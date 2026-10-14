@@ -45,24 +45,24 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#161F28] text-slate-100 flex items-center justify-center p-4 relative overflow-hidden font-sans dir-rtl">
+    <div className="min-h-screen w-full bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center p-4 relative overflow-hidden font-sans dir-rtl">
       {/* Ambient background glow effects */}
       <div className="absolute -top-40 -right-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none animate-pulseGlow"></div>
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none animate-pulseGlow" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none animate-pulseGlow" style={{ animationDelay: '2s' }}></div>
       {/* ? Third subtle glow for depth */}
       <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-teal-400/5 rounded-full blur-3xl pointer-events-none animate-pulseGlow" style={{ animationDelay: '1s' }}></div>
 
       {/* Main Glassmorphic Login Card */}
-      <div className="w-full max-w-md bg-slate-900/90 border border-slate-800/90 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl relative z-10 space-y-6 animate-scaleIn">
+      <div className="w-full max-w-md bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-8 sm:p-10 shadow-[var(--shadow-card)] backdrop-blur-xl relative z-10 space-y-6 animate-scaleIn">
         {/* Brand Header */}
         <div className="text-center space-y-3">
           <Image src={logo} alt="" width={64} height={64} priority className="w-16 h-16 mx-auto animate-breathe" />
 
           <div>
-            <h1 className="text-2xl font-black text-white tracking-tight">
-              سكون – Admin
+            <h1 className="text-2xl font-black text-[var(--foreground)] tracking-tight">
+              أهلاً بك في سكون
             </h1>
-            <p className="text-xs text-slate-400 font-medium mt-1">
+            <p className="text-xs text-[var(--text-muted)] font-medium mt-1">
               تسجيل الدخول إلى لوحة الإدارة المركزية
             </p>
           </div>
@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
 
         {/* Error Alert */}
         {errorMsg && (
-          <div className="bg-rose-500/15 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-300 text-center font-bold animate-fadeInUp">
+          <div className="bg-rose-500/15 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-600 dark:text-rose-300 text-center font-bold animate-fadeInUp">
             {errorMsg}
           </div>
         )}
@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Input */}
           <div className="space-y-1.5 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
-            <label className="text-xs font-bold text-slate-300 block">
+            <label className="text-xs font-bold text-[var(--text-muted)] block">
               البريد الإلكتروني
             </label>
             <div className="relative">
@@ -88,15 +88,15 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@sukoon.com"
-                className="w-full pl-4 pr-11 py-3 bg-slate-800/80 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-[#0D7C66] transition-all placeholder:text-slate-500 dir-ltr text-right"
+                className="w-full pl-4 pr-11 py-3 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-xl text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-[#0D7C66] transition-all placeholder:text-slate-500 dir-ltr text-right"
               />
-              <Mail className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5" />
+              <Mail className="w-4 h-4 text-[var(--text-muted)] absolute right-3.5 top-3.5" />
             </div>
           </div>
 
           {/* Password Input */}
           <div className="space-y-1.5 animate-fadeInUp" style={{ animationDelay: '150ms' }}>
-            <label className="text-xs font-bold text-slate-300 block">
+            <label className="text-xs font-bold text-[var(--text-muted)] block">
               كلمة المرور
             </label>
             <div className="relative">
@@ -105,14 +105,14 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-11 pr-11 py-3 bg-slate-800/80 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-[#0D7C66] transition-all placeholder:text-slate-500 dir-ltr text-right"
+                className="w-full pl-11 pr-11 py-3 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-xl text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-[#0D7C66] transition-all placeholder:text-slate-500 dir-ltr text-right"
               />
-              <Lock className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5" />
+              <Lock className="w-4 h-4 text-[var(--text-muted)] absolute right-3.5 top-3.5" />
 
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute left-3.5 top-3.5 text-slate-400 hover:text-slate-200 transition-colors"
+                className="absolute left-3.5 top-3.5 text-[var(--text-muted)] hover:text-slate-200 transition-colors"
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />
@@ -125,7 +125,7 @@ export default function AdminLoginPage() {
 
           {/* Remember Me & Forgot Password */}
           <div className="flex items-center justify-between text-xs pt-1 animate-fadeInUp" style={{ animationDelay: '200ms' }}>
-            <label className="flex items-center gap-2 text-slate-400 cursor-pointer select-none">
+            <label className="flex items-center gap-2 text-[var(--text-muted)] cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={rememberMe}
@@ -141,7 +141,7 @@ export default function AdminLoginPage() {
                 e.preventDefault();
                 alert('يرجى التواصل مع مالك النظام لاستعادة كلمة المرور');
               }}
-              className="text-teal-400 hover:text-teal-300 font-semibold transition-colors"
+              className="text-[var(--primary-text)] hover:text-teal-300 font-semibold transition-colors"
             >
               نسيت كلمة المرور؟
             </a>
@@ -151,7 +151,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] active:scale-[0.98] text-white font-black text-sm rounded-xl shadow-lg shadow-teal-900/40 transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2 animate-fadeInUp"
+            className="w-full py-3.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] active:scale-[0.98] text-white font-black text-sm rounded-xl shadow-lg shadow-teal-900/40 transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2 animate-fadeInUp"
             style={{ animationDelay: '250ms' }}
           >
             {isSubmitting ? (
@@ -167,8 +167,8 @@ export default function AdminLoginPage() {
 
         {/* Divider */}
         <div className="relative flex items-center justify-center pt-2">
-          <div className="border-t border-slate-800 w-full"></div>
-          <span className="bg-slate-900 px-3 text-[11px] text-slate-500 font-bold uppercase shrink-0">
+          <div className="border-t border-[var(--card-border)] w-full"></div>
+          <span className="bg-[var(--card-bg)] px-3 text-[11px] text-slate-500 font-bold uppercase shrink-0">
             أو
           </span>
         </div>
@@ -177,7 +177,7 @@ export default function AdminLoginPage() {
         <button
           type="button"
           onClick={handleQuickDemo}
-          className="w-full py-3 bg-slate-800/90 hover:bg-slate-800 active:scale-[0.98] text-teal-400 font-extrabold text-xs rounded-xl border border-teal-500/20 hover:border-teal-500/40 transition-all flex items-center justify-center gap-2 animate-fadeInUp"
+          className="w-full py-3 bg-[var(--primary-subtle)] hover:bg-[var(--card-hover)] active:scale-[0.98] text-[var(--primary-text)] font-extrabold text-xs rounded-xl border border-teal-500/20 hover:border-teal-500/40 transition-all flex items-center justify-center gap-2 animate-fadeInUp"
           style={{ animationDelay: '300ms' }}
         >
           <span>دخول سريع كـ Admin (تجريبي)</span>

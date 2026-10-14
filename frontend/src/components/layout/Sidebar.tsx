@@ -219,6 +219,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
         return (
           <Link
             key={item.href}
+            aria-current={item.active ? 'page' : undefined}
             href={item.href}
             onClick={onCloseMobile}
             className={`relative flex items-center justify-between px-3.5 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 group animate-slideInFromSide cursor-pointer ${
@@ -229,7 +230,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
             style={{ animationDelay: `${(startIndex + idx) * 20}ms` }}
           >
             {item.active && (
-              <span className="absolute right-0 top-2 bottom-2 w-1.5 rounded-l-full bg-teal-400 glow-teal-sm"></span>
+              <span className="absolute right-0 top-2 bottom-2 w-1.5 rounded-l-full bg-teal-400 "></span>
             )}
             <div className="flex items-center gap-3 pr-1">
               <Icon
@@ -240,7 +241,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
               <span>{item.title}</span>
             </div>
             {item.badge && (
-              <span className="px-2 py-0.5 text-[10px] font-extrabold bg-slate-800/90 text-teal-400 rounded-full border border-teal-500/30">
+              <span className="px-2 py-0.5 text-[10px] font-extrabold bg-[#123520] text-teal-400 rounded-full border border-teal-500/30">
                 {item.badge}
               </span>
             )}
@@ -253,11 +254,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
   const sidebarContent = (
     <div className="flex flex-col h-full">
       {/* Brand Header */}
-      <div className="p-5 flex items-center justify-between border-b border-[var(--sidebar-border)] bg-slate-950/40">
+      <div className="p-5 flex items-center justify-between border-b border-[var(--sidebar-border)] bg-[#0b2415]">
         <div className="flex items-center gap-3">
           <Image src={logo} alt="" width={40} height={40} priority className="w-10 h-10 shrink-0" />
           <div>
-            <h1 className="font-black text-white text-base tracking-tight leading-tight">سكون – Sukoon Admin</h1>
+            <h1 className="font-black text-white text-base tracking-tight leading-tight">سكون</h1>
             <p className="text-[11px] font-semibold text-[var(--sidebar-text)] mt-0.5">منظومة المراجعة والتوثيق</p>
           </div>
         </div>
@@ -265,6 +266,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
         {onCloseMobile && (
           <button
             onClick={onCloseMobile}
+            aria-label="إغلاق القائمة"
             className="lg:hidden p-1.5 text-[var(--sidebar-text)] hover:text-white rounded-xl transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
@@ -274,7 +276,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
 
       {/* Mode Quick Switcher */}
       <div className="px-4 pt-4 pb-2">
-        <div className="bg-slate-900/80 p-1 rounded-xl flex text-xs font-bold border border-slate-800 shadow-inner">
+        <div className="bg-[#0b2415] p-1 rounded-xl flex text-xs font-bold border border-[var(--sidebar-border)] shadow-inner">
           <Link
             href="/"
             onClick={onCloseMobile}
@@ -299,21 +301,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
       {/* Navigation Links */}
       <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
         <div>
-          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-teal-400/80 uppercase">
+          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-[#a1b0a6] uppercase">
             الإدارة الرئيسية
           </div>
           {renderNavGroup(section1, 0)}
         </div>
 
         <div>
-          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-cyan-400/80 uppercase">
+          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-[#a1b0a6] uppercase">
             المراقبة والدعم
           </div>
           {renderNavGroup(section2, section1.length)}
         </div>
 
         <div>
-          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-emerald-400/80 uppercase">
+          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-[#a1b0a6] uppercase">
             المالية والنظام
           </div>
           {renderNavGroup(section3, section1.length + section2.length)}
@@ -321,7 +323,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
       </nav>
 
       {/* Footer Info */}
-      <div className="p-3.5 border-t border-[var(--sidebar-border)] bg-slate-950/40 text-[11px] text-[var(--sidebar-text)] flex items-center justify-between">
+      <div className="p-3.5 border-t border-[var(--sidebar-border)] bg-[#0b2415] text-[11px] text-[var(--sidebar-text)] flex items-center justify-between">
         <span className="font-bold">Sukoon Real Estate</span>
         <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full text-[10px] font-extrabold">
           <Radio className="w-3 h-3 animate-pulse" />
@@ -334,7 +336,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
   return (
     <>
       {/* Desktop Fixed Sidebar */}
-      <aside className="hidden lg:flex w-64 bg-[var(--sidebar-bg)] text-slate-300 min-h-screen flex-col border-l border-[var(--sidebar-border)] shrink-0">
+      <aside className="hidden lg:flex w-64 xl:w-72 bg-[var(--sidebar-bg)] text-slate-300 h-screen sticky top-0 flex-col border-l border-[var(--sidebar-border)] shrink-0">
         {sidebarContent}
       </aside>
 

@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import Link from '@/components/ui/AdminLink';
 import { usePathname } from 'next/navigation';
+import { adminRelativePath } from '@/lib/basePath';
 import { Home, ChevronLeft } from 'lucide-react';
 
 interface BreadcrumbItem {
@@ -37,7 +38,7 @@ const ROUTE_LABELS: Record<string, string> = {
 };
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
-  const pathname = usePathname();
+  const pathname = adminRelativePath(usePathname());
 
   let breadcrumbs: BreadcrumbItem[] = [];
 
@@ -45,14 +46,13 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
     breadcrumbs = items;
   } else {
     const segments = pathname.split('/').filter(Boolean);
-    let currentPath = '';
-
-    breadcrumbs = segments.map((segment) => {
-      currentPath += `/${segment}`;
+    breadcrumbs = segments.map((segment, index) => {
+      const currentPath = `/${segments.slice(0, index + 1).join('/')}`;
       const label = ROUTE_LABELS[segment] || (segment.startsWith('prop-') ? 'تفاصيل العقار' : segment.length > 10 ? 'تفاصيل السجل' : segment);
       return {
         label,
-        href: currentPath,
+        // /system groups the health and logs pages; it has no page of its own.
+        href: currentPath === '/system' ? undefined : currentPath,
       };
     });
   }

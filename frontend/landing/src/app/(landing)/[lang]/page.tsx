@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { Hero } from "@/components/sections/Hero";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { WhySukoon } from "@/components/sections/WhySukoon";
+import { ProductFeatures } from "@/components/sections/ProductFeatures";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { InViewObserver } from "@/components/layout/InViewObserver";
@@ -27,6 +28,7 @@ export default async function LandingPage({ params }: PageProps<"/[lang]">) {
         <Hero dict={dict} />
         <HowItWorks dict={dict} />
         <WhySukoon dict={dict} />
+        <ProductFeatures dict={dict} />
         <Faq dict={dict} />
         <FinalCta dict={dict} />
       </main>

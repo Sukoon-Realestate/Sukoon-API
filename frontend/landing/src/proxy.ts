@@ -10,7 +10,7 @@ function preferredLocale(request: NextRequest): Locale {
 // Sends locale-less paths (e.g. "/") to "/ar" or "/en" based on the browser language.
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  // /admin belongs to the admin zone (see next.config.ts rewrites).
+  // Admin routes are not localized; the (admin) route group serves them directly.
   if (pathname === "/admin" || pathname.startsWith("/admin/")) return;
 
   const segment = pathname.split("/")[1] ?? "";

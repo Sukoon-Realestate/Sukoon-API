@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { adminPath, adminRelativePath } from '@/lib/basePath';
 import { apiClient } from '@/lib/api/client';
 
 interface UserProfile {
@@ -57,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const isLoading = false;
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = adminRelativePath(usePathname());
 
   const login = async (email: string, pass: string): Promise<boolean> => {
     try {
@@ -82,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(profile);
       localStorage.setItem('sukoon_admin_auth', 'true');
       localStorage.setItem('sukoon_user', JSON.stringify(profile));
-      router.push('/');
+      router.push(adminPath('/'));
       return true;
     } catch (err) {
       return false;
@@ -100,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('sukoon_access_token');
     localStorage.removeItem('sukoon_admin_auth');
     localStorage.removeItem('sukoon_user');
-    router.push('/login');
+    router.push(adminPath('/login'));
   };
 
   // Listen for unauthorized 401 events across the app
@@ -112,7 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.removeItem('sukoon_admin_auth');
       localStorage.removeItem('sukoon_user');
       if (pathname !== '/login') {
-        router.push('/login');
+        router.push(adminPath('/login'));
       }
     };
 
@@ -124,9 +125,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated && pathname !== '/login') {
-        router.push('/login');
+        router.push(adminPath('/login'));
       } else if (isAuthenticated && pathname === '/login') {
-        router.push('/');
+        router.push(adminPath('/'));
       }
     }
   }, [isLoading, isAuthenticated, pathname, router]);

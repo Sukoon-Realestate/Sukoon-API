@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/ui/AdminLink';
 import {
   PlusCircle,
   Download,
   UserPlus,
   ShieldAlert,
   Sparkles,
-  Command,
 } from 'lucide-react';
 import { useToast } from './Toast';
 import { ConfirmModal } from './ConfirmModal';
@@ -31,7 +30,7 @@ export const QuickActionsToolbar: React.FC = () => {
 
   return (
     <>
-      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-4 shadow-[var(--shadow-card)] mb-6 animate-fadeIn flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-5 shadow-[var(--shadow-card)] mb-6 animate-fadeIn flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center border border-teal-500/20">
             <Sparkles className="w-4 h-4" />
@@ -50,7 +49,7 @@ export const QuickActionsToolbar: React.FC = () => {
         <div className="flex items-center gap-2.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
           <Link
             href="/properties/review"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-teal-600 via-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-xs shadow-teal-600/25 transition-all cursor-pointer btn-press shrink-0"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-extrabold text-xs rounded-xl shadow-xs shadow-teal-600/25 transition-all cursor-pointer btn-press shrink-0"
           >
             <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>مراجعة العقارات</span>
@@ -58,7 +57,7 @@ export const QuickActionsToolbar: React.FC = () => {
 
           <button
             onClick={() => setShowExportModal(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-[var(--card-hover)] dark:hover:bg-[var(--card-border)] dark:text-[var(--foreground)] border border-slate-200 dark:border-[var(--card-border)] font-bold text-xs rounded-xl transition-all cursor-pointer btn-press shrink-0"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[var(--card-hover)] hover:bg-[var(--primary-subtle)] text-[var(--foreground)] dark:bg-[var(--card-hover)] dark:hover:bg-[var(--card-border)] dark:text-[var(--foreground)] border border-[var(--card-border)] dark:border-[var(--card-border)] font-bold text-xs rounded-xl transition-all cursor-pointer btn-press shrink-0"
           >
             <Download className="w-3.5 h-3.5 text-teal-700 dark:text-teal-400 stroke-[2.5]" />
             <span>تصدير PDF</span>
@@ -69,9 +68,9 @@ export const QuickActionsToolbar: React.FC = () => {
 
           <button
             onClick={() => setShowInviteModal(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-50/90 hover:bg-blue-100/90 text-blue-800 dark:bg-[var(--card-hover)] dark:hover:bg-[var(--card-border)] dark:text-[var(--foreground)] border border-blue-200/90 dark:border-[var(--card-border)] font-bold text-xs rounded-xl transition-all cursor-pointer btn-press shrink-0"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[var(--primary-subtle)] hover:bg-[var(--card-hover)] text-[var(--primary-text)] dark:bg-[var(--card-hover)] dark:hover:bg-[var(--card-border)] dark:text-[var(--foreground)] border border-[var(--card-border)] dark:border-[var(--card-border)] font-bold text-xs rounded-xl transition-all cursor-pointer btn-press shrink-0"
           >
-            <UserPlus className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 stroke-[2.5]" />
+            <UserPlus className="w-3.5 h-3.5 text-[var(--primary-text)] stroke-[2.5]" />
             <span>دعوة مشرف</span>
           </button>
 

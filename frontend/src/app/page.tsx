@@ -65,6 +65,11 @@ export default function OverviewDashboardPage() {
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
+        <section className="admin-welcome">
+          <span className="inline-flex rounded-full border border-[#7fe08d]/25 bg-[#7fe08d]/10 px-3 py-1 text-xs font-medium text-[#7fe08d]">مساحة إدارة سكون</span>
+          <h1 className="mt-4 text-2xl sm:text-3xl font-semibold leading-relaxed">كل التفاصيل، في مكان واحد.</h1>
+          <p className="mt-2 max-w-xl text-sm leading-7 text-[#c4d5c7]">تابع أداء المنصة، وراجع الطلبات، وساعد مجتمع سكون على الوصول إلى سكن أفضل.</p>
+        </section>
         {/* Admin Quick Toolbar */}
         <QuickActionsToolbar />
 
@@ -74,7 +79,7 @@ export default function OverviewDashboardPage() {
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="h-32 bg-slate-900/60 rounded-2xl animate-pulse border border-slate-800"
+                className="h-32 bg-[var(--card-hover)] rounded-3xl animate-pulse border border-[var(--card-border)]"
               />
             ))}
           </div>
@@ -118,7 +123,7 @@ export default function OverviewDashboardPage() {
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/50 rounded-full h-3 overflow-hidden p-0.5">
                   <div
-                    className="bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 h-2 rounded-full transition-all duration-1000 shadow-sm shadow-blue-500/20"
+                    className="bg-gradient-to-r from-teal-700 to-teal-500 h-2 rounded-full transition-all duration-1000 shadow-sm shadow-blue-500/20"
                     style={{ width: `${tenantPercent}%` }}
                   ></div>
                 </div>
@@ -134,7 +139,7 @@ export default function OverviewDashboardPage() {
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/50 rounded-full h-3 overflow-hidden p-0.5">
                   <div
-                    className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 h-2 rounded-full transition-all duration-1000 shadow-sm shadow-amber-500/20"
+                    className="bg-gradient-to-r from-[#9eb77b] to-[#698b50] h-2 rounded-full transition-all duration-1000 shadow-sm shadow-amber-500/20"
                     style={{ width: `${landlordPercent}%` }}
                   ></div>
                 </div>

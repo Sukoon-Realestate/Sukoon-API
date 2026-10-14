@@ -32,6 +32,10 @@ ${steps(tenant.steps)}
 
 ${steps(owner.steps)}
 
+## ${en.features.eyebrow}
+
+${en.features.items.map((item) => `### ${item.title}\n\n${item.body}\n\n${item.points.map((point) => `- ${point}`).join("\n")}`).join("\n\n")}
+
 ## FAQ
 
 ${en.faq.items.map((item) => `### ${item.question}\n\n${item.answer}`).join("\n\n")}

@@ -1,0 +1,515 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  --color-teal-50: #f0f5f0;
+  --color-teal-100: #e1f0e2;
+  --color-teal-200: #bddfc2;
+  --color-teal-300: #9bdca5;
+  --color-teal-400: #7fe08d;
+  --color-teal-500: #04a417;
+  --color-teal-600: #0a5c18;
+  --color-teal-700: #084b14;
+  --color-teal-800: #123520;
+  --color-teal-900: #0c2a18;
+}
+
+/* ===========================
+   * Light Theme (Default)
+   =========================== */
+:root {
+  --background: #f6f2e9;
+  --foreground: #0c2a18;
+  --text-muted: #4b5650;
+  --text-subtle: #68766b;
+
+  --card-bg: #fcfbf7;
+  --card-border: #e3dccb;
+  --card-hover: #fcfbf7;
+  --surface-elevated: #fcfbf7;
+
+  --sidebar-bg: #0c2a18;
+  --sidebar-border: #213e2c;
+  --sidebar-text: #a1b0a6;
+  --sidebar-active: #0a5c18;
+  --sidebar-hover: #123520;
+
+  --header-bg: #fcfbf7;
+  --header-border: #e3dccb;
+
+  --primary: #0a5c18;
+  --primary-hover: #084b14;
+  --primary-subtle: #e1f0e2;
+  --primary-text: #084b14;
+
+  --input-bg: #fcfbf7;
+  --input-border: #d6cfbe;
+  --input-focus-ring: rgba(4, 164, 23, 0.3);
+
+  --table-header-bg: #fcfbf7;
+  --table-row-hover: #f6f2e9;
+  --table-border: #e3dccb;
+
+  --badge-bg-muted: #f6f2e9;
+  --divider: #e3dccb;
+
+  --scrollbar-thumb: #d6cfbe;
+  --scrollbar-thumb-hover: #a1b0a6;
+
+  --shadow-card: 0 1px 3px 0 rgba(12, 42, 24, 0.05), 0 4px 14px -2px rgba(12, 42, 24, 0.06), 0 0 0 1px rgba(227, 220, 203, 0.4);
+  --shadow-card-hover: 0 12px 24px -4px rgba(12, 42, 24, 0.12), 0 4px 8px -2px rgba(12, 42, 24, 0.04), 0 0 0 1px rgba(4, 164, 23, 0.35);
+}
+
+/* ===========================
+   * Dark Theme
+   =========================== */
+.dark {
+  --background: #0a120d;
+  --foreground: #ecf2ea;
+  --text-muted: #a1b0a6;
+  --text-subtle: #a1b0a6;
+
+  --card-bg: #0e1912;
+  --card-border: #213628;
+  --card-hover: #16241b;
+  --surface-elevated: #16241b;
+
+  --sidebar-bg: #08140d;
+  --sidebar-border: #0e1912;
+  --sidebar-text: #a1b0a6;
+  --sidebar-active: #168a2b;
+  --sidebar-hover: #123520;
+
+  --header-bg: #0e1912;
+  --header-border: #213628;
+
+  --primary: #168a2b;
+  --primary-hover: #0a5c18;
+  --primary-subtle: rgba(4, 164, 23, 0.15);
+  --primary-text: #7fe08d;
+
+  --input-bg: #0c160f;
+  --input-border: #213628;
+  --input-focus-ring: rgba(4, 164, 23, 0.3);
+
+  --table-header-bg: #0c160f;
+  --table-row-hover: #16241b;
+  --table-border: #213628;
+
+  --badge-bg-muted: #213e2c;
+  --divider: #213628;
+
+  --scrollbar-thumb: #213628;
+  --scrollbar-thumb-hover: #4b5650;
+
+  --shadow-card: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 8px 16px -2px rgba(0, 0, 0, 0.5);
+}
+
+/* ===========================
+   * Base Styles
+   =========================== */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-arabic), 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  direction: rtl;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===========================
+   * Theme Transition
+   ? Applied only during theme switch via JS class toggle to avoid
+   ? animating on initial page load
+   =========================== */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 400ms ease, color 300ms ease,
+    border-color 300ms ease, box-shadow 300ms ease, fill 300ms ease,
+    stroke 300ms ease !important;
+}
+
+/* ===========================
+   * Custom Scrollbar
+   =========================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ===========================
+   * Base Transitions (interactive elements only)
+   =========================== */
+a, button, input, select, textarea,
+[role="button"] {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* ===========================
+   * Keyframe Animations
+   =========================== */
+
+/* ? Cards and sections fade up into view */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ? Metric cards scale in with a pop */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ? Sidebar nav items slide in from the side (RTL-aware: from left) */
+@keyframes slideInFromSide {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ? Mobile drawer slides in */
+@keyframes slideInDrawer {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ? Backdrop fades in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ? Bar chart bars grow from bottom */
+@keyframes barGrow {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+
+/* ? Login page ambient glow pulse */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.08;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.18;
+    transform: scale(1.08);
+  }
+}
+
+/* ? Login logo breathing */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(4, 164, 23, 0);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 20px 4px rgba(4, 164, 23, 0.15);
+  }
+}
+
+/* ? Notification dot pulse */
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.5;
+  }
+}
+
+/* ? Subtle shimmer for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ===========================
+   * Animation Utility Classes
+   =========================== */
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slideInFromSide {
+  animation: slideInFromSide 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slideInDrawer {
+  animation: slideInDrawer 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease both;
+}
+
+.animate-barGrow {
+  animation: barGrow 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.animate-pulseDot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+/* ===========================
+   * Hover Utility Enhancements
+   =========================== */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ===========================
+   * Dark-mode specific overrides for status badges
+   ? Slightly more vivid backgrounds for contrast on dark surfaces
+   =========================== */
+.dark .badge-emerald {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+.dark .badge-rose {
+  background-color: rgba(244, 63, 94, 0.15);
+  color: #fda4af;
+  border-color: rgba(244, 63, 94, 0.25);
+}
+.dark .badge-amber {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+.dark .badge-blue {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+.dark .badge-teal {
+  background-color: rgba(4, 164, 23, 0.15);
+  color: #5eead4;
+  border-color: rgba(4, 164, 23, 0.25);
+}
+.dark .badge-slate {
+  background-color: rgba(100, 116, 139, 0.2);
+  color: #d6cfbe;
+  border-color: rgba(100, 116, 139, 0.3);
+}
+
+/* ===========================
+   * Advanced UI Utilities & Glassmorphism
+   =========================== */
+.glass-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+.glow-teal-sm {
+  box-shadow: 0 0 16px -2px rgba(4, 164, 23, 0.25);
+}
+
+.glow-rose-sm {
+  box-shadow: 0 0 16px -2px rgba(244, 63, 94, 0.25);
+}
+
+.glow-amber-sm {
+  box-shadow: 0 0 16px -2px rgba(245, 158, 11, 0.25);
+}
+
+.glow-blue-sm {
+  box-shadow: 0 0 16px -2px rgba(59, 130, 246, 0.25);
+}
+
+.accent-line-top {
+  position: relative;
+  overflow: hidden;
+}
+
+.accent-line-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0a5c18, #04a417, #7fe08d);
+  border-radius: 3px 3px 0 0;
+}
+
+
+/* ===========================
+   * Logo Loader & Splash
+   =========================== */
+
+/* ? Green rises through the wordmark, rests, then drains. The resting (and
+   reduced-motion) state is the fully filled logo. Mirrors the landing app. */
+@keyframes logoFill {
+  0% {
+    background-position: 0 0%;
+  }
+  50%,
+  70% {
+    background-position: 0 100%;
+  }
+  100% {
+    background-position: 0 0%;
+  }
+}
+
+@keyframes logoBreathe {
+  0%,
+  100% {
+    transform: scale(0.97);
+  }
+  50%,
+  70% {
+    transform: scale(1);
+  }
+}
+
+.logo-loader {
+  --loader-fill: #04a417;
+  --loader-empty: color-mix(in oklab, var(--foreground) 14%, transparent);
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+  /* bottom half = filled, top half = empty; sliding the 200%-tall gradient raises the "water line" */
+  background: linear-gradient(to top, var(--loader-fill) 0 47%, var(--loader-empty) 53% 100%) 0 100% / 100% 200%;
+  animation:
+    logoFill 2.6s cubic-bezier(0.45, 0, 0.25, 1) infinite,
+    logoBreathe 2.6s ease-in-out infinite;
+}
+
+/* ! Splash only shows while html[data-loading] is set by the init script. */
+.splash {
+  display: none;
+}
+
+[data-loading] .splash {
+  display: grid;
+}
+
+[data-loading="out"] .splash {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+
+/* Hold the dashboard's own entrance animations until the splash lifts. */
+[data-loading="on"] body > :not(.splash),
+[data-loading="on"] body > :not(.splash) * {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-loader {
+    animation: none;
+  }
+}
+
+/* The same paper, rounded shapes and arch motif as the public landing page. */
+html[lang="ar"] * { letter-spacing: 0; }
+h1, h2, h3, h4 { font-family: var(--font-readex), var(--font-arabic), sans-serif; }
+:focus-visible { outline: 2px solid var(--primary-text); outline-offset: 4px; }
+.admin-welcome {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #213e2c;
+  border-radius: 1.75rem;
+  background: #0c2a18;
+  color: #fcfbf7;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+.admin-welcome::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 18rem;
+  height: 24rem;
+  left: -5rem;
+  top: 2rem;
+  border: 1px solid #7fe08d40;
+  border-radius: 12rem 12rem 0 0;
+  box-shadow: 0 0 0 22px #7fe08d08, 0 0 0 44px #7fe08d08, 0 0 0 66px #7fe08d08;
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

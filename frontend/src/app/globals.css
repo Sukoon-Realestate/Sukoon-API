@@ -1,92 +1,107 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  --color-teal-50: #f0f5f0;
+  --color-teal-100: #e1f0e2;
+  --color-teal-200: #bddfc2;
+  --color-teal-300: #9bdca5;
+  --color-teal-400: #7fe08d;
+  --color-teal-500: #04a417;
+  --color-teal-600: #0a5c18;
+  --color-teal-700: #084b14;
+  --color-teal-800: #123520;
+  --color-teal-900: #0c2a18;
+}
 
 /* ===========================
    * Light Theme (Default)
    =========================== */
 :root {
-  --background: #f1f5f9;
-  --foreground: #0f172a;
-  --text-muted: #334155;
-  --text-subtle: #64748b;
+  --background: #f6f2e9;
+  --foreground: #0c2a18;
+  --text-muted: #4b5650;
+  --text-subtle: #68766b;
 
-  --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --card-hover: #f8fafc;
-  --surface-elevated: #ffffff;
+  --card-bg: #fcfbf7;
+  --card-border: #e3dccb;
+  --card-hover: #fcfbf7;
+  --surface-elevated: #fcfbf7;
 
-  --sidebar-bg: #0f172a;
-  --sidebar-border: #1e293b;
-  --sidebar-text: #94a3b8;
-  --sidebar-active: #0d9488;
-  --sidebar-hover: rgba(30, 41, 59, 0.4);
+  --sidebar-bg: #0c2a18;
+  --sidebar-border: #213e2c;
+  --sidebar-text: #a1b0a6;
+  --sidebar-active: #0a5c18;
+  --sidebar-hover: #123520;
 
-  --header-bg: #ffffff;
-  --header-border: #e2e8f0;
+  --header-bg: #fcfbf7;
+  --header-border: #e3dccb;
 
-  --primary: #0d9488;
-  --primary-hover: #0f766e;
-  --primary-subtle: #ccfbf1;
-  --primary-text: #0f766e;
+  --primary: #0a5c18;
+  --primary-hover: #084b14;
+  --primary-subtle: #e1f0e2;
+  --primary-text: #084b14;
 
-  --input-bg: #ffffff;
-  --input-border: #cbd5e1;
-  --input-focus-ring: rgba(13, 148, 136, 0.3);
+  --input-bg: #fcfbf7;
+  --input-border: #d6cfbe;
+  --input-focus-ring: rgba(4, 164, 23, 0.3);
 
-  --table-header-bg: #f8fafc;
-  --table-row-hover: #f1f5f9;
-  --table-border: #e2e8f0;
+  --table-header-bg: #fcfbf7;
+  --table-row-hover: #f6f2e9;
+  --table-border: #e3dccb;
 
-  --badge-bg-muted: #f1f5f9;
-  --divider: #e2e8f0;
+  --badge-bg-muted: #f6f2e9;
+  --divider: #e3dccb;
 
-  --scrollbar-thumb: #cbd5e1;
-  --scrollbar-thumb-hover: #94a3b8;
+  --scrollbar-thumb: #d6cfbe;
+  --scrollbar-thumb-hover: #a1b0a6;
 
-  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 4px 14px -2px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(226, 232, 240, 0.9);
-  --shadow-card-hover: 0 12px 24px -4px rgba(15, 23, 42, 0.12), 0 4px 8px -2px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(13, 148, 136, 0.35);
+  --shadow-card: 0 1px 3px 0 rgba(12, 42, 24, 0.05), 0 4px 14px -2px rgba(12, 42, 24, 0.06), 0 0 0 1px rgba(227, 220, 203, 0.4);
+  --shadow-card-hover: 0 12px 24px -4px rgba(12, 42, 24, 0.12), 0 4px 8px -2px rgba(12, 42, 24, 0.04), 0 0 0 1px rgba(4, 164, 23, 0.35);
 }
 
 /* ===========================
    * Dark Theme
    =========================== */
 .dark {
-  --background: #0b0f17;
-  --foreground: #f8fafc;
-  --text-muted: #cbd5e1;
-  --text-subtle: #94a3b8;
+  --background: #0a120d;
+  --foreground: #ecf2ea;
+  --text-muted: #a1b0a6;
+  --text-subtle: #a1b0a6;
 
-  --card-bg: #151d2a;
-  --card-border: #243042;
-  --card-hover: #1c2738;
-  --surface-elevated: #1a2434;
+  --card-bg: #0e1912;
+  --card-border: #213628;
+  --card-hover: #16241b;
+  --surface-elevated: #16241b;
 
-  --sidebar-bg: #070a0f;
-  --sidebar-border: #151d2a;
-  --sidebar-text: #94a3b8;
-  --sidebar-active: #14b8a6;
-  --sidebar-hover: rgba(30, 41, 59, 0.6);
+  --sidebar-bg: #08140d;
+  --sidebar-border: #0e1912;
+  --sidebar-text: #a1b0a6;
+  --sidebar-active: #168a2b;
+  --sidebar-hover: #123520;
 
-  --header-bg: #151d2a;
-  --header-border: #243042;
+  --header-bg: #0e1912;
+  --header-border: #213628;
 
-  --primary: #14b8a6;
-  --primary-hover: #0d9488;
-  --primary-subtle: rgba(20, 184, 166, 0.15);
-  --primary-text: #2dd4bf;
+  --primary: #168a2b;
+  --primary-hover: #0a5c18;
+  --primary-subtle: rgba(4, 164, 23, 0.15);
+  --primary-text: #7fe08d;
 
-  --input-bg: #111827;
-  --input-border: #243042;
-  --input-focus-ring: rgba(20, 184, 166, 0.3);
+  --input-bg: #0c160f;
+  --input-border: #213628;
+  --input-focus-ring: rgba(4, 164, 23, 0.3);
 
-  --table-header-bg: #111827;
-  --table-row-hover: #1a2434;
-  --table-border: #243042;
+  --table-header-bg: #0c160f;
+  --table-row-hover: #16241b;
+  --table-border: #213628;
 
-  --badge-bg-muted: #1e293b;
-  --divider: #243042;
+  --badge-bg-muted: #213e2c;
+  --divider: #213628;
 
-  --scrollbar-thumb: #243042;
-  --scrollbar-thumb-hover: #334155;
+  --scrollbar-thumb: #213628;
+  --scrollbar-thumb-hover: #4b5650;
 
   --shadow-card: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
   --shadow-card-hover: 0 8px 16px -2px rgba(0, 0, 0, 0.5);
@@ -98,7 +113,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-cairo), 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-arabic), 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   direction: rtl;
   margin: 0;
   padding: 0;
@@ -230,11 +245,11 @@ a, button, input, select, textarea,
 @keyframes breathe {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
+    box-shadow: 0 0 0 0 rgba(4, 164, 23, 0);
   }
   50% {
     transform: scale(1.04);
-    box-shadow: 0 0 20px 4px rgba(13, 148, 136, 0.15);
+    box-shadow: 0 0 20px 4px rgba(4, 164, 23, 0.15);
   }
 }
 
@@ -336,13 +351,13 @@ a, button, input, select, textarea,
   border-color: rgba(59, 130, 246, 0.25);
 }
 .dark .badge-teal {
-  background-color: rgba(20, 184, 166, 0.15);
+  background-color: rgba(4, 164, 23, 0.15);
   color: #5eead4;
-  border-color: rgba(20, 184, 166, 0.25);
+  border-color: rgba(4, 164, 23, 0.25);
 }
 .dark .badge-slate {
   background-color: rgba(100, 116, 139, 0.2);
-  color: #cbd5e1;
+  color: #d6cfbe;
   border-color: rgba(100, 116, 139, 0.3);
 }
 
@@ -366,7 +381,7 @@ a, button, input, select, textarea,
 }
 
 .glow-teal-sm {
-  box-shadow: 0 0 16px -2px rgba(20, 184, 166, 0.25);
+  box-shadow: 0 0 16px -2px rgba(4, 164, 23, 0.25);
 }
 
 .glow-rose-sm {
@@ -393,7 +408,7 @@ a, button, input, select, textarea,
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #14b8a6, #0d9488, #06b6d4);
+  background: linear-gradient(90deg, #0a5c18, #04a417, #7fe08d);
   border-radius: 3px 3px 0 0;
 }
 
@@ -465,4 +480,36 @@ a, button, input, select, textarea,
   .logo-loader {
     animation: none;
   }
+}
+
+/* The same paper, rounded shapes and arch motif as the public landing page. */
+html[lang="ar"] * { letter-spacing: 0; }
+h1, h2, h3, h4 { font-family: var(--font-readex), var(--font-arabic), sans-serif; }
+:focus-visible { outline: 2px solid var(--primary-text); outline-offset: 4px; }
+.admin-welcome {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #213e2c;
+  border-radius: 1.75rem;
+  background: #0c2a18;
+  color: #fcfbf7;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+.admin-welcome::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 18rem;
+  height: 24rem;
+  left: -5rem;
+  top: 2rem;
+  border: 1px solid #7fe08d40;
+  border-radius: 12rem 12rem 0 0;
+  box-shadow: 0 0 0 22px #7fe08d08, 0 0 0 44px #7fe08d08, 0 0 0 66px #7fe08d08;
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

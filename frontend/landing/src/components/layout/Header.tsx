@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { Bell, User, Menu, LogOut, Settings, Shield, CheckCircle2, AlertTriangle, ExternalLink } from 'lucide-react';
+import Link from '@/components/ui/AdminLink';
+import { Bell, User, Menu, LogOut, Settings, Shield } from 'lucide-react';
 import { useSidebar } from './AppLayout';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -25,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   return (
-    <header className="h-16 bg-[var(--header-bg)] border-b border-[var(--header-border)] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-[var(--shadow-card)] backdrop-blur-sm animate-fadeIn">
+    <header className="min-h-20 py-3 bg-[var(--header-bg)] border-b border-[var(--header-border)] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30  backdrop-blur-sm animate-fadeIn">
       {/* User profile & Mobile Menu button (Left in RTL layout) */}
       <div className="relative flex items-center gap-2">
         <button
@@ -91,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Main title (Centered) */}
       <div className="text-center flex-1 mx-2 sm:mx-4 min-w-0 flex flex-col items-center">
         <h2 className="text-sm sm:text-base font-black text-[var(--foreground)] tracking-tight truncate flex items-center justify-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+          <span className="w-2 h-2 rounded-full bg-teal-500"></span>
           <span>{title}</span>
         </h2>
         {subtitle && (

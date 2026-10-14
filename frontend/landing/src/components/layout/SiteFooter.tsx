@@ -5,6 +5,7 @@ import { Logo } from "@/components/ui/Logo";
 
 export function SiteFooter({ dict }: { dict: Dictionary }) {
   const sections = [
+    { label: dict.nav.features, href: `#${SECTION_IDS.features}` },
     { label: dict.nav.howItWorks, href: `#${SECTION_IDS.howItWorks}` },
     { label: dict.nav.why, href: `#${SECTION_IDS.why}` },
     { label: dict.nav.faq, href: `#${SECTION_IDS.faq}` },

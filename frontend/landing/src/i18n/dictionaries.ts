@@ -1,6 +1,8 @@
 import type { Locale } from "./config";
+import { featuresAr, featuresEn } from "./features";
 
 const ar = {
+  features: featuresAr,
   meta: {
     title: "سكون – سكنك القادم من المالك مباشرة",
     description:
@@ -11,11 +13,13 @@ const ar = {
   header: {
     switchLanguage: "English",
     getApp: "حمّل التطبيق",
+    adminDashboard: "لوحة الإدارة",
     homeLabel: "سكون – الصفحة الرئيسية",
     toggleTheme: "تبديل الوضع الليلي",
   },
   nav: {
     label: "أقسام الصفحة",
+    features: "داخل سكون",
     howItWorks: "كيف يعمل",
     why: "لماذا سكون",
     faq: "أسئلة شائعة",
@@ -160,6 +164,7 @@ const ar = {
 export type Dictionary = typeof ar;
 
 const en: Dictionary = {
+  features: featuresEn,
   meta: {
     title: "Sukoon – Your next home, straight from the owner",
     description:
@@ -170,11 +175,13 @@ const en: Dictionary = {
   header: {
     switchLanguage: "العربية",
     getApp: "Get the app",
+    adminDashboard: "Admin dashboard",
     homeLabel: "Sukoon – Home",
     toggleTheme: "Toggle dark mode",
   },
   nav: {
     label: "Page sections",
+    features: "Inside Sukoon",
     howItWorks: "How it works",
     why: "Why Sukoon",
     faq: "FAQ",

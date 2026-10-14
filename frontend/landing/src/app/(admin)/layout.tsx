@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { Cairo } from 'next/font/google';
-import '../globals.css';
+import { IBM_Plex_Sans_Arabic, Readex_Pro } from 'next/font/google';
+import './admin.css';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -8,11 +8,13 @@ import { ToastProvider } from '@/components/ui/Toast';
 import { Splash } from '@/components/ui/LogoLoader';
 import { loadingInitScript } from '@/lib/loading';
 
-const cairo = Cairo({
+const plex = IBM_Plex_Sans_Arabic({
   subsets: ['arabic', 'latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-cairo',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-arabic',
 });
+
+const readex = Readex_Pro({ subsets: ['arabic', 'latin'], variable: '--font-readex', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'سكون – لوحة تحكم الإدارة',
@@ -27,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" className={`${cairo.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className={`${plex.variable} ${readex.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         {/* ! Inline script to apply theme before paint — prevents flash */}
         <script

@@ -1,5 +1,6 @@
-﻿import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
+import { adminPath } from '@/lib/basePath';
 
 export default function ReportsPage() {
-  redirect('/reports/overview');
+  redirect(adminPath('/reports/overview'));
 }

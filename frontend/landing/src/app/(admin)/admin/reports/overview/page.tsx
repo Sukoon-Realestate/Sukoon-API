@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import Link from '@/components/ui/AdminLink';
 import { Header } from '@/components/layout/Header';
 import { OverviewTicket, ReportsOverviewStats } from '@/lib/api/types';
 import { fetchReportsOverview } from '@/lib/api/reports';
