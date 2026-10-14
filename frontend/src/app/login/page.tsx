@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import logo from '@/assets/brand/logo.png';
 import { Mail, Lock, Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
+import { isBackendEnabled } from '@/lib/api/config';
 
 export default function AdminLoginPage() {
   const { login, loginDemo } = useAuth();
@@ -176,24 +177,29 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        {/* Divider */}
-        <div className="relative flex items-center justify-center pt-2">
-          <div className="border-t border-[var(--card-border)] w-full"></div>
-          <span className="bg-[var(--card-bg)] px-3 text-[11px] text-slate-500 font-bold uppercase shrink-0">
-            أو
-          </span>
-        </div>
+        {/* Quick Demo Login Button - only visible when NEXT_PUBLIC_ENABLE_BACKEND is false */}
+        {!isBackendEnabled() && (
+          <>
+            {/* Divider */}
+            <div className="relative flex items-center justify-center pt-2">
+              <div className="border-t border-[var(--card-border)] w-full"></div>
+              <span className="bg-[var(--card-bg)] px-3 text-[11px] text-slate-500 font-bold uppercase shrink-0">
+                أو
+              </span>
+            </div>
 
-        {/* Quick Demo Login Button */}
-        <button
-          type="button"
-          onClick={handleQuickDemo}
-          className="w-full py-3 bg-[var(--primary-subtle)] hover:bg-[var(--card-hover)] active:scale-[0.98] text-[var(--primary-text)] font-extrabold text-xs rounded-xl border border-teal-500/20 hover:border-teal-500/40 transition-all flex items-center justify-center gap-2 animate-fadeInUp"
-          style={{ animationDelay: '300ms' }}
-        >
-          <span>دخول سريع كـ Admin (تجريبي)</span>
-          <ArrowLeft className="w-3.5 h-3.5" />
-        </button>
+            {/* Quick Demo Login Button */}
+            <button
+              type="button"
+              onClick={handleQuickDemo}
+              className="w-full py-3 bg-[var(--primary-subtle)] hover:bg-[var(--card-hover)] active:scale-[0.98] text-[var(--primary-text)] font-extrabold text-xs rounded-xl border border-teal-500/20 hover:border-teal-500/40 transition-all flex items-center justify-center gap-2 animate-fadeInUp"
+              style={{ animationDelay: '300ms' }}
+            >
+              <span>دخول سريع كـ Admin (تجريبي)</span>
+              <ArrowLeft className="w-3.5 h-3.5" />
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
