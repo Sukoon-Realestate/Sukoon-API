@@ -32,6 +32,8 @@ Apply `features.0010_alter_idempotencyrecord_operation`, `0011_settlement_execut
 
 ## 2. Select mock mode explicitly
 
+**Latest live recheck — October 14, 11:31 Cairo:** after the reported enablement, fresh owner authentication succeeded but onboarding still returned HTTP 403 and subject-specific capabilities remained empty. [Inspect the serving runtime with the current diagnostic](SOKOUN_MOCK_PROVIDER_RUNTIME_RECHECK.md). No new signing/payment/activation claim is made.
+
 Use one of these settings modules:
 
 - Developer environment: existing `config.settings.local` / `local_sqlite`.
