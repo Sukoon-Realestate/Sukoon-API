@@ -69,7 +69,7 @@ The domain is `SITE_URL` in `src/lib/site.ts` (`https://sukoon.rent`). Canonical
 | `/robots.txt` | `app/robots.ts` (disallows `/admin`) |
 | `/llms.txt` | `app/llms.txt/route.ts`, generated from the EN dictionary |
 | `/[lang]/opengraph-image/share` | `app/[lang]/opengraph-image.tsx`, a 1200×630 share card rendered at build |
-| `/favicon.ico`, `/icon.svg`, `/apple-icon.png` | static files in `app/` |
+| `/favicon.ico`, `/icon.png`, `/apple-icon.png` | static files in `app/`, generated from `docs/brand/logo.png` |
 | any unknown URL | `app/global-not-found.tsx` (bilingual, 404 + `noindex`) |
 
 - The JSON-LD (`lib/structuredData.ts`) includes Organization, WebSite, WebPage and FAQPage, all built from the visible copy.

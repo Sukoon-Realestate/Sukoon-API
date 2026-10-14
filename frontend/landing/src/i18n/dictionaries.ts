@@ -11,6 +11,7 @@ const ar = {
     switchLanguage: "English",
     getApp: "حمّل التطبيق",
     homeLabel: "سكون – الصفحة الرئيسية",
+    toggleTheme: "تبديل الوضع الليلي",
   },
   nav: {
     label: "أقسام الصفحة",
@@ -34,6 +35,15 @@ const ar = {
     tenantLink: "كيف تستأجر",
     ownerPrompt: "لديك عقار للإيجار؟",
     ownerLink: "كيف تعرض عقارك",
+  },
+  trust: {
+    label: "سكون باختصار",
+    items: [
+      { title: "بدون عمولة", body: "لا سمسار ولا وسيط" },
+      { title: "كل عقار مُراجَع", body: "قبل أن يظهر لك" },
+      { title: "حسابات موثّقة", body: "تعرف مع من تتعامل" },
+      { title: "شات وحجز معاينة", body: "من داخل التطبيق" },
+    ],
   },
   phone: {
     locationLabel: "موقعك",
@@ -159,6 +169,7 @@ const en: Dictionary = {
     switchLanguage: "العربية",
     getApp: "Get the app",
     homeLabel: "Sukoon – Home",
+    toggleTheme: "Toggle dark mode",
   },
   nav: {
     label: "Page sections",
@@ -182,6 +193,15 @@ const en: Dictionary = {
     tenantLink: "How renting works",
     ownerPrompt: "Have a property to rent?",
     ownerLink: "How listing works",
+  },
+  trust: {
+    label: "Sukoon at a glance",
+    items: [
+      { title: "No commission", body: "No broker, no middleman" },
+      { title: "Every listing reviewed", body: "Before you ever see it" },
+      { title: "Verified accounts", body: "Know who you’re dealing with" },
+      { title: "Chat & book viewings", body: "Right inside the app" },
+    ],
   },
   phone: {
     locationLabel: "Your location",

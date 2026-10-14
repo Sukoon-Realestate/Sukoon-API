@@ -4,8 +4,9 @@ import clsx from "clsx";
 import "../globals.css";
 import { defaultLocale, directionOf, hasLocale, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { lexend, plexArabic } from "@/lib/fonts";
-import { SITE_NAME, SITE_URL, THEME_COLOR } from "@/lib/site";
+import { lexend, plexArabic, readex } from "@/lib/fonts";
+import { SITE_NAME, SITE_URL, THEME_COLOR, THEME_COLOR_DARK } from "@/lib/site";
+import { themeInitScript } from "@/lib/theme";
 
 export const dynamicParams = false;
 
@@ -14,7 +15,10 @@ export function generateStaticParams() {
 }
 
 export const viewport: Viewport = {
-  themeColor: THEME_COLOR,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: THEME_COLOR },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLOR_DARK },
+  ],
 };
 
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
@@ -56,9 +60,12 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     <html
       lang={lang}
       dir={directionOf(lang)}
+      // The init script sets data-theme before hydration.
+      suppressHydrationWarning
       className={clsx(
         plexArabic.variable,
         lexend.variable,
+        readex.variable,
         // Arabic pages lead with Plex Arabic; English pages lead with Lexend.
         lang === "ar"
           ? "[--font-primary:var(--font-arabic)] [--font-secondary:var(--font-latin)]"
@@ -66,7 +73,10 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
         "antialiased",
       )}
     >
-      <body className="min-h-dvh font-sans">{children}</body>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="min-h-dvh bg-sand font-sans">{children}</body>
     </html>
   );
 }

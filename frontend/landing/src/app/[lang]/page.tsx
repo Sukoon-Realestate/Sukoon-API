@@ -21,11 +21,9 @@ export default async function LandingPage({ params }: PageProps<"/[lang]">) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(landingPageGraph(lang, dict)) }}
       />
-      <div className="relative overflow-hidden bg-ink">
-        <SiteHeader lang={lang} dict={dict} />
-        <Hero dict={dict} />
-      </div>
+      <SiteHeader lang={lang} dict={dict} />
       <main>
+        <Hero dict={dict} />
         <HowItWorks dict={dict} />
         <WhySukoon dict={dict} />
         <Faq dict={dict} />

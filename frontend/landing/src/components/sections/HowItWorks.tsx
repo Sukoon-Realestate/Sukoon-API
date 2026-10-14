@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ContourLines } from "@/components/ui/Decor";
+import { ArchLines } from "@/components/ui/Decor";
 import { SECTION_IDS } from "@/lib/sections";
 
 type Journey = Dictionary["howItWorks"]["tenant"];
@@ -26,46 +26,63 @@ function JourneyCard({
     <article
       id={id}
       className={clsx(
-        "scroll-mt-8 rounded-3xl p-6 sm:p-8",
-        dark ? "bg-forest text-white" : "border border-black/8 bg-white text-heading",
+        "reveal relative scroll-mt-24 overflow-hidden rounded-[2rem] p-7 sm:p-10",
+        dark ? "bg-pine text-white dark:ring-1 dark:ring-white/10" : "border border-line bg-sand text-fg",
       )}
     >
-      <header className="flex items-center gap-3.5">
+      <ArchLines
+        count={4}
+        className={clsx("-end-16 -top-10 size-64", dark ? "text-white/8" : "text-accent/10")}
+      />
+
+      <header className="relative flex items-center gap-4">
         <span
           className={clsx(
-            "grid size-11 shrink-0 place-items-center rounded-xl",
-            dark ? "bg-brand text-heading" : "bg-mint-strong text-brand-deep",
+            "grid size-12 shrink-0 place-items-center rounded-2xl",
+            dark ? "bg-brand text-white" : "bg-pine text-white dark:bg-brand",
           )}
         >
           {icon}
         </span>
         <div>
-          <p className={clsx("text-xs", dark ? "text-white/60" : "text-body")}>{journey.label}</p>
-          <h3 className="text-xl font-bold">{journey.title}</h3>
+          <p className={clsx("text-sm font-medium", dark ? "text-brand-soft" : "text-accent")}>{journey.label}</p>
+          <h3 className="font-display text-2xl font-semibold">{journey.title}</h3>
         </div>
       </header>
 
-      <ol className="mt-7 space-y-5">
-        {journey.steps.map((step, index) => (
-          <li key={step.title} className="flex gap-3.5">
-            <span
-              className={clsx(
-                "grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold",
-                index === lastIndex
-                  ? "bg-brand text-heading"
-                  : dark
-                    ? "bg-white/8 text-brand-soft"
-                    : "bg-mint-strong text-brand-deep",
+      <ol className="relative mt-9">
+        {journey.steps.map((step, index) => {
+          const last = index === lastIndex;
+          return (
+            <li key={step.title} className="relative flex gap-4 pb-7 last:pb-0">
+              {!last && (
+                <span
+                  aria-hidden
+                  className={clsx(
+                    "absolute start-4 top-9 bottom-1 w-px -translate-x-1/2 rtl:translate-x-1/2",
+                    dark ? "bg-white/15" : "bg-line",
+                  )}
+                />
               )}
-            >
-              {index + 1}
-            </span>
-            <div>
-              <p className="font-semibold">{step.title}</p>
-              <p className={clsx("mt-0.5 text-sm leading-6", dark ? "text-white/60" : "text-body")}>{step.body}</p>
-            </div>
-          </li>
-        ))}
+              <span
+                className={clsx(
+                  "relative grid size-8 shrink-0 place-items-center rounded-full font-display text-sm font-semibold",
+                  last
+                    ? "bg-brand text-white shadow-[0_0_0_5px_rgba(4,164,23,0.18)]"
+                    : dark
+                      ? "bg-white/10 text-brand-soft ring-1 ring-white/15"
+                      : "bg-paper text-accent ring-1 ring-line",
+                )}
+              >
+                {index + 1}
+              </span>
+              <div className="pt-1">
+                <p className="font-semibold">{step.title}</p>
+                <p className={clsx("mt-1 text-sm leading-6", dark ? "text-white/60" : "text-muted")}>{step.body}</p>
+              </div>
+            </li>
+          );
+        })}
       </ol>
     </article>
   );
@@ -75,13 +92,16 @@ export function HowItWorks({ dict }: { dict: Dictionary }) {
   const section = dict.howItWorks;
 
   return (
-    <section id={SECTION_IDS.howItWorks} className="relative overflow-hidden bg-mint py-20 sm:py-24">
-      <ContourLines className="inset-x-0 bottom-0 h-48 w-full" />
+    <section id={SECTION_IDS.howItWorks} className="scroll-mt-16 bg-paper py-24 sm:py-32">
+      <Container>
+        <SectionHeading
+          eyebrow={section.eyebrow}
+          titleLines={[section.title]}
+          subtitle={section.subtitle}
+          align="center"
+        />
 
-      <Container className="relative">
-        <SectionHeading eyebrow={section.eyebrow} titleLines={[section.title]} subtitle={section.subtitle} />
-
-        <div className="mt-12 grid gap-5 md:grid-cols-2">
+        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:gap-6">
           <JourneyCard
             id="tenants"
             journey={section.tenant}

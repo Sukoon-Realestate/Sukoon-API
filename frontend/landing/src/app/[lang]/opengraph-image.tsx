@@ -4,12 +4,14 @@ import { ImageResponse } from "next/og";
 import { hasLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { shapeLine } from "@/lib/og/shapeText";
-import { SITE_NAME_AR, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 
 // Social share card (Open Graph; X falls back to it too). Prerendered per locale at build.
 
 const size = { width: 1200, height: 630 };
 const fontsDir = join(process.cwd(), "src/assets/fonts");
+const logoPath = join(process.cwd(), "src/assets/brand/logo.png");
+const LOGO_SIZE = 112;
 
 const WHITE = "#ffffff";
 const BRAND = "#04a417";
@@ -29,16 +31,17 @@ export default async function OpengraphImage({ params }: { params: Promise<{ lan
   const lang = await localeOf(params);
   const { hero } = getDictionary(lang);
   const rtl = lang === "ar";
-  const [bold, medium] = await Promise.all([
+  const [bold, medium, logo] = await Promise.all([
     readFile(join(fontsDir, "IBMPlexSansArabic-Bold.ttf")),
     readFile(join(fontsDir, "IBMPlexSansArabic-Medium.ttf")),
+    readFile(logoPath),
   ]);
+  const logoSrc = `data:image/png;base64,${logo.toString("base64")}`;
 
   // Every Arabic string goes through HarfBuzz (see lib/og/shapeText.ts).
-  const [wordmark, ...arabicTitle] = await Promise.all([
-    shapeLine(bold, SITE_NAME_AR, 64, WHITE),
-    ...(rtl ? [shapeLine(bold, hero.titleLead, TITLE_SIZE, WHITE), shapeLine(bold, hero.titleHighlight, TITLE_SIZE, BRAND)] : []),
-  ]);
+  const arabicTitle = rtl
+    ? await Promise.all([shapeLine(bold, hero.titleLead, TITLE_SIZE, WHITE), shapeLine(bold, hero.titleHighlight, TITLE_SIZE, BRAND)])
+    : [];
   const align = rtl ? "flex-end" : "flex-start";
 
   return new ImageResponse(
@@ -59,11 +62,8 @@ export default async function OpengraphImage({ params }: { params: Promise<{ lan
           fontFamily: "Plex Arabic",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element -- Satori markup, not a page */}
-          <img src={wordmark.src} width={wordmark.width} height={wordmark.height} alt="" />
-          <span style={{ fontSize: 18, fontWeight: 500, letterSpacing: 6 }}>SUKOON</span>
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element -- Satori markup, not a page */}
+        <img src={logoSrc} width={LOGO_SIZE} height={LOGO_SIZE} alt="" />
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: align }}>
           {rtl ? (

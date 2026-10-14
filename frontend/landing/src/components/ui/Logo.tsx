@@ -1,31 +1,34 @@
+import Image from "next/image";
 import clsx from "clsx";
+import wordmark from "@/assets/brand/wordmark.png";
 
-// TODO: swap for the official SVG wordmark once design hands it over.
-export function Logo({ className, size = "md" }: { className?: string; size?: "sm" | "md" | "lg" }) {
+// Rendered height in px; the width follows the lockup's aspect ratio.
+const HEIGHTS = { sm: 44, md: 52, lg: 96 } as const;
+
+// Arabic + Latin wordmark; the master file lives at docs/brand/wordmark.png.
+// Favicons and the OG image keep the square mark (docs/brand/logo.png).
+export function Logo({
+  className,
+  size = "md",
+  preload,
+}: {
+  className?: string;
+  size?: keyof typeof HEIGHTS;
+  preload?: boolean;
+}) {
+  const height = HEIGHTS[size];
+  const width = Math.round((height * wordmark.width) / wordmark.height);
+
   return (
-    <span
-      dir="ltr"
-      className={clsx("inline-flex flex-col items-center leading-none text-white select-none", className)}
+    <Image
+      src={wordmark}
+      alt=""
       aria-hidden
-    >
-      <span
-        className={clsx(
-          "font-[family-name:var(--font-arabic)] font-bold",
-          size === "sm" && "text-2xl",
-          size === "md" && "text-3xl",
-          size === "lg" && "text-4xl",
-        )}
-      >
-        سكون
-      </span>
-      <span
-        className={clsx(
-          "font-[family-name:var(--font-latin)] font-medium uppercase tracking-[0.18em]",
-          size === "lg" ? "text-[0.6rem]" : "text-[0.5rem]",
-        )}
-      >
-        Sukoon
-      </span>
-    </span>
+      width={width}
+      height={height}
+      preload={preload}
+      className={clsx("w-auto select-none", className)}
+      style={{ height }}
+    />
   );
 }

@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { fetchDashboardStats } from '@/lib/api/dashboard';
 import { fetchAdminPropertyMetrics } from '@/lib/api/properties';
+import logo from '@/assets/brand/logo.png';
 import {
   LayoutDashboard,
   Users,
@@ -253,9 +255,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
       {/* Brand Header */}
       <div className="p-5 flex items-center justify-between border-b border-[var(--sidebar-border)] bg-slate-950/40">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-400 shadow-inner glow-teal-sm animate-breathe">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
+          <Image src={logo} alt="" width={40} height={40} priority className="w-10 h-10 shrink-0" />
           <div>
             <h1 className="font-black text-white text-base tracking-tight leading-tight">سكون – Sukoon Admin</h1>
             <p className="text-[11px] font-semibold text-[var(--sidebar-text)] mt-0.5">منظومة المراجعة والتوثيق</p>

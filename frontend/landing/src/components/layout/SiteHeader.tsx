@@ -5,6 +5,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { SECTION_IDS } from "@/lib/sections";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const target = otherLocale(lang);
@@ -15,17 +16,20 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   ];
 
   return (
-    <header className="relative z-20">
-      <Container className="flex items-center justify-between gap-6 py-5">
-        <Link href={`/${lang}`} aria-label={dict.header.homeLabel} className="rounded-md">
-          <Logo />
+    <header className="sticky top-0 z-40 border-b border-line/70 bg-sand/80 backdrop-blur-lg backdrop-saturate-150">
+      <Container className="flex h-16 items-center justify-between gap-6 sm:h-18">
+        <Link href={`/${lang}`} aria-label={dict.header.homeLabel} className="rounded-lg">
+          <Logo size="sm" preload />
         </Link>
 
         <nav aria-label={dict.nav.label} className="max-md:hidden">
-          <ul className="flex items-center gap-7 text-sm text-white/75">
+          <ul className="flex items-center gap-1 text-sm font-medium text-fg/70">
             {sections.map((section) => (
               <li key={section.id}>
-                <a href={`#${section.id}`} className="transition-colors hover:text-white">
+                <a
+                  href={`#${section.id}`}
+                  className="rounded-full px-4 py-2 transition-colors hover:bg-sand-deep hover:text-fg"
+                >
                   {section.label}
                 </a>
               </li>
@@ -33,19 +37,20 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <ThemeToggle label={dict.header.toggleTheme} />
           <Link
             href={`/${target}`}
             hrefLang={target}
             lang={target}
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3.5 py-2 text-xs font-medium text-white transition-colors hover:bg-white/10"
+            className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium text-fg/80 transition-colors hover:bg-sand-deep hover:text-fg"
           >
             <Globe className="size-4" strokeWidth={1.75} aria-hidden />
             {dict.header.switchLanguage}
           </Link>
           <a
             href={`#${SECTION_IDS.download}`}
-            className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-heading transition-colors hover:bg-brand-hover sm:px-5"
+            className="rounded-full bg-pine px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-moss sm:px-5 dark:bg-brand dark:hover:bg-brand-hover"
           >
             {dict.header.getApp}
           </a>

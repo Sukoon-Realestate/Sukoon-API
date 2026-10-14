@@ -21,15 +21,18 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
   ];
 
   return (
-    <footer className="border-t border-white/10 bg-ink">
-      <Container className="flex flex-col gap-6 py-8">
+    <footer className="bg-sand">
+      <Container className="flex flex-col gap-8 pb-10 pt-6">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-          <Logo size="sm" />
+          <div className="flex items-center gap-3">
+            <Logo size="md" />
+            <p className="font-display text-lg font-semibold text-fg">{dict.finalCta.title}</p>
+          </div>
           <nav aria-label={dict.nav.label}>
-            <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-white/80">
+            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-fg/70">
               {sections.map((section) => (
                 <li key={section.href}>
-                  <a href={section.href} className="transition-colors hover:text-white">
+                  <a href={section.href} className="transition-colors hover:text-fg">
                     {section.label}
                   </a>
                 </li>
@@ -38,19 +41,19 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
           </nav>
         </div>
 
-        <div className="flex flex-col items-center gap-4 border-t border-white/10 pt-6 text-center sm:flex-row sm:justify-between sm:text-start">
+        <div className="flex flex-col items-center gap-4 border-t border-line pt-6 text-center sm:flex-row sm:justify-between sm:text-start">
           <nav aria-label={dict.footer.linksLabel}>
-            <ul className="flex gap-5 text-xs text-white/80">
+            <ul className="flex gap-6 text-sm text-fg/70">
               {links.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="transition-colors hover:text-white">
+                  <a href={link.href} className="transition-colors hover:text-fg">
                     {link.label}
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
-          <p className="text-xs text-white/50">{dict.footer.copyright}</p>
+          <p className="text-sm text-fg/50">{dict.footer.copyright}</p>
         </div>
       </Container>
     </footer>

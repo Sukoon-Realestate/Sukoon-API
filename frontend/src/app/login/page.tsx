@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
-import { ShieldCheck, Mail, Lock, Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
+import logo from '@/assets/brand/logo.png';
+import { Mail, Lock, Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const { login } = useAuth();
@@ -54,9 +56,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md bg-slate-900/90 border border-slate-800/90 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl relative z-10 space-y-6 animate-scaleIn">
         {/* Brand Header */}
         <div className="text-center space-y-3">
-          <div className="w-16 h-16 rounded-2xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-400 mx-auto shadow-inner animate-breathe">
-            <ShieldCheck className="w-9 h-9 stroke-[2.2]" />
-          </div>
+          <Image src={logo} alt="" width={64} height={64} priority className="w-16 h-16 mx-auto animate-breathe" />
 
           <div>
             <h1 className="text-2xl font-black text-white tracking-tight">

@@ -16,23 +16,30 @@ export function OutlinedWordmark({ className }: { className?: string }) {
   );
 }
 
-// Loose topographic lines for the light "How it works" section.
-export function ContourLines({ className }: { className?: string }) {
+// Concentric doorway arches: the page's "home" motif.
+export function ArchLines({ className, count = 6 }: { className?: string; count?: number }) {
+  const rise = 120;
+
   return (
     <svg
       aria-hidden
-      viewBox="0 0 1200 300"
+      viewBox="0 0 400 400"
       fill="none"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMax meet"
       className={clsx("pointer-events-none absolute", className)}
     >
-      <g stroke="#04a417" strokeOpacity="0.28" strokeWidth="1.5">
-        <path d="M0 140c140-40 260 60 420 20s240-120 400-70 220 120 380 80" />
-        <path d="M0 190c160-50 280 50 440 10s250-110 410-60 200 110 350 70" />
-        <path d="M0 240c150-30 300 40 460 0s260-100 420-50 190 100 320 60" />
-        <path d="M640 300c-30-70 10-130 70-140s110 40 90 100" />
-        <path d="M700 300c-20-50 10-90 50-95s70 30 60 75" />
-        <path d="M900 300c20-80 90-120 150-100s70 70 40 100" />
+      <g stroke="currentColor" strokeWidth="1.25">
+        {Array.from({ length: count }, (_, index) => {
+          const r = 60 + index * 28;
+          const top = 400 - rise;
+          return (
+            <path
+              key={r}
+              d={`M${200 - r} 400V${top}A${r} ${r} 0 0 1 ${200 + r} ${top}V400`}
+              strokeOpacity={1 - index / (count + 1)}
+            />
+          );
+        })}
       </g>
     </svg>
   );

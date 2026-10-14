@@ -28,21 +28,21 @@ function FloatingCard({
   return (
     <div
       className={clsx(
-        "absolute z-10 flex items-center gap-2.5 rounded-xl border border-white/10 bg-ink-raised/95 px-3 py-2.5 shadow-2xl shadow-black/50 backdrop-blur",
+        "absolute z-10 flex items-center gap-3 rounded-2xl border border-line/80 bg-paper/95 px-3.5 py-3 shadow-[0_20px_40px_-16px_rgba(12,42,24,0.45)] backdrop-blur",
         className,
       )}
     >
       <span
         className={clsx(
-          "grid size-8 place-items-center rounded-lg",
-          variant === "brand" ? "bg-brand text-heading" : "bg-white text-brand-deep",
+          "grid size-9 place-items-center rounded-xl",
+          variant === "brand" ? "bg-brand text-white" : "bg-chip text-accent",
         )}
       >
         {icon}
       </span>
       <span className="leading-tight">
-        <span className="block text-xs font-semibold text-white">{title}</span>
-        <span className="block text-[0.6rem] text-white/55">{subtitle}</span>
+        <span className="block text-sm font-semibold text-fg">{title}</span>
+        <span className="block text-[0.7rem] text-muted">{subtitle}</span>
       </span>
     </div>
   );
@@ -55,10 +55,7 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
 
   return (
     <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[18.5rem]" aria-hidden>
-      {/* glow */}
-      <div className="absolute -inset-24 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(4,164,23,0.55),rgba(4,164,23,0.12)_55%,transparent)] blur-2xl" />
-
-      <div className="rounded-[2.6rem] border border-white/15 bg-[#121a14] p-2 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
+      <div className="rounded-[2.6rem] bg-[#0b120d] p-2 shadow-[0_40px_80px_-24px_rgba(12,42,24,0.75)] ring-1 ring-white/10">
         <div className="overflow-hidden rounded-[2.2rem] bg-[#f6f8f6]">
           <div className="px-4 pt-5">
             {/* top bar */}
@@ -155,14 +152,14 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
         icon={<ShieldCheck className="size-4" aria-hidden />}
         title={phone.verifiedOwner.title}
         subtitle={phone.verifiedOwner.subtitle}
-        className="-end-10 top-[30%] animate-float sm:-end-24"
+        className="-end-8 top-[28%] animate-float sm:-end-28"
       />
       <FloatingCard
         variant="light"
         icon={<CalendarCheck className="size-4" aria-hidden />}
         title={phone.viewingBooked.title}
         subtitle={phone.viewingBooked.subtitle}
-        className="-start-10 top-[62%] animate-float-delayed sm:-start-20"
+        className="-start-8 top-[64%] animate-float-delayed sm:-start-24"
       />
     </div>
   );

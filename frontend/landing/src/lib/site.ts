@@ -6,7 +6,8 @@ export const SITE_URL = "https://sukoon.rent";
 export const SITE_NAME = "Sukoon";
 export const SITE_NAME_AR = "سكون";
 
-export const THEME_COLOR = "#060a07";
+export const THEME_COLOR = "#f6f2e9";
+export const THEME_COLOR_DARK = "#0a120d";
 
 export const absoluteUrl = (path = "/") => new URL(path, SITE_URL).toString();
 

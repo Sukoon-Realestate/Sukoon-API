@@ -368,3 +368,39 @@
 - **Why:** User requested push and merge with main.
 - **Details:** Only conflict was `WORKLOG.md`; resolved by keeping both sides, with origin's entries first and the frontend 2026-10-14 entries appended under the existing 2026-10-14 heading. `frontend/src/lib/api/client.ts` auto-merged cleanly.
 - **Files:** `WORKLOG.md` (merge resolution)
+
+### Adopt the official Sukoon logo across the web apps
+- **What:** Replaced the text/glyph placeholders with the official logo (`logo.png` supplied at the repo root) in the landing site, the admin dashboard, favicons and the share image.
+- **Why:** The user provided the real brand mark and asked for it to be used everywhere it's needed.
+- **Details:**
+  - The master file moved to `docs/brand/logo.png` and is unchanged. Its letters are **transparent cut-outs**, not white, so on our dark pages they showed as black and the CTA's gradient ring bled through them. `docs/brand/logo-filled.png` is a derived version with the letters filled white, clipped to the logo's rounded square (radius ≈462px at 1620px, inset 3px to avoid a white fringe). All web assets are generated from it. If design has a version with solid white letters, swap it in.
+  - Landing: `components/ui/Logo.tsx` now renders the mark with `next/image` (40/48/64px). It's used by the header, footer, final CTA (the gradient ring now wraps the rounded square) and the 404 page. The OG image now uses the logo instead of the HarfBuzz-shaped "سكون" wordmark.
+  - Admin: the sidebar brand tile and the login card use the logo in place of the `ShieldCheck` icon.
+  - Icons for both apps: `favicon.ico` (16/32/48), `icon.png` (512) replaces `icon.svg`, and `apple-icon.png` (180) sits on a solid dark-green background because iOS renders transparent corners black. The JSON-LD `logo` still points to `/apple-icon.png`, which is now the real mark.
+  - Verified: ESLint and `next build` pass for both apps. I checked the landing header, CTA, footer and OG image in headless Edge. I didn't render-check the admin screens, only built them.
+  - Not done: the mobile app's launcher icons (`mobile/`) still use their current assets.
+- **Files:** `docs/brand/{logo.png,logo-filled.png}`, `frontend/landing/src/assets/brand/logo.png`, `frontend/landing/src/components/ui/Logo.tsx`, `frontend/landing/src/components/sections/FinalCta.tsx`, `frontend/landing/src/app/[lang]/opengraph-image.tsx`, `frontend/landing/src/app/{favicon.ico,icon.png,apple-icon.png}` (`icon.svg` removed), `frontend/landing/README.md`, `frontend/src/assets/brand/logo.png`, `frontend/src/components/layout/Sidebar.tsx`, `frontend/src/app/login/page.tsx`, `frontend/src/app/{favicon.ico,icon.png,apple-icon.png}` (`icon.svg` removed), `WORKLOG.md`
+
+### Landing page visual redesign ("calm" direction)
+- **What:** Restyled the whole landing site (`frontend/landing`). It moves from the near-black and neon-green template look to warm sand and paper surfaces with deep pine green, plus an arch ("doorway / home") motif.
+- **Why:** The user didn't like the existing landing UI and asked for it to be made better.
+- **Details:**
+  - New tokens in `globals.css` (`sand`, `sand-deep`, `paper`, `line`, `pine`, `pine-raised`, `moss`). The old `ink*` tokens stay because `global-not-found.tsx` still uses them. `THEME_COLOR` is now the sand colour.
+  - New display font: Readex Pro (Arabic and Latin, a sibling of Lexend), set as `--font-display` / `font-display`. Body text keeps Plex Arabic and Lexend. The OG image is unchanged.
+  - Header is now sticky with blur and shows the wordmark next to the logo. The hero puts the phone in front of a large arch, has an underlined highlight, card-style jump links, and a new trust strip (`dict.trust`, AR and EN). How it works has a connected step timeline. Why Sukoon is an inset pine panel with a refined bento grid. The FAQ is a divider-style accordion with a rotating plus icon. The final CTA is a rounded pine panel with concentric arches. The footer is on sand.
+  - Store badges are now dark (or white on dark) and carry Apple and Google Play marks as inline SVG. They are still non-interactive.
+  - Sections fade in on scroll using CSS scroll-driven animations (`.reveal`). There is no JS, browsers without support show content normally, and reduced-motion turns it off.
+  - Removed `GradientPill` and `ContourLines` because nothing uses them now.
+  - Verified: `tsc` and ESLint pass. I checked AR and EN in headless Chrome at 1440px and 500px. I didn't run `next build` (the user's dev server was running).
+- **Files:** `frontend/landing/src/app/globals.css`, `frontend/landing/src/app/[lang]/{layout,page}.tsx`, `frontend/landing/src/lib/{fonts,site}.ts`, `frontend/landing/src/i18n/dictionaries.ts`, `frontend/landing/src/components/layout/{SiteHeader,SiteFooter}.tsx`, `frontend/landing/src/components/sections/{Hero,HowItWorks,WhySukoon,Faq,FinalCta}.tsx`, `frontend/landing/src/components/phone/PhoneMockup.tsx`, `frontend/landing/src/components/ui/{Decor,StoreButtons,SectionHeading}.tsx`, `frontend/landing/src/components/ui/GradientPill.tsx` (deleted), `WORKLOG.md`
+
+### Landing: new wordmark logo + dark mode
+- **What:** The landing site now uses the Arabic + Latin "Sukoon" wordmark (`Asset 10@2x.png`) as its logo, and has a dark mode that follows the OS setting and can be switched with a header toggle.
+- **Why:** The user asked for the new logo file to be used in the app and for dark mode to be added.
+- **Details:**
+  - The wordmark master is at `docs/brand/wordmark.png`, with a copy in `frontend/landing/src/assets/brand/wordmark.png`. `Logo` now renders it sized by height (`sm` 44 / `md` 52 / `lg` 96) and takes Next 16's `preload` prop (`priority` is deprecated). It appears in the header, footer, final CTA and the 404 page. Favicons and the OG image still use the square mark, because a wordmark can't be read at icon sizes.
+  - Dark mode is driven by `html[data-theme]`. An inline script in `[lang]/layout.tsx` (`lib/theme.ts`) sets it before paint: a saved choice in `localStorage` (`sukoon-theme`) wins, otherwise it follows `prefers-color-scheme`. `<html>` has `suppressHydrationWarning` for this reason. `ThemeToggle` is the only client component, and its icons swap through the `dark:` variant, so it holds no state.
+  - Tailwind `dark` is a custom variant on `[data-theme="dark"]`. New theme-aware tokens `fg`, `muted`, `accent` and `chip`, plus `sand`, `sand-deep`, `paper` and `line`, are redefined under the dark theme. Section text moved from `text-pine`/`text-body`/`text-brand-deep` to these tokens. The phone screen and the pine panels keep fixed colours. Viewport `themeColor` now has light and dark entries.
+  - Verified: `tsc` and ESLint pass. I checked dark (EN, full page) and light (EN hero) with forced `prefers-color-scheme` in headless Chrome, and dark in AR. I didn't click the toggle in a real browser.
+  - The original `Asset 10@2x.png` is still untracked at the repo root.
+- **Files:** `docs/brand/wordmark.png`, `frontend/landing/src/assets/brand/wordmark.png`, `frontend/landing/src/components/ui/{Logo,StoreButtons,SectionHeading}.tsx`, `frontend/landing/src/components/layout/{SiteHeader,SiteFooter,ThemeToggle}.tsx`, `frontend/landing/src/components/sections/{Hero,HowItWorks,WhySukoon,Faq,FinalCta}.tsx`, `frontend/landing/src/components/phone/PhoneMockup.tsx`, `frontend/landing/src/lib/{theme,site}.ts`, `frontend/landing/src/app/globals.css`, `frontend/landing/src/app/[lang]/layout.tsx`, `frontend/landing/src/i18n/dictionaries.ts`, `WORKLOG.md`
