@@ -1,5 +1,13 @@
 # Worklog
 
+## 2026-10-14
+
+### Merge origin/main and push
+- **What:** Merged diverged origin/main into local main and pushed.
+- **Why:** Local and remote had diverged (1 vs 2 commits).
+- **Details:** Merge was clean, no conflicts. Brought in housing_requests.py changes, test_housing_demand_discovery.py, and two docs updates.
+- **Files:** backend/core_apps/features/ (housing_requests.py, tests/test_housing_demand_discovery.py), docs/PLANNING_FEATURES_DEPLOYMENT.md, docs owner/tenant guide
+
 ## 2026-10-06
 
 ### Monorepo Restructuring & Mobile App Merge
