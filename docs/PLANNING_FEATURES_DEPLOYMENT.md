@@ -94,6 +94,18 @@ Notifications use a durable event and a single in-app record. Push retries may b
 - Renewal and departure/replacement compete under the same lease lock. Applied renewals retain the existing single-tenant tenancy root and zero acquisition-commission policy.
 - Existing live onboarding, e-signature, payment and private-storage providers are still required for their respective rental stages. This change does not configure provider accounts.
 
+## Housing demand and group follow-up — 2026-10-14
+
+Deploy/restart the API with the updated `planning_housing_views_parts/housing_requests.py`. No database migration is required for this follow-up. The mobile city-label fix is in the separate `darak-app` checkout and requires an updated app build.
+
+`GET /api/v1/features/v1/housing-demand/` now returns published, unexpired requests from all cities to eligible owners, excluding the owner's own requests. Previously it silently restricted discovery to cities of the owner's verified listings. `?city=<UUID>` applies an explicit city filter. Detail permissions follow the same discovery rule. Sending an offer still requires verified inventory in the requested city and revalidates the exact selected unit against the request criteria.
+
+The existing group fixes remain covered: `housing-groups/?status=active|archived`, administrator-only `unarchive`, invitation history, atomic leave with `member_id` for the successor, and `group_join_requests_count` in tenant unread counts. The common `planning-capabilities` URL authorizes access; it does not select a collection tab.
+
+Local verification: four new demand-discovery tests, the existing complete housing request/offer/recovery cycle, and five group-management tests passed on isolated SQLite test databases. These checks cover other-account visibility across cities, city filtering/pagination, unpublished/expired/private/own-request exclusions, owner eligibility, offer permissions, group restore, succession, invitation history and counts. They do not verify the deployed service.
+
+After deployment, publish a request from a designated tenant account in a different city from the test owner's listings. Confirm it appears in the owner's feed and detail, while no `offer` action is advertised without matching inventory. Verify the explicit city filter and a matching-city offer through the app.
+
 ## Post-deployment acceptance
 
 Use designated test accounts and test-owned inventory:
