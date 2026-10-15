@@ -3,6 +3,7 @@ import { SECTION_IDS } from "@/lib/sections";
 import { SOCIAL_LINKS } from "@/lib/site";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
+import { SignatureMark } from "@/components/ui/Decor";
 
 export function SiteFooter({ dict }: { dict: Dictionary }) {
   const sections = [
@@ -95,6 +96,10 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
           <p className="text-sm text-fg/50">{dict.footer.copyright}</p>
         </div>
       </Container>
+      {/* the page signs off: a large word cropped by the bottom edge, written in once in view */}
+      <div data-animate aria-hidden className="mx-auto aspect-[1455/430] w-full max-w-6xl overflow-hidden px-5 sm:px-8">
+        <SignatureMark draw className="relative! block w-full text-brand-deep/30 [--sig-fill:0.1] dark:text-brand/35 dark:[--sig-fill:0]" />
+      </div>
     </footer>
   );
 }

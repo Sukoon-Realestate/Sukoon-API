@@ -666,3 +666,16 @@
 - **Verification:** Checked a before/after contact sheet across light and dark screens, and a screenshot of the section. No code changes.
 - **Note:** The real Flutter app still uses the teal theme. If the app's own palette should change, that's a separate change in `mobile/`.
 - **Files:** `frontend/landing/public/images/app/*.webp`
+
+### "سكون" engraving on the remaining sections, one pattern each
+- **What:** Added the logo's calligraphy to How it works, Why Sukoon, FAQ and the footer, with a different pattern in each so no pattern repeats across the page.
+- **Why:** The user wanted the engraving concept on the sections that didn't have it yet, but without the same pattern appearing in more than one section.
+- **Patterns** (hero and Inside Sukoon already had their own):
+  - **How it works:** `SignatureTrace` in the owner (dark) card's corner, replacing its arches. A very faint outline with a short light that keeps running along the letters. First tried behind the section heading, but the light crossed the title text and looked noisy, so it moved into the card.
+  - **Why Sukoon:** `SignatureWeave`, a tiled brick pattern of small tilted words (an SVG `<pattern>`) across the dark panel, fading toward the top.
+  - **FAQ:** a small `SignatureMark` under the heading that writes itself in; it sits in the same sticky wrapper so it stays with the heading.
+  - **Footer:** a large word cropped by the bottom of the page (an `aspect-[1455/430]` overflow box) that writes itself in.
+  - **Final CTA:** skipped, because it already shows the logo.
+- **Bug fixed along the way:** `pathLength={1}` is ignored on paths with `vector-effect: non-scaling-stroke`; the browser applied the dashes as literal px. So the existing draw-in animations (hero, card stamp, wide word) were never actually drawing, and the new running light was invisible. Drawing and the running light now happen in an SVG `<mask>` on a thick ordinary stroke under the visible 1.25px outline. `.signature-draw` is the mask stroke, the new `.signature-fill-in` handles the fill fade, and `.signature-trace-glow` / `.signature-trace-light` drive the trace. Mask ids come from `useId()`. Also moved the trace colour from the `stroke` attribute (where `var()` doesn't resolve) to `style`.
+- **Verification:** Checked screenshots of the trace light running in the owner card, the FAQ signature mid-draw, the weave, and the footer in light and dark; the hero split still draws in. Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/HowItWorks.tsx`, `frontend/landing/src/components/sections/WhySukoon.tsx`, `frontend/landing/src/components/sections/Faq.tsx`, `frontend/landing/src/components/layout/SiteFooter.tsx`, `frontend/landing/src/app/globals.css`

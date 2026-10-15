@@ -1,3 +1,4 @@
+import { useId } from "react";
 import clsx from "clsx";
 import { SIGNATURE_PATH, SIGNATURE_REST_PATH, SIGNATURE_SEEN_PATH, SIGNATURE_VIEWBOX } from "@/assets/brand/signature";
 
@@ -8,6 +9,10 @@ const PATHS = { word: SIGNATURE_PATH, seen: SIGNATURE_SEEN_PATH, rest: SIGNATURE
 // `--sig-fill` (0-1) to tint the inside of the strokes as well. `draw` lets CSS
 // draw the outline in (see .signature-draw in globals.css). `part` draws only
 // the first letter (seen) or the rest of the word, in its place in the word.
+//
+// The visible outline keeps a 1.25px non-scaling stroke at any size, but
+// non-scaling strokes ignore pathLength, so dash-based drawing happens on a
+// thick, ordinary stroke in a mask underneath instead.
 export function SignatureMark({
   className,
   draw = false,
@@ -17,16 +22,23 @@ export function SignatureMark({
   draw?: boolean;
   part?: keyof typeof PATHS;
 }) {
+  const maskId = useId();
   return (
     <svg
       aria-hidden
       viewBox={SIGNATURE_VIEWBOX}
       className={clsx("pointer-events-none absolute select-none", className)}
     >
+      {draw && (
+        <mask id={maskId} maskUnits="userSpaceOnUse">
+          {/* wide enough to cover a whole letter's thickness from its outline */}
+          <path d={PATHS[part]} pathLength={1} className="signature-draw" fill="none" stroke="white" strokeWidth="120" />
+        </mask>
+      )}
       <path
         d={PATHS[part]}
-        pathLength={draw ? 1 : undefined}
-        className={clsx(draw && "signature-draw")}
+        mask={draw ? `url(#${maskId})` : undefined}
+        className={clsx(draw && "signature-fill-in")}
         fill="currentColor"
         style={{ fillOpacity: "var(--sig-fill, 0)" }}
         stroke="currentColor"
@@ -84,6 +96,53 @@ export function WideSignature({ className }: { className?: string }) {
         className,
       )}
     />
+  );
+}
+
+// The word as a woven texture: small tilted copies tiled in a brick layout,
+// like an engraved textile. Fills its (positioned) parent; colour from text-*.
+export function SignatureWeave({ className }: { className?: string }) {
+  // One pattern per page, so a fixed id is safe.
+  return (
+    <svg aria-hidden className={clsx("pointer-events-none absolute inset-0 h-full w-full select-none", className)}>
+      <defs>
+        <pattern id="signature-weave" width="260" height="160" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)">
+          <path d={SIGNATURE_PATH} transform="scale(0.12)" fill="none" stroke="currentColor" strokeWidth="9" />
+          <path d={SIGNATURE_PATH} transform="translate(130 80) scale(0.12)" fill="none" stroke="currentColor" strokeWidth="9" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#signature-weave)" />
+    </svg>
+  );
+}
+
+// The word's outline kept very faint, with a short light that keeps running
+// along the letters (see .signature-trace in globals.css). Outline colour from
+// text-*, the light's from --trace (brand green by default).
+export function SignatureTrace({ className }: { className?: string }) {
+  const maskId = useId();
+  return (
+    <svg
+      aria-hidden
+      viewBox={SIGNATURE_VIEWBOX}
+      fill="none"
+      className={clsx("signature-trace pointer-events-none absolute select-none", className)}
+    >
+      {/* the moving dash lives in a mask (non-scaling strokes ignore pathLength) */}
+      <mask id={maskId} maskUnits="userSpaceOnUse">
+        <path d={SIGNATURE_PATH} pathLength={1} className="signature-trace-light" stroke="white" strokeWidth="40" strokeLinecap="round" />
+      </mask>
+      <path d={SIGNATURE_PATH} stroke="currentColor" strokeOpacity="0.22" strokeWidth="1.25" vectorEffect="non-scaling-stroke" />
+      <path
+        d={SIGNATURE_PATH}
+        mask={`url(#${maskId})`}
+        className="signature-trace-glow"
+        // var() only resolves in CSS, not in SVG presentation attributes
+        style={{ stroke: "var(--trace, var(--color-brand))" }}
+        strokeWidth="2.5"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
   );
 }
 

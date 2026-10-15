@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ArchLines } from "@/components/ui/Decor";
+import { ArchLines, SignatureTrace } from "@/components/ui/Decor";
 import { SECTION_IDS } from "@/lib/sections";
 
 type Journey = Dictionary["howItWorks"]["tenant"];
@@ -33,10 +33,12 @@ function JourneyCard({
         dark ? "bg-pine text-white dark:ring-1 dark:ring-white/10" : "border border-line bg-sand text-fg",
       )}
     >
-      <ArchLines
-        count={4}
-        className={clsx("-end-16 -top-10 size-64", dark ? "text-white/8" : "text-accent/10")}
-      />
+      {dark ? (
+        // the owner card's corner holds the word, a light tracing its letters
+        <SignatureTrace className="-end-28 -top-14 w-[26rem] text-white/40 [--trace:var(--color-brand-soft)] sm:w-[30rem]" />
+      ) : (
+        <ArchLines count={4} className="-end-16 -top-10 size-64 text-accent/10" />
+      )}
 
       <header className="relative flex items-center gap-4">
         <span

@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SignatureMark } from "@/components/ui/Decor";
 import { SECTION_IDS } from "@/lib/sections";
 
 // Native <details name> gives an exclusive accordion with no client JS.
@@ -11,7 +12,11 @@ export function Faq({ dict }: { dict: Dictionary }) {
   return (
     <section id={SECTION_IDS.faq} className="scroll-mt-16 bg-paper py-24 sm:py-32">
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
-        <SectionHeading eyebrow={faq.eyebrow} titleLines={[faq.title]} subtitle={faq.subtitle} className="lg:sticky lg:top-28 lg:self-start" />
+        {/* heading signed off with the word, written in once in view; both stay put while the answers scroll */}
+        <div data-animate className="lg:sticky lg:top-28 lg:self-start">
+          <SectionHeading eyebrow={faq.eyebrow} titleLines={[faq.title]} subtitle={faq.subtitle} />
+          <SignatureMark draw className="relative! mt-8 block w-44 text-accent/60 [--sig-fill:0.12] sm:w-56 dark:[--sig-fill:0]" />
+        </div>
 
         <div className="reveal divide-y divide-line border-y border-line">
           {faq.items.map((item, index) => (

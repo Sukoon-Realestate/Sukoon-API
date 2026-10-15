@@ -599,27 +599,59 @@ summary::-webkit-details-marker {
 }
 
 /* The card's signature writes itself in as its slide becomes active, then
-   its fill settles in (to the --sig-fill set on the element). */
+   its fill settles in (to the --sig-fill set on the element). .signature-draw
+   is the mask stroke that reveals the outline; .signature-fill-in the outline. */
 [data-motion] .feature-slide[data-active] .signature-draw {
   stroke-dasharray: 1;
-  animation:
-    draw 2.4s cubic-bezier(0.5, 0, 0.2, 1) 0.2s both,
-    signature-fill 0.8s ease-out 2.2s both;
+  animation: draw 2.4s cubic-bezier(0.5, 0, 0.2, 1) 0.2s both;
+}
+
+[data-motion] .feature-slide[data-active] .signature-fill-in {
+  animation: signature-fill 0.8s ease-out 2.2s both;
 }
 
 /* A section-wide signature (WideSignature) waits hidden, then writes itself
    in once its [data-animate] parent scrolls into view. */
-[data-motion] [data-animate]:not([data-inview]) > svg > .signature-draw {
+[data-motion] [data-animate]:not([data-inview]) > svg .signature-draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
+}
+
+[data-motion] [data-animate]:not([data-inview]) > svg > .signature-fill-in {
   fill-opacity: 0;
 }
 
-[data-motion] [data-animate][data-inview] > svg > .signature-draw {
+[data-motion] [data-animate][data-inview] > svg .signature-draw {
   stroke-dasharray: 1;
-  animation:
-    draw 3.2s cubic-bezier(0.5, 0, 0.2, 1) 0.3s both,
-    signature-fill 1s ease-out 3s both;
+  animation: draw 3.2s cubic-bezier(0.5, 0, 0.2, 1) 0.3s both;
+}
+
+[data-motion] [data-animate][data-inview] > svg > .signature-fill-in {
+  animation: signature-fill 1s ease-out 3s both;
+}
+
+/* SignatureTrace: a short light runs along the word's outline, over and over.
+   The dash moves in the mask (.signature-trace-light); the glow path shows it. */
+.signature-trace-glow {
+  display: none;
+}
+
+[data-motion] .signature-trace-glow {
+  display: inline;
+}
+
+[data-motion] .signature-trace-light {
+  stroke-dasharray: 0.12 0.88;
+  animation: signature-trace 14s linear infinite;
+}
+
+@keyframes signature-trace {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -1;
+  }
 }
 
 @keyframes signature-fill {
