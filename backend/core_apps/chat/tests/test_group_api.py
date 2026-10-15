@@ -8,6 +8,8 @@ from core_apps.chat.models import Conversation
 from core_apps.chat.services.group_send import send_group_message
 from core_apps.chat.services.group_provisioning import provision_group
 from core_apps.chat.services.group_access import total_unread_count
+from core_apps.features.tests.test_planning_cycles import create_group
+from core_apps.features.tests.test_rental_phase2 import rental_participants
 from .conftest import message_request
 from .test_group_media import image_file
 
@@ -18,6 +20,24 @@ def base(conversation):
     return reverse("message-list", kwargs={"id": conversation.id}).removesuffix(
         "messages/"
     )
+
+
+def test_new_group_can_chat_with_only_its_creator(rental_participants, api_client):
+    _, creator, _, property_, _ = rental_participants
+    group = create_group(creator, property_)
+    assert group["chat"]["available"] is True
+    conversation = Conversation.objects.get(housing_group__id=group["id"])
+    assert group["chat"]["conversation_id"] == str(conversation.id)
+    assert conversation.participant_set.count() == 1
+    api_client.force_authenticate(creator)
+    response = api_client.get(f"/api/v1/features/v1/housing-groups/{group['id']}/chat/")
+    assert response.status_code == 200
+    assert "send_message" in response.json()["data"]["allowed_actions"]
+    sent = api_client.post(
+        base(conversation) + "messages/create/", message_request(), format="json"
+    )
+    assert sent.status_code == 201
+    assert sent.json()["data"]["conversation_id"] == str(conversation.id)
 
 
 @pytest.mark.parametrize("access", ["member", "disabled", "unverified", "removed"])
