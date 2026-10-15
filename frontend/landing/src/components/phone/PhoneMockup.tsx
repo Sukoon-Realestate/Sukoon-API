@@ -1,7 +1,21 @@
 import { CalendarCheck, Check, Heart, House, MapPin, MessageCircle, Search, ShieldCheck, User } from "lucide-react";
+import Image from "next/image";
 import clsx from "clsx";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { BuildingArt, HouseArt } from "./PropertyArt";
+
+// Listing photo on a mock card; decorative, since the whole mockup is aria-hidden.
+function ListingPhoto({ src }: { src: string }) {
+  return (
+    <Image
+      unoptimized
+      src={src}
+      alt=""
+      width={640}
+      height={400}
+      className="size-full object-cover"
+    />
+  );
+}
 
 function ReviewedTag({ label }: { label: string }) {
   return (
@@ -181,14 +195,14 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
               <div className="mt-3 flex min-h-0 flex-1 flex-col gap-2.5 overflow-hidden">
                 <ListingCard
                   listing={primary}
-                  art={<BuildingArt className="size-full" />}
+                  art={<ListingPhoto src="/images/listings/apartment.jpg" />}
                   reviewed={phone.reviewed}
                   delay={700}
                   imageClassName="h-24"
                 />
                 <ListingCard
                   listing={secondary}
-                  art={<HouseArt className="size-full" />}
+                  art={<ListingPhoto src="/images/listings/studio.jpg" />}
                   reviewed={phone.reviewed}
                   delay={850}
                   imageClassName="h-24"

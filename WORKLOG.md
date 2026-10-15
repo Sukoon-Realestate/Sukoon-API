@@ -471,3 +471,11 @@
   - Why Sukoon: the bento grid now has a `md` two-column layout (commission full-width, then two per row) instead of full-width stacked cards with empty previews at tablet size. The 0% stat and headline step down at `lg`, so "No commission." no longer breaks after "No". Bento padding is `p-5` on phones, and the verified preview's avatar and badge no longer shrink.
   - Verified: `tsc` and ESLint pass, and I re-ran the audit at 320/375/768/1024 in AR and EN after the fixes.
 - **Files:** `frontend/landing/src/components/layout/SiteHeader.tsx`, `frontend/landing/src/components/ui/StoreButtons.tsx`, `frontend/landing/src/components/phone/PhoneMockup.tsx`, `frontend/landing/src/components/sections/{Hero,HowItWorks,WhySukoon}.tsx`, `WORKLOG.md`
+
+## 2026-10-15
+
+### Real photos in the landing hero phone mockup
+- **What:** Replaced the flat SVG illustrations on the hero phone's two listing cards with real apartment photos.
+- **Why:** The user asked for pictures inside the app shown on the hero phone.
+- **Details:** Added two Unsplash photos (Unsplash License, self-hosted at about 45 KB each): a bright living room for "3-bed apartment" and a kitchen/lounge for "Furnished studio". They render through `next/image` with `unoptimized`, matching `ProductFeatures`. Deleted `PropertyArt.tsx`, which nothing used anymore. Typecheck, ESLint and `next build` pass, and the hero was checked in a headless Edge screenshot (ar).
+- **Files:** `frontend/landing/src/components/phone/PhoneMockup.tsx`, `frontend/landing/src/components/phone/PropertyArt.tsx` (deleted), `frontend/landing/public/images/listings/apartment.jpg`, `frontend/landing/public/images/listings/studio.jpg`
