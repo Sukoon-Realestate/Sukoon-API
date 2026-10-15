@@ -21,7 +21,7 @@ export function InitialState({ locale }: { locale: Locale }) {
   // before paint without replaying the initial page-loading splash.
   useLayoutEffect(() => {
     const root = document.documentElement;
-    let theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    let theme = "light";
     try {
       const saved = localStorage.getItem(THEME_STORAGE_KEY);
       if (saved === "light" || saved === "dark") theme = saved;

@@ -497,3 +497,33 @@
 - **Why:** The user asked for pictures inside the app shown on the hero phone.
 - **Details:** Added two Unsplash photos (Unsplash License, self-hosted at about 45 KB each): a bright living room for "3-bed apartment" and a kitchen/lounge for "Furnished studio". They render through `next/image` with `unoptimized`, matching `ProductFeatures`. Deleted `PropertyArt.tsx`, which nothing used anymore. Typecheck, ESLint and `next build` pass, and the hero was checked in a headless Edge screenshot (ar).
 - **Files:** `frontend/landing/src/components/phone/PhoneMockup.tsx`, `frontend/landing/src/components/phone/PropertyArt.tsx` (deleted), `frontend/landing/public/images/listings/apartment.jpg`, `frontend/landing/public/images/listings/studio.jpg`
+
+### Logo calligraphy engraved behind the landing hero
+- **What:** Added the "سكون" calligraphy from the logo as a large, thin green outline in the hero background, like a signature.
+- **Why:** The user felt the hero background was too plain and wanted the logo's lettering engraved into it in green.
+- **Details:** Traced the Arabic part of `wordmark.png` (without the Latin "SUKOON" line and the ©) to a single vector path with potrace. It is drawn as a 1.25px non-scaling outline, so it stays crisp at any size. New `SignatureMark` component in `Decor.tsx`, at `text-brand/25` (light) and `/30` (dark), fading out toward the bottom. It sits behind the headline and runs off the edge. Typecheck and ESLint pass; checked in headless Edge screenshots in both themes (ar).
+- **Files:** `frontend/landing/src/assets/brand/signature.ts` (new), `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/Hero.tsx`
+
+### Light mode as the landing default + softer engraving in light mode
+- **What:** The landing page now opens in light mode unless the visitor picked dark themselves. The hero's "سكون" engraving is also easier to see in light mode.
+- **Why:** The user wanted light as the default, and the pale outline looked weak on the sand background.
+- **Details:** The theme init script and `InitialState` no longer follow the OS `prefers-color-scheme`; a saved toggle choice still wins. `themeColor` is now the light value only, and the unused `THEME_COLOR_DARK` was removed. `SignatureMark` takes a `--sig-fill` variable that tints the inside of the letters. In light mode it uses `brand-deep/25` with a faint fill, so it reads as carved into the background; dark mode is unchanged. Checked in a headless Edge screenshot with the OS set to dark (it still opens light). Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/lib/theme.ts`, `frontend/landing/src/components/layout/InitialState.tsx`, `frontend/landing/src/app/(landing)/[lang]/layout.tsx`, `frontend/landing/src/lib/site.ts`, `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/Hero.tsx`
+
+### Moved the hero engraving off the headline
+- **What:** Moved the "سكون" calligraphy to the right edge of the hero and faded it out before it reaches the headline.
+- **Why:** The user felt the engraving made the area under the title crowded.
+- **Details:** It is now pinned to the physical right edge (`-right-64`, `lg:-right-72`) and mostly sits off-screen. A `to_left` mask fades it out toward the text, replacing the old bottom fade. The left side of the hero and the headline area are now clear. Checked in headless Edge screenshots. The cut-off on the right in the 390px mobile screenshot also shows without the engraving, so it comes from headless Edge, not the page.
+- **Files:** `frontend/landing/src/components/sections/Hero.tsx`
+
+### Hero engraving continues on the left edge
+- **What:** Added the start of the "سكون" calligraphy (the ن with its dot and sukun) on the left edge of the hero. The end of the word is already on the right, so the word looks like it wraps around the content.
+- **Why:** The user liked the right-edge engraving and asked for the word to continue on the left.
+- **Details:** Added a second `SignatureMark`; both copies share a `signature` class constant for size and tone. The left copy is pinned at `-left-24`/`lg:-left-10` with a `to_right` mask, so it fades out before the phone arch; the middle of the word stays hidden behind the content. Checked in a headless Edge screenshot (ar, 1440px). Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/sections/Hero.tsx`
+
+### Hide the hero engraving on mobile and tablet
+- **What:** The "سكون" engraving in the hero now shows only from the `lg` breakpoint (1024px) up.
+- **Why:** The user said it looked bad on mobile: below `lg` the hero stacks, so both halves ended up behind the headline and paragraph.
+- **Details:** Added `max-lg:hidden` to the shared `signature` class constant and removed the small-screen size and offset values that no longer apply. Checked in headless Edge: at 900px (en) there is no engraving, and at 1440px (ar) the hero looks the same as before. Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/sections/Hero.tsx`

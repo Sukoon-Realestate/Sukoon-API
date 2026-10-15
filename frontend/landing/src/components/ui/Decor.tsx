@@ -1,4 +1,28 @@
 import clsx from "clsx";
+import { SIGNATURE_PATH, SIGNATURE_VIEWBOX } from "@/assets/brand/signature";
+
+// The logo's "سكون" calligraphy as a thin outlined engraving, used as a large
+// background signature. Size and colour come from `className` (text-*); set
+// `--sig-fill` (0-1) to tint the inside of the strokes as well.
+export function SignatureMark({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox={SIGNATURE_VIEWBOX}
+      className={clsx("pointer-events-none absolute select-none", className)}
+    >
+      <path
+        d={SIGNATURE_PATH}
+        fill="currentColor"
+        style={{ fillOpacity: "var(--sig-fill, 0)" }}
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
 
 // Oversized outlined wordmark used as a faint texture on dark sections.
 export function OutlinedWordmark({ className }: { className?: string }) {

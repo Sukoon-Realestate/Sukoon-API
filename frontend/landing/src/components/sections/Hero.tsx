@@ -2,7 +2,7 @@ import { ArrowRight, BadgePercent, Building2, ClipboardCheck, KeyRound, Messages
 import type { Dictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { StoreButtons } from "@/components/ui/StoreButtons";
-import { ArchLines, OutlinedWordmark } from "@/components/ui/Decor";
+import { ArchLines, OutlinedWordmark, SignatureMark } from "@/components/ui/Decor";
 import { PhoneMockup } from "@/components/phone/PhoneMockup";
 
 function JumpLink({
@@ -33,6 +33,11 @@ function JumpLink({
     </a>
   );
 }
+
+// Shared size and tone for the two halves of the background signature. Only
+// shown from lg up: below that the hero stacks and the text has no free side.
+const signature =
+  "top-4 w-[64rem] text-brand-deep/25 [--sig-fill:0.18] max-lg:hidden dark:text-brand/30 dark:[--sig-fill:0]";
 
 // Staggers the hero's on-load entrance (CSS only, so it never waits for JS).
 const enter = (ms: number) => ({ animationDelay: `${ms}ms` });
@@ -98,6 +103,14 @@ export function Hero({ dict }: { dict: Dictionary }) {
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 end-[-10%] size-[46rem] animate-drift rounded-full bg-[radial-gradient(closest-side,rgba(4,164,23,0.16),transparent)]"
+      />
+      {/* the logo's calligraphy engraved into both edges: its end on the right,
+          its start on the left, each fading out before it reaches the content */}
+      <SignatureMark
+        className={`${signature} -right-72 [mask-image:linear-gradient(to_left,black_40%,transparent_72%)]`}
+      />
+      <SignatureMark
+        className={`${signature} -left-10 [mask-image:linear-gradient(to_right,black_30%,transparent_55%)]`}
       />
 
       <Container className="relative grid items-center gap-14 pb-20 pt-10 sm:pt-14 lg:grid-cols-[1.2fr_1fr] lg:gap-8 lg:pb-24 lg:pt-16">

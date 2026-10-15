@@ -5,7 +5,7 @@ import "../../globals.css";
 import { defaultLocale, directionOf, hasLocale, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { lexend, plexArabic, readex } from "@/lib/fonts";
-import { SITE_NAME, SITE_URL, THEME_COLOR, THEME_COLOR_DARK } from "@/lib/site";
+import { SITE_NAME, SITE_URL, THEME_COLOR } from "@/lib/site";
 import { InitialState } from "@/components/layout/InitialState";
 import { Splash } from "@/components/ui/LogoLoader";
 
@@ -16,10 +16,8 @@ export function generateStaticParams() {
 }
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: THEME_COLOR },
-    { media: "(prefers-color-scheme: dark)", color: THEME_COLOR_DARK },
-  ],
+  // Light is the default theme regardless of the OS setting.
+  themeColor: THEME_COLOR,
 };
 
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {

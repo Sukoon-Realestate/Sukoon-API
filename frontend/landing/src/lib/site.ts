@@ -11,7 +11,6 @@ export const SITE_DESCRIPTION =
   "Sukoon is a real estate rental platform that connects property owners and tenants directly, with no broker and no commission. Every property is reviewed before it is published and every account is verified.";
 
 export const THEME_COLOR = "#f6f2e9";
-export const THEME_COLOR_DARK = "#0a120d";
 
 export const absoluteUrl = (path = "/") => new URL(path, SITE_URL).toString();
 
