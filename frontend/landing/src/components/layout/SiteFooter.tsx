@@ -1,5 +1,6 @@
 import type { Dictionary } from "@/i18n/dictionaries";
 import { SECTION_IDS } from "@/lib/sections";
+import { SOCIAL_LINKS } from "@/lib/site";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 
@@ -41,6 +42,43 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
             </ul>
           </nav>
         </div>
+
+        <nav aria-label={dict.footer.socialLabel}>
+          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-fg/70 sm:justify-start">
+            {SOCIAL_LINKS.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-5 shrink-0"
+                    aria-hidden="true"
+                  >
+                    {link.label === "Instagram" ? (
+                      <>
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="0.5" />
+                      </>
+                    ) : (
+                      <path d="M14 3h3a5 5 0 0 0 4 4v3a8 8 0 0 1-4-1v7a6 6 0 1 1-6-6v3a3 3 0 1 0 3 3V3Z" />
+                    )}
+                  </svg>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         <div className="flex flex-col items-center gap-4 border-t border-line pt-6 text-center sm:flex-row sm:justify-between sm:text-start">
           <nav aria-label={dict.footer.linksLabel}>

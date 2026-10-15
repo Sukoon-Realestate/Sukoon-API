@@ -152,6 +152,7 @@ const ar = {
     terms: "الشروط",
     contact: "تواصل معنا",
     linksLabel: "روابط",
+    socialLabel: "تابعنا على مواقع التواصل الاجتماعي",
     copyright: "© 2026 سكون. جميع الحقوق محفوظة.",
   },
   notFound: {
@@ -322,6 +323,7 @@ const en: Dictionary = {
     terms: "Terms",
     contact: "Contact us",
     linksLabel: "Links",
+    socialLabel: "Follow us on social media",
     copyright: "© 2026 Sukoon. All rights reserved.",
   },
   notFound: {

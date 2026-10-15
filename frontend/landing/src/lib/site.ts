@@ -14,9 +14,13 @@ export const THEME_COLOR = "#f6f2e9";
 
 export const absoluteUrl = (path = "/") => new URL(path, SITE_URL).toString();
 
-// TODO: add the official social profile URLs (Instagram, Facebook, X, LinkedIn, ...).
-// They're published as `sameAs` in the Organization schema once this list is non-empty.
-export const SOCIAL_PROFILES: string[] = [];
+// Shared by the footer and Organization structured data.
+export const SOCIAL_LINKS = [
+  { label: "Instagram", href: "https://www.instagram.com/suk_oon272/" },
+  { label: "TikTok", href: "https://www.tiktok.com/@sukoon5026" },
+];
+
+export const SOCIAL_PROFILES: string[] = SOCIAL_LINKS.map((link) => link.href);
 
 // TODO: fill in the registered business details. The LocalBusiness schema stays off
 // until name, telephone and the street address + city are all set, so placeholder

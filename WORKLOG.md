@@ -626,3 +626,43 @@
 - **Why:** The user wanted to see the section without the box.
 - **Details:** Dropped `overflow-hidden rounded-[2rem] border border-line bg-sand` from the slide's `<figure>`; the soft radial glow and the caption stay. Nothing clips the card stamp any more, so it was narrowed from `w-[116%]` (with `-inset-x-[8%]`) to the figure's own width. That keeps it out of the text column, and the whole word now shows behind the phone. Checked light and dark screenshots at 1440px. Typecheck and ESLint pass.
 - **Files:** `frontend/landing/src/components/sections/ProductFeatures.tsx`
+
+### 10 UI proposals for the mobile app home screen
+- **What:** Made 10 different tenant home screen designs as phone mockups (390×844, Arabic RTL, Tajawal) on a design canvas: https://claude.ai/artifact/U8UUhGprTjP9wFP5AqNvtG
+- **Why:** The user doesn't like the current app UI and wants new directions that use the landing page colors.
+- **Details:** All 10 use the `LandingColors` palette from `mobile/apps/landing_page/lib/landing/theme/landing_theme.dart` (teal `#0C6254`, tealDark `#084B40`, tealLight `#EDFDF3`, navy `#152E29`, gold `#D6A84F`, background `#FAFBF8`, border `#E3EBE5`). Directions: Calm Teal, Gold Night (dark), Mint Minimal, Map First, Bento Grid, Editorial (Amiri serif), Floating Pill nav, Swipe Discover, Tenant Hub (journey dashboard), Curved Hero. Photos are tinted placeholder blocks and prices are `[السعر]` placeholders. No app code was changed.
+- **Files:** none in the repo (design canvas only)
+
+### Hero engraving split: س on the right, كون on the left
+- **What:** The hero engraving now shows only the first letter, the س with its damma, on the right edge, and the rest of the word (كون) on the left.
+- **Why:** The user's idea, to set the first letter apart from the rest of the word.
+- **Details:**
+  - The letters are joined in the drawing (the ك's tail runs into the س), so I cut the traced bitmap rather than the vector. The cut is x ≥ 966, below the ك's swash (y ≥ 370), extended above that line past the swash's tip (x ≥ 1270) and for the damma box. Each part is traced separately into `SIGNATURE_SEEN_PATH` / `SIGNATURE_REST_PATH` in `signature.ts`. They share the full word's viewBox, so each part keeps its place in the word.
+  - `SignatureMark` takes a new `part` prop (`word` | `seen` | `rest`). `EdgeSignature` uses `seen` at `right-0`, fading out by about 32% of its width, and `rest` at `-left-10`. The full-word path is unchanged, so `WideSignature` and the card stamp have no seam.
+  - Earlier messages wrongly called the right-hand tall strokes ل/ك; they are the س. I corrected this with the user.
+  - The user restored the hero arch themselves after the previous change, and it stays.
+- **Verification:** Checked screenshots at 1440px (light and dark) and 1920px (light). Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/assets/brand/signature.ts`, `frontend/landing/src/components/ui/Decor.tsx`
+
+### Hero س now includes its madda
+- **What:** The س on the right of the hero now carries its madda: the stroke that rises from the ك's foot up the س's first bar.
+- **Why:** The user asked to add the س's madda to the right-hand part.
+- **Details:**
+  - The madda touches the ك only at its foot. A rectangle cut sliced it in half, so instead I cut a short line across that joint, from (697,712) to (772,658) in bitmap coordinates. Then I flood-filled from a point inside the tail, which gave the region x 709–965, y 392–743, and moved it into the س part.
+  - Retraced `SIGNATURE_SEEN_PATH` / `SIGNATURE_REST_PATH`; the full-word path is unchanged.
+  - The س is wider now, so its mask in `EdgeSignature` moved from `black 18% → 25% at 32%` to `black 26% → 35% at 46%`. That way the madda stays visible instead of fading out.
+- **Verification:** Checked screenshots at 1440px and 1920px (light). On 1440px the madda runs faintly behind the end of the hero paragraph. Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/assets/brand/signature.ts`, `frontend/landing/src/components/ui/Decor.tsx`
+
+### Recoloured the carousel app screenshots to the site's green
+- **What:** The 16 app screenshots in the "Inside Sukoon" carousel now use the landing page's green instead of the app's teal / blue-green.
+- **Why:** The user wanted the greens in the mocked app to match the site.
+- **Details:**
+  - Started from the original PNGs, taken from git before `383f9fb` (where they were removed), so the WebP is only compressed once.
+  - The light screenshots used teal `#087068` (hue 175°) with a light teal chip background `#e0f0f0`; the dark ones used `#107840` (hue 148°).
+  - The recolour sets the hue to the site's 127° (`#04a417` / `#0a5c18` / chip `#e1f0e2`) for UI pixels between 135° and 198° and keeps their lightness, so anti-aliased text and shading survive. In the dark theme, saturated greens are also lifted toward `#04a417`.
+  - Blues (the info banner, above 200°) are left alone. Listing photos are protected by a busy-block photo mask, so plants and decor keep their colours.
+  - Output is the same 560px WebP at quality 82 (496 KB for the folder).
+- **Verification:** Checked a before/after contact sheet across light and dark screens, and a screenshot of the section. No code changes.
+- **Note:** The real Flutter app still uses the teal theme. If the app's own palette should change, that's a separate change in `mobile/`.
+- **Files:** `frontend/landing/public/images/app/*.webp`

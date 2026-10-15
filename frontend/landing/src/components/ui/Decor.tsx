@@ -1,11 +1,22 @@
 import clsx from "clsx";
-import { SIGNATURE_PATH, SIGNATURE_VIEWBOX } from "@/assets/brand/signature";
+import { SIGNATURE_PATH, SIGNATURE_REST_PATH, SIGNATURE_SEEN_PATH, SIGNATURE_VIEWBOX } from "@/assets/brand/signature";
+
+const PATHS = { word: SIGNATURE_PATH, seen: SIGNATURE_SEEN_PATH, rest: SIGNATURE_REST_PATH };
 
 // The logo's "سكون" calligraphy as a thin outlined engraving, used as a large
 // background signature. Size and colour come from `className` (text-*); set
 // `--sig-fill` (0-1) to tint the inside of the strokes as well. `draw` lets CSS
-// draw the outline in (see .signature-draw in globals.css).
-export function SignatureMark({ className, draw = false }: { className?: string; draw?: boolean }) {
+// draw the outline in (see .signature-draw in globals.css). `part` draws only
+// the first letter (seen) or the rest of the word, in its place in the word.
+export function SignatureMark({
+  className,
+  draw = false,
+  part = "word",
+}: {
+  className?: string;
+  draw?: boolean;
+  part?: keyof typeof PATHS;
+}) {
   return (
     <svg
       aria-hidden
@@ -13,7 +24,7 @@ export function SignatureMark({ className, draw = false }: { className?: string;
       className={clsx("pointer-events-none absolute select-none", className)}
     >
       <path
-        d={SIGNATURE_PATH}
+        d={PATHS[part]}
         pathLength={draw ? 1 : undefined}
         className={clsx(draw && "signature-draw")}
         fill="currentColor"
@@ -31,8 +42,9 @@ export function SignatureMark({ className, draw = false }: { className?: string;
 const edgeSignature =
   "w-[64rem] text-brand-deep/25 [--sig-fill:0.18] max-lg:hidden dark:text-brand/30 dark:[--sig-fill:0]";
 
-// The signature engraved into both edges of a section: the word's end on the
-// right, its start on the left, each fading out before it reaches the content.
+// The signature split across both edges of a section: its first letter (س)
+// alone on the right, the rest of the word (كون) on the left, each fading out
+// before it reaches the content.
 // Only from lg up: below that sections stack and the text has no free side.
 // `className` sets the vertical position (e.g. top-4); the parent must be
 // positioned and clip overflow. With `draw`, a [data-animate] parent makes it
@@ -42,11 +54,13 @@ export function EdgeSignature({ className, draw = false }: { className?: string;
     <>
       <SignatureMark
         draw={draw}
-        className={clsx(edgeSignature, "-right-72 [mask-image:linear-gradient(to_left,black_40%,transparent_72%)]", className)}
+        part="seen"
+        className={clsx(edgeSignature, "right-0 [mask-image:linear-gradient(to_left,black_26%,rgb(0_0_0/0.35)_46%)]", className)}
       />
       <SignatureMark
         draw={draw}
-        className={clsx(edgeSignature, "-left-10 [mask-image:linear-gradient(to_right,black_30%,transparent_55%)]", className)}
+        part="rest"
+        className={clsx(edgeSignature, "-left-10 [mask-image:linear-gradient(to_right,black_45%,transparent_68%)]", className)}
       />
     </>
   );

@@ -57,7 +57,7 @@ src/
 - `components/ui/Logo.tsx` is a text placeholder. Replace it with the official SVG wordmark.
 - The store buttons are non-interactive ("coming soon"). Turn them into links once the store listings are live.
 - The footer links (Privacy / Terms / Contact) point to `#`. Each one has a `TODO` in `SiteFooter.tsx`.
-- `lib/site.ts`: the `BUSINESS` details and `SOCIAL_PROFILES` are empty `TODO`s. The LocalBusiness schema switches on by itself once name, phone, street and city are filled in.
+- `lib/site.ts`: `SOCIAL_LINKS` supplies the footer's Instagram and TikTok links and the Organization schema's `sameAs` profiles. The `BUSINESS` details remain empty `TODO`s; the LocalBusiness schema switches on by itself once name, phone, street and city are filled in.
 
 Run `grep -rn "TODO" src` to list them all.
 
