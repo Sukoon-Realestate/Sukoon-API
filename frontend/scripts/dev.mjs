@@ -27,7 +27,9 @@ const children = zones.map((zone) => {
   // Drop PORT (set by backend/scripts/dev.py) so each zone uses its own --port.
   const env = { ...process.env, ...zone.env };
   delete env.PORT;
-  const child = spawn("npx", ["next", "dev", "--port", zone.port], {
+  // The landing app uses Webpack to avoid Turbopack's missing CSS link HMR error.
+  const bundlerArgs = zone.cwd === root ? [] : ["--webpack"];
+  const child = spawn("npx", ["next", "dev", ...bundlerArgs, "--port", zone.port], {
     cwd: zone.cwd,
     env,
     shell: true,

@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T06:44:07.887286+00:00",
+  "title": "Design System: Sukoon Admin",
+  "extensions": {
+    "colorMeta": {
+      "background": {
+        "role": "neutral",
+        "displayName": "Background",
+        "canonical": "#f6f2e9"
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Foreground",
+        "canonical": "#173923"
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Text Muted",
+        "canonical": "#566151"
+      },
+      "text-subtle": {
+        "role": "neutral",
+        "displayName": "Text Subtle",
+        "canonical": "#67715f"
+      },
+      "card-bg": {
+        "role": "neutral",
+        "displayName": "Card Bg",
+        "canonical": "#fcfbf7"
+      },
+      "card-border": {
+        "role": "neutral",
+        "displayName": "Card Border",
+        "canonical": "#e3dccb"
+      },
+      "sidebar-bg": {
+        "role": "neutral",
+        "displayName": "Sidebar Bg",
+        "canonical": "#f0ede3"
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Primary",
+        "canonical": "#0a5c18"
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Primary Hover",
+        "canonical": "#084b14"
+      },
+      "primary-subtle": {
+        "role": "primary",
+        "displayName": "Primary Subtle",
+        "canonical": "#e1f0e2"
+      },
+      "chart-bar": {
+        "role": "neutral",
+        "displayName": "Chart Bar",
+        "canonical": "#c3d5bc"
+      },
+      "chart-active": {
+        "role": "neutral",
+        "displayName": "Chart Active",
+        "canonical": "#1d4a2c"
+      }
+    },
+    "darkMode": {
+      "background": "#0b140f",
+      "foreground": "#eaf0e4",
+      "text-muted": "#b3bfae",
+      "text-subtle": "#9bab97",
+      "card-bg": "#111e16",
+      "card-border": "#293c2d",
+      "card-hover": "#1c2d20",
+      "surface-elevated": "#18281c",
+      "sidebar-bg": "#0e1b12",
+      "sidebar-border": "#293c2d",
+      "sidebar-text": "#b3bfae",
+      "sidebar-active": "#d9edd2",
+      "sidebar-hover": "#1c2d20",
+      "header-bg": "#111e16",
+      "header-border": "#293c2d",
+      "primary": "#2c7039",
+      "primary-hover": "#245e30",
+      "primary-subtle": "#203c26",
+      "primary-text": "#a8d99d",
+      "input-bg": "#142219",
+      "input-border": "#3b4f3c",
+      "input-focus-ring": "#a8d99d33",
+      "table-header-bg": "#18281c",
+      "table-row-hover": "#1c2d20",
+      "table-border": "#293c2d",
+      "badge-bg-muted": "#1c2d20",
+      "divider": "#293c2d",
+      "scrollbar-thumb": "#3c513b",
+      "scrollbar-thumb-hover": "#6b8265",
+      "chart-bar": "#375a3c",
+      "chart-active": "#a8d99d"
+    },
+    "shadows": [
+      {
+        "name": "overlay",
+        "value": "0 20px 65px -20px #0c2a1840",
+        "purpose": "Menus and native dialog surfaces only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "160ms ease",
+        "purpose": "Control hover, focus, and selection feedback; reduced-motion removes transitions."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "767px"
+      },
+      {
+        "name": "drawer",
+        "value": "1023px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1279px"
+      },
+      {
+        "name": "wide-desktop",
+        "value": "1600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary button in the administration workspace.",
+      "html": "<button class=\"ds-primary\">حفظ التغييرات</button>",
+      "css": ".ds-primary{font-family:var(--font-arabic),sans-serif;font-size:.75rem;background:var(--primary,#0a5c18);color:#fff;border:1px solid transparent;border-radius:.5rem;padding:.55rem .85rem;cursor:pointer;transition:background-color 160ms ease}.ds-primary:hover{background:var(--primary-hover,#084b14)}.ds-primary:focus-visible{outline:2px solid var(--primary-text,#0a5c18);outline-offset:3px;}.ds-primary:disabled{opacity:.55;cursor:not-allowed}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary button in the administration workspace.",
+      "html": "<button class=\"ds-secondary\">تحديث البيانات</button>",
+      "css": ".ds-secondary{font-family:var(--font-arabic),sans-serif;font-size:.75rem;background:var(--card-bg,#fcfbf7);color:var(--foreground,#173923);border:1px solid var(--card-border,#e3dccb);border-radius:.5rem;padding:.55rem .85rem;cursor:pointer}.ds-secondary:hover{background:var(--card-hover,#efeee5)}.ds-secondary:focus-visible{outline:2px solid var(--primary-text,#0a5c18);outline-offset:3px;}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "",
+      "description": "Text field in the administration workspace.",
+      "html": "<label class=\"ds-label\" dir=\"rtl\">البريد الإلكتروني<input class=\"ds-input\" placeholder=\"name@sukoon.com\" /></label>",
+      "css": ".ds-label{font-family:var(--font-arabic),sans-serif;font-size:.75rem;color:var(--foreground,#173923)}.ds-input{display:block;margin-top:.5rem;padding:.75rem;border:1px solid var(--input-border,#d7d4c4);border-radius:.5rem;background:var(--input-bg,#fcfbf7);color:var(--foreground,#173923)}.ds-input:focus-visible{outline:2px solid var(--primary-text,#0a5c18);outline-offset:3px;}"
+    },
+    {
+      "name": "Active navigation",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Active navigation in the administration workspace.",
+      "html": "<a class=\"ds-nav\" href=\"#\" dir=\"rtl\" aria-current=\"page\">ملخص المنصة</a>",
+      "css": ".ds-nav{font-family:var(--font-arabic),sans-serif;font-size:.75rem;display:block;background:#0c2a18;color:#f0f5f0;padding:.6rem .7rem;border-radius:.5rem;text-decoration:none}.ds-nav:hover{background:#123520}.ds-nav:focus-visible{outline:2px solid var(--primary-text,#0a5c18);outline-offset:3px;}"
+    },
+    {
+      "name": "Neutral role tag",
+      "kind": "chip",
+      "refersTo": "",
+      "description": "Neutral role tag in the administration workspace.",
+      "html": "<span class=\"ds-tag\" dir=\"rtl\">مستأجر</span>",
+      "css": ".ds-tag{font-family:var(--font-arabic),sans-serif;font-size:.75rem;display:inline-flex;padding:.25rem .5rem;background:var(--badge-bg-muted,#efeee5);color:var(--text-muted,#566151);border:1px solid var(--card-border,#e3dccb);border-radius:.375rem}"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Panel in the administration workspace.",
+      "html": "<section class=\"ds-panel\" dir=\"rtl\"><h2>آخر الأنشطة</h2><p>آخر الإجراءات المسجلة على المنصة</p></section>",
+      "css": ".ds-panel{font-family:var(--font-arabic),sans-serif;font-size:.75rem;padding:1.5rem;background:var(--card-bg,#fcfbf7);color:var(--foreground,#173923);border:1px solid var(--card-border,#e3dccb);border-radius:.875rem}.ds-panel h2{font-size:.9375rem;font-weight:600}.ds-panel p{color:var(--text-muted,#566151)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Sukoon administration",
+    "overview": "Arabic administration with the confirmed landing identity, compact data surfaces, and a balanced operations/business overview.",
+    "keyCharacteristics": [
+      "RTL reading and right-side workflow navigation.",
+      "Warm canvas, cream panels, forest selection, restrained sage data graphics.",
+      "Compact controls, clear data hierarchy, accessible mobile and keyboard interactions."
+    ],
+    "rules": [],
+    "dos": [
+      "Do use semantic CSS properties for theme-aware surfaces and text.",
+      "Do preserve RTL layouts, correct /admin destinations, and visible keyboard focus."
+    ],
+    "donts": [
+      "Don't treat demonstration data as live platform activity."
+    ]
+  }
+}

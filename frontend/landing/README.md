@@ -18,6 +18,8 @@ The landing page and the admin dashboard are two separate Next.js apps served un
 
 ## Commands
 
+Local development uses Webpack to work around Turbopack's `No link element found for chunk ...css` hot reload error. Both `npm run dev` here and the parent frontend launcher apply this option; production builds keep their existing bundler. After switching an already-open browser session, reload the page to discard the old Turbopack runtime.
+
 ```bash
 # From frontend/ — runs both zones; open http://localhost:3000 and /admin
 npm run dev
