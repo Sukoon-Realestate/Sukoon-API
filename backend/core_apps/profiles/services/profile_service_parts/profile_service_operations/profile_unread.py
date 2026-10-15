@@ -9,10 +9,9 @@ class ProfileUnreadMixin:
         """
         Calculates badge / unread counts for an owner account.
         """
-        from django.db.models import Sum
+        from core_apps.chat.services.group_access import total_unread_count
         from core_apps.properties.models import PropertyVisit
         from core_apps.notifications.models import Notification
-        from core_apps.chat.models.conversation import ConversationParticipant
 
         visit_requests_count = PropertyVisit.objects.filter(
             property__owner=user, status=PropertyVisit.Status.PENDING
@@ -20,12 +19,7 @@ class ProfileUnreadMixin:
         unread_notifications_count = Notification.objects.filter(
             user=user, is_read=False
         ).count()
-        unread_chat_messages_count = (
-            ConversationParticipant.objects.filter(user=user).aggregate(
-                total=Sum("unread_count")
-            )["total"]
-            or 0
-        )
+        unread_chat_messages_count = total_unread_count(user)
         return {
             "visit_requests_count": visit_requests_count,
             "unread_chat_messages_count": unread_chat_messages_count,
@@ -37,10 +31,9 @@ class ProfileUnreadMixin:
         """
         Calculates badge / unread counts for a tenant account.
         """
-        from django.db.models import Sum
+        from core_apps.chat.services.group_access import total_unread_count
         from core_apps.properties.models import PropertyVisit, SavedProperty
         from core_apps.notifications.models import Notification
-        from core_apps.chat.models.conversation import ConversationParticipant
         from core_apps.features.planning_models import GroupJoinRequest
 
         favorites_count = SavedProperty.objects.filter(user=user).count()
@@ -62,12 +55,7 @@ class ProfileUnreadMixin:
         unread_notifications_count = Notification.objects.filter(
             user=user, is_read=False
         ).count()
-        unread_chat_messages_count = (
-            ConversationParticipant.objects.filter(user=user).aggregate(
-                total=Sum("unread_count")
-            )["total"]
-            or 0
-        )
+        unread_chat_messages_count = total_unread_count(user)
         return {
             "favorites_count": favorites_count,
             "group_join_requests_count": group_join_requests_count,

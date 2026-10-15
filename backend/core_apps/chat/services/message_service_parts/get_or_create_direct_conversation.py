@@ -74,7 +74,7 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
 
     # Find an existing conversation shared by both users
     existing = (
-        Conversation.objects.filter(participant_set__user=user)
+        Conversation.objects.filter(kind="direct", participant_set__user=user)
         .filter(participant_set__user=other_user)
         .distinct()
         .first()

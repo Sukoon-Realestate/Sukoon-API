@@ -76,7 +76,8 @@ def configuration():
     return {
         "schema_version": 2,
         "joint_leases": False,
-        "group_chat": False,
+        # Protocol support only; housing_groups and current membership grant access.
+        "group_chat": True,
         "commute": {
             "modes": list(settings.PLANNING_ROUTE_MODES),
             "arrive_by_modes": (

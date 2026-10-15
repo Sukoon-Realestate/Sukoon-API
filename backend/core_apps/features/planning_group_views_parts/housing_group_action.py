@@ -217,6 +217,16 @@ def housing_group_action(request, group_id, action):
                 item.save()
         group.revision += 1
         group.save()
+        from core_apps.chat.services.group_provisioning import roster_changed
+        if action in {"leave", "remove_member", "transfer_admin"}:
+            roster_changed(group, actor=request.user, subject=target.user, kind={
+                "leave": "member_left", "remove_member": "member_removed",
+                "transfer_admin": "admin_transferred",
+            }[action])
+        elif action == "edit":
+            from core_apps.chat.services.group_provisioning import provision_group
+            from core_apps.chat.services.group_events import record_event
+            record_event(provision_group(group), "conversation.updated", actor=request.user)
         return group
 
     return mutate(

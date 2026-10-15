@@ -94,6 +94,7 @@ def join_payload(item, user):
 
 
 def group_payload(group, user):
+    from core_apps.chat.services.group_projection import card_projection
     if not group.memberships.filter(user=user, status="active").exists():
         return {
             "id": str(group.id),
@@ -138,6 +139,7 @@ def group_payload(group, user):
     return {
         "id": str(group.id),
         "name": group.name,
+        "chat": card_projection(group, user),
         "status": group.status,
         "visibility": group.visibility,
         "revision": group.revision,

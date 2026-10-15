@@ -3,11 +3,12 @@ from uuid import UUID
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from .group_consumer import GroupChatConsumerMixin
 
 logger = logging.getLogger(__name__)
 
 
-class ChatConsumer(AsyncJsonWebsocketConsumer):
+class ChatConsumer(GroupChatConsumerMixin, AsyncJsonWebsocketConsumer):
     """
     Personal websocket channel for a single authenticated user.
 
@@ -48,6 +49,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             await sync_to_async(set_user_online_status)(str(self.user.id), False)
 
     async def receive_json(self, content, **kwargs):
+        if not isinstance(content, dict):
+            await self.send_json({"error": "Supply a message object."})
+            return
+        if await self.handle_group_request(content):
+            return
         msg_type = content.get("type")
 
         if msg_type == "message.send":

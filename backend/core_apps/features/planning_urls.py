@@ -1,4 +1,5 @@
 from django.urls import path
+from core_apps.chat.views.group_history import GroupChatSummaryAPIView
 
 from . import planning_condition_views as conditions
 from . import planning_discovery_views as discovery
@@ -10,6 +11,7 @@ from .planning_home_views import planning_home
 
 
 urlpatterns = [
+    path("housing-groups/<uuid:group_id>/chat/", GroupChatSummaryAPIView.as_view()),
     path("planning-home/", planning_home),
     path("open-housing-groups/", groups.open_groups),
     path("group-join-requests/", groups.my_group_join_requests),

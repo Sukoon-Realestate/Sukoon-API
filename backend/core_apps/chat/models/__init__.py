@@ -6,3 +6,5 @@ __all__ = [
     "ConversationParticipant",
     "Message",
 ]
+from .attachment import ChatAttachment
+from .event import ChatEvent, ChatNotificationDelivery

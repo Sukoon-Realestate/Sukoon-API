@@ -43,6 +43,12 @@ class ConversationSerializer(serializers.ModelSerializer):
     unread_count = serializers.SerializerMethodField()
     can_send = serializers.SerializerMethodField()
 
+    def to_representation(self, instance):
+        if instance.kind == "housing_group":
+            from core_apps.chat.services.group_projection import summary
+            return summary(instance, self.context["request"].user)
+        return {"conversation_type": "direct", **super().to_representation(instance)}
+
     class Meta:
         model = Conversation
         fields = (
