@@ -3,7 +3,8 @@ import clsx from "clsx";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ArchLines, SignatureWeave } from "@/components/ui/Decor";
+import { ArchLines } from "@/components/ui/Decor";
+import { SignatureSpotlight } from "@/components/ui/SignatureSpotlight";
 import { SECTION_IDS } from "@/lib/sections";
 
 // Stagger helper for the mock-UI choreography inside each card.
@@ -56,8 +57,8 @@ export function WhySukoon({ dict }: { dict: Dictionary }) {
   return (
     <section id={SECTION_IDS.why} className="scroll-mt-16 bg-paper px-2 pb-2 sm:px-4 sm:pb-4">
       <div className="relative overflow-hidden rounded-[2rem] bg-pine py-24 dark:ring-1 dark:ring-white/10 sm:rounded-[2.75rem] sm:py-32">
-        {/* the word woven into the panel like an engraved textile, fading toward the top */}
-        <SignatureWeave className="text-brand-soft/[0.07] [mask-image:linear-gradient(to_top,black_30%,transparent_95%)]" />
+        {/* one large word engraved behind the cards, lit up under the mouse like a torch */}
+        <SignatureSpotlight />
         <div
           aria-hidden
           className="parallax pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_50%_0%,rgba(4,164,23,0.22),transparent_65%)] [--parallax:-60px]"

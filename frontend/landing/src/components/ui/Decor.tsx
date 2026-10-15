@@ -99,23 +99,6 @@ export function WideSignature({ className }: { className?: string }) {
   );
 }
 
-// The word as a woven texture: small tilted copies tiled in a brick layout,
-// like an engraved textile. Fills its (positioned) parent; colour from text-*.
-export function SignatureWeave({ className }: { className?: string }) {
-  // One pattern per page, so a fixed id is safe.
-  return (
-    <svg aria-hidden className={clsx("pointer-events-none absolute inset-0 h-full w-full select-none", className)}>
-      <defs>
-        <pattern id="signature-weave" width="260" height="160" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)">
-          <path d={SIGNATURE_PATH} transform="scale(0.12)" fill="none" stroke="currentColor" strokeWidth="9" />
-          <path d={SIGNATURE_PATH} transform="translate(130 80) scale(0.12)" fill="none" stroke="currentColor" strokeWidth="9" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#signature-weave)" />
-    </svg>
-  );
-}
-
 // The word's outline kept very faint, with a short light that keeps running
 // along the letters (see .signature-trace in globals.css). Outline colour from
 // text-*, the light's from --trace (brand green by default).

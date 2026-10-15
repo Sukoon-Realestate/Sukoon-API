@@ -630,6 +630,13 @@ summary::-webkit-details-marker {
   animation: signature-fill 1s ease-out 3s both;
 }
 
+/* SignatureSpotlight: the lit copy shows only in a soft pool around the pointer
+   (--x / --y are set from JS, relative to the svg). */
+.spotlight-lit {
+  -webkit-mask-image: radial-gradient(circle 300px at var(--x, -999px) var(--y, -999px), black, transparent 70%);
+  mask-image: radial-gradient(circle 300px at var(--x, -999px) var(--y, -999px), black, transparent 70%);
+}
+
 /* SignatureTrace: a short light runs along the word's outline, over and over.
    The dash moves in the mask (.signature-trace-light); the glow path shows it. */
 .signature-trace-glow {

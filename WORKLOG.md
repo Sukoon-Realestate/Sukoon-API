@@ -679,3 +679,14 @@
 - **Bug fixed along the way:** `pathLength={1}` is ignored on paths with `vector-effect: non-scaling-stroke`; the browser applied the dashes as literal px. So the existing draw-in animations (hero, card stamp, wide word) were never actually drawing, and the new running light was invisible. Drawing and the running light now happen in an SVG `<mask>` on a thick ordinary stroke under the visible 1.25px outline. `.signature-draw` is the mask stroke, the new `.signature-fill-in` handles the fill fade, and `.signature-trace-glow` / `.signature-trace-light` drive the trace. Mask ids come from `useId()`. Also moved the trace colour from the `stroke` attribute (where `var()` doesn't resolve) to `style`.
 - **Verification:** Checked screenshots of the trace light running in the owner card, the FAQ signature mid-draw, the weave, and the footer in light and dark; the hero split still draws in. Typecheck and ESLint pass.
 - **Files:** `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/HowItWorks.tsx`, `frontend/landing/src/components/sections/WhySukoon.tsx`, `frontend/landing/src/components/sections/Faq.tsx`, `frontend/landing/src/components/layout/SiteFooter.tsx`, `frontend/landing/src/app/globals.css`
+
+### Why Sukoon: mouse spotlight instead of the woven pattern
+- **What:** Replaced the tiled "سكون" weave in the Why Sukoon panel with one large, barely visible word that lights up under the mouse, like a torch over an engraving.
+- **Why:** The user didn't like the repetition of the tiled pattern.
+- **Details:**
+  - New client component `SignatureSpotlight`: two stacked copies of the full word behind the bento cards. The resting copy is at `brand-soft/7%`. The lit copy (`.spotlight-lit`) uses full `brand-soft` with a 22% fill, masked to a 300px radial pool at `--x`/`--y`.
+  - A `pointermove` listener on the panel writes those variables directly, rAF-throttled and with no React re-render, and fades the lit copy in; `pointerleave` fades it out.
+  - Mouse only: on touch devices only the faint word shows.
+  - Removed `SignatureWeave`, which had no other users.
+- **Verification:** Drove the mouse over the panel through the DevTools protocol and confirmed the mask position and opacity update, and that the lit part of the word shows through the translucent cards. Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/ui/SignatureSpotlight.tsx` (new), `frontend/landing/src/components/sections/WhySukoon.tsx`, `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/app/globals.css`
