@@ -1,0 +1,541 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "title": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ar": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "en": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            }
+          },
+          "required": [
+            "ar",
+            "en"
+          ]
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "content_origin": {
+          "enum": [
+            "photographic_capture",
+            "reality_scan",
+            "measured_model",
+            "representative_model"
+          ]
+        },
+        "spaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "label": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                },
+                "required": [
+                  "ar",
+                  "en"
+                ]
+              },
+              "floor_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "space_kind": {
+                "enum": [
+                  "room",
+                  "bed",
+                  "shared",
+                  "corridor",
+                  "entrance"
+                ]
+              },
+              "room_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "bed_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "floor_id",
+              "space_kind"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "kind": {
+          "const": "panorama_360"
+        },
+        "scenes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "space_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "source_asset_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "initial_view": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "yaw_rad": {
+                    "type": "number",
+                    "minimum": -3.141593,
+                    "maximum": 3.141593
+                  },
+                  "pitch_rad": {
+                    "type": "number",
+                    "minimum": -1.570797,
+                    "maximum": 1.570797
+                  },
+                  "hfov_rad": {
+                    "type": "number",
+                    "minimum": 0.3,
+                    "maximum": 2.1
+                  }
+                },
+                "required": [
+                  "yaw_rad",
+                  "pitch_rad",
+                  "hfov_rad"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "space_id",
+              "source_asset_id",
+              "initial_view"
+            ]
+          },
+          "minItems": 2,
+          "maxItems": 40
+        },
+        "hotspots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "source_scene_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "target_scene_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "yaw_rad": {
+                "type": "number",
+                "minimum": -3.141593,
+                "maximum": 3.141593
+              },
+              "pitch_rad": {
+                "type": "number",
+                "minimum": -1.570797,
+                "maximum": 1.570797
+              },
+              "label": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                },
+                "required": [
+                  "ar",
+                  "en"
+                ]
+              },
+              "target_view": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "yaw_rad": {
+                    "type": "number",
+                    "minimum": -3.141593,
+                    "maximum": 3.141593
+                  },
+                  "pitch_rad": {
+                    "type": "number",
+                    "minimum": -1.570797,
+                    "maximum": 1.570797
+                  },
+                  "hfov_rad": {
+                    "type": "number",
+                    "minimum": 0.3,
+                    "maximum": 2.1
+                  }
+                },
+                "required": [
+                  "yaw_rad",
+                  "pitch_rad",
+                  "hfov_rad"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "source_scene_id",
+              "target_scene_id",
+              "yaw_rad",
+              "pitch_rad",
+              "label",
+              "target_view"
+            ]
+          },
+          "minItems": 2,
+          "maxItems": 400
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "context": {
+                "anyOf": [
+                  {
+                    "const": "overview"
+                  },
+                  {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                ]
+              },
+              "space_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]{1,80}$"
+                },
+                "minItems": 1,
+                "maxItems": 100
+              },
+              "scene_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]{1,80}$"
+                },
+                "minItems": 2,
+                "maxItems": 40
+              },
+              "start_scene_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              }
+            },
+            "required": [
+              "context",
+              "space_ids",
+              "scene_ids",
+              "start_scene_id"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "schema_version",
+        "title",
+        "captured_at",
+        "content_origin",
+        "spaces",
+        "kind",
+        "scenes",
+        "hotspots",
+        "variants"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "title": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ar": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "en": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            }
+          },
+          "required": [
+            "ar",
+            "en"
+          ]
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "content_origin": {
+          "enum": [
+            "photographic_capture",
+            "reality_scan",
+            "measured_model",
+            "representative_model"
+          ]
+        },
+        "spaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "label": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "ar": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                },
+                "required": [
+                  "ar",
+                  "en"
+                ]
+              },
+              "floor_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              },
+              "space_kind": {
+                "enum": [
+                  "room",
+                  "bed",
+                  "shared",
+                  "corridor",
+                  "entrance"
+                ]
+              },
+              "room_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "bed_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "floor_id",
+              "space_kind"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "kind": {
+          "const": "model_3d"
+        },
+        "coordinate_system": {
+          "const": "right_handed_y_up_meters"
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "context": {
+                "anyOf": [
+                  {
+                    "const": "overview"
+                  },
+                  {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                ]
+              },
+              "space_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]{1,80}$"
+                },
+                "minItems": 1,
+                "maxItems": 100
+              },
+              "visual_asset_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "collision_asset_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "walk_asset_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "spawns": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,80}$"
+                    },
+                    "space_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,80}$"
+                    },
+                    "floor_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,80}$"
+                    },
+                    "foot_position_m": {
+                      "type": "array",
+                      "items": {
+                        "type": "number",
+                        "minimum": -10000,
+                        "maximum": 10000
+                      },
+                      "minItems": 3,
+                      "maxItems": 3
+                    },
+                    "yaw_rad": {
+                      "type": "number",
+                      "minimum": -3.141593,
+                      "maximum": 3.141593
+                    },
+                    "pitch_rad": {
+                      "type": "number",
+                      "minimum": -1.570797,
+                      "maximum": 1.570797
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "space_id",
+                    "floor_id",
+                    "foot_position_m",
+                    "yaw_rad",
+                    "pitch_rad"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 100
+              },
+              "start_spawn_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,80}$"
+              }
+            },
+            "required": [
+              "context",
+              "space_ids",
+              "visual_asset_id",
+              "collision_asset_id",
+              "walk_asset_id",
+              "spawns",
+              "start_spawn_id"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "schema_version",
+        "title",
+        "captured_at",
+        "content_origin",
+        "spaces",
+        "kind",
+        "coordinate_system",
+        "variants"
+      ]
+    }
+  ]
+}

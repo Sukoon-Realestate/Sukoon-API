@@ -1,0 +1,94 @@
+"""Tiled cubemaps with bounded per-tile memory and metadata-free JPEG output."""
+
+import math
+import os
+import uuid
+import numpy as np
+from PIL import Image, ImageOps, UnidentifiedImageError
+from .errors import TourError, require
+from .storage import path, read_path, persist_tiles
+
+FACES = ("f", "b", "l", "r", "u", "d")
+LEVELS = (512, 1024, 2048)
+
+
+def cube_direction(face, u, v):
+    one = np.ones_like(u)
+    return {
+        "f": (u, -v, -one),
+        "b": (-u, -v, one),
+        "l": (-one, -v, -u),
+        "r": (one, -v, u),
+        "u": (u, one, v),
+        "d": (u, -one, -v),
+    }[face]
+
+
+def tile_pixels(pixels, face, size, tile_x, tile_y):
+    height, width, _ = pixels.shape
+    u, v = np.meshgrid(
+        (np.arange(512, dtype=np.float32) + tile_x * 512 + 0.5) / size * 2 - 1,
+        (np.arange(512, dtype=np.float32) + tile_y * 512 + 0.5) / size * 2 - 1,
+    )
+    x, y, z = cube_direction(face, u, v)
+    sx = (np.arctan2(x, -z) / (2 * math.pi) + 0.5) * width - 0.5
+    sy = (0.5 - np.arctan2(y, np.sqrt(x * x + z * z)) / math.pi) * height - 0.5
+    sy = np.clip(sy, 0, height - 1)
+    x0, y0 = np.floor(sx).astype(int), np.floor(sy).astype(int)
+    fx, fy = (sx - x0)[..., None], (sy - y0)[..., None]
+    a, b = pixels[y0, x0 % width], pixels[y0, (x0 + 1) % width]
+    c, d = (
+        pixels[np.minimum(y0 + 1, height - 1), x0 % width],
+        pixels[np.minimum(y0 + 1, height - 1), (x0 + 1) % width],
+    )
+    return ((a * (1 - fx) + b * fx) * (1 - fy) + (c * (1 - fx) + d * fx) * fy).astype(
+        np.uint8
+    )
+
+
+def process_panorama(asset):
+    try:
+        with Image.open(read_path(asset.blob)) as original:
+            width, height = original.size
+            require(
+                original.format in ("JPEG", "PNG")
+                and 4096 <= width <= 8192
+                and width == 2 * height
+                and width * height <= 35_000_000,
+                "invalid_panorama",
+                "Use a complete 2:1 JPEG/PNG sphere, 4096–8192 pixels wide.",
+            )
+            require(
+                getattr(original, "n_frames", 1) == 1,
+                "invalid_panorama",
+                "Animated panoramas are not supported.",
+            )
+            image = ImageOps.exif_transpose(original).convert("RGB")
+            require(
+                image.size == (width, height),
+                "invalid_panorama_orientation",
+                "Normalize rotated panorama orientation before uploading.",
+            )
+            pixels = np.asarray(image)
+            key = uuid.uuid4().hex
+            directory = path(key)
+            directory.mkdir(mode=0o700)
+            for level, size in enumerate(LEVELS):
+                for face in FACES:
+                    for tile_y in range(size // 512):
+                        for tile_x in range(size // 512):
+                            target = directory / f"{face}_{level}_{tile_x}_{tile_y}.jpg"
+                            Image.fromarray(
+                                tile_pixels(pixels, face, size, tile_x, tile_y)
+                            ).save(target, "JPEG", quality=85)
+                            os.chmod(target, 0o600)
+            persist_tiles(key)
+            return {
+                "blob": key,
+                "type": "tiles",
+                "media_type": "image/jpeg",
+                "faces": list(FACES),
+                "levels": list(LEVELS),
+            }
+    except (UnidentifiedImageError, OSError, Image.DecompressionBombError) as exc:
+        raise TourError("invalid_panorama", "Panorama decoding failed.") from exc

@@ -42,6 +42,7 @@ class PropertyDetailSerializer(PropertyDetailMediaMixin, serializers.ModelSerial
     price = serializers.SerializerMethodField()
     ownership_proof = serializers.SerializerMethodField()
     rental_inventory = serializers.SerializerMethodField()
+    virtual_tours = serializers.SerializerMethodField()
 
     AMENITY_FIELDS = (
         ("has_wifi", "wifi"),
@@ -105,11 +106,18 @@ class PropertyDetailSerializer(PropertyDetailMediaMixin, serializers.ModelSerial
             "updated_at",
             "availability_confirmed_at",
             "rental_inventory",
+            "virtual_tours",
         ]
         read_only_fields = fields
 
     def get_price(self, obj: Property) -> str:
         return f"{obj.price:.2f}"
+
+    def get_virtual_tours(self, obj: Property) -> list:
+        from core_apps.virtual_tours.sessions import available
+        # General details only contain overview hints. Offer-scoped reads have
+        # a separate no-store endpoint and never enter the public listing cache.
+        return available(obj)
 
     def get_owner(self, obj: Property) -> dict:
         owner = PropertyDetailOwnerSerializer(obj.owner).data

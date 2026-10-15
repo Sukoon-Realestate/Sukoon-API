@@ -1,0 +1,302 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "type": {
+          "const": "initialize"
+        },
+        "message_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "viewer_instance_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bootstrap_token": {
+              "type": "string",
+              "minLength": 20,
+              "maxLength": 100
+            },
+            "session_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "language": {
+              "enum": [
+                "ar",
+                "en"
+              ]
+            },
+            "reduced_motion": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "bootstrap_token",
+            "session_id",
+            "language",
+            "reduced_motion"
+          ]
+        }
+      },
+      "required": [
+        "protocol_version",
+        "type",
+        "message_id",
+        "viewer_instance_id",
+        "session_id",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "type": {
+          "const": "selectPlace"
+        },
+        "message_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "viewer_instance_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "place_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,80}$"
+            }
+          },
+          "required": [
+            "place_id"
+          ]
+        }
+      },
+      "required": [
+        "protocol_version",
+        "type",
+        "message_id",
+        "viewer_instance_id",
+        "session_id",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "type": {
+          "const": "resetView"
+        },
+        "message_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "viewer_instance_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {},
+          "required": []
+        }
+      },
+      "required": [
+        "protocol_version",
+        "type",
+        "message_id",
+        "viewer_instance_id",
+        "session_id",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "type": {
+          "const": "pause"
+        },
+        "message_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "viewer_instance_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {},
+          "required": []
+        }
+      },
+      "required": [
+        "protocol_version",
+        "type",
+        "message_id",
+        "viewer_instance_id",
+        "session_id",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "type": {
+          "const": "resume"
+        },
+        "message_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "viewer_instance_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {},
+          "required": []
+        }
+      },
+      "required": [
+        "protocol_version",
+        "type",
+        "message_id",
+        "viewer_instance_id",
+        "session_id",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "type": {
+          "const": "dispose"
+        },
+        "message_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "viewer_instance_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {},
+          "required": []
+        }
+      },
+      "required": [
+        "protocol_version",
+        "type",
+        "message_id",
+        "viewer_instance_id",
+        "session_id",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "type": {
+          "const": "readView"
+        },
+        "message_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "viewer_instance_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {},
+          "required": []
+        }
+      },
+      "required": [
+        "protocol_version",
+        "type",
+        "message_id",
+        "viewer_instance_id",
+        "session_id",
+        "payload"
+      ]
+    }
+  ]
+}

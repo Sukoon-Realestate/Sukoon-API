@@ -80,3 +80,4 @@ Thumbs.db
 
 # Private group-chat media; never publish as public MEDIA_URL.
 private_chat_media/
+private_virtual_tours/
