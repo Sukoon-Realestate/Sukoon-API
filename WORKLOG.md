@@ -620,3 +620,9 @@
   - Everything is gated on `[data-motion]`, so reduced motion and no-JS still render the final state.
 - **Verification:** Checked screenshots of the hero, How it works and the carousel after their animations, and an FAQ heading mid-entrance (lines staggering in). Typecheck passes and ESLint shows no errors. The parallax drift itself is scroll-driven and wasn't captured in a still.
 - **Files:** `frontend/landing/public/images/app/*.webp` (new), `frontend/landing/public/images/app/*.png` (deleted), `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/components/ui/SectionHeading.tsx`, `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/Hero.tsx`, `frontend/landing/src/components/sections/FinalCta.tsx`, `frontend/landing/src/components/sections/WhySukoon.tsx`, `frontend/landing/src/components/sections/HowItWorks.tsx`, `frontend/landing/src/app/globals.css`
+
+### Removed the box around the carousel phone
+- **What:** The phone in the "Inside Sukoon" carousel now sits directly on the page, without the bordered card behind it.
+- **Why:** The user wanted to see the section without the box.
+- **Details:** Dropped `overflow-hidden rounded-[2rem] border border-line bg-sand` from the slide's `<figure>`; the soft radial glow and the caption stay. Nothing clips the card stamp any more, so it was narrowed from `w-[116%]` (with `-inset-x-[8%]`) to the figure's own width. That keeps it out of the text column, and the whole word now shows behind the phone. Checked light and dark screenshots at 1440px. Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/sections/ProductFeatures.tsx`

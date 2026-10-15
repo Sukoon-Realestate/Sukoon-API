@@ -46,11 +46,11 @@ export function ProductFeatures({ dict }: { dict: Dictionary }) {
                   {content.cta}<ArrowDown aria-hidden className="size-4" />
                 </a>
               </div>
-              <figure className="relative overflow-hidden rounded-[2rem] border border-line bg-sand px-6 pt-8 text-center sm:pt-10">
+              <figure className="relative px-6 pt-8 text-center sm:pt-10">
                 <div aria-hidden className="slide-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(4,164,23,0.12),transparent_70%)]" />
                 {/* the whole word stamped behind the phone; it redraws each time its slide comes in.
                     Hidden where the section's WideSignature takes over, so the two never overlap. */}
-                <SignatureMark draw className="min-[1700px]:hidden -inset-x-[8%] top-[42%] w-[116%] -translate-y-1/2 text-brand-deep/25 [--sig-fill:0.14] dark:text-brand/30 dark:[--sig-fill:0]" />
+                <SignatureMark draw className="min-[1700px]:hidden inset-x-0 top-[42%] w-full -translate-y-1/2 text-brand-deep/25 [--sig-fill:0.14] dark:text-brand/30 dark:[--sig-fill:0]" />
                 <div className="slide-phone relative">
                   <IPhoneFrame>
                     <Image unoptimized src={`/images/app/${screens[index]}-light.webp`} alt={item.imageAlt} width={390} height={844} className="block h-auto w-full dark:hidden" />
