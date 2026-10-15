@@ -2,6 +2,12 @@
 
 ## 2026-10-15
 
+### Verify virtual-tour deployment after user-reported release
+- **What:** Probed the user-confirmed DigitalOcean host with anonymous GETs and inspected the backend implementation on remote `main`.
+- **Result:** At 12:25:19 UTC, `/health/` returned 200 with `ready: true`; the capabilities route, owner tour collection route and `/tours/` returned Django route-not-found HTML with status 404 and `CF-Cache-Status: BYPASS`. Remote main `5eb32ad` includes tour commit `c4fd793` and its URL registration. The active API process and viewer deployment remain unverified; disabled flags do not explain a routing 404.
+- **Validation:** A read-only Django route/configuration console command was executed locally under test settings and resolved `core_apps.virtual_tours.views.view`. Documented that command, migration/health inspection, source comparison and separate viewer deployment. No production data, flags, migrations or deployment were changed.
+- **Files:** Sibling `darak-app/docs/verification/virtual_tours/DEPLOYMENT_VERIFICATION_2026_10_15.md`, sanitized probe JSON, and implementation-guide evidence link; this worklog.
+
 ### Implement optional 360-degree and prepared 3D property tours
 - **What:** Added the `virtual_tours` Django app and migration, private multipart uploads, immutable revision/asset packages, ETag and idempotency recovery, inventory-scoped viewer sessions/resources, Celery panorama/model processing, staff review/disable tools, and private filesystem or S3/Spaces storage. Implemented the connected owner editors, tenant entry and trusted viewer in the sibling Flutter repository.
 - **Why:** Fulfill `SOKOUN_VIRTUAL_TOURS_360_AND_3D_IMPLEMENTATION_PLAN.md` while preserving required ordinary property photos/video and rental actions.
