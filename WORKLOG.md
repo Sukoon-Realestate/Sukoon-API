@@ -557,3 +557,47 @@
 - **Why:** The user sent a screenshot of slide 6 with its badge, heading and CTA clipped.
 - **Details:** (1) `snap-always` + `scrollBy`: Chromium treats `scrollBy` as directional, so a multi-slide jump stopped at the next slide and the track ended up between snap points. `goTo` now uses `scrollTo(scrollLeft + delta)`. (2) The inactive-slide `scale` was on the slide box, which `goTo` measures, so the offset was ~2% off. Moved it to the slide's content (`.feature-slide > *`). (3) The on-screen check needed 35% of the carousel visible, which a stacked phone slide taller than the screen can never reach. It now uses `rootMargin: -30% 0px`. (4) `goTo` sets the active slide right away and ignores the slides it passes until `scrollend` (1.2s timer as fallback); chip centring is now instant. (5) Counter forced to `dir="ltr"` (it read "08 / 06" in Arabic). Checked in headless Edge through the DevTools protocol at 1511px and 390px: all 8 slides line up exactly with the frame, a jump to 6 lands on 6, and autoplay goes 6 → 7 → 8 → 1. Typecheck and ESLint pass.
 - **Files:** `frontend/landing/src/components/sections/FeatureCarousel.tsx`, `frontend/landing/src/app/globals.css`
+
+### "سكون" engraving on the app-screenshots section
+- **What:** Added the same edge engraving from the hero to the "Inside Sukoon" section (the app-screenshot carousel).
+- **Why:** The user wanted the hero's look repeated on the section with the phone screenshots.
+- **Details:** Moved the two-halves setup into a reusable `EdgeSignature` component in `Decor.tsx`; the hero now uses it too, and looks the same. In `ProductFeatures` the section became `relative isolate overflow-hidden`, and the engraving sits at `top-[38%]` with `-z-10`, so it stays behind the non-positioned content. It shows from `lg` up only, like the hero. Checked light and dark screenshots of the section, captured by driving headless Edge over the DevTools protocol (a scratchpad script, not added to the repo). Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/Hero.tsx`, `frontend/landing/src/components/sections/ProductFeatures.tsx`
+
+### New engraving treatment for the app-screenshots section
+- **What:** Replaced the hero-style edge halves in the "Inside Sukoon" section with two new treatments. The whole "سكون" word is stamped inside each screenshot card behind the phone, and the word stands upright in the empty side margins on wide screens.
+- **Why:** The user felt the section repeated the hero and asked for a different approach that uses the empty space on the right and left.
+- **Details:**
+  - Card stamp: `SignatureMark` takes a new `draw` prop that sets `pathLength=1`. A new `.signature-draw` rule in `globals.css` draws the outline in each time its slide becomes active, then fades the fill in with a new `signature-fill` keyframe.
+  - Side words: new `SideSignatures` component in `Decor.tsx`. The word is rotated ±90° and centred in the margin beside the 72rem container, sized to that margin with `calc((100vw - 72rem) ...)`. It shows only from 1700px wide.
+  - The section is `relative isolate overflow-hidden`, and the side words sit at `-z-10`. `EdgeSignature` stays in use by the hero only.
+- **Verification:** Screenshots at 2540px (light and dark) show both side words filling the margins. At 1440px they are hidden and the card stamp shows. Typecheck and ESLint pass. The draw-in animation was not confirmed in a mid-animation screenshot: the dev server kept returning loading or blank frames.
+- **Files:** `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/app/globals.css`
+
+### Removed the side-margin words from the app-screenshots section
+- **What:** Removed the upright "سكون" words from the side margins of the "Inside Sukoon" section.
+- **Why:** The user didn't like the word written down both sides.
+- **Details:** Deleted the `SideSignatures` component and its class constant from `Decor.tsx`. Reverted the section wrapper in `ProductFeatures` to its original classes. The animated stamp inside the screenshot card stays. Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/ProductFeatures.tsx`
+
+### One wide "سكون" behind the app-screenshots section
+- **What:** Put the word back on the sides of the "Inside Sukoon" section as one large horizontal signature. Its start (the ن) sits in the left margin, its end (the ل strokes and the ك sweep) in the right margin, and the middle runs faintly behind the content.
+- **Why:** The user wanted the word in the empty side space, but done better than the rotated copies they rejected.
+- **Details:**
+  - New `WideSignature` component in `Decor.tsx`, sized `calc(60vw + 28.8rem)`: the 72rem content plus 60% of the margins.
+  - A plain `100vw` width made the word taller than the section, so only fragments showed; a 100rem cap left the margins empty on 2540px screens. The `calc` width avoids both.
+  - A horizontal mask keeps the margins at full strength and drops the middle 62rem to 12%, so it still reads as one word.
+  - It shows from 1700px wide only. The section is `relative isolate overflow-hidden`, and the word sits at `-z-10`.
+  - The animated stamp inside the screenshot card stays.
+- **Verification:** Checked in screenshots at 2540px (dark) and 1920px (light). Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/ProductFeatures.tsx`
+
+### Stop the wide signature and the card stamp from overlapping
+- **What:** On screens 1700px and wider only the section-wide "سكون" shows; below that only the stamp inside the screenshot card. The wide word now draws itself in when the section scrolls into view.
+- **Why:** The user said the wide word clashed with the stamp inside the phone card.
+- **Details:**
+  - The card stamp got `min-[1700px]:hidden`, the same breakpoint where `WideSignature` appears, so the two never show together.
+  - `WideSignature` now passes `draw`, and the section has `data-animate`. Two new rules in `globals.css`, keyed on `[data-animate]` / `[data-inview]` from `InViewObserver`, keep the word hidden until the section enters the viewport, then draw the outline and fade the fill in.
+  - The selectors only match a signature that is a direct child of the section, so the card stamp keeps its own per-slide animation.
+- **Verification:** Checked screenshots at 2540px (dark: wide word fully drawn, card clean) and 1440px (light: card stamp only). Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/app/globals.css`

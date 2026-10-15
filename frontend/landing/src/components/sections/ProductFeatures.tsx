@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SECTION_IDS } from "@/lib/sections";
 import { IPhoneFrame } from "@/components/phone/IPhoneFrame";
+import { SignatureMark, WideSignature } from "@/components/ui/Decor";
 import { FeatureCarousel } from "./FeatureCarousel";
 
 // Staggers the slide-entrance animation (see .feature-slide in globals.css).
@@ -15,7 +16,8 @@ const screens = ["discovery", "shortlist", "viewings", "owners", "conversations"
 export function ProductFeatures({ dict }: { dict: Dictionary }) {
   const content = dict.features;
   return (
-    <section id={SECTION_IDS.features} aria-labelledby="features-title" className="scroll-mt-20 bg-paper py-24 sm:py-32">
+    <section id={SECTION_IDS.features} aria-labelledby="features-title" data-animate className="relative isolate scroll-mt-20 overflow-hidden bg-paper py-24 sm:py-32">
+      <WideSignature className="top-1/2 -z-10 -translate-y-[42%]" />
       <Container>
         <div id="features-title">
           <SectionHeading eyebrow={content.eyebrow} titleLines={content.titleLines} subtitle={content.subtitle} />
@@ -46,7 +48,10 @@ export function ProductFeatures({ dict }: { dict: Dictionary }) {
               </div>
               <figure className="relative overflow-hidden rounded-[2rem] border border-line bg-sand px-6 pt-8 text-center sm:pt-10">
                 <div aria-hidden className="slide-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(4,164,23,0.12),transparent_70%)]" />
-                <div className="slide-phone">
+                {/* the whole word stamped behind the phone; it redraws each time its slide comes in.
+                    Hidden where the section's WideSignature takes over, so the two never overlap. */}
+                <SignatureMark draw className="min-[1700px]:hidden -inset-x-[8%] top-[42%] w-[116%] -translate-y-1/2 text-brand-deep/25 [--sig-fill:0.14] dark:text-brand/30 dark:[--sig-fill:0]" />
+                <div className="slide-phone relative">
                   <IPhoneFrame>
                     <Image unoptimized src={`/images/app/${screens[index]}-light.png`} alt={item.imageAlt} width={390} height={844} className="block h-auto w-full dark:hidden" />
                     <Image unoptimized src={`/images/app/${screens[index]}-dark.png`} alt="" aria-hidden width={390} height={844} className="hidden h-auto w-full dark:block" />
