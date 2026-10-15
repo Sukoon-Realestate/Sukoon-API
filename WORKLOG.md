@@ -527,3 +527,21 @@
 - **Why:** The user said it looked bad on mobile: below `lg` the hero stacks, so both halves ended up behind the headline and paragraph.
 - **Details:** Added `max-lg:hidden` to the shared `signature` class constant and removed the small-screen size and offset values that no longer apply. Checked in headless Edge: at 900px (en) there is no engraving, and at 1440px (ar) the hero looks the same as before. Typecheck and ESLint pass.
 - **Files:** `frontend/landing/src/components/sections/Hero.tsx`
+
+### Landing: turn the "Inside Sukoon" screenshots section into a slider
+- **What:** Replaced the 8 stacked feature rows in `ProductFeatures` with a carousel that shows one feature at a time.
+- **Why:** The user said the section with the screenshots was too long.
+- **Details:** New client component `FeatureCarousel` uses a CSS scroll-snap track, so swiping and trackpad scrolling work natively, even without JS. It has audience-label chips (horizontally scrollable on mobile), prev/next arrows (flipped for RTL) and a `03 / 08` counter. An IntersectionObserver keeps the active slide in sync with manual swipes. It respects reduced motion and has carousel/slide ARIA roles. Slides no longer alternate left/right. Added `carousel` labels (ar/en) to the features dictionary. Typecheck and ESLint pass, and the dev server renders 8 slides.
+- **Files:** `frontend/landing/src/components/sections/FeatureCarousel.tsx` (new), `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/i18n/features.ts`
+
+### Landing: autoplay + animations for the features slider
+- **What:** The "Inside Sukoon" slider now auto-advances every 6s (looping to the start) and animates each slide as it becomes active.
+- **Why:** The user asked for the slider to move on its own and to have some animation.
+- **Details:** The timer is a CSS progress bar inside the active chip. When its animation ends, the slider advances, so pausing just pauses that animation and the bar always matches the timer. Autoplay pauses on hover, on keyboard focus inside the carousel, when the section is off-screen, and through a new pause/play button (WCAG 2.2.2). It doesn't run under reduced motion, because the global rule disables the animation. Slides that aren't active are dimmed and scaled down. The active slide's text rises in a stagger (via `--d`), the phone mockup enters with a lift/scale/tilt and then floats, the glow scales in, and the counter digit animates. Arrows now wrap around. On mobile, the chip row keeps the active chip centred. Added `pause`/`play` labels (ar/en). Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/sections/FeatureCarousel.tsx`, `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/app/globals.css`, `frontend/landing/src/i18n/features.ts`
+
+### Landing: fix clipped text and broken jumps in the features slider
+- **What:** Fixed slides sitting off-centre (text cut off at the edge), chip/wrap-around jumps stopping short, and autoplay never starting on phones.
+- **Why:** The user sent a screenshot of slide 6 with its badge, heading and CTA clipped.
+- **Details:** (1) `snap-always` + `scrollBy`: Chromium treats `scrollBy` as directional, so a multi-slide jump stopped at the next slide and the track ended up between snap points. `goTo` now uses `scrollTo(scrollLeft + delta)`. (2) The inactive-slide `scale` was on the slide box, which `goTo` measures, so the offset was ~2% off. Moved it to the slide's content (`.feature-slide > *`). (3) The on-screen check needed 35% of the carousel visible, which a stacked phone slide taller than the screen can never reach. It now uses `rootMargin: -30% 0px`. (4) `goTo` sets the active slide right away and ignores the slides it passes until `scrollend` (1.2s timer as fallback); chip centring is now instant. (5) Counter forced to `dir="ltr"` (it read "08 / 06" in Arabic). Checked in headless Edge through the DevTools protocol at 1511px and 390px: all 8 slides line up exactly with the frame, a jump to 6 lands on 6, and autoplay goes 6 → 7 → 8 → 1. Typecheck and ESLint pass.
+- **Files:** `frontend/landing/src/components/sections/FeatureCarousel.tsx`, `frontend/landing/src/app/globals.css`

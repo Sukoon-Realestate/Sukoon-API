@@ -4,6 +4,7 @@ export const featuresAr = {
   subtitle: "من أول بحث لحد المعاينة، ومن نشر العقار لمتابعة الطلبات. أدوات تساعد المستأجر يختار والمالك ينظّم، في مكان واحد.",
   cta: "اعرف تفاصيل إطلاق التطبيق",
   caption: "معاينة من التصميم الأولي للتطبيق ببيانات توضيحية؛ قد تختلف الواجهة النهائية.",
+  carousel: { carousel: "مميزات التطبيق", previous: "الميزة السابقة", next: "الميزة التالية", pause: "إيقاف التشغيل التلقائي", play: "تشغيل تلقائي" },
   items: [
     {
       audience: "للباحثين عن سكن",
@@ -70,6 +71,7 @@ export const featuresEn: typeof featuresAr = {
   subtitle: "From your first search to a viewing, from publishing a property to managing requests. One place to help tenants choose and owners stay organised.",
   cta: "See app launch availability",
   caption: "Arabic mobile design preview with sample data. The final app interface may differ.",
+  carousel: { carousel: "App features", previous: "Previous feature", next: "Next feature", pause: "Pause autoplay", play: "Play autoplay" },
   items: [
     {
       audience: "For home seekers",
