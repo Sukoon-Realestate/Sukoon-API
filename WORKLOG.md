@@ -2,6 +2,18 @@
 
 ## 2026-10-15
 
+### Diagnose group-chat GET method rejection
+- **What:** Traced the user's exact group-chat URL through local Django routing and the live API's allowed-method response.
+- **Why:** Opening the group chat returned the Arabic equivalent of `Method "GET" not allowed.` despite GET being the required summary method.
+- **Details:** At 09:29:48 UTC, an unauthenticated GET to the supplied DigitalOcean URL returned HTTP 401 with `Allow: POST, OPTIONS` and `CF-Cache-Status: BYPASS`; authentication prevented an anonymous reproduction of the user's method error. The same URL resolves locally to `GroupChatSummaryAPIView` with `GET, OPTIONS`. Directly calling the generic `housing_group_action` locally with an authenticated GET reproduced HTTP 405 and the same method error without database writes. The live headers are consistent with the generic action route capturing `chat`; the active component's resolved view, source file and release still require runtime verification. Added a read-only `django.urls.resolve` console probe and interpretation to the existing sibling verification report. No production source, request method, server settings or data changed, and the live issue remains unresolved.
+- **Files:** `WORKLOG.md`; sibling `darak-app/docs/verification/housing_groups/GROUP_CHAT_ENTRY_AND_DEPLOYMENT_2026_10_15.md`.
+
+### Group chat entry and live deployment diagnosis
+- **What:** Removed the mobile chat-button dependency on list-preview availability in the sibling Flutter checkout and verified automatic chat provisioning for a new group with only its creator.
+- **Why:** The user expects each housing group to have chat without a separate activation condition and still could not open chat after running the read-only configuration probe.
+- **Details:** Added an HTTP regression test proving that group creation immediately provisions one canonical conversation, permits its creator to read the summary and send a message, and requires no other planning activity. All 24 focused PostgreSQL backend tests and 62 Flutter entry/navigation/access tests passed; scoped Dart analysis and Black checks passed. The DigitalOcean API still advertised `group_chat: false` and returned HTML 404 for events/preferences/attachments routes that resolve locally and return authentication errors. The actual deployed commit, server migrations and user's authenticated session remain unverified; no live mutation or deployment was performed. Documented the correct component/release, migration and backfill steps in the sibling checkout's `docs/verification/housing_groups/GROUP_CHAT_ENTRY_AND_DEPLOYMENT_2026_10_15.md`. Local tests initially hit disk exhaustion, then passed after deleting only unused generated Flutter test cache; the task-owned PostgreSQL instance was stopped and its temporary data removed.
+- **Files:** `backend/core_apps/chat/tests/test_group_api.py`, `WORKLOG.md`; sibling `darak-app` group chat button, focused entry test, feature README, API reference and verification report.
+
 ### Landing nav order fix & SEO pass
 - **What:** Made the header nav order match the page section order, and tightened SEO on the landing page.
 - **Why:** The first nav link (داخل سكون) landed on a section further down the page than the nav order implied, so links and sections were out of step.
@@ -9,6 +21,12 @@
 - **Files:** `frontend/landing/src/app/(landing)/[lang]/page.tsx`, `frontend/landing/src/app/(landing)/[lang]/layout.tsx`, `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/lib/structuredData.ts`, `frontend/landing/src/lib/site.ts`, `WORKLOG.md`
 
 ## 2026-10-14
+
+### Investigate group-chat discovery after deployment
+- **What:** Compared the live DigitalOcean planning-capabilities response with the pushed backend source after the user reported `group_chat: false`.
+- **Why:** The source fix was deployed by the user, but the API still advertised the previous value.
+- **Details:** At 2026-10-14 18:46:03 UTC, three independent anonymous GET requests returned HTTP 200 with `configuration.group_chat: false` and `CF-Cache-Status: BYPASS`; the earlier probe also returned `Cache-Control: private, no-store`. GitHub `main` and local HEAD both point to `db970ef495a557d502096362c14b8bbc4c135e44`, which contains `True`; the preceding commit `07ad6ea` contains `False`. A local Django import returned `True`. GitHub's successful deployment for the latest commit belongs to `vercel[bot]` and a Vercel URL. The DigitalOcean active commit, build logs and component routing remain unverified because no DigitalOcean session is configured here; requested the active deployment hash/status from the user. No server, configuration, database or application source was changed during this investigation.
+- **Files:** `WORKLOG.md`.
 
 ### Admin Quick Demo Login & Backend Switch Visibility
 - **What:** Wrapped the "دخول سريع كـ Admin (تجريبي)" button in `!isBackendEnabled()` so that it is only shown when `NEXT_PUBLIC_ENABLE_BACKEND` is `false` (offline/demo mode) and automatically hidden when connected to a live backend (`true`).
