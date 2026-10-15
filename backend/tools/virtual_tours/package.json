@@ -1,0 +1,11 @@
+{
+  "name": "@sokoun/tour-worker-validation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@dimforge/rapier3d-compat": "0.21.0",
+    "gltf-validator": "2.0.0-dev.3.10",
+    "three": "0.186.1"
+  }
+}

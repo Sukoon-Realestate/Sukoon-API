@@ -107,6 +107,13 @@ test-connected-cycles: ## Exercise joined marketplace/planning/funded/ongoing cy
 	SOKOUN_PLANNING_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) SOKOUN_CONTRACT_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) $(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_full_cycle_http.py core_apps/features/tests/test_ongoing_cycle_http.py core_apps/features/tests/test_change_recovery.py core_apps/features/tests/test_cycle_qa_setup.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/connected-cycles.xml
 
 .PHONY: test-runtime runtime-readiness
+.PHONY: test-virtual-tours export-virtual-tour-contracts
+test-virtual-tours: ## Run tour authorization, processing, recovery and PostgreSQL concurrency checks
+	$(CYCLE_PYTHON) -m pytest core_apps/virtual_tours/tests core_apps/properties/tests/test_rental_inventory.py --ds=$(CYCLE_SETTINGS)
+
+export-virtual-tour-contracts: ## Export executable schemas and OpenAPI without touching production data
+	$(CYCLE_PYTHON) manage.py export_virtual_tour_contracts ../docs/virtual_tours/contracts --settings=config.settings.test
+
 test-runtime: ## Verify App Platform spec preservation and scheduled execution evidence
 	$(CYCLE_PYTHON) -m pytest core_apps/common/test_runtime.py core_apps/common/test_digitalocean_runtime.py --ds=$(CYCLE_SETTINGS)
 

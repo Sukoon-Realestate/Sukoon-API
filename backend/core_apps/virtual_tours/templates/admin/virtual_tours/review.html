@@ -1,0 +1,26 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% block content %}
+<h2>{{ revision.tour.property.title }} — {{ revision.tour.kind }}</h2>
+<p>Revision {{ revision.id }}. Processing: {{ revision.processing_state }}. Review: {{ revision.review_state }}.</p>
+<p>Inspect every package, including downloadable GLB contents, private rooms, other beds, mirrors and documents.
+For panoramas verify real door connections and return routes. For 3D verify scale, floor, walls, glass, fixed doors and all approved starting places.
+Approval applies to this exact source hash. A published property and unchanged scope are still required for tenant access.</p>
+<form id="tour-review" method="post">{% csrf_token %}
+  <input type="hidden" name="source_hash" value="{{ revision.source_hash }}">
+  <p><label for="tour-context">Package to inspect</label>
+  <select id="tour-context" name="context">{% for variant in variants %}<option value="{{ variant.context }}">{{ variant.context }} — {{ variant.scope_fingerprint|truncatechars:16 }}</option>{% endfor %}</select>
+  <button type="button" id="tour-preview">Open private preview</button></p>
+  <p id="tour-preview-status" role="status"></p>
+  <p>The preview requires the viewer and admin to be served on the same HTTPS origin. Bootstrap credentials are sent in memory, never in the address bar.</p>
+  {% if can_review %}
+  <label for="tour-reason">Review evidence or rejection reason</label><br>
+  <textarea id="tour-reason" name="reason" rows="6" cols="80" maxlength="4000" required></textarea>
+  <p><button name="decision" value="approved">Approve inspected packages</button>
+  <button name="decision" value="rejected">Reject with reason</button></p>
+  {% endif %}
+</form>
+<details><summary>Processing report</summary><pre>{{ revision.report }}</pre></details>
+{{ revision.id|stringformat:"s"|json_script:"tour-revision-id" }}
+<script src="{% static 'virtual_tours/review.js' %}"></script>
+{% endblock %}

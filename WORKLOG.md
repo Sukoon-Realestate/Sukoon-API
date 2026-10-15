@@ -2,6 +2,18 @@
 
 ## 2026-10-15
 
+### Implement optional 360-degree and prepared 3D property tours
+- **What:** Added the `virtual_tours` Django app and migration, private multipart uploads, immutable revision/asset packages, ETag and idempotency recovery, inventory-scoped viewer sessions/resources, Celery panorama/model processing, staff review/disable tools, and private filesystem or S3/Spaces storage. Implemented the connected owner editors, tenant entry and trusted viewer in the sibling Flutter repository.
+- **Why:** Fulfill `SOKOUN_VIRTUAL_TOURS_360_AND_3D_IMPLEMENTATION_PLAN.md` while preserving required ordinary property photos/video and rental actions.
+- **Details:** Both tour kinds default to disabled. Prepared models require the real Khronos/Rapier validation tools, physically scoped content and review; automatic scanning/LOD is not provided. All 28 focused PostgreSQL tests, 105 Flutter tests, seven viewer unit tests and two production-bundle Chrome smoke tests passed locally. Static analysis, Django checks and migration drift checks passed. S3/Spaces recovery is covered with a protocol fake; real provider access, authorized real assets, physical Android/iOS WebViews and live deployment remain unverified. No live database migration or publication was performed.
+- **Files:** `backend/core_apps/virtual_tours/`, `backend/tools/virtual_tours/`, `backend/config/`, property-detail projection, dependency locks, `backend/Makefile`, `docs/virtual_tours/`; sibling `darak-app/SOKOUN_VIRTUAL_TOURS_IMPLEMENTATION.md`, mobile tour feature/integration and `apps/virtual_tour_viewer/`.
+
+### Make the group-chat runtime probe easier to run
+- **What:** Replaced the multiline console diagnostic in the sibling verification report with an unbuffered, single-line `manage.py shell -c` command that includes stderr.
+- **Why:** The user reported no output from the previous heredoc command in DigitalOcean Console.
+- **Details:** A locally executed one-line route probe under test settings exited successfully and printed `GroupChatSummaryAPIView ['GET', 'OPTIONS']`. Documented canceling a possibly incomplete pasted command before retrying, and checking `pwd` if the console remains silent. The cause of the remote silence, the active deployment and the live chat repair remain unverified; no backend production source or live data changed.
+- **Files:** `WORKLOG.md`; sibling `darak-app/docs/verification/housing_groups/GROUP_CHAT_ENTRY_AND_DEPLOYMENT_2026_10_15.md`.
+
 ### Diagnose group-chat GET method rejection
 - **What:** Traced the user's exact group-chat URL through local Django routing and the live API's allowed-method response.
 - **Why:** Opening the group chat returned the Arabic equivalent of `Method "GET" not allowed.` despite GET being the required summary method.

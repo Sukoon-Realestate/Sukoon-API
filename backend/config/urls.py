@@ -52,6 +52,7 @@ urlpatterns = [
         "api/v1/homepage/", PropertyListAPIView.as_view(), name="property-homepage-list"
     ),
     path("api/v1/properties/", include("core_apps.properties.urls")),
+    path("api/v1/", include("core_apps.virtual_tours.urls")),
     path("api/v1/notifications/", include("core_apps.notifications.urls")),
     path("api/v1/chat/", include("core_apps.chat.urls")),
     path("api/v1/pages/", include("core_apps.common.pages_urls")),
