@@ -151,6 +151,37 @@ body {
   }
 }
 
+@keyframes line-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.55em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Decorations drift against the scroll for a little depth; --parallax is the
+   offset at each end of the element's pass through the viewport. */
+@keyframes parallax {
+  from {
+    transform: translateY(var(--parallax, 50px));
+  }
+  to {
+    transform: translateY(calc(var(--parallax, 50px) * -1));
+  }
+}
+
 @keyframes draw {
   from {
     stroke-dashoffset: 1;
@@ -276,6 +307,28 @@ body {
   animation: grow-y 0.9s ease-in-out var(--d, 0ms) both;
 }
 
+/* Section titles land line by line; the eyebrow rule draws out beside them. */
+[data-motion] :is(.reveal, [data-animate]):not([data-inview]) .seq-line {
+  opacity: 0;
+}
+
+[data-motion] :is(.reveal, [data-animate]):not([data-inview]) .seq-grow-x {
+  transform: scaleX(0);
+}
+
+[data-inview] .seq-line {
+  animation: line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0ms) both;
+}
+
+[data-inview] .seq-grow-x {
+  transform-origin: right;
+  animation: grow-x 0.7s cubic-bezier(0.6, 0, 0.2, 1) var(--d, 0ms) both;
+}
+
+[dir="ltr"] [data-inview] .seq-grow-x {
+  transform-origin: left;
+}
+
 .typing-bubble {
   opacity: 0;
 }
@@ -351,6 +404,12 @@ details[open] > .faq-answer {
 
 /* Header gains a soft shadow and a reading-progress line as you scroll. */
 @supports (animation-timeline: scroll()) {
+  [data-motion] .parallax {
+    animation: parallax linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+
   .header-lift {
     animation: header-lift linear both;
     animation-timeline: scroll();

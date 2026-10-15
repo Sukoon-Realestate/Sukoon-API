@@ -58,7 +58,7 @@ export function WhySukoon({ dict }: { dict: Dictionary }) {
       <div className="relative overflow-hidden rounded-[2rem] bg-pine py-24 dark:ring-1 dark:ring-white/10 sm:rounded-[2.75rem] sm:py-32">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_50%_0%,rgba(4,164,23,0.22),transparent_65%)]"
+          className="parallax pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_50%_0%,rgba(4,164,23,0.22),transparent_65%)] [--parallax:-60px]"
         />
 
         <Container className="relative">

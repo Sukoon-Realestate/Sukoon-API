@@ -29,7 +29,7 @@ function JourneyCard({
       id={id}
       style={{ "--delay": `${delay}ms` } as React.CSSProperties}
       className={clsx(
-        "reveal relative scroll-mt-24 overflow-hidden rounded-[2rem] p-5 min-[400px]:p-7 sm:p-10",
+        "reveal relative scroll-mt-24 overflow-hidden rounded-[2rem] p-5 hover:-translate-y-1 min-[400px]:p-7 sm:p-10",
         dark ? "bg-pine text-white dark:ring-1 dark:ring-white/10" : "border border-line bg-sand text-fg",
       )}
     >

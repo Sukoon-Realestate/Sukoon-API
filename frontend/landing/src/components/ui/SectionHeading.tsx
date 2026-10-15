@@ -1,5 +1,8 @@
 import clsx from "clsx";
 
+// Staggers the heading's entrance once it scrolls into view (see .seq-* in globals.css).
+const at = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
+
 export function SectionHeading({
   eyebrow,
   titleLines,
@@ -19,14 +22,15 @@ export function SectionHeading({
   const centered = align === "center";
 
   return (
-    <div className={clsx("reveal max-w-2xl", centered && "mx-auto text-center", className)}>
+    <div data-animate className={clsx("max-w-2xl", centered && "mx-auto text-center", className)}>
       <p
+        style={at(0)}
         className={clsx(
-          "inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em]",
+          "seq-rise inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em]",
           dark ? "text-brand-soft" : "text-accent",
         )}
       >
-        <span className={clsx("h-px w-6", dark ? "bg-brand-soft/60" : "bg-accent/50")} aria-hidden />
+        <span style={at(150)} className={clsx("seq-grow-x h-px w-6", dark ? "bg-brand-soft/60" : "bg-accent/50")} aria-hidden />
         {eyebrow}
       </p>
       <h2
@@ -35,15 +39,16 @@ export function SectionHeading({
           dark ? "text-white" : "text-fg",
         )}
       >
-        {titleLines.map((line) => (
-          <span key={line} className="block">
+        {titleLines.map((line, index) => (
+          <span key={line} style={at(120 + index * 140)} className="seq-line block">
             {line}
           </span>
         ))}
       </h2>
       <p
+        style={at(220 + titleLines.length * 140)}
         className={clsx(
-          "mt-4 text-base leading-8 sm:text-lg",
+          "seq-rise mt-4 text-base leading-8 sm:text-lg",
           dark ? "text-white/65" : "text-muted",
           centered && "mx-auto max-w-xl",
         )}

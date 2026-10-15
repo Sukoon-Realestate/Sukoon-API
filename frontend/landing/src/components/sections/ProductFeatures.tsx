@@ -17,7 +17,7 @@ export function ProductFeatures({ dict }: { dict: Dictionary }) {
   const content = dict.features;
   return (
     <section id={SECTION_IDS.features} aria-labelledby="features-title" data-animate className="relative isolate scroll-mt-20 overflow-hidden bg-paper py-24 sm:py-32">
-      <WideSignature className="top-1/2 -z-10 -translate-y-[42%]" />
+      <WideSignature className="parallax top-1/2 -z-10 -translate-y-[42%] [--parallax:70px]" />
       <Container>
         <div id="features-title">
           <SectionHeading eyebrow={content.eyebrow} titleLines={content.titleLines} subtitle={content.subtitle} />
@@ -53,8 +53,8 @@ export function ProductFeatures({ dict }: { dict: Dictionary }) {
                 <SignatureMark draw className="min-[1700px]:hidden -inset-x-[8%] top-[42%] w-[116%] -translate-y-1/2 text-brand-deep/25 [--sig-fill:0.14] dark:text-brand/30 dark:[--sig-fill:0]" />
                 <div className="slide-phone relative">
                   <IPhoneFrame>
-                    <Image unoptimized src={`/images/app/${screens[index]}-light.png`} alt={item.imageAlt} width={390} height={844} className="block h-auto w-full dark:hidden" />
-                    <Image unoptimized src={`/images/app/${screens[index]}-dark.png`} alt="" aria-hidden width={390} height={844} className="hidden h-auto w-full dark:block" />
+                    <Image unoptimized src={`/images/app/${screens[index]}-light.webp`} alt={item.imageAlt} width={390} height={844} className="block h-auto w-full dark:hidden" />
+                    <Image unoptimized src={`/images/app/${screens[index]}-dark.webp`} alt="" aria-hidden width={390} height={844} className="hidden h-auto w-full dark:block" />
                   </IPhoneFrame>
                 </div>
                 <figcaption className="relative mx-auto max-w-sm py-5 text-xs leading-5 text-muted">{content.caption}</figcaption>

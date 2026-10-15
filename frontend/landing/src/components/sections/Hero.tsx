@@ -75,7 +75,7 @@ function TrustStrip({ dict }: { dict: Dictionary }) {
                 style={{ "--delay": `${index * 90}ms` } as React.CSSProperties}
                 className="reveal flex items-center gap-3 border-line py-5 max-lg:odd:border-e max-lg:nth-[n+3]:border-t sm:gap-4 sm:py-6 lg:not-last:border-e lg:px-6 lg:first:ps-0 max-lg:odd:pe-3 max-lg:even:ps-4"
               >
-                <Icon className="size-6 shrink-0 text-accent" strokeWidth={1.6} aria-hidden />
+                <Icon style={{ "--d": "250ms" } as React.CSSProperties} className="seq-pop size-6 shrink-0 text-accent" strokeWidth={1.6} aria-hidden />
                 <span className="leading-snug">
                   <span className="block text-sm font-semibold text-fg sm:text-base">{item.title}</span>
                   <span className="block text-xs text-muted sm:text-sm">{item.body}</span>
@@ -93,13 +93,13 @@ export function Hero({ dict }: { dict: Dictionary }) {
   const hero = dict.hero;
 
   return (
-    <section className="grain relative overflow-hidden">
+    <section data-animate className="grain relative overflow-hidden">
       {/* soft morning light behind the arch */}
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 end-[-10%] size-[46rem] animate-drift rounded-full bg-[radial-gradient(closest-side,rgba(4,164,23,0.16),transparent)]"
       />
-      <EdgeSignature className="top-4" />
+      <EdgeSignature draw className="parallax top-4 [--parallax:50px]" />
 
       <Container className="relative grid items-center gap-14 pb-20 pt-10 sm:pt-14 lg:grid-cols-[1.2fr_1fr] lg:gap-8 lg:pb-24 lg:pt-16">
         <div>

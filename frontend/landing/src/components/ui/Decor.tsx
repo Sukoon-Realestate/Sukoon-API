@@ -35,14 +35,17 @@ const edgeSignature =
 // right, its start on the left, each fading out before it reaches the content.
 // Only from lg up: below that sections stack and the text has no free side.
 // `className` sets the vertical position (e.g. top-4); the parent must be
-// positioned and clip overflow.
-export function EdgeSignature({ className }: { className?: string }) {
+// positioned and clip overflow. With `draw`, a [data-animate] parent makes it
+// write itself in once in view (see .signature-draw in globals.css).
+export function EdgeSignature({ className, draw = false }: { className?: string; draw?: boolean }) {
   return (
     <>
       <SignatureMark
+        draw={draw}
         className={clsx(edgeSignature, "-right-72 [mask-image:linear-gradient(to_left,black_40%,transparent_72%)]", className)}
       />
       <SignatureMark
+        draw={draw}
         className={clsx(edgeSignature, "-left-10 [mask-image:linear-gradient(to_right,black_30%,transparent_55%)]", className)}
       />
     </>

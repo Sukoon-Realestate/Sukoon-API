@@ -601,3 +601,16 @@
   - The selectors only match a signature that is a direct child of the section, so the card stamp keeps its own per-slide animation.
 - **Verification:** Checked screenshots at 2540px (dark: wide word fully drawn, card clean) and 1440px (light: card stamp only). Typecheck and ESLint pass.
 - **Files:** `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/app/globals.css`
+
+### Lighter screenshots carousel + more motion across the landing page
+- **What:** Cut the app-screenshots section's image weight by about 86%, and added more motion across the landing page.
+- **Why:** The user found the phone section heavy and the site as a whole felt static ("dead").
+- **Details:**
+  - **Weight:** The 16 carousel screenshots were full-size PNGs (3.1 MB, `unoptimized`; the two `shortlist` photos alone were 816 KB each). Converted them to WebP at 560px wide, 2x the 280px phone frame, quality 82: 447 KB in total. `ProductFeatures` now points at the `.webp` files and the PNGs were removed (`git rm`); nothing else referenced them.
+  - **Section headings:** `SectionHeading` now uses `[data-animate]` instead of a single `.reveal` fade. The eyebrow rises, its rule grows out (new `seq-grow-x`), each title line lands in turn (new `seq-line` / `line-in`), and the subtitle follows. This applies to every section that uses the component.
+  - **Hero:** The section is `[data-animate]` and `EdgeSignature` takes a new `draw` prop, so the "سكون" engraving writes itself in after the splash lifts. The trust-strip icons pop in as each item reveals.
+  - **Scroll-linked drift:** New `.parallax` utility (`animation-timeline: view()`, offset set by `--parallax`, only where supported) on the hero engraving, the features `WideSignature`, the FinalCta arches and the WhySukoon top glow. It uses `transform`, so it composes with Tailwind's `translate`.
+  - **Hover:** Journey cards in How it works lift on hover, like the bento cards.
+  - Everything is gated on `[data-motion]`, so reduced motion and no-JS still render the final state.
+- **Verification:** Checked screenshots of the hero, How it works and the carousel after their animations, and an FAQ heading mid-entrance (lines staggering in). Typecheck passes and ESLint shows no errors. The parallax drift itself is scroll-driven and wasn't captured in a still.
+- **Files:** `frontend/landing/public/images/app/*.webp` (new), `frontend/landing/public/images/app/*.png` (deleted), `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/components/ui/SectionHeading.tsx`, `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/components/sections/Hero.tsx`, `frontend/landing/src/components/sections/FinalCta.tsx`, `frontend/landing/src/components/sections/WhySukoon.tsx`, `frontend/landing/src/components/sections/HowItWorks.tsx`, `frontend/landing/src/app/globals.css`
