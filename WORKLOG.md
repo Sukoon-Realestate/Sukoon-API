@@ -1,5 +1,13 @@
 # Worklog
 
+## 2026-10-15
+
+### Landing nav order fix & SEO pass
+- **What:** Made the header nav order match the page section order, and tightened SEO on the landing page.
+- **Why:** The first nav link (داخل سكون) landed on a section further down the page than the nav order implied, so links and sections were out of step.
+- **Details:** `ProductFeatures` ("داخل سكون", `#inside-sukoon`) now renders directly after the Hero, so the nav reads داخل سكون → كيف يعمل → لماذا سكون → أسئلة شائعة in page order. SEO: the dark-mode phone screenshots are now decorative (`alt=""`) so screen readers don't announce each one twice; the locale layout sets explicit robots directives (`max-image-preview: large`, `max-snippet: -1`); the Organization JSON-LD gains a `description` (new `SITE_DESCRIPTION` in `lib/site.ts`). Existing canonical, hreflang, sitemap, robots, FAQ JSON-LD, and noindex on `/admin` were already correct and left as is. Verified with `tsc --noEmit`, eslint on changed files, and `next build`; built HTML confirmed section order and metadata.
+- **Files:** `frontend/landing/src/app/(landing)/[lang]/page.tsx`, `frontend/landing/src/app/(landing)/[lang]/layout.tsx`, `frontend/landing/src/components/sections/ProductFeatures.tsx`, `frontend/landing/src/lib/structuredData.ts`, `frontend/landing/src/lib/site.ts`, `WORKLOG.md`
+
 ## 2026-10-14
 
 ### Admin Quick Demo Login & Backend Switch Visibility

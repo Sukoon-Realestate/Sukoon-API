@@ -2,6 +2,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import {
   BUSINESS,
+  SITE_DESCRIPTION,
   SITE_NAME,
   SITE_NAME_AR,
   SITE_URL,
@@ -21,6 +22,7 @@ function organization() {
     alternateName: SITE_NAME_AR,
     url: SITE_URL,
     logo: absoluteUrl("/apple-icon.png"),
+    description: SITE_DESCRIPTION,
     ...(SOCIAL_PROFILES.length > 0 && { sameAs: SOCIAL_PROFILES }),
   };
 }

@@ -43,7 +43,7 @@ export function ProductFeatures({ dict }: { dict: Dictionary }) {
                 <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(4,164,23,0.12),transparent_70%)]" />
                 <IPhoneFrame>
                   <Image unoptimized src={`/images/app/${screens[index]}-light.png`} alt={item.imageAlt} width={390} height={844} className="block h-auto w-full dark:hidden" />
-                  <Image unoptimized src={`/images/app/${screens[index]}-dark.png`} alt={item.imageAlt} width={390} height={844} className="hidden h-auto w-full dark:block" />
+                  <Image unoptimized src={`/images/app/${screens[index]}-dark.png`} alt="" aria-hidden width={390} height={844} className="hidden h-auto w-full dark:block" />
                 </IPhoneFrame>
                 <figcaption className="relative mx-auto max-w-sm py-5 text-xs leading-5 text-muted">{content.caption}</figcaption>
               </figure>

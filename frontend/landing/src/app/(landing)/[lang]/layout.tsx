@@ -32,6 +32,11 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     title: dict.meta.title,
     description: dict.meta.description,
     applicationName: SITE_NAME,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+    },
     alternates: {
       canonical: `/${lang}`,
       languages: { ar: "/ar", en: "/en", "x-default": `/${defaultLocale}` },

@@ -26,9 +26,10 @@ export default async function LandingPage({ params }: PageProps<"/[lang]">) {
       <SiteHeader lang={lang} dict={dict} />
       <main>
         <Hero dict={dict} />
+        {/* Order matches the header nav (lib/sections.ts), so each nav link lands on the section it names. */}
+        <ProductFeatures dict={dict} />
         <HowItWorks dict={dict} />
         <WhySukoon dict={dict} />
-        <ProductFeatures dict={dict} />
         <Faq dict={dict} />
         <FinalCta dict={dict} />
       </main>
