@@ -61,6 +61,8 @@ def company_subject(user, identifier):
         ResidentialBuilding,
         ResidentialComplex,
         PortfolioBatch,
+        PortfolioChangeSet,
+        ResidentialMedia,
     )
     from django.db.models import Q
     from ...company_staff_models import (
@@ -95,6 +97,10 @@ def company_subject(user, identifier):
     batch = PortfolioBatch.objects.filter(id=identifier, owner=user).first()
     if batch:
         return batch
+    for model in (PortfolioChangeSet, ResidentialMedia):
+        item = model.objects.filter(id=identifier, owner=user).first()
+        if item:
+            return item
     offer = PortfolioOffer.objects.filter(id=identifier, owner=user).first()
     if offer:
         return offer
@@ -163,13 +169,18 @@ def authority_review_subject(user, identifier):
     Operation lookup still scopes the receipt to its initiating actor. This
     resolver is intentionally separate from owner/company action capabilities.
     """
-    from core_apps.properties.models import ResidentialBuilding, ResidentialComplex
+    from core_apps.properties.models import (
+        ResidentialBuilding,
+        ResidentialComplex,
+        ResidentialMedia,
+    )
     from ..rental_lifecycle.common import staff_role
 
     for model, roles in (
         (Company, {"kyc_reviewer"}),
         (ResidentialBuilding, {"property_reviewer"}),
         (ResidentialComplex, {"property_reviewer"}),
+        (ResidentialMedia, {"property_reviewer"}),
     ):
         if staff_role(user, roles):
             item = model.objects.filter(id=identifier).first()
@@ -191,7 +202,19 @@ def actions(user, capability, identifier=""):
     if item is None:
         return []
     if capability == "residential_portfolios":
-        return ["read", "batch", "offer", "publish", "pause", "attach"]
+        return [
+            "read",
+            "batch",
+            "offer",
+            "publish",
+            "pause",
+            "attach",
+            "edit",
+            "preview",
+            "apply",
+            "media",
+            "remove_media",
+        ]
     company = (
         item
         if isinstance(item, Company)

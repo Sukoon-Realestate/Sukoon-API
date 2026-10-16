@@ -61,7 +61,7 @@ def validate_authoring(revision, document):
         )
         selected = [spaces[i] for i in variant["space_ids"]]
         contexts[variant["context"]] = scope_policy(
-            revision.tour.property, variant["context"], selected
+            revision.tour.target, variant["context"], selected
         )
         if document["kind"] == "panorama_360":
             scenes = [s for s in document["scenes"] if s["id"] in variant["scene_ids"]]

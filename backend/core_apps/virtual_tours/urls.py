@@ -39,3 +39,28 @@ urlpatterns = [
     ),
     path("admin/" + revision_base + "review-decisions/", views.review_decision),
 ]
+
+# Reuse the same authoring, processing, upload, review and viewer lifecycle.
+for asset_kind in ("building", "complex"):
+    base = "residential-assets/" + asset_kind + "/<uuid:property_id>/virtual-tours/"
+    tour = base + "<uuid:tour_id>/"
+    revision = tour + "revisions/<uuid:revision_id>/"
+    kwargs = {"asset_kind": asset_kind}
+    urlpatterns += [
+        path(base, views.tours, kwargs),
+        path(base + "available/", views.availability, kwargs),
+        path(tour, views.delete_tour, kwargs),
+        path(tour + "unpublish/", views.unpublish_tour, kwargs),
+        path(tour + "revisions/", views.revisions, kwargs),
+        path(revision, views.revision, kwargs),
+        *[
+            path(
+                revision + action + "/",
+                views.revision_action,
+                {**kwargs, "action": action},
+            )
+            for action in ("uploads", "process", "submit-review")
+        ],
+        path(tour + "viewer-sessions/", views.viewer_sessions, kwargs),
+        path("admin/" + revision + "review-decisions/", views.review_decision, kwargs),
+    ]

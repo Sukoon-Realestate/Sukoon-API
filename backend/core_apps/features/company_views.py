@@ -369,10 +369,21 @@ def containers(request):
     )
 
 
-@company_api(["GET"])
+@company_api(["GET", "PATCH"])
 def container_detail(request, kind, asset_id):
     if kind not in {"building", "complex"}:
         raise ValidationError("Choose building or complex.")
+    if request.method == "PATCH":
+        from .services.company.portfolio_changes import update_container
+
+        data = validated(ContainerBody, request.data)
+        return mutate(
+            request,
+            "portfolio.container.update",
+            lambda: portfolio.parent_for(request.user, kind, asset_id),
+            lambda _: update_container(request.user, kind, asset_id, data),
+            portfolio.container_payload,
+        )
     return Response(
         portfolio.container_payload(portfolio.parent_for(request.user, kind, asset_id))
     )
@@ -394,7 +405,7 @@ def attach_unit(request, kind, asset_id):
 
 @company_api(["GET"])
 def unit_templates(request):
-    units = Property.objects.filter(owner=request.user)
+    units = Property.objects.filter(owner=request.user, retired_at=None)
     if request.query_params.get("unparented") == "true":
         units = units.filter(building=None, complex=None)
     return page(

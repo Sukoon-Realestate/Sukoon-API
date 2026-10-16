@@ -101,6 +101,10 @@ FIELD_LABELS = {
 
 MESSAGES.update(
     {
+        "Inventory parents changed. Review the current scope.": "تغير ارتباط الوحدات بالعقارات. راجع نطاق السكن الحالي.",
+        "Choose a supported residential asset.": "اختر عقارًا سكنيًا مدعومًا.",
+        "Container tours show common areas only. Prepare unit interiors on their canonical unit.": "تعرض جولات العمارات والمجمعات المساحات المشتركة فقط. أضف جولة المساحات الداخلية في سجل الوحدة نفسها.",
+        "Upload the asset's common-area photos before preparing a tour.": "ارفع صور المساحات المشتركة للعقار قبل إعداد الجولة.",
         "Use membership controls for an activated staff record.": "استخدم إدارة العضويات لتعديل صلاحيات الموظف المفعل.",
         "Only unlinked active staff can receive an activation.": "يمكن إرسال التفعيل لموظف نشط لم يربط حسابه بعد فقط.",
         "Company activation email delivery is not configured.": "إرسال بريد تفعيل الشركة غير مهيأ.",
@@ -147,5 +151,79 @@ FIELD_LABELS.update(
         "Approver Id": "المعتمد",
         "Row Key": "معرف الصف",
         "Rows": "الموظفون",
+    }
+)
+
+
+# Owner portfolio editing, private media and controlled physical changes.
+MESSAGES.update(
+    {
+        "This inventory identity has been retired.": "هذه الوحدة مؤرشفة بعد تعديل تقسيمها ولا يمكن إعادة عرضها للإيجار.",
+        "An existing commitment requires a supported amendment before this change.": "يوجد التزام قائم يتطلب تعديلًا تعاقديًا مدعومًا قبل هذا التغيير.",
+        "Use an inventory change to move an existing asset.": "استخدم تغيير هيكل العقار لنقل عقار مسجل.",
+        "The declared count cannot be smaller than registered inventory.": "لا يمكن أن يقل العدد المعلن عن الوحدات المسجلة.",
+        "Choose exact units you own inside this asset.": "اختر وحدات محددة تملكها داخل هذا العقار.",
+        "Create a new preview for unresolved changes.": "أنشئ معاينة جديدة للتغييرات التي لم تكتمل.",
+        "Review current values before editing.": "راجع القيم الحالية قبل التعديل.",
+        "Parent defaults changed. Create a fresh preview.": "تغيرت القيم الافتراضية للعقار. أنشئ معاينة جديدة.",
+        "Unsupported fields.": "توجد حقول غير مدعومة.",
+        "Provide both map coordinates or clear both.": "حدد إحداثيي الموقع معًا أو امسحهما معًا.",
+        "Choose up to 100 distinct units.": "اختر حتى مئة وحدة دون تكرار.",
+        "Choose at least one field to change.": "اختر حقلًا واحدًا على الأقل لتغييره.",
+        "A field cannot be overridden and inherited together.": "لا يمكن تخصيص قيمة الحقل ووراثتها معًا.",
+        "Choose distinct units.": "اختر وحدات دون تكرار.",
+        "A destination is required only for moves.": "حدد وجهة عند نقل الوحدات فقط.",
+        "Review the units to move.": "راجع الوحدات المطلوب نقلها.",
+        "Move a complete building to a complex.": "انقل العمارة بالكامل إلى مجمع سكني.",
+        "Split one unit into 2 to 20 new units.": "قسّم وحدة واحدة إلى وحدتين وحتى عشرين وحدة جديدة.",
+        "Merge selected units into one new unit.": "ادمج الوحدات المحددة في وحدة جديدة واحدة.",
+        "Replacement codes must be unique.": "يجب أن تكون رموز الوحدات الجديدة غير مكررة.",
+        "Authority evidence cannot be representative media.": "لا يمكن تصنيف مستند إثبات الصلاحية كصورة تمثيلية.",
+        "Remove unused media before adding more files.": "أزل الوسائط غير المستخدمة قبل إضافة ملفات أخرى.",
+        "Select the original file for this upload intent.": "اختر الملف الأصلي لاستكمال هذا الرفع.",
+        "The file does not match the saved upload identity.": "الملف لا يطابق بيانات الرفع المحفوظة.",
+        "Choose a valid PNG or JPEG image within the pixel limit.": "اختر صورة PNG أو JPEG صالحة ضمن حد أبعاد الصورة.",
+        "This upload was removed.": "تمت إزالة هذا الملف المرفوع.",
+        "An independent reviewer must review this media.": "يجب أن يراجع شخص مستقل هذه الوسائط.",
+        "Only completed uploads can be reviewed.": "يمكن مراجعة الملفات التي اكتمل رفعها فقط.",
+        "This media is private.": "هذه الوسائط خاصة.",
+        "The parent changed. Create a fresh inventory preview.": "تغير العقار المرتبط. أنشئ معاينة جديدة للوحدات.",
+        "Select a building to move.": "اختر عمارة لنقلها.",
+        "The building already belongs to this complex.": "العمارة مرتبطة بهذا المجمع بالفعل.",
+        "Choose exact units in the source asset.": "اختر وحدات محددة من العقار الأصلي.",
+        "Authority over a container does not grant ownership of its units.": "إدارة العمارة أو المجمع لا تمنح ملكية الوحدات التابعة له.",
+        "Merge units with the same direct parent.": "ادمج وحدات مرتبطة مباشرة بنفس العمارة أو المجمع.",
+        "The destination must be different from the current parent.": "يجب أن تختلف الوجهة عن العقار المرتبط حاليًا.",
+        "Create a fresh eligible preview before applying.": "أنشئ معاينة جديدة قابلة للتنفيذ قبل التطبيق.",
+        "Inventory changed since the preview.": "تغيرت بيانات الوحدات منذ المعاينة.",
+        "An inventory commitment or revision now prevents this change.": "يوجد التزام أو تغيير في بيانات الوحدات يمنع هذا التعديل الآن.",
+    }
+)
+FIELD_LABELS.update(
+    {
+        "Facts": "تفاصيل العقار",
+        "Latitude": "خط العرض",
+        "Longitude": "خط الطول",
+        "Elevators": "المصاعد",
+        "Parking Spaces": "أماكن الانتظار",
+        "Accessibility": "إمكانية الوصول",
+        "Utilities": "ترتيبات المرافق",
+        "Included Services": "الخدمات المشمولة",
+        "Public Access": "معلومات الدخول العامة",
+        "Private Access": "تعليمات الدخول الخاصة",
+        "Contact Name": "اسم مسؤول التشغيل",
+        "Contact Phone": "هاتف مسؤول التشغيل",
+        "Unit Defaults": "القيم الافتراضية للوحدات",
+        "Inherit Fields": "الحقول الموروثة",
+        "Reset Overrides": "استبدال القيم المخصصة",
+        "Changes": "التغييرات",
+        "Replacements": "الوحدات البديلة",
+        "Target Kind": "نوع الوجهة",
+        "Target Id": "الوجهة",
+        "Target Revision": "مراجعة الوجهة",
+        "Representative": "صورة تمثيلية",
+        "Caption": "وصف الصورة",
+        "Byte Size": "حجم الملف",
+        "Content Type": "نوع الملف",
     }
 )

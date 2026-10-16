@@ -31,7 +31,7 @@ def _complete(container):
             code="authority_required",
         )
     if isinstance(container, ResidentialBuilding):
-        if container.units.count() != container.declared_units:
+        if units_for(container).count() != container.declared_units:
             raise RentalConflict(
                 "Register every declared residential unit before offering the entire building.",
                 code="inventory_incomplete",
@@ -39,7 +39,8 @@ def _complete(container):
     else:
         if (
             container.buildings.count() != container.declared_buildings
-            or container.standalone_units.count() != container.declared_standalone_units
+            or container.standalone_units.filter(retired_at=None).count()
+            != container.declared_standalone_units
         ):
             raise RentalConflict(
                 "Register the complete declared complex inventory.",
@@ -97,7 +98,7 @@ def resolve_scope(offer, *, lock=False):
         containers = [offer.complex]
     elif offer.scope == "selected_buildings":
         containers = list(offer.buildings.all())
-        props = Property.objects.filter(building__in=containers)
+        props = Property.objects.filter(building__in=containers, retired_at=None)
     elif offer.scope == "selected_units":
         containers = []
         props = offer.units.all()
@@ -118,6 +119,18 @@ def resolve_scope(offer, *, lock=False):
         .select_related("building__complex", "complex")
         .order_by("pk")
     )
+    if lock:
+        actual_buildings = {p.building_id for p in props if p.building_id}
+        actual_complexes = {p.complex_id for p in props if p.complex_id} | {
+            p.building.complex_id
+            for p in props
+            if p.building_id and p.building.complex_id
+        }
+        if not actual_buildings <= building_ids or not actual_complexes <= complex_ids:
+            raise RentalConflict(
+                "Inventory parents changed. Review the current scope.",
+                code="stale_revision",
+            )
     for container in containers:
         container.refresh_from_db()
         _complete(container)
@@ -131,6 +144,7 @@ def resolve_scope(offer, *, lock=False):
         or not offer.owner.is_verified
         or any(
             p.owner_id != offer.owner_id
+            or p.retired_at is not None
             or not p.is_ownership_verified
             or not p.is_verified
             or p.status != Property.Status.VERIFIED
@@ -191,6 +205,18 @@ def scope_snapshot(offer, props):
         ],
         "topology_revisions": {
             str(c.id): c.topology_revision
+            for c in [
+                *(p.building for p in props if p.building_id),
+                *(p.complex for p in props if p.complex_id),
+                *(
+                    p.building.complex
+                    for p in props
+                    if p.building_id and p.building.complex_id
+                ),
+            ]
+        },
+        "asset_revisions": {
+            str(c.id): c.commercial_revision
             for c in [
                 *(p.building for p in props if p.building_id),
                 *(p.complex for p in props if p.complex_id),

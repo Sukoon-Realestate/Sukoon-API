@@ -4,6 +4,7 @@ from datetime import timedelta
 from functools import wraps
 from django.core import signing
 from django.db import transaction
+from django.db.models import Q
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -29,7 +30,7 @@ from .models import (
     TourViewerSession,
 )
 from .operations import mutate
-from .policy import KINDS, LIMITS, enabled, owner_property
+from .policy import KINDS, LIMITS, enabled, owner_property, target_model
 
 
 def endpoint(methods, public=False, viewer=False):
@@ -67,18 +68,24 @@ def mutation(request, action, resource, execute):
     )
 
 
+def asset_kind_for(request):
+    return request.resolver_match.kwargs.get("asset_kind", "property")
+
+
 def owned_tour(request, property_id, tour_id, lock=False):
-    prop = owner_property(request.user, property_id)
+    prop = owner_property(request.user, property_id, asset_kind_for(request))
     qs = PropertyVirtualTour.objects.select_related("property", "active_revision")
     if lock:
         qs = qs.select_for_update(of=("self",))
-    return get_object_or_404(qs, id=tour_id, property=prop)
+    return get_object_or_404(qs, id=tour_id, **{asset_kind_for(request): prop})
 
 
 def owned_revision(request, property_id, tour_id, revision_id):
     tour = owned_tour(request, property_id, tour_id)
     return get_object_or_404(
-        TourRevision.objects.select_for_update().select_related("tour__property"),
+        TourRevision.objects.select_for_update(of=("self",)).select_related(
+            "tour__property"
+        ),
         id=revision_id,
         tour=tour,
     )
@@ -103,8 +110,8 @@ def capabilities(request):
 
 
 @endpoint(["GET", "POST"])
-def tours(request, property_id):
-    prop = owner_property(request.user, property_id)
+def tours(request, property_id, asset_kind="property"):
+    prop = owner_property(request.user, property_id, asset_kind_for(request))
     if request.method == "GET":
         return Response(
             {"tours": [services.tour_payload(t) for t in prop.virtual_tours.all()]}
@@ -118,7 +125,7 @@ def tours(request, property_id):
 
 
 @endpoint(["POST"])
-def revisions(request, property_id, tour_id):
+def revisions(request, property_id, tour_id, asset_kind="property"):
     return mutation(
         request,
         "revision.create",
@@ -130,7 +137,7 @@ def revisions(request, property_id, tour_id):
 
 
 @endpoint(["GET", "PATCH"])
-def revision(request, property_id, tour_id, revision_id):
+def revision(request, property_id, tour_id, revision_id, asset_kind="property"):
     if request.method == "GET":
         tour = owned_tour(request, property_id, tour_id)
         value = get_object_or_404(tour.revisions, id=revision_id)
@@ -151,7 +158,9 @@ def revision(request, property_id, tour_id, revision_id):
 
 
 @endpoint(["POST"])
-def revision_action(request, property_id, tour_id, revision_id, action):
+def revision_action(
+    request, property_id, tour_id, revision_id, action, asset_kind="property"
+):
     def execute():
         value = owned_revision(request, property_id, tour_id, revision_id)
         etag = request.headers.get("If-Match")
@@ -187,12 +196,12 @@ def disable_tour(request, property_id, tour_id):
 
 
 @endpoint(["POST"])
-def unpublish_tour(request, property_id, tour_id):
+def unpublish_tour(request, property_id, tour_id, asset_kind="property"):
     return disable_tour(request, property_id, tour_id)
 
 
 @endpoint(["DELETE"])
-def delete_tour(request, property_id, tour_id):
+def delete_tour(request, property_id, tour_id, asset_kind="property"):
     return disable_tour(request, property_id, tour_id)
 
 
@@ -201,7 +210,12 @@ def owned_upload(request, upload_id, lock=False):
     if lock:
         qs = qs.select_for_update(of=("self",))
     return get_object_or_404(
-        qs, id=upload_id, revision__tour__property__owner=request.user
+        qs.filter(
+            Q(revision__tour__property__owner=request.user)
+            | Q(revision__tour__building__manager=request.user)
+            | Q(revision__tour__complex__manager=request.user)
+        ),
+        id=upload_id,
     )
 
 
@@ -270,7 +284,7 @@ def upload_part_bytes(request, upload_id, part):
     )
     with transaction.atomic():
         upload = get_object_or_404(
-            TourUploadSession.objects.select_for_update().select_related(
+            TourUploadSession.objects.select_for_update(of=("self",)).select_related(
                 "revision__tour__property"
             ),
             id=upload_id,
@@ -317,8 +331,8 @@ def operation(request, operation_id=None, key=None):
 
 
 @endpoint(["GET"], public=True)
-def availability(request, property_id):
-    prop = get_object_or_404(Property, id=property_id)
+def availability(request, property_id, asset_kind="property"):
+    prop = get_object_or_404(target_model(asset_kind), id=property_id)
     return Response(
         {
             "tours": sessions.available(
@@ -329,11 +343,11 @@ def availability(request, property_id):
 
 
 @endpoint(["POST"], public=True)
-def viewer_sessions(request, property_id, tour_id):
+def viewer_sessions(request, property_id, tour_id, asset_kind="property"):
     tour = get_object_or_404(
         PropertyVirtualTour.objects.select_related("property", "active_revision"),
         id=tour_id,
-        property__id=property_id,
+        **{asset_kind + "__id": property_id},
     )
     return Response(
         sessions.create_session(tour, request.user, request.data), status=201
@@ -488,13 +502,15 @@ def resource_bytes(
 
 
 @endpoint(["POST"])
-def review_decision(request, property_id, tour_id, revision_id):
+def review_decision(request, property_id, tour_id, revision_id, asset_kind="property"):
     def execute():
         value = get_object_or_404(
-            TourRevision.objects.select_for_update().select_related("tour__property"),
+            TourRevision.objects.select_for_update(of=("self",)).select_related(
+                "tour__property"
+            ),
             id=revision_id,
             tour__id=tour_id,
-            tour__property__id=property_id,
+            **{"tour__" + asset_kind + "__id": property_id},
         )
         return services.review(value, request.user, request.data)
 

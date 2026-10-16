@@ -44,7 +44,9 @@ def tour_payload(tour):
     latest = tour.revisions.order_by("-created_at").first()
     return {
         "id": str(tour.id),
-        "property_id": str(tour.property.id),
+        "property_id": str(tour.property.id) if tour.property_id else None,
+        "asset_id": str(tour.target.id),
+        "asset_kind": tour.target_kind,
         "kind": tour.kind,
         "disabled": tour.disabled,
         "deleted": tour.deleted,
@@ -67,23 +69,39 @@ def create_tour(prop, body):
         "Tour preparation is unavailable.",
         503,
     )
-    # A saved property must have completed its required ordinary-media cycle.
-    # Cover is separate from PropertyImage on legacy listings.
-    images = set(str(i.image) for i in prop.images.all())
-    if prop.main_image:
-        images.add(str(prop.main_image))
-    require(
-        10 <= len(images) <= 25
-        and prop.video
-        and prop.video_duration
-        and 1 <= prop.video_duration <= 60,
-        "listing_media_incomplete",
-        "Complete the property's required photos and video before preparing a tour.",
-        409,
+    from core_apps.properties.models import Property
+
+    target_kind = (
+        "property"
+        if isinstance(prop, Property)
+        else "building" if prop._meta.model_name == "residentialbuilding" else "complex"
     )
+    target = {target_kind: prop}
+    if target_kind == "property":
+        # A saved property must have completed its required ordinary-media cycle.
+        # Cover is separate from PropertyImage on legacy listings.
+        images = set(str(i.image) for i in prop.images.all())
+        if prop.main_image:
+            images.add(str(prop.main_image))
+        require(
+            10 <= len(images) <= 25
+            and prop.video
+            and prop.video_duration
+            and 1 <= prop.video_duration <= 60,
+            "listing_media_incomplete",
+            "Complete the property's required photos and video before preparing a tour.",
+            409,
+        )
+    else:
+        require(
+            prop.media.filter(purpose="photo", state="ready").exists(),
+            "listing_media_incomplete",
+            "Upload the asset's common-area photos before preparing a tour.",
+            409,
+        )
     existing = (
         PropertyVirtualTour.objects.select_for_update()
-        .filter(property=prop, kind=body["kind"])
+        .filter(**target, kind=body["kind"])
         .first()
     )
     if existing and existing.deleted:
@@ -100,7 +118,7 @@ def create_tour(prop, body):
         "Open the existing tour and create a revision.",
         409,
     )
-    tour = PropertyVirtualTour.objects.create(property=prop, kind=body["kind"])
+    tour = PropertyVirtualTour.objects.create(**target, kind=body["kind"])
     TourRevision.objects.create(tour=tour)
     return tour_payload(tour), 201
 

@@ -20,6 +20,7 @@ class PropertyLifecycleMixin:
         property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
         if (
             property_obj.building_id
+            or property_obj.retired_at
             or property_obj.complex_id
             or property_obj.portfolio_offers.exists()
         ):
@@ -51,6 +52,13 @@ class PropertyLifecycleMixin:
         """
         Toggles or sets the property's visibility between HIDDEN and active/verified.
         """
+        property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        if property_obj.retired_at:
+            from core_apps.features.services.rental_phase2 import RentalConflict
+
+            raise RentalConflict(
+                "This inventory identity has been retired.", code="inventory_retired"
+            )
         if is_hidden is None:
             new_hidden = property_obj.status != Property.Status.HIDDEN
         else:

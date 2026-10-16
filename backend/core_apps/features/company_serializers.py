@@ -1,6 +1,7 @@
 """Strict discriminated input: hidden fields cannot leak between creation modes."""
 
 from rest_framework import serializers
+from .portfolio_fields import AssetFacts
 
 
 class StrictBody(serializers.Serializer):
@@ -32,6 +33,7 @@ class ContainerBody(CommandBody):
     facilities = serializers.ListField(
         child=serializers.CharField(max_length=100), max_length=30, default=list
     )
+    facts = AssetFacts(required=False)
     complex_id = serializers.UUIDField(required=False)
     declared_units = serializers.IntegerField(
         min_value=1, max_value=500, required=False

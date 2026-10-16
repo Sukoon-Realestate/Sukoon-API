@@ -1,14 +1,46 @@
 """Authoring documents are versioned as a unit; delivery variants are immutable."""
 
 from django.conf import settings
+from builtins import property as computed_property
 from django.db import models
 from core_apps.common.models import TimeStampedModel
 
 
 class PropertyVirtualTour(TimeStampedModel):
     property = models.ForeignKey(
-        "properties.Property", on_delete=models.CASCADE, related_name="virtual_tours"
+        "properties.Property",
+        on_delete=models.CASCADE,
+        related_name="virtual_tours",
+        null=True,
+        blank=True,
     )
+    building = models.ForeignKey(
+        "properties.ResidentialBuilding",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="virtual_tours",
+    )
+    complex = models.ForeignKey(
+        "properties.ResidentialComplex",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="virtual_tours",
+    )
+
+    @computed_property
+    def target(self):
+        return self.property or self.building or self.complex
+
+    @computed_property
+    def target_kind(self):
+        return (
+            "property"
+            if self.property_id
+            else "building" if self.building_id else "complex"
+        )
+
     kind = models.CharField(
         max_length=24, choices=[("panorama_360", "360°"), ("model_3d", "3D")]
     )
@@ -26,7 +58,33 @@ class PropertyVirtualTour(TimeStampedModel):
         constraints = [
             models.UniqueConstraint(
                 fields=["property", "kind"], name="unique_property_tour_kind"
-            )
+            ),
+            models.UniqueConstraint(
+                fields=["building", "kind"], name="unique_building_tour_kind"
+            ),
+            models.UniqueConstraint(
+                fields=["complex", "kind"], name="unique_complex_tour_kind"
+            ),
+            models.CheckConstraint(
+                check=(
+                    models.Q(
+                        property__isnull=False,
+                        building__isnull=True,
+                        complex__isnull=True,
+                    )
+                    | models.Q(
+                        property__isnull=True,
+                        building__isnull=False,
+                        complex__isnull=True,
+                    )
+                    | models.Q(
+                        property__isnull=True,
+                        building__isnull=True,
+                        complex__isnull=False,
+                    )
+                ),
+                name="tour_exact_asset_target",
+            ),
         ]
 
 

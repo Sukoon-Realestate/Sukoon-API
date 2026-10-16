@@ -4,7 +4,11 @@ import uuid
 from urllib.parse import urlsplit
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from core_apps.properties.models import Property
+from core_apps.properties.models import (
+    Property,
+    ResidentialBuilding,
+    ResidentialComplex,
+)
 from .errors import require
 
 KINDS = ("panorama_360", "model_3d")
@@ -57,14 +61,36 @@ def uuid_value(value):
         return None
 
 
-def owner_property(user, property_id):
+def target_model(kind):
+    require(
+        kind in {"property", "building", "complex"},
+        "invalid_asset",
+        "Choose a supported residential asset.",
+        404,
+    )
+    return {
+        "property": Property,
+        "building": ResidentialBuilding,
+        "complex": ResidentialComplex,
+    }[kind]
+
+
+def owner_property(user, property_id, kind="property"):
     require(
         user.is_authenticated,
         "authentication_required",
         "Sign in to manage tours.",
         401,
     )
-    return get_object_or_404(Property, id=property_id, owner=user)
+    return get_object_or_404(
+        target_model(kind),
+        id=property_id,
+        **(
+            {"owner": user, "retired_at": None}
+            if kind == "property"
+            else {"manager": user, "archived": False}
+        ),
+    )
 
 
 def writable(revision):
@@ -99,11 +125,39 @@ def match_version(revision, etag):
 
 
 def public_property(prop):
-    return prop.status == Property.Status.VERIFIED
+    if not isinstance(prop, Property):
+        return (
+            not prop.archived
+            and prop.authority_status == "verified"
+            and bool(prop.authority_reviewed_by_id and prop.authority_reference)
+        )
+    return prop.retired_at is None and prop.status == Property.Status.VERIFIED
 
 
 def scope_policy(prop, context, spaces):
     """Exclude prices/revision counters. Include persisted spatial identities only."""
+    if not isinstance(prop, Property):
+        require(
+            context == "overview"
+            and all(
+                s.get("space_kind") in {"shared", "corridor", "entrance"}
+                and not s.get("room_id")
+                and not s.get("bed_id")
+                for s in spaces
+            ),
+            "scope_violation",
+            "Container tours show common areas only. Prepare unit interiors on their canonical unit.",
+            403,
+        )
+        return digest(
+            {
+                "policy": 1,
+                "asset_id": str(prop.id),
+                "kind": prop._meta.model_name,
+                "topology_revision": prop.topology_revision,
+                "spaces": sorted(spaces, key=lambda s: s["id"]),
+            }
+        )
     inventory = prop.rental_inventory or {}
     rooms = {str(r["id"]): r for r in inventory.get("rooms", []) if r.get("id")}
     beds = {

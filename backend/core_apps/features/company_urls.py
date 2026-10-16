@@ -4,8 +4,25 @@ from . import company_admin_views as a
 from . import company_staff_views as s
 from . import company_work_views as w
 from . import company_chat_views as c
+from . import portfolio_views as p
 
 urlpatterns = [
+    path("residential-assets/<slug:kind>/<uuid:asset_id>/changes/", p.change_history),
+    path(
+        "residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",
+        p.preview,
+        {"operation": "bulk-edit"},
+    ),
+    path(
+        "residential-assets/<slug:kind>/<uuid:asset_id>/topology/preview/",
+        p.preview,
+        {"operation": "topology"},
+    ),
+    path("residential-changes/<uuid:change_id>/", p.change),
+    path("residential-assets/<slug:kind>/<uuid:asset_id>/media/", p.media_collection),
+    path("residential-media/<uuid:media_id>/", p.media_detail),
+    path("residential-media/<uuid:media_id>/bytes/", p.media_bytes),
+    path("residential-media/<uuid:media_id>/review/", p.media_review),
     path(
         "companies/<uuid:company_id>/housing-requests/<uuid:request_id>/discussion/",
         c.discussion,

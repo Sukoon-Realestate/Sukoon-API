@@ -22,20 +22,30 @@ from ..rental_phase2 import RentalConflict, fingerprint
 
 def units_for(container):
     if isinstance(container, ResidentialBuilding):
-        return Property.objects.filter(building=container)
+        return Property.objects.filter(building=container, retired_at=None)
     return Property.objects.filter(
         Q(complex=container) | Q(building__complex=container)
-    )
+    ).filter(retired_at=None)
 
 
 def parent_for(user, kind, identity, lock=False):
+    if kind not in {"building", "complex"}:
+        raise ValidationError("Choose building or complex.")
     model = ResidentialBuilding if kind == "building" else ResidentialComplex
+    expected_root = None
     if lock and kind == "building":
         root = get_object_or_404(model, id=identity, manager=user, archived=False)
+        expected_root = root.complex_id
         if root.complex_id:
             ResidentialComplex.objects.select_for_update().get(pk=root.complex_id)
     query = model.objects.select_for_update() if lock else model.objects
-    return get_object_or_404(query, id=identity, manager=user, archived=False)
+    parent = get_object_or_404(query, id=identity, manager=user, archived=False)
+    if lock and kind == "building" and parent.complex_id != expected_root:
+        raise RentalConflict(
+            "The parent changed. Create a fresh inventory preview.",
+            code="stale_revision",
+        )
+    return parent
 
 
 def assert_topology_mutable(container):
@@ -72,6 +82,7 @@ def create_container(user, data):
         for k in ("name", "code", "address", "description", "facilities")
         if k in data
     }
+    values.update(data.get("facts", {}))
     if data["kind"] == "building":
         parent = None
         if data.get("complex_id"):
@@ -106,7 +117,10 @@ def attach_unit(user, kind, identity, data):
     require_revision(parent, data["expected_revision"])
     assert_topology_mutable(parent)
     prop = get_object_or_404(
-        Property.objects.select_for_update(), id=data["property_id"], owner=user
+        Property.objects.select_for_update(),
+        id=data["property_id"],
+        owner=user,
+        retired_at=None,
     )
     if (prop.rental_inventory or {}).get("revision", 0) != data["inventory_revision"]:
         raise RentalConflict(
@@ -267,7 +281,9 @@ def create_batch_item(user, data, row):
     if data.get("parent_id"):
         parent = parent_for(user, data["parent_kind"], data["parent_id"], lock=True)
         assert_topology_mutable(parent)
-    source = get_object_or_404(Property, id=data["template_id"], owner=user)
+    source = get_object_or_404(
+        Property, id=data["template_id"], owner=user, retired_at=None
+    )
     values = {k: getattr(source, k) for k in TEMPLATE_FIELDS}
     values.update(
         {
@@ -431,6 +447,8 @@ def batch_payload(batch, language=None):
 
 
 def unit_payload(prop):
+    from .portfolio_changes import unit_version, defaults_for
+
     return {
         "id": str(prop.id),
         "code": prop.unit_code,
@@ -445,10 +463,16 @@ def unit_payload(prop):
         "area": prop.area,
         "is_furnished": prop.is_furnished,
         "inventory_revision": (prop.rental_inventory or {}).get("revision", 0),
+        "version": unit_version(prop),
+        "inheritance": prop.portfolio_inheritance,
+        "available_defaults": defaults_for(prop),
+        "retired": prop.retired_at is not None,
     }
 
 
 def container_payload(item):
+    from .portfolio_changes import FACT_FIELDS, json_value
+
     building = isinstance(item, ResidentialBuilding)
     units = list(
         units_for(item)
@@ -463,6 +487,9 @@ def container_payload(item):
         "address": item.address,
         "description": item.description,
         "facilities": item.facilities,
+        "facts": json_value({f: getattr(item, f) for f in FACT_FIELDS}),
+        "complex_id": str(item.complex.id) if building and item.complex_id else None,
+        "floors": item.floors if building else None,
         "revision": item.revision,
         "topology_revision": item.topology_revision,
         "authority_status": item.authority_status,
@@ -486,7 +513,7 @@ def container_payload(item):
                     "id": str(b.id),
                     "name": b.name,
                     "code": b.code,
-                    "registered_units": b.units.count(),
+                    "registered_units": b.units.filter(retired_at=None).count(),
                     "declared_units": b.declared_units,
                 }
                 for b in item.buildings.order_by("code")

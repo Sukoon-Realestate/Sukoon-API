@@ -140,6 +140,7 @@ class PropertyCatalogMixin:
         places = (
             Property.objects.filter(
                 property_type=property_type,
+                retired_at=None,
             )
             .filter(Q(status=Property.Status.VERIFIED) | Q(is_verified=True))
             .values("governorate__name", "city__name", "district")

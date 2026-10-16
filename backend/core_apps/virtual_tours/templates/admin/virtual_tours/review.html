@@ -1,7 +1,7 @@
 {% extends "admin/base_site.html" %}
 {% load static %}
 {% block content %}
-<h2>{{ revision.tour.property.title }} — {{ revision.tour.kind }}</h2>
+<h2>{% firstof revision.tour.target.title revision.tour.target.name %} — {{ revision.tour.kind }}</h2>
 <p>Revision {{ revision.id }}. Processing: {{ revision.processing_state }}. Review: {{ revision.review_state }}.</p>
 <p>Inspect every package, including downloadable GLB contents, private rooms, other beds, mirrors and documents.
 For panoramas verify real door connections and return routes. For 3D verify scale, floor, walls, glass, fixed doors and all approved starting places.

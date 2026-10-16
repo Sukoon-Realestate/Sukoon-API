@@ -11,15 +11,27 @@ class Property(TimeStampedModel):
     # A direct complex parent is only for standalone units. Building membership
     # derives its complex through the building, so contradictory parents cannot exist.
     building = models.ForeignKey(
-        "ResidentialBuilding", on_delete=models.PROTECT, null=True, blank=True,
+        "ResidentialBuilding",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name="units",
     )
     complex = models.ForeignKey(
-        "ResidentialComplex", on_delete=models.PROTECT, null=True, blank=True,
+        "ResidentialComplex",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name="standalone_units",
     )
     unit_code = models.CharField(max_length=40, blank=True, default="")
     occupancy_capacity = models.PositiveSmallIntegerField(null=True, blank=True)
+    portfolio_inheritance = models.JSONField(default=dict, blank=True)
+    retired_at = models.DateTimeField(null=True, blank=True)
+    replaces = models.ManyToManyField(
+        "self", symmetrical=False, blank=True, related_name="successors"
+    )
+
     class PricePeriod(models.TextChoices):
         DAILY = ("daily", _("Daily"))
         WEEKLY = ("weekly", _("Weekly"))
@@ -160,24 +172,38 @@ class Property(TimeStampedModel):
     )
     has_water_meter = models.BooleanField(_("Has Water Meter"), default=False)
 
+    def clean(self):
+        super().clean()
+        if self.retired_at and self.status != self.Status.HIDDEN:
+            from django.core.exceptions import ValidationError
+
+            raise ValidationError({"status": "Retired inventory must remain hidden."})
+
     class Meta:
         constraints = [
+            models.CheckConstraint(
+                check=models.Q(retired_at__isnull=True) | models.Q(status="hidden"),
+                name="retired_unit_remains_hidden",
+            ),
             models.CheckConstraint(
                 check=models.Q(building__isnull=True) | models.Q(complex__isnull=True),
                 name="unit_has_one_direct_parent",
             ),
             models.CheckConstraint(
-                check=models.Q(occupancy_capacity__isnull=True) | models.Q(occupancy_capacity__gte=1),
+                check=models.Q(occupancy_capacity__isnull=True)
+                | models.Q(occupancy_capacity__gte=1),
                 name="unit_capacity_positive_or_unknown",
             ),
             models.UniqueConstraint(
                 fields=["building", "unit_code"],
-                condition=models.Q(building__isnull=False) & ~models.Q(unit_code=""),
+                condition=models.Q(building__isnull=False, retired_at__isnull=True)
+                & ~models.Q(unit_code=""),
                 name="unique_unit_code_in_building",
             ),
             models.UniqueConstraint(
                 fields=["complex", "unit_code"],
-                condition=models.Q(complex__isnull=False) & ~models.Q(unit_code=""),
+                condition=models.Q(complex__isnull=False, retired_at__isnull=True)
+                & ~models.Q(unit_code=""),
                 name="unique_standalone_code_in_complex",
             ),
         ]

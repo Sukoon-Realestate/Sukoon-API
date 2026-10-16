@@ -1,6 +1,7 @@
 """Exportable OpenAPI 3.1 contract for the isolated tour API surface."""
 
 import re
+from copy import deepcopy
 from .contracts import DELIVERY, BRIDGE_COMMAND, WALK_DELIVERY
 from .schemas import AUTHORING, ID, UUID, array, obj
 from .uploads import ROLES
@@ -62,7 +63,9 @@ REVISION = obj(
 TOUR = obj(
     {
         "id": UUID,
-        "property_id": UUID,
+        "property_id": {"anyOf": [UUID, {"type": "null"}]},
+        "asset_id": UUID,
+        "asset_kind": {"enum": ["property", "building", "complex"]},
         "kind": {"enum": ["panorama_360", "model_3d"]},
         "disabled": BOOL,
         "deleted": BOOL,
@@ -73,6 +76,8 @@ TOUR = obj(
     [
         "id",
         "property_id",
+        "asset_id",
+        "asset_kind",
         "kind",
         "disabled",
         "deleted",
@@ -447,6 +452,23 @@ def document():
         ),
         mutation=True,
     )
+    # Containers share the canonical tour lifecycle. Keep fixed kind segments
+    # aligned with urls.py and preserve the legacy property routes verbatim.
+    for kind in ("building", "complex"):
+        for path, operations in list(paths.items()):
+            if p not in path:
+                continue
+            target = path.replace(
+                p, f"/residential-assets/{kind}/{{property_id}}/virtual-tours/"
+            )
+            paths[target] = deepcopy(operations)
+            for method, operation in paths[target].items():
+                operation["operationId"] = (
+                    method + "_" + re.sub(r"[^a-zA-Z0-9]+", "_", target).strip("_")
+                )
+                operation["description"] = (
+                    "Common-area overview of this container only. Unit interiors and exact unit offers retain their own tours. property_id in this path identifies the container."
+                )
     return {
         "openapi": "3.1.0",
         "info": {

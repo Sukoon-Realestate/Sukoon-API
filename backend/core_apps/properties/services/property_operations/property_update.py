@@ -20,6 +20,10 @@ class PropertyUpdateMixin:
         from core_apps.features.services.rental_phase2 import RentalConflict
 
         property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        if property_obj.retired_at:
+            raise RentalConflict(
+                "This inventory identity has been retired.", code="inventory_retired"
+            )
         if "rental_inventory" in data:
             replacement = data["rental_inventory"]
             current_revision = (property_obj.rental_inventory or {}).get("revision", 0)
@@ -155,6 +159,9 @@ class PropertyUpdateMixin:
                 data[field_name] = amenity_val in amenities
 
         # Apply scalar updates
+        from core_apps.features.services.company.portfolio_changes import mark_overrides
+
+        mark_overrides(property_obj, data)
         for attr, value in data.items():
             setattr(property_obj, attr, value)
 

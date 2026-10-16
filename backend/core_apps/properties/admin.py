@@ -55,6 +55,9 @@ class PropertyAdmin(admin.ModelAdmin):
         "unit_code",
         "occupancy_capacity",
         "rental_inventory",
+        "portfolio_inheritance",
+        "retired_at",
+        "replaces",
     ]
 
     def has_delete_permission(self, request, obj=None):

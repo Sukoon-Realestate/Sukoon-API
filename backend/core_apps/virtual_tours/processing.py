@@ -131,7 +131,7 @@ def build_variants(revision):
 def process_revision(revision_id, expected_hash):
     with transaction.atomic():
         revision = (
-            TourRevision.objects.select_for_update()
+            TourRevision.objects.select_for_update(of=("self",))
             .select_related("tour__property")
             .get(id=revision_id)
         )
@@ -166,7 +166,9 @@ def process_revision(revision_id, expected_hash):
         )
         return
     with transaction.atomic():
-        current = TourRevision.objects.select_for_update().get(id=revision_id)
+        current = TourRevision.objects.select_for_update(of=("self",)).get(
+            id=revision_id
+        )
         if (
             current.source_hash != expected_hash
             or current.processing_state != "processing"

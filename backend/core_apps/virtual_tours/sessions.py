@@ -14,7 +14,7 @@ def token_hash(token):
 
 def available_variant(variant, preview=False, user=None):
     revision = variant.revision
-    tour, prop = revision.tour, revision.tour.property
+    tour, prop = revision.tour, revision.tour.target
     require(
         enabled(tour.kind, preview) and not tour.deleted,
         "tour_disabled",
@@ -33,7 +33,7 @@ def available_variant(variant, preview=False, user=None):
             user
             and user.is_authenticated
             and (
-                prop.owner_id == user.pk
+                getattr(prop, "owner_id", getattr(prop, "manager_id", None)) == user.pk
                 or (user.is_staff and user.has_perm("virtual_tours.view_tourrevision"))
             ),
             "preview_forbidden",

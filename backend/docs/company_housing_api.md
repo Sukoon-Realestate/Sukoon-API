@@ -55,7 +55,7 @@ Batch result messages are localized on detail reads without rewriting the persis
 | POST | `company-booking-items/{id}/hold/` | Coordinator; reviewed company, fresh approval/offer/policy/availability, budget and owner readiness. |
 | POST | `company-booking-items/{id}/withdraw/` | Coordinator; uncommitted packages only, remains available when new bookings are disabled. |
 | GET, POST | `residential-assets/` | Own managed containers / create building or complex. GET requires `kind=building|complex`. |
-| GET | `residential-assets/{kind}/{id}/` | Exact manager; units, counts, authority and known/unknown capacity. |
+| GET, PATCH | `residential-assets/{kind}/{id}/` | Exact manager; units, counts, facts/defaults, authority and capacity. PATCH uses the complete typed container body and current revision. |
 | POST | `residential-assets/{kind}/{id}/attach-unit/` | Attach original owned standalone unit under version/topology checks. |
 | GET | `residential-unit-templates/` | Own existing unit facts, no bookings or verified-evidence cloning. Optional `unparented=true`. |
 | POST | `residential-unit-batches/` | Submit/retry up to 100 independently identified rows. |
@@ -317,7 +317,7 @@ irreversible: rollback must not silently erase retained business conversations.
 
 Models and services: `properties/models/portfolio.py`, `features/company_models.py`, `features/services/company/`, and canonical `rental_lifecycle/inventory.py`. Migrations: properties `0022_company_portfolio_foundations`, `0023_portfolio_batch_recovery`; features `0030_company_portfolio_foundations`, `0031_company_authority_review`.
 
-Root locks precede descendant enumeration. Whole scopes require exact declared completeness and consistent reviewed contracting authority. All modes allocate the same physical day rows. Conflicting personal rooms/beds/units reject a parent hold; selected scopes leave unrelated resources free. Dates use exclusive ends. No topology edit or added child may bypass an active aggregate hold. Parent identities and historic scope are retained; unsupported reparenting/splitting/merging is blocked.
+Root locks precede descendant enumeration. Whole scopes require exact declared completeness and consistent reviewed contracting authority. All modes allocate the same physical day rows. Conflicting personal rooms/beds/units reject a parent hold; selected scopes leave unrelated resources free. Dates use exclusive ends. No topology edit or added child may bypass an active aggregate hold. Parent identities and historic scope are retained; previewed uncommitted moves/splits/merges are supported, with unsafe changes under allocations/leases blocked. Retired split/merge predecessors remain hidden historical identities with successor links.
 
 Monthly EGP/exponent-2 policy remains owner commission 1000 bps on first-period base rent, platform processing and zero renewal commission. Parent offer prices are explicit bundle prices. Deposit is counted once per bundle. Known full-term rent, reserved budget, committed budget, cash, deposit liability and refunds must remain distinct. This increment implements reservations and projection scaffolding; it does not implement corporate cash movement or committed-budget transfer on signing.
 
@@ -333,3 +333,101 @@ Use the existing `config.settings.postgres_test` with an isolated local database
 ```
 
 The earlier portfolio foundation passed 34 company tests. The current combined run passed **230 tests**, including 62 company tests plus personal/student lifecycle, OTP and response-contract regressions. The existing chat suite passed **87 tests**, with two actual-device recording cases skipped pending Android/iOS clip inputs. Real PostgreSQL tests cover shared-budget, parent/child allocation, topology growth, activation, approval and duplicate-message races. The synthetic 12-unit scenario proves a 48-place bounded hold for 40 initial employees and eight reserve places, without creating a lease, signature, payment or assignment. Django system checks, migration drift checks and a complete fresh migration apply passed on isolated PostgreSQL. Test providers/fixtures are not deployed or production evidence. The full readiness and missing-implementation record is in the Flutter repository's `docs/COMPANY_HOUSING_IMPLEMENTATION.md`.
+
+
+## Owner editing, inheritance, physical changes and media
+
+Added locally on 2026-10-16. These routes use the existing `/api/v1/features/v1/` prefix, session authentication, localized envelope, request-key receipts and fresh authorization described above. Container edits do not create new canonical units or rental commitments.
+
+| Method | Path | Contract |
+| --- | --- | --- |
+| PATCH | `residential-assets/{kind}/{id}/` | Same discriminated body as creation with current `expected_revision`; existing kind/parent cannot be changed here. |
+| POST | `residential-assets/{kind}/{id}/bulk-edit/preview/` | Save immutable exact-unit preview; per-row versions and selected fields required. |
+| POST | `residential-assets/{kind}/{id}/topology/preview/` | Save move/split/merge scope and blockers; no inventory mutation yet. |
+| GET | `residential-assets/{kind}/{id}/changes/` | Owner-scoped paginated previews/results, newest first; recover after restart. |
+| GET, POST | `residential-changes/{id}/` | Read saved preview/result, or apply with current change revision and a stable request key. |
+| GET, POST | `residential-assets/{kind}/{id}/media/` | List up to 60 active intentions/items, or create a private durable upload intention. |
+| GET, PUT, DELETE | `residential-media/{id}/` | Owner metadata/reconciliation; PUT multipart `file`; DELETE uses the canonical command body. |
+| GET | `residential-media/{id}/bytes/` | Authenticated no-store PNG bytes; current media and parent policy required. |
+| POST | `residential-media/{id}/review/` | Independent property reviewer, current revision, approved/rejected status and reason. |
+
+### Typed facts and revisions
+
+Container create/edit accepts optional `facts`:
+
+```json
+{
+  "latitude": "30.044400",
+  "longitude": "31.235700",
+  "elevators": 2,
+  "parking_spaces": 12,
+  "accessibility": "Synthetic step-free shared entrance",
+  "utilities": {"water": "Metered", "electricity": "Metered", "internet": "Shared connection", "laundry": "Shared room"},
+  "included_services": ["Synthetic common-area cleaning"],
+  "public_access": "Reception entrance",
+  "private_access": "Private instructions for authorized operations only",
+  "contact_name": "Synthetic operator",
+  "contact_phone": "",
+  "unit_defaults": {"is_furnished": true, "has_wifi": true}
+}
+```
+
+Coordinates must be paired or both null, latitude within ±90 and longitude ±180, six decimal places. Counts may be unknown (`null`), elevators 0–100 and parking 0–10000. Access/accessibility text ≤2000, each utility arrangement ≤500, up to 30 included-service descriptions ≤300 each, contact name ≤200 and phone ≤40. These describe factual arrangements, not guaranteed response times or implicit extra charges.
+
+Private access and operational contacts stay in owner projections, outside commercial snapshots. `revision` protects ordinary edits, `topology_revision` protects physical scope, and `commercial_revision` protects changed public quote facts. Private contact/access/default edits do not invalidate an otherwise unchanged commercial package. Identity/structure changes reset parent authority; declared counts cannot exclude registered inventory.
+
+### Exact bulk previews
+
+```json
+{
+  "request_key": "10000000-0000-4000-8000-000000000010",
+  "expected_revision": 4,
+  "units": [{"id": "10000000-0000-4000-8000-000000000011", "version": "2026-10-16T12:00:00+00:00"}],
+  "changes": {"is_furnished": true},
+  "inherit_fields": ["has_wifi"],
+  "reset_overrides": false,
+  "reason": "Synthetic reviewed defaults update"
+}
+```
+
+Use the exact `version` supplied by each asset unit row; do not generate a client timestamp. Up to 100 distinct units are allowed. Override and inherit sets cannot overlap. `unit_defaults`/inheritance accepts furnishing, nullable smoking rule, Wi-Fi/elevator/garage/security/air-conditioning/gas/electricity-meter/water-meter booleans, district/street/country. Bulk changes additionally accept bedrooms/bathrooms 0–100, area 1–100000, floor null or −20–200 and capacity null or 1–1000. Money, authority and booking fields are rejected.
+
+The returned change has `id`, `revision`, `operation: bulk_edit`, `applied`, immutable `preview` and `results`. Preview rows identify canonical ID/code/version, before/after/source, skipped fields and `ready|blocked|unchanged`. Apply rechecks exact membership/ownership, current defaults and all revisions/commitments. Results preserve `updated|failed|blocked|unchanged` per unit and a machine `code_reason` when appropriate. An applied change can contain failures; unresolved rows require a fresh preview. Receipt replay never repeats successful updates.
+
+Complex defaults are overridden by building defaults. A unit's recorded explicit value is preserved unless `reset_overrides` is selected. Canonical ordinary unit edits mark explicit overrides too. Parent changes never silently propagate to children or rewrite an approval/agreement. Each inherited value records source ID/name/revision/value.
+
+### Move, split and merge previews
+
+Body: canonical `request_key`/`expected_revision`, `operation`, `units` with exact ID/version, `replacements`, and a nonempty `reason` ≤1000.
+
+- `move_units`: one to 100 source units and `target_kind`, `target_id`, `target_revision`; no replacements. Target is a managed building or complex.
+- `move_building`: building source, complex target and target revision; empty units/replacements. The server resolves every contained unit.
+- `split_unit`: exactly one source, two to 20 replacement rows, no target fields.
+- `merge_units`: two to 100 units with the same direct parent, one replacement row, no target fields.
+
+Every replacement needs unique nonempty `unit_code` ≤40, title ≤255 and explicit/unknown capacity; optional safe unit facts use the bulk-field contract. Preview includes resolved unit versions, target label, `allowed`, `blocked_reasons` and identity-retention facts. Apply uses only the stored scope and current change revision; it does not accept revised target/units.
+
+Complex roots, buildings and properties are locked in order. Parent changes are rechecked after locking, including stale parent relationships resolved before a concurrent move. Moves retain identities; splits/merges retain hidden predecessors and create fresh canonical units with `replaces` lineage, no room/bed IDs, copied media or verified authority. Replaced IDs cannot be publicly retrieved, reactivated or allocated. Ordinary historical lease/document access remains canonical. A database constraint keeps retired rows hidden.
+
+The entire topology apply succeeds or rolls back. Source/destination declarations do not silently expand; affected authority/topology revisions require review. Existing allocations, relevant leases and live parent holds block unsafe changes, including commitments acquired after preview. No active-contract amendment is simulated.
+
+### Upload and review recovery
+
+An intention body contains parent `expected_revision`, stable `request_key`, `purpose: photo|authority`, caption ≤300, `representative`, lowercase SHA-256, `byte_size` and `content_type: image/png|image/jpeg`. Authority evidence cannot be representative. Files are limited to 5 MiB and 24 million pixels. The server validates the original digest/size/format and strips embedded metadata through PNG re-encoding.
+
+POST intention returns a recoverable media resource/receipt before bytes are sent. PUT sends multipart field `file` and returns current media metadata directly in `data`; read GET first after an uncertain response. Ready intentions return without another write. A pending intention requires the exact original file. Local drafts retain digest/identity metadata, not evidence bytes or local paths. Storage I/O runs outside locks; concurrent retries can leave an unreferenced private storage blob but cannot create multiple media records or publish an unreviewed file.
+
+Review requires `status: approved|rejected`, a reason and current revision. Self-review is forbidden. The initiating reviewer's receipt is recoverable only while the staff role remains authorized. Review is independent of whole-building/complex authority. Ready private evidence is readable only by its owner or reviewer. Approved photos become eligible to other authenticated readers only for nonarchived parents with verified authority. DELETE revokes byte access while retaining review history; authorized staff inspection can retain historical evidence.
+
+The Django `ResidentialMedia` review console and read-only `PortfolioChangeSet` inspection expose pending reviews and partial failures without arbitrary confirmation/payment controls. Production evidence retention/scan policy, private storage and staff operations require deployment validation. This endpoint accepts image evidence, not PDF/video dossiers.
+
+### Canonical parent tours
+
+Use `/api/v1/residential-assets/{building|complex}/{id}/virtual-tours/` and its canonical tour/revision/viewer suffixes. These deliberately use the existing tour API prefix rather than `features/v1`. Owner authorization, idempotency headers, ETags, resumable upload sessions, processing, staff review and short-lived viewer grants remain canonical.
+
+Responses include `asset_id`, `asset_kind: property|building|complex` and nullable legacy `property_id`. The exported tour OpenAPI document includes both parent route families. A parent needs uploaded ordinary photos before tour authoring. Only common-area overview spaces are permitted; child bedrooms/room IDs/bed IDs and child offer scopes are rejected. Unit interior tours retain original property endpoints. Parent topology revisions bind the scope fingerprint and invalidate stale viewer sessions.
+
+Migrations: `properties` 0024, 0025, 0026; `virtual_tours` 0002. They preserve legacy units/tour targets and do not reinterpret historical apartment `entire_property` selections. No deployment or production configuration change is included.
+
+
+Owner-increment evidence: 252 distinct selected backend cases verified across the combined regression and corrected owner runs; the 20 owner cases include real PostgreSQL concurrency and staff review-console authorization. The only initial failure was a new test URL, corrected and rerun successfully. Django checks, migration drift checks and all migrations on a fresh isolated PostgreSQL database passed. No deployment/provider or native-device verification is implied.

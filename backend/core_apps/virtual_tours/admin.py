@@ -30,9 +30,18 @@ class ReadOnlyTourAdmin(admin.ModelAdmin):
 
 @admin.register(PropertyVirtualTour)
 class TourAdmin(ReadOnlyTourAdmin):
-    list_display = ("id", "property", "kind", "active_revision", "disabled", "deleted")
+    list_display = (
+        "id",
+        "property",
+        "building",
+        "complex",
+        "kind",
+        "active_revision",
+        "disabled",
+        "deleted",
+    )
     list_filter = ("kind", "disabled", "deleted")
-    search_fields = ("property__title",)
+    search_fields = ("property__title", "building__name", "complex__name")
     actions = ("disable_viewing",)
 
     @admin.action(description="Disable viewing immediately")
@@ -96,7 +105,7 @@ class RevisionAdmin(ReadOnlyTourAdmin):
                     return response
                 with transaction.atomic():
                     locked = (
-                        TourRevision.objects.select_for_update()
+                        TourRevision.objects.select_for_update(of=("self",))
                         .select_related("tour__property")
                         .get(pk=object_id)
                     )

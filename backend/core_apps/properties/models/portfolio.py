@@ -13,7 +13,24 @@ class ResidentialContainer(TimeStampedModel):
     address = models.CharField(max_length=500)
     description = models.TextField(blank=True)
     facilities = models.JSONField(default=list, blank=True)
+    latitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True
+    )
+    longitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True
+    )
+    elevators = models.PositiveSmallIntegerField(null=True, blank=True)
+    parking_spaces = models.PositiveSmallIntegerField(null=True, blank=True)
+    accessibility = models.TextField(blank=True)
+    utilities = models.JSONField(default=dict, blank=True)
+    included_services = models.JSONField(default=list, blank=True)
+    public_access = models.TextField(blank=True)
+    private_access = models.TextField(blank=True)
+    contact_name = models.CharField(max_length=200, blank=True)
+    contact_phone = models.CharField(max_length=40, blank=True)
+    unit_defaults = models.JSONField(default=dict, blank=True)
     revision = models.PositiveIntegerField(default=1)
+    commercial_revision = models.PositiveIntegerField(default=1)
     topology_revision = models.PositiveIntegerField(default=1)
     authority_status = models.CharField(max_length=20, default="pending")
     authority_reviewed_by = models.ForeignKey(
@@ -83,3 +100,70 @@ class PortfolioBatch(TimeStampedModel):
     draft = models.JSONField(default=dict)
     results = models.JSONField(default=list)
     complete = models.BooleanField(default=False)
+
+
+class PortfolioChangeSet(TimeStampedModel):
+    """Immutable preview, then a durable per-unit result. Never an allocation."""
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    building = models.ForeignKey(
+        ResidentialBuilding, on_delete=models.PROTECT, null=True
+    )
+    complex = models.ForeignKey(ResidentialComplex, on_delete=models.PROTECT, null=True)
+    revision = models.PositiveIntegerField(default=1)
+    operation = models.CharField(max_length=30)
+    preview = models.JSONField(default=dict)
+    results = models.JSONField(default=list)
+    applied_at = models.DateTimeField(null=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=(
+                    Q(building__isnull=False, complex__isnull=True)
+                    | Q(building__isnull=True, complex__isnull=False)
+                ),
+                name="portfolio_change_exact_parent",
+            )
+        ]
+
+
+class ResidentialMedia(TimeStampedModel):
+    """Private immutable upload; public photos and authority evidence never mix."""
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    building = models.ForeignKey(
+        ResidentialBuilding, on_delete=models.PROTECT, null=True, related_name="media"
+    )
+    complex = models.ForeignKey(
+        ResidentialComplex, on_delete=models.PROTECT, null=True, related_name="media"
+    )
+    request_key = models.UUIDField()
+    purpose = models.CharField(max_length=20)
+    caption = models.CharField(max_length=300, blank=True)
+    representative = models.BooleanField(default=False)
+    sha256 = models.CharField(max_length=64)
+    byte_size = models.PositiveIntegerField()
+    content_type = models.CharField(max_length=60)
+    blob = models.CharField(max_length=500, blank=True)
+    state = models.CharField(max_length=20, default="pending")
+    review_status = models.CharField(max_length=20, default="pending")
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, related_name="+"
+    )
+    review_reason = models.TextField(blank=True)
+    revision = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["owner", "request_key"], name="unique_residential_media_request"
+            ),
+            models.CheckConstraint(
+                check=(
+                    Q(building__isnull=False, complex__isnull=True)
+                    | Q(building__isnull=True, complex__isnull=False)
+                ),
+                name="residential_media_exact_parent",
+            ),
+        ]

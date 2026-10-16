@@ -1,7 +1,7 @@
 """Property: property detail apiview."""
 
 from django.shortcuts import get_object_or_404
-from django.db.models import Avg, BooleanField, Exists, FloatField, OuterRef, Value
+from django.db.models import Avg, BooleanField, Exists, FloatField, OuterRef, Q, Value
 from django.db.models.functions import Coalesce
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -121,6 +121,13 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
             "city__governorate",
         ).prefetch_related("images")
         request_user = self.request.user
+        # Split/merge predecessors remain historical identities, never public
+        # offers. Contract participants retain their canonical lease documents.
+        if not getattr(request_user, "is_staff", False):
+            visible = Q(retired_at__isnull=True)
+            if request_user.is_authenticated:
+                visible |= Q(owner=request_user)
+            queryset = queryset.filter(visible)
         if request_user.is_authenticated:
             queryset = queryset.annotate(
                 is_fav=Exists(

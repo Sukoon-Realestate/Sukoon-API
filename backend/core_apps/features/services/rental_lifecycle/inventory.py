@@ -188,6 +188,10 @@ def expire_property_holds(prop, now=None):
 def assert_available(
     prop, snapshot, starts_on, ends_on, *, exclude_lease=None, exclude_hold=None
 ):
+    if prop.retired_at:
+        raise RentalConflict(
+            "This inventory identity has been retired.", code="inventory_retired"
+        )
     keys = unit_keys(prop, snapshot)
     rows = prop.rental_day_locks.filter(stay_on__gte=starts_on, stay_on__lt=ends_on)
     if exclude_lease is not None:
