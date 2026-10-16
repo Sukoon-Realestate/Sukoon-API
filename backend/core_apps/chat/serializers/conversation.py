@@ -44,8 +44,9 @@ class ConversationSerializer(serializers.ModelSerializer):
     can_send = serializers.SerializerMethodField()
 
     def to_representation(self, instance):
-        if instance.kind == "housing_group":
+        if instance.kind in {"housing_group", "company_request"}:
             from core_apps.chat.services.group_projection import summary
+
             return summary(instance, self.context["request"].user)
         return {"conversation_type": "direct", **super().to_representation(instance)}
 

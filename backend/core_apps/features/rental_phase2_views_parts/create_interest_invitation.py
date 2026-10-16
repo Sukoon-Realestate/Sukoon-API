@@ -57,6 +57,9 @@ def terms_proposal_respond(request, proposal_id):
             raise RentalConflict("This proposal is already closed.")
         decision = data["decision"]
         actor_id = str(request.user.id)
+        from ..services.rental_lifecycle.consents import record_consent
+
+        record_consent(proposal, request.user, decision)
         if decision == "accept":
             proposal.accepted_by = list(
                 dict.fromkeys([*proposal.accepted_by, actor_id])

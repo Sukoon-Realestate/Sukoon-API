@@ -17,7 +17,10 @@ class RentalEvidence(TimeStampedModel):
         UNSAFE = "unsafe", "Unsafe"
         FAILED = "failed", "Failed"
 
-    lease = models.ForeignKey(Lease, on_delete=models.PROTECT, related_name="evidence")
+    lease = models.ForeignKey(
+        Lease, on_delete=models.PROTECT, related_name="evidence", null=True, blank=True
+    )
+    purpose = models.CharField(max_length=30, default="rental")
     uploader = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -40,10 +43,20 @@ class RentalEvidence(TimeStampedModel):
 
     class Meta:
         constraints = [
+            models.CheckConstraint(
+                check=Q(purpose="rental", lease__isnull=False)
+                | Q(purpose="student", lease__isnull=True),
+                name="evidence_exact_context",
+            ),
+            models.UniqueConstraint(
+                fields=["uploader", "request_key"],
+                condition=Q(purpose="student"),
+                name="unique_student_evidence_request",
+            ),
             models.UniqueConstraint(
                 fields=["uploader", "lease", "request_key"],
                 name="unique_rental_evidence_request",
-            )
+            ),
         ]
 
 

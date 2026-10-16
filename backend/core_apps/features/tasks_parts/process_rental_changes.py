@@ -26,15 +26,27 @@ from ..services.rental_phase2 import RentalConflict
 def scan_rental_evidence(self):
     safe = unsafe = 0
     for item in RentalEvidence.objects.filter(
-        malware_status=RentalEvidence.MalwareStatus.PENDING
+        malware_status=RentalEvidence.MalwareStatus.PENDING, deleted_at__isnull=True
     )[:100]:
+        # Provider work uses a durable evidence identity and runs outside DB locks.
+        provider = get_rental_provider()
+        if item.purpose == "student" and item.storage_key.startswith(
+            "student-evidence-pending/"
+        ):
+            storage_key = provider.store_private_evidence(
+                item.uploader.id, item.id, bytes(item.private_content or b"")
+            )
+            RentalEvidence.objects.filter(pk=item.pk, deleted_at__isnull=True).update(
+                storage_key=storage_key
+            )
+        is_safe = provider.scan_evidence(bytes(item.private_content or b""))
         with transaction.atomic():
             item = RentalEvidence.objects.select_for_update().get(pk=item.pk)
-            if item.malware_status != RentalEvidence.MalwareStatus.PENDING:
+            if (
+                item.malware_status != RentalEvidence.MalwareStatus.PENDING
+                or item.deleted_at
+            ):
                 continue
-            is_safe = get_rental_provider().scan_evidence(
-                bytes(item.private_content or b"")
-            )
             item.malware_status = (
                 RentalEvidence.MalwareStatus.SAFE
                 if is_safe
@@ -67,9 +79,25 @@ def reconcile_approved_payouts(self):
             payout = RentalPayout.objects.select_for_update().get(pk=candidate.pk)
             if payout.status != RentalPayout.Status.CREATED:
                 continue
-            payout.provider_payout_id = get_rental_provider().execute_payout(
-                payout.id, payout.batch.request_key
+            from ..services.rental_lifecycle.provider_instructions import (
+                execute_local_instruction,
+                hold_payout_for_review,
             )
+
+            try:
+                payout.provider_payout_id = execute_local_instruction(
+                    kind="payout",
+                    subject=payout,
+                    request_key=payout.batch.request_key,
+                    payload={
+                        "amount_minor": payout.amount_minor,
+                        "currency": payout.currency,
+                        "beneficiary": payout.masked_beneficiary,
+                    },
+                )
+            except RentalConflict as error:
+                hold_payout_for_review(payout, error)
+                continue
             payout.status = RentalPayout.Status.PAID
             payout.revision += 1
             payout.save()
@@ -110,6 +138,9 @@ def process_rental_changes(self):
         effective_on__lte=timezone.localdate(),
     ).select_related("lease")[:100]:
         with transaction.atomic():
+            from core_apps.properties.models import Property
+
+            Property.objects.select_for_update().get(pk=candidate.lease.property_id)
             lease = Lease.objects.select_for_update().get(pk=candidate.lease_id)
             change = (
                 RentalChange.objects.select_for_update(of=("self",))
@@ -162,7 +193,7 @@ def process_rental_changes(self):
                     end_date=ends_on,
                     rent_amount_minor=change.terms["monthly_rent"]["amount_minor"],
                     status=Lease.Status.ACTIVE,
-                    occupancy_status=Lease.OccupancyStatus.NOT_STARTED,
+                    occupancy_status=lease.occupancy_status,
                     legacy_read_only=False,
                     offer_id=lease.offer_id,
                     offer_snapshot=lease.offer_snapshot,
@@ -170,6 +201,8 @@ def process_rental_changes(self):
                     terms=change.terms,
                     activated_at=now,
                 )
+                change.result_lease = renewal
+                change.save(update_fields=["result_lease", "updated_at"])
                 reserve_inventory_days(
                     renewal, starts_on, ends_on, now + timedelta(minutes=30)
                 )

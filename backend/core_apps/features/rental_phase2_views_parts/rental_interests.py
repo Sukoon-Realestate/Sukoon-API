@@ -1,5 +1,6 @@
 """Rental phase2 views: rental interests."""
 
+from datetime import timedelta
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -67,6 +68,9 @@ def rental_interests(request):
     if replay:
         return replay
     with transaction.atomic():
+        from ..services.student_housing.applications import context
+
+        academic = context(request.user, data)
         property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
         replay = _replay_response(
             request.user, operation, data["request_key"], request.data
@@ -84,7 +88,19 @@ def rental_interests(request):
         validate_interest_capacity(snapshot, data["occupants"])
         if data["desired_start"] < timezone.localdate():
             raise ValidationError({"desired_start": "Cannot be in the past."})
+        from ..services.rental_lifecycle.applications import valid_interest_share
+
+        grant = (
+            valid_interest_share(
+                data["application_share_id"], request.user, property_obj
+            )
+            if data.get("application_share_id")
+            else None
+        )
         interest = RentalInterest.objects.create(
+            **academic,
+            application_grant=grant,
+            response_due_at=timezone.now() + timedelta(hours=48),
             property=property_obj,
             tenant=request.user,
             offer_id=offer_id,
@@ -107,16 +123,13 @@ def rental_interests(request):
             resource=resource,
             response_status=201,
         )
-        transaction.on_commit(
-            lambda: _notify(
-                property_obj.owner,
-                Notification.NotificationType.RENTAL_INTEREST,
-                "New rental interest",
-                "open_rental_interest",
-                interest.id,
-                rental_interest_id=interest.id,
-                workspace="owner",
-            )
+        from ..services.rental_lifecycle.notifications import record_rental_event
+
+        record_rental_event(
+            interest,
+            {property_obj.owner},
+            "application.submitted",
+            "open_rental_interest",
         )
     return Response(output, status=status.HTTP_201_CREATED)
 
@@ -158,17 +171,61 @@ def rental_interest_respond(request, interest_id):
             raise RentalConflict("Interest revision conflict.", code="stale_revision")
         decision = data["decision"]
         if decision not in interest_actions(request.user, interest):
-            raise PermissionDenied("This decision is not allowed for the current interest.")
+            raise PermissionDenied(
+                "This decision is not allowed for the current interest."
+            )
         if decision == "reject" and request.user == interest.property.owner:
             interest.status = RentalInterest.Status.REJECTED
+            interest.waiting_for = ""
         elif decision == "withdraw" and request.user == interest.tenant:
             interest.status = RentalInterest.Status.WITHDRAWN
+            interest.waiting_for = ""
+        elif (
+            decision == "request_information"
+            and request.user == interest.property.owner
+        ):
+            if not data.get("note", "").strip():
+                raise ValidationError({"note": "Describe the missing information."})
+            interest.information_requested = data["note"].strip()
+            interest.applicant_response = ""
+            interest.waiting_for = "tenant"
+            interest.status = RentalInterest.Status.UNDER_REVIEW
+        elif decision == "provide_information" and request.user == interest.tenant:
+            if not data.get("note", "").strip():
+                raise ValidationError({"note": "Provide the requested information."})
+            interest.applicant_response = data["note"].strip()
+            interest.waiting_for = "owner"
+        elif (
+            decision == "mark_under_review" and request.user == interest.property.owner
+        ):
+            interest.status = RentalInterest.Status.UNDER_REVIEW
+            interest.waiting_for = "owner"
         else:
             raise PermissionDenied(
                 "This decision is not allowed for the current actor."
             )
+        if (
+            request.user == interest.property.owner
+            and not interest.first_owner_response_at
+        ):
+            interest.first_owner_response_at = timezone.now()
+        interest.response_due_at = (
+            timezone.now() + timedelta(hours=48) if interest.waiting_for else None
+        )
         interest.revision += 1
-        interest.save(update_fields=["status", "revision", "updated_at"])
+        interest.save()
+        from ..services.rental_lifecycle.common import audit
+        from ..services.rental_lifecycle.notifications import record_rental_event
+
+        audit(interest, request.user, f"application.{decision}", data.get("note", ""))
+        recipient = (
+            interest.tenant
+            if request.user == interest.property.owner
+            else interest.property.owner
+        )
+        record_rental_event(
+            interest, {recipient}, f"application.{decision}", "open_rental_interest"
+        )
         resource = RentalInterestSerializer(interest, context={"request": request}).data
         output = remember_mutation(
             user=request.user,

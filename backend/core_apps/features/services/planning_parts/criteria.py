@@ -91,7 +91,7 @@ def money(amount):
     return {"amount_minor": amount, "currency": "EGP", "exponent": 2}
 
 
-def criteria(raw):
+def criteria(raw, *, allow_existing_start=False):
     if not isinstance(raw, dict):
         raise ValidationError({"criteria": "Supply housing criteria."})
     city = get_object_or_404(City, id=raw.get("city_id"))
@@ -115,7 +115,7 @@ def criteria(raw):
         raise ValidationError(
             {"budget_max": "Maximum must be at least the minimum budget."}
         )
-    start = civil_date(raw.get("start_on"), "start_on", future=True)
+    start = civil_date(raw.get("start_on"), "start_on", future=not allow_existing_start)
     end = civil_date(raw["end_on"], "end_on") if raw.get("end_on") else None
     if end and end <= start:
         raise ValidationError({"end_on": "End date must follow start date."})

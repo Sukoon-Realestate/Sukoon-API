@@ -44,6 +44,9 @@ def create_structured_lease(request):
     if replay:
         return replay
     with transaction.atomic():
+        from core_apps.properties.models import Property
+
+        Property.objects.select_for_update().get(pk=invitation.property_id)
         invitation = (
             TenancyInvitation.objects.select_for_update(of=("self",))
             .select_related("property", "owner", "tenant", "terms_proposal")
@@ -99,6 +102,16 @@ def create_structured_lease(request):
                 "The accepted accommodation has changed.", "accommodation_changed"
             )
         _validate_terms_offer(data["terms"], snapshot)
+        from ..services.student_housing.policies import validate_occupants
+
+        validate_occupants(
+            invitation.property,
+            snapshot,
+            [invitation.tenant],
+            data["terms"]["starts_on"],
+            data["terms"]["ends_on_exclusive"],
+            occupant_count=data["terms"].get("occupants", 1),
+        )
         if (
             invitation.terms_proposal
             and _json_safe(data["terms"]) != invitation.terms_proposal.terms
@@ -123,12 +136,20 @@ def create_structured_lease(request):
             hold_expires_at=timezone.now()
             + timedelta(minutes=settings.RENTAL_HOLD_TTL_MINUTES),
         )
-        reserve_inventory_days(
-            lease,
-            data["terms"]["starts_on"],
-            data["terms"]["ends_on_exclusive"],
-            lease.hold_expires_at,
+        from ..services.rental_lifecycle.reservations import transfer_hold
+
+        if not transfer_hold(lease, invitation.terms_proposal):
+            reserve_inventory_days(
+                lease, lease.start_date, lease.end_date, lease.hold_expires_at
+            )
+        from ..models import GroupBookingParticipant
+
+        GroupBookingParticipant.objects.filter(invitation=invitation).update(
+            lease=lease
         )
+        from ..services.student_housing.applications import link_agreement
+
+        link_agreement(invitation, lease)
         invitation.lease = lease
         invitation.consumed_at = timezone.now()
         invitation.save(update_fields=["lease", "consumed_at", "updated_at"])

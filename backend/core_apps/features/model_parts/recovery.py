@@ -63,12 +63,33 @@ class RentalInventoryDayLock(TimeStampedModel):
     )
     expires_at = models.DateTimeField(null=True, blank=True)
 
+    unit = models.ForeignKey(
+        "RentalInventoryUnit",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="day_locks",
+    )
+    hold = models.ForeignKey(
+        "ReservationHold",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="day_locks",
+    )
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
+                fields=["unit", "stay_on"],
+                condition=Q(unit__isnull=False),
+                name="unique_rental_unit_stay_day",
+            ),
+            models.UniqueConstraint(
                 fields=["property", "offer_id", "stay_on"],
-                name="unique_rental_offer_stay_day",
-            )
+                condition=Q(unit__isnull=True),
+                name="unique_legacy_rental_stay_day",
+            ),
         ]
 
 

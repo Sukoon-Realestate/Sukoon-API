@@ -56,6 +56,8 @@ def apply_fake_rental_event(payload):
                 profile.status = OwnerPaymentProfile.Status.READY
                 profile.payout_ready = True
                 profile.masked_beneficiary = {"account_last4": "4242"}
+                profile.provider = "fake"
+                profile.provider_account_id = f"fake-beneficiary:{profile.id}"
                 profile.requirements = []
                 profile.revision += 1
                 profile.save()
@@ -63,6 +65,9 @@ def apply_fake_rental_event(payload):
             session = get_object_or_404(
                 SigningSession, provider_session_id=provider_session_id
             )
+            from core_apps.properties.models import Property
+
+            Property.objects.select_for_update().get(pk=session.lease.property_id)
             Lease.objects.select_for_update().get(pk=session.lease_id)
             session = (
                 SigningSession.objects.select_for_update(of=("self",))
@@ -97,12 +102,19 @@ def apply_fake_rental_event(payload):
                     holds = lease.inventory_day_locks.filter(
                         kind=RentalInventoryDayLock.Kind.HOLD, expires_at__gt=now
                     )
-                    if holds.count() != (lease.end_date - lease.start_date).days:
+                    from ..services.rental_lifecycle.inventory import hold_coverage
+
+                    if not hold_coverage(lease):
                         raise RentalConflict(
                             "The inventory hold has expired.", code="hold_expired"
                         )
                     lease.hold_expires_at = now + timedelta(hours=48)
                     holds.update(expires_at=lease.hold_expires_at)
+                    from ..models import ReservationHold
+
+                    ReservationHold.objects.filter(lease=lease).update(
+                        expires_at=lease.hold_expires_at
+                    )
                     lease.status = Lease.Status.SIGNED
                     lease.revision += 1
                     lease.save(

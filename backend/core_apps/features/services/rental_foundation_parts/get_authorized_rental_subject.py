@@ -41,6 +41,23 @@ def get_authorized_rental_subject(user, subject_id):
         raise NotFound()
     if str(user.id) == str(subject_id):
         return user
+    from ..company.access import company_subject, authority_review_subject
+
+    corporate = company_subject(user, subject_id) or authority_review_subject(
+        user, subject_id
+    )
+    if corporate:
+        return corporate
+    from ..student_housing.access import student_subject
+
+    academic = student_subject(user, subject_id)
+    if academic:
+        return academic
+    from ..rental_lifecycle.access import lifecycle_subject
+
+    extension = lifecycle_subject(user, subject_id)
+    if extension:
+        return extension
 
     # Session/quote receipts identify the created resource, not its parent.
     # Resolve these private results when reconciling an uncertain creation.
@@ -128,6 +145,10 @@ def get_authorized_rental_subject(user, subject_id):
             .first()
         )
         if item:
+            if isinstance(item, RentalEvidence) and item.purpose == "student":
+                if item.uploader_id == user.pk and not item.deleted_at:
+                    return item
+                raise NotFound()
             if user in (item.lease.owner, item.lease.tenant):
                 return item
             raise NotFound()

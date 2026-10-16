@@ -135,7 +135,7 @@ def upload_attachment(
 
 
 def cleanup_orphans():
-    from core_apps.features.planning_models import HousingGroup
+    from .group_access import lock_conversation_root
 
     cutoff = timezone.now() - timedelta(hours=limits()["orphan_retention_hours"])
     count = 0
@@ -144,9 +144,7 @@ def cleanup_orphans():
     )
     for item in candidates.select_related("conversation"):
         with transaction.atomic():
-            HousingGroup.objects.select_for_update().get(
-                pk=item.conversation.housing_group_id
-            )
+            lock_conversation_root(item.conversation)
             locked = ChatAttachment.objects.select_for_update().get(pk=item.pk)
             if locked.state != "ready" or locked.message_id:
                 continue

@@ -10,6 +10,24 @@ from .agreements import Lease
 
 
 class RentalInterest(TimeStampedModel):
+    academic_plan = models.ForeignKey(
+        "AcademicHousingPlan",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="rental_interests",
+    )
+    academic_revision = models.PositiveIntegerField(null=True, blank=True)
+    academic_snapshot = models.JSONField(default=dict, blank=True)
+    source_housing_offer = models.ForeignKey(
+        "HousingOffer",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="rental_interests",
+    )
+    desired_end = models.DateField(null=True, blank=True)
+
     class Status(models.TextChoices):
         SUBMITTED = "submitted", "Submitted"
         UNDER_REVIEW = "under_review", "Under review"
@@ -38,9 +56,27 @@ class RentalInterest(TimeStampedModel):
     )
     revision = models.PositiveIntegerField(default=1)
 
+    application_grant = models.ForeignKey(
+        "ApplicationAccessGrant",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="interests",
+    )
+    information_requested = models.TextField(blank=True, default="")
+    applicant_response = models.TextField(blank=True, default="")
+    waiting_for = models.CharField(max_length=20, default="owner")
+    response_due_at = models.DateTimeField(null=True, blank=True)
+    first_owner_response_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         ordering = ["-created_at", "-id"]
         constraints = [
+            models.CheckConstraint(
+                check=Q(desired_end__isnull=True)
+                | Q(desired_end__gt=F("desired_start")),
+                name="interest_desired_dates_valid",
+            ),
             models.CheckConstraint(
                 check=Q(revision__gte=1), name="rental_interest_revision_positive"
             ),

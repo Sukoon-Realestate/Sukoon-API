@@ -6,8 +6,9 @@ class IsParticipant(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         conversation = getattr(obj, "conversation", obj)
-        if conversation.kind == "housing_group":
+        if conversation.kind in {"housing_group", "company_request"}:
             from .services.group_access import authorize
+
             authorize(conversation, request.user)
             return True
         return conversation.participants.filter(pk=request.user.pk).exists()

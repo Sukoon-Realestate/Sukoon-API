@@ -23,9 +23,12 @@ from .housing_request_action import offer_actions, offer_payload, get_offer
 def housing_offers(request, request_id):
     parent = get_request(request.user, request_id)
     if request.method == "GET":
+        from ..services.student_housing.publication import participant_can_read
+
         items = (
             parent.offers.all()
             if parent.user_id == request.user.pk
+            or participant_can_read(request.user, parent)
             else parent.offers.filter(owner=request.user)
         )
         return page(
@@ -84,10 +87,14 @@ def housing_offers(request, request_id):
             )
         rent, deposit = offer_money(snapshot)
         requirements = item.criteria
-        if rent < (requirements.get("budget_min") or {}).get(
-            "amount_minor", 0
-        ) or rent > (requirements.get("budget_max") or {}).get(
-            "amount_minor", 10**12
+        per_person_group = bool(
+            item.academic_plan_id
+            and item.academic_snapshot.get("budget_basis") == "per_person"
+            and requirements["people"] > 1
+        )
+        if not per_person_group and (
+            rent < (requirements.get("budget_min") or {}).get("amount_minor", 0)
+            or rent > (requirements.get("budget_max") or {}).get("amount_minor", 10**12)
         ):
             raise ValidationError(
                 {"selection": "The rent is outside the requested budget."}
@@ -117,7 +124,19 @@ def housing_offers(request, request_id):
             raise ValidationError(
                 {"selection": "The offer must use the requested price period."}
             )
+        if item.academic_plan_id:
+            from ..services.student_housing.policies import (
+                validate_response,
+                snapshot_for,
+            )
+
+            validate_response(item, prop, snapshot)
         return HousingOffer.objects.create(
+            student_policy_snapshot=(
+                snapshot_for(prop, snapshot["offer_id"])
+                if item.academic_plan_id
+                else {}
+            ),
             request=item,
             owner=request.user,
             property=prop,
@@ -165,10 +184,35 @@ def housing_offer_action(request, offer_id, action):
         }[action]
         item.revision += 1
         item.save()
+        if (
+            action == "select_to_proceed"
+            and item.request.academic_plan_id
+            and item.request.academic_plan.group_id
+        ):
+            from ..services.student_housing.access import plan_for
+            from ..services.student_housing.groups import link_selection
+
+            plan = plan_for(request.user, item.request.academic_plan.id, lock=True)
+            link_selection(
+                plan.group,
+                plan,
+                item.selection,
+                source={
+                    "housing_offer_id": str(item.id),
+                    "housing_offer_revision": item.revision,
+                },
+            )
+            plan.group.revision += 1
+            plan.group.save(update_fields=["shortlist", "revision", "updated_at"])
         return item
 
     def load():
         found = get_offer(request.user, offer_id)
+        if found.request.academic_plan_id:
+            from ..services.student_housing.access import plan_for
+
+            if found.owner_id != request.user.pk:
+                plan_for(request.user, found.request.academic_plan.id, lock=True)
         HousingRequest.objects.select_for_update().get(pk=found.request_id)
         return get_offer(request.user, offer_id, lock=True)
 

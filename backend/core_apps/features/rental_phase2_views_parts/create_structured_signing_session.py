@@ -68,13 +68,9 @@ def lease_submit_for_signature(request, lease_id):
             raise RentalConflict("Both participants must review the current agreement.")
         if not lease.hold_expires_at or lease.hold_expires_at <= timezone.now():
             raise RentalConflict("The inventory hold expired.", code="hold_expired")
-        required_days = (lease.end_date - lease.start_date).days
-        held_days = RentalInventoryDayLock.objects.filter(
-            lease=lease,
-            kind=RentalInventoryDayLock.Kind.HOLD,
-            expires_at__gt=timezone.now(),
-        ).count()
-        if held_days != required_days:
+        from ..services.rental_lifecycle.inventory import hold_coverage
+
+        if not hold_coverage(lease):
             raise RentalConflict("The inventory hold expired.", code="hold_expired")
         document = get_rental_provider().generate_agreement(
             lease.id, lease.revision, lease.terms

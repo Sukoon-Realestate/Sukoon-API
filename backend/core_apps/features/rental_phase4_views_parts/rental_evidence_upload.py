@@ -109,6 +109,7 @@ def _evidence(request, evidence_id):
         RentalEvidence.objects.select_related("lease__owner", "lease__tenant"),
         id=evidence_id,
         deleted_at__isnull=True,
+        purpose="rental",
     )
     if request.user not in (item.lease.owner, item.lease.tenant):
         raise NotFound()

@@ -111,15 +111,24 @@ def summary(conversation, user):
             "is_deleted": bool(latest.deleted_at),
             "content": latest.content[:160] if not latest.deleted_at else "",
         }
+    company = conversation.kind == "company_request"
+    request = conversation.company_request if company else None
     return {
         "id": str(conversation.id),
         "conversation_id": str(conversation.id),
-        "conversation_type": "housing_group",
-        "group_id": str(conversation.housing_group.id),
-        "title": conversation.housing_group.name,
-        "active_member_count": conversation.housing_group.memberships.filter(
-            status="active"
-        ).count(),
+        "conversation_type": conversation.kind,
+        "group_id": None if company else str(conversation.housing_group.id),
+        **(
+            {
+                "company_id": str(request.company.id),
+                "company_name": request.company.name,
+                "request_id": str(request.id),
+            }
+            if company
+            else {}
+        ),
+        "title": request.title if company else conversation.housing_group.name,
+        "active_member_count": eligible_participants(conversation).count(),
         "membership_id": str(member.id),
         "membership_period": str(participant.membership_period),
         "visible_from_sequence": participant.visible_from_sequence,

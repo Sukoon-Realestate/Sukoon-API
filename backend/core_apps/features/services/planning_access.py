@@ -29,6 +29,15 @@ def planning_subject(user, identifier):
         identifier = uuid.UUID(str(identifier))
     except (ValueError, TypeError):
         raise NotFound()
+    from .company.access import company_subject
+    corporate = company_subject(user, identifier)
+    if corporate:
+        return corporate
+    from .student_housing.access import student_subject
+
+    academic = student_subject(user, identifier)
+    if academic:
+        return academic
     for model in (LifestyleProfile, CommuteSearch, TenantAssistantTurn):
         item = model.objects.filter(id=identifier, user=user).first()
         if item:
@@ -90,6 +99,15 @@ def planning_subject(user, identifier):
 
 
 def planning_actions(user, capability, subject_id=""):
+    if capability in {"company_housing", "residential_portfolios"}:
+        from .company.access import actions
+        return actions(user, capability, subject_id)
+    from config.student_housing import SERVICES as STUDENT_SERVICES
+
+    if capability in STUDENT_SERVICES:
+        from .student_housing.access import actions
+
+        return actions(user, capability, subject_id)
     general = {
         "lifestyle": ["read", "save"],
         "roommates": ["read", "request", "block"],

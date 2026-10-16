@@ -86,3 +86,53 @@ from .planning_models import (  # noqa: E402,F401
     TenantAssistantTurn,
 )
 from .catalog_models import PromotionOption
+from .model_parts.summary_sharing import RentalSummaryGrant
+
+from .model_parts.application_profiles import (
+    ApplicationProfile,
+    ApplicationProfileVersion,
+    ApplicationAccessGrant,
+    RentalVerificationClaim,
+    RentalConsentRecord,
+)
+from .model_parts.decision_facts import (
+    PropertyDecisionFact,
+    RentalAvailabilityConfirmation,
+)
+from .model_parts.reservations import RentalInventoryUnit, ReservationHold
+from .model_parts.group_bookings import GroupBookingProposal, GroupBookingParticipant
+from .model_parts.operational_cases import (
+    RentalOperationalCase,
+    RentalAuditEvent,
+    RentalProviderInstruction,
+)
+
+from .student_models import (
+    University,
+    Campus,
+    StudentProfile,
+    AcademicHousingPlan,
+    AcademicPlanParticipant,
+    AcademicRequirementRevision,
+    SharedLivingAgreement,
+    StudentOfferPolicy,
+)
+
+from .company_models import (
+    Company,
+    CompanyMembership,
+    CompanyInvitation,
+    PortfolioOffer,
+    CompanyHousingRequest,
+    CompanyBookingItem,
+    CompanyApproval,
+    CompanyBudgetReservation,
+    EmployeeAssignment,
+)
+from .company_staff_models import (
+    CompanyStaffRecord,
+    CompanyAccountProvisioning,
+    CompanyStaffBatch,
+    CompanyStaffBatchRow,
+    CompanyWorkContactProof,
+)

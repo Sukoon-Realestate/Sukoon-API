@@ -74,6 +74,8 @@ def maintenance_payload(item, user=None):
         "appointment_at": (
             item.appointment_at.isoformat() if item.appointment_at else None
         ),
+        "appointment_version": item.appointment_version,
+        "access_approved_version": item.access_approved_version,
         "proposed_cost": _money(item.proposed_cost_minor),
         "cost_payer": item.cost_payer or None,
         "cost_version": item.cost_version,

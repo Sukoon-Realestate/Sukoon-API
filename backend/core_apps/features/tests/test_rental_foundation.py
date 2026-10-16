@@ -37,9 +37,13 @@ def test_capabilities_are_fresh_private_and_account_scoped():
     assert response.data == {
         "account_id": str(user.id),
         "account_verified": True,
-        "enabled_capabilities": ["rental_interests", "rental_agreements"],
+        "enabled_capabilities": [
+            "rental_interests",
+            "rental_agreements",
+            "rental_lifecycle",
+        ],
         "policy_version": "rental-policy-v1",
-        "allowed_actions": ["onboard"],
+        "allowed_actions": ["onboard", "save_application"],
         "blocking_reasons": ["The requested rental action is not available yet."],
     }
     assert response["Cache-Control"] == "private, no-store"

@@ -22,7 +22,10 @@ from .payment_attempt_payload import (
 
 
 def _capture_attempt(attempt):
-    if attempt.payment_status == PaymentAttempt.Status.CAPTURED:
+    if attempt.payment_status in {
+        PaymentAttempt.Status.CAPTURED,
+        PaymentAttempt.Status.CHARGEDBACK,
+    }:
         return attempt
     invoice = RentInvoice.objects.select_for_update().get(pk=attempt.invoice_id)
     lease = Lease.objects.select_for_update().get(pk=invoice.lease_id)
@@ -160,7 +163,10 @@ def _capture_attempt(attempt):
         invoice.billing_period.status = BillingPeriod.Status.PAID
         invoice.billing_period.save(update_fields=["status", "updated_at"])
     if (
-        lease.status in {Lease.Status.SIGNED, Lease.Status.EXPIRED}
+        (
+            lease.status in {Lease.Status.SIGNED, Lease.Status.EXPIRED}
+            or (lease.status == Lease.Status.CANCELLED and lease.activated_at is None)
+        )
         and invoice.billing_period
         and invoice.billing_period.sequence == 1
     ):

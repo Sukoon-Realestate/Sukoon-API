@@ -6,6 +6,10 @@ from .owner_payment_profile_serializer import RentalTermsSerializer
 
 
 class RentalInterestSerializer(serializers.ModelSerializer):
+    academic_context = serializers.JSONField(source="academic_snapshot", read_only=True)
+    application_share_id = serializers.UUIDField(
+        source="application_grant.id", read_only=True, allow_null=True
+    )
     property_id = serializers.UUIDField(source="property.id", read_only=True)
     tenant_id = serializers.UUIDField(source="tenant.id", read_only=True)
     tenant_name = serializers.CharField(source="tenant.get_full_name", read_only=True)
@@ -18,6 +22,8 @@ class RentalInterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = RentalInterest
         fields = [
+            "academic_context",
+            "desired_end",
             "id",
             "property_id",
             "offer_id",
@@ -28,6 +34,12 @@ class RentalInterestSerializer(serializers.ModelSerializer):
             "months",
             "occupants",
             "message",
+            "application_share_id",
+            "information_requested",
+            "applicant_response",
+            "waiting_for",
+            "response_due_at",
+            "first_owner_response_at",
             "status",
             "proposal_id",
             "invitation_id",
@@ -84,6 +96,7 @@ class TermsProposalBodySerializer(serializers.Serializer):
 
 
 class TermsProposalSerializer(serializers.ModelSerializer):
+    terms_digest = serializers.SerializerMethodField()
     interest_id = serializers.UUIDField(source="interest.id", read_only=True)
     invitation_id = serializers.SerializerMethodField()
     allowed_actions = serializers.SerializerMethodField()
@@ -98,6 +111,7 @@ class TermsProposalSerializer(serializers.ModelSerializer):
             "revision",
             "status",
             "terms",
+            "terms_digest",
             "previous_terms",
             "offer_snapshot",
             "allowed_actions",
@@ -107,6 +121,11 @@ class TermsProposalSerializer(serializers.ModelSerializer):
     def get_invitation_id(self, obj):
         invitation = obj.invitations.order_by("-created_at").first()
         return str(invitation.id) if invitation else None
+
+    def get_terms_digest(self, obj):
+        from ..services.rental_phase2 import fingerprint
+
+        return fingerprint(obj.terms)
 
     def get_allowed_actions(self, obj):
         from ..services.lease_permissions import proposal_actions

@@ -39,6 +39,9 @@ def _invoice(request, invoice_id, lock=False):
         candidate = get_object_or_404(queryset, id=invoice_id)
         if candidate.lease_id is None:
             raise NotFound()
+        from core_apps.properties.models import Property
+
+        Property.objects.select_for_update().get(pk=candidate.lease.property_id)
         Lease.objects.select_for_update().get(pk=candidate.lease_id)
         queryset = queryset.select_for_update(of=("self",))
     invoice = get_object_or_404(queryset, id=invoice_id)
@@ -55,6 +58,11 @@ def _attempt(request, attempt_id, lock=False):
     if lock:
         candidate = get_object_or_404(queryset, id=attempt_id)
         if candidate.invoice.lease_id is not None:
+            from core_apps.properties.models import Property
+
+            Property.objects.select_for_update().get(
+                pk=candidate.invoice.lease.property_id
+            )
             Lease.objects.select_for_update().get(pk=candidate.invoice.lease_id)
         queryset = queryset.select_for_update(of=("self",))
     attempt = get_object_or_404(queryset, id=attempt_id)

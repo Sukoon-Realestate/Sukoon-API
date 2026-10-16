@@ -1,6 +1,7 @@
 """Planning notifications: deliver planning events."""
 
 from django.db import transaction
+from django.http import Http404
 from datetime import timedelta
 from django.db.models import Q
 from django.utils import timezone
@@ -13,7 +14,7 @@ def deliver_planning_events():
     )
     from core_apps.notifications.services.fcm_service import FCMService
     from ..planning_access import planning_subject
-    from rest_framework.exceptions import NotFound
+    from rest_framework.exceptions import NotFound, PermissionDenied
 
     delivered = 0
     retry_before = timezone.now() - timedelta(minutes=2)
@@ -34,7 +35,33 @@ def deliver_planning_events():
             if event.attempts and event.updated_at >= retry_before:
                 continue
             try:
-                if event.destination.get("event_kind") == "visit_post_decision":
+                if event.destination.get("action_type") == "open_company_work":
+                    from ..company.access import company_for
+                    from ..company.approval_routing import work_items
+
+                    company = company_for(
+                        event.recipient, event.destination["target_id"]
+                    )
+                    if (
+                        not work_items(event.recipient, company)
+                        .filter(
+                            id=event.destination.get("item_id"),
+                            revision=event.destination.get("revision"),
+                        )
+                        .exists()
+                    ):
+                        raise NotFound()
+                elif event.destination.get("rental_lifecycle"):
+                    from ..rental_foundation import get_authorized_rental_subject
+
+                    item = get_authorized_rental_subject(
+                        event.recipient, event.destination["target_id"]
+                    )
+                    if getattr(item, "revision", 1) != event.destination.get(
+                        "revision"
+                    ):
+                        raise NotFound()
+                elif event.destination.get("event_kind") == "visit_post_decision":
                     from core_apps.properties.models import PropertyVisitDecision
 
                     if (
@@ -82,7 +109,7 @@ def deliver_planning_events():
                         raise NotFound()
                 else:
                     planning_subject(event.recipient, event.destination["target_id"])
-            except NotFound:
+            except (NotFound, Http404, PermissionDenied):
                 event.delivered_at = timezone.now()
                 event.save(update_fields=["delivered_at", "updated_at"])
                 continue

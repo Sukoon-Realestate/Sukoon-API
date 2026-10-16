@@ -105,6 +105,11 @@ class GroupInvitation(TimeStampedModel):
 
 
 class GroupProcess(TimeStampedModel):
+    academic_plan = models.ForeignKey(
+        "features.AcademicHousingPlan", on_delete=models.PROTECT, null=True, blank=True
+    )
+    academic_revision = models.PositiveIntegerField(null=True, blank=True)
+    academic_snapshot = models.JSONField(default=dict)
     group = models.ForeignKey(
         HousingGroup, on_delete=models.PROTECT, related_name="processes"
     )
@@ -130,6 +135,15 @@ class GroupProcess(TimeStampedModel):
 
 
 class HousingRequest(TimeStampedModel):
+    academic_plan = models.ForeignKey(
+        "features.AcademicHousingPlan",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="housing_requests",
+    )
+    academic_revision = models.PositiveIntegerField(null=True, blank=True)
+    academic_snapshot = models.JSONField(default=dict)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -145,6 +159,7 @@ class HousingRequest(TimeStampedModel):
 
 
 class HousingOffer(TimeStampedModel):
+    student_policy_snapshot = models.JSONField(default=dict)
     request = models.ForeignKey(
         HousingRequest, on_delete=models.PROTECT, related_name="offers"
     )

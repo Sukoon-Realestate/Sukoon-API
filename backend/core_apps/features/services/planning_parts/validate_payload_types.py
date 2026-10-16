@@ -143,7 +143,7 @@ def validate_payload_types(value, depth=0):
             validate_payload_types(item, depth + 1)
 
 
-def planning_api(methods, capability):
+def planning_api(methods, capability, *, typed=False):
     def decorate(fn):
         @api_view(methods)
         @permission_classes([IsAuthenticated])
@@ -153,7 +153,7 @@ def planning_api(methods, capability):
             require_planning(request.user, capability)
             if request.method == "POST" and not isinstance(request.data, dict):
                 raise ValidationError("Supply a JSON object.")
-            if request.method == "POST":
+            if request.method == "POST" and not typed:
                 validate_payload_types(request.data)
             try:
                 response = fn(request, *args, **kwargs)

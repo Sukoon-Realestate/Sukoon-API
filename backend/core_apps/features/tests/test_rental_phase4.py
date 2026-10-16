@@ -219,6 +219,8 @@ def test_only_operations_can_execute_each_eligible_payable_once(phase4_lease):
         payout_ready=True,
         accepted_policy_versions=["rental-policy-v1"],
         masked_beneficiary={"account_last4": "4242"},
+        provider="fake",
+        provider_account_id="fake-reviewed-beneficiary",
     )
     RentalHandover.objects.create(
         lease=lease,

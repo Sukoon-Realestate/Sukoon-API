@@ -48,6 +48,15 @@ def housing_request_action(request, request_id, action):
 
 
 def offer_status(item):
+    from ..services.student_housing.publication import request_current
+
+    if not request_current(item.request):
+        return "review_required"
+    if item.request.academic_plan_id:
+        from ..services.student_housing.policies import response_policy_current
+
+        if not response_policy_current(item):
+            return "review_required"
     if item.status not in {"declined", "withdrawn"} and (
         request_status(item.request) != "published"
         or item.request_revision != item.request.revision
@@ -91,6 +100,8 @@ def offer_actions(user, item):
 
 
 def offer_payload(item, user):
+    from ..services.student_housing.publication import participant_can_read
+
     return {
         "id": str(item.id),
         "request_id": str(item.request.id),
@@ -101,10 +112,21 @@ def offer_payload(item, user):
         "request_revision": item.request_revision,
         "selection": item.selection,
         "rent": money(item.rent_minor),
-        "deposit": money(item.deposit_minor),
+        "deposit": (
+            money(item.deposit_minor) if item.deposit_minor is not None else None
+        ),
         "price_period": item.price_period,
         "allowed_actions": offer_actions(user, item),
         "blocking_reasons": [],
+        "academic_context": item.request.academic_snapshot,
+        "student_policy": item.student_policy_snapshot,
+        "academic_group_id": (
+            str(item.request.academic_plan.group.id)
+            if item.request.academic_plan_id
+            and item.request.academic_plan.group_id
+            and participant_can_read(user, item.request)
+            else None
+        ),
     }
 
 
@@ -112,7 +134,15 @@ def get_offer(user, identifier, *, lock=False):
     queryset = HousingOffer.objects.select_related("request", "owner")
     if lock:
         queryset = queryset.select_for_update(of=("self",))
-    item = get_object_or_404(
-        queryset.filter(Q(owner=user) | Q(request__user=user)), id=identifier
-    )
+    item = get_object_or_404(queryset, id=identifier)
+    from ..services.student_housing.publication import participant_can_read
+
+    if (
+        item.owner_id != user.pk
+        and not (item.request.user_id == user.pk and not item.request.academic_plan_id)
+        and not participant_can_read(user, item.request)
+    ):
+        from rest_framework.exceptions import NotFound
+
+        raise NotFound()
     return item
