@@ -4,41 +4,54 @@ import { useEffect, useRef } from "react";
 import clsx from "clsx";
 import { SignatureMark } from "@/components/ui/Decor";
 
-// A barely-there signature that a soft light lights up under the pointer, like
-// a torch over an engraving. Listens on its parent (which must be positioned);
-// `wordClassName` places and sizes the word within it. Without a mouse only
-// the faint word shows.
+// A soft light drifts across the engraving automatically. The mask is confined
+// to the signature, so its light never spills onto the feature cards.
 export function SignatureSpotlight({ className, wordClassName }: { className?: string; wordClassName: string }) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const area = rootRef.current?.parentElement;
     const lit = rootRef.current?.querySelector<SVGSVGElement>(".spotlight-lit");
-    if (!area || !lit) return;
+    if (!lit) return;
 
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
-    const move = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") return;
-      cancelAnimationFrame(frame);
-      // Straight to CSS variables (see .spotlight-lit in globals.css): no React render per move.
-      frame = requestAnimationFrame(() => {
-        const box = lit.getBoundingClientRect();
-        lit.style.setProperty("--x", `${event.clientX - box.left}px`);
-        lit.style.setProperty("--y", `${event.clientY - box.top}px`);
-        lit.style.opacity = "1";
-      });
+    let visible = false;
+    let elapsed = 0;
+    let previousTime = 0;
+    const paint = () => {
+      const phase = (elapsed / 3000) * Math.PI * 2;
+      lit.style.setProperty("--x", `${50 + Math.sin(phase) * 35}%`);
+      lit.style.setProperty("--y", `${50 + Math.sin(phase * 2) * 12}%`);
     };
-    const leave = () => {
-      cancelAnimationFrame(frame);
-      lit.style.opacity = "0";
+    const tick = (time: number) => {
+      if (previousTime) elapsed += Math.min(time - previousTime, 64);
+      previousTime = time;
+      paint();
+      frame = requestAnimationFrame(tick);
     };
-
-    area.addEventListener("pointermove", move);
-    area.addEventListener("pointerleave", leave);
+    const sync = () => {
+      cancelAnimationFrame(frame);
+      previousTime = 0;
+      if (reducedMotion.matches) {
+        lit.style.setProperty("--x", "50%");
+        lit.style.setProperty("--y", "50%");
+      } else if (visible && !document.hidden) {
+        frame = requestAnimationFrame(tick);
+      }
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting && entry.boundingClientRect.width > 0;
+      sync();
+    });
+    observer.observe(lit);
+    document.addEventListener("visibilitychange", sync);
+    reducedMotion.addEventListener("change", sync);
+    sync();
     return () => {
       cancelAnimationFrame(frame);
-      area.removeEventListener("pointermove", move);
-      area.removeEventListener("pointerleave", leave);
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+      reducedMotion.removeEventListener("change", sync);
     };
   }, []);
 
@@ -46,9 +59,9 @@ export function SignatureSpotlight({ className, wordClassName }: { className?: s
     <div ref={rootRef} aria-hidden className={clsx("pointer-events-none absolute inset-0", className)}>
       {/* the engraving at rest: only just there */}
       <SignatureMark className={clsx(wordClassName, "text-brand-soft/[0.08]")} />
-      {/* the same word, shown only inside the pointer's pool of light */}
+      {/* the same word, revealed by an autonomous pool of light */}
       <SignatureMark
-        className={clsx(wordClassName, "spotlight-lit text-brand-soft opacity-0 transition-opacity duration-500 [--sig-fill:0.22]")}
+        className={clsx(wordClassName, "spotlight-lit text-brand-soft opacity-70 [--sig-fill:0.16]")}
       />
     </div>
   );

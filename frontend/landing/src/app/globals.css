@@ -630,11 +630,11 @@ summary::-webkit-details-marker {
   animation: signature-fill 1s ease-out 3s both;
 }
 
-/* SignatureSpotlight: the lit copy shows only in a soft pool around the pointer
-   (--x / --y are set from JS, relative to the svg). */
+/* SignatureSpotlight: a slow, automatic pool of light confined to the word.
+   Percentage coordinates keep the sweep proportional at every word size. */
 .spotlight-lit {
-  -webkit-mask-image: radial-gradient(circle 300px at var(--x, -999px) var(--y, -999px), black, transparent 70%);
-  mask-image: radial-gradient(circle 300px at var(--x, -999px) var(--y, -999px), black, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 48% 70% at var(--x, 50%) var(--y, 50%), black, transparent 75%);
+  mask-image: radial-gradient(ellipse 48% 70% at var(--x, 50%) var(--y, 50%), black, transparent 75%);
 }
 
 /* SignatureTrace: a short light runs along the word's outline, over and over.
