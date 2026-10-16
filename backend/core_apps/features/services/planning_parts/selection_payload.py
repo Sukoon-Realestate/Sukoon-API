@@ -17,7 +17,7 @@ from ..rental_phase2 import RentalConflict, remember_mutation, replay_operation
 def enabled_services():
     from config.student_housing import SERVICES as STUDENT_SERVICES
 
-    return [
+    return ["company_housing", "residential_portfolios"] + [
         x for x in SERVICES if x in getattr(settings, "PLANNING_ENABLED_SERVICES", [])
     ] + [
         x

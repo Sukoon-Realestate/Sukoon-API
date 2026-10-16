@@ -1,4 +1,5 @@
 from django.contrib import admin
+from . import company_admin  # noqa: F401
 from .billing_admin import FinancialHistoryAdmin
 
 from .models import (

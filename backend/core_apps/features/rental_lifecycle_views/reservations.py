@@ -14,7 +14,7 @@ def reservation_holds(request, external=False):
         from ..models import ReservationHold
 
         qs = ReservationHold.objects.filter(
-            Q(actor=request.user) | Q(property__owner=request.user)
+            Q(actor=request.user) | Q(property__owner=request.user), companybookingitem__isnull=True
         ).order_by("-created_at")
         if request.query_params.get("property_id"):
             qs = qs.filter(property__id=request.query_params["property_id"])

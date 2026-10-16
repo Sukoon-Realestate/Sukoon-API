@@ -47,6 +47,35 @@ class CityAdmin(admin.ModelAdmin):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
+    # Physical topology uses the versioned property/portfolio services. Generic
+    # admin edits must not bypass aggregate holds or rewrite historical scope.
+    readonly_fields = [
+        "building",
+        "complex",
+        "unit_code",
+        "occupancy_capacity",
+        "rental_inventory",
+    ]
+
+    def has_delete_permission(self, request, obj=None):
+        if obj and (obj.building_id or obj.complex_id or obj.portfolio_offers.exists()):
+            return False
+        return super().has_delete_permission(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        from django.core.exceptions import PermissionDenied
+        from django.db.models import Q
+
+        if queryset.filter(
+            Q(building__isnull=False)
+            | Q(complex__isnull=False)
+            | Q(portfolio_offers__isnull=False)
+        ).exists():
+            raise PermissionDenied(
+                "Portfolio inventory is retained. Hide listings through their controlled lifecycle."
+            )
+        return super().delete_queryset(request, queryset)
+
     list_display = [
         "title",
         "owner",

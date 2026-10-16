@@ -29,11 +29,13 @@ def property_for(user, identifier, *, owner=False, lock=False):
 
 
 def hold_for(user, identifier, *, lock=False):
-    scoped = ReservationHold.objects.filter(Q(actor=user) | Q(property__owner=user))
+    scoped = ReservationHold.objects.filter(
+        Q(actor=user) | Q(property__owner=user), companybookingitem__isnull=True
+    )
     item = get_object_or_404(scoped, id=identifier)
     if lock:
         Property.objects.select_for_update().get(pk=item.property_id)
-        item = scoped.select_for_update().get(pk=item.pk)
+        item = scoped.select_for_update(of=("self",)).get(pk=item.pk)
     return item
 
 
@@ -56,7 +58,9 @@ def lifecycle_subject(user, identifier):
                 expires_at__gt=timezone.now(),
             )
         ),
-        ReservationHold.objects.filter(Q(actor=user) | Q(property__owner=user)),
+        ReservationHold.objects.filter(
+            Q(actor=user) | Q(property__owner=user), companybookingitem__isnull=True
+        ),
         booking_queryset(user),
         case_queryset(user),
         PropertyDecisionFact.objects.filter(property__owner=user),

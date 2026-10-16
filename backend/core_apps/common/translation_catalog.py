@@ -94,8 +94,11 @@ AR_TO_EN_MESSAGES = {
 
 # Reverse-populate missing reverse mappings
 from .billing_translations import MESSAGES as BILLING_MESSAGES
+from .company_translations import MESSAGES as COMPANY_MESSAGES
+from .company_translations import FIELD_LABELS as COMPANY_FIELD_LABELS
 
 EN_TO_AR_MESSAGES.update(BILLING_MESSAGES)
+EN_TO_AR_MESSAGES.update(COMPANY_MESSAGES)
 for en_msg, ar_msg in EN_TO_AR_MESSAGES.items():
     if ar_msg not in AR_TO_EN_MESSAGES:
         AR_TO_EN_MESSAGES[ar_msg] = en_msg
@@ -130,6 +133,8 @@ FIELD_LABELS_AR = {
     "Category": "الفئة",
     "Note": "الملاحظة",
 }
+
+FIELD_LABELS_AR.update(COMPANY_FIELD_LABELS)
 
 # Tag translation mappings for Property cards
 TAG_TRANSLATIONS = {

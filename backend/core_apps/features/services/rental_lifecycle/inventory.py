@@ -164,9 +164,17 @@ def expire_property_holds(prop, now=None):
             revision=F("revision") + 1,
             updated_at=now,
         )
+    # Aggregate holds have one anchor property but own day locks on all units.
+    # Visiting any included unit must observe the same authoritative expiry.
+    expiring_hold_ids = ReservationHold.objects.filter(
+        day_locks__property=prop,
+        lease__isnull=True,
+        status="active",
+        expires_at__lte=now,
+    ).values_list("pk", flat=True)
     for hold in (
         ReservationHold.objects.select_for_update()
-        .filter(property=prop, lease__isnull=True, status="active", expires_at__lte=now)
+        .filter(pk__in=expiring_hold_ids)
         .order_by("pk")
     ):
         released += hold.day_locks.all().delete()[0]

@@ -172,6 +172,8 @@ def create_hold(prop, actor, data, *, external=False):
 
 
 def hold_actions(hold, actor):
+    if hasattr(hold, "companybookingitem"):
+        return []
     if hold.status != "active" or hold.lease_id:
         return []
     if hold.expires_at and hold.expires_at <= timezone.now():

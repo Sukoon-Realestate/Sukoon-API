@@ -11,10 +11,23 @@ def journey_summary(user):
         profile and profile.national_id and profile.id_face and profile.id_back
     )
     return {
+        **account_category(user),
         "is_subscriped": True,
         "subscription_summary": subscription_summary(user),
         "has_completed_registration": complete,
         "available_workspaces": ["tenant", "owner"],
+    }
+
+
+def account_category(user):
+    """Private presentation discriminator; never a role or authorization grant."""
+    from core_apps.features.models import StudentProfile, CompanyMembership
+    student = StudentProfile.objects.filter(user=user).values_list("id", flat=True).first()
+    companies = CompanyMembership.objects.filter(user=user, is_active=True).count()
+    return {
+        "account_kind": "company" if companies else "student" if student else "normal",
+        "student_profile_id": str(student) if student else None,
+        "company_membership_count": companies,
     }
 
 

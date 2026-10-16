@@ -117,3 +117,9 @@ from .student_models import (
     SharedLivingAgreement,
     StudentOfferPolicy,
 )
+
+from .company_models import (
+    Company, CompanyMembership, CompanyInvitation, PortfolioOffer,
+    CompanyHousingRequest, CompanyBookingItem, CompanyApproval,
+    CompanyBudgetReservation, EmployeeAssignment,
+)

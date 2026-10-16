@@ -41,6 +41,13 @@ def get_authorized_rental_subject(user, subject_id):
         raise NotFound()
     if str(user.id) == str(subject_id):
         return user
+    from ..company.access import company_subject, authority_review_subject
+
+    corporate = company_subject(user, subject_id) or authority_review_subject(
+        user, subject_id
+    )
+    if corporate:
+        return corporate
     from ..student_housing.access import student_subject
 
     academic = student_subject(user, subject_id)

@@ -17,6 +17,19 @@ class PropertyLifecycleMixin:
         if property_obj.owner != user:
             raise PermissionDenied("You are not the owner of this property listing.")
 
+        property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        if (
+            property_obj.building_id
+            or property_obj.complex_id
+            or property_obj.portfolio_offers.exists()
+        ):
+            from core_apps.features.services.rental_phase2 import RentalConflict
+
+            raise RentalConflict(
+                "Portfolio inventory identities must be retained. Hide the listing instead.",
+                code="inventory_history_protected",
+            )
+
         # Check for active or confirmed visit requests
         active_visits = property_obj.visits.filter(
             status__in=[PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED]

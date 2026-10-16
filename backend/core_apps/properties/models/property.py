@@ -8,6 +8,18 @@ User = get_user_model()
 
 
 class Property(TimeStampedModel):
+    # A direct complex parent is only for standalone units. Building membership
+    # derives its complex through the building, so contradictory parents cannot exist.
+    building = models.ForeignKey(
+        "ResidentialBuilding", on_delete=models.PROTECT, null=True, blank=True,
+        related_name="units",
+    )
+    complex = models.ForeignKey(
+        "ResidentialComplex", on_delete=models.PROTECT, null=True, blank=True,
+        related_name="standalone_units",
+    )
+    unit_code = models.CharField(max_length=40, blank=True, default="")
+    occupancy_capacity = models.PositiveSmallIntegerField(null=True, blank=True)
     class PricePeriod(models.TextChoices):
         DAILY = ("daily", _("Daily"))
         WEEKLY = ("weekly", _("Weekly"))
@@ -149,6 +161,26 @@ class Property(TimeStampedModel):
     has_water_meter = models.BooleanField(_("Has Water Meter"), default=False)
 
     class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(building__isnull=True) | models.Q(complex__isnull=True),
+                name="unit_has_one_direct_parent",
+            ),
+            models.CheckConstraint(
+                check=models.Q(occupancy_capacity__isnull=True) | models.Q(occupancy_capacity__gte=1),
+                name="unit_capacity_positive_or_unknown",
+            ),
+            models.UniqueConstraint(
+                fields=["building", "unit_code"],
+                condition=models.Q(building__isnull=False) & ~models.Q(unit_code=""),
+                name="unique_unit_code_in_building",
+            ),
+            models.UniqueConstraint(
+                fields=["complex", "unit_code"],
+                condition=models.Q(complex__isnull=False) & ~models.Q(unit_code=""),
+                name="unique_standalone_code_in_complex",
+            ),
+        ]
         verbose_name = _("Property")
         verbose_name_plural = _("Properties")
         ordering = ["-created_at"]
