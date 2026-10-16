@@ -20,13 +20,17 @@ def _submit_process(request, group, action):
     require_planning(
         request.user, "group_visits" if kind == "visit" else "group_applications"
     )
-    members = active_ids(group)
+    from ..services.student_housing.groups import context, participant_ids
+    from ..services.student_housing.publication import preview
+
+    academic = context(request.user, group, request.data)
+    members = participant_ids(academic) if academic else active_ids(group)
     supplied = request.data.get("participant_ids", [])
     if (
         not isinstance(supplied, list)
         or any(not isinstance(x, str) for x in supplied)
         or len(set(supplied)) != len(supplied)
-        or str(request.user.id) not in supplied
+        or (not academic and str(request.user.id) not in supplied)
         or not set(supplied).issubset(members)
         or (kind == "application" and sorted(supplied) != members)
     ):
@@ -71,6 +75,11 @@ def _submit_process(request, group, action):
             and x["offer_revision"] == snapshot["offer_revision"]
             and x["roster_revision"] == group.roster_revision
             and set(x["approved_by"]) == set(members)
+            and x.get("academic_plan_id") == (str(academic.id) if academic else None)
+            and (
+                not academic
+                or x.get("academic_revision") == academic.requirements_revision
+            )
         ]
         if not proposals:
             raise RentalConflict(
@@ -79,6 +88,7 @@ def _submit_process(request, group, action):
             )
     if group.processes.filter(
         kind=kind,
+        academic_plan=academic,
         status__in=[
             "collecting_consent",
             "ready",
@@ -89,7 +99,17 @@ def _submit_process(request, group, action):
         ],
     ).exists():
         raise RentalConflict("Resolve the current group process first.")
+    academic_snapshot = preview(academic) if academic else {}
+    if academic:
+        from ..services.student_housing.groups import source_snapshot
+
+        academic_snapshot.update(
+            source_snapshot(request.user, group, academic, snapshot)
+        )
     item = GroupProcess.objects.create(
+        academic_plan=academic,
+        academic_revision=academic.requirements_revision if academic else None,
+        academic_snapshot=academic_snapshot,
         group=group,
         property=prop,
         initiated_by=request.user,
@@ -98,7 +118,9 @@ def _submit_process(request, group, action):
         selection=snapshot,
         participant_ids=members,
         consented_ids=(
-            [str(request.user.id)] if request.data.get("consent") is True else []
+            [str(request.user.id)]
+            if request.data.get("consent") is True and str(request.user.id) in members
+            else []
         ),
         appointment_at=appointment,
     )

@@ -66,6 +66,12 @@ def test_room_and_bed_overlapping_inventory_cannot_both_be_reserved(
     owner, tenant, _, initial, _ = awaiting_signatures
     initial.inventory_day_locks.all().delete()
     room_id, bed_id = str(uuid.uuid4()), str(uuid.uuid4())
+    # Reservation now resolves canonical physical units, not arbitrary snapshot IDs.
+    initial.property.rental_inventory = {
+        "mode": "shared",
+        "rooms": [{"id": room_id, "beds": [{"id": bed_id}]}],
+    }
+    initial.property.save(update_fields=["rental_inventory"])
     leases = [initial]
     initial.offer_id = str(uuid.uuid4())
     initial.offer_snapshot = {"rental_scope": "room", "room_ids": [room_id]}

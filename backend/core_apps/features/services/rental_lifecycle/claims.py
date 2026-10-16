@@ -26,6 +26,16 @@ def claim_current(claim):
             and claim.kyc_submission.status == "approved"
             and claim.subject_user.is_active
         )
+    if claim.subject_kind == "student_enrollment":
+        return bool(
+            claim.subject_user.is_active
+            and claim.student_evidence
+            and claim.student_evidence.uploader_id == claim.subject_user_id
+            and claim.student_evidence.purpose == "student"
+            and claim.student_evidence.malware_status == "safe"
+            and not claim.student_evidence.deleted_at
+            and claim.expires_at
+        )
     return bool(
         claim.property
         and claim.property.owner_id == claim.subject_user_id

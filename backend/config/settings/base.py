@@ -1,5 +1,7 @@
 from pathlib import Path
 from os import getenv, path
+from config.student_housing import enabled_from_env as student_services_from_env
+
 from dotenv import load_dotenv
 from datetime import timedelta
 import ssl
@@ -18,6 +20,9 @@ local_env_file = path.join(BASE_DIR, ".envs", ".env.local")
 if path.isfile(local_env_file):
     load_dotenv(local_env_file)
 
+STUDENT_ENABLED_SERVICES = student_services_from_env(
+    getenv("STUDENT_ENABLED_SERVICES", "none")
+)
 
 ## Application definition
 

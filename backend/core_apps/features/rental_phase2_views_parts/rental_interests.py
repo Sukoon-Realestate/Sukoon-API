@@ -68,6 +68,9 @@ def rental_interests(request):
     if replay:
         return replay
     with transaction.atomic():
+        from ..services.student_housing.applications import context
+
+        academic = context(request.user, data)
         property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
         replay = _replay_response(
             request.user, operation, data["request_key"], request.data
@@ -95,6 +98,7 @@ def rental_interests(request):
             else None
         )
         interest = RentalInterest.objects.create(
+            **academic,
             application_grant=grant,
             response_due_at=timezone.now() + timedelta(hours=48),
             property=property_obj,

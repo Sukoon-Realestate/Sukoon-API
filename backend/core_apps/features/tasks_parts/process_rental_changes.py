@@ -26,15 +26,27 @@ from ..services.rental_phase2 import RentalConflict
 def scan_rental_evidence(self):
     safe = unsafe = 0
     for item in RentalEvidence.objects.filter(
-        malware_status=RentalEvidence.MalwareStatus.PENDING
+        malware_status=RentalEvidence.MalwareStatus.PENDING, deleted_at__isnull=True
     )[:100]:
+        # Provider work uses a durable evidence identity and runs outside DB locks.
+        provider = get_rental_provider()
+        if item.purpose == "student" and item.storage_key.startswith(
+            "student-evidence-pending/"
+        ):
+            storage_key = provider.store_private_evidence(
+                item.uploader.id, item.id, bytes(item.private_content or b"")
+            )
+            RentalEvidence.objects.filter(pk=item.pk, deleted_at__isnull=True).update(
+                storage_key=storage_key
+            )
+        is_safe = provider.scan_evidence(bytes(item.private_content or b""))
         with transaction.atomic():
             item = RentalEvidence.objects.select_for_update().get(pk=item.pk)
-            if item.malware_status != RentalEvidence.MalwareStatus.PENDING:
+            if (
+                item.malware_status != RentalEvidence.MalwareStatus.PENDING
+                or item.deleted_at
+            ):
                 continue
-            is_safe = get_rental_provider().scan_evidence(
-                bytes(item.private_content or b"")
-            )
             item.malware_status = (
                 RentalEvidence.MalwareStatus.SAFE
                 if is_safe

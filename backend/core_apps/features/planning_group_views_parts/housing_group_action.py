@@ -101,35 +101,58 @@ def housing_group_action(request, group_id, action):
             group.invitations.filter(status="active").update(status="revoked")
         elif action == "add_shortlist":
             _, snapshot = selection(request, request.data.get("selection"))
-            if any(
+            from ..services.student_housing.groups import context, link_selection
+
+            academic = context(request.user, group, request.data, reviewed=False)
+            if academic:
+                link_selection(group, academic, snapshot)
+            elif any(
                 x["selection"]["offer_id"] == snapshot["offer_id"]
                 and x["selection"]["property_id"] == snapshot["property_id"]
                 for x in group.shortlist
             ):
                 raise RentalConflict("This accommodation is already shortlisted.")
-            group.shortlist.append(
-                {
-                    "id": str(uuid.uuid4()),
-                    "revision": 1,
-                    "selection": snapshot,
-                    "comments": [],
-                    "voter_ids": [],
-                }
-            )
+            else:
+                group.shortlist.append(
+                    {
+                        "id": str(uuid.uuid4()),
+                        "revision": 1,
+                        "selection": snapshot,
+                        "comments": [],
+                        "voter_ids": [],
+                    }
+                )
         elif action in {"remove_shortlist", "vote", "comment"}:
             item = _shortlist_item(group, request.data)
+            from ..services.student_housing.groups import shortlist_decision
+
+            academic, decision = shortlist_decision(
+                request.user, group, request.data, item
+            )
             if action == "remove_shortlist":
-                group.shortlist.remove(item)
-                group.proposals = [
-                    x
-                    for x in group.proposals
-                    if x["offer_id"] != item["selection"]["offer_id"]
-                ]
-                for process in group.processes.exclude(
-                    status__in=["withdrawn", "expired", "rejected"]
-                ):
-                    if process.selection["offer_id"] == item["selection"]["offer_id"]:
-                        invalidate_process(process)
+                if academic:
+                    item["academic_plan_ids"].remove(str(academic.id))
+                    item["revision"] += 1
+                else:
+                    if item.get("academic_plan_ids") or item.get("academic_decisions"):
+                        raise RentalConflict(
+                            "Academic history is retained. Remove the accommodation from the relevant plan instead.",
+                            code="academic_history_retained",
+                        )
+                    group.shortlist.remove(item)
+                    group.proposals = [
+                        x
+                        for x in group.proposals
+                        if x["offer_id"] != item["selection"]["offer_id"]
+                    ]
+                    for process in group.processes.exclude(
+                        status__in=["withdrawn", "expired", "rejected", "completed"]
+                    ):
+                        if (
+                            process.selection["offer_id"]
+                            == item["selection"]["offer_id"]
+                        ):
+                            invalidate_process(process)
             elif action == "vote":
                 choice = request.data.get(
                     "vote",
@@ -139,20 +162,20 @@ def housing_group_action(request, group_id, action):
                     raise ValidationError(
                         {"vote": "Choose interested, maybe, not_suitable, or abstain."}
                     )
-                votes = item.setdefault(
+                votes = decision.setdefault(
                     "votes_by_user",
-                    {x: "interested" for x in item.get("voter_ids", [])},
+                    {x: "interested" for x in decision.get("voter_ids", [])},
                 )
                 if choice == "abstain":
                     votes.pop(actor_id, None)
                 else:
                     votes[actor_id] = choice
-                item["voter_ids"] = sorted(
+                decision["voter_ids"] = sorted(
                     x for x, value in votes.items() if value == "interested"
                 )
                 item["revision"] += 1
             else:
-                item["comments"].append(
+                decision["comments"].append(
                     {
                         "user_id": actor_id,
                         "group_revision": group.revision,
@@ -173,6 +196,14 @@ def housing_group_action(request, group_id, action):
                 raise ValidationError({"item_id": "Select a persisted proposal."})
             check_revision(item["revision"], request.data.get("item_revision"))
             check_revision(group.roster_revision, item["roster_revision"])
+            if item.get("academic_plan_id"):
+                from ..services.student_housing.groups import context, participant_ids
+
+                academic = context(request.user, group, item)
+                if actor_id not in participant_ids(academic):
+                    raise PermissionDenied(
+                        "Only an intended academic participant may approve their contribution."
+                    )
             consent = set(item["approved_by"])
             (
                 consent.add(actor_id)
@@ -182,9 +213,9 @@ def housing_group_action(request, group_id, action):
             item["approved_by"] = sorted(consent)
             item["revision"] += 1
             if request.data.get("consent") is not True:
-                for process in group.processes.filter(kind="application").exclude(
-                    status__in=["withdrawn", "expired", "rejected"]
-                ):
+                for process in group.processes.filter(
+                    kind="application", academic_plan__id=item.get("academic_plan_id")
+                ).exclude(status__in=["withdrawn", "expired", "rejected", "completed"]):
                     invalidate_process(process)
         elif action in {"request_visit", "apply"}:
             _submit_process(request, group, action)
@@ -218,15 +249,25 @@ def housing_group_action(request, group_id, action):
         group.revision += 1
         group.save()
         from core_apps.chat.services.group_provisioning import roster_changed
+
         if action in {"leave", "remove_member", "transfer_admin"}:
-            roster_changed(group, actor=request.user, subject=target.user, kind={
-                "leave": "member_left", "remove_member": "member_removed",
-                "transfer_admin": "admin_transferred",
-            }[action])
+            roster_changed(
+                group,
+                actor=request.user,
+                subject=target.user,
+                kind={
+                    "leave": "member_left",
+                    "remove_member": "member_removed",
+                    "transfer_admin": "admin_transferred",
+                }[action],
+            )
         elif action == "edit":
             from core_apps.chat.services.group_provisioning import provision_group
             from core_apps.chat.services.group_events import record_event
-            record_event(provision_group(group), "conversation.updated", actor=request.user)
+
+            record_event(
+                provision_group(group), "conversation.updated", actor=request.user
+            )
         return group
 
     return mutate(

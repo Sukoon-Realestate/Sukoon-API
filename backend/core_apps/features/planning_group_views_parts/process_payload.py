@@ -97,6 +97,10 @@ def process_payload(item, user):
             else [f"consent_{suffix}"]
         )
     return {
+        "academic_plan_id": (
+            str(item.academic_plan.id) if item.academic_plan_id else None
+        ),
+        "academic_revision": item.academic_revision,
         "id": str(item.id),
         "revision": item.revision,
         "roster_revision": item.roster_revision,

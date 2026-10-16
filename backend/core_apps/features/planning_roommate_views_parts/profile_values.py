@@ -146,6 +146,8 @@ def disclosures(profile, fields=None):
 
 
 def candidate_payload(item, facts=(), viewer_revision=0):
+    from ..services.student_housing.profiles import roommate_disclosures
+
     return {
         "id": str(item.id),
         "user_id": str(item.user.id),
@@ -155,6 +157,7 @@ def candidate_payload(item, facts=(), viewer_revision=0):
         "explanations": [],
         "match_facts": list(facts),
         "matching_rule_version": "declared-v2",
+        "student_disclosures": roommate_disclosures(item.user),
         "profile_revisions": {"candidate": item.revision, "viewer": viewer_revision},
         "disclosures": disclosures(item),
         "chat_granted": False,

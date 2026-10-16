@@ -3,6 +3,7 @@
 from datetime import timedelta
 from uuid import UUID
 from django.conf import settings
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
@@ -30,7 +31,13 @@ def request_status(item):
 
 
 def can_read_request(user, item):
-    if item.user_id == user.pk or item.offers.filter(owner=user).exists():
+    from ..services.student_housing.publication import participant_can_read
+
+    if participant_can_read(user, item):
+        return True
+    if (item.user_id == user.pk and not item.academic_plan_id) or item.offers.filter(
+        owner=user
+    ).exists():
         return True
     return (
         request_status(item) == "published"
@@ -40,6 +47,10 @@ def can_read_request(user, item):
 
 
 def can_offer_request(user, item):
+    from ..services.student_housing.publication import request_current
+
+    if not request_current(item):
+        return False
     return (
         item.user_id != user.pk
         and request_status(item) == "published"
@@ -68,7 +79,9 @@ def get_request(user, identifier, *, lock=False):
 
 def request_actions(user, item):
     state = request_status(item)
-    if item.user_id == user.pk:
+    if item.user_id == user.pk and can_read_request(user, item):
+        if item.academic_plan_id:
+            return ["close"] if state in {"published", "paused"} else []
         return {
             "published": ["edit", "pause", "close", "fulfill"],
             "paused": ["edit", "publish", "close"],
@@ -90,6 +103,7 @@ def request_payload(item, user):
         "expires_at": item.expires_at.isoformat(),
         "allowed_actions": request_actions(user, item),
         "blocking_reasons": [],
+        "academic_context": item.academic_snapshot,
     }
 
 
@@ -108,11 +122,18 @@ def _request_values(data):
 @planning_api(["GET", "POST"], "housing_requests")
 def housing_requests(request):
     if request.method == "GET":
+        from ..services.student_housing.access import plans_for
+
+        visible = HousingRequest.objects.filter(
+            Q(user=request.user, academic_plan__isnull=True)
+            | Q(
+                academic_plan__in=plans_for(request.user),
+                academic_plan__participants__user=request.user,
+            )
+        ).distinct()
         return page(
             request,
-            HousingRequest.objects.filter(user=request.user).order_by(
-                "-created_at", "pkid"
-            ),
+            visible.order_by("-created_at", "pkid"),
             lambda x: request_payload(x, request.user),
         )
     if request.data.get("action") != "publish":
@@ -166,6 +187,16 @@ def housing_demand(request):
         .order_by("-created_at", "pkid")
     )
     city = request.query_params.get("city", "").strip()
+    if request.query_params.get("student") == "true":
+        items = items.filter(academic_plan__isnull=False)
+    if request.query_params.get("matching_inventory") == "true":
+        cities = [
+            str(value)
+            for value in public_properties()
+            .filter(owner=request.user, is_ownership_verified=True)
+            .values_list("city__id", flat=True)
+        ]
+        items = items.filter(criteria__city_id__in=cities)
     if city:
         try:
             city = str(UUID(city))

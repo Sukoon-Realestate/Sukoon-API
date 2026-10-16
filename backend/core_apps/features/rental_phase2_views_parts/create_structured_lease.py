@@ -102,6 +102,16 @@ def create_structured_lease(request):
                 "The accepted accommodation has changed.", "accommodation_changed"
             )
         _validate_terms_offer(data["terms"], snapshot)
+        from ..services.student_housing.policies import validate_occupants
+
+        validate_occupants(
+            invitation.property,
+            snapshot,
+            [invitation.tenant],
+            data["terms"]["starts_on"],
+            data["terms"]["ends_on_exclusive"],
+            occupant_count=data["terms"].get("occupants", 1),
+        )
         if (
             invitation.terms_proposal
             and _json_safe(data["terms"]) != invitation.terms_proposal.terms
@@ -137,6 +147,9 @@ def create_structured_lease(request):
         GroupBookingParticipant.objects.filter(invitation=invitation).update(
             lease=lease
         )
+        from ..services.student_housing.applications import link_agreement
+
+        link_agreement(invitation, lease)
         invitation.lease = lease
         invitation.consumed_at = timezone.now()
         invitation.save(update_fields=["lease", "consumed_at", "updated_at"])

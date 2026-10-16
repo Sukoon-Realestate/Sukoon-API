@@ -10,6 +10,7 @@ from ..rental_phase2 import RentalConflict
 
 
 ROLES = {
+    "kyc_reviewer",
     "support",
     "dispute_resolver",
     "psp_reconciliation",
@@ -18,6 +19,11 @@ ROLES = {
     "payout_operator",
 }
 CASE_KINDS = {
+    "student_verification",
+    "maintenance",
+    "roommate_support",
+    "academic_transition",
+    "admission_request",
     "move_in_mismatch",
     "access_failure",
     "owner_cancellation",
@@ -66,16 +72,20 @@ def open_system_case(
             "reason": reason,
             "next_action": next_action,
             "team": (
-                "finance"
-                if kind
-                in {
-                    "payment_unknown",
-                    "capture_after_release",
-                    "beneficiary_issue",
-                    "refund_failure",
-                    "payout_failure",
-                }
-                else "support"
+                "verification"
+                if kind == "student_verification"
+                else (
+                    "finance"
+                    if kind
+                    in {
+                        "payment_unknown",
+                        "capture_after_release",
+                        "beneficiary_issue",
+                        "refund_failure",
+                        "payout_failure",
+                    }
+                    else "support"
+                )
             ),
             "due_at": (
                 hold.reconciliation_deadline
@@ -121,7 +131,9 @@ def case_queryset(user):
     if staff_role(user, ROLES):
         qs = RentalOperationalCase.objects.all()
         role = getattr(getattr(user, "staff_profile", None), "role_name", "")
-        if not user.is_superuser and role in {"support", "dispute_resolver"}:
+        if not user.is_superuser and role == "kyc_reviewer":
+            qs = qs.filter(team="verification")
+        elif not user.is_superuser and role in {"support", "dispute_resolver"}:
             qs = qs.filter(team="support")
         elif not user.is_superuser:
             qs = qs.filter(team="finance")

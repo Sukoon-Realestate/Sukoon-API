@@ -6,6 +6,7 @@ from .owner_payment_profile_serializer import RentalTermsSerializer
 
 
 class RentalInterestSerializer(serializers.ModelSerializer):
+    academic_context = serializers.JSONField(source="academic_snapshot", read_only=True)
     application_share_id = serializers.UUIDField(
         source="application_grant.id", read_only=True, allow_null=True
     )
@@ -21,6 +22,8 @@ class RentalInterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = RentalInterest
         fields = [
+            "academic_context",
+            "desired_end",
             "id",
             "property_id",
             "offer_id",

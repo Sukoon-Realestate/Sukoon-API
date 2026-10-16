@@ -95,6 +95,7 @@ def join_payload(item, user):
 
 def group_payload(group, user):
     from core_apps.chat.services.group_projection import card_projection
+
     if not group.memberships.filter(user=user, status="active").exists():
         return {
             "id": str(group.id),
@@ -134,6 +135,9 @@ def group_payload(group, user):
         for x in group.shortlist
     ]
     for item in shortlist:
+        from ..services.student_housing.groups import shortlist_decision_payloads
+
+        item["academic_decisions"] = shortlist_decision_payloads(group, user, item)
         item.pop("voter_ids", None)
         item.pop("votes_by_user", None)
     return {

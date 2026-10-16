@@ -41,6 +41,11 @@ def get_authorized_rental_subject(user, subject_id):
         raise NotFound()
     if str(user.id) == str(subject_id):
         return user
+    from ..student_housing.access import student_subject
+
+    academic = student_subject(user, subject_id)
+    if academic:
+        return academic
     from ..rental_lifecycle.access import lifecycle_subject
 
     extension = lifecycle_subject(user, subject_id)
@@ -133,6 +138,10 @@ def get_authorized_rental_subject(user, subject_id):
             .first()
         )
         if item:
+            if isinstance(item, RentalEvidence) and item.purpose == "student":
+                if item.uploader_id == user.pk and not item.deleted_at:
+                    return item
+                raise NotFound()
             if user in (item.lease.owner, item.lease.tenant):
                 return item
             raise NotFound()

@@ -25,8 +25,8 @@ def group_bookings(request):
         item = get_object_or_404(
             GroupProcess, id=data["application_id"], property__owner=request.user
         )
-        Property.objects.select_for_update().get(pk=item.property_id)
         HousingGroup.objects.select_for_update().get(pk=item.group_id)
+        Property.objects.select_for_update().get(pk=item.property_id)
         return GroupProcess.objects.select_for_update().get(pk=item.pk)
 
     def execute(application):
@@ -46,8 +46,8 @@ def group_booking(request, booking_id, action=None):
     )
 
     def authorize():
-        Property.objects.select_for_update().get(pk=item.property_id)
         HousingGroup.objects.select_for_update().get(pk=item.group_id)
+        Property.objects.select_for_update().get(pk=item.property_id)
         from ..models import GroupBookingProposal
 
         return GroupBookingProposal.objects.select_for_update().get(pk=item.pk)

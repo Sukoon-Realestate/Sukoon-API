@@ -128,3 +128,5 @@ admin.site.register(
 )
 
 admin.site.register(RentalCommercialPolicy, FinancialHistoryAdmin)
+
+from . import student_admin  # noqa: E402,F401

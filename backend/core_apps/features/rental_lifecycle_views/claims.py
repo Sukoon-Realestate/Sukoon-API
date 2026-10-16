@@ -57,7 +57,7 @@ def revoke_claim(request, claim_id):
             request.user,
             (
                 {"kyc_reviewer"}
-                if item.subject_kind == "identity"
+                if item.subject_kind in {"identity", "student_enrollment"}
                 else {"property_reviewer"}
             ),
         )

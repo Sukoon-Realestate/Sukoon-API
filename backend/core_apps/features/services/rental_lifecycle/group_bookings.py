@@ -22,6 +22,8 @@ from .notifications import record_rental_event
 
 
 def current_roster(proposal):
+    from ..student_housing.groups import process_current
+
     proposal.group.refresh_from_db()
     proposal.application.refresh_from_db()
     roster = set(
@@ -36,6 +38,7 @@ def current_roster(proposal):
     )
     return (
         proposal.group.status == "active"
+        and process_current(proposal.application)
         and proposal.group.roster_revision == proposal.roster_revision
         and participants <= roster
         and proposal.application.status
@@ -44,6 +47,12 @@ def current_roster(proposal):
 
 
 def create_booking(application, actor, data):
+    from ..student_housing.groups import process_current
+
+    if not process_current(application):
+        raise RentalConflict(
+            "Review changed academic requirements.", code="source_changed"
+        )
     policy, rules = lifecycle_policy("independent_group_booking")
     if data["booking_model"] != "independent":
         raise RentalConflict(
@@ -125,6 +134,16 @@ def create_booking(application, actor, data):
 
         validate_terms_offer(terms, selection)
         start, end = value["terms"]["starts_on"], value["terms"]["ends_on_exclusive"]
+        from ..student_housing.policies import validate_occupants
+
+        validate_occupants(
+            application.property,
+            selection,
+            [tenant],
+            start,
+            end,
+            occupant_count=value["terms"].get("occupants", 1),
+        )
         if (
             start < timezone.localdate()
             or (end - start).days > rules["max_booking_days"]
@@ -328,6 +347,10 @@ def booking_action(proposal, actor, data, action):
                     proposal.ends_on_exclusive,
                 )
                 interest = RentalInterest.objects.create(
+                    academic_plan=proposal.application.academic_plan,
+                    academic_revision=proposal.application.academic_revision,
+                    academic_snapshot=proposal.application.academic_snapshot,
+                    desired_end=proposal.ends_on_exclusive,
                     property=proposal.property,
                     tenant=actor,
                     offer_id=participant.offer_id,

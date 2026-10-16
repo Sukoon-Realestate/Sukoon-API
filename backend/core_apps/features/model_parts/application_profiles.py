@@ -64,6 +64,7 @@ class RentalVerificationClaim(TimeStampedModel):
             ("identity", "Identity"),
             ("property_authority", "Property authority"),
             ("property_fact", "Property fact"),
+            ("student_enrollment", "Student enrollment"),
         ],
     )
     subject_user = models.ForeignKey(
@@ -89,6 +90,12 @@ class RentalVerificationClaim(TimeStampedModel):
         related_name="reviewed_rental_claims",
     )
     evidence_reference = models.CharField(max_length=160)
+    student_evidence = models.ForeignKey(
+        "RentalEvidence", on_delete=models.PROTECT, null=True, blank=True
+    )
+    campus = models.ForeignKey(
+        "Campus", on_delete=models.PROTECT, null=True, blank=True
+    )
     checked_at = models.DateTimeField()
     expires_at = models.DateTimeField(null=True, blank=True)
     revoked_at = models.DateTimeField(null=True, blank=True)
@@ -106,6 +113,12 @@ class RentalVerificationClaim(TimeStampedModel):
                     | Q(
                         subject_kind__in=["property_authority", "property_fact"],
                         property__isnull=False,
+                    )
+                    | Q(
+                        subject_kind="student_enrollment",
+                        property__isnull=True,
+                        student_evidence__isnull=False,
+                        expires_at__isnull=False,
                     )
                 ),
                 name="rental_claim_exact_subject",

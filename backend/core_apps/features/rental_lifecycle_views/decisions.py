@@ -53,6 +53,12 @@ def property_fact(request, property_id):
     data = validated(FactBody, request.data)
 
     def execute(prop):
+        from ..services.rental_lifecycle.decisions import STUDY_FACT_CODES
+
+        if data["code"] in STUDY_FACT_CODES:
+            from ..services.planning import require_planning
+
+            require_planning(request.user, "student_study_facts")
         if data["code"] not in FACT_CODES:
             raise ValidationError({"code": "Unsupported decision fact."})
         if data["offer_id"] and data["offer_id"] not in {

@@ -86,6 +86,7 @@ from .planning_models import (  # noqa: E402,F401
     TenantAssistantTurn,
 )
 from .catalog_models import PromotionOption
+from .model_parts.summary_sharing import RentalSummaryGrant
 
 from .model_parts.application_profiles import (
     ApplicationProfile,
@@ -104,4 +105,15 @@ from .model_parts.operational_cases import (
     RentalOperationalCase,
     RentalAuditEvent,
     RentalProviderInstruction,
+)
+
+from .student_models import (
+    University,
+    Campus,
+    StudentProfile,
+    AcademicHousingPlan,
+    AcademicPlanParticipant,
+    AcademicRequirementRevision,
+    SharedLivingAgreement,
+    StudentOfferPolicy,
 )

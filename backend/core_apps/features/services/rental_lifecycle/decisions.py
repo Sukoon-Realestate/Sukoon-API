@@ -13,7 +13,20 @@ from .claims import current_claims, claim_current, claim_payload
 from .inventory import assert_available
 
 
-FACT_CODES = {
+STUDY_FACT_CODES = {
+    "study_desk",
+    "study_seating",
+    "study_lighting",
+    "study_storage",
+    "room_occupants",
+    "shared_facility_occupants",
+    "internet_limits",
+    "internet_measurement",
+    "quiet_hours",
+    "shared_study_space",
+    "utility_limitations",
+}
+FACT_CODES = STUDY_FACT_CODES | {
     "furniture_included",
     "private_areas",
     "shared_areas",
@@ -109,6 +122,12 @@ def decision_summary(prop, data, actor=None):
         )
     }
     for code in sorted(FACT_CODES):
+        from django.conf import settings
+
+        if code in STUDY_FACT_CODES and "student_study_facts" not in getattr(
+            settings, "STUDENT_ENABLED_SERVICES", []
+        ):
+            continue
         fact = source_facts.get(code)
         classification = fact.classification if fact else "unknown"
         if fact and (

@@ -192,6 +192,12 @@ class OwnerOnboardingBodySerializer(serializers.Serializer):
 
 
 class RentalInterestBodySerializer(serializers.Serializer):
+    academic_plan_id = serializers.UUIDField(required=False)
+    academic_revision = serializers.IntegerField(min_value=1, required=False)
+    source_housing_offer_id = serializers.UUIDField(required=False)
+    source_housing_offer_revision = serializers.IntegerField(
+        min_value=1, required=False
+    )
     application_share_id = serializers.UUIDField(required=False)
     property_id = serializers.UUIDField()
     offer_id = serializers.CharField(max_length=64)

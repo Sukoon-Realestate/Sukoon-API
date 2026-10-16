@@ -71,7 +71,11 @@ def lifecycle_subject(user, identifier):
     claim = RentalVerificationClaim.objects.filter(id=identifier).first()
     if claim and staff_role(
         user,
-        {"kyc_reviewer"} if claim.subject_kind == "identity" else {"property_reviewer"},
+        (
+            {"kyc_reviewer"}
+            if claim.subject_kind in {"identity", "student_enrollment"}
+            else {"property_reviewer"}
+        ),
     ):
         return claim
     return None

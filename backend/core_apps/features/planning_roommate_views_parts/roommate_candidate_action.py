@@ -24,6 +24,8 @@ from .profile_values import (
 
 
 def connection_payload(item, user):
+    from ..services.student_housing.profiles import roommate_disclosures
+
     other = item.second if item.first_id == user.pk else item.first
     profile = LifestyleProfile.objects.filter(user=other).first()
     grant = item.disclosure_grants.get(str(other.id), {})
@@ -41,6 +43,9 @@ def connection_payload(item, user):
         "status": item.status,
         "revision": item.revision,
         "explanations": [],
+        "student_disclosures": (
+            roommate_disclosures(other) if item.status == "accepted" else {}
+        ),
         "disclosures": (
             disclosures(
                 profile,

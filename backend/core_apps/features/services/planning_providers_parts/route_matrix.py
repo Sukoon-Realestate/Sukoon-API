@@ -61,6 +61,10 @@ def mock_discovery():
 
 def ready_services(enabled):
     result = list(enabled)
+    from ...providers import fake_provider_available
+
+    if not fake_provider_available() and "student_verification" in result:
+        result.remove("student_verification")
     if not mock_discovery():
         if not settings.PLANNING_ROUTES_API_KEY and "commute" in result:
             result.remove("commute")
@@ -76,6 +80,16 @@ def configuration():
     return {
         "schema_version": 2,
         "joint_leases": False,
+        "student_housing": {
+            "schema_version": 1,
+            "billing_period": "monthly",
+            "currency": "EGP",
+            "conditional_group_booking": False,
+            "family_payment_delegation": False,
+            "ambassadors": False,
+            "partner_services": False,
+            "admission_refund_guarantee": False,
+        },
         # Protocol support only; housing_groups and current membership grant access.
         "group_chat": True,
         "commute": {

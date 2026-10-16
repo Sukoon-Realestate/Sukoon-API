@@ -41,7 +41,10 @@ def _proposal(request, group):
                 "total": "The contribution total and period must equal the selected offer rent."
             }
         )
-    members = active_ids(group)
+    from ..services.student_housing.groups import context, participant_ids
+
+    academic = context(request.user, group, {**request.data, **raw})
+    members = participant_ids(academic) if academic else active_ids(group)
     contributions = raw.get("contributions")
     if (
         not isinstance(contributions, dict)
@@ -59,6 +62,12 @@ def _proposal(request, group):
     if end and end <= start:
         raise ValidationError({"end_on": "Must follow start_on."})
     previous = next((x for x in group.proposals if x["id"] == raw.get("id")), None)
+    if previous and previous.get("academic_plan_id") != (
+        str(academic.id) if academic else None
+    ):
+        raise ValidationError(
+            {"proposal": "A cost decision cannot move to a different academic period."}
+        )
     check_revision(previous["revision"] if previous else 0, raw.get("revision", 0))
     value = {
         "id": previous["id"] if previous else str(uuid.uuid4()),
@@ -72,18 +81,34 @@ def _proposal(request, group):
         "total": raw["total"],
         "contributions": contributions,
         "approved_by": [],
+        "academic_plan_id": str(academic.id) if academic else None,
+        "academic_revision": academic.requirements_revision if academic else None,
     }
+    if academic and (
+        str(start) != str(academic.starts_on)
+        or str(end) != str(academic.ends_on_exclusive)
+    ):
+        raise ValidationError(
+            {"start_on": "The cost proposal must use the reviewed academic dates."}
+        )
     if previous:
         group.proposals[group.proposals.index(previous)] = value
     else:
         group.proposals.append(value)
-    for process in group.processes.filter(kind="application").exclude(
-        status__in=["withdrawn", "expired", "rejected"]
-    ):
+    for process in group.processes.filter(
+        kind="application", academic_plan=academic
+    ).exclude(status__in=["withdrawn", "expired", "rejected", "completed"]):
         invalidate_process(process)
 
 
 def _dispatch_process(request, group, item):
+    from ..services.student_housing.groups import process_current
+
+    if not process_current(item):
+        raise RentalConflict(
+            "Review changed academic requirements before proceeding.",
+            code="source_changed",
+        )
     prop, snapshot = selection(request, item.selection)
     if item.kind == "visit":
         local = timezone.localtime(item.appointment_at)
@@ -106,6 +131,8 @@ def _dispatch_process(request, group, item):
                 if x["offer_id"] == snapshot["offer_id"]
                 and x["roster_revision"] == group.roster_revision
                 and set(x["approved_by"]) == set(item.participant_ids)
+                and x.get("academic_plan_id")
+                == (str(item.academic_plan.id) if item.academic_plan_id else None)
             ),
             None,
         )
@@ -128,13 +155,13 @@ def _dispatch_process(request, group, item):
 
             end = civil_date(proposal["end_on"], "end_on")
             agreed_months = (end.year - start.year) * 12 + end.month - start.month
-            if (
-                agreed_months < months
-                or start + relativedelta(months=agreed_months) != end
+            if end < start + relativedelta(months=months) or (
+                not item.academic_plan_id
+                and start + relativedelta(months=agreed_months) != end
             ):
                 raise ValidationError(
                     {
-                        "end_on": "Application dates must span whole calendar months and meet the minimum term."
+                        "end_on": "Use a period meeting the offer's minimum monthly term. Ordinary applications require whole calendar months."
                     }
                 )
             months = agreed_months
