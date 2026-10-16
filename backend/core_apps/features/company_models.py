@@ -23,6 +23,20 @@ class Company(TimeStampedModel):
     revision = models.PositiveIntegerField(default=1)
     budget_limit_minor = models.PositiveBigIntegerField(null=True, blank=True)
     deposit_limit_minor = models.PositiveBigIntegerField(null=True, blank=True)
+    default_approver = models.ForeignKey(
+        "CompanyMembership",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="default_for_companies",
+    )
+    backup_approver = models.ForeignKey(
+        "CompanyMembership",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="backup_for_companies",
+    )
 
 
 class CompanyMembership(TimeStampedModel):
@@ -159,6 +173,17 @@ class CompanyBookingItem(TimeStampedModel):
     full_term_rent_minor = models.PositiveBigIntegerField()
     deposit_minor = models.PositiveBigIntegerField()
     status = models.CharField(max_length=24, default="proposed")
+    assigned_approver = models.ForeignKey(
+        CompanyMembership,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="assigned_packages",
+    )
+    submitted_at = models.DateTimeField(null=True, blank=True)
+    planned_staff = models.ManyToManyField(
+        "CompanyStaffRecord", blank=True, related_name="planned_items"
+    )
     hold = models.OneToOneField(
         "ReservationHold", on_delete=models.PROTECT, null=True, blank=True
     )
@@ -182,7 +207,12 @@ class CompanyApproval(TimeStampedModel):
     snapshot = models.JSONField()
     snapshot_digest = models.CharField(max_length=64)
     decision = models.CharField(
-        max_length=12, choices=[("approved", "Approved"), ("rejected", "Rejected")]
+        max_length=20,
+        choices=[
+            ("approved", "Approved"),
+            ("rejected", "Rejected"),
+            ("changes_requested", "Changes requested"),
+        ],
     )
     expires_at = models.DateTimeField()
     reason = models.TextField(blank=True)

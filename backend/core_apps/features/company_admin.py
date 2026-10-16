@@ -3,6 +3,13 @@
 from django.contrib import admin
 from .billing_admin import FinancialHistoryAdmin
 from . import company_models as m
+from .company_staff_models import (
+    CompanyStaffRecord,
+    CompanyAccountProvisioning,
+    CompanyStaffBatch,
+    CompanyStaffBatchRow,
+    CompanyWorkContactProof,
+)
 from core_apps.properties.models import (
     ResidentialComplex,
     ResidentialBuilding,
@@ -48,6 +55,11 @@ admin.site.register(
         m.CompanyApproval,
         m.CompanyBudgetReservation,
         m.EmployeeAssignment,
+        CompanyStaffRecord,
+        CompanyAccountProvisioning,
+        CompanyStaffBatch,
+        CompanyStaffBatchRow,
+        CompanyWorkContactProof,
     ],
     FinancialHistoryAdmin,
 )

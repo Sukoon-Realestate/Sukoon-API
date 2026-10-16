@@ -32,6 +32,7 @@ from .access import company_for, request_for, member_for, require_new_business
 from .offers import resolve_scope, scope_snapshot
 
 
+@transaction.atomic
 def save_request(user, company, data):
     require_new_business()
     member_for(user, company, "coordinate")
@@ -53,6 +54,9 @@ def save_request(user, company, data):
         **{k: data[k] for k in fields if k in data}
     )
     audit(item, user, "company_housing_request_created")
+    from core_apps.chat.services.company_access import provision
+
+    provision(item, user)
     return item
 
 
@@ -115,18 +119,46 @@ def select_offer(user, request_id, data):
             }
         )
     snapshot = scope_snapshot(offer, props)
+    from ...company_staff_models import CompanyStaffRecord
+
+    planned_staff = list(
+        CompanyStaffRecord.objects.filter(
+            company=request.company,
+            id__in=data.get("staff_ids", []),
+            employment_status="active",
+        ).select_related("membership__user")
+    )
+    if len(planned_staff) != len(set(data.get("staff_ids", []))) or any(
+        "employee" not in row.proposed_roles for row in planned_staff
+    ):
+        raise ValidationError(
+            {"staff_ids": "Choose active company staff with employee eligibility."}
+        )
+    if any(
+        row.membership_id
+        and (
+            not row.membership.is_active
+            or not row.membership.is_employee
+            or row.membership.user_id in {m.user_id for m in occupants}
+        )
+        for row in planned_staff
+    ):
+        raise ValidationError(
+            {"staff_ids": "Do not duplicate or include inactive employee memberships."}
+        )
+    initial_places = len(occupants) + len(planned_staff)
     if snapshot["capacity"] is None:
         raise RentalConflict(
             "Confirm the registered accommodation capacity before requesting approval.",
             code="capacity_unknown",
         )
-    if len(occupants) > snapshot["capacity"]:
+    if initial_places > snapshot["capacity"]:
         raise ValidationError(
             {"occupant_ids": "The selected accommodation has insufficient capacity."}
         )
     if (
         offer.occupancy_policy != "reserve_capacity_with_notice"
-        and len(occupants) < snapshot["capacity"]
+        and initial_places < snapshot["capacity"]
     ):
         raise RentalConflict(
             "This offer requires named occupants. Choose an offer permitting reserve capacity or identify its occupants.",
@@ -171,7 +203,16 @@ def select_offer(user, request_id, data):
             {"user_id": str(m.user.id), "name": m.user.get_full_name}
             for m in sorted(occupants, key=lambda m: str(m.user.id))
         ],
-        reserve_places=snapshot["capacity"] - len(occupants),
+        planned_staff=[
+            {
+                "staff_id": str(row.id),
+                "name": row.display_name,
+                "activation_required": not bool(row.membership_id),
+                "proposal_revision": row.proposal_revision,
+            }
+            for row in sorted(planned_staff, key=lambda row: str(row.id))
+        ],
+        reserve_places=snapshot["capacity"] - initial_places,
         full_term_rent_minor=months * offer.monthly_rent_minor,
         policy_version=commercial.version,
         lifecycle_policy_version=policy.version,
@@ -192,6 +233,7 @@ def select_offer(user, request_id, data):
         deposit_minor=offer.deposit_minor,
     )
     item.occupants.set(m.user for m in occupants)
+    item.planned_staff.set(planned_staff)
     request.revision += 1
     request.save()
     audit(item, user, "company_package_proposed")
@@ -219,10 +261,16 @@ def decide(user, item_id, data):
         .get(pk=item.pk)
     )
     require_revision(item, data["expected_revision"])
-    if item.status != "proposed":
+    if item.status != "approval_pending":
         raise RentalConflict(
             "Only a current proposed package can receive a decision.",
             code="package_closed",
+        )
+    from .approval_routing import require_independent, validate_staff_plan
+
+    if not item.assigned_approver_id or item.assigned_approver.user_id != user.pk:
+        raise PermissionDenied(
+            "Only the currently assigned approver can decide this package."
         )
     if (
         item.request.requester_id == user.pk
@@ -231,6 +279,12 @@ def decide(user, item_id, data):
         raise PermissionDenied(
             "An independent approver must decide this accommodation package."
         )
+    require_independent(item.assigned_approver, item)
+    validate_staff_plan(item)
+    if data["decision"] not in {"approved", "rejected", "changes_requested"} or (
+        data["decision"] != "approved" and not data.get("reason", "").strip()
+    ):
+        raise ValidationError({"reason": "Explain the rejection or requested changes."})
     if item.approvals.filter(commercial_revision=item.commercial_revision).exists():
         raise RentalConflict(
             "This commercial revision already has a decision.", code="decision_exists"
@@ -289,6 +343,12 @@ def decide(user, item_id, data):
     item.revision += 1  # Approval does not mutate the commercial revision/digest.
     item.save()
     audit(item, user, "company_package_" + approval.decision, approval.reason)
+    from .approval_routing import notify
+
+    notify(item, item.request.coordinator)
+    from core_apps.chat.services.company_access import approval_card
+
+    approval_card(item, user, "company_approval_decided")
     return item
 
 
@@ -327,6 +387,10 @@ def hold_item(user, item_id, data):
             code="approval_required",
         )
     member_for(approval.approver, company, "approve")
+    from .approval_routing import require_independent, validate_staff_plan
+
+    require_independent(item.assigned_approver, item)
+    validate_staff_plan(item)
     if (
         item.request.requester_id == approval.approver_id
         or item.request.items.filter(occupants=approval.approver).exists()
@@ -489,6 +553,18 @@ def item_payload(item):
         "revision": item.revision,
         "commercial_revision": item.commercial_revision,
         "status": status,
+        "assigned_approver_id": (
+            str(item.assigned_approver.id) if item.assigned_approver_id else None
+        ),
+        "assigned_approver_name": (
+            item.assigned_approver.user.get_full_name
+            if item.assigned_approver_id
+            else None
+        ),
+        "submitted_at": item.submitted_at.isoformat() if item.submitted_at else None,
+        "decision_reason": item.approvals.order_by("-created_at")
+        .values_list("reason", flat=True)
+        .first(),
         "snapshot": item.snapshot,
         "snapshot_digest": item.snapshot_digest,
         "quote_expires_at": item.quote_expires_at.isoformat(),
@@ -502,7 +578,7 @@ def item_payload(item):
     }
 
 
-def request_payload(request):
+def request_payload(request, viewer=None):
     items = list(request.items.select_related("hold", "lease", "request"))
     confirmed = [i for i in items if i.lease_id and i.lease.status == "active"]
     covered = sum(i.snapshot.get("capacity") or 0 for i in confirmed)
@@ -522,5 +598,11 @@ def request_payload(request):
         "confirmed_items": len(confirmed),
         "total_items": len(items),
         "uncovered_headcount": max(0, request.headcount - covered),
-        "items": [item_payload(i) for i in items],
+        "items": [
+            item_payload(i)
+            for i in items
+            if viewer is None
+            or request.coordinator_id == viewer.pk
+            or (i.assigned_approver_id and i.assigned_approver.user_id == viewer.pk)
+        ],
     }

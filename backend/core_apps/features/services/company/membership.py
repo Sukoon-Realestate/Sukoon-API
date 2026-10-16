@@ -5,7 +5,7 @@ from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from ...company_models import Company, CompanyMembership, CompanyInvitation
-from ..rental_lifecycle.common import audit, require_revision
+from ..rental_lifecycle.common import audit, require_revision, require_actor
 from ..rental_phase2 import RentalConflict
 from .access import company_for, require_new_business
 
@@ -48,12 +48,22 @@ def invite(user, company_id, email, roles):
 
 @transaction.atomic
 def accept_invitation(user, token):
+    require_actor(user)
     digest = hashlib.sha256(token.encode()).hexdigest()
     invitation = CompanyInvitation.objects.filter(token_digest=digest).first()
     if invitation is None:
         raise PermissionDenied("The invitation is invalid or unavailable.")
     Company.objects.select_for_update().get(pk=invitation.company_id)
     invitation = CompanyInvitation.objects.select_for_update().get(pk=invitation.pk)
+    if not CompanyMembership.objects.filter(
+        company_id=invitation.company_id,
+        user_id=invitation.invited_by_id,
+        is_active=True,
+        is_admin=True,
+        user__is_active=True,
+        user__is_verified=True,
+    ).exists():
+        raise PermissionDenied("The invitation is invalid or unavailable.")
     if invitation.recipient_email.casefold() != user.email.casefold():
         raise PermissionDenied("The invitation belongs to another recipient.")
     if (
@@ -134,4 +144,7 @@ def update_member(user, company_id, membership_id, data):
     member.revision += 1
     member.save()
     audit(member, user, "company_membership_changed", data.get("reason", ""))
+    from core_apps.chat.services.company_access import refresh_company
+
+    refresh_company(company, user)
     return member

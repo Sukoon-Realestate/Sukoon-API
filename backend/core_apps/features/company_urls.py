@@ -1,8 +1,31 @@
 from django.urls import path
 from . import company_views as v
 from . import company_admin_views as a
+from . import company_staff_views as s
+from . import company_work_views as w
+from . import company_chat_views as c
 
 urlpatterns = [
+    path(
+        "companies/<uuid:company_id>/housing-requests/<uuid:request_id>/discussion/",
+        c.discussion,
+    ),
+    path("companies/<uuid:company_id>/approval-route/", w.approval_route),
+    path("companies/<uuid:company_id>/work-items/", w.work),
+    path("company-booking-items/<uuid:item_id>/reassign/", w.reassign),
+    path("account-contexts/", s.contexts),
+    path("companies/<uuid:company_id>/planning-staff/", s.planning_people),
+    path("companies/<uuid:company_id>/staff/", s.roster),
+    path("companies/<uuid:company_id>/staff/<uuid:staff_id>/", s.detail),
+    path(
+        "companies/<uuid:company_id>/staff/<uuid:staff_id>/<slug:action>/", s.activation
+    ),
+    path("companies/<uuid:company_id>/staff-batches/", s.batch),
+    path("companies/<uuid:company_id>/staff-batches/<uuid:batch_id>/", s.batch_detail),
+    path("company-access/preview/", s.access_preview),
+    path("company-access/contact-proof/", s.request_contact_proof),
+    path("company-access/contact-proof/<uuid:proof_id>/", s.verify_contact_proof),
+    path("company-access/<slug:action>/", s.access_response),
     path("company-capabilities/", v.capabilities),
     path("companies/", v.companies),
     path("company-invitations/accept/", v.accept_invitation),

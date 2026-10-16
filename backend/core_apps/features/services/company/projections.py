@@ -32,6 +32,7 @@ def company_payload(company, user):
         "membership": membership_payload(member),
         "permissions": {
             "manage_people": member.is_admin,
+            "manage_budget": member.is_admin,
             "coordinate": member.is_coordinator,
             "approve": member.is_approver,
             "execute_payment": member.can_execute_payments,
@@ -45,7 +46,41 @@ def company_payload(company, user):
         result.update(
             registration_number=company.registration_number,
             contact_email=company.contact_email,
+            default_approver_id=(
+                str(company.default_approver.id)
+                if company.default_approver_id
+                else None
+            ),
+            backup_approver_id=(
+                str(company.backup_approver.id) if company.backup_approver_id else None
+            ),
+            default_approver_name=(
+                company.default_approver.user.get_full_name
+                if company.default_approver_id
+                else ""
+            ),
+            backup_approver_name=(
+                company.backup_approver.user.get_full_name
+                if company.backup_approver_id
+                else ""
+            ),
         )
+    result["readiness"] = {
+        "company_review": company.review_status,
+        "independent_approver_configured": bool(
+            company.default_approver_id
+            and company.default_approver.is_active
+            and company.default_approver.is_approver
+        ),
+        "signing_authority": company.memberships.filter(
+            is_active=True, signing_verified_until__gt=timezone.now()
+        ).exists(),
+        "payment_executor": company.memberships.filter(
+            is_active=True, can_execute_payments=True
+        ).exists(),
+        "corporate_contracting": False,
+        "corporate_payments": False,
+    }
     if member.is_admin or member.is_approver:
         from django.db.models import Q, Sum
 

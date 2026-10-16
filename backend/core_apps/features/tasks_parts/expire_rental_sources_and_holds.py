@@ -46,8 +46,11 @@ def process_planning_jobs():
     from ..services.rental_lifecycle.jobs import reconcile_lifecycle_deadlines
 
     deadlines = reconcile_lifecycle_deadlines()
+    from ..services.company.activation_delivery import drain
+
     return {
         **deadlines,
+        "company_activation_emails": drain(),
         "reminders": record_lease_reminders(),
         "notifications": deliver_planning_events(),
     }

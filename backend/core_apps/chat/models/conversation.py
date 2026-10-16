@@ -8,8 +8,18 @@ from core_apps.common.models import TimeStampedModel
 class Conversation(TimeStampedModel):
     kind = models.CharField(max_length=24, default="direct", db_index=True)
     housing_group = models.OneToOneField(
-        "features.HousingGroup", null=True, blank=True,
-        on_delete=models.PROTECT, related_name="chat_conversation",
+        "features.HousingGroup",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="chat_conversation",
+    )
+    company_request = models.OneToOneField(
+        "features.CompanyHousingRequest",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="discussion",
     )
     last_sequence = models.PositiveBigIntegerField(default=0)
     last_event_sequence = models.PositiveBigIntegerField(default=0)
@@ -27,11 +37,28 @@ class Conversation(TimeStampedModel):
         verbose_name = _("Conversation")
         verbose_name_plural = _("Conversations")
         ordering = ["-last_message_at"]
-        constraints = [models.CheckConstraint(
-            check=(models.Q(kind="direct", housing_group__isnull=True)
-                   | models.Q(kind="housing_group", housing_group__isnull=False)),
-            name="chat_conversation_kind_group_consistent",
-        )]
+        constraints = [
+            models.CheckConstraint(
+                check=(
+                    models.Q(
+                        kind="direct",
+                        housing_group__isnull=True,
+                        company_request__isnull=True,
+                    )
+                    | models.Q(
+                        kind="housing_group",
+                        housing_group__isnull=False,
+                        company_request__isnull=True,
+                    )
+                    | models.Q(
+                        kind="company_request",
+                        housing_group__isnull=True,
+                        company_request__isnull=False,
+                    )
+                ),
+                name="chat_conversation_kind_group_consistent",
+            )
+        ]
 
     def __str__(self) -> str:
         return f"Conversation {self.id}"
@@ -54,7 +81,16 @@ class ConversationParticipant(TimeStampedModel):
     # * Denormalized per-participant unread count — avoids N+1 on conversation list
     unread_count = models.PositiveIntegerField(default=0)
     membership = models.ForeignKey(
-        "features.GroupMembership", null=True, blank=True, on_delete=models.SET_NULL,
+        "features.GroupMembership",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    company_membership = models.ForeignKey(
+        "features.CompanyMembership",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
     )
     membership_revision = models.PositiveBigIntegerField(default=0)
     membership_period = models.UUIDField(null=True, blank=True)

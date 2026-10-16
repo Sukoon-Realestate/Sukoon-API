@@ -7,7 +7,7 @@ class StrictBody(serializers.Serializer):
     def to_internal_value(self, data):
         if not isinstance(data, dict) or set(data) - set(self.fields):
             raise serializers.ValidationError(
-                "The request contains unsupported fields."
+                {"non_field_errors": ["The request contains unsupported fields."]}
             )
         return super().to_internal_value(data)
 
@@ -207,12 +207,24 @@ class SelectionBody(CommandBody):
     occupant_ids = serializers.ListField(
         child=serializers.UUIDField(), max_length=1000, default=list
     )
+    staff_ids = serializers.ListField(
+        child=serializers.UUIDField(), max_length=1000, default=list
+    )
 
 
 class ApprovalBody(CommandBody):
-    decision = serializers.ChoiceField(choices=["approved", "rejected"])
+    decision = serializers.ChoiceField(
+        choices=["approved", "rejected", "changes_requested"]
+    )
     snapshot_digest = serializers.RegexField(r"^[a-f0-9]{64}$")
     reason = serializers.CharField(max_length=1000, allow_blank=True, default="")
+
+    def validate(self, data):
+        if data["decision"] != "approved" and not data["reason"].strip():
+            raise serializers.ValidationError(
+                {"reason": "Explain the rejection or requested changes."}
+            )
+        return data
 
 
 class AuthorityReviewBody(CommandBody):

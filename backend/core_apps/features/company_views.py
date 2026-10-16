@@ -3,8 +3,14 @@
 from functools import wraps
 from django.conf import settings
 from django.db import IntegrityError
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
+from rest_framework.decorators import (
+    api_view,
+    permission_classes,
+    renderer_classes,
+    throttle_classes,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, PermissionDenied
@@ -48,8 +54,11 @@ from core_apps.properties.models import (
 )
 
 
-def company_api(methods):
+def company_api(methods, throttles=None):
     def decorate(fn):
+        if throttles is not None:
+            fn = throttle_classes(throttles)(fn)
+
         @api_view(methods)
         @permission_classes([IsAuthenticated])
         @renderer_classes([FeatureJsonRenderer])
@@ -91,10 +100,17 @@ def mutate(request, operation, authorize, execute, mapper, creating=False):
 
 @company_api(["GET"])
 def capabilities(request):
+    from .services.company.staff import delivery_ready
+
     return Response(
         {
             "new_bookings": bool(getattr(settings, "COMPANY_HOUSING_ENABLED", False)),
             "portfolio_creation": True,
+            "staff_provisioning": True,
+            "activation_email_delivery": delivery_ready(),
+            "account_contexts": True,
+            "assigned_approvals": True,
+            "internal_request_discussions": True,
             "contracting": False,
             "payments": False,
         }
@@ -242,8 +258,13 @@ def housing_requests(request, company_id):
     if request.method == "GET":
         return page(
             request,
-            company.housing_requests.order_by("-created_at", "id"),
-            bookings.request_payload,
+            company.housing_requests.filter(
+                Q(coordinator=request.user)
+                | Q(items__assigned_approver__user=request.user)
+            )
+            .distinct()
+            .order_by("-created_at", "id"),
+            lambda item: bookings.request_payload(item, request.user),
         )
     data = validated(RequestBody, request.data)
     return mutate(
@@ -251,7 +272,7 @@ def housing_requests(request, company_id):
         "company.housing_request.create",
         lambda: company_for(request.user, company_id, "coordinate", lock=True),
         lambda c: bookings.save_request(request.user, c, data),
-        bookings.request_payload,
+        lambda item: bookings.request_payload(item, request.user),
         creating=True,
     )
 
@@ -260,9 +281,15 @@ def housing_requests(request, company_id):
 def housing_request(request, request_id):
     item = get_object_or_404(CompanyHousingRequest, id=request_id)
     member = member_for(request.user, item.company)
-    if not (member.is_coordinator or member.is_approver):
+    if not (
+        (member.is_coordinator and item.coordinator_id == request.user.pk)
+        or (
+            member.is_approver
+            and item.items.filter(assigned_approver__user=request.user).exists()
+        )
+    ):
         raise PermissionDenied("You do not have access to the commercial request.")
-    return Response(bookings.request_payload(item))
+    return Response(bookings.request_payload(item, request.user))
 
 
 @company_api(["POST"])
@@ -280,7 +307,7 @@ def select_offer(request, request_id):
 
 @company_api(["POST"])
 def item_action(request, item_id, action):
-    if action not in {"decide", "hold", "withdraw"}:
+    if action not in {"submit", "decide", "hold", "withdraw"}:
         raise ValidationError("Unsupported booking action.")
     data = validated(ApprovalBody if action == "decide" else CommandBody, request.data)
 
@@ -292,9 +319,23 @@ def item_action(request, item_id, action):
             "approve" if action == "decide" else "coordinate",
             lock=True,
         )
+        if action != "decide" and item.request.coordinator_id != request.user.pk:
+            raise PermissionDenied(
+                "Only the assigned coordinator can manage this request."
+            )
+        if action == "decide" and (
+            not item.assigned_approver_id
+            or item.assigned_approver.user_id != request.user.pk
+        ):
+            raise PermissionDenied(
+                "Only the currently assigned approver can decide this package."
+            )
         return item
 
+    from .services.company.approval_routing import submit
+
     handler = {
+        "submit": submit,
         "decide": bookings.decide,
         "hold": bookings.hold_item,
         "withdraw": bookings.withdraw_item,

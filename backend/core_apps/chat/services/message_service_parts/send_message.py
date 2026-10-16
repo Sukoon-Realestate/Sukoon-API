@@ -23,11 +23,18 @@ def send_message(
     Create a message, update conversation preview, increment recipients' unread counts,
     and broadcast to all participants via the channel layer.
     """
-    if conversation.kind == "housing_group":
+    if conversation.kind in {"housing_group", "company_request"}:
         from ..group_send import send_group_message
-        return send_group_message(conversation, sender, {
-            "client_message_id": str(client_message_id), "kind": "text", "content": content,
-        })
+
+        return send_group_message(
+            conversation,
+            sender,
+            {
+                "client_message_id": str(client_message_id),
+                "kind": "text",
+                "content": content,
+            },
+        )
     # Guard: sender must be a participant in the conversation
     if not ConversationParticipant.objects.filter(
         conversation=conversation, user=sender
@@ -135,7 +142,7 @@ def mark_conversation_read(*, conversation: Conversation, user) -> None:
     Mark all messages in a conversation as read for a user.
     Resets unread_count and sets last_read_at. Broadcasts a read receipt.
     """
-    if conversation.kind == "housing_group":
+    if conversation.kind in {"housing_group", "company_request"}:
         raise ValidationError("Group reads require an explicit last_read_sequence.")
     updated = ConversationParticipant.objects.filter(
         conversation=conversation,

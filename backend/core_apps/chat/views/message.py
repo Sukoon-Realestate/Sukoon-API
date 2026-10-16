@@ -31,8 +31,9 @@ class MessageListAPIView(ListAPIView):
 
     def list(self, request, *args, **kwargs):
         conversation = get_object_or_404(Conversation, id=kwargs["id"])
-        if conversation.kind == "housing_group":
+        if conversation.kind in {"housing_group", "company_request"}:
             from .group_history import history_response
+
             return history_response(conversation, request.user, request.query_params)
         return super().list(request, *args, **kwargs)
 
@@ -67,11 +68,12 @@ class MessageCreateAPIView(APIView):
 
     def post(self, request, id):
         conversation = get_object_or_404(Conversation, id=id)
-        if conversation.kind == "housing_group":
+        if conversation.kind in {"housing_group", "company_request"}:
             from core_apps.chat.services.group_send import send_group_message
             from core_apps.chat.services.group_access import authorize
             from core_apps.chat.services.group_projection import message_payload
             from core_apps.chat.services.group_rate_limit import enforce_rate
+
             enforce_rate(request.user, "send")
             message = send_group_message(conversation, request.user, dict(request.data))
             _, participant, member = authorize(conversation, request.user)

@@ -119,7 +119,20 @@ from .student_models import (
 )
 
 from .company_models import (
-    Company, CompanyMembership, CompanyInvitation, PortfolioOffer,
-    CompanyHousingRequest, CompanyBookingItem, CompanyApproval,
-    CompanyBudgetReservation, EmployeeAssignment,
+    Company,
+    CompanyMembership,
+    CompanyInvitation,
+    PortfolioOffer,
+    CompanyHousingRequest,
+    CompanyBookingItem,
+    CompanyApproval,
+    CompanyBudgetReservation,
+    EmployeeAssignment,
+)
+from .company_staff_models import (
+    CompanyStaffRecord,
+    CompanyAccountProvisioning,
+    CompanyStaffBatch,
+    CompanyStaffBatchRow,
+    CompanyWorkContactProof,
 )

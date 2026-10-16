@@ -27,7 +27,13 @@ from core_apps.features.company_models import (
     CompanyApproval,
     CompanyBudgetReservation,
 )
-from core_apps.features.services.company import membership, portfolio, offers, bookings
+from core_apps.features.services.company import (
+    membership,
+    portfolio,
+    offers,
+    bookings,
+    approval_routing,
+)
 from core_apps.features.services.rental_lifecycle.inventory import (
     allocate_days,
     assert_available,
@@ -79,7 +85,10 @@ def company_setup(rental_participants, policy, settings):
     CompanyMembership.objects.filter(company=company, user=coordinator).update(
         is_coordinator=True
     )
-    CompanyMembership.objects.create(company=company, user=approver, is_approver=True)
+    company.default_approver = CompanyMembership.objects.create(
+        company=company, user=approver, is_approver=True
+    )
+    company.save()
     building = ResidentialBuilding.objects.create(
         manager=owner,
         name="Synthetic building",
@@ -151,7 +160,7 @@ def company_setup(rental_participants, policy, settings):
 def proposed(setup):
     _, coordinator, _, _, _, _, offer, request = setup
     request.refresh_from_db()
-    return bookings.select_offer(
+    item = bookings.select_offer(
         coordinator,
         request.id,
         {
@@ -160,6 +169,10 @@ def proposed(setup):
             "offer_revision": offer.revision,
             "occupant_ids": [],
         },
+    )
+
+    return approval_routing.submit(
+        coordinator, item.id, {"expected_revision": item.revision}
     )
 
 
@@ -1189,6 +1202,9 @@ def test_synthetic_twelve_unit_hold_for_forty_employees_and_eight_reserve_places
     assert item.snapshot["company_name"] == company.name
     assert item.snapshot["requester_name"] == coordinator.get_full_name
     assert all(row["building_name"] == building.name for row in item.snapshot["units"])
+    item = approval_routing.submit(
+        coordinator, item.id, {"expected_revision": item.revision}
+    )
     item = bookings.decide(
         approver,
         item.id,

@@ -98,3 +98,54 @@ FIELD_LABELS = {
     "Ends On Exclusive": "تاريخ المغادرة",
     "Roles": "الأدوار",
 }
+
+MESSAGES.update(
+    {
+        "Use membership controls for an activated staff record.": "استخدم إدارة العضويات لتعديل صلاحيات الموظف المفعل.",
+        "Only unlinked active staff can receive an activation.": "يمكن إرسال التفعيل لموظف نشط لم يربط حسابه بعد فقط.",
+        "Company activation email delivery is not configured.": "إرسال بريد تفعيل الشركة غير مهيأ.",
+        "Wait before requesting another activation email.": "انتظر قبل طلب رسالة تفعيل أخرى.",
+        "The activation is invalid or unavailable.": "التفعيل غير صالح أو غير متاح.",
+        "The activation expired or changed. Request a current invitation.": "انتهت صلاحية التفعيل أو تغيرت بياناته. اطلب دعوة جديدة.",
+        "Sign in with the verified email that received this activation.": "سجل الدخول بالبريد الموثق الذي استلم هذا التفعيل.",
+        "Review the current role proposal before accepting.": "راجع الأدوار المقترحة الحالية قبل القبول.",
+        "This account already has a company relationship. Ask the administrator to review it.": "هذا الحساب مرتبط بالشركة بالفعل. اطلب من المسؤول مراجعة العضوية.",
+        "The batch belongs to another workspace or submitter.": "تخص الدفعة شركة أو مقدم طلب آخر.",
+        "A submitted staff row changed. Use a new row identity for a correction.": "تغير سجل موظف مرسل. استخدم معرف صف جديد للتصحيح.",
+        "Submit at most 50 distinct staff rows without duplicate contacts or employee codes.": "أرسل حتى خمسين موظفا دون تكرار جهات الاتصال أو أكواد الموظفين.",
+        "Unsupported staff action.": "إجراء الموظف غير مدعوم.",
+        "Unsupported activation response.": "رد التفعيل غير مدعوم.",
+        "Assign an active independent approver before submitting this package.": "حدد معتمدا مستقلا ونشطا قبل إرسال هذه الحزمة.",
+        "Choose a distinct backup after selecting the default approver.": "اختر احتياطيا مختلفا بعد اختيار المعتمد الأساسي.",
+        "Obtain a current proposed quote before submitting approval.": "احصل على عرض سعر مقترح وساري قبل الإرسال للموافقة.",
+        "Only a pending approval can be reassigned.": "يمكن إعادة إسناد الموافقة المعلقة فقط.",
+        "Only the currently assigned approver can decide this package.": "يمكن للمعتمد المسؤول حاليا اتخاذ قرار بشأن هذه الحزمة فقط.",
+        "Only the assigned coordinator can manage this request.": "يمكن للمنسق المسؤول إدارة هذا الطلب فقط.",
+        "Explain the rejection or requested changes.": "وضح سبب الرفض أو التعديلات المطلوبة.",
+        "Choose active company staff with employee eligibility.": "اختر موظفين نشطين بالشركة ومؤهلين للسكن.",
+        "Do not duplicate or include inactive employee memberships.": "لا تكرر عضويات الموظفين أو تدرج عضويات غير نشطة.",
+        "The staff plan changed. Review a new package.": "تغيرت خطة الموظفين. راجع حزمة جديدة.",
+        "The employee code or activation email already exists in this company.": "كود الموظف أو بريد التفعيل موجود بالفعل في هذه الشركة.",
+        "A submitted staff batch cannot add new rows. Prepare a new batch.": "لا يمكن إضافة موظفين إلى دفعة مرسلة. جهز دفعة جديدة.",
+        "A new batch starts at revision zero.": "تبدأ الدفعة الجديدة بالمراجعة صفر.",
+        "The code is invalid or expired. Request a new code after the delivery cooldown.": "الرمز غير صالح أو منتهي. اطلب رمزا جديدا بعد مهلة إعادة الإرسال.",
+        "Company discussion access is no longer available.": "لم يعد الوصول إلى مناقشة الشركة متاحا.",
+    }
+)
+FIELD_LABELS.update(
+    {
+        "Employee Code": "كود الموظف",
+        "Display Name": "اسم الموظف",
+        "Work Email": "بريد التفعيل",
+        "Job Title": "المسمى الوظيفي",
+        "Department": "القسم",
+        "Project Code": "كود المشروع",
+        "Staff Ids": "الموظفون",
+        "Proposal Revision": "مراجعة الأدوار المقترحة",
+        "Default Approver Id": "المعتمد الأساسي",
+        "Backup Approver Id": "المعتمد الاحتياطي",
+        "Approver Id": "المعتمد",
+        "Row Key": "معرف الصف",
+        "Rows": "الموظفون",
+    }
+)

@@ -4,7 +4,7 @@ from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import APIException
 from core_apps.chat.models import ChatEvent, ChatNotificationDelivery
-from .group_access import authorize
+from .group_access import authorize, lock_conversation_root
 from .group_events import event_payload
 
 
@@ -23,12 +23,8 @@ def drain_outbox(limit=100):
 def deliver_event(identity):
     # Lock order matches commands. Row locking serializes concurrent workers.
     initial = ChatEvent.objects.select_related("conversation").get(pk=identity)
-    from core_apps.features.planning_models import HousingGroup
-
     with transaction.atomic():
-        HousingGroup.objects.select_for_update().get(
-            pk=initial.conversation.housing_group_id
-        )
+        lock_conversation_root(initial.conversation)
         event = (
             ChatEvent.objects.select_for_update(of=("self",))
             .select_related("conversation", "message", "actor")
@@ -76,15 +72,21 @@ def _notify(event, user):
         NotificationService,
     )
 
-    group_id = str(conversation.housing_group.id)
-    notification = NotificationService.create_notification(
-        user=user,
-        title="رسالة جديدة في شات الجروب",
-        body="افتح سكون لقراءة الرسالة",
-        notification_type="new_message",
-        category="housing_group_chat",
-        icon_type="chat",
-        data={
+    company = conversation.kind == "company_request"
+    group_id = "" if company else str(conversation.housing_group.id)
+    destination = (
+        {
+            "type": "company_request_chat",
+            "action_type": "open_company_discussion",
+            "target_id": str(conversation.company_request.id),
+            "company_id": str(conversation.company_request.company.id),
+            "conversation_id": str(conversation.id),
+            "message_id": str(event.message.id),
+            "schema_version": "1",
+            "workspace": "tenant",
+        }
+        if company
+        else {
             "type": "housing_group_chat",
             "event_kind": "housing_group_chat",
             "group_id": group_id,
@@ -92,7 +94,18 @@ def _notify(event, user):
             "message_id": str(event.message.id),
             "event_id": str(event.id),
             "deep_link": f"https://sokoun.app/housing-groups/{group_id}/chat?message_id={event.message.id}",
-        },
+        }
+    )
+    notification = NotificationService.create_notification(
+        user=user,
+        title=(
+            "رسالة جديدة في مناقشة الشركة" if company else "رسالة جديدة في شات الجروب"
+        ),
+        body="افتح سكون لقراءة الرسالة",
+        notification_type="new_message",
+        category="company_request_chat" if company else "housing_group_chat",
+        icon_type="chat",
+        data=destination,
         send_push=False,
     )
     delivery.notification = notification
@@ -102,7 +115,7 @@ def _notify(event, user):
 def deliver_pushes(limit=100):
     """Claim once before provider I/O. Provider exactly-once delivery is not assumed."""
     from core_apps.notifications.services.fcm_service import FCMService
-    from core_apps.features.planning_models import HousingGroup
+    from contextlib import nullcontext
 
     ids = ChatNotificationDelivery.objects.filter(
         push_claimed_at__isnull=True, notification__isnull=False
@@ -112,9 +125,7 @@ def deliver_pushes(limit=100):
             "event__conversation"
         ).get(pk=identity)
         with transaction.atomic():
-            HousingGroup.objects.select_for_update().get(
-                pk=initial.event.conversation.housing_group_id
-            )
+            lock_conversation_root(initial.event.conversation)
             delivery = (
                 ChatNotificationDelivery.objects.select_for_update(of=("self",))
                 .select_related(
@@ -126,11 +137,13 @@ def deliver_pushes(limit=100):
                 continue
             delivery.push_claimed_at = timezone.now()
             delivery.save(update_fields=["push_claimed_at", "updated_at"])
-        # Reacquire the roster lock through the provider call: a completed removal cannot race dispatch.
-        with transaction.atomic():
+        # Company delivery rechecks current case authority immediately before
+        # dispatch, without retaining database locks during provider I/O.
+        company = delivery.event.conversation.kind == "company_request"
+        with nullcontext() if company else transaction.atomic():
             try:
                 _, participant, _ = authorize(
-                    delivery.event.conversation, delivery.user, lock=True
+                    delivery.event.conversation, delivery.user, lock=not company
                 )
             except APIException:
                 continue

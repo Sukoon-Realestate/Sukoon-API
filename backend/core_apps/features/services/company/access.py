@@ -48,6 +48,8 @@ def company_for(user, identity, action="read", lock=False):
 def request_for(user, identity, action="coordinate", lock=False):
     request = get_object_or_404(CompanyHousingRequest, id=identity)
     company_for(user, request.company.id, action, lock=lock)
+    if action == "coordinate" and request.coordinator_id != user.pk:
+        raise PermissionDenied("Only the assigned coordinator can manage this request.")
     if lock:
         request = CompanyHousingRequest.objects.select_for_update().get(pk=request.pk)
     return request
@@ -61,6 +63,30 @@ def company_subject(user, identifier):
         PortfolioBatch,
     )
     from django.db.models import Q
+    from ...company_staff_models import (
+        CompanyStaffRecord,
+        CompanyStaffBatch,
+        CompanyAccountProvisioning,
+        CompanyWorkContactProof,
+    )
+
+    for model in (CompanyStaffRecord, CompanyStaffBatch):
+        item = model.objects.filter(
+            id=identifier,
+            company__memberships__user=user,
+            company__memberships__is_active=True,
+            company__memberships__is_admin=True,
+        ).first()
+        if item:
+            return item
+    provisioning = CompanyAccountProvisioning.objects.filter(
+        id=identifier, consumed_by=user
+    ).first()
+    if provisioning:
+        return provisioning
+    proof = CompanyWorkContactProof.objects.filter(id=identifier, user=user).first()
+    if proof:
+        return proof
 
     for model in (ResidentialBuilding, ResidentialComplex):
         item = model.objects.filter(id=identifier, manager=user).first()
@@ -98,6 +124,14 @@ def company_subject(user, identifier):
     ).first()
     if company:
         return company
+    administrative_item = CompanyBookingItem.objects.filter(
+        id=identifier,
+        request__company__memberships__user=user,
+        request__company__memberships__is_active=True,
+        request__company__memberships__is_admin=True,
+    ).first()
+    if administrative_item:
+        return administrative_item
     for model, relation in [
         (CompanyHousingRequest, "company"),
         (CompanyBookingItem, "request__company"),
@@ -111,6 +145,12 @@ def company_subject(user, identifier):
                 relation + "__memberships__is_active": True,
             }
         )
+        if model == CompanyHousingRequest:
+            qs = qs.filter(Q(coordinator=user) | Q(items__assigned_approver__user=user))
+        else:
+            qs = qs.filter(
+                Q(request__coordinator=user) | Q(assigned_approver__user=user)
+            )
         item = qs.first()
         if item:
             return item
@@ -144,7 +184,7 @@ def actions(user, capability, identifier=""):
     if not identifier:
         if capability == "residential_portfolios":
             return ["read", "create", "batch", "offer"]
-        return ["read", "join"] + (
+        return ["read", "join", "activate"] + (
             ["create"] if getattr(settings, "COMPANY_HOUSING_ENABLED", False) else []
         )
     item = company_subject(user, identifier)
@@ -170,12 +210,30 @@ def actions(user, capability, identifier=""):
         return []
     result = ["read"]
     if member.is_admin:
-        result += ["invite", "update_member", "budget", "reassign"]
+        result += [
+            "invite",
+            "update_member",
+            "budget",
+            "reassign",
+            "staff",
+            "activation",
+            "revoke",
+            "approval_route",
+        ]
     if member.is_coordinator:
         result += ["withdraw"]
     if getattr(settings, "COMPANY_HOUSING_ENABLED", False):
         if member.is_coordinator:
-            result += ["create_request", "select", "hold"]
+            result += ["create_request", "select", "hold", "submit"]
         if member.is_approver:
-            result += ["decide"]
+            if (
+                isinstance(item, CompanyBookingItem)
+                and item.status == "approval_pending"
+                and item.assigned_approver_id
+                and item.assigned_approver.user_id == user.pk
+            ):
+                from .approval_routing import eligible
+
+                if eligible(item.assigned_approver, item):
+                    result += ["decide"]
     return result

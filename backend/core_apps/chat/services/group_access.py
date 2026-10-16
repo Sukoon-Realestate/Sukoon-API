@@ -9,6 +9,10 @@ from core_apps.chat.models import Conversation, ConversationParticipant
 
 
 def authorize(conversation, user, *, action="read_chat", lock=False):
+    if conversation.kind == "company_request":
+        from .company_access import authorize as company_authorize
+
+        return company_authorize(conversation, user, action=action, lock=lock)
     # The same lock order is used by roster changes, sends and finalization.
     groups = HousingGroup.objects.select_for_update() if lock else HousingGroup.objects
     group = get_object_or_404(groups, pk=conversation.housing_group_id)
@@ -76,6 +80,10 @@ def unread_count(conversation, participant):
 
 
 def eligible_participants(conversation):
+    if conversation.kind == "company_request":
+        from .company_access import eligible_participants as company_participants
+
+        return company_participants(conversation)
     from django.db.models import F
 
     return conversation.participant_set.filter(
@@ -98,7 +106,7 @@ def total_unread_count(user):
         or 0
     )
     for conversation in Conversation.objects.filter(
-        kind="housing_group", participant_set__user=user
+        kind__in=["housing_group", "company_request"], participant_set__user=user
     ):
         try:
             _, participant, _ = authorize(conversation, user)
@@ -106,3 +114,13 @@ def total_unread_count(user):
         except APIException:
             continue
     return total
+
+
+def lock_conversation_root(conversation):
+    if conversation.kind == "company_request":
+        from .company_access import lock_root
+
+        return lock_root(conversation)
+    return HousingGroup.objects.select_for_update().get(
+        pk=conversation.housing_group_id
+    )

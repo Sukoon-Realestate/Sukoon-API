@@ -26,6 +26,9 @@ STUDENT_ENABLED_SERVICES = student_services_from_env(
 
 # New commitments may be stopped without removing historical company access.
 COMPANY_HOUSING_ENABLED = getenv("COMPANY_HOUSING_ENABLED", "false").lower() == "true"
+COMPANY_ACTIVATION_EMAIL_ENABLED = (
+    getenv("COMPANY_ACTIVATION_EMAIL_ENABLED", "false").lower() == "true"
+)
 
 ## Application definition
 

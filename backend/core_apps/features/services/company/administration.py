@@ -98,4 +98,7 @@ def reassign_coordinator(user, request_id, data):
     item.revision += 1
     item.save()
     audit(item, user, "company_coordinator_reassigned", data["reason"])
+    from core_apps.chat.services.company_access import provision
+
+    provision(item, user)
     return item

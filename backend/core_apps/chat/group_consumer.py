@@ -47,7 +47,10 @@ class GroupChatConsumerMixin:
                 raise ValidationError("Supply a valid conversation identity.")
             return None
         conversation = Conversation.objects.filter(id=identity).first()
-        if not conversation or conversation.kind != "housing_group":
+        if not conversation or conversation.kind not in {
+            "housing_group",
+            "company_request",
+        }:
             if content.get("protocol") == "group.v1":
                 raise NotFound()
             return None
