@@ -57,8 +57,9 @@ export function WhySukoon({ dict }: { dict: Dictionary }) {
   return (
     <section id={SECTION_IDS.why} className="scroll-mt-16 bg-paper px-2 pb-2 sm:px-4 sm:pb-4">
       <div className="relative overflow-hidden rounded-[2rem] bg-pine py-24 dark:ring-1 dark:ring-white/10 sm:rounded-[2.75rem] sm:py-32">
-        {/* one large word engraved behind the cards, lit up under the mouse like a torch */}
-        <SignatureSpotlight />
+        {/* the word engraved in the empty space beside the heading, clear of the cards,
+            lit up under the mouse like a torch */}
+        <SignatureSpotlight wordClassName="top-14 end-[calc((100%-72rem)/2+2rem)] w-[24rem] max-lg:hidden sm:top-16 xl:w-[26rem]" />
         <div
           aria-hidden
           className="parallax pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_50%_0%,rgba(4,164,23,0.22),transparent_65%)] [--parallax:-60px]"

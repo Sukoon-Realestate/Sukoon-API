@@ -1,0 +1,86 @@
+{
+  "screens": 20,
+  "contrast": {
+    "light": {
+      "text/canvas": 13.82,
+      "text/surface": 14.91,
+      "muted/canvas": 6.84,
+      "muted/surface": 7.39,
+      "accent/chip": 6.95,
+      "on-action/action": 14.91,
+      "on-hero/hero": 14.91,
+      "hero-muted/hero": 11.56,
+      "success/success-bg": 6.36,
+      "warning/warning-bg": 6.1,
+      "error/error-bg": 6.06,
+      "info/info-bg": 6.59
+    },
+    "dark": {
+      "text/canvas": 16.7,
+      "text/surface": 15.82,
+      "muted/canvas": 8.39,
+      "muted/surface": 7.95,
+      "accent/chip": 7.77,
+      "on-action/action": 9.52,
+      "on-hero/hero": 14.91,
+      "hero-muted/hero": 11.56,
+      "success/success-bg": 8.19,
+      "warning/warning-bg": 8.55,
+      "error/error-bg": 8.65,
+      "info/info-bg": 8.53
+    }
+  },
+  "overflow": [
+    {
+      "theme": "light",
+      "width": 1680,
+      "screens": []
+    },
+    {
+      "theme": "dark",
+      "width": 1680,
+      "screens": []
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "page": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "page": false
+    },
+    {
+      "theme": "light",
+      "width": 360,
+      "page": false
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "page": false
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "page": false
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "page": false
+    }
+  ],
+  "interactions": [
+    "dark theme changes and persists after reload",
+    "system theme follows OS changes",
+    "role filter and save toggle",
+    "request confirmation and status filter",
+    "local chat composer",
+    "booking review opens request-sent screen",
+    "appearance screen synchronizes with global switch",
+    "theme carries into design-map link"
+  ],
+  "errors": []
+}

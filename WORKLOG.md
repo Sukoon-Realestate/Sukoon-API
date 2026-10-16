@@ -690,3 +690,24 @@
   - Removed `SignatureWeave`, which had no other users.
 - **Verification:** Drove the mouse over the panel through the DevTools protocol and confirmed the mask position and opacity update, and that the lit part of the word shows through the translucent cards. Typecheck and ESLint pass.
 - **Files:** `frontend/landing/src/components/ui/SignatureSpotlight.tsx` (new), `frontend/landing/src/components/sections/WhySukoon.tsx`, `frontend/landing/src/components/ui/Decor.tsx`, `frontend/landing/src/app/globals.css`
+
+### Why Sukoon spotlight word moved clear of the cards
+- **What:** The mouse-lit "سكون" in the Why Sukoon panel now sits in the empty space beside the section heading instead of behind the bento cards.
+- **Why:** The user liked the mouse light but felt the word clashed with the boxes, which are translucent, so the light showed through them.
+- **Details:**
+  - `SignatureSpotlight` now takes a `wordClassName` that places the word, instead of a fixed full-width, centred layout.
+  - In `WhySukoon` the word sits at the container's end edge, `end-[calc((100%-72rem)/2+2rem)]`, which is left of the heading in Arabic and right of it in English. It is `w-[24rem]`, `xl:w-[26rem]`, at `top-14`/`sm:top-16`, and hidden below `lg`, where the heading spans the full width.
+  - A first try at 30–34rem overlapped the top card and the end of the subtitle, so it was shrunk and lifted.
+- **Verification:** Checked dark and light screenshots with the mouse driven over it; the word clears both the cards and the subtitle. ESLint passes.
+- **Files:** `frontend/landing/src/components/ui/SignatureSpotlight.tsx`, `frontend/landing/src/components/sections/WhySukoon.tsx`
+
+### Mobile redesign proposal to match the landing page
+- **What:** Built a design canvas with four redesigned app screens (Welcome, Tenant Home, Property Details, Owner Dashboard in night mode) and a foundations board.
+- **Why:** The user wants the mobile app and the landing page to share one identity.
+- **Details:**
+  - The proposal swaps the app's teal `AppColors.primary` (#0F766E) and white surfaces for the landing palette: sand/paper surfaces, pine #0C2A18, brand #04A417 (fills only), brandDeep #0A5C18 (green text), brandSoft #7FE08D (on dark).
+  - It replaces Tajawal with Readex Pro (headings and numbers) and IBM Plex Sans Arabic (body), the same fonts the landing uses.
+  - It brings the landing motifs into the app: concentric arches, arch-cropped photos, the hand-drawn underline, the "سكون" signature engraving (large screens only), and the "تمت المراجعة" and "موثّق" trust badges.
+  - Copy comes from the landing's Arabic dictionary. No app code was changed; this is only a proposal.
+  - Canvas: https://claude.ai/artifact/Mp5BTANwVh3QeXTDozu5eL (private until shared)
+- **Files:** none in the repo (design canvas only)

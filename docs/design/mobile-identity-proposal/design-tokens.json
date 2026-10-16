@@ -1,0 +1,171 @@
+{
+  "canvas": {
+    "light": "#F6F2E9",
+    "dark": "#0A120D",
+    "usage": "خلفية الشاشة"
+  },
+  "surface": {
+    "light": "#FCFBF7",
+    "dark": "#0E1912",
+    "usage": "البطاقات والحقول"
+  },
+  "raised": {
+    "light": "#ECE5D5",
+    "dark": "#16241B",
+    "usage": "سطح مرتفع / هيكل التحميل"
+  },
+  "text": {
+    "light": "#0C2A18",
+    "dark": "#ECF2EA",
+    "usage": "النص الأساسي"
+  },
+  "muted": {
+    "light": "#4B5650",
+    "dark": "#A1B0A6",
+    "usage": "النص الثانوي"
+  },
+  "line": {
+    "light": "#E3DCCB",
+    "dark": "#294632",
+    "usage": "فصل الأسطح"
+  },
+  "accent": {
+    "light": "#0A5C18",
+    "dark": "#7FE08D",
+    "usage": "الروابط والاختيار"
+  },
+  "chip": {
+    "light": "#E1F0E2",
+    "dark": "#173A24",
+    "usage": "الاختيارات اللونية الخفيفة"
+  },
+  "action": {
+    "light": "#0C2A18",
+    "dark": "#7FE08D",
+    "usage": "خلفية الزر الأساسي"
+  },
+  "on-action": {
+    "light": "#FCFBF7",
+    "dark": "#0C2A18",
+    "usage": "نص الزر الأساسي"
+  },
+  "hero": {
+    "light": "#0C2A18",
+    "dark": "#0C2A18",
+    "usage": "هيدر الهوية"
+  },
+  "on-hero": {
+    "light": "#FCFBF7",
+    "dark": "#FCFBF7",
+    "usage": "نص هيدر الهوية"
+  },
+  "hero-muted": {
+    "light": "#D6E2D7",
+    "dark": "#D6E2D7",
+    "usage": "النص الثانوي فوق الهيدر"
+  },
+  "success": {
+    "light": "#176132",
+    "dark": "#9BE0AD",
+    "usage": "نجاح / تأكيد"
+  },
+  "success-bg": {
+    "light": "#E1F0E2",
+    "dark": "#173A24",
+    "usage": "خلفية النجاح"
+  },
+  "warning": {
+    "light": "#725014",
+    "dark": "#EBCA83",
+    "usage": "قيد الانتظار"
+  },
+  "warning-bg": {
+    "light": "#F5EACD",
+    "dark": "#382D17",
+    "usage": "خلفية الانتظار"
+  },
+  "error": {
+    "light": "#A12D42",
+    "dark": "#FFB1BD",
+    "usage": "خطأ / رفض"
+  },
+  "error-bg": {
+    "light": "#FBE9ED",
+    "dark": "#3C1F28",
+    "usage": "خلفية الخطأ"
+  },
+  "info": {
+    "light": "#315774",
+    "dark": "#A9CCEB",
+    "usage": "المعلومة"
+  },
+  "info-bg": {
+    "light": "#E8EFF5",
+    "dark": "#1B2C3A",
+    "usage": "خلفية المعلومة"
+  },
+  "disabled": {
+    "light": "#ECE5D5",
+    "dark": "#203127",
+    "usage": "زر غير متاح"
+  },
+  "disabled-text": {
+    "light": "#626B62",
+    "dark": "#B2BDB5",
+    "usage": "نص غير متاح"
+  },
+  "focus": {
+    "light": "#0A5C18",
+    "dark": "#7FE08D",
+    "usage": "حلقة التركيز"
+  },
+  "typography": {
+    "display": "Readex Pro",
+    "body": "IBM Plex Sans Arabic",
+    "displaySizes": [
+      24,
+      28
+    ],
+    "bodySizes": [
+      14,
+      16
+    ],
+    "metadataSizes": [
+      12,
+      13
+    ],
+    "minInteractiveTargetDp": 48,
+    "lineHeight": [
+      1.5,
+      1.75
+    ]
+  },
+  "layout": {
+    "spacing": [
+      4,
+      8,
+      12,
+      16,
+      24,
+      32
+    ],
+    "radius": {
+      "control": 12,
+      "card": 14,
+      "chip": 999
+    },
+    "safeArea": true,
+    "prototypeViewport": [
+      350,
+      790
+    ]
+  },
+  "themePolicy": {
+    "default": "system",
+    "persistence": "ThemePreferences / sokoun_theme_mode_v1",
+    "transitionMs": 320,
+    "curve": "easeInOutCubic",
+    "reducedMotion": "no animation",
+    "prototypeStorageKey": "sukoon-proposal-theme"
+  }
+}
