@@ -45,6 +45,24 @@ def maintenance_action(request, request_id):
             raise RentalConflict(
                 "Maintenance revision conflict.", code="stale_revision"
             )
+        if action in transitions and item.status not in transitions[action][0]:
+            raise RentalConflict("Unsupported maintenance transition.")
+        if action == "start_work" and (
+            item.appointment_version != item.access_approved_version
+            or not item.appointment_at
+            or (
+                item.proposed_cost_minor
+                and item.cost_version != item.approved_cost_version
+            )
+        ):
+            raise RentalConflict(
+                "Current access consent and cost approval are required.",
+                code="consent_required",
+            )
+        if action not in cycle_actions(request.user, item):
+            raise PermissionDenied(
+                "This action is not permitted for the current actor, access consent and cost version."
+            )
         if action in transitions:
             allowed, target = transitions[action]
             if item.status not in allowed:
@@ -90,8 +108,35 @@ def maintenance_action(request, request_id):
             item.appointment_at = parse_datetime(request.data["appointment_at"])
             if not item.appointment_at:
                 raise ValidationError({"appointment_at": "Must be an ISO date-time."})
+            from django.utils import timezone
+
+            if (
+                timezone.is_naive(item.appointment_at)
+                or item.appointment_at <= timezone.now()
+            ):
+                raise ValidationError(
+                    {"appointment_at": "Use a future date-time with its timezone."}
+                )
+            item.appointment_version += 1
+            item.access_approved_version = None
+        elif action == "accept_appointment":
+            item.access_approved_version = item.appointment_version
         item.revision += 1
         item.save()
+        from ..services.rental_lifecycle.common import audit
+
+        audit(
+            item,
+            request.user,
+            f"maintenance.{action}",
+            request.data.get("note", ""),
+            {
+                "appointment_version": item.appointment_version,
+                "access_approved_version": item.access_approved_version,
+                "cost_version": item.cost_version,
+                "approved_cost_version": item.approved_cost_version,
+            },
+        )
         MaintenanceEvent.objects.create(
             maintenance_request=item,
             actor=request.user,

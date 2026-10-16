@@ -55,6 +55,10 @@ def lease_cancel(request, lease_id):
     if structured and serializer.validated_data["decision"] != "cancel_draft":
         raise ValidationError({"decision": "Must be cancel_draft."})
     with transaction.atomic():
+        from core_apps.properties.models import Property
+
+        root = get_object_or_404(Lease, id=lease_id, owner=request.user)
+        Property.objects.select_for_update().get(pk=root.property_id)
         lease = get_object_or_404(
             Lease.objects.select_for_update(), id=lease_id, owner=request.user
         )
@@ -79,6 +83,12 @@ def lease_cancel(request, lease_id):
                     "لا يمكن لهذا الحساب إلغاء هذا العقد.",
                 )
             )
+        from ..services.rental_lifecycle.inventory import unresolved_payment
+
+        if unresolved_payment(lease):
+            raise InvitationConflict(
+                "Reconcile the original payment before releasing accommodation."
+            )
         lease.status = Lease.Status.CANCELLED
         lease.revision += 1
         lease.save(update_fields=["status", "revision", "updated_at"])
@@ -87,6 +97,14 @@ def lease_cancel(request, lease_id):
         # Cancellation and its derived financial state are one lease mutation.
         evaluate_financial_closure(lease, increment_revision=False)
         lease.inventory_day_locks.filter(kind="hold").delete()
+        from ..models import ReservationHold
+        from django.db.models import F
+
+        ReservationHold.objects.filter(
+            lease=lease, status__in=["active", "reconciliation_pending"]
+        ).update(
+            status="cancelled", released_at=timezone.now(), revision=F("revision") + 1
+        )
         data = {
             "id": str(lease.id),
             "subject_id": str(lease.id),

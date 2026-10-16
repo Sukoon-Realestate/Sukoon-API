@@ -163,14 +163,20 @@ CELERY_BEAT_SCHEDULE["process-planning-jobs"] = {
     "schedule": 30.0,
 }
 CELERY_BEAT_SCHEDULE["drain-group-chat-outbox"] = {
-    "task": "core_apps.chat.tasks.drain_chat_outbox", "schedule": 5.0,
+    "task": "core_apps.chat.tasks.drain_chat_outbox",
+    "schedule": 5.0,
 }
 CELERY_BEAT_SCHEDULE["clean-group-chat-media"] = {
-    "task": "core_apps.chat.tasks.clean_chat_media", "schedule": 3600.0,
+    "task": "core_apps.chat.tasks.clean_chat_media",
+    "schedule": 3600.0,
 }
-CHAT_PRIVATE_MEDIA_ROOT = getenv("CHAT_PRIVATE_MEDIA_ROOT", str(BASE_DIR / "private_chat_media"))
+CHAT_PRIVATE_MEDIA_ROOT = getenv(
+    "CHAT_PRIVATE_MEDIA_ROOT", str(BASE_DIR / "private_chat_media")
+)
 CHAT_FFPROBE = getenv("CHAT_FFPROBE", "ffprobe")
-VIRTUAL_TOUR_PRIVATE_ROOT = getenv("VIRTUAL_TOUR_PRIVATE_ROOT", str(BASE_DIR / "private_virtual_tours"))
+VIRTUAL_TOUR_PRIVATE_ROOT = getenv(
+    "VIRTUAL_TOUR_PRIVATE_ROOT", str(BASE_DIR / "private_virtual_tours")
+)
 VIRTUAL_TOUR_S3_BUCKET = getenv("VIRTUAL_TOUR_S3_BUCKET", "")
 VIRTUAL_TOUR_S3_ENDPOINT = getenv("VIRTUAL_TOUR_S3_ENDPOINT", "")
 VIRTUAL_TOUR_S3_REGION = getenv("VIRTUAL_TOUR_S3_REGION", "us-east-1")
@@ -178,7 +184,8 @@ VIRTUAL_TOUR_S3_PREFIX = getenv("VIRTUAL_TOUR_S3_PREFIX", "sokoun-virtual-tours"
 VIRTUAL_TOUR_VIEWER_URL = getenv("VIRTUAL_TOUR_VIEWER_URL", "")
 VIRTUAL_TOUR_KINDS = {
     kind: {
-        action: getenv(f"VIRTUAL_TOUR_{prefix}_{action.upper()}", "false").lower() == "true"
+        action: getenv(f"VIRTUAL_TOUR_{prefix}_{action.upper()}", "false").lower()
+        == "true"
         for action in ("read", "write")
     }
     for kind, prefix in (("panorama_360", "PANORAMA"), ("model_3d", "MODEL"))
@@ -186,10 +193,12 @@ VIRTUAL_TOUR_KINDS = {
 VIRTUAL_TOUR_GLTF_VALIDATOR = getenv("VIRTUAL_TOUR_GLTF_VALIDATOR", "")
 VIRTUAL_TOUR_SPAWN_VALIDATOR = getenv("VIRTUAL_TOUR_SPAWN_VALIDATOR", "")
 CELERY_BEAT_SCHEDULE["clean-virtual-tours"] = {
-    "task": "core_apps.virtual_tours.tasks.cleanup_tours", "schedule": 3600.0,
+    "task": "core_apps.virtual_tours.tasks.cleanup_tours",
+    "schedule": 3600.0,
 }
 CELERY_BEAT_SCHEDULE["dispatch-virtual-tours"] = {
-    "task": "core_apps.virtual_tours.tasks.dispatch_pending_tours", "schedule": 60.0,
+    "task": "core_apps.virtual_tours.tasks.dispatch_pending_tours",
+    "schedule": 60.0,
 }
 CHAT_FFMPEG = getenv("CHAT_FFMPEG", "ffmpeg")
 PLANNING_ROUTES_API_KEY = getenv("PLANNING_ROUTES_API_KEY", "").strip()
@@ -214,6 +223,8 @@ PLANNING_OWNER_OFFERS_PER_REQUEST_PER_DAY = int(
 RENTAL_ONBOARDING_TTL_MINUTES = int(getenv("RENTAL_ONBOARDING_TTL_MINUTES", "30"))
 RENTAL_SIGNING_TTL_MINUTES = int(getenv("RENTAL_SIGNING_TTL_MINUTES", "30"))
 RENTAL_HOLD_TTL_MINUTES = int(getenv("RENTAL_HOLD_TTL_MINUTES", "30"))
+# Unset until a reviewed commercial policy supplies lifecycle rules.
+RENTAL_LIFECYCLE_POLICY_VERSION = getenv("RENTAL_LIFECYCLE_POLICY_VERSION", "")
 RENTAL_PROVIDER_WEBHOOK_SECRET = getenv("RENTAL_PROVIDER_WEBHOOK_SECRET", "")
 RENTAL_QUOTE_TTL_MINUTES = int(getenv("RENTAL_QUOTE_TTL_MINUTES", "5"))
 RENTAL_CHECKOUT_TTL_MINUTES = int(getenv("RENTAL_CHECKOUT_TTL_MINUTES", "15"))

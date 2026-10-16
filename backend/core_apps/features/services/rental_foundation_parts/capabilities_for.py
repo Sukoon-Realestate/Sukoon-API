@@ -97,7 +97,9 @@ def capabilities_for(user, subject, requested_action=""):
             enabled.append("rental_agreements")
         if isinstance(subject, RentalInterest):
             allowed.extend(interest_actions(user, subject))
-        elif isinstance(subject, Property) and not interest_creation_blocker(user, subject):
+        elif isinstance(subject, Property) and not interest_creation_blocker(
+            user, subject
+        ):
             allowed.append("create_rental_interest")
     elif phase2_ready and isinstance(subject, (TermsProposal, OwnerPaymentProfile)):
         enabled.extend(["rental_interests", "rental_agreements"])
@@ -127,6 +129,11 @@ def capabilities_for(user, subject, requested_action=""):
         elif isinstance(subject, TermsProposal):
             allowed.extend(proposal_actions(user, subject))
 
+    from ..rental_lifecycle.capabilities import lifecycle_capabilities
+
+    extension_enabled, extension_actions = lifecycle_capabilities(user, subject)
+    enabled.extend(extension_enabled)
+    allowed.extend(extension_actions)
     if not user.is_active or not user.is_verified:
         blocking.append("A verified active account is required.")
         enabled = []
@@ -134,7 +141,8 @@ def capabilities_for(user, subject, requested_action=""):
     elif requested_action and requested_action not in allowed:
         reason = (
             interest_creation_blocker(user, subject)
-            if isinstance(subject, Property) and requested_action == "create_rental_interest"
+            if isinstance(subject, Property)
+            and requested_action == "create_rental_interest"
             else None
         )
         blocking.append(reason or "The requested rental action is not available yet.")

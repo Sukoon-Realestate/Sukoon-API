@@ -92,7 +92,10 @@ def interest_creation_blocker(user, property_obj):
         return "A verified active account is required."
     if user.pk == property_obj.owner_id:
         return "An owner cannot submit interest in their own property."
-    if not property_obj.is_verified or property_obj.status != property_obj.Status.VERIFIED:
+    if (
+        not property_obj.is_verified
+        or property_obj.status != property_obj.Status.VERIFIED
+    ):
         return "Rental interest requires a verified, available property."
     return None
 
@@ -109,17 +112,20 @@ def interest_actions(user, item):
     }:
         return []
     if user.pk == item.property.owner_id:
-        actions = ["reject"]
+        actions = ["reject", "request_information", "mark_under_review"]
         if fake_provider_available():
             actions.insert(0, "create_terms_proposal")
-            if item.terms_proposals.filter(status=TermsProposal.Status.ACCEPTED).exists():
+            if item.terms_proposals.filter(
+                status=TermsProposal.Status.ACCEPTED
+            ).exists():
                 actions.append("create_invitation")
         return actions
-    return (
-        ["withdraw"]
-        if user.pk == item.tenant_id and item.status == RentalInterest.Status.SUBMITTED
-        else []
-    )
+    if user.pk == item.tenant_id:
+        actions = ["withdraw"]
+        if item.waiting_for == "tenant":
+            actions.append("provide_information")
+        return actions
+    return []
 
 
 def proposal_actions(user, item):

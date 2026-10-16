@@ -38,6 +38,19 @@ class RentalInterest(TimeStampedModel):
     )
     revision = models.PositiveIntegerField(default=1)
 
+    application_grant = models.ForeignKey(
+        "ApplicationAccessGrant",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="interests",
+    )
+    information_requested = models.TextField(blank=True, default="")
+    applicant_response = models.TextField(blank=True, default="")
+    waiting_for = models.CharField(max_length=20, default="owner")
+    response_due_at = models.DateTimeField(null=True, blank=True)
+    first_owner_response_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         ordering = ["-created_at", "-id"]
         constraints = [

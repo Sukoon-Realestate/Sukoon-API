@@ -70,6 +70,11 @@ def process_provider_event(event):
             "This provider event is not a rental payment.",
             code="invalid_payment_domain",
         )
+    from core_apps.properties.models import Property
+
+    Property.objects.select_for_update().get(
+        pk=Lease.objects.values_list("property_id", flat=True).get(pk=lease_id)
+    )
     Lease.objects.select_for_update().get(pk=lease_id)
     attempt = PaymentAttempt.objects.select_for_update().get(
         pk=event.payment_attempt_id
@@ -79,6 +84,11 @@ def process_provider_event(event):
     )
     if event.processed:
         return event
+    if not event.signature_valid:
+        raise RentalConflict(
+            "The provider event has not been authenticated.",
+            code="invalid_provider_signature",
+        )
     payload = event.payload
     if (
         payload.get("currency") != attempt.currency
@@ -91,13 +101,22 @@ def process_provider_event(event):
     elif event.event_type == "payment.settled":
         event.processed = _settle_attempt(attempt)
     elif event.event_type == "payment.failed":
-        if attempt.payment_status != PaymentAttempt.Status.CAPTURED:
+        if attempt.payment_status not in {
+            PaymentAttempt.Status.CAPTURED,
+            PaymentAttempt.Status.CHARGEDBACK,
+        }:
             attempt.payment_status = PaymentAttempt.Status.FAILED
             attempt.failure_code = str(payload.get("failure_code") or "provider_failed")
             attempt.revision += 1
             attempt.save()
         event.processed = True
     elif event.event_type == "payment.chargeback":
+        # Keep a reversal pending until the original capture is recorded.
+        if attempt.payment_status not in {
+            PaymentAttempt.Status.CAPTURED,
+            PaymentAttempt.Status.CHARGEDBACK,
+        }:
+            return event
         if attempt.payment_status != PaymentAttempt.Status.CHARGEDBACK:
             amount = int(payload["amount_minor"])
             attempt.payment_status = PaymentAttempt.Status.CHARGEDBACK
@@ -113,7 +132,7 @@ def process_provider_event(event):
             invoice.revision += 1
             invoice.save()
             post_ledger_transaction(
-                reference=f"chargeback:{event.provider_event_id}",
+                reference=f"chargeback:{attempt.id}",
                 kind="chargeback",
                 lease=invoice.lease,
                 invoice=invoice,
@@ -141,7 +160,7 @@ def process_provider_event(event):
     if event.event_type == "payment.captured":
         for pending in ProviderWebhookEvent.objects.filter(
             payment_attempt=attempt,
-            event_type="payment.settled",
+            event_type__in=["payment.settled", "payment.chargeback"],
             processed=False,
         ).order_by("sequence", "created_at"):
             process_provider_event(pending)

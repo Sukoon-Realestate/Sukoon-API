@@ -10,6 +10,7 @@ from . import mock_provider_views
 from .models import RentalChange
 
 urlpatterns = [
+    path("", include("core_apps.features.rental_lifecycle_urls")),
     path("", include("core_apps.features.billing_urls")),
     path("", include("core_apps.features.planning_urls")),
     path(

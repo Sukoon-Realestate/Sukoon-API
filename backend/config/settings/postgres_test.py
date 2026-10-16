@@ -7,6 +7,7 @@ from .test import *  # noqa: F401,F403
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
+        "TEST": {"CHARSET": "UTF8", "TEMPLATE": "template0"},
         "NAME": environ["TEST_POSTGRES_DB"],
         "USER": environ["TEST_POSTGRES_USER"],
         "PASSWORD": environ.get("TEST_POSTGRES_PASSWORD", ""),

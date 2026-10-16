@@ -741,6 +741,7 @@ def test_signed_renewal_survives_worker_order_and_applies_only_once(phase5_lease
         renewal.start_date == lease.end_date
         and renewal.tenancy_root_id == lease.tenancy_root_id
     )
+    assert renewal.occupancy_status == lease.occupancy_status
     before = renewal.billing_periods.count()
     assert before > 0 and process_rental_changes()["applied"] == 0
     assert renewal.billing_periods.count() == before

@@ -34,7 +34,17 @@ def deliver_planning_events():
             if event.attempts and event.updated_at >= retry_before:
                 continue
             try:
-                if event.destination.get("event_kind") == "visit_post_decision":
+                if event.destination.get("rental_lifecycle"):
+                    from ..rental_foundation import get_authorized_rental_subject
+
+                    item = get_authorized_rental_subject(
+                        event.recipient, event.destination["target_id"]
+                    )
+                    if getattr(item, "revision", 1) != event.destination.get(
+                        "revision"
+                    ):
+                        raise NotFound()
+                elif event.destination.get("event_kind") == "visit_post_decision":
                     from core_apps.properties.models import PropertyVisitDecision
 
                     if (

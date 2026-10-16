@@ -41,6 +41,11 @@ def get_authorized_rental_subject(user, subject_id):
         raise NotFound()
     if str(user.id) == str(subject_id):
         return user
+    from ..rental_lifecycle.access import lifecycle_subject
+
+    extension = lifecycle_subject(user, subject_id)
+    if extension:
+        return extension
 
     # Session/quote receipts identify the created resource, not its parent.
     # Resolve these private results when reconciling an uncertain creation.

@@ -131,6 +131,9 @@ class RentalPayout(TimeStampedModel):
     currency = models.CharField(max_length=3, default="EGP")
     exponent = models.PositiveSmallIntegerField(default=2)
     masked_beneficiary = models.JSONField(default=dict)
+    beneficiary_profile_revision = models.PositiveIntegerField(null=True, blank=True)
+    beneficiary_provider = models.CharField(max_length=40, blank=True, default="")
+    beneficiary_account_id = models.CharField(max_length=120, blank=True, default="")
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.CREATED
     )

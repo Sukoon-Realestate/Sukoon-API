@@ -192,6 +192,7 @@ class OwnerOnboardingBodySerializer(serializers.Serializer):
 
 
 class RentalInterestBodySerializer(serializers.Serializer):
+    application_share_id = serializers.UUIDField(required=False)
     property_id = serializers.UUIDField()
     offer_id = serializers.CharField(max_length=64)
     offer_revision = serializers.IntegerField(min_value=1)

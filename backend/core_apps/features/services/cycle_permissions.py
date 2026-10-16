@@ -94,6 +94,26 @@ def cycle_actions(user, subject):
             if subject.status in states
         ]
         actions += ["reply", "propose_cost"]
+        owner_only = {
+            "acknowledge",
+            "propose_appointment",
+            "start_work",
+            "report_resolved",
+        }
+        tenant_only = {"accept_appointment", "confirm_resolved"}
+        if user.pk != lease.owner_id:
+            actions = [action for action in actions if action not in owner_only]
+        if user.pk != lease.tenant_id:
+            actions = [action for action in actions if action not in tenant_only]
+        if (
+            subject.appointment_version != subject.access_approved_version
+            or not subject.appointment_at
+            or (
+                subject.proposed_cost_minor
+                and subject.cost_version != subject.approved_cost_version
+            )
+        ):
+            actions = [action for action in actions if action != "start_work"]
         payer_id = lease.owner_id if subject.cost_payer == "owner" else lease.tenant_id
         if (
             subject.proposed_cost_minor

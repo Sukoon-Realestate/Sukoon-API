@@ -95,7 +95,14 @@ def payment_attempt_payload(attempt, user=None):
             and refundable > 0
             else []
         ),
-        "blocking_reasons": [],
+        "blocking_reasons": (
+            ["payment_outcome_unknown"]
+            if attempt.payment_status in {"created", "pending", "authorized"}
+            else []
+        ),
+        "outcome_known": attempt.payment_status
+        not in {"created", "pending", "authorized"},
+        "may_start_new_attempt": False,
         "revision": attempt.revision,
         "lease_id": str(invoice.lease.id),
         "payment_attempt_id": str(attempt.id),
@@ -139,6 +146,16 @@ def _activate_after_initial_capture(lease, attempt):
     except (RentalConflict, PermissionDenied) as exc:
         attempt.failure_code = "activation_review_required"
         attempt.save(update_fields=["failure_code", "updated_at"])
+        from ..rental_lifecycle.cases import open_system_case
+
+        open_system_case(
+            kind="capture_after_release",
+            source_key=f"late-capture:{attempt.id}",
+            lease=lease,
+            attempt=attempt,
+            reason="Captured money could not activate the original agreement.",
+            next_action="Review allocation and execute the authorized financial remedy; do not allocate over another booking.",
+        )
         RentalTimelineEvent.objects.create(
             lease=lease,
             kind="activation_blocked",

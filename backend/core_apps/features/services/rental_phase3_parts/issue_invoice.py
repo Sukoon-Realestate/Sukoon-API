@@ -24,9 +24,21 @@ def cairo_instant(day, at_time=time.min):
     return datetime.combine(day, at_time, tzinfo=CAIRO)
 
 
+@transaction.atomic
 def post_ledger_transaction(
     *, reference, kind, entries, lease=None, invoice=None, attempt=None, metadata=None
 ):
+    entries = list(entries)
+    if any(
+        isinstance(amount, bool)
+        or not isinstance(amount, int)
+        or amount <= 0
+        or direction not in {"debit", "credit"}
+        for _, direction, amount in entries
+    ):
+        raise ValidationError(
+            "Ledger entries require positive integer amounts and supported directions."
+        )
     debit = sum(item[2] for item in entries if item[1] == LedgerEntry.Direction.DEBIT)
     credit = sum(item[2] for item in entries if item[1] == LedgerEntry.Direction.CREDIT)
     if debit != credit or debit <= 0:
@@ -55,6 +67,28 @@ def post_ledger_transaction(
                 for account, direction, amount in entries
             ]
         )
+    else:
+        expected = sorted(
+            (account, direction, amount) for account, direction, amount in entries
+        )
+        existing = sorted(
+            ledger_transaction.entries.values_list(
+                "account", "direction", "amount_minor"
+            )
+        )
+        if (
+            ledger_transaction.kind != kind
+            or ledger_transaction.lease_id != (lease.pk if lease else None)
+            or ledger_transaction.invoice_id != (invoice.pk if invoice else None)
+            or ledger_transaction.payment_attempt_id
+            != (attempt.pk if attempt else None)
+            or existing != expected
+            or ledger_transaction.metadata != (metadata or {})
+        ):
+            raise RentalConflict(
+                "A ledger source identity cannot be reused for different entries.",
+                code="financial_source_conflict",
+            )
     return ledger_transaction
 
 

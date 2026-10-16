@@ -43,7 +43,11 @@ def process_planning_jobs():
         status="queued", expires_at__gt=timezone.now()
     ).values_list("id", flat=True)[:20]:
         run_commute(identifier)
+    from ..services.rental_lifecycle.jobs import reconcile_lifecycle_deadlines
+
+    deadlines = reconcile_lifecycle_deadlines()
     return {
+        **deadlines,
         "reminders": record_lease_reminders(),
         "notifications": deliver_planning_events(),
     }
@@ -73,25 +77,29 @@ def expire_rental_sources_and_holds(self):
             revision=models.F("revision") + 1,
             updated_at=now,
         )
-        # Capture/signature handlers also lock the lease before its day locks.
-        expired_leases = list(
-            Lease.objects.select_for_update()
-            .filter(
-                status=Lease.Status.SIGNED,
-                hold_expires_at__lte=now,
+    from core_apps.properties.models import Property
+    from ..services.rental_lifecycle.inventory import expire_property_holds
+    from ..models import ReservationHold
+
+    roots = set(
+        RentalInventoryDayLock.objects.filter(
+            kind="hold", expires_at__lte=now
+        ).values_list("property_id", flat=True)
+    )
+    roots.update(
+        ReservationHold.objects.filter(
+            status="active", expires_at__lte=now
+        ).values_list("property_id", flat=True)
+    )
+    expired_holds, expired_agreements = 0, 0
+    for root in sorted(roots):
+        with transaction.atomic():
+            prop = Property.objects.select_for_update().get(pk=root)
+            before = Lease.objects.filter(property=prop, status="expired").count()
+            expired_holds += expire_property_holds(prop, now)
+            expired_agreements += (
+                Lease.objects.filter(property=prop, status="expired").count() - before
             )
-            .order_by("pk")
-            .values_list("pk", flat=True)
-        )
-        expired_agreements = Lease.objects.filter(pk__in=expired_leases).update(
-            status=Lease.Status.EXPIRED,
-            revision=models.F("revision") + 1,
-            updated_at=now,
-        )
-        expired_holds = RentalInventoryDayLock.objects.filter(
-            kind=RentalInventoryDayLock.Kind.HOLD,
-            expires_at__lte=now,
-        ).delete()[0]
     return {
         "expired_invitations": expired_invitations,
         "expired_holds": expired_holds,
@@ -170,16 +178,27 @@ def reconcile_ambiguous_rental_payments(self):
     )[:100]:
         process_provider_event(event)
         processed += 1
-    expired = PaymentAttempt.objects.filter(
+    from ..services.rental_lifecycle.cases import open_system_case
+
+    unresolved = PaymentAttempt.objects.filter(
         invoice__purpose="rent",
-        payment_status__in=[
-            PaymentAttempt.Status.CREATED,
-            PaymentAttempt.Status.PENDING,
-        ],
+        payment_status__in=["created", "pending", "authorized"],
         checkout_session__expires_at__lte=timezone.now(),
-    ).update(
-        payment_status=PaymentAttempt.Status.EXPIRED,
-        revision=models.F("revision") + 1,
-        updated_at=timezone.now(),
-    )
-    return {"events_processed": processed, "attempts_expired": expired}
+    ).select_related("invoice__lease")[:100]
+    cases = 0
+    for attempt in unresolved:
+        # A URL timeout says nothing about whether the provider took money.
+        open_system_case(
+            kind="payment_unknown",
+            source_key=f"payment-unknown:{attempt.id}",
+            attempt=attempt,
+            lease=attempt.invoice.lease,
+            reason="Checkout expired without an authoritative financial outcome.",
+            next_action="Query the original provider reference; do not start another charge.",
+        )
+        cases += 1
+    return {
+        "events_processed": processed,
+        "attempts_expired": 0,
+        "reconciliation_cases": cases,
+    }

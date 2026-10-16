@@ -108,7 +108,13 @@ def _participant_proposal(request, proposal_id, lock=False):
         "owner", "interest__tenant", "interest__property"
     )
     if lock:
-        queryset = queryset.select_for_update()
+        from core_apps.properties.models import Property
+
+        root = get_object_or_404(queryset, id=proposal_id)
+        if request.user not in (root.owner, root.interest.tenant):
+            raise NotFound()
+        Property.objects.select_for_update().get(pk=root.interest.property_id)
+        queryset = queryset.select_for_update(of=("self",))
     proposal = get_object_or_404(queryset, id=proposal_id)
     if request.user not in (proposal.owner, proposal.interest.tenant):
         raise NotFound()
@@ -120,36 +126,24 @@ def _participant_lease(request, lease_id, lock=False):
         require_rental_provider(request.user)
     queryset = Lease.objects.select_related("property", "owner", "tenant")
     if lock:
-        queryset = queryset.select_for_update()
+        from core_apps.properties.models import Property
+
+        root = get_object_or_404(Lease, id=lease_id)
+        if request.user not in (root.owner, root.tenant):
+            raise NotFound()
+        Property.objects.select_for_update().get(pk=root.property_id)
+        queryset = queryset.select_for_update(of=("self",))
     lease = get_object_or_404(queryset, id=lease_id)
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()
     return lease
 
 
-def _money_minor_from_offer(snapshot):
-    try:
-        return int(
-            (Decimal(str(snapshot["terms"]["price"])) * 100).quantize(
-                Decimal("1"), rounding=ROUND_HALF_UP
-            )
-        )
-    except (KeyError, TypeError, InvalidOperation):
-        raise ValidationError({"offer_id": "The offer has no valid monthly price."})
-
-
-def _json_safe(value):
-    return json.loads(json.dumps(value, default=str))
-
-
-def _validate_terms_offer(terms, snapshot):
-    if snapshot.get("terms", {}).get("price_period") != "monthly":
-        raise ValidationError({"offer_id": "V1 supports monthly offers only."})
-    if terms["monthly_rent"]["amount_minor"] != _money_minor_from_offer(snapshot):
-        raise RentalConflict(
-            "The agreement rent does not match the selected offer.",
-            code="document_changed",
-        )
+from ..services.rental_lifecycle.terms import (
+    money_minor_from_offer as _money_minor_from_offer,
+    validate_terms_offer as _validate_terms_offer,
+    _json_safe,
+)
 
 
 def _event(lease, actor, kind, label, resource_id=None, description=""):

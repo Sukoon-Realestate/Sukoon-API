@@ -81,8 +81,18 @@ def execute_refund(refund):
         )
     owner_amount = split["rent"] - commission
     distributed = bool(payable and payable.payout_status == "succeeded")
-    refund.provider_refund_id = get_rental_provider().execute_refund(
-        refund.id, refund.request_key
+    from ..rental_lifecycle.provider_instructions import execute_local_instruction
+
+    refund.provider_refund_id = execute_local_instruction(
+        kind="refund",
+        subject=refund,
+        request_key=refund.request_key,
+        payload={
+            "payment_attempt_id": str(attempt.id),
+            "amount_minor": refund.amount_minor,
+            "currency": attempt.currency,
+            "allocations": split,
+        },
     )
     refund.allocations = split
     refund.commission_reversal_minor = commission

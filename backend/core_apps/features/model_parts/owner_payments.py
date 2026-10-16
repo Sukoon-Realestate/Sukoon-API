@@ -20,6 +20,7 @@ class RentalCommercialPolicy(TimeStampedModel):
     currency = models.CharField(max_length=3, default="EGP")
     exponent = models.PositiveSmallIntegerField(default=2)
     summary = models.JSONField(default=dict)
+    lifecycle_rules = models.JSONField(default=dict, blank=True)
     is_active = models.BooleanField(default=True)
 
 

@@ -14,6 +14,21 @@ class PropertyUpdateMixin:
         from rest_framework.exceptions import ValidationError
 
         data = validated_data.copy()
+        from core_apps.features.services.rental_lifecycle.inventory import (
+            guard_topology_update,
+        )
+        from core_apps.features.services.rental_phase2 import RentalConflict
+
+        property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        if "rental_inventory" in data:
+            replacement = data["rental_inventory"]
+            current_revision = (property_obj.rental_inventory or {}).get("revision", 0)
+            if replacement.get("revision") != current_revision + 1:
+                raise RentalConflict(
+                    "Review the current inventory before editing.",
+                    code="stale_revision",
+                )
+            guard_topology_update(property_obj, replacement)
         cls._apply_rental_projection(data)
 
         # Handle video removal and replacement conflict

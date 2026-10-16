@@ -86,3 +86,22 @@ from .planning_models import (  # noqa: E402,F401
     TenantAssistantTurn,
 )
 from .catalog_models import PromotionOption
+
+from .model_parts.application_profiles import (
+    ApplicationProfile,
+    ApplicationProfileVersion,
+    ApplicationAccessGrant,
+    RentalVerificationClaim,
+    RentalConsentRecord,
+)
+from .model_parts.decision_facts import (
+    PropertyDecisionFact,
+    RentalAvailabilityConfirmation,
+)
+from .model_parts.reservations import RentalInventoryUnit, ReservationHold
+from .model_parts.group_bookings import GroupBookingProposal, GroupBookingParticipant
+from .model_parts.operational_cases import (
+    RentalOperationalCase,
+    RentalAuditEvent,
+    RentalProviderInstruction,
+)

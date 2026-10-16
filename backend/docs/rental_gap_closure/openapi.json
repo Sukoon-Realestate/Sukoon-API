@@ -1,0 +1,5786 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sokoun rental lifecycle gap closure additive contract",
+    "version": "2026-10-15",
+    "description": "Strict request schemas generated from DRF. Example response shapes derive from local test HTTP responses and do not prove production readiness. See API_CONTRACT.md for authorization, receipt and projection rules."
+  },
+  "servers": [
+    {
+      "url": "/api/v1/features/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/application-profile/": {
+      "get": {
+        "operationId": "get_application_profile",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patch_application_profile",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/application-profile/versions/": {
+      "post": {
+        "operationId": "post_application_profile_versions",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created with canonical operation receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/application-profile/versions/{version_id}/": {
+      "get": {
+        "operationId": "get_application_profile_versions__version_id",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/application-shares/preview/": {
+      "post": {
+        "operationId": "post_application_shares_preview",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareReviewBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/application-shares/": {
+      "get": {
+        "operationId": "get_application_shares",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing pagination: data is a list; X-Page, X-Per-Page, X-Total-Count and X-Total-Pages headers, with X-Next-Page and X-Previous-Page when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_application_shares",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created with canonical operation receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/application-shares/{share_id}/": {
+      "get": {
+        "operationId": "get_application_shares__share_id",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "share_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_application_shares__share_id",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "share_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/application-shares/{share_id}/revoke/": {
+      "post": {
+        "operationId": "post_application_shares__share_id__revoke",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "share_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/properties/{property_id}/decision-summary/": {
+      "get": {
+        "operationId": "get_properties__property_id__decision_summary",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offer_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offer_revision",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "starts_on",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "ends_on_exclusive",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/properties/{property_id}/decision-facts/": {
+      "post": {
+        "operationId": "post_properties__property_id__decision_facts",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FactBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/properties/{property_id}/availability-confirmation/": {
+      "post": {
+        "operationId": "post_properties__property_id__availability_confirmation",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmationBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/availability-blocks/": {
+      "get": {
+        "operationId": "get_availability_blocks",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing pagination: data is a list; X-Page, X-Per-Page, X-Total-Count and X-Total-Pages headers, with X-Next-Page and X-Previous-Page when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_availability_blocks",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created with canonical operation receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HoldBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservation-holds/": {
+      "get": {
+        "operationId": "get_reservation_holds",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing pagination: data is a list; X-Page, X-Per-Page, X-Total-Count and X-Total-Pages headers, with X-Next-Page and X-Previous-Page when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_reservation_holds",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created with canonical operation receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HoldBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservation-holds/{hold_id}/": {
+      "get": {
+        "operationId": "get_reservation_holds__hold_id",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "hold_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservation-holds/{hold_id}/extend/": {
+      "post": {
+        "operationId": "post_reservation_holds__hold_id__extend",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "hold_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReasonBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservation-holds/{hold_id}/release/": {
+      "post": {
+        "operationId": "post_reservation_holds__hold_id__release",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "hold_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReasonBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deals/{subject_id}/": {
+      "get": {
+        "operationId": "get_deals__subject_id",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "subject_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/owner-application-queue/": {
+      "get": {
+        "operationId": "get_owner_application_queue",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing pagination: data is a list; X-Page, X-Per-Page, X-Total-Count and X-Total-Pages headers, with X-Next-Page and X-Previous-Page when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-cases/": {
+      "get": {
+        "operationId": "get_rental_cases",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing pagination: data is a list; X-Page, X-Per-Page, X-Total-Count and X-Total-Pages headers, with X-Next-Page and X-Previous-Page when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_rental_cases",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created with canonical operation receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/move-in-cases/": {
+      "get": {
+        "operationId": "get_move_in_cases",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing pagination: data is a list; X-Page, X-Per-Page, X-Total-Count and X-Total-Pages headers, with X-Next-Page and X-Previous-Page when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_move_in_cases",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-cases/{case_id}/": {
+      "get": {
+        "operationId": "get_rental_cases__case_id",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-cases/{case_id}/actions/": {
+      "post": {
+        "operationId": "post_rental_cases__case_id__actions",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseActionBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations/rental-cases/": {
+      "get": {
+        "operationId": "get_operations_rental_cases",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing pagination: data is a list; X-Page, X-Per-Page, X-Total-Count and X-Total-Pages headers, with X-Next-Page and X-Previous-Page when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_operations_rental_cases",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations/rental-cases/{case_id}/actions/": {
+      "post": {
+        "operationId": "post_operations_rental_cases__case_id__actions",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseActionBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations/verification-claims/": {
+      "post": {
+        "operationId": "post_operations_verification_claims",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created with canonical operation receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations/verification-claims/{claim_id}/revoke/": {
+      "post": {
+        "operationId": "post_operations_verification_claims__claim_id__revoke",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "claim_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReasonBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/group-booking-proposals/": {
+      "get": {
+        "operationId": "get_group_booking_proposals",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing pagination: data is a list; X-Page, X-Per-Page, X-Total-Count and X-Total-Pages headers, with X-Next-Page and X-Previous-Page when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_group_booking_proposals",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created with canonical operation receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/group-booking-proposals/{booking_id}/": {
+      "get": {
+        "operationId": "get_group_booking_proposals__booking_id",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/group-booking-proposals/{booking_id}/submit/": {
+      "post": {
+        "operationId": "post_group_booking_proposals__booking_id__submit",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/group-booking-proposals/{booking_id}/consents/": {
+      "post": {
+        "operationId": "post_group_booking_proposals__booking_id__consents",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsentBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/group-booking-proposals/{booking_id}/withdraw/": {
+      "post": {
+        "operationId": "post_group_booking_proposals__booking_id__withdraw",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "booking_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/terms-proposals/{proposal_id}/propose-answer/": {
+      "post": {
+        "operationId": "post_terms_proposals__proposal_id__propose_answer",
+        "tags": [
+          "rental-lifecycle"
+        ],
+        "parameters": [
+          {
+            "name": "proposal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read or confirmed mutation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields or unsupported input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Actor role or capability unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subject inaccessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, consent, policy, inventory or reconciliation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnswerBody"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "CommandBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "ProfileBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "desired_start": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "months": {
+            "type": "integer",
+            "maximum": 36,
+            "minimum": 1,
+            "nullable": true
+          },
+          "occupants": {
+            "type": "integer",
+            "maximum": 20,
+            "minimum": 1,
+            "nullable": true
+          },
+          "introduction": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "ShareReviewBody": {
+        "type": "object",
+        "properties": {
+          "version_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "property_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "rental_preferences",
+                "introduction"
+              ],
+              "type": "string"
+            },
+            "maxItems": 2
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "version_id",
+          "property_id",
+          "categories",
+          "expires_at"
+        ],
+        "additionalProperties": false
+      },
+      "ShareBody": {
+        "type": "object",
+        "properties": {
+          "version_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "property_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "rental_preferences",
+                "introduction"
+              ],
+              "type": "string"
+            },
+            "maxItems": 2
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "consent_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "version_id",
+          "property_id",
+          "categories",
+          "expires_at",
+          "request_key",
+          "expected_revision",
+          "consent_digest"
+        ],
+        "additionalProperties": false
+      },
+      "HoldBody": {
+        "type": "object",
+        "properties": {
+          "offer_id": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "offer_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "starts_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ends_on_exclusive": {
+            "type": "string",
+            "format": "date"
+          },
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "property_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inventory_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "proposal_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "proposal_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "terms_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "kind": {
+            "enum": [
+              "external_booking",
+              "operational"
+            ],
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "offer_id",
+          "offer_revision",
+          "starts_on",
+          "ends_on_exclusive",
+          "request_key",
+          "expected_revision",
+          "property_id",
+          "inventory_revision"
+        ],
+        "additionalProperties": false
+      },
+      "ReasonBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "ConfirmationBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "inventory_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision",
+          "inventory_revision"
+        ],
+        "additionalProperties": false
+      },
+      "FactBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "offer_id": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "classification": {
+            "enum": [
+              "owner_reported",
+              "verified",
+              "estimated",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "claim_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision",
+          "offer_id",
+          "code",
+          "value",
+          "classification"
+        ],
+        "additionalProperties": false
+      },
+      "CaseBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "lease_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "enum": [
+              "move_in_mismatch",
+              "access_failure",
+              "owner_cancellation",
+              "tenant_no_show",
+              "deposit_dispute"
+            ],
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "maxItems": 20
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision",
+          "lease_id",
+          "kind",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "CaseActionBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "action": {
+            "enum": [
+              "reply",
+              "assign",
+              "triage",
+              "resolve",
+              "reopen",
+              "link_remedy"
+            ],
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "assignee_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "refund_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "payout_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "resolution_code": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "next_action": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision",
+          "action",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "ClaimBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "subject_kind": {
+            "enum": [
+              "identity",
+              "property_authority",
+              "property_fact"
+            ],
+            "type": "string"
+          },
+          "subject_user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "property_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kyc_submission_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "claim_code": {
+            "type": "string",
+            "maxLength": 60,
+            "pattern": "^[-a-zA-Z0-9_]+$"
+          },
+          "public_wording": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "evidence_reference": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision",
+          "subject_kind",
+          "subject_user_id",
+          "claim_code",
+          "public_wording",
+          "evidence_reference"
+        ],
+        "additionalProperties": false
+      },
+      "BookingBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "application_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "application_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "roster_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "booking_model": {
+            "enum": [
+              "independent",
+              "conditional_bundle"
+            ],
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tenant_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "offer_id": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "offer_revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "terms": {
+                  "type": "object",
+                  "properties": {
+                    "starts_on": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "ends_on_exclusive": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "handover_on": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "monthly_rent": {
+                      "type": "object",
+                      "properties": {
+                        "amount_minor": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "currency": {
+                          "enum": [
+                            "EGP"
+                          ],
+                          "type": "string"
+                        },
+                        "exponent": {
+                          "type": "integer",
+                          "maximum": 2,
+                          "minimum": 2
+                        }
+                      },
+                      "required": [
+                        "amount_minor",
+                        "currency",
+                        "exponent"
+                      ]
+                    },
+                    "deposit": {
+                      "type": "object",
+                      "properties": {
+                        "amount_minor": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "currency": {
+                          "enum": [
+                            "EGP"
+                          ],
+                          "type": "string"
+                        },
+                        "exponent": {
+                          "type": "integer",
+                          "maximum": 2,
+                          "minimum": 2
+                        }
+                      },
+                      "required": [
+                        "amount_minor",
+                        "currency",
+                        "exponent"
+                      ]
+                    },
+                    "deposit_holder": {
+                      "enum": [
+                        "owner",
+                        "platform"
+                      ],
+                      "type": "string"
+                    },
+                    "included_services": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "excluded_services": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "termination_policy": {
+                      "type": "object"
+                    },
+                    "renewal_policy": {
+                      "type": "object"
+                    },
+                    "policy_version": {
+                      "type": "string",
+                      "maxLength": 40
+                    },
+                    "template_id": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "template_version": {
+                      "type": "string",
+                      "maxLength": 40
+                    },
+                    "timezone": {
+                      "enum": [
+                        "Africa/Cairo"
+                      ],
+                      "type": "string"
+                    },
+                    "occupants": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "billing_anchor_day": {
+                      "type": "integer",
+                      "maximum": 31,
+                      "minimum": 1
+                    },
+                    "commission_rate_bps": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "commission_payer": {
+                      "enum": [
+                        "owner"
+                      ],
+                      "type": "string"
+                    },
+                    "commission_basis": {
+                      "enum": [
+                        "first_period_base_rent"
+                      ],
+                      "type": "string"
+                    },
+                    "processing_fee_payer": {
+                      "enum": [
+                        "platform"
+                      ],
+                      "type": "string"
+                    },
+                    "renewal_commission_rate_bps": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "starts_on",
+                    "ends_on_exclusive",
+                    "handover_on",
+                    "monthly_rent",
+                    "deposit",
+                    "deposit_holder",
+                    "termination_policy",
+                    "renewal_policy",
+                    "policy_version",
+                    "template_id",
+                    "template_version",
+                    "timezone",
+                    "occupants",
+                    "billing_anchor_day",
+                    "commission_rate_bps",
+                    "commission_payer",
+                    "commission_basis",
+                    "processing_fee_payer",
+                    "renewal_commission_rate_bps"
+                  ]
+                }
+              },
+              "required": [
+                "tenant_id",
+                "offer_id",
+                "offer_revision",
+                "terms"
+              ]
+            }
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision",
+          "application_id",
+          "application_revision",
+          "roster_revision",
+          "booking_model",
+          "deadline",
+          "participants"
+        ],
+        "additionalProperties": false
+      },
+      "ConsentBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "decision": {
+            "enum": [
+              "accept",
+              "decline"
+            ],
+            "type": "string"
+          },
+          "terms_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision",
+          "decision",
+          "terms_digest"
+        ],
+        "additionalProperties": false
+      },
+      "AnswerBody": {
+        "type": "object",
+        "properties": {
+          "request_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "field": {
+            "enum": [
+              "included_services",
+              "excluded_services"
+            ],
+            "type": "string"
+          },
+          "wording": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "source_message_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "request_key",
+          "expected_revision",
+          "field",
+          "wording"
+        ],
+        "additionalProperties": false
+      },
+      "ProfileResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "resource": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "desired_start": {
+                    "type": "string"
+                  },
+                  "months": {
+                    "type": "integer"
+                  },
+                  "occupants": {
+                    "type": "integer"
+                  },
+                  "introduction": {
+                    "type": "string"
+                  },
+                  "latest_version_id": {
+                    "nullable": true
+                  },
+                  "allowed_actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "blocking_reasons": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "id",
+                  "revision",
+                  "desired_start",
+                  "months",
+                  "occupants",
+                  "introduction",
+                  "latest_version_id",
+                  "allowed_actions",
+                  "blocking_reasons"
+                ]
+              },
+              "operation_receipt": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "subject_id": {
+                    "type": "string"
+                  },
+                  "request_key": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "subject_id",
+                  "request_key",
+                  "revision",
+                  "status"
+                ]
+              }
+            },
+            "required": [
+              "resource",
+              "operation_receipt"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ]
+      },
+      "VersionResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "resource": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "digest": {
+                    "type": "string"
+                  },
+                  "snapshot": {
+                    "type": "object",
+                    "properties": {
+                      "desired_start": {
+                        "type": "string"
+                      },
+                      "months": {
+                        "type": "integer"
+                      },
+                      "occupants": {
+                        "type": "integer"
+                      },
+                      "introduction": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "desired_start",
+                      "months",
+                      "occupants",
+                      "introduction"
+                    ]
+                  },
+                  "allowed_actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "blocking_reasons": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "id",
+                  "revision",
+                  "digest",
+                  "snapshot",
+                  "allowed_actions",
+                  "blocking_reasons"
+                ]
+              },
+              "operation_receipt": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "subject_id": {
+                    "type": "string"
+                  },
+                  "request_key": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "subject_id",
+                  "request_key",
+                  "revision",
+                  "status"
+                ]
+              }
+            },
+            "required": [
+              "resource",
+              "operation_receipt"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ]
+      },
+      "Share_ReviewResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "version_id": {
+                "type": "string"
+              },
+              "version_digest": {
+                "type": "string"
+              },
+              "recipient_id": {
+                "type": "string"
+              },
+              "recipient_name": {
+                "type": "string"
+              },
+              "property_id": {
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              },
+              "categories": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "expires_at": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer"
+              },
+              "consent_digest": {
+                "type": "string"
+              },
+              "snapshot": {
+                "type": "object",
+                "properties": {
+                  "desired_start": {
+                    "type": "string"
+                  },
+                  "months": {
+                    "type": "integer"
+                  },
+                  "occupants": {
+                    "type": "integer"
+                  },
+                  "introduction": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "desired_start",
+                  "months",
+                  "occupants",
+                  "introduction"
+                ]
+              }
+            },
+            "required": [
+              "version_id",
+              "version_digest",
+              "recipient_id",
+              "recipient_name",
+              "property_id",
+              "purpose",
+              "categories",
+              "expires_at",
+              "revision",
+              "consent_digest",
+              "snapshot"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ]
+      },
+      "ShareResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "resource": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "version_id": {
+                    "type": "string"
+                  },
+                  "recipient_id": {
+                    "type": "string"
+                  },
+                  "recipient_name": {
+                    "type": "string"
+                  },
+                  "property_id": {
+                    "type": "string"
+                  },
+                  "purpose": {
+                    "type": "string"
+                  },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "expires_at": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "snapshot": {
+                    "type": "object",
+                    "properties": {
+                      "introduction": {
+                        "type": "string"
+                      },
+                      "desired_start": {
+                        "type": "string"
+                      },
+                      "months": {
+                        "type": "integer"
+                      },
+                      "occupants": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "introduction",
+                      "desired_start",
+                      "months",
+                      "occupants"
+                    ]
+                  },
+                  "allowed_actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "blocking_reasons": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "id",
+                  "revision",
+                  "version_id",
+                  "recipient_id",
+                  "recipient_name",
+                  "property_id",
+                  "purpose",
+                  "categories",
+                  "expires_at",
+                  "status",
+                  "snapshot",
+                  "allowed_actions",
+                  "blocking_reasons"
+                ]
+              },
+              "operation_receipt": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "subject_id": {
+                    "type": "string"
+                  },
+                  "request_key": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "subject_id",
+                  "request_key",
+                  "revision",
+                  "status"
+                ]
+              }
+            },
+            "required": [
+              "resource",
+              "operation_receipt"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ]
+      },
+      "HoldResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "resource": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "property_id": {
+                    "type": "string"
+                  },
+                  "proposal_id": {
+                    "type": "string"
+                  },
+                  "lease_id": {
+                    "nullable": true
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "selection": {
+                    "type": "object",
+                    "properties": {
+                      "property_id": {
+                        "type": "string"
+                      },
+                      "offer_id": {
+                        "type": "string"
+                      },
+                      "offer_revision": {
+                        "type": "integer"
+                      },
+                      "rental_scope": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "room_ids": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "room_names": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "bed_id": {
+                        "nullable": true
+                      },
+                      "bed_name": {
+                        "nullable": true
+                      },
+                      "capacity": {
+                        "type": "integer"
+                      },
+                      "bathroom_access": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "availability": {
+                        "type": "string"
+                      },
+                      "archived": {
+                        "type": "boolean"
+                      },
+                      "offer_link": {
+                        "type": "string"
+                      },
+                      "terms": {
+                        "type": "object",
+                        "properties": {
+                          "price": {
+                            "type": "string"
+                          },
+                          "price_period": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "price",
+                          "price_period"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "property_id",
+                      "offer_id",
+                      "offer_revision",
+                      "rental_scope",
+                      "name",
+                      "room_ids",
+                      "room_names",
+                      "bed_id",
+                      "bed_name",
+                      "capacity",
+                      "bathroom_access",
+                      "availability",
+                      "archived",
+                      "offer_link",
+                      "terms"
+                    ]
+                  },
+                  "starts_on": {
+                    "type": "string"
+                  },
+                  "ends_on_exclusive": {
+                    "type": "string"
+                  },
+                  "blocked_until_exclusive": {
+                    "type": "string"
+                  },
+                  "expires_at": {
+                    "type": "string"
+                  },
+                  "server_time": {
+                    "type": "string"
+                  },
+                  "policy_version": {
+                    "type": "string"
+                  },
+                  "terms_digest": {
+                    "type": "string"
+                  },
+                  "reconciliation_deadline": {
+                    "nullable": true
+                  },
+                  "amount_due_now": {
+                    "type": "object",
+                    "properties": {
+                      "amount_minor": {
+                        "type": "integer"
+                      },
+                      "currency": {
+                        "type": "string"
+                      },
+                      "exponent": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "amount_minor",
+                      "currency",
+                      "exponent"
+                    ]
+                  },
+                  "allowed_actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "blocking_reasons": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "id",
+                  "revision",
+                  "property_id",
+                  "proposal_id",
+                  "lease_id",
+                  "status",
+                  "kind",
+                  "selection",
+                  "starts_on",
+                  "ends_on_exclusive",
+                  "blocked_until_exclusive",
+                  "expires_at",
+                  "server_time",
+                  "policy_version",
+                  "terms_digest",
+                  "reconciliation_deadline",
+                  "amount_due_now",
+                  "allowed_actions",
+                  "blocking_reasons"
+                ]
+              },
+              "operation_receipt": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "subject_id": {
+                    "type": "string"
+                  },
+                  "request_key": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "subject_id",
+                  "request_key",
+                  "revision",
+                  "status"
+                ]
+              }
+            },
+            "required": [
+              "resource",
+              "operation_receipt"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ]
+      },
+      "DecisionResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer"
+              },
+              "selection": {
+                "type": "object",
+                "properties": {
+                  "property_id": {
+                    "type": "string"
+                  },
+                  "offer_id": {
+                    "type": "string"
+                  },
+                  "offer_revision": {
+                    "type": "integer"
+                  },
+                  "rental_scope": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "room_ids": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "room_names": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "bed_id": {
+                    "nullable": true
+                  },
+                  "bed_name": {
+                    "nullable": true
+                  },
+                  "capacity": {
+                    "type": "integer"
+                  },
+                  "bathroom_access": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "availability": {
+                    "type": "string"
+                  },
+                  "archived": {
+                    "type": "boolean"
+                  },
+                  "offer_link": {
+                    "type": "string"
+                  },
+                  "terms": {
+                    "type": "object",
+                    "properties": {
+                      "price": {
+                        "type": "string"
+                      },
+                      "price_period": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "price",
+                      "price_period"
+                    ]
+                  }
+                },
+                "required": [
+                  "property_id",
+                  "offer_id",
+                  "offer_revision",
+                  "rental_scope",
+                  "name",
+                  "room_ids",
+                  "room_names",
+                  "bed_id",
+                  "bed_name",
+                  "capacity",
+                  "bathroom_access",
+                  "availability",
+                  "archived",
+                  "offer_link",
+                  "terms"
+                ]
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "revision": {
+                      "type": "integer"
+                    },
+                    "offer_id": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "classification": {
+                      "type": "string"
+                    },
+                    "checked_at": {
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "revision",
+                    "offer_id",
+                    "code",
+                    "value",
+                    "classification",
+                    "checked_at"
+                  ]
+                }
+              },
+              "property_claims": {
+                "type": "array",
+                "items": {}
+              },
+              "owner_identity_claims": {
+                "type": "array",
+                "items": {}
+              },
+              "availability_confirmed_at": {
+                "type": "string"
+              },
+              "confirmation_revision": {
+                "type": "integer"
+              },
+              "available_for_dates": {
+                "nullable": true
+              },
+              "lines": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "object",
+                      "properties": {
+                        "amount_minor": {
+                          "type": "integer"
+                        },
+                        "currency": {
+                          "type": "string"
+                        },
+                        "exponent": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "amount_minor",
+                        "currency",
+                        "exponent"
+                      ]
+                    },
+                    "recurrence": {
+                      "type": "string"
+                    },
+                    "payer": {
+                      "type": "string"
+                    },
+                    "payee_or_holder": {
+                      "type": "string"
+                    },
+                    "due_basis": {
+                      "type": "string"
+                    },
+                    "refundable": {
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "type": "string"
+                    },
+                    "classification": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "amount",
+                    "recurrence",
+                    "payer",
+                    "payee_or_holder",
+                    "due_basis",
+                    "refundable",
+                    "source",
+                    "classification"
+                  ]
+                }
+              },
+              "known_monthly_subtotal_minor": {
+                "type": "integer"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "exponent": {
+                "type": "integer"
+              },
+              "complete_total": {
+                "type": "boolean"
+              },
+              "unresolved_items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "allowed_actions": {
+                "type": "array",
+                "items": {}
+              },
+              "blocking_reasons": {
+                "type": "array",
+                "items": {}
+              },
+              "digest": {
+                "type": "string"
+              },
+              "generated_at": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "revision",
+              "selection",
+              "facts",
+              "property_claims",
+              "owner_identity_claims",
+              "availability_confirmed_at",
+              "confirmation_revision",
+              "available_for_dates",
+              "lines",
+              "known_monthly_subtotal_minor",
+              "currency",
+              "exponent",
+              "complete_total",
+              "unresolved_items",
+              "allowed_actions",
+              "blocking_reasons",
+              "digest",
+              "generated_at"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ]
+      },
+      "DealResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer"
+              },
+              "property_id": {
+                "type": "string"
+              },
+              "property_title": {
+                "type": "string"
+              },
+              "selection": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "terms": {
+                    "type": "object",
+                    "properties": {
+                      "price": {
+                        "type": "string"
+                      },
+                      "price_period": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "price",
+                      "price_period"
+                    ]
+                  },
+                  "bed_id": {
+                    "nullable": true
+                  },
+                  "archived": {
+                    "type": "boolean"
+                  },
+                  "bed_name": {
+                    "nullable": true
+                  },
+                  "capacity": {
+                    "type": "integer"
+                  },
+                  "offer_id": {
+                    "type": "string"
+                  },
+                  "room_ids": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "offer_link": {
+                    "type": "string"
+                  },
+                  "room_names": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "property_id": {
+                    "type": "string"
+                  },
+                  "availability": {
+                    "type": "string"
+                  },
+                  "rental_scope": {
+                    "type": "string"
+                  },
+                  "offer_revision": {
+                    "type": "integer"
+                  },
+                  "bathroom_access": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "name",
+                  "terms",
+                  "bed_id",
+                  "archived",
+                  "bed_name",
+                  "capacity",
+                  "offer_id",
+                  "room_ids",
+                  "offer_link",
+                  "room_names",
+                  "property_id",
+                  "availability",
+                  "rental_scope",
+                  "offer_revision",
+                  "bathroom_access"
+                ]
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "revision": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "allowed_actions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "kind",
+                    "revision",
+                    "status",
+                    "allowed_actions"
+                  ]
+                }
+              },
+              "terms": {
+                "type": "object",
+                "properties": {
+                  "deposit": {
+                    "type": "object",
+                    "properties": {
+                      "currency": {
+                        "type": "string"
+                      },
+                      "exponent": {
+                        "type": "integer"
+                      },
+                      "amount_minor": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "currency",
+                      "exponent",
+                      "amount_minor"
+                    ]
+                  },
+                  "timezone": {
+                    "type": "string"
+                  },
+                  "occupants": {
+                    "type": "integer"
+                  },
+                  "starts_on": {
+                    "type": "string"
+                  },
+                  "handover_on": {
+                    "type": "string"
+                  },
+                  "template_id": {
+                    "type": "string"
+                  },
+                  "monthly_rent": {
+                    "type": "object",
+                    "properties": {
+                      "currency": {
+                        "type": "string"
+                      },
+                      "exponent": {
+                        "type": "integer"
+                      },
+                      "amount_minor": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "currency",
+                      "exponent",
+                      "amount_minor"
+                    ]
+                  },
+                  "deposit_holder": {
+                    "type": "string"
+                  },
+                  "policy_version": {
+                    "type": "string"
+                  },
+                  "renewal_policy": {
+                    "type": "object",
+                    "properties": {
+                      "automatic": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "automatic"
+                    ]
+                  },
+                  "commission_basis": {
+                    "type": "string"
+                  },
+                  "commission_payer": {
+                    "type": "string"
+                  },
+                  "template_version": {
+                    "type": "string"
+                  },
+                  "ends_on_exclusive": {
+                    "type": "string"
+                  },
+                  "excluded_services": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "included_services": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "billing_anchor_day": {
+                    "type": "integer"
+                  },
+                  "termination_policy": {
+                    "type": "object",
+                    "properties": {
+                      "notice_days": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "notice_days"
+                    ]
+                  },
+                  "commission_rate_bps": {
+                    "type": "integer"
+                  },
+                  "processing_fee_payer": {
+                    "type": "string"
+                  },
+                  "renewal_commission_rate_bps": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "deposit",
+                  "timezone",
+                  "occupants",
+                  "starts_on",
+                  "handover_on",
+                  "template_id",
+                  "monthly_rent",
+                  "deposit_holder",
+                  "policy_version",
+                  "renewal_policy",
+                  "commission_basis",
+                  "commission_payer",
+                  "template_version",
+                  "ends_on_exclusive",
+                  "excluded_services",
+                  "included_services",
+                  "billing_anchor_day",
+                  "termination_policy",
+                  "commission_rate_bps",
+                  "processing_fee_payer",
+                  "renewal_commission_rate_bps"
+                ]
+              },
+              "terms_digest": {
+                "type": "string"
+              },
+              "proposal_id": {
+                "type": "string"
+              },
+              "proposal_revision": {
+                "type": "integer"
+              },
+              "inventory_revision": {
+                "type": "integer"
+              },
+              "hold": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "property_id": {
+                    "type": "string"
+                  },
+                  "proposal_id": {
+                    "type": "string"
+                  },
+                  "lease_id": {
+                    "nullable": true
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "selection": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "terms": {
+                        "type": "object",
+                        "properties": {
+                          "price": {
+                            "type": "string"
+                          },
+                          "price_period": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "price",
+                          "price_period"
+                        ]
+                      },
+                      "bed_id": {
+                        "nullable": true
+                      },
+                      "archived": {
+                        "type": "boolean"
+                      },
+                      "bed_name": {
+                        "nullable": true
+                      },
+                      "capacity": {
+                        "type": "integer"
+                      },
+                      "offer_id": {
+                        "type": "string"
+                      },
+                      "room_ids": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "offer_link": {
+                        "type": "string"
+                      },
+                      "room_names": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "property_id": {
+                        "type": "string"
+                      },
+                      "availability": {
+                        "type": "string"
+                      },
+                      "rental_scope": {
+                        "type": "string"
+                      },
+                      "offer_revision": {
+                        "type": "integer"
+                      },
+                      "bathroom_access": {
+                        "type": "array",
+                        "items": {}
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "terms",
+                      "bed_id",
+                      "archived",
+                      "bed_name",
+                      "capacity",
+                      "offer_id",
+                      "room_ids",
+                      "offer_link",
+                      "room_names",
+                      "property_id",
+                      "availability",
+                      "rental_scope",
+                      "offer_revision",
+                      "bathroom_access"
+                    ]
+                  },
+                  "starts_on": {
+                    "type": "string"
+                  },
+                  "ends_on_exclusive": {
+                    "type": "string"
+                  },
+                  "blocked_until_exclusive": {
+                    "type": "string"
+                  },
+                  "expires_at": {
+                    "type": "string"
+                  },
+                  "server_time": {
+                    "type": "string"
+                  },
+                  "policy_version": {
+                    "type": "string"
+                  },
+                  "terms_digest": {
+                    "type": "string"
+                  },
+                  "reconciliation_deadline": {
+                    "nullable": true
+                  },
+                  "amount_due_now": {
+                    "type": "object",
+                    "properties": {
+                      "amount_minor": {
+                        "type": "integer"
+                      },
+                      "currency": {
+                        "type": "string"
+                      },
+                      "exponent": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "amount_minor",
+                      "currency",
+                      "exponent"
+                    ]
+                  },
+                  "allowed_actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "blocking_reasons": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "id",
+                  "revision",
+                  "property_id",
+                  "proposal_id",
+                  "lease_id",
+                  "status",
+                  "kind",
+                  "selection",
+                  "starts_on",
+                  "ends_on_exclusive",
+                  "blocked_until_exclusive",
+                  "expires_at",
+                  "server_time",
+                  "policy_version",
+                  "terms_digest",
+                  "reconciliation_deadline",
+                  "amount_due_now",
+                  "allowed_actions",
+                  "blocking_reasons"
+                ]
+              },
+              "lease_id": {
+                "nullable": true
+              },
+              "lease_status": {
+                "nullable": true
+              },
+              "occupancy_status": {
+                "nullable": true
+              },
+              "financial_closure_status": {
+                "nullable": true
+              },
+              "waiting_for": {
+                "type": "string"
+              },
+              "information_requested": {
+                "type": "string"
+              },
+              "applicant_response": {
+                "type": "string"
+              },
+              "application_share_id": {
+                "nullable": true
+              },
+              "response_due_at": {
+                "nullable": true
+              },
+              "timeline": {
+                "type": "array",
+                "items": {}
+              },
+              "cases": {
+                "type": "array",
+                "items": {}
+              },
+              "allowed_actions": {
+                "type": "array",
+                "items": {}
+              },
+              "blocking_reasons": {
+                "type": "array",
+                "items": {}
+              },
+              "generated_at": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "revision",
+              "property_id",
+              "property_title",
+              "selection",
+              "resources",
+              "terms",
+              "terms_digest",
+              "proposal_id",
+              "proposal_revision",
+              "inventory_revision",
+              "hold",
+              "lease_id",
+              "lease_status",
+              "occupancy_status",
+              "financial_closure_status",
+              "waiting_for",
+              "information_requested",
+              "applicant_response",
+              "application_share_id",
+              "response_due_at",
+              "timeline",
+              "cases",
+              "allowed_actions",
+              "blocking_reasons",
+              "generated_at"
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "data"
+        ]
+      },
+      "Envelope": {
+        "type": "object",
+        "required": [
+          "message",
+          "data"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {}
+        }
+      },
+      "MutationReceipt": {
+        "type": "object",
+        "required": [
+          "resource",
+          "operation_receipt"
+        ],
+        "properties": {
+          "resource": {
+            "type": "object"
+          },
+          "operation_receipt": {
+            "type": "object",
+            "required": [
+              "id",
+              "subject_id",
+              "request_key",
+              "revision",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "subject_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "request_key": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "status": {
+                "enum": [
+                  "confirmed"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -41,6 +41,9 @@ def rent_invoice_checkout(request, invoice_id):
     except ValueError:
         raise ValidationError("quote_id and request_key must be UUIDs.")
     operation = f"invoice.checkout.{invoice_id}"
+    _invoice(
+        request, invoice_id
+    )  # Reauthorize before returning any historical receipt.
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])

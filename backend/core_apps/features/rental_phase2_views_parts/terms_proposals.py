@@ -77,6 +77,9 @@ def terms_proposals(request):
             offer_snapshot=snapshot,
             accepted_by=[str(request.user.id)],
         )
+        from ..services.rental_lifecycle.consents import record_consent
+
+        record_consent(proposal, request.user, "propose")
         interest.status = RentalInterest.Status.PROPOSED
         interest.revision += 1
         interest.save(update_fields=["status", "revision", "updated_at"])
@@ -92,16 +95,10 @@ def terms_proposals(request):
             resource=resource,
             response_status=201,
         )
-        transaction.on_commit(
-            lambda: _notify(
-                interest.tenant,
-                Notification.NotificationType.RENTAL_TERMS,
-                "Rental terms proposed",
-                "open_rental_terms",
-                proposal.id,
-                terms_proposal_id=proposal.id,
-                workspace="tenant",
-            )
+        from ..services.rental_lifecycle.notifications import record_rental_event
+
+        record_rental_event(
+            proposal, {interest.tenant}, "terms.proposed", "open_rental_terms"
         )
     return Response(output, status=status.HTTP_201_CREATED)
 
@@ -128,6 +125,11 @@ def terms_proposal_detail(request, proposal_id):
         return replay
     with transaction.atomic():
         proposal = _participant_proposal(request, proposal_id, lock=True)
+        if proposal.invitations.filter(lease__isnull=False).exists():
+            raise RentalConflict(
+                "Use the agreement change process after draft creation.",
+                code="invalid_state",
+            )
         if data["expected_revision"] != proposal.revision:
             raise RentalConflict("Proposal revision conflict.", code="stale_revision")
         if data["interest_revision"] != proposal.interest.revision:
@@ -151,6 +153,17 @@ def terms_proposal_detail(request, proposal_id):
         proposal.status = TermsProposal.Status.PROPOSED
         proposal.revision += 1
         proposal.save()
+        from ..services.rental_lifecycle.terms import release_proposal_holds
+
+        release_proposal_holds(proposal)
+        from ..services.rental_lifecycle.consents import record_consent
+
+        record_consent(proposal, request.user, "propose")
+        from ..services.rental_lifecycle.notifications import record_rental_event
+
+        record_rental_event(
+            proposal, {proposal.interest.tenant}, "terms.changed", "open_rental_terms"
+        )
         TenancyInvitation.objects.filter(
             terms_proposal=proposal,
             lease__isnull=True,

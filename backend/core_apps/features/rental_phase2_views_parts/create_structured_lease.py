@@ -44,6 +44,9 @@ def create_structured_lease(request):
     if replay:
         return replay
     with transaction.atomic():
+        from core_apps.properties.models import Property
+
+        Property.objects.select_for_update().get(pk=invitation.property_id)
         invitation = (
             TenancyInvitation.objects.select_for_update(of=("self",))
             .select_related("property", "owner", "tenant", "terms_proposal")
@@ -123,11 +126,16 @@ def create_structured_lease(request):
             hold_expires_at=timezone.now()
             + timedelta(minutes=settings.RENTAL_HOLD_TTL_MINUTES),
         )
-        reserve_inventory_days(
-            lease,
-            data["terms"]["starts_on"],
-            data["terms"]["ends_on_exclusive"],
-            lease.hold_expires_at,
+        from ..services.rental_lifecycle.reservations import transfer_hold
+
+        if not transfer_hold(lease, invitation.terms_proposal):
+            reserve_inventory_days(
+                lease, lease.start_date, lease.end_date, lease.hold_expires_at
+            )
+        from ..models import GroupBookingParticipant
+
+        GroupBookingParticipant.objects.filter(invitation=invitation).update(
+            lease=lease
         )
         invitation.lease = lease
         invitation.consumed_at = timezone.now()

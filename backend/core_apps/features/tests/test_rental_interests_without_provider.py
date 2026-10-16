@@ -46,7 +46,10 @@ def readiness(client, subject_id, action):
 
 @pytest.mark.parametrize("provider", ["disabled", "fake"])
 def test_create_interest_without_provider_preserves_receipt_and_owner_delivery(
-    rental_participants, settings, provider, django_capture_on_commit_callbacks  # noqa: F811 - shared fixture
+    rental_participants,
+    settings,
+    provider,
+    django_capture_on_commit_callbacks,  # noqa: F811 - shared fixture
 ):
     # Even a configured fake provider must stay disabled in production.
     settings.RENTAL_PROVIDER_BACKEND = provider
@@ -62,14 +65,25 @@ def test_create_interest_without_provider_preserves_receipt_and_owner_delivery(
     assert grant.data["allowed_actions"] == ["create_rental_interest"]
     assert grant.data["blocking_reasons"] == []
 
+    from core_apps.features.planning_models import PlanningEvent
+    from core_apps.features.services.planning_notifications import (
+        deliver_planning_events,
+    )
+
+    created = client.post(API + "rental-interests/", body, format="json")
+    assert created.status_code == 201, created.data
+    event = PlanningEvent.objects.get(recipient=owner)
+    assert event.destination["workspace"] == "owner"
+    assert event.delivered_at is None
     with patch(
-        "core_apps.features.rental_phase2_views_parts.rental_interests._notify"
-    ) as notify, django_capture_on_commit_callbacks(execute=True):
-        created = client.post(API + "rental-interests/", body, format="json")
-        assert created.status_code == 201, created.data
-    assert notify.call_count == 1
-    assert notify.call_args.args[0] == owner
-    assert notify.call_args.kwargs["workspace"] == "owner"
+        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_user",
+        return_value=1,
+    ):
+        assert deliver_planning_events() == 1
+        assert deliver_planning_events() == 0
+    event.refresh_from_db()
+    assert event.notification_id is not None
+    assert event.delivered_at is not None
 
     resource = created.data["resource"]
     receipt = created.data["operation_receipt"]
@@ -81,12 +95,16 @@ def test_create_interest_without_provider_preserves_receipt_and_owner_delivery(
     assert receipt["request_key"] == body["request_key"]
     assert receipt["subject_id"] == resource["id"]
     assert receipt["revision"] == 1
-    assert notify.call_args.kwargs["rental_interest_id"] == uuid.UUID(resource["id"])
+    assert event.destination["rental_interest_id"] == resource["id"]
 
     owner_client = authenticated(owner)
     owner_list = owner_client.get(API + "rental-interests/?workspace=owner")
     assert [item["id"] for item in owner_list.data["results"]] == [resource["id"]]
-    assert owner_list.data["results"][0]["allowed_actions"] == ["reject"]
+    assert owner_list.data["results"][0]["allowed_actions"] == [
+        "reject",
+        "request_information",
+        "mark_under_review",
+    ]
     detail_url = API + f"rental-interests/{resource['id']}/"
     assert owner_client.get(detail_url).status_code == 200
     assert authenticated(stranger).get(detail_url).status_code == 404
@@ -105,11 +123,15 @@ def test_create_interest_without_provider_preserves_receipt_and_owner_delivery(
     assert changed.status_code == 409
     assert changed["X-App-Error-Code"] == "idempotency_conflict"
     assert RentalInterest.objects.count() == 1
-    assert IdempotencyRecord.objects.filter(request_key=body["request_key"]).count() == 1
+    assert (
+        IdempotencyRecord.objects.filter(request_key=body["request_key"]).count() == 1
+    )
 
 
 @pytest.mark.parametrize("actor", ["owner", "unverified", "inactive"])
-def test_interest_still_requires_verified_other_account(rental_participants, actor):  # noqa: F811
+def test_interest_still_requires_verified_other_account(
+    rental_participants, actor
+):  # noqa: F811
     owner, tenant, _, property_obj, offer_id = rental_participants
     user = owner if actor == "owner" else tenant
     if actor == "unverified":
@@ -128,8 +150,12 @@ def test_interest_still_requires_verified_other_account(rental_participants, act
     assert RentalInterest.objects.count() == 0
 
 
-@pytest.mark.parametrize("property_change", [{"is_verified": False}, {"status": "pending"}])
-def test_unavailable_property_cannot_receive_interest(rental_participants, property_change):  # noqa: F811
+@pytest.mark.parametrize(
+    "property_change", [{"is_verified": False}, {"status": "pending"}]
+)
+def test_unavailable_property_cannot_receive_interest(
+    rental_participants, property_change
+):  # noqa: F811
     _, tenant, _, property_obj, offer_id = rental_participants
     for field, value in property_change.items():
         setattr(property_obj, field, value)
@@ -170,7 +196,9 @@ def test_selected_offer_is_still_validated(
 
 
 @pytest.mark.parametrize("decision", ["withdraw", "reject"])
-def test_interest_can_be_closed_without_provider_and_replayed(rental_participants, decision):  # noqa: F811
+def test_interest_can_be_closed_without_provider_and_replayed(
+    rental_participants, decision
+):  # noqa: F811
     owner, tenant, stranger, property_obj, offer_id = rental_participants
     tenant_client = authenticated(tenant)
     created = tenant_client.post(
@@ -180,9 +208,17 @@ def test_interest_can_be_closed_without_provider_and_replayed(rental_participant
     interest_id = created.data["resource"]["id"]
     client = tenant_client if decision == "withdraw" else authenticated(owner)
     grant = readiness(client, interest_id, decision)
-    assert grant.data["allowed_actions"] == [decision]
+    assert grant.data["allowed_actions"] == (
+        ["reject", "request_information", "mark_under_review"]
+        if decision == "reject"
+        else [decision]
+    )
     assert grant.data["blocking_reasons"] == []
-    body = {"decision": decision, "expected_revision": 1, "request_key": str(uuid.uuid4())}
+    body = {
+        "decision": decision,
+        "expected_revision": 1,
+        "request_key": str(uuid.uuid4()),
+    }
     url = API + f"rental-interests/{interest_id}/respond/"
     assert authenticated(stranger).post(url, body, format="json").status_code == 404
     result = client.post(url, body, format="json")
@@ -196,13 +232,17 @@ def test_interest_can_be_closed_without_provider_and_replayed(rental_participant
     closed_grant = readiness(client, interest_id, decision)
     assert decision not in closed_grant.data["allowed_actions"]
     repeated = client.post(
-        url, {**body, "expected_revision": 2, "request_key": str(uuid.uuid4())}, format="json"
+        url,
+        {**body, "expected_revision": 2, "request_key": str(uuid.uuid4())},
+        format="json",
     )
     assert repeated.status_code == 403
     assert RentalInterest.objects.get(id=interest_id).revision == 2
 
 
-def test_agreement_and_onboarding_remain_provider_gated(rental_participants):  # noqa: F811
+def test_agreement_and_onboarding_remain_provider_gated(
+    rental_participants,
+):  # noqa: F811
     owner, tenant, _, property_obj, offer_id = rental_participants
     created = authenticated(tenant).post(
         API + "rental-interests/", interest_body(property_obj, offer_id), format="json"
@@ -212,7 +252,11 @@ def test_agreement_and_onboarding_remain_provider_gated(rental_participants):  #
     client = authenticated(owner)
     grant = readiness(client, interest["id"], "create_terms_proposal")
     assert grant.data["enabled_capabilities"] == ["rental_interests"]
-    assert grant.data["allowed_actions"] == ["reject"]
+    assert grant.data["allowed_actions"] == [
+        "reject",
+        "request_information",
+        "mark_under_review",
+    ]
     assert grant.data["blocking_reasons"]
     starts_on = timezone.localdate() + timedelta(days=10)
     terms = client.post(

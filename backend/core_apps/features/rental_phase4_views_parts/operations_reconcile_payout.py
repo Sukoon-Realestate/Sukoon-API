@@ -39,8 +39,19 @@ def operations_reconcile_payout(request, payout_id):
             id=payout_id,
         )
         if payout.status != RentalPayout.Status.PAID:
-            payout.provider_payout_id = get_rental_provider().execute_payout(
-                payout.id, payout.batch.request_key
+            from ..services.rental_lifecycle.provider_instructions import (
+                execute_local_instruction,
+            )
+
+            payout.provider_payout_id = execute_local_instruction(
+                kind="payout",
+                subject=payout,
+                request_key=payout.batch.request_key,
+                payload={
+                    "amount_minor": payout.amount_minor,
+                    "currency": payout.currency,
+                    "beneficiary": payout.masked_beneficiary,
+                },
             )
             payout.status = RentalPayout.Status.PAID
             payout.revision += 1

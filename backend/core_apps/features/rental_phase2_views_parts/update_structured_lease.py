@@ -130,6 +130,9 @@ def lease_review(request, lease_id):
         if data["expected_revision"] != lease.revision:
             raise RentalConflict("Lease revision conflict.", code="stale_revision")
         actor_id = str(request.user.id)
+        from ..services.rental_lifecycle.consents import record_consent
+
+        record_consent(lease, request.user, data["decision"])
         if data["decision"] == "accept_review":
             lease.reviewed_by = list(dict.fromkeys([*lease.reviewed_by, actor_id]))
         elif data["decision"] == "request_changes":

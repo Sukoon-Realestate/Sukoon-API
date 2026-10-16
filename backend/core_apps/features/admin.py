@@ -53,37 +53,6 @@ admin.site.register(
         SearchAlert,
         ListingSuggestion,
         LeaseEligibleTenant,
-        Lease,
-        SigningSession,
-        CheckoutSession,
-        TenancyInvitation,
-        IdempotencyRecord,
-        OwnerPaymentProfile,
-        OwnerOnboardingSession,
-        RentalCommercialPolicy,
-        RentalInterest,
-        TermsProposal,
-        RentalInventoryDayLock,
-        RentalTimelineEvent,
-        BillingPeriod,
-        ProviderWebhookEvent,
-        OwnerPayable,
-        RentalEvidence,
-        RentalHandover,
-        DepositAgreement,
-        PayoutBatch,
-        RentalPayout,
-        PayoutAuditEvent,
-        MaintenanceRequest,
-        MaintenanceEvent,
-        RentalChange,
-        ChangeSigningSession,
-        FinalSettlement,
-        RefundRequest,
-        RentalDispute,
-        RentalDocument,
-        RentalReview,
-        PrivateAccessRevocation,
     ]
 )
 
@@ -102,3 +71,60 @@ admin.site.register(
 )
 
 from . import catalog_admin  # noqa: E402,F401
+
+from . import models as lifecycle_models
+
+admin.site.register(
+    [
+        getattr(lifecycle_models, name)
+        for name in [
+            "Lease",
+            "SigningSession",
+            "CheckoutSession",
+            "TenancyInvitation",
+            "IdempotencyRecord",
+            "OwnerPaymentProfile",
+            "OwnerOnboardingSession",
+            "RentalInterest",
+            "TermsProposal",
+            "RentalInventoryDayLock",
+            "RentalTimelineEvent",
+            "BillingPeriod",
+            "ProviderWebhookEvent",
+            "OwnerPayable",
+            "RentalEvidence",
+            "RentalHandover",
+            "DepositAgreement",
+            "PayoutBatch",
+            "RentalPayout",
+            "PayoutAuditEvent",
+            "MaintenanceRequest",
+            "MaintenanceEvent",
+            "RentalChange",
+            "ChangeSigningSession",
+            "FinalSettlement",
+            "RefundRequest",
+            "RentalDispute",
+            "RentalDocument",
+            "RentalReview",
+            "PrivateAccessRevocation",
+            "ApplicationProfile",
+            "ApplicationProfileVersion",
+            "ApplicationAccessGrant",
+            "RentalVerificationClaim",
+            "PropertyDecisionFact",
+            "RentalAvailabilityConfirmation",
+            "RentalInventoryUnit",
+            "ReservationHold",
+            "RentalConsentRecord",
+            "RentalOperationalCase",
+            "RentalAuditEvent",
+            "RentalProviderInstruction",
+            "GroupBookingProposal",
+            "GroupBookingParticipant",
+        ]
+    ],
+    FinancialHistoryAdmin,
+)
+
+admin.site.register(RentalCommercialPolicy, FinancialHistoryAdmin)
