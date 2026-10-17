@@ -33,7 +33,10 @@ def housing_offers(request, request_id):
         )
         return page(
             request,
-            items.select_related("request", "owner").order_by("-created_at", "pkid"),
+            items.filter(tender_line__isnull=True)
+            .exclude(status="tender_quote")
+            .select_related("request", "owner")
+            .order_by("-created_at", "pkid"),
             lambda x: offer_payload(x, request.user),
         )
 

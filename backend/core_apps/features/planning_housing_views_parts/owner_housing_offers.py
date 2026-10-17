@@ -10,6 +10,8 @@ def owner_housing_offers(request):
     return page(
         request,
         HousingOffer.objects.filter(owner=request.user)
+        .filter(tender_line__isnull=True)
+        .exclude(status="tender_quote")
         .select_related("request", "owner", "property")
         .order_by("-created_at", "pkid"),
         lambda x: offer_payload(x, request.user),

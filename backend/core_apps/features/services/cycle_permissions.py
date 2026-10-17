@@ -32,9 +32,11 @@ def cycle_actions(user, subject):
         not user
         or not user.is_active
         or not user.is_verified
-        or not fake_provider_available()
     ):
         return []
+    if not fake_provider_available():
+        from .reputation.eligibility import can_review_lease
+        return ["review_rental"] if isinstance(subject, Lease) and can_review_lease(subject, user) else []
     lease = (
         subject
         if isinstance(subject, Lease)
@@ -73,12 +75,8 @@ def cycle_actions(user, subject):
             or lease.occupancy_status == Lease.OccupancyStatus.RETURNED
         ):
             actions.append("propose_settlement")
-        if (
-            lease.handovers.filter(
-                kind=RentalHandover.Kind.MOVE_IN, status=RentalHandover.Status.ACCEPTED
-            ).exists()
-            and not lease.rental_reviews.filter(author=user).exists()
-        ):
+        from .reputation.eligibility import can_review_lease
+        if can_review_lease(lease, user):
             actions.append("review_rental")
         if lease.invoices.filter(
             payment_attempts__payer=user, payment_attempts__payment_status="captured"

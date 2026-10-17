@@ -10,6 +10,13 @@ from . import mock_provider_views
 from .models import RentalChange
 
 urlpatterns = [
+    path("", include("core_apps.features.advanced_execution_urls")),
+    path("", include("core_apps.features.advanced_tender_urls")),
+    path("", include("core_apps.features.living_lab_urls")),
+    path("", include("core_apps.features.housing_scenario_urls")),
+    path("", include("core_apps.features.asset_passport_urls")),
+    path("", include("core_apps.features.transition_network_urls")),
+    path("", include("core_apps.features.reputation_urls")),
     path("", include("core_apps.features.company_urls")),
     path("", include("core_apps.features.rental_lifecycle_urls")),
     path("", include("core_apps.features.student_urls")),

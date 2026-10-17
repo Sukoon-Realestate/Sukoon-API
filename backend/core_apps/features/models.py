@@ -14,6 +14,12 @@ from .model_parts.agreements import (
     Lease,
     SigningSession,
 )
+from .model_parts.rental_experiences import (
+    CompanyLeaseBinding,
+    CompanyReviewAuthority,
+    EmployeeOccupancyConfirmation,
+    LeaseResponsibilityTransition,
+)
 from .model_parts.offers import (
     RentalInterest,
     TermsProposal,
@@ -135,4 +141,35 @@ from .company_staff_models import (
     CompanyStaffBatch,
     CompanyStaffBatchRow,
     CompanyWorkContactProof,
+)
+
+from .model_parts.reputation import (
+    ReviewCase, ReviewOpportunity, ReviewSubmission, ReviewSection, ReviewReply,
+    ReviewDraft, ReviewReport, ReviewModerationDecision, ReviewAppeal,
+    ReputationAccessGrant, ReviewAuditEvent, ReviewDecisionNotice,
+)
+
+from .advanced_tender_models import (
+    HousingTender, TenderParticipantRequirement, TenderDemandSnapshot,
+    OwnerBid, TenderBidLine, PackageCandidate, PackageConsent,
+    TenderPackageRun, TenderBidClarification,
+)
+from .living_lab_models import (
+    SharedLivingLab, PrivateParticipantRequirement, LivingLabRun,
+    ArrangementResponse, SharedArrangementSnapshot, LivingLabAuditEvent,
+    LivingPreferenceDisclosure,
+)
+from .transition_network_models import (
+    MoveIntent, TransitionMatchRun, TransitionCandidate, TransitionParticipant,
+)
+from .housing_scenario_models import (
+    HousingScenario, HousingScenarioRun, HousingScenarioDecision, HousingScenarioComparison,
+)
+from .asset_passport_models import (
+    AssetItem, AssetLocationPeriod, AssetLifecycleEvent, AssetObservation,
+    AssetAnalysisJob, AssetAnalysisSuggestion, AssetSharedSystem, AssetPatternCase,
+    AssetWarrantyReference,
+)
+from .advanced_execution_models import (
+    AdvancedExecution, AdvancedExecutionLeg, AdvancedExecutionConsent, AdvancedExecutionStep,
 )

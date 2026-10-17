@@ -10,7 +10,12 @@ class SavedPropertyCardSerializer(serializers.ModelSerializer):
 
     main_image = CloudinarySerializerField(read_only=True)
     property_type = serializers.SlugRelatedField(slug_field="slug", read_only=True)
-    rating = serializers.FloatField(read_only=True)
+    rating = serializers.SerializerMethodField()
+
+    def get_rating(self, obj):
+        from core_apps.features.services.reputation.visibility import summary
+        return summary("property_stay", obj.id)["average"]
+
     saved_at = serializers.DateTimeField(read_only=True)
     is_saved = serializers.SerializerMethodField()
     saved_offers = serializers.SerializerMethodField()

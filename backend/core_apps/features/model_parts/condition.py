@@ -87,6 +87,7 @@ class RentalHandover(TimeStampedModel):
         RentalEvidence, related_name="handovers", blank=True
     )
     accepted_at = models.DateTimeField(null=True, blank=True)
+    context_snapshot = models.JSONField(default=dict, blank=True)
 
     class Meta:
         constraints = [

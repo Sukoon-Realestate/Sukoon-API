@@ -419,7 +419,7 @@ def test_dispute_documents_reviews_and_private_authorization(phase6_lease):
             format="json",
         )
         .status_code
-        == 201
+        == 409
     )
     assert (
         client_for(tenant)

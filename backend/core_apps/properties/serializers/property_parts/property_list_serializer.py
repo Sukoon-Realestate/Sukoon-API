@@ -135,10 +135,8 @@ class PropertyListSerializer(serializers.ModelSerializer):
         ]
 
     def get_rate(self, obj: Property) -> Optional[float]:
-        # ? Price per square meter; None when area is not provided
-        if obj.area:
-            return round(float(obj.price) / obj.area, 2)
-        return None
+        from core_apps.features.services.reputation.visibility import summary
+        return summary("property_stay", obj.id)["average"]
 
     def get_rental_schema_version(self, obj: Property):
         return 1 if obj.rental_inventory else None

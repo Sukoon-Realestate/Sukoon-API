@@ -1,3 +1,4 @@
+from core_apps.features.services.reputation.eligibility import can_review_visit
 """Visit: tenant visit request serializer."""
 
 from datetime import datetime
@@ -85,11 +86,7 @@ class TenantVisitRequestSerializer(PostVisitContextMixin, serializers.ModelSeria
             in (PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED)
             and not hasattr(obj, "post_visit_decision"),
             "can_chat": obj.status == PropertyVisit.Status.CONFIRMED,
-            "can_review": (
-                obj.status == PropertyVisit.Status.CONFIRMED
-                and scheduled_at <= timezone.localtime()
-                and not was_reviewed
-            ),
+            "can_review": can_review_visit(obj),
             "can_find_alternative": obj.status == PropertyVisit.Status.REJECTED,
         }
 

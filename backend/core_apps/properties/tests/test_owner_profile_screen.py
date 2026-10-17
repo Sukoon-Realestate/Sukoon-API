@@ -91,15 +91,15 @@ class TestOwnerProfileScreenAPI:
         assert owner_data["is_verified"] is True
         assert owner_data["role_badge"] == "مالك موثّق"
         assert "عضو منذ" in owner_data["member_since_label"]
-        assert owner_data["reviews_count"] == 1
-        assert owner_data["average_rating"] == 5.0
-        assert "5.0 (1 تقييم)" in owner_data["rating_label"]
+        assert owner_data["reviews_count"] == 0
+        assert owner_data["average_rating"] is None
+        assert owner_data["rating_label"] == "— (0)"
 
         # Stats assertions (3 properties, reviews, acceptance rate)
         stats = data["stats"]
         assert stats["properties_count"] == 3
         assert stats["properties_label"] == "عقارات"
-        assert stats["reviews_count"] == 1
+        assert stats["reviews_count"] == 0
         assert stats["reviews_label"] == "تقييم"
         assert stats["acceptance_rate"] == 100
         assert stats["acceptance_label"] == "قبول"
@@ -118,10 +118,8 @@ class TestOwnerProfileScreenAPI:
 
         # Recent reviews
         reviews = data["recent_reviews"]
-        assert len(reviews) == 1
-        assert reviews[0]["reviewer_name"] == another_user.get_full_name
-        assert reviews[0]["rating"] == 5
-        assert reviews[0]["comment"] == "مالك ممتاز ومتعاون جداً"
+        # A viewing is not an explicit landlord tenancy review.
+        assert reviews == []
 
     def test_owner_profile_unverified_owner_role_badge(self, auth_client, user):
         user.is_verified = False

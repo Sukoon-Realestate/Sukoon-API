@@ -38,7 +38,12 @@ class PropertyDetailSerializer(PropertyDetailMediaMixin, serializers.ModelSerial
     amenities = serializers.SerializerMethodField()
     is_fav = serializers.BooleanField(read_only=True, default=False)
     is_saved = serializers.BooleanField(read_only=True, default=False)
-    rating = serializers.FloatField(read_only=True, default=0.0)
+    rating = serializers.SerializerMethodField()
+
+    def get_rating(self, obj):
+        from core_apps.features.services.reputation.visibility import summary
+        return summary("property_stay", obj.id)["average"]
+
     price = serializers.SerializerMethodField()
     ownership_proof = serializers.SerializerMethodField()
     rental_inventory = serializers.SerializerMethodField()

@@ -42,40 +42,26 @@ class PropertyReviewListAPIView(generics.ListAPIView):
         )
 
     def list(self, request, *args, **kwargs):
+        from core_apps.features.services.reputation.visibility import summary, subject_rows
+        from rest_framework.response import Response
         property_obj = self.get_property()
-        aggregates = PropertyVisitReview.objects.filter(
-            visit__property=property_obj
-        ).aggregate(
-            total_reviews=models.Count("id"),
-            avg_overall=models.Avg("overall_rating"),
-            avg_cleanliness=models.Avg("cleanliness_rating"),
-            avg_accuracy=models.Avg("listing_accuracy_rating"),
-            avg_interaction=models.Avg("owner_interaction_rating"),
-        )
-        self._review_summary = {
-            "total_reviews": aggregates["total_reviews"],
-            "average_rating": (
-                round(float(aggregates["avg_overall"]), 1)
-                if aggregates["avg_overall"] is not None
-                else 0.0
-            ),
-            "cleanliness_rating": (
-                round(float(aggregates["avg_cleanliness"]), 1)
-                if aggregates["avg_cleanliness"] is not None
-                else 0.0
-            ),
-            "listing_accuracy_rating": (
-                round(float(aggregates["avg_accuracy"]), 1)
-                if aggregates["avg_accuracy"] is not None
-                else 0.0
-            ),
-            "owner_interaction_rating": (
-                round(float(aggregates["avg_interaction"]), 1)
-                if aggregates["avg_interaction"] is not None
-                else 0.0
-            ),
-        }
-        return super().list(request, *args, **kwargs)
+        aggregate = summary("property_visit", property_obj.id)
+        rows = subject_rows("property_visit", property_obj.id)
+        from core_apps.features.models import ReviewSection
+        imported = ReviewSection.objects.filter(legacy_source="property_visit_review").values("legacy_id")
+        old_rows = PropertyVisitReview.objects.filter(visit__property=property_obj).exclude(id__in=imported).order_by("-created_at")
+        legacy_payloads = [{"_sort": r.created_at, "id": str(r.id), "overall_rating": r.overall_rating, "comment": r.comment, "reviewer": {"name": "", "avatar": ""}, "verification_basis": "legacy_unverified", "created_at": r.created_at.strftime("%Y-%m-01T00:00:00Z")} for r in old_rows]
+        page = None
+        result = [{"_sort": r.created_at, "id": str(r.id), "overall_rating": r.overall_score, "comment": r.public_comment, "reviewer": {"name": "", "avatar": ""}, "verification_basis": r.verification_basis, "created_at": r.created_at.strftime("%Y-%m-01T00:00:00Z")} for r in (page if page is not None else rows)]
+        # Pagination owns the combined historical/new collection exactly once.
+        combined = sorted(result + legacy_payloads, key=lambda r: (r["_sort"], r["id"]), reverse=True)
+        for item in combined:
+            item.pop("_sort", None)
+        page = self.paginate_queryset(combined)
+        response = self.get_paginated_response(page)
+        response.data["summary"] = {"total_reviews": aggregate["review_count"], "average_rating": aggregate["average"], "context_type": "viewing"}
+        response["Cache-Control"] = "private, no-store"
+        return response
 
     def paginate_queryset(self, queryset):
         page = super().paginate_queryset(queryset)

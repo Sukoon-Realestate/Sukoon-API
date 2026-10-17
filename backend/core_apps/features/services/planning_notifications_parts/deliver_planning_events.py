@@ -35,7 +35,10 @@ def deliver_planning_events():
             if event.attempts and event.updated_at >= retry_before:
                 continue
             try:
-                if event.destination.get("action_type") == "open_company_work":
+                if event.destination.get("action_type") in {"open_reviews", "open_review_opportunity", "open_review_section"}:
+                    from ..reputation.tasks import authorize_notification
+                    authorize_notification(event)
+                elif event.destination.get("action_type") == "open_company_work":
                     from ..company.access import company_for
                     from ..company.approval_routing import work_items
 
@@ -116,12 +119,18 @@ def deliver_planning_events():
             if event.notification_id is None:
                 event.notification = NotificationService.create_notification(
                     user=event.recipient,
-                    title="تحديث بشأن طلب السكن / Housing update",
+                    title=("تحديث بخصوص تقييم في سكون / Review update" if event.destination.get("action_type") in {"open_reviews", "open_review_opportunity", "open_review_section"} else "تحديث بشأن طلب السكن / Housing update"),
                     body="افتح التطبيق لمراجعة التفاصيل / Open the app to review.",
                     category="housing_planning",
                     data={**event.destination, "event_id": str(event.id)},
                     send_push=False,
                 )
+            if event.destination.get("decision_id"):
+                from ...models import ReviewModerationDecision
+                from ..reputation.visibility import decision_notice
+                decision = ReviewModerationDecision.objects.filter(id=event.destination["decision_id"]).first()
+                if decision:
+                    decision_notice(decision, event.recipient)
             event.attempts += 1
             event.save()
         # The external call is outside the database transaction. Event ID deduplicates delivery.

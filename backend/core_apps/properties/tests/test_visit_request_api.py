@@ -154,7 +154,7 @@ class TestTenantVisitRequestScreens:
 
 @pytest.mark.django_db
 class TestPropertyVisitReviewAPI:
-    def test_tenant_reviews_completed_confirmed_visit(
+    def test_legacy_visit_write_requires_final_confirmation_client(
         self,
         auth_client,
         user,
@@ -186,22 +186,13 @@ class TestPropertyVisitReviewAPI:
             format="json",
         )
 
-        assert response.status_code == status.HTTP_201_CREATED
-        data = response.json()["data"]
-        # ? (4 + 5 + 4) / 3 = 4.33 -> rounded to 4
-        assert data["overall_rating"] == 4
-        review = PropertyVisitReview.objects.get(visit=visit)
-        assert review.overall_rating == 4
-        assert PropertyRating.objects.get(user=user, property=property_obj).rating == 4
+        # The legacy route has no explicit overall score/final confirmation.
+        assert response.status_code == status.HTTP_409_CONFLICT
+        assert not PropertyVisitReview.objects.filter(visit=visit).exists()
+        assert not PropertyRating.objects.filter(user=user, property=property_obj).exists()
 
-        duplicate = auth_client.post(
-            reverse("property-visit-review-create", kwargs={"id": visit.id}),
-            payload,
-            format="json",
-        )
-        assert duplicate.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_review_idempotency_replays_confirmed_review(
+    def test_legacy_review_retries_do_not_create_rows(
         self,
         auth_client,
         user,
@@ -235,14 +226,13 @@ class TestPropertyVisitReviewAPI:
             url, {**payload, "comment": "Changed"}, format="json", **headers
         )
 
-        assert first.status_code == status.HTTP_201_CREATED
-        assert replay.status_code == status.HTTP_201_CREATED
-        assert replay.headers["Idempotency-Replayed"] == "true"
-        assert replay.json()["data"]["id"] == first.json()["data"]["id"]
+        assert first.status_code == status.HTTP_409_CONFLICT
+        assert replay.status_code == status.HTTP_409_CONFLICT
         assert changed.status_code == status.HTTP_409_CONFLICT
-        assert PropertyVisitReview.objects.filter(visit=visit).count() == 1
+        assert not PropertyVisitReview.objects.filter(visit=visit).exists()
 
-    def test_overall_rating_calculation_rounds_properly(
+
+    def test_legacy_criteria_cannot_infer_an_overall_score(
         self,
         auth_client,
         user,
@@ -272,9 +262,9 @@ class TestPropertyVisitReviewAPI:
             payload,
             format="json",
         )
-        assert response.status_code == status.HTTP_201_CREATED
-        assert response.json()["data"]["overall_rating"] == 5
-        assert PropertyVisitReview.objects.get(visit=visit).overall_rating == 5
+        assert response.status_code == status.HTTP_409_CONFLICT
+        assert not PropertyVisitReview.objects.filter(visit=visit).exists()
+
 
     def test_rejects_review_before_visit_and_invalid_scores(
         self,
@@ -307,7 +297,7 @@ class TestPropertyVisitReviewAPI:
             url, {**valid_payload, "cleanliness_rating": 6}, format="json"
         )
 
-        assert early.status_code == status.HTTP_400_BAD_REQUEST
+        assert early.status_code == status.HTTP_409_CONFLICT
         assert invalid.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_review_requires_authentication(self, api_client):
@@ -594,22 +584,19 @@ class TestPropertyReviewListAPI:
 
         # Verify summary
         summary = data["summary"]
-        assert summary["total_reviews"] == 2
-        assert summary["average_rating"] == 4.5
-        assert summary["cleanliness_rating"] == 4.5
-        assert summary["listing_accuracy_rating"] == 4.5
-        assert summary["owner_interaction_rating"] == 4.0
+        assert summary == {"total_reviews": 0, "average_rating": None, "context_type": "viewing"}
 
         # Verify results
         results = data["results"]
         assert len(results) == 2
         # Most recent first
         assert results[0]["comment"] == "Nice host and decent place."
-        assert results[0]["tenant"]["name"] == superuser.get_full_name
+        assert results[0]["reviewer"]["name"] == ""
+        assert results[0]["verification_basis"] == "legacy_unverified"
         assert results[0]["overall_rating"] == 4
 
         assert results[1]["comment"] == "Great apartment, very clean!"
-        assert results[1]["tenant"]["name"] == user.get_full_name
+        assert results[1]["reviewer"]["name"] == ""
         assert results[1]["overall_rating"] == 5
 
     def test_list_reviews_empty(
@@ -630,10 +617,8 @@ class TestPropertyReviewListAPI:
         data = response.json()["data"]
         assert data["summary"] == {
             "total_reviews": 0,
-            "average_rating": 0.0,
-            "cleanliness_rating": 0.0,
-            "listing_accuracy_rating": 0.0,
-            "owner_interaction_rating": 0.0,
+            "average_rating": None,
+            "context_type": "viewing",
         }
         assert data["results"] == []
 

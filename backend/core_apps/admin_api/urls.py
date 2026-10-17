@@ -114,3 +114,18 @@ urlpatterns = [
     path("staff/<str:staff_id>/", AdminStaffDeleteAPIView.as_view(), name="admin-staff-delete-str"),
     path("permissions/", AdminPermissionsMatrixAPIView.as_view(), name="admin-permissions-matrix"),
 ]
+
+from core_apps.features import reputation_views as rating_views
+urlpatterns += [
+    path("reviews/", rating_views.ReviewModerationQueueView.as_view()),
+    path("review-cases/", rating_views.ReviewOperatorCasesView.as_view()),
+    path("review-cases/<uuid:identity>/resolve/", rating_views.ReviewResolveCaseView.as_view()),
+    path("reviews/<uuid:identity>/decisions/", rating_views.ReviewModerateView.as_view()),
+    path("review-appeals/<uuid:identity>/resolve/", rating_views.ReviewResolveAppealView.as_view()),
+]
+
+from core_apps.features import reputation_experience_views as review_experiences
+urlpatterns += [
+    path("review-recovery/", review_experiences.ReviewRecoveryView.as_view()),
+    path("review-windows/<uuid:identity>/extend/", review_experiences.ReviewWindowExtensionView.as_view()),
+]

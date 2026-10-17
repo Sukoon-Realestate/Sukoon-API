@@ -131,38 +131,6 @@ def lease_reviews(request, lease_id):
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
-    if not lease.handovers.filter(
-        kind=RentalHandover.Kind.MOVE_IN, status=RentalHandover.Status.ACCEPTED
-    ).exists():
-        raise PermissionDenied("A review requires an actual tenancy.")
-    request_key = request.data.get("request_key")
-    if not request_key or int(request.data.get("expected_revision", -1)) != 0:
-        raise ValidationError("request_key and expected_revision=0 are required.")
-    operation = f"rental_review.create.{lease.id}"
-    replay = replay_operation(request.user, operation, request_key, request.data)
-    if replay:
-        return Response(replay[0], status=replay[1])
-    rating = request.data.get("rating")
-    if not isinstance(rating, int) or not 1 <= rating <= 5:
-        raise ValidationError({"rating": "Must be 1 through 5."})
-    try:
-        item = RentalReview.objects.create(
-            lease=lease,
-            author=request.user,
-            rating=rating,
-            comment=request.data.get("comment", ""),
-        )
-    except IntegrityError:
-        raise RentalConflict("This tenancy was already reviewed.")
-    output = remember_mutation(
-        user=request.user,
-        operation=operation,
-        request_key=request_key,
-        payload=request.data,
-        request_subject_id=lease.id,
-        result_subject_id=item.id,
-        result_revision=item.revision,
-        resource=review_payload(item),
-        response_status=201,
-    )
-    return Response(output, status=status.HTTP_201_CREATED)
+    # Old clients cannot explain immutable submission or select canonical targets.
+    from ..services.reputation.policy import ReviewError
+    raise ReviewError("client_update_required")

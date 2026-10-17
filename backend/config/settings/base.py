@@ -7,6 +7,7 @@ from datetime import timedelta
 import ssl
 
 from config.planning import enabled_services_from_env
+from config.advanced_housing import enabled_services_from_env as advanced_services_from_env
 
 # todo refactor the code, write explaining comments
 
@@ -19,6 +20,20 @@ local_env_file = path.join(BASE_DIR, ".envs", ".env.local")
 
 if path.isfile(local_env_file):
     load_dotenv(local_env_file)
+
+ADVANCED_HOUSING_ENABLED_SERVICES = advanced_services_from_env(
+    getenv("ADVANCED_HOUSING_ENABLED_SERVICES", "none")
+)
+ADVANCED_HOUSING_PROVIDER_MODE = getenv("ADVANCED_HOUSING_PROVIDER_MODE", "disabled")
+LIVING_LAB_MAX_PARTICIPANTS = 6
+LIVING_LAB_MAX_ROOMS = 6
+LIVING_LAB_MAX_RUNS_PER_LAB = 6
+LIVING_LAB_MAX_RUNS_PER_GROUP_DAY = 12
+LIVING_LAB_MAX_LABS_PER_GROUP_DAY = 8
+LIVING_LAB_ACTIVE_DAYS = 14
+LIVING_LAB_PRIVATE_RETENTION_DAYS = 30
+LIVING_LAB_UNCOMMITTED_RETENTION_DAYS = 30
+LIVING_LAB_MAX_SHARE_RATIO = 4
 
 STUDENT_ENABLED_SERVICES = student_services_from_env(
     getenv("STUDENT_ENABLED_SERVICES", "none")
@@ -172,6 +187,14 @@ PLANNING_MOCK_DISCOVERY = False
 CELERY_BEAT_SCHEDULE["process-planning-jobs"] = {
     "task": "core_apps.features.tasks.process_planning_jobs",
     "schedule": 30.0,
+}
+CELERY_BEAT_SCHEDULE["recover-advanced-housing-jobs"] = {
+    "task": "advanced_housing.recover_jobs",
+    "schedule": 300.0,
+}
+CELERY_BEAT_SCHEDULE["purge-advanced-private-inputs"] = {
+    "task": "advanced_housing.purge_private_inputs",
+    "schedule": 86400.0,
 }
 CELERY_BEAT_SCHEDULE["drain-group-chat-outbox"] = {
     "task": "core_apps.chat.tasks.drain_chat_outbox",
@@ -520,3 +543,8 @@ FIREBASE_CREDENTIALS_FILE = getenv(
     "FIREBASE_CREDENTIALS_FILE",
     str(BASE_DIR / "config" / "credentials" / "firebase-tenant-service-account.json"),
 )
+
+# New rating writes require an explicit rollout; reads/receipts remain available.
+REVIEWS_ENABLED = getenv("REVIEWS_ENABLED", "false").lower() == "true"
+
+CELERY_BEAT_SCHEDULE["reconcile-reviews"] = {"task": "core_apps.features.tasks.reconcile_reviews", "schedule": 300.0}

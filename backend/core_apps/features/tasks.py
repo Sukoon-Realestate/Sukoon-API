@@ -4,6 +4,11 @@ Implementation modules separate domain responsibilities without changing routes.
 """
 
 from celery import shared_task
+from .services.transition_network.jobs import process_transition_match
+from .services.housing_tenders.jobs import process_tender_packages
+from .services.housing_scenarios.jobs import calculate as calculate_housing_scenario
+from .services.asset_passport.analysis import process as analyze_asset_observations
+from .services.advanced_housing_jobs import recover_jobs, purge_private_inputs
 from datetime import timedelta
 from django.db import models, transaction
 from django.utils import timezone
@@ -45,3 +50,8 @@ from .tasks_parts.process_rental_changes import (
 from .tasks_parts.process_rental_closure import (
     process_rental_closure,
 )
+
+@shared_task
+def reconcile_reviews():
+    from .services.reputation.tasks import reconcile
+    return reconcile()

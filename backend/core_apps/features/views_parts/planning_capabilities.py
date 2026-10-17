@@ -55,10 +55,22 @@ def planning_capabilities(request):
     ready = ready_services(enabled)
     capability = request.query_params.get("capability", "")
     requested_action = request.query_params.get("action", "")
+    subject_id = request.query_params.get("subject_id", "")
+    privacy_actions = []
+    if (
+        verified
+        and capability == "shared_living_lab"
+        and requested_action == "withdraw"
+        and subject_id
+    ):
+        # Turning off creation never prevents an entitled participant from
+        # withdrawing their own private requirements. Scope stays exact.
+        if "withdraw" in planning_actions(user, capability, subject_id):
+            privacy_actions = ["withdraw"]
     allowed = (
-        planning_actions(user, capability, request.query_params.get("subject_id", ""))
+        planning_actions(user, capability, subject_id)
         if capability in ready
-        else []
+        else privacy_actions
     )
     if requested_action:
         allowed = [requested_action] if requested_action in allowed else []
@@ -79,6 +91,8 @@ def planning_capabilities(request):
                 "يلزم حساب نشط وموثق.",
             )
         )
+    elif privacy_actions:
+        pass
     elif not enabled:
         reasons.append(
             localized(
@@ -120,8 +134,12 @@ def planning_capabilities(request):
             "configuration": configuration(),
             "policy_version": "planning-policy-v1",
             "allowed_actions": allowed,
+            "privacy_actions": privacy_actions,
+            "privacy_subject_id": subject_id if privacy_actions else "",
             "expires_at": (
-                (timezone.now() + timedelta(minutes=5)).isoformat() if enabled else None
+                (timezone.now() + timedelta(minutes=5)).isoformat()
+                if enabled or privacy_actions
+                else None
             ),
             "blocking_reasons": reasons,
         }

@@ -15,15 +15,27 @@ from ..rental_phase2 import RentalConflict, remember_mutation, replay_operation
 
 
 def enabled_services():
+    from config.advanced_housing import SERVICES as ADVANCED_SERVICES
     from config.student_housing import SERVICES as STUDENT_SERVICES
 
-    return ["company_housing", "residential_portfolios"] + [
-        x for x in SERVICES if x in getattr(settings, "PLANNING_ENABLED_SERVICES", [])
-    ] + [
-        x
-        for x in STUDENT_SERVICES
-        if x in getattr(settings, "STUDENT_ENABLED_SERVICES", [])
-    ]
+    return (
+        ["company_housing", "residential_portfolios"]
+        + [
+            x
+            for x in SERVICES
+            if x in getattr(settings, "PLANNING_ENABLED_SERVICES", [])
+        ]
+        + [
+            x
+            for x in STUDENT_SERVICES
+            if x in getattr(settings, "STUDENT_ENABLED_SERVICES", [])
+        ]
+        + [
+            x
+            for x in ADVANCED_SERVICES
+            if x in getattr(settings, "ADVANCED_HOUSING_ENABLED_SERVICES", [])
+        ]
+    )
 
 
 def require_planning(user, capability):

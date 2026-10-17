@@ -60,7 +60,12 @@ def mock_discovery():
 
 
 def ready_services(enabled):
-    result = list(enabled)
+    from config.advanced_housing import PROVIDER_SERVICES, mock_mode_available
+
+    result = [
+        service for service in enabled
+        if service not in PROVIDER_SERVICES or mock_mode_available()
+    ]
     from ...providers import fake_provider_available
 
     if not fake_provider_available() and "student_verification" in result:
@@ -77,8 +82,11 @@ def ready_services(enabled):
 
 
 def configuration():
+    from config.advanced_housing import provider_configuration
+
     return {
         "schema_version": 2,
+        "advanced_housing": provider_configuration(),
         "joint_leases": False,
         "student_housing": {
             "schema_version": 1,

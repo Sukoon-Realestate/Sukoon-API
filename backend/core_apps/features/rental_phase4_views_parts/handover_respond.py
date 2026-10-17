@@ -134,6 +134,9 @@ def handover_respond(request, handover_id):
                 handover.status = RentalHandover.Status.ACCEPTED
                 handover.accepted_at = timezone.now()
                 if handover.kind == RentalHandover.Kind.MOVE_IN:
+                    from ..services.reputation.ancestry import freeze_handover
+
+                    handover.context_snapshot = freeze_handover(handover)
                     handover.lease.occupancy_status = "occupied"
                 else:
                     handover.lease.occupancy_status = "returned"

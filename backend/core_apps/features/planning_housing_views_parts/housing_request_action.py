@@ -79,6 +79,8 @@ def offer_status(item):
 
 
 def offer_actions(user, item):
+    if item.status == "tender_quote" or hasattr(item, "tender_line"):
+        return []
     if user.pk == item.owner_id:
         return (
             ["withdraw"]
@@ -101,6 +103,8 @@ def offer_actions(user, item):
 
 def offer_payload(item, user):
     from ..services.student_housing.publication import participant_can_read
+
+    _check_sealed_offer(user, item)
 
     return {
         "id": str(item.id),
@@ -135,6 +139,8 @@ def get_offer(user, identifier, *, lock=False):
     if lock:
         queryset = queryset.select_for_update(of=("self",))
     item = get_object_or_404(queryset, id=identifier)
+    if _check_sealed_offer(user, item):
+        return item
     from ..services.student_housing.publication import participant_can_read
 
     if (
@@ -146,3 +152,18 @@ def get_offer(user, identifier, *, lock=False):
 
         raise NotFound()
     return item
+
+
+def _check_sealed_offer(user, item):
+    """A canonical bid quote must retain its tender-specific visibility."""
+    line = getattr(item, "tender_line", None)
+    if line is None and item.status != "tender_quote":
+        return False
+    from ..services.housing_tenders.access import admin
+    from rest_framework.exceptions import NotFound
+
+    if line is None or not (
+        line.bid.owner_id == user.pk or admin(user, line.bid.tender)
+    ):
+        raise NotFound()
+    return True

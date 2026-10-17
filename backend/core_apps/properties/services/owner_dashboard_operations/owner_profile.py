@@ -48,15 +48,12 @@ class OwnerProfileMixin:
         role_badge = "مالك موثّق" if owner.is_verified else "مالك"
         properties_count = Property.objects.filter(owner=owner).count()
 
-        reviews_qs = (
-            PropertyVisitReview.objects.filter(visit__property__owner=owner)
-            .select_related("visit__tenant")
-            .order_by("-created_at")
-        )
-        reviews_count = reviews_qs.count()
-        avg_rating = reviews_qs.aggregate(Avg("overall_rating"))["overall_rating__avg"]
-        average_rating = round(float(avg_rating), 1) if avg_rating is not None else 0.0
-        rating_label = f"{average_rating} ({reviews_count} تقييم)"
+        from core_apps.features.services.reputation.visibility import summary, subject_rows
+        reputation = summary("person_landlord", owner.id)
+        reviews_qs = subject_rows("person_landlord", owner.id, aggregate=True)
+        reviews_count = reputation["review_count"]
+        average_rating = reputation["average"]
+        rating_label = f"{average_rating if average_rating is not None else '—'} ({reviews_count})"
 
         confirmed_count = PropertyVisit.objects.filter(
             property__owner=owner, status=PropertyVisit.Status.CONFIRMED
@@ -70,20 +67,7 @@ class OwnerProfileMixin:
         else:
             acceptance_rate = 96 if properties_count > 0 else 100
 
-        recent_reviews = []
-        for r in reviews_qs[:5]:
-            tenant_name = (
-                r.visit.tenant.get_full_name or r.visit.tenant.first_name or "مستأجر"
-            )
-            recent_reviews.append(
-                {
-                    "id": str(r.id),
-                    "reviewer_name": tenant_name,
-                    "rating": r.overall_rating,
-                    "comment": r.comment,
-                    "created_at": r.created_at,
-                }
-            )
+        recent_reviews = [{"id": str(r.id), "reviewer_name": "", "rating": r.overall_score, "comment": r.public_comment, "created_at": r.created_at.replace(day=1, hour=0, minute=0, second=0, microsecond=0)} for r in reviews_qs[:5]]
 
         return {
             "owner": {

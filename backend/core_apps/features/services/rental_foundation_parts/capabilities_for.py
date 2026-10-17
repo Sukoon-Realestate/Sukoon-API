@@ -129,6 +129,12 @@ def capabilities_for(user, subject, requested_action=""):
         elif isinstance(subject, TermsProposal):
             allowed.extend(proposal_actions(user, subject))
 
+    if isinstance(subject, Lease):
+        from ..reputation.eligibility import can_review_lease
+        if can_review_lease(subject, user):
+            enabled.append("rental_reviews")
+            allowed.append("review_rental")
+
     from ..rental_lifecycle.capabilities import lifecycle_capabilities
 
     extension_enabled, extension_actions = lifecycle_capabilities(user, subject)

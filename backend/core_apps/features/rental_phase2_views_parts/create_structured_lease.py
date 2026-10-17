@@ -117,6 +117,9 @@ def create_structured_lease(request):
             and _json_safe(data["terms"]) != invitation.terms_proposal.terms
         ):
             raise RentalConflict("The reviewed terms changed.", code="document_changed")
+        from ..services.reputation.ancestry import from_property
+
+        snapshot = {**snapshot, "reputation_ancestry": from_property(invitation.property)}
         lease = Lease.objects.create(
             property=invitation.property,
             owner=request.user,

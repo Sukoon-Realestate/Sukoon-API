@@ -29,6 +29,10 @@ def planning_subject(user, identifier):
         identifier = uuid.UUID(str(identifier))
     except (ValueError, TypeError):
         raise NotFound()
+    from .advanced_housing_access import subject as advanced_subject
+    advanced = advanced_subject(user, identifier)
+    if advanced is not None:
+        return advanced
     from .company.access import company_subject
     corporate = company_subject(user, identifier)
     if corporate:
@@ -99,6 +103,10 @@ def planning_subject(user, identifier):
 
 
 def planning_actions(user, capability, subject_id=""):
+    from config.advanced_housing import SERVICES as ADVANCED_SERVICES
+    if capability in ADVANCED_SERVICES:
+        from .advanced_housing_access import actions
+        return actions(user, capability, subject_id)
     if capability in {"company_housing", "residential_portfolios"}:
         from .company.access import actions
         return actions(user, capability, subject_id)
