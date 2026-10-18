@@ -18,10 +18,29 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture(autouse=True)
-def production_without_provider(settings):
+def production_without_provider(settings, tmp_path):
     settings.RENTAL_PROVIDER_BACKEND = "disabled"
     settings.RENTAL_FAKE_PROVIDER_ALLOWED = False
     settings.RENTAL_RUNTIME_ENVIRONMENT = "production"
+    # Independent notification scope is reviewed even when rental PSP is absent.
+    import json
+
+    control = tmp_path / "synthetic-control.json"
+    settings.RECOVERY_ENVIRONMENT = "synthetic-interest-delivery"
+    settings.RECOVERY_CONTROL_FILE = str(control)
+    control.write_text(
+        json.dumps(
+            {
+                "environment": settings.RECOVERY_ENVIRONMENT,
+                "mode": "open",
+                "generation": "fixture",
+                "security_epoch": "fixture",
+                "scopes": ["notifications"],
+                "approval_reference": "synthetic-only",
+                "coverage_reference": "synthetic-only",
+            }
+        )
+    )
 
 
 def interest_body(property_obj, offer_id):

@@ -148,7 +148,7 @@ class TestPropertyDetailsMobileFields:
         assert data["amenities"] == ["wifi", "garage"]
         assert data["is_fav"] is True
         assert data["is_saved"] is True
-        assert data["rating"] == 4.5
+        assert data["rating"] is None  # Legacy ratings lack a verified F66 experience.
         assert data["is_furnished"] is True
         for field in PropertyDetailAmenityFields.MODEL_FIELDS:
             assert field not in data
@@ -166,7 +166,7 @@ class TestPropertyDetailsMobileFields:
         assert data["amenities"] == []
         assert data["is_fav"] is False
         assert data["is_saved"] is False
-        assert data["rating"] == 0.0
+        assert data["rating"] is None  # No verified experience is not a zero rating.
         assert "owner" in data
         assert "is_verified" in data
         assert "owner_is_verified" in data
@@ -191,14 +191,15 @@ class TestPropertyDetailsMobileFields:
             is_enabled=True,
         )
 
-        url = reverse("owner-availability-week", kwargs={"property_id": property_obj.id})
+        url = reverse(
+            "owner-availability-week", kwargs={"property_id": property_obj.id}
+        )
         res = auth_client.get(url, {"week_start": target_week_start.isoformat()})
         assert res.status_code == status.HTTP_200_OK
         data = res.json()["data"]
         assert data["week_start"] == target_week_start.isoformat()
         assert len(data["days"]) >= 1
         assert data["days"][0]["date"] == slot_date.isoformat()
-
 
 
 class PropertyDetailAmenityFields:
@@ -373,7 +374,13 @@ class TestAvailableDatesAndBooking:
 
     @pytest.mark.parametrize(
         "slot_kind",
-        ["disabled", "different_time", "different_date", "different_property", "wrong_owner"],
+        [
+            "disabled",
+            "different_time",
+            "different_date",
+            "different_property",
+            "wrong_owner",
+        ],
     )
     def test_booking_requires_matching_enabled_slot(
         self, auth_client, user, another_user, apartment_type, slot_kind
@@ -421,7 +428,9 @@ class TestAvailableDatesAndBooking:
             time="14:00:00",
         )
         available = api_client.get(
-            reverse("property-available-dates", kwargs={"property_id": property_obj.id}),
+            reverse(
+                "property-available-dates", kwargs={"property_id": property_obj.id}
+            ),
             {"date": visit_date.isoformat()},
         )
         assert available.status_code == status.HTTP_200_OK

@@ -115,7 +115,9 @@ def post_visit_decision(request, id):
             ),
             id=id,
         )
-        participant = request.user.pk in {visit.tenant_id, visit.property.owner_id}
+        from ..services.viewing_access import can_read
+
+        participant = can_read(visit, request.user)
         if not participant and not reason_visible(request.user, visit):
             from rest_framework.exceptions import NotFound
 
@@ -123,7 +125,7 @@ def post_visit_decision(request, id):
         if participant:
             serializer = (
                 TenantVisitRequestDetailSerializer
-                if request.user.pk == visit.tenant_id
+                if request.user.pk != visit.property.owner_id
                 else OwnerVisitRequestDetailSerializer
             )
             output = serializer(visit, context={"request": request}).data

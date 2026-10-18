@@ -40,6 +40,8 @@ def capabilities_for(user, subject, requested_action=""):
     if isinstance(subject, Lease):
         allowed.extend(agreement_actions(user, subject))
         enabled.append("rental_center")
+        if not subject.legacy_read_only:
+            enabled.append("rental_maintenance")
         if phase2_ready and not subject.legacy_read_only:
             enabled.append("rental_agreements")
         if checkout_available():
@@ -59,6 +61,10 @@ def capabilities_for(user, subject, requested_action=""):
             )
             if subject.owner_id == user.pk:
                 enabled.append("owner_payouts")
+            allowed.extend(cycle_actions(user, subject))
+    elif isinstance(subject, MaintenanceRequest):
+        if not subject.lease.legacy_read_only:
+            enabled.append("rental_maintenance")
             allowed.extend(cycle_actions(user, subject))
     elif phase2_ready and isinstance(subject, RentalHandover):
         enabled.append("rental_handovers")

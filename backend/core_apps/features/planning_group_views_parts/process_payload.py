@@ -140,7 +140,18 @@ def _group_values(data):
 
 
 def invalidate_process(item):
-    if item.visit_id and item.visit.status in {"pending", "confirmed"}:
+    if item.visit_id and item.visit.participant_decisions.exists():
+        # A later membership change cannot erase other attendees' statements or
+        # committed invitations. Fresh participant checks still revoke leavers.
+        item.status = "completed"
+        item.revision += 1
+        item.save(update_fields=["status", "revision", "updated_at"])
+        return
+    if (
+        item.visit_id
+        and item.visit.status in {"pending", "confirmed"}
+        and not item.visit.participant_decisions.exists()
+    ):
         item.visit.status = "canceled"
         item.visit.note = (
             "Group consent or roster changed. Submit a new reviewed group visit."

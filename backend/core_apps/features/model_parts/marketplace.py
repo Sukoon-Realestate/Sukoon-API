@@ -48,6 +48,8 @@ class SearchAlert(TimeStampedModel):
     enabled = models.BooleanField(default=True)
     revision = models.PositiveIntegerField(default=1)
     last_matched_at = models.DateTimeField(null=True, blank=True)
+    last_checked_at = models.DateTimeField(null=True, blank=True)
+    matching_status = models.CharField(max_length=24, default="pending")
     deleted_at = models.DateTimeField(null=True, blank=True)
 
 

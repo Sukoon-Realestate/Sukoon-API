@@ -130,3 +130,13 @@ admin.site.register(PropertyVisitReview)
 admin.site.register(PropertyFavorite)
 admin.site.register(SavedProperty)
 admin.site.register(PropertyRating)
+
+
+from .models import District
+
+
+@admin.register(District)
+class DistrictAdmin(admin.ModelAdmin):
+    list_display = ["name", "city", "is_active"]
+    list_filter = ["is_active", "city"]
+    search_fields = ["name", "city__name"]

@@ -15,6 +15,9 @@ def require_new_business():
 
 
 def member_for(user, company, action="read"):
+    from core_apps.common.recovery import require_scope
+
+    require_scope("company_authority")
     if not user or not user.is_active:
         raise PermissionDenied("An active account is required.")
     member = get_object_or_404(
@@ -56,6 +59,10 @@ def request_for(user, identity, action="coordinate", lock=False):
 
 
 def company_subject(user, identifier):
+    from core_apps.common.recovery import scope_available
+
+    if not scope_available("company_authority"):
+        return None
     from ...company_models import CompanyBookingItem, CompanyInvitation, PortfolioOffer
     from core_apps.properties.models import (
         ResidentialBuilding,

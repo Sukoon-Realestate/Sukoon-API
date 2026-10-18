@@ -131,6 +131,9 @@ def request_activation(user, company_id, staff_id, data):
             "Company activation email delivery is not configured.",
             code="provider_not_ready",
         )
+    from .grant_security import require_nonprivileged_onboarding
+
+    require_nonprivileged_onboarding(staff.proposed_roles)
     now = timezone.now()
     if staff.provisionings.filter(created_at__gt=now - timedelta(seconds=60)).exists():
         raise RentalConflict(
@@ -276,6 +279,9 @@ def respond(user, data, accept=True):
             "Review the current role proposal before accepting.", code="stale_revision"
         )
     if accept:
+        from .grant_security import require_nonprivileged_onboarding
+
+        require_nonprivileged_onboarding(provisioning.roles)
         member, created = CompanyMembership.objects.get_or_create(
             company=staff.company, user=user
         )

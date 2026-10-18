@@ -64,6 +64,9 @@ def company_api(methods, throttles=None):
         @renderer_classes([FeatureJsonRenderer])
         @wraps(fn)
         def endpoint(request, *args, **kwargs):
+            from core_apps.common.recovery import require_scope
+
+            require_scope("company_authority")
             try:
                 return fn(request, *args, **kwargs)
             except IntegrityError:
@@ -162,9 +165,7 @@ def member_action(request, company_id, membership_id):
         request,
         "company.member.update",
         lambda: company_for(request.user, company_id, "admin", lock=True),
-        lambda _: membership.update_member(
-            request.user, company_id, membership_id, data
-        ),
+        lambda _: _secured_member_update(request, company_id, membership_id, data),
         membership_payload,
     )
 
@@ -502,3 +503,31 @@ def portfolio_offer_action(request, offer_id, action):
     return mutate(
         request, "portfolio.offer." + action, authorize, execute, offers.offer_payload
     )
+
+
+def _secured_member_update(request, company_id, membership_id, data):
+    from core_apps.features.company_models import CompanyMembership
+    from core_apps.users.services.sensitive_actions import consume
+
+    member = CompanyMembership.objects.select_for_update().get(
+        id=membership_id, company__id=company_id
+    )
+    roles = set(data["roles"])
+    # Revocations remain available; granting financial/admin authority is sensitive.
+    grants = (
+        ("approver" in roles and (not member.is_active or not member.is_approver))
+        or ("admin" in roles and (not member.is_active or not member.is_admin))
+        or (
+            (data.get("can_execute_payments", member.can_execute_payments) is True)
+            and (not member.is_active or not member.can_execute_payments)
+        )
+    ) and data["is_active"]
+    if grants:
+        consume(
+            request,
+            action="company.member.update",
+            resource_id=member.id,
+            revision=member.revision,
+            payload={"company_id": str(company_id), "command": request.data},
+        )
+    return membership.update_member(request.user, company_id, membership_id, data)

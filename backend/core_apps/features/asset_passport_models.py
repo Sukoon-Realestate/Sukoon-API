@@ -169,6 +169,10 @@ class AssetPatternCase(TimeStampedModel):
 
 
 class AssetWarrantyReference(TimeStampedModel):
+    service_case = models.ForeignKey(
+        "RentalOperationalCase", on_delete=models.PROTECT, null=True, blank=True
+    )
+    provider_result = models.JSONField(default=dict)
     asset = models.ForeignKey(
         AssetItem, on_delete=models.PROTECT, related_name="warranty_references"
     )

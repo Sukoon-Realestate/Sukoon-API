@@ -24,7 +24,7 @@ from .maintenance_payload import (
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def maintenance_requests(request, lease_id):
-    lease = _lease(request, lease_id)
+    lease = _lease(request, lease_id, servicing=True)
     if request.method == "GET":
         results = [
             maintenance_payload(x, request.user)
@@ -50,6 +50,10 @@ def maintenance_requests(request, lease_id):
         raise ValidationError(
             "Complete maintenance body with expected_revision=0 is required."
         )
+    from ..services.cycle_permissions import cycle_actions
+    from rest_framework.exceptions import PermissionDenied
+    if "create_maintenance_request" not in cycle_actions(request.user, lease):
+        raise PermissionDenied("Maintenance requires an existing serviceable agreement.")
     operation = f"maintenance.create.{lease.id}"
     replay = replay_operation(
         request.user, operation, request.data["request_key"], request.data
@@ -60,7 +64,9 @@ def maintenance_requests(request, lease_id):
     access.is_valid(raise_exception=True)
     evidence = _safe_evidence(lease, request.data["evidence_ids"])
     with transaction.atomic():
-        lease = _lease(request, lease_id, lock=True)
+        lease = _lease(request, lease_id, lock=True, servicing=True)
+        if "create_maintenance_request" not in cycle_actions(request.user, lease):
+            raise PermissionDenied("Maintenance requires an existing serviceable agreement.")
         replay = replay_operation(
             request.user, operation, request.data["request_key"], request.data
         )

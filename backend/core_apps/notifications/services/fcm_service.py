@@ -4,11 +4,14 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from django.conf import settings
+from django.db.models import F, Q
+from django.utils import timezone
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 import requests
 
 from core_apps.notifications.models import DeviceToken
+from .push_privacy import PUSH_TITLE, PUSH_BODY, routing_data
 
 logger = logging.getLogger(__name__)
 
@@ -37,8 +40,10 @@ class FCMService:
                 raw_json = getattr(settings, "FIREBASE_CREDENTIALS_JSON", None)
                 if raw_json and raw_json.strip():
                     info_dict = json.loads(raw_json)
-                    cls._credentials = service_account.Credentials.from_service_account_info(
-                        info_dict, scopes=FCM_SCOPES
+                    cls._credentials = (
+                        service_account.Credentials.from_service_account_info(
+                            info_dict, scopes=FCM_SCOPES
+                        )
                     )
                 # 2. Check individual env variables
                 elif getattr(settings, "FIREBASE_PRIVATE_KEY", None) and getattr(
@@ -47,17 +52,23 @@ class FCMService:
                     private_key = settings.FIREBASE_PRIVATE_KEY.replace("\\n", "\n")
                     info_dict = {
                         "type": "service_account",
-                        "project_id": getattr(settings, "FIREBASE_PROJECT_ID", "sokoun-99c7b"),
+                        "project_id": getattr(
+                            settings, "FIREBASE_PROJECT_ID", "sokoun-99c7b"
+                        ),
                         "private_key": private_key,
                         "client_email": settings.FIREBASE_CLIENT_EMAIL,
                         "token_uri": "https://oauth2.googleapis.com/token",
                     }
-                    cls._credentials = service_account.Credentials.from_service_account_info(
-                        info_dict, scopes=FCM_SCOPES
+                    cls._credentials = (
+                        service_account.Credentials.from_service_account_info(
+                            info_dict, scopes=FCM_SCOPES
+                        )
                     )
                 # 3. Fallback to file path
                 else:
-                    credentials_file = getattr(settings, "FIREBASE_CREDENTIALS_FILE", None)
+                    credentials_file = getattr(
+                        settings, "FIREBASE_CREDENTIALS_FILE", None
+                    )
                     if credentials_file and Path(credentials_file).is_file():
                         cls._credentials = (
                             service_account.Credentials.from_service_account_file(
@@ -72,7 +83,7 @@ class FCMService:
                 cls._credentials.refresh(Request())
             return cls._credentials
         except Exception as exc:
-            logger.error("Failed to load or refresh FCM credentials: %s", exc)
+            logger.error("FCM credentials unavailable (%s)", type(exc).__name__)
             return None
 
     @classmethod
@@ -107,6 +118,7 @@ class FCMService:
         """
         try:
             from core_apps.profiles.models import UserSettings
+
             user_settings = UserSettings.objects.filter(user=user).first()
         except Exception:
             user_settings = getattr(user, "settings", None)
@@ -159,6 +171,12 @@ class FCMService:
         """
         Sends a single push notification to a device token using FCM v1 HTTP API.
         """
+        from core_apps.common.recovery import require_scope, RecoveryRequired
+
+        try:
+            require_scope("notifications")
+        except RecoveryRequired:
+            return False
         creds = credentials or cls.get_credentials()
         proj_id = project_id or cls.get_project_id()
 
@@ -173,7 +191,7 @@ class FCMService:
             try:
                 creds.refresh(Request())
             except Exception as exc:
-                logger.error("Failed to refresh FCM access token: %s", exc)
+                logger.error("FCM token refresh failed (%s)", type(exc).__name__)
                 return False
 
         url = f"https://fcm.googleapis.com/v1/projects/{proj_id}/messages:send"
@@ -185,15 +203,17 @@ class FCMService:
         # * Convert all data values to strings per FCM specification
         formatted_data = {}
         if data:
-            for k, v in data.items():
-                formatted_data[str(k)] = json.dumps(v) if isinstance(v, (dict, list)) else str(v)
+            for k, v in routing_data(data).items():
+                formatted_data[str(k)] = (
+                    json.dumps(v) if isinstance(v, (dict, list)) else str(v)
+                )
 
         message_payload: Dict[str, Any] = {
             "message": {
                 "token": token,
                 "notification": {
-                    "title": title,
-                    "body": body,
+                    "title": PUSH_TITLE,
+                    "body": PUSH_BODY,
                 },
             }
         }
@@ -201,7 +221,9 @@ class FCMService:
             message_payload["message"]["data"] = formatted_data
 
         try:
-            response = requests.post(url, headers=headers, json=message_payload, timeout=10)
+            response = requests.post(
+                url, headers=headers, json=message_payload, timeout=10
+            )
             if response.status_code == 200:
                 return True
 
@@ -214,14 +236,12 @@ class FCMService:
                     or "INVALID_ARGUMENT" in resp_text
                 ):
                     DeviceToken.objects.filter(token=token).update(is_active=False)
-                    logger.warning("Deactivated invalid FCM token: %s", token[:12])
+                    logger.warning("Deactivated invalid FCM device registration.")
 
-            logger.error(
-                "FCM send failed: HTTP %s - %s", response.status_code, response.text
-            )
+            logger.error("FCM send failed: HTTP %s", response.status_code)
             return False
         except Exception as exc:
-            logger.error("Exception occurred while sending FCM push: %s", exc)
+            logger.error("FCM transport failed (%s)", type(exc).__name__)
             return False
 
     @classmethod
@@ -236,15 +256,23 @@ class FCMService:
         """
         Sends push notification to all active devices of the user,
         respecting user settings preferences.
-        Returns the count of successfully delivered push messages.
+        Returns provider acceptances, not proof of device delivery or reading.
         """
         if not cls.should_send_to_user(user, notification_type):
             return 0
 
         active_tokens = list(
-            DeviceToken.objects.filter(user=user, is_active=True).values_list(
-                "token", flat=True
+            DeviceToken.objects.filter(user=user, is_active=True)
+            .filter(
+                Q(auth_session__isnull=True, user__security_epoch=0)
+                | Q(
+                    auth_session__revoked_at__isnull=True,
+                    auth_session__expires_at__gt=timezone.now(),
+                    auth_session__security_epoch=F("user__security_epoch"),
+                    auth_session__user_id=F("user_id"),
+                )
             )
+            .values_list("token", flat=True)
         )
         if not active_tokens:
             return 0

@@ -188,6 +188,12 @@ def expire_property_holds(prop, now=None):
 def assert_available(
     prop, snapshot, starts_on, ends_on, *, exclude_lease=None, exclude_hold=None
 ):
+    from core_apps.common.recovery import require_scope
+
+    require_scope("inventory_commitments")
+    from .habitability import assert_habitable
+
+    assert_habitable(prop, snapshot)
     if prop.retired_at:
         raise RentalConflict(
             "This inventory identity has been retired.", code="inventory_retired"
@@ -310,6 +316,15 @@ def reserve_lease(lease, starts_on, ends_on_exclusive, expires_at):
 
 
 def guard_topology_update(prop, replacement):
+    from .habitability import restricted_keys
+
+    if topology_digest(prop.rental_inventory) != topology_digest(
+        replacement
+    ) and restricted_keys(prop):
+        raise RentalConflict(
+            "Inspect and clear restricted physical accommodation before changing its identity.",
+            code="habitability_restricted",
+        )
     if (
         topology_digest(prop.rental_inventory) != topology_digest(replacement)
         and prop.rental_day_locks.exists()

@@ -47,6 +47,7 @@ def can_read_request(user, item):
 
 
 def can_offer_request(user, item):
+    from ..services.planning_parts.districts import filter_districts
     from ..services.student_housing.publication import request_current
 
     if not request_current(item):
@@ -55,7 +56,7 @@ def can_offer_request(user, item):
         item.user_id != user.pk
         and request_status(item) == "published"
         and item.visibility == "eligible_owners"
-        and public_properties()
+        and filter_districts(public_properties(), item.criteria)
         .filter(
             owner=user,
             is_ownership_verified=True,
@@ -190,13 +191,25 @@ def housing_demand(request):
     if request.query_params.get("student") == "true":
         items = items.filter(academic_plan__isnull=False)
     if request.query_params.get("matching_inventory") == "true":
-        cities = [
-            str(value)
-            for value in public_properties()
+        by_city = {}
+        for city_id, district_id in (
+            public_properties()
             .filter(owner=request.user, is_ownership_verified=True)
-            .values_list("city__id", flat=True)
-        ]
-        items = items.filter(criteria__city_id__in=cities)
+            .values_list("city__id", "district_catalog__id")
+            .distinct()
+        ):
+            selected = by_city.setdefault(str(city_id), set())
+            if district_id:
+                selected.add(str(district_id))
+        matching = Q(pk__in=[])
+        for city_id, district_ids in by_city.items():
+            district_scope = Q(criteria__district_ids=[]) | ~Q(
+                criteria__has_key="district_ids"
+            )
+            for district_id in district_ids:
+                district_scope |= Q(criteria__district_ids__contains=[district_id])
+            matching |= Q(criteria__city_id=city_id) & district_scope
+        items = items.filter(matching)
     if city:
         try:
             city = str(UUID(city))

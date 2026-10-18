@@ -7,7 +7,9 @@ from datetime import timedelta
 import ssl
 
 from config.planning import enabled_services_from_env
-from config.advanced_housing import enabled_services_from_env as advanced_services_from_env
+from config.advanced_housing import (
+    enabled_services_from_env as advanced_services_from_env,
+)
 
 # todo refactor the code, write explaining comments
 
@@ -376,6 +378,9 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = str(BASE_DIR / "media")
+SUPPORT_PRIVATE_MEDIA_ROOT = getenv(
+    "SUPPORT_PRIVATE_MEDIA_ROOT", str(BASE_DIR / "private_support_media")
+)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -455,6 +460,8 @@ DJOSER = {
     == "True",
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
     "EMAIL": {
+        "password_reset": "core_apps.users.emails.RecoveryPasswordResetEmail",
+        "activation": "core_apps.users.emails.RecoveryActivationEmail",
         "password_changed_confirmation": "core_apps.users.emails.SafePasswordChangedConfirmationEmail",
     },
     "ACTIVATION_URL": "activate/{uid}/{token}",
@@ -547,4 +554,14 @@ FIREBASE_CREDENTIALS_FILE = getenv(
 # New rating writes require an explicit rollout; reads/receipts remain available.
 REVIEWS_ENABLED = getenv("REVIEWS_ENABLED", "false").lower() == "true"
 
-CELERY_BEAT_SCHEDULE["reconcile-reviews"] = {"task": "core_apps.features.tasks.reconcile_reviews", "schedule": 300.0}
+CELERY_BEAT_SCHEDULE["reconcile-reviews"] = {
+    "task": "core_apps.features.tasks.reconcile_reviews",
+    "schedule": 300.0,
+}
+
+# Recovery control and journal are outside the restored primary database.
+RECOVERY_CONTROL_FILE = getenv("RECOVERY_CONTROL_FILE", "")
+RECOVERY_ENVIRONMENT = getenv("RECOVERY_ENVIRONMENT", "")
+RECOVERY_JOURNAL_ADAPTER = getenv("RECOVERY_JOURNAL_ADAPTER", "")
+RECOVERY_LOCAL_JOURNAL = getenv("RECOVERY_LOCAL_JOURNAL", "")
+SECURITY_ASSURANCE_PROVIDER = getenv("SECURITY_ASSURANCE_PROVIDER", "")

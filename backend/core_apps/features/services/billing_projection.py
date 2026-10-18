@@ -30,7 +30,10 @@ def invoice_payload(invoice, user, language="en", *, mobile=False):
         .select_related("receipt")
         .first()
     )
+    from .purchase_routing import routing
+
     payload = {
+        "purchase_routing": routing(invoice.purpose),
         "id": str(invoice.id),
         "reference": invoice.reference,
         "purpose": invoice.purpose,

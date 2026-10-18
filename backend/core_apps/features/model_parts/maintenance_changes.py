@@ -40,6 +40,7 @@ class MaintenanceRequest(TimeStampedModel):
         max_length=30, choices=Status.choices, default=Status.OPEN
     )
     appointment_at = models.DateTimeField(null=True, blank=True)
+    appointment_ends_at = models.DateTimeField(null=True, blank=True)
     appointment_version = models.PositiveIntegerField(default=0)
     access_approved_version = models.PositiveIntegerField(null=True, blank=True)
     proposed_cost_minor = models.PositiveBigIntegerField(null=True, blank=True)

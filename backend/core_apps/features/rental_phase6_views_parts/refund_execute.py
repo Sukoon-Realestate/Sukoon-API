@@ -48,18 +48,14 @@ def refund_execute(request, refund_id):
     from ..services.refunds import execute_refund
     from ..services.rental_phase3 import post_ledger_transaction
 
+    from ..services.financial_authority import require_financial_actor
+
+    roles = {
+        StaffProfile.RoleName.REFUND_OPERATOR,
+        StaffProfile.RoleName.FINANCIAL_APPROVER,
+    }
+    require_financial_actor(request.user, roles, "refund.execute")
     item = _refund(request, refund_id, allow_operations=True)
-    profile = getattr(request.user, "staff_profile", None)
-    if not request.user.is_superuser and (
-        not profile
-        or not profile.is_active
-        or profile.role_name
-        not in {
-            StaffProfile.RoleName.REFUND_OPERATOR,
-            StaffProfile.RoleName.FINANCIAL_APPROVER,
-        }
-    ):
-        raise PermissionDenied("A financial operations role is required.")
     key, revision = command_identity(request.data, minimum=1)
     recover = request.data.get("action") == "confirm_owner_recovery"
     if request.data.get("action", "execute") not in {
@@ -71,6 +67,7 @@ def refund_execute(request, refund_id):
         raise NotFound()
     operation = f"refund.{'recover' if recover else 'execute'}.{item.id}"
     with transaction.atomic():
+        require_financial_actor(request.user, roles, "refund.execute", lock=True)
         lease = Lease.objects.select_for_update().get(pk=item.lease_id)
         item = RefundRequest.objects.select_for_update().get(pk=item.pk)
         replay = replay_operation(request.user, operation, key, request.data)
@@ -103,6 +100,19 @@ def refund_execute(request, refund_id):
         else:
             if item.status != "approved":
                 raise RentalConflict("Only an approved refund can execute.")
+            from core_apps.users.services.sensitive_actions import consume
+
+            consume(
+                request,
+                action="refund.execute",
+                resource_id=item.id,
+                revision=item.revision,
+                payload={
+                    "command": request.data,
+                    "amount_minor": item.amount_minor,
+                    "payment_attempt_id": str(item.payment_attempt_id),
+                },
+            )
             item = execute_refund(item)
         evaluate_financial_closure(lease)
         return Response(

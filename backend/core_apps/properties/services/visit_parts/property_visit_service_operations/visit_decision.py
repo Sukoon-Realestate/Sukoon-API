@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from ....models import PropertyVisit
 from ..logger import logger
+from ...viewing_commands import notify
 
 
 class VisitDecisionMixin:
@@ -26,7 +27,9 @@ class VisitDecisionMixin:
 
         if status == PropertyVisit.Status.CANCELED:
             # Only tenant can cancel the visit
-            if visit_obj.tenant != user:
+            from ...viewing_access import participant
+
+            if visit_obj.tenant != user or not participant(visit_obj, user):
                 raise PermissionDenied(
                     _("You do not have permission to cancel this visit.")
                 )
@@ -37,8 +40,21 @@ class VisitDecisionMixin:
                 raise ValidationError(
                     _("This visit has already been canceled or rejected.")
                 )
+            if (
+                visit_obj.participant_decisions.exists()
+                or visit_obj.rental_invitations.exists()
+            ):
+                from ...post_visit_decision_parts.linked_invitation import (
+                    DecisionConflict,
+                )
+
+                raise DecisionConflict(
+                    "Attendance and existing commitments must be handled through their own continuation.",
+                    "attendance_recorded",
+                )
             visit_obj.status = status
             visit_obj.save(update_fields=["status", "updated_at"])
+            notify(visit_obj, status)
             return visit_obj
 
         elif status == PropertyVisit.Status.REJECTED:
@@ -58,6 +74,7 @@ class VisitDecisionMixin:
                 )
             visit_obj.status = status
             visit_obj.save(update_fields=["status", "updated_at"])
+            notification = None
 
             # * Notify tenant on accept (T-NOTIF-01/02) or reject
             try:
@@ -65,8 +82,9 @@ class VisitDecisionMixin:
                 from core_apps.notifications.services import NotificationService
 
                 owner_name = visit_obj.property.owner.get_full_name or "المالك"
-                NotificationService.create_notification(
+                notification = NotificationService.create_notification(
                     user=visit_obj.tenant,
+                    send_push=False,
                     notification_type=Notification.NotificationType.VISIT_REJECTED,
                     title="تم رفض طلب الزيارة",
                     body=f"نعتذر، لم يتمكن {owner_name} من قبول موعد الزيارة.",
@@ -80,6 +98,7 @@ class VisitDecisionMixin:
             except Exception as exc:
                 logger.error("Failed to notify tenant of visit status update: %s", exc)
 
+            notify(visit_obj, status, notification)
             return visit_obj
 
         else:
@@ -137,7 +156,7 @@ class VisitDecisionMixin:
             notification_data["conversation_id"] = str(conversation.id)
         title = "تم قبول طلب زيارتك"
         body = f"وافق المالك {owner_name} على موعد الزيارة. يمكنك الآن رؤية رقم هاتف المالك."
-        NotificationService.create_notification(
+        notification = NotificationService.create_notification(
             user=visit.tenant,
             notification_type=Notification.NotificationType.VISIT_ACCEPTED,
             title=title,
@@ -147,15 +166,7 @@ class VisitDecisionMixin:
             data=notification_data,
             send_push=False,
         )
-        transaction.on_commit(
-            lambda: FCMService.send_push_to_user(
-                user=visit.tenant,
-                title=title,
-                body=body,
-                data=notification_data,
-                notification_type=Notification.NotificationType.VISIT_ACCEPTED,
-            )
-        )
+        notify(visit, "accepted", notification)
         return visit
 
     @classmethod

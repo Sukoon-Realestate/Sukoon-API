@@ -8,14 +8,14 @@ from .policy import ReviewError
 
 
 def visit_decision(visit):
-    if visit.status != "confirmed":
+    if visit.status != "confirmed" or visit.company_id:
         raise ReviewError("experience_not_confirmed")
     decision = PropertyVisitDecision.objects.filter(
         visit=visit, tenant=visit.tenant, attended=True
     ).first()
     if (
         not decision
-        or decision.visit_revision != visit.revision
+        or decision.visit_revision > visit.revision
         or decision.property_id_snapshot != visit.property.id
     ):
         raise ReviewError("experience_not_confirmed")

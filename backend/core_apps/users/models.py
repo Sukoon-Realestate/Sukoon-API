@@ -14,6 +14,9 @@ class User(AbstractUser):
     email = models.EmailField(_("Email"), max_length=254, unique=True)
     is_verified = models.BooleanField(_("Is Verified"), default=False)
 
+    security_epoch = models.PositiveIntegerField(default=0)
+    sensitive_actions_frozen = models.BooleanField(default=False)
+
     username = None
 
     USERNAME_FIELD = "email"
@@ -63,3 +66,45 @@ class SocialAccount(TimeStampedModel):
 
     def __str__(self):
         return f"{self.provider}:{self.provider_uid} -> {self.user.email}"
+
+
+class AuthSession(TimeStampedModel):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="auth_sessions"
+    )
+    security_epoch = models.PositiveIntegerField()
+    expires_at = models.DateTimeField()
+    revoked_at = models.DateTimeField(null=True, blank=True)
+
+
+class SecurityEvent(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    actor = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="security_actions",
+    )
+    action = models.CharField(max_length=70)
+    security_epoch = models.PositiveIntegerField()
+    subject_id = models.UUIDField(null=True, blank=True)
+    policy_version = models.CharField(max_length=80, blank=True, default="")
+    decision = models.CharField(max_length=30)
+
+
+class SensitiveAuthorization(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    session = models.ForeignKey(AuthSession, on_delete=models.PROTECT)
+    security_epoch = models.PositiveIntegerField()
+    action = models.CharField(max_length=80)
+    resource_id = models.UUIDField()
+    resource_revision = models.PositiveIntegerField()
+    payload_digest = models.CharField(max_length=64)
+    policy = models.ForeignKey("features.PolicyDecision", on_delete=models.PROTECT)
+    expires_at = models.DateTimeField()
+    provider_challenge = models.CharField(max_length=200, blank=True, default="")
+    proof_digest = models.CharField(max_length=64, blank=True, default="")
+    verified_at = models.DateTimeField(null=True, blank=True)
+    consumed_at = models.DateTimeField(null=True, blank=True)
+    assurance = models.CharField(max_length=80, blank=True, default="")

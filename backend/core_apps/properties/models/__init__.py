@@ -8,7 +8,7 @@ from .portfolio import (
     ResidentialMedia,
 )
 from .property_type import PropertyType
-from .location import City, Governorate
+from .location import City, Governorate, District
 from .engagement import PropertyFavorite, PropertyRating, SavedProperty
 from .visit import (
     OwnerAvailabilitySlot,

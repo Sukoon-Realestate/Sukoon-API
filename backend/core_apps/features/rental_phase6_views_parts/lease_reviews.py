@@ -1,7 +1,7 @@
 """Rental phase6 views: lease reviews."""
 
 from datetime import timedelta
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
@@ -55,6 +55,9 @@ def lease_documents(request, lease_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def document_download(request, document_id):
+    from core_apps.common.recovery import require_scope
+
+    require_scope("private_artifacts")
     document = get_object_or_404(
         RentalDocument.objects.select_related("lease"), id=document_id
     )
@@ -75,6 +78,7 @@ def document_download(request, document_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
+@transaction.atomic
 def rental_statement_create(request):
     lease = _lease(request, request.data.get("lease_id"))
     request_key = request.data.get("request_key")
@@ -84,6 +88,23 @@ def rental_statement_create(request):
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])
+    from core_apps.common.recovery import require_scope
+    from core_apps.users.services.sensitive_actions import consume
+
+    require_scope("private_artifacts")
+    consume(
+        request,
+        action="private.export",
+        resource_id=lease.id,
+        revision=lease.revision,
+        payload={
+            "lease_id": str(lease.id),
+            "lease_revision": lease.revision,
+            "starts_on": request.data.get("starts_on"),
+            "ends_on_exclusive": request.data.get("ends_on_exclusive"),
+            "request_key": str(request_key),
+        },
+    )
     document = RentalDocument.objects.create(
         lease=lease,
         requested_by=request.user,
@@ -133,4 +154,5 @@ def lease_reviews(request, lease_id):
         )
     # Old clients cannot explain immutable submission or select canonical targets.
     from ..services.reputation.policy import ReviewError
+
     raise ReviewError("client_update_required")

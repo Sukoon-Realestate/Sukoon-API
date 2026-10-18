@@ -221,11 +221,11 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
     assert data_auth["account_id"] == str(user.id)
     assert data_auth["account_verified"] is True
     assert data_auth["policy_version"] == "planning-policy-v1"
-    assert data_auth["enabled_capabilities"] == []
-    assert data_auth["verified_services"] == []
+    assert data_auth["enabled_capabilities"] == ["company_housing", "residential_portfolios"]
+    assert data_auth["verified_services"] == ["company_housing", "residential_portfolios"]
     assert data_auth["allowed_actions"] == []
-    assert data_auth["expires_at"] is None
-    assert data_auth["blocking_reasons"]
+    assert data_auth["expires_at"] is not None
+    assert not data_auth["blocking_reasons"]
     assert res_auth["Cache-Control"] == "private, no-store"
 
     # Targeted capability & action query
@@ -233,7 +233,7 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
         "/api/v1/features/v1/planning-capabilities/?capability=housing_groups&action=create_group"
     )
     assert res_cap.status_code == 200
-    assert res_cap.data["enabled_capabilities"] == []
+    assert res_cap.data["enabled_capabilities"] == ["company_housing", "residential_portfolios"]
     assert res_cap.data["allowed_actions"] == []
 
     # 2. Unauthenticated / guest call (blocked from account planning)

@@ -4,6 +4,7 @@ import logging
 from datetime import timedelta
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.db import transaction
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from core_apps.common.idempotency import (
@@ -57,9 +58,16 @@ class PropertyVisitCreateAPIView(generics.CreateAPIView):
         )
         serializer.save(tenant=self.request.user, property_obj=property_obj)
 
+    @transaction.atomic
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        # Recheck authority even when the original command has a receipt.
+        from ...services.viewing_access import prepare_context
+
+        prepare_context(
+            request.user, serializer.validated_data.get("viewing_context", {})
+        )
         property_obj = get_object_or_404(
             Property.objects.select_related(
                 "owner", "owner__profile", "property_type", "governorate", "city"

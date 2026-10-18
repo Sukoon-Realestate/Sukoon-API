@@ -1,6 +1,7 @@
 from django.contrib import admin
 from core_apps.common.content_admin import ManagedContentAdmin
 from .models import HelpContact, HelpArticle
+from .ticket_admin import TicketAdmin  # noqa: F401
 
 
 @admin.register(HelpContact)

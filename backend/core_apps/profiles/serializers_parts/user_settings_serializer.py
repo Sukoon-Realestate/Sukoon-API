@@ -22,6 +22,7 @@ class UserSettingsSerializer(serializers.ModelSerializer):
         model = UserSettings
         fields = [
             "id",
+            "revision",
             # Notifications
             "visit_notifications",
             "new_properties_in_area",
@@ -39,6 +40,7 @@ class UserSettingsSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
+            "revision",
             "always_hide_mobile_number",
             "always_hide_mobile_number_locked",
             "sections",

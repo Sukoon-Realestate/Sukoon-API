@@ -5,7 +5,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, ValidationError
-from config.advanced_housing import require_mock_mode
+from config.advanced_housing import require_mock_mode, manual_review_available
 from ...asset_passport_models import (
     AssetObservation,
     AssetAnalysisJob,
@@ -142,7 +142,9 @@ def current_manifest(job, user):
 
 
 def create(user, asset, data):
-    require_mock_mode()
+    manual = manual_review_available()
+    if not manual:
+        require_mock_mode()
     rows = observations_for(user, data.get("observation_ids"), asset=asset)
     original = None
     if data.get("previous_run_id"):
@@ -160,9 +162,25 @@ def create(user, asset, data):
         previous_run=original,
         source_manifest=sources,
         source_digest=fingerprint(sources),
-        provider_version=VERSION,
+        provider_version="human-visual-review-v1" if manual else VERSION,
+        provider="manual_visual_review" if manual else "mock_asset_rules",
+        state="ready_for_review" if manual else "queued",
     )
     audit(job, user, "asset_analysis_queued")
+    if manual:
+        AssetAnalysisSuggestion.objects.create(
+            job=job,
+            kind="manual_visual_review",
+            uncertainty="unreviewed",
+            output={
+                "provider": "manual_visual_review",
+                "simulated": False,
+                "pixels_analyzed_by_model": False,
+                "comparison_basis": "awaiting_human_inspection",
+                "liability_determined": False,
+            },
+        )
+        return job
 
     def dispatch():
         try:
@@ -323,7 +341,9 @@ def finding_for(user, identifier, *, lock=False):
 
 
 def review(user, finding, data):
-    require_mock_mode()
+    manual = finding.job.provider == "manual_visual_review"
+    if not manual:
+        require_mock_mode()
     if finding.review_status != "ready_for_review":
         raise RentalConflict(
             "This finding already has a preserved review. Rerun for a new version.",
@@ -344,6 +364,45 @@ def review(user, finding, data):
             "Insufficient or changed evidence cannot become an accepted observation.",
             code="source_changed",
         )
+    if manual:
+        sources = current_manifest(finding.job, user)
+        required_ids = {media["id"] for row in sources for media in row["evidence"]}
+        inspected = data.get("inspected_evidence_ids", [])
+        if (
+            not isinstance(inspected, list)
+            or any(not isinstance(item, str) for item in inspected)
+            or set(inspected) != required_ids
+            or data.get("human_inspection_attested") is not True
+            or fingerprint(sources) != finding.job.source_digest
+        ):
+            raise ValidationError(
+                {
+                    "inspected_evidence_ids": "Review the exact currently authorized source images before submitting a human observation."
+                }
+            )
+        comparable = (
+            all(row["evidence"] for row in sources)
+            and data.get("comparison_quality") == "comparable"
+            and data.get("identity_confirmed") is True
+        )
+        if verdict == "accepted_as_observation" and not comparable:
+            raise ValidationError(
+                {
+                    "comparison_quality": "Insufficient or incomparable images cannot establish a visual observation."
+                }
+            )
+        finding.output = {
+            **finding.output,
+            "comparison_basis": "human_inspected_sources",
+            "reviewer_id": str(user.id),
+            "inspection_attested_at": timezone.now().isoformat(),
+            "inspected_evidence_ids": sorted(required_ids),
+            "comparison_quality": data.get("comparison_quality", "inconclusive"),
+            "identity_confirmed": data.get("identity_confirmed") is True,
+            "independent_inspection": False,
+            "liability_determined": False,
+        }
+        finding.uncertainty = "human_advisory" if comparable else "inconclusive"
     finding.review_note = text_field(data, "reason", required=True, limit=1200)
     finding.review_status, finding.reviewer, finding.reviewed_at = (
         verdict,
@@ -360,6 +419,11 @@ def finding_payload(row):
     return {
         "id": str(row.id),
         "job_id": str(row.job.id),
+        "source_manifest": (
+            row.job.source_manifest
+            if row.job.provider == "manual_visual_review"
+            else []
+        ),
         "revision": row.revision,
         "kind": row.kind,
         "uncertainty": row.uncertainty,
@@ -386,7 +450,7 @@ def payload(job, user):
         "previous_run_id": str(job.previous_run.id) if job.previous_run_id else "",
         "provider": job.provider,
         "provider_version": job.provider_version,
-        "simulated": True,
+        "simulated": job.provider != "manual_visual_review",
         "source_manifest": job.source_manifest,
         "findings": [finding_payload(row) for row in job.suggestions.all()],
         "allowed_actions": ["read"]

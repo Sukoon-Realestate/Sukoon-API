@@ -1,4 +1,6 @@
 from django.db import models
+from django.urls import reverse
+from core_apps.support.storage import SupportPrivateStorage
 from django.utils.translation import gettext_lazy as _
 
 from core_apps.common.models import TimeStampedModel
@@ -12,7 +14,8 @@ class TicketAttachment(TimeStampedModel):
         verbose_name=_("Message"),
     )
     name = models.CharField(_("File Name"), max_length=255)
-    file = models.FileField(_("File"), upload_to="support/attachments/")
+    file = models.FileField(_("File"), upload_to="support/attachments/", blank=True)
+    private_file = models.FileField(upload_to="attachments/", blank=True, storage=SupportPrivateStorage())
 
     class Meta:
         verbose_name = _("Ticket Attachment")
@@ -24,6 +27,4 @@ class TicketAttachment(TimeStampedModel):
 
     @property
     def file_url(self) -> str:
-        if self.file and hasattr(self.file, "url"):
-            return self.file.url
-        return ""
+        return reverse("support-attachment", kwargs={"id": self.id}) if self.private_file or self.file else ""

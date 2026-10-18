@@ -78,7 +78,8 @@ class TestFCMService:
         mock_post.assert_called_once()
         args, kwargs = mock_post.call_args
         assert "sokoun-99c7b" in args[0]
-        assert kwargs["json"]["message"]["notification"]["title"] == "إشعار جديد"
+        from core_apps.notifications.services.push_privacy import PUSH_TITLE
+        assert kwargs["json"]["message"]["notification"]["title"] == PUSH_TITLE
 
     @patch("requests.post")
     def test_send_push_to_device_deactivates_unregistered_token(self, mock_post, user):

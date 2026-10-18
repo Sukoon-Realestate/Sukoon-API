@@ -1,5 +1,6 @@
 import uuid
 from datetime import date, timedelta
+from unittest.mock import patch
 
 import pytest
 from django.utils import timezone
@@ -139,12 +140,14 @@ def test_complete_maintenance_vocabulary_and_exact_cost_approval(phase5_lease):
     appointment = (timezone.now() + timedelta(days=1)).isoformat()
     assert (
         action(
-            owner_client, item_id, "propose_appointment", 5, appointment_at=appointment
+            owner_client, item_id, "propose_appointment", 5, appointment_at=appointment,
+            appointment_ends_at=(timezone.now() + timedelta(days=1, hours=1)).isoformat()
         ).status_code
         == 200
     )
     assert action(tenant_client, item_id, "accept_appointment", 6).status_code == 200
-    assert action(owner_client, item_id, "start_work", 7).status_code == 200
+    with patch("django.utils.timezone.now", return_value=timezone.now() + timedelta(days=1, minutes=1)):
+        assert action(owner_client, item_id, "start_work", 7).status_code == 200
     assert action(owner_client, item_id, "report_resolved", 8).status_code == 200
     assert action(tenant_client, item_id, "confirm_resolved", 9).status_code == 200
     assert action(tenant_client, item_id, "reopen", 10).status_code == 200

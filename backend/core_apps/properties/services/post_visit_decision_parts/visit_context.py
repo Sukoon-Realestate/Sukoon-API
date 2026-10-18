@@ -10,8 +10,11 @@ from .continuation import continuation, reason_visible
 
 
 def visit_context(visit, actor):
-    decision = decision_for(visit)
-    invitation, ambiguous = linked_invitation(visit)
+    from ..viewing_access import participant, context_payload
+
+    decision_actor = actor if participant(visit, actor) else visit.tenant
+    decision = decision_for(visit, decision_actor)
+    invitation, ambiguous = linked_invitation(visit, decision_actor)
     if invitation and actor.pk not in {invitation.owner_id, invitation.tenant_id}:
         # A later property owner does not acquire another owner's contract or
         # invitation permissions merely by viewing the property's old visit.
@@ -43,6 +46,7 @@ def visit_context(visit, actor):
             serialized["reason"] = decision.reason
     return {
         "revision": visit.revision,
+        "viewing_context": context_payload(visit, actor),
         "offer_id": visit.offer_id,
         "offer_snapshot": visit.offer_snapshot,
         "post_visit_decision": serialized,

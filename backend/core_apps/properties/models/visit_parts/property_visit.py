@@ -1,5 +1,6 @@
 """Visit: property visit."""
 
+import builtins
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
@@ -28,6 +29,28 @@ class PropertyVisit(TimeStampedModel):
         related_name="visits",
         verbose_name=_("Tenant"),
     )
+    requested_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="requested_viewings",
+    )
+    company = models.ForeignKey(
+        "features.Company",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="viewings",
+    )
+    academic_plan = models.ForeignKey(
+        "features.AcademicHousingPlan",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="viewings",
+    )
+    context_kind = models.CharField(max_length=24, default="personal")
     visit_date = models.DateField(_("Visit Date"))
     visit_time = models.TimeField(_("Visit Time"))
     status = models.CharField(
@@ -84,6 +107,14 @@ class PropertyVisit(TimeStampedModel):
                 self.revision = max(self.revision, old.revision)
             return super().save(*args, **kwargs)
 
+    @builtins.property
+    def post_visit_decision(self):
+        # Compatibility for the original single-attendee integrations.
+        decision = self.participant_decisions.filter(tenant_id=self.tenant_id).first()
+        if decision is None:
+            raise AttributeError("No post-visit decision")
+        return decision
+
     class Meta:
         verbose_name = _("Property Visit")
         verbose_name_plural = _("Property Visits")
@@ -102,8 +133,8 @@ class PropertyVisit(TimeStampedModel):
 class PropertyVisitDecision(TimeStampedModel):
     """Immutable tenant statement, separate from public reviews and signing."""
 
-    visit = models.OneToOneField(
-        PropertyVisit, on_delete=models.CASCADE, related_name="post_visit_decision"
+    visit = models.ForeignKey(
+        PropertyVisit, on_delete=models.CASCADE, related_name="participant_decisions"
     )
     tenant = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="visit_decisions"
@@ -127,6 +158,9 @@ class PropertyVisitDecision(TimeStampedModel):
 
     class Meta:
         constraints = [
+            models.UniqueConstraint(
+                fields=["visit", "tenant"], name="one_decision_per_visit_participant"
+            ),
             models.UniqueConstraint(
                 fields=["tenant", "request_key"], name="unique_visit_decision_request"
             ),

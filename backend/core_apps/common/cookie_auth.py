@@ -22,9 +22,12 @@ class CookieAuthentication(JWTAuthentication):
             try:
                 validated_token = self.get_validated_token(raw_token)
 
-                return self.get_user(validated_token), validated_token
+                from core_apps.users.services.sessions import validate_session
+
+                user = validate_session(self.get_user(validated_token), validated_token)
+                return user, validated_token
 
             except TokenError as e:
-                logging.error(f"Token Validation Error !: {str(e)}")
+                logging.info("JWT validation rejected")
 
         return None

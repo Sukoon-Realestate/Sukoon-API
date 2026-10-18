@@ -154,15 +154,14 @@ def test_disabled_planning_never_grants_actions(rental_participants, query):
         API + "planning-capabilities/" + query, HTTP_ACCEPT_LANGUAGE="ar"
     )
     assert response.status_code == 200
-    assert (
-        response.data["allowed_actions"]
-        == response.data["verified_services"]
-        == response.data["enabled_capabilities"]
-        == []
-    )
-    assert response.data["expires_at"] is None
+    assert response.data["allowed_actions"] == []
+    # Company servicing and owner portfolios have independent rollout controls.
+    assert response.data["verified_services"] == ["company_housing", "residential_portfolios"]
+    assert response.data["enabled_capabilities"] == ["company_housing", "residential_portfolios"]
+    assert response.data["expires_at"] is not None
     assert response["Content-Language"] == "ar"
-    assert any("التخطيط" in reason for reason in response.data["blocking_reasons"])
+    if "capability=" in query:
+        assert response.data["blocking_reasons"]
 
 
 @pytest.mark.django_db
@@ -275,6 +274,12 @@ def test_expired_payment_hold_releases_inventory_but_retains_late_capture(
     before = timezone.now() - timedelta(seconds=1)
     Lease.objects.filter(pk=lease.pk).update(hold_expires_at=before)
     lease.inventory_day_locks.update(expires_at=before)
+    # Unknown payment protects stock. Only a confirmed terminal failure permits expiry.
+    assert expire_rental_sources_and_holds()["expired_agreements"] == 0
+    assert lease.inventory_day_locks.exists()
+    from .test_rental_lifecycle_safety import event
+    from core_apps.features.services.rental_phase3 import process_provider_event
+    process_provider_event(event(attempt, "failed"))
     assert expire_rental_sources_and_holds()["expired_agreements"] == 1
     assert expire_rental_sources_and_holds()["expired_agreements"] == 0
     assert not lease.inventory_day_locks.exists()

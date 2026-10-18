@@ -90,9 +90,11 @@ class TestTicketListCreateAPIView:
         assert Ticket.objects.count() == 1
 
     def test_create_ticket_with_multipart_attachment(self, auth_client, user):
-        image = SimpleUploadedFile(
-            "screenshot.png", b"fake_image_bytes", content_type="image/png"
-        )
+        import io
+        from PIL import Image
+        body = io.BytesIO()
+        Image.new("RGB", (3, 3)).save(body, "PNG")
+        image = SimpleUploadedFile("screenshot.png", body.getvalue(), content_type="image/png")
         payload = {
             "workspace": "tenant",
             "category": "visit",

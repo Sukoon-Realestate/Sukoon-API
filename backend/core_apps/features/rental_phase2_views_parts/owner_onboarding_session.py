@@ -53,6 +53,14 @@ def owner_onboarding_session(request):
             )
         if profile.status == OwnerPaymentProfile.Status.READY:
             raise RentalConflict("Beneficiary onboarding is already complete.")
+        from core_apps.users.services.sensitive_actions import consume
+
+        consume(
+            request,
+            action="beneficiary.onboarding",
+            resource_id=profile.id,
+            revision=profile.revision,
+        )
         provider_session = get_rental_provider().create_onboarding_session(
             profile.id, data["request_key"]
         )

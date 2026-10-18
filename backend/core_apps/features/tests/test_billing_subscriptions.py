@@ -209,7 +209,7 @@ def test_production_mock_is_refused(client, plan, settings):
     invoice = body(issue(client, plan)[0], 201)
     settings.RENTAL_RUNTIME_ENVIRONMENT = "production"
     response, _ = pay_disabled(client, invoice)
-    assert body(response, 403) is None
+    assert body(response, 409) is None
     assert not PaymentAttempt.objects.exists()
 
 

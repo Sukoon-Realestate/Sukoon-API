@@ -1,3 +1,5 @@
+from ..planning_parts.districts import district_matches
+
 """Transaction-owned tender commands. A package is a proposal, never a reservation."""
 
 from collections import Counter
@@ -203,6 +205,8 @@ def publish(user, tender):
         "participant_count": len(requirements),
         "city_id": tender.request.criteria.get("city_id", ""),
         "city_name": tender.request.criteria.get("city", {}).get("name", ""),
+        "district_ids": tender.request.criteria.get("district_ids", []),
+        "districts": tender.request.criteria.get("districts", []),
         "currency": "EGP",
         "price_period": "monthly",
         "requirements": [
@@ -343,7 +347,8 @@ def bid(request, tender):
     for value in sorted(raw, key=lambda x: str(x.get("property_id", ""))):
         prop, snapshot = selection(request, value, owned=True)
         if (
-            str(prop.city.id) != tender.request.criteria.get("city_id")
+            not district_matches(prop, tender.request.criteria)
+            or str(prop.city.id) != tender.request.criteria.get("city_id")
             or snapshot["terms"].get("price_period") != "monthly"
         ):
             raise ValidationError(

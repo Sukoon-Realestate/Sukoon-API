@@ -135,6 +135,8 @@ def create_ticket(
                     "attachments": f"حجم الملف '{att.name}' يتجاوز الحد الأقصى 5 ميجابايت."
                 }
             )
+        from core_apps.support.services.private_attachments import clean_image
+        clean_image(att)
 
     reference = generate_ticket_reference()
     while Ticket.objects.filter(reference=reference).exists():
@@ -157,12 +159,15 @@ def create_ticket(
         body=description,
     )
 
-    for att in attachments:
-        TicketAttachment.objects.create(
-            message=initial_message,
-            name=att.name,
-            file=att,
-        )
+    stored = []
+    try:
+        for att in attachments:
+            from core_apps.support.services.private_attachments import store_image
+            stored.append(store_image(initial_message, att))
+    except Exception:
+        for attachment in stored:
+            attachment.private_file.delete(save=False)
+        raise
 
     logger.info(
         "Created support ticket %s (%s) for user %s in workspace %s",

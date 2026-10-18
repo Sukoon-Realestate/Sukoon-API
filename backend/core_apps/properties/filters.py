@@ -3,6 +3,10 @@ import django_filters
 from .models import Property, PropertyVisit, PropertyType
 
 
+class DistrictIdsFilter(django_filters.BaseInFilter, django_filters.UUIDFilter):
+    pass
+
+
 class PropertyFilter(django_filters.FilterSet):
     """
     Filter class for Property listings.
@@ -32,6 +36,9 @@ class PropertyFilter(django_filters.FilterSet):
     property_type = django_filters.CharFilter(field_name="property_type__slug")
     governorate = django_filters.UUIDFilter(field_name="governorate__id")
     city = django_filters.UUIDFilter(field_name="city__id")
+    district_ids = DistrictIdsFilter(
+        field_name="district_catalog__id", lookup_expr="in"
+    )
     price_min = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     price_max = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
     bedrooms_min = django_filters.NumberFilter(field_name="bedrooms", lookup_expr="gte")

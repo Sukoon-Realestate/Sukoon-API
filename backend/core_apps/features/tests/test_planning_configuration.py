@@ -15,6 +15,7 @@ from .test_rental_phase2 import authenticated, rental_participants
 
 
 API = "/api/v1/features/v1/"
+ALWAYS_READ_SERVICES = ["company_housing", "residential_portfolios"]
 CORE_SERVICES = [
     name for name in SERVICES if name not in {"commute", "tenant_assistant"}
 ]
@@ -35,6 +36,7 @@ names = (
     "PLANNING_ENABLED_SERVICES", "PLANNING_MOCK_DISCOVERY",
     "RENTAL_PROVIDER_BACKEND", "RENTAL_FAKE_PROVIDER_ALLOWED",
     "RENTAL_RUNTIME_ENVIRONMENT",
+    "STUDENT_ENABLED_SERVICES", "COMPANY_HOUSING_ENABLED",
 )
 print(json.dumps({
     **{name: getattr(settings, name) for name in names},
@@ -118,6 +120,9 @@ def normal_planning(settings, normal_configuration):
     for name, value in normal_configuration.items():
         if name.isupper():
             setattr(settings, name, value)
+    # This matrix isolates core planning; student/company readiness has its own suites.
+    settings.STUDENT_ENABLED_SERVICES = []
+    settings.COMPANY_HOUSING_ENABLED = False
     settings.PLANNING_ROUTES_API_KEY = ""
     settings.PLANNING_GEMINI_API_KEY = ""
     settings.PLANNING_GEMINI_MODEL = ""
@@ -134,8 +139,8 @@ def test_core_service_grants_work_without_providers(
         API + "planning-capabilities/", {"capability": capability, "action": "read"}
     )
     assert response.status_code == 200
-    assert response.data["enabled_capabilities"] == list(SERVICES)
-    assert response.data["verified_services"] == CORE_SERVICES
+    assert response.data["enabled_capabilities"] == ALWAYS_READ_SERVICES + list(SERVICES)
+    assert response.data["verified_services"] == ALWAYS_READ_SERVICES + CORE_SERVICES
     assert response.data["allowed_actions"] == ["read"]
     assert response.data["blocking_reasons"] == []
     assert response.data["account_id"] == str(tenant.id)
@@ -248,7 +253,7 @@ def test_missing_provider_reports_setup_without_disabling_other_services(
     )
     assert capability in grant.data["enabled_capabilities"]
     assert capability not in grant.data["verified_services"]
-    assert grant.data["verified_services"] == CORE_SERVICES
+    assert grant.data["verified_services"] == ALWAYS_READ_SERVICES + CORE_SERVICES
     assert grant.data["allowed_actions"] == []
     assert grant.data["blocking_reasons"] == [
         (
@@ -280,5 +285,5 @@ def test_provider_capabilities_become_available_independently(
     client = authenticated(rental_participants[1])
     for capability, action in [("commute", "search"), ("tenant_assistant", "ask")]:
         grant = client.get(API + "planning-capabilities/", {"capability": capability})
-        assert grant.data["verified_services"] == CORE_SERVICES + ready
+        assert grant.data["verified_services"] == ALWAYS_READ_SERVICES + CORE_SERVICES + ready
         assert (action in grant.data["allowed_actions"]) == (capability in ready)

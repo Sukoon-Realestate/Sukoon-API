@@ -7,7 +7,6 @@ from ..rental_lifecycle_serializers import CaseBody, CaseActionBody
 from ..services.rental_lifecycle.cases import (
     case_queryset,
     case_payload,
-    case_action,
     open_system_case,
 )
 from ..services.rental_lifecycle.common import require_revision
@@ -63,6 +62,10 @@ def rental_cases(request, operations=False):
             reason=data["reason"],
             next_action="Review the agreed selection and both participant accounts.",
         )
+        if data["kind"] == "habitability":
+            from ..services.rental_lifecycle.habitability import report
+
+            report(item, data)
         return item, case_payload(item, request.user), 201
 
     return mutate(request, "rental_case.create", authorize, execute)
@@ -80,17 +83,7 @@ def rental_case(request, case_id, operations=False):
         return Response(case_payload(item, request.user))
     data = validated(CaseActionBody, request.data)
 
-    def authorize():
-        if item.property_id:
-            Property.objects.select_for_update().get(pk=item.property_id)
-        if item.lease_id:
-            Lease.objects.select_for_update().get(pk=item.lease_id)
-        return get_object_or_404(
-            case_queryset(request.user).select_for_update(of=("self",)), id=case_id
-        )
+    from ..services.rental_lifecycle.case_commands import act_on_case
 
-    def execute(current):
-        current = case_action(current, request.user, data)
-        return current, case_payload(current, request.user), 200
-
-    return mutate(request, f"rental_case.action.{case_id}", authorize, execute)
+    output, status = act_on_case(request.user, case_id, data, command_data=request.data)
+    return Response(output, status=status)

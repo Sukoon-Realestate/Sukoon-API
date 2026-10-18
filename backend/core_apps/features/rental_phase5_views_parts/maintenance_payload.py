@@ -13,6 +13,7 @@ MAINTENANCE_ACTIONS = {
     "propose_appointment",
     "accept_appointment",
     "start_work",
+    "report_missed",
     "report_resolved",
     "confirm_resolved",
     "reopen",
@@ -31,9 +32,13 @@ def _money(value):
     )
 
 
-def _lease(request, lease_id, lock=False):
+def _lease(request, lease_id, lock=False, servicing=False):
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
-        require_rental_provider(request.user)
+        if servicing:
+            from ..services.rental_lifecycle.common import require_actor
+            require_actor(request.user)
+        else:
+            require_rental_provider(request.user)
     queryset = Lease.objects.select_related("owner", "tenant")
     if lock:
         queryset = queryset.select_for_update(of=("self",))
@@ -75,6 +80,7 @@ def maintenance_payload(item, user=None):
             item.appointment_at.isoformat() if item.appointment_at else None
         ),
         "appointment_version": item.appointment_version,
+        "appointment_ends_at": item.appointment_ends_at.isoformat() if item.appointment_ends_at else None,
         "access_approved_version": item.access_approved_version,
         "proposed_cost": _money(item.proposed_cost_minor),
         "cost_payer": item.cost_payer or None,

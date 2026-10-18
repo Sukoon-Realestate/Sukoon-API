@@ -15,8 +15,17 @@ class PropertyDetailMediaMixin:
             and request.user.is_authenticated
             and (request.user == obj.owner or request.user.is_staff)
         )
+        from core_apps.features.services.rental_lifecycle.habitability import (
+            restricted_keys,
+            offer_restricted,
+        )
+
+        restricted = restricted_keys(obj)
         offers = []
         for offer in inventory.get("offers", []):
+            if offer_restricted(obj, offer, restricted):
+                offer["availability"] = "unavailable"
+                offer["habitability_restricted"] = True
             if not is_owner and (
                 offer.get("archived") or offer.get("availability") != "available"
             ):

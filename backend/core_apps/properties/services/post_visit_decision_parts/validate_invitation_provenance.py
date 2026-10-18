@@ -42,6 +42,12 @@ def validate_invitation_provenance(invitation):
         raise DecisionConflict(
             "The invitation has no valid source decision.", "source_mismatch"
         )
+    from ..viewing_access import participant
+
+    if invitation.source_visit.company_id or not participant(
+        invitation.source_visit, invitation.tenant
+    ):
+        raise DecisionConflict("The viewing authority has changed.", "source_mismatch")
     decision = invitation.source_decision
     visit = invitation.source_visit
     if (

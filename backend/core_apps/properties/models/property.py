@@ -126,6 +126,13 @@ class Property(TimeStampedModel):
         related_name="properties",
         verbose_name=_("City"),
     )
+    district_catalog = models.ForeignKey(
+        "District",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="properties",
+    )
     district = models.CharField(_("District"), max_length=100)
     street = models.CharField(_("Street"), max_length=255, blank=True, default="")
     country = models.CharField(

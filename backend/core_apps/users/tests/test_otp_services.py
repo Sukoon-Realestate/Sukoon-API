@@ -164,3 +164,11 @@ class TestOtpService:
         assert cached is not None
         assert len(mail.outbox) == 1
         assert cached["otp"] in mail.outbox[0].body
+
+
+def test_otp_failure_log_does_not_store_email_code_or_provider_detail(caplog):
+    with patch("core_apps.users.services.otp_service.send_mail", side_effect=OSError("private@example.test code=765432 token=secret")):
+        assert send_otp_email("private@example.test", "765432") is False
+    assert "private@example.test" not in caplog.text
+    assert "765432" not in caplog.text and "secret" not in caplog.text
+    assert "OSError" in caplog.text

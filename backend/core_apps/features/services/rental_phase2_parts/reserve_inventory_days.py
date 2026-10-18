@@ -19,6 +19,12 @@ def activate_inventory(lease):
     from ..rental_lifecycle.inventory import hold_coverage
 
     Property.objects.select_for_update().get(pk=lease.property_id)
+    from core_apps.common.recovery import require_scope
+
+    require_scope("inventory_commitments")
+    from ..rental_lifecycle.habitability import assert_habitable
+
+    assert_habitable(lease.property, lease.offer_snapshot)
     if not hold_coverage(lease):
         raise RentalConflict("The inventory hold has expired.", code="hold_expired")
     lease.inventory_day_locks.filter(kind="hold").update(

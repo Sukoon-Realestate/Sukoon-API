@@ -3,7 +3,7 @@
 from datetime import timedelta
 from django.db.models import Q
 from django.utils import timezone
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from ...models import RentalOperationalCase, RentalEvidence
 from .common import audit, require_revision, require_staff, staff_role
 from ..rental_phase2 import RentalConflict
@@ -19,6 +19,8 @@ ROLES = {
     "payout_operator",
 }
 CASE_KINDS = {
+    "habitability",
+    "habitability_impact",
     "student_verification",
     "maintenance",
     "roommate_support",
@@ -56,10 +58,36 @@ def open_system_case(
     from .common import lifecycle_policy
 
     try:
-        _, rules = lifecycle_policy()
+        policy, rules = lifecycle_policy()
         case_hours = rules["case_hours"]
+        deadline_policy = {
+            "version": policy.version,
+            "case_hours": case_hours,
+            "basis": "elapsed_hours",
+            "effect": "escalation_only",
+        }
     except RentalConflict:
-        case_hours = 24  # Operational fallback; does not enable commercial actions.
+        case_hours = 24  # Existing operational fallback; never a commercial deadline.
+        deadline_policy = {
+            "version": None,
+            "case_hours": case_hours,
+            "basis": "elapsed_hours",
+            "effect": "escalation_only",
+            "source": "existing_operational_fallback",
+        }
+    if hold and hold.reconciliation_deadline:
+        due_at = hold.reconciliation_deadline
+        deadline_policy = {
+            "version": hold.policy_version,
+            "basis": "original_hold_reconciliation_deadline",
+            "effect": "escalation_only",
+            "source": "reservation_hold",
+            "hold_id": str(hold.id),
+            "hold_revision": hold.revision,
+            "due_at": due_at.isoformat(),
+        }
+    else:
+        due_at = timezone.now() + timedelta(hours=case_hours)
     item, created = RentalOperationalCase.objects.get_or_create(
         source_key=source_key,
         defaults={
@@ -87,20 +115,19 @@ def open_system_case(
                     else "support"
                 )
             ),
-            "due_at": (
-                hold.reconciliation_deadline
-                if hold and hold.reconciliation_deadline
-                else timezone.now() + timedelta(hours=case_hours)
-            ),
-            "baseline": (
-                {
-                    "lease_revision": lease.revision,
-                    "selection": lease.offer_snapshot,
-                    "terms": lease.terms,
-                }
-                if lease
-                else {}
-            ),
+            "due_at": due_at,
+            "baseline": {
+                "response_target": deadline_policy,
+                **(
+                    {
+                        "lease_revision": lease.revision,
+                        "selection": lease.offer_snapshot,
+                        "terms": lease.terms,
+                    }
+                    if lease
+                    else {}
+                ),
+            },
         },
     )
     if created:
@@ -128,6 +155,12 @@ def notify_case_participants(item, action):
 
 
 def case_queryset(user):
+    own = RentalOperationalCase.objects.filter(
+        Q(opened_by=user)
+        | Q(lease__owner=user)
+        | Q(lease__tenant=user)
+        | Q(hold__actor=user)
+    )
     if staff_role(user, ROLES):
         qs = RentalOperationalCase.objects.all()
         role = getattr(getattr(user, "staff_profile", None), "role_name", "")
@@ -137,17 +170,14 @@ def case_queryset(user):
             qs = qs.filter(team="support")
         elif not user.is_superuser:
             qs = qs.filter(team="finance")
-        return qs
-    return RentalOperationalCase.objects.filter(
-        Q(opened_by=user)
-        | Q(lease__owner=user)
-        | Q(lease__tenant=user)
-        | Q(hold__actor=user)
-    )
+        return qs | own
+    return own
 
 
 def case_payload(item, user):
-    operator = staff_role(user, ROLES)
+    from .habitability import projection
+
+    operator = independent_case_operator(item, user)
     from ...models import RentalAuditEvent
 
     replies = RentalAuditEvent.objects.filter(
@@ -157,16 +187,26 @@ def case_payload(item, user):
         "id": str(item.id),
         "revision": item.revision,
         "kind": item.kind,
+        "habitability": projection(item),
         "status": item.status,
         "lease_id": str(item.lease.id) if item.lease else None,
         "reason": item.reason,
         "next_action": item.next_action,
         "responsible_team": item.team,
         "assigned": item.assigned_to_id is not None,
+        "response_target": item.baseline.get("response_target"),
         "due_at": item.due_at.isoformat(),
         "escalated_at": item.escalated_at.isoformat() if item.escalated_at else None,
         "resolution_code": item.resolution_code,
         "resolution": item.resolution,
+        "remedies": [
+            {"kind": kind, "id": str(remedy.id), "status": remedy.status}
+            for kind, remedy in [("refund", item.refund), ("payout", item.payout)]
+            if remedy is not None
+        ],
+        "assignment_current": bool(
+            item.assigned_to_id and independent_case_operator(item, item.assigned_to)
+        ),
         "replies": [
             {
                 "text": row.reason,
@@ -176,7 +216,8 @@ def case_payload(item, user):
             for row in replies
         ],
         "allowed_actions": (
-            ["assign", "triage", "resolve", "reopen", "reply"]
+            ["assign", "triage", "reopen", "reply"]
+            + (["resolve"] if item.assigned_to_id == user.pk else [])
             + (["link_remedy"] if item.team == "finance" else [])
             if operator
             else ["reply"]
@@ -188,16 +229,55 @@ def case_payload(item, user):
     }
 
 
+def independent_case_operator(item, user):
+    if not staff_role(user, ROLES):
+        return False
+    interested = {item.opened_by_id}
+    if item.lease_id:
+        interested.update({item.lease.owner_id, item.lease.tenant_id})
+    if item.hold_id:
+        interested.add(item.hold.actor_id)
+    if user.pk in interested:
+        return False
+    role = getattr(getattr(user, "staff_profile", None), "role_name", "")
+    return user.is_superuser or (
+        (item.team == "verification" and role == "kyc_reviewer")
+        or (item.team == "support" and role in {"support", "dispute_resolver"})
+        or (
+            item.team == "finance"
+            and role
+            in {
+                "financial_approver",
+                "refund_operator",
+                "payout_operator",
+                "psp_reconciliation",
+            }
+        )
+    )
+
+
 def case_action(item, user, data):
     require_revision(item, data.get("expected_revision"))
     action = data.get("action")
     reason = str(data.get("reason", "")).strip()
     if not reason:
         raise ValidationError({"reason": "Explain the action."})
+    if (
+        action == "resolve"
+        and item.habitability_restrictions.filter(cleared_at__isnull=True).exists()
+    ):
+        raise RentalConflict(
+            "The approved restriction requires a separate inspected clearance.",
+            code="habitability_restricted",
+        )
     if action == "reply":
         audit(item, user, "case.reply", reason)
     else:
         require_staff(user, ROLES)
+        if not independent_case_operator(item, user):
+            raise PermissionDenied(
+                "An independent operator authorized for this team is required."
+            )
         if action == "assign":
             from core_apps.users.models import User
 
@@ -205,7 +285,7 @@ def case_action(item, user, data):
             if (
                 not target
                 or not target.is_active
-                or not staff_role(target, ROLES)
+                or not independent_case_operator(item, target)
                 or not case_queryset(target).filter(pk=item.pk).exists()
             ):
                 raise ValidationError(
@@ -273,9 +353,11 @@ def case_action(item, user, data):
                         "psp_reconciliation",
                     },
                 )
-            if not item.assigned_to_id:
+            if item.assigned_to_id != user.pk or not independent_case_operator(
+                item, item.assigned_to
+            ):
                 raise RentalConflict(
-                    "Assign responsibility before resolving this case."
+                    "Assign this case to the current independent operator before resolving it."
                 )
             if item.payment_attempt and item.payment_attempt.payment_status in {
                 "created",

@@ -127,6 +127,8 @@ class PlanningEvent(TimeStampedModel):
         "notifications.Notification", on_delete=models.SET_NULL, null=True, blank=True
     )
     delivered_at = models.DateTimeField(null=True, blank=True)
+    delivery_status = models.CharField(max_length=30, default="pending")
+    provider_accepted_at = models.DateTimeField(null=True, blank=True)
     attempts = models.PositiveIntegerField(default=0)
 
     class Meta:

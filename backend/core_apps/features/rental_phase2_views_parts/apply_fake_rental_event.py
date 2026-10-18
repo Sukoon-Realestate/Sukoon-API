@@ -166,4 +166,7 @@ def fake_rental_provider_webhook(request):
         raise NotFound()
     if not verify_fake_webhook(request.data, request.headers.get("X-Rental-Signature")):
         raise PermissionDenied("Invalid provider signature.")
+    from core_apps.common.recovery import require_scope
+
+    require_scope("provider_callbacks")
     return Response(apply_fake_rental_event(request.data))

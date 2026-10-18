@@ -72,7 +72,7 @@ def offer_snapshot(offer, request, *, turnover_days=0):
     return snapshot
 
 
-def capture(user, company, data):
+def capture(user, company, data, *, frozen_assumptions=None):
     request = request_for(user, data.get("request_id"), write=True)
     if request.company_id != company.pk:
         raise ValidationError({"request_id": "Choose a request from this company."})
@@ -211,7 +211,9 @@ def capture(user, company, data):
     }
     from .assumptions import capture as capture_assumptions
 
-    planning_assumptions = capture_assumptions(user, data, set(staff_ids), unit_ids)
+    planning_assumptions = capture_assumptions(
+        user, data, set(staff_ids), unit_ids, frozen=frozen_assumptions
+    )
     return {
         "schema": 1,
         "planning_assumptions": planning_assumptions,
@@ -276,7 +278,12 @@ def source_data(snapshot):
 
 def freshness(scenario, user):
     try:
-        current = capture(user, scenario.company, source_data(scenario.input_snapshot))
+        current = capture(
+            user,
+            scenario.company,
+            source_data(scenario.input_snapshot),
+            frozen_assumptions=scenario.input_snapshot.get("planning_assumptions"),
+        )
         return "current" if fingerprint(current) == scenario.input_digest else "stale"
     except (ValidationError, RentalConflict, Http404):
         return "stale"

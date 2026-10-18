@@ -61,17 +61,16 @@ def scheduled_at(visit):
     return datetime.combine(visit.visit_date, visit.visit_time, CAIRO)
 
 
-def decision_for(visit):
-    try:
-        return visit.post_visit_decision
-    except PropertyVisitDecision.DoesNotExist:
-        return None
+def decision_for(visit, actor=None):
+    return visit.participant_decisions.filter(tenant=actor or visit.tenant).first()
 
 
-def linked_invitation(visit):
+def linked_invitation(visit, actor=None):
+    tenant = actor or visit.tenant
     """Do not invent a visit link for ambiguous historical invitations."""
     linked = (
-        visit.rental_invitations.select_related("lease", "property", "owner", "tenant")
+        visit.rental_invitations.filter(tenant=tenant)
+        .select_related("lease", "property", "owner", "tenant")
         .order_by("-created_at", "-pkid")
         .first()
     )
@@ -82,7 +81,7 @@ def linked_invitation(visit):
             provenance_version="historical_v0",
             source_visit__isnull=True,
             property=visit.property,
-            tenant=visit.tenant,
+            tenant=tenant,
             owner=visit.property.owner,
         )
         .filter(status__in=["pending", "accepted"])
@@ -126,7 +125,9 @@ def historical_agreement(visit):
 
 def eligibility(visit, actor, *, decision=None, invitation=None, ambiguous=False):
     reason = None
-    if actor.pk != visit.tenant_id:
+    from ..viewing_access import participant
+
+    if not participant(visit, actor):
         reason = "not_visit_tenant"
     elif decision:
         reason = "decision_already_recorded"

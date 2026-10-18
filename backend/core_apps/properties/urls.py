@@ -1,4 +1,7 @@
 from django.urls import path
+from .views.districts import DistrictListAPIView
+from .views.viewing_commands import viewing_command, viewing_receipt
+from .views.viewing_representatives import representatives
 from .views.post_visit_decision import post_visit_decision
 
 from .views import (
@@ -45,7 +48,23 @@ from .views import (
 )
 
 urlpatterns = [
-    path("visits/<uuid:id>/post-visit-decision/", post_visit_decision, name="post-visit-decision"),
+    path(
+        "viewing-companies/<uuid:company_id>/representatives/",
+        representatives,
+        name="viewing-representatives",
+    ),
+    path("visits/creation-receipt/", viewing_receipt, name="viewing-creation-receipt"),
+    path("visits/<uuid:id>/commands/", viewing_command, name="viewing-command"),
+    path(
+        "cities/<uuid:city_id>/districts/",
+        DistrictListAPIView.as_view(),
+        name="district-list",
+    ),
+    path(
+        "visits/<uuid:id>/post-visit-decision/",
+        post_visit_decision,
+        name="post-visit-decision",
+    ),
     path("governorates/", GovernorateListAPIView.as_view(), name="governorate-list"),
     path("cities/", CityListAPIView.as_view(), name="city-list"),
     path("types/", PropertyTypeListAPIView.as_view(), name="property-type-list"),

@@ -39,9 +39,8 @@ def register_user(validated_data: dict) -> Any:
     create_and_send_otp(user)
 
     logger.info(
-        "Registered user %s (%s) and dispatched verification OTP.",
+        "Registered user %s and dispatched verification OTP.",
         user.id,
-        user.email,
     )
     return user
 
@@ -58,7 +57,6 @@ def delete_user_account(user: Any) -> None:
     ! Cloudinary assets are cleaned up best-effort.
     """
     user_id = getattr(user, "id", None)
-    email = getattr(user, "email", "")
 
     # * Collect Cloudinary public IDs for best-effort deletion
     cloudinary_public_ids = []
@@ -94,12 +92,12 @@ def delete_user_account(user: Any) -> None:
         logger.warning(
             "Could not inspect properties for Cloudinary cleanup on user %s: %s",
             user_id,
-            exc,
+            type(exc).__name__,
         )
 
     # * Permanently delete user from database (triggers CASCADE on all related models)
     user.delete()
-    logger.info("Permanently deleted user %s (%s)", user_id, email)
+    logger.info("Permanently deleted user %s", user_id)
 
     # * Clean up Cloudinary assets best-effort without blocking or rolling back
     if cloudinary_public_ids:
@@ -111,13 +109,17 @@ def delete_user_account(user: Any) -> None:
                     cloudinary.uploader.destroy(pid)
                 except Exception as c_exc:
                     logger.warning(
-                        "Cloudinary destroy failed for public_id %s: %s", pid, c_exc
+                        "Cloudinary cleanup failed for user %s (%s)",
+                        user_id,
+                        type(c_exc).__name__,
                     )
         except ImportError:
             pass
         except Exception as exc:
             logger.warning(
-                "Cloudinary cleanup encountered an error for user %s: %s", user_id, exc
+                "Cloudinary cleanup encountered an error for user %s (%s)",
+                user_id,
+                type(exc).__name__,
             )
 
 
@@ -169,16 +171,20 @@ def complete_user_registration(user: Any, validated_data: dict) -> dict:
 
 # * Change user password service
 @transaction.atomic
+@transaction.atomic
 def change_user_password(user: Any, current_password: str, new_password: str) -> None:
     """
     Validates current password, checks usability for social accounts,
-    and updates password while keeping current session intact.
+    and revokes sessions after a password change.
     Never logs credentials.
     """
     from rest_framework.exceptions import ValidationError
     from django.contrib.auth.password_validation import validate_password
     from django.core.exceptions import ValidationError as DjangoValidationError
 
+    from core_apps.users.models import User
+
+    user = User.objects.select_for_update().get(pk=user.pk)
     if not user.has_usable_password():
         raise ValidationError(
             {
@@ -196,4 +202,7 @@ def change_user_password(user: Any, current_password: str, new_password: str) ->
 
     user.set_password(new_password)
     user.save(update_fields=["password"])
-    logger.info("Successfully changed password for user %s", user.id)
+    from .sessions import revoke_all
+
+    revoke_all(user, action="password.change")
+    logger.info("Password changed and sessions revoked")

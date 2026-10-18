@@ -23,6 +23,9 @@ class CompanyConversationGrant:
 
 
 def case_members(request):
+    from core_apps.common.recovery import require_scope
+
+    require_scope("company_authority")
     return (
         CompanyMembership.objects.filter(
             company=request.company,

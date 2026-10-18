@@ -14,6 +14,7 @@ from ..rental_serializers_parts.maintenance_cost_decision_serializer import (
     MaintenanceCostDecisionSerializer,
 )
 from ..services.cycle_permissions import MAINTENANCE_TRANSITIONS, cycle_actions
+from ..services.maintenance_access import access_window_current, appointment_reviewable
 from ..services.commands import money_minor
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .maintenance_payload import (
@@ -41,6 +42,9 @@ def maintenance_action(request, request_id):
     transitions = MAINTENANCE_TRANSITIONS
     with transaction.atomic():
         item = _maintenance(request, request_id, lock=True)
+        replay = replay_operation(request.user, operation, request.data["request_key"], request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
         if int(request.data.get("expected_revision", 0)) != item.revision:
             raise RentalConflict(
                 "Maintenance revision conflict.", code="stale_revision"
@@ -48,8 +52,7 @@ def maintenance_action(request, request_id):
         if action in transitions and item.status not in transitions[action][0]:
             raise RentalConflict("Unsupported maintenance transition.")
         if action == "start_work" and (
-            item.appointment_version != item.access_approved_version
-            or not item.appointment_at
+            not access_window_current(item)
             or (
                 item.proposed_cost_minor
                 and item.cost_version != item.approved_cost_version
@@ -59,6 +62,19 @@ def maintenance_action(request, request_id):
                 "Current access consent and cost approval are required.",
                 code="consent_required",
             )
+        if action == "accept_appointment" and not appointment_reviewable(item):
+            raise RentalConflict("Review a new bounded appointment before approving access.", code="appointment_expired")
+        if action == "report_missed" and not str(request.data.get("note", "")).strip():
+            raise ValidationError({"note": "Describe the missed appointment."})
+        if action in {"approve_cost", "reject_cost"}:
+            responsible = item.lease.owner if item.cost_payer == "owner" else item.lease.tenant
+            if request.user != responsible or not request.user.is_active or not request.user.is_verified:
+                raise PermissionDenied("Only the current responsible payer may decide this cost.")
+            decision = MaintenanceCostDecisionSerializer(data=request.data)
+            decision.is_valid(raise_exception=True)
+            if (decision.validated_data["cost_version"] != item.cost_version
+                or not item.proposed_cost_minor or item.approved_cost_version == item.cost_version):
+                raise RentalConflict("Cost version conflict.", code="stale_revision")
         if action not in cycle_actions(request.user, item):
             raise PermissionDenied(
                 "This action is not permitted for the current actor, access consent and cost version."
@@ -84,21 +100,6 @@ def maintenance_action(request, request_id):
             item.cost_version += 1
             item.approved_cost_version = None
         elif action in {"approve_cost", "reject_cost"}:
-            responsible = (
-                item.lease.owner if item.cost_payer == "owner" else item.lease.tenant
-            )
-            if request.user != responsible:
-                raise PermissionDenied(
-                    "Only the responsible payer may decide this cost."
-                )
-            decision = MaintenanceCostDecisionSerializer(data=request.data)
-            decision.is_valid(raise_exception=True)
-            if (
-                decision.validated_data["cost_version"] != item.cost_version
-                or not item.proposed_cost_minor
-                or item.approved_cost_version == item.cost_version
-            ):
-                raise RentalConflict("Cost version conflict.", code="stale_revision")
             item.approved_cost_version = (
                 item.cost_version if action == "approve_cost" else None
             )
@@ -106,6 +107,7 @@ def maintenance_action(request, request_id):
             if not request.data.get("appointment_at"):
                 raise ValidationError({"appointment_at": "Required."})
             item.appointment_at = parse_datetime(request.data["appointment_at"])
+            item.appointment_ends_at = parse_datetime(str(request.data.get("appointment_ends_at", "")))
             if not item.appointment_at:
                 raise ValidationError({"appointment_at": "Must be an ISO date-time."})
             from django.utils import timezone
@@ -113,14 +115,19 @@ def maintenance_action(request, request_id):
             if (
                 timezone.is_naive(item.appointment_at)
                 or item.appointment_at <= timezone.now()
+                or not item.appointment_ends_at
+                or timezone.is_naive(item.appointment_ends_at)
+                or item.appointment_ends_at <= item.appointment_at
             ):
                 raise ValidationError(
-                    {"appointment_at": "Use a future date-time with its timezone."}
+                    {"appointment_at": "Use future start and end date-times with their timezones."}
                 )
             item.appointment_version += 1
             item.access_approved_version = None
         elif action == "accept_appointment":
             item.access_approved_version = item.appointment_version
+        elif action == "report_missed":
+            item.access_approved_version = None
         item.revision += 1
         item.save()
         from ..services.rental_lifecycle.common import audit
@@ -133,6 +140,7 @@ def maintenance_action(request, request_id):
             {
                 "appointment_version": item.appointment_version,
                 "access_approved_version": item.access_approved_version,
+                "appointment_ends_at": item.appointment_ends_at.isoformat() if item.appointment_ends_at else None,
                 "cost_version": item.cost_version,
                 "approved_cost_version": item.approved_cost_version,
             },
@@ -148,7 +156,10 @@ def maintenance_action(request, request_id):
                 else None
             ),
             cost_minor=item.proposed_cost_minor if "cost" in action else None,
-            metadata={"cost_version": item.cost_version} if "cost" in action else {},
+            metadata={"cost_version": item.cost_version} if "cost" in action else {
+                "appointment_version": item.appointment_version,
+                "appointment_ends_at": item.appointment_ends_at.isoformat() if item.appointment_ends_at else None,
+            },
         )
         output = remember_mutation(
             user=request.user,

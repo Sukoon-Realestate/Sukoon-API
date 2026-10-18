@@ -60,7 +60,23 @@ def execute_local_instruction(*, kind, subject, request_key, payload):
         raise RentalConflict(
             "This instruction kind is not supported.", code="capability_unavailable"
         )
-    reference = method(subject.id, request_key)
+    from core_apps.common.recovery import test_bypass, dispatch
+
+    if test_bypass():
+        reference = method(subject.id, request_key)
+    else:
+        reference = dispatch(
+            item,
+            {
+                "account": "isolated-mock",
+                "amount_minor": subject.amount_minor,
+                "currency": getattr(subject, "currency", "EGP"),
+                "destination_revision": getattr(
+                    subject, "beneficiary_profile_revision", 0
+                ),
+            },
+            lambda: method(subject.id, request_key),
+        )
     item.provider_reference, item.status = reference, "confirmed"
     item.attempts += 1
     item.result = {"provider_mode": "mock", "reference": reference}

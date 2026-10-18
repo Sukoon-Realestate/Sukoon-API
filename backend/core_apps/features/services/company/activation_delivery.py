@@ -10,6 +10,9 @@ from .staff import activation_token, delivery_ready
 
 
 def deliver(identity):
+    from core_apps.common.recovery import require_scope
+
+    generation = require_scope("company_mail")
     initial = CompanyAccountProvisioning.objects.select_related("staff").get(
         pk=identity
     )
@@ -41,6 +44,7 @@ def deliver(identity):
     # No database lock is held during SMTP. Revocation always blocks acceptance,
     # including when an already-claimed email is delivered after revocation.
     try:
+        require_scope("company_mail", generation)
         sent = send_mail(
             subject="Sokoun company access / تفعيل حساب الشركة في سكون",
             message=(
@@ -57,6 +61,7 @@ def deliver(identity):
             pk=identity, delivery_status="sending"
         ).update(delivery_status="unknown")
         return False
+    require_scope("company_mail", generation)
     CompanyAccountProvisioning.objects.filter(
         pk=identity, delivery_status="sending"
     ).update(
@@ -67,6 +72,9 @@ def deliver(identity):
 
 
 def deliver_contact_proof(identity):
+    from core_apps.common.recovery import require_scope
+
+    generation = require_scope("company_mail")
     from .contact_proof import proof_code
     from .staff import validate_proposal
     from ..rental_phase2 import RentalConflict
@@ -106,6 +114,7 @@ def deliver_contact_proof(identity):
         row.delivery_claimed_at = timezone.now()
         row.save(update_fields=["delivery_status", "delivery_claimed_at", "updated_at"])
     try:
+        require_scope("company_mail", generation)
         sent = send_mail(
             subject="Sokoun work email verification / توثيق بريد العمل في سكون",
             message=(
@@ -122,6 +131,7 @@ def deliver_contact_proof(identity):
             pk=identity, delivery_status="sending"
         ).update(delivery_status="unknown")
         return False
+    require_scope("company_mail", generation)
     CompanyWorkContactProof.objects.filter(
         pk=identity, delivery_status="sending"
     ).update(

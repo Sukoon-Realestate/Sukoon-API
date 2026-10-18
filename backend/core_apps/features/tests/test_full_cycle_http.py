@@ -39,6 +39,13 @@ class HttpActor:
             timeout=10,
         )
         assert login.status_code == 200
+        # The fixture advances Django's business clock without advancing JWT's
+        # wall clock; these synthetic sessions cover the whole simulated lease.
+        from core_apps.users.models import AuthSession
+
+        AuthSession.objects.filter(user=user).update(
+            expires_at=timezone.now() + timedelta(days=60)
+        )
         payload = login.json()
         token = payload.get("access") or payload.get("data", {}).get("access")
         assert token
@@ -134,6 +141,11 @@ def test_complete_funded_cycle_over_http(
     future_now = datetime.combine(
         ending_day, datetime.min.time(), tzinfo=dt_timezone.utc
     ) + timedelta(hours=12)
+    # This business-clock fixture advances twenty days. Explicitly retain the
+    # synthetic HTTP sessions for this scenario; expiry is separately tested.
+    from core_apps.users.models import AuthSession
+
+    AuthSession.objects.update(expires_at=future_now + timedelta(hours=1))
     monkeypatch.setattr(timezone, "now", lambda: future_now)
     assert process_rental_changes()["applied"] == 1
     lease.refresh_from_db()

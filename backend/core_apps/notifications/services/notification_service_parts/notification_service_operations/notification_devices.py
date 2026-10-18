@@ -15,6 +15,7 @@ class NotificationDevicesMixin:
         token: str,
         device_type: str = DeviceToken.DeviceType.ANDROID,
         device_name: str = "",
+        auth_session=None,
     ) -> DeviceToken:
         """
         Registers or updates an FCM device token for the user.
@@ -22,10 +23,30 @@ class NotificationDevicesMixin:
         if not token or not token.strip():
             raise ValidationError({"token": "Device token is required."})
 
+        if auth_session is not None:
+            from core_apps.users.models import AuthSession, User
+            from django.utils import timezone
+
+            # Serialize registration with account/session revocation.
+            current = User.objects.select_for_update().get(pk=user.pk)
+            auth_session = (
+                AuthSession.objects.select_for_update()
+                .filter(
+                    id=auth_session,
+                    user=current,
+                    revoked_at__isnull=True,
+                    security_epoch=current.security_epoch,
+                    expires_at__gt=timezone.now(),
+                )
+                .first()
+            )
+            if auth_session is None:
+                raise ValidationError("Sign in again before registering notifications.")
         device, _ = DeviceToken.objects.update_or_create(
             token=token.strip(),
             defaults={
                 "user": user,
+                "auth_session": auth_session,
                 "device_type": device_type,
                 "device_name": device_name.strip(),
                 "is_active": True,

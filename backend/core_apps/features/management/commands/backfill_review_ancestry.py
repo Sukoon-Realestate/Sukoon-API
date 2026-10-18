@@ -9,7 +9,17 @@ from core_apps.features.services.reputation.ancestry import from_snapshot, for_s
 class Command(BaseCommand):
     help = "Freeze known original ancestry for existing stays. Unknown history stays unknown."
 
+    def add_arguments(self, parser):
+        parser.add_argument("--dry-run", action="store_true")
+
+    @transaction.atomic
     def handle(self, **options):
+        self._run()
+        if options["dry_run"]:
+            transaction.set_rollback(True)
+            self.stdout.write("Dry run: all database changes rolled back.")
+
+    def _run(self):
         handovers = cases = unknown = 0
         for source in RentalHandover.objects.filter(
             kind="move_in", status="accepted", context_snapshot={}

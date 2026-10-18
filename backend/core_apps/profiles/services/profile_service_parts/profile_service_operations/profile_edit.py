@@ -14,6 +14,21 @@ class ProfileEditMixin:
         """
         profile, _ = Profile.objects.get_or_create(user=user)
 
+        from rest_framework.exceptions import PermissionDenied
+
+        nested = validated_data.get("user", {})
+        new_email = (
+            nested.get("email", validated_data.get("email"))
+            if isinstance(nested, dict)
+            else None
+        )
+        if (new_email and new_email.casefold() != user.email.casefold()) or (
+            "phone_number" in validated_data
+            and str(validated_data["phone_number"]) != str(profile.phone_number)
+        ):
+            raise PermissionDenied(
+                "Changing a contact requires approved re-verification and proof of the new contact; the verification provider is not configured."
+            )
         user_fields_to_update = []
 
         # * Handle full_name or first_name / last_name
@@ -87,6 +102,18 @@ class ProfileEditMixin:
         """
         settings_obj, _ = UserSettings.objects.get_or_create(user=user)
 
+        settings_obj = UserSettings.objects.select_for_update().get(pk=settings_obj.pk)
+        from core_apps.profiles.models import NotificationPreferenceChange
+
+        preference_fields = (
+            "visit_notifications",
+            "new_properties_in_area",
+            "owner_messages",
+            "property_updates",
+            "security_alerts",
+            "promotions_and_updates",
+        )
+        before = {key: getattr(settings_obj, key) for key in preference_fields}
         # ! Enforce privacy rule: always_hide_mobile_number cannot be turned off
         validated_data.pop("always_hide_mobile_number", None)
 
@@ -94,5 +121,14 @@ class ProfileEditMixin:
             if hasattr(settings_obj, field):
                 setattr(settings_obj, field, value)
 
+        after = {key: getattr(settings_obj, key) for key in preference_fields}
+        if before != after:
+            settings_obj.revision += 1
+            NotificationPreferenceChange.objects.create(
+                user=user,
+                revision=settings_obj.revision,
+                previous=before,
+                current=after,
+            )
         settings_obj.save()
         return settings_obj

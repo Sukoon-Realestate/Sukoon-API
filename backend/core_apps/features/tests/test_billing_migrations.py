@@ -10,13 +10,31 @@ from django.utils import timezone
 
 @pytest.mark.django_db(transaction=True)
 def test_billing_upgrade_preserves_paid_rent_receipt_and_ledger():
+    if connection.vendor != "postgresql":
+        pytest.skip("Historical forward migration proof uses an isolated PostgreSQL schema.")
+    # Start at the historical schema. Never reverse newer irreversible production
+    # migrations or leave the shared test schema partially downgraded on failure.
+    schema = "closure_migration_" + uuid.uuid4().hex
+    quoted = connection.ops.quote_name(schema)
+    with connection.cursor() as cursor:
+        cursor.execute("SHOW search_path")
+        original_path = cursor.fetchone()[0]
+        cursor.execute(f"CREATE SCHEMA {quoted}")
+        cursor.execute(f"SET search_path TO {quoted}")
+    try:
+        _assert_billing_forward_upgrade()
+    finally:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT set_config('search_path', %s, false)", [original_path])
+            cursor.execute(f"DROP SCHEMA {quoted} CASCADE")
+
+
+def _assert_billing_forward_upgrade():
     executor = MigrationExecutor(connection)
     after = executor.loader.graph.leaf_nodes()
-    before = [node for node in after if node[0] != "features"] + [
-        ("features", "0017_renewal_effective_dates")
-    ]
-    executor.migrate(before)
+    before = [("features", "0017_renewal_effective_dates")]
     try:
+        executor.migrate(before)
         apps = executor.loader.project_state(before).apps
         model = lambda name: apps.get_model("features", name)
         user = apps.get_model("users", "User").objects.create(

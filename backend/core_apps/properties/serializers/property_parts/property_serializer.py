@@ -4,7 +4,7 @@ import json
 from django.utils import timezone
 from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
-from ...models import City, Governorate, Property, PropertyType
+from ...models import City, Governorate, Property, PropertyType, District
 from ..location import PublicUUIDRelatedField
 from ...services import PropertyService
 from ...rental_inventory import normalize_inventory
@@ -50,6 +50,11 @@ class PropertySerializer(PropertyValidationMixin, serializers.ModelSerializer):
     )
     governorate = PublicUUIDRelatedField(queryset=Governorate.objects.all())
     city = PublicUUIDRelatedField(queryset=City.objects.all())
+    district_catalog = PublicUUIDRelatedField(
+        queryset=District.objects.filter(is_active=True),
+        required=False,
+        allow_null=True,
+    )
     district = serializers.CharField(required=False, allow_blank=True, default="")
     street = serializers.CharField(required=False, allow_blank=True, default="")
     country = serializers.CharField(required=False, allow_blank=True, default="Egypt")
@@ -78,6 +83,7 @@ class PropertySerializer(PropertyValidationMixin, serializers.ModelSerializer):
             "governorate",
             "city",
             "district",
+            "district_catalog",
             "street",
             "country",
             "building_year",

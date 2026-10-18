@@ -27,6 +27,13 @@ class DeviceToken(TimeStampedModel):
     device_name = models.CharField(
         _("Device Name"), max_length=100, blank=True, default=""
     )
+    auth_session = models.ForeignKey(
+        "users.AuthSession",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="notification_devices",
+    )
     is_active = models.BooleanField(_("Is Active"), default=True)
 
     class Meta:

@@ -13,10 +13,17 @@ User = get_user_model()
 
 
 @database_sync_to_async
-def _get_user(user_id):
+def _get_user(user_id, claims=None):
     # ? DB access must be wrapped for the async consumer context
     try:
-        return User.objects.get(id=user_id)
+        from core_apps.users.services.sessions import validate_session
+        from rest_framework.exceptions import AuthenticationFailed
+
+        user = User.objects.get(id=user_id)
+        try:
+            return validate_session(user, claims or {})
+        except AuthenticationFailed:
+            return AnonymousUser()
     except (User.DoesNotExist, ValueError, TypeError):
         return AnonymousUser()
 
@@ -39,12 +46,43 @@ class JWTCookieAuthMiddleware(BaseMiddleware):
         if raw_token:
             try:
                 validated = AccessToken(raw_token)
-                scope["user"] = await _get_user(validated["user_id"])
+                scope["user"] = await _get_user(validated["user_id"], validated.payload)
             except (TokenError, KeyError) as e:
                 # ! Invalid/expired token -> stays anonymous; consumer decides to reject
-                logger.error(f"WS token validation error: {e}")
+                logger.info("WS authentication rejected")
 
-        return await super().__call__(scope, receive, send)
+        if not scope["user"].is_authenticated:
+            return await super().__call__(scope, receive, send)
+        scope["auth_claims"] = validated.payload
+        closed = False
+
+        async def current():
+            from time import time
+
+            user = await _get_user(validated["user_id"], validated.payload)
+            return user.is_authenticated and validated["exp"] > time()
+
+        async def guarded_send(message):
+            nonlocal closed
+            if closed:
+                return
+            if message["type"] == "websocket.send" and not await current():
+                closed = True
+                await send({"type": "websocket.close", "code": 4401})
+                return
+            await send(message)
+
+        async def guarded_receive():
+            nonlocal closed
+            message = await receive()
+            if message["type"] == "websocket.receive" and not await current():
+                if not closed:
+                    await send({"type": "websocket.close", "code": 4401})
+                closed = True
+                return {"type": "websocket.disconnect", "code": 4401}
+            return message
+
+        return await super().__call__(scope, guarded_receive, guarded_send)
 
     @staticmethod
     def _token_from_query_string(scope):

@@ -11,6 +11,8 @@ from .linked_invitation import DecisionConflict, scheduled_at, accommodation_ide
 
 
 def contracting_problem(visit, decision):
+    if visit.company_id:
+        return "corporate_contract_policy_required"
     prop = visit.property
     if decision and decision.owner_id != prop.owner_id:
         return "ownership_changed"
@@ -164,7 +166,9 @@ def reason_visible(actor, visit):
     # Owning the property never grants access to the tenant's private text.
     if actor.pk == visit.property.owner_id:
         return False
-    if actor.pk == visit.tenant_id:
+    from ..viewing_access import participant
+
+    if participant(visit, actor):
         return True
     profile = getattr(actor, "staff_profile", None)
     return bool(

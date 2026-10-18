@@ -1,6 +1,7 @@
 from django.urls import include, path
 
 from . import views
+from .continuation_views import continuation_items
 from . import rental_phase2_views as views_phase2
 from . import rental_phase3_views as views_phase3
 from . import rental_phase4_views as views_phase4
@@ -9,7 +10,11 @@ from . import rental_phase6_views as views_phase6
 from . import mock_provider_views
 from .models import RentalChange
 
+from .rental_lifecycle_views import habitability
+
 urlpatterns = [
+    path("rental-cases/<uuid:case_id>/habitability/", habitability.assessment),
+    path("continuation-items/", continuation_items, name="continuation-items"),
     path("", include("core_apps.features.advanced_execution_urls")),
     path("", include("core_apps.features.advanced_tender_urls")),
     path("", include("core_apps.features.living_lab_urls")),

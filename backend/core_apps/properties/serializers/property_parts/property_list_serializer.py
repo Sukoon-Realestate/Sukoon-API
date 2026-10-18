@@ -4,6 +4,7 @@ from typing import Optional
 from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
 from ...models import Property, PropertyImage, PropertyType
+from .property_collection import PropertyCollectionSerializer, stay_rating
 
 
 class CloudinaryMediaField(serializers.FileField):
@@ -73,23 +74,48 @@ class PropertyImageUpdateSerializer(serializers.ModelSerializer):
 def build_rental_summary(obj: Property):
     if not obj.rental_inventory:
         return None
+    from core_apps.features.services.rental_lifecycle.habitability import (
+        restricted_keys,
+        offer_restricted,
+    )
+
+    restricted = (
+        obj._listing_restricted_keys
+        if hasattr(obj, "_listing_restricted_keys")
+        else restricted_keys(obj)
+    )
     offers = [
         offer
         for offer in obj.rental_inventory.get("offers", [])
-        if not offer.get("archived") and offer.get("availability") == "available"
+        if not offer.get("archived")
+        and offer.get("availability") == "available"
+        and not offer_restricted(obj, offer, restricted)
     ]
+    minimum = obj.rental_min_price
+    if restricted:
+        from decimal import Decimal
+
+        minimum = min(
+            (
+                Decimal(str(offer["terms"]["price"]))
+                for offer in offers
+                if offer.get("terms", {}).get("price") is not None
+                and offer.get("terms", {}).get("price_period")
+                == obj.rental_price_period
+            ),
+            default=None,
+        )
     labels = [offer.get("name", "") for offer in offers]
     scopes = sorted(
         {offer.get("rental_scope") for offer in offers if offer.get("rental_scope")}
     )
     cheapest = None
-    if obj.rental_min_price is not None:
+    if minimum is not None:
         cheapest = next(
             (
                 offer
                 for offer in offers
-                if str(offer.get("terms", {}).get("price"))
-                == f"{obj.rental_min_price:.2f}"
+                if str(offer.get("terms", {}).get("price")) == f"{minimum:.2f}"
             ),
             None,
         )
@@ -97,12 +123,10 @@ def build_rental_summary(obj: Property):
         "eligible_count": len(offers),
         "scopes": scopes,
         "labels": labels,
-        "price": (
-            f"{obj.rental_min_price:.2f}" if obj.rental_min_price is not None else None
-        ),
+        "price": (f"{minimum:.2f}" if minimum is not None else None),
         "price_period": obj.rental_price_period or None,
         "price_scope": cheapest.get("rental_scope") if cheapest else None,
-        "starting_from": len(offers) > 1 and obj.rental_min_price is not None,
+        "starting_from": len(offers) > 1 and minimum is not None,
     }
 
 
@@ -119,6 +143,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Property
+        list_serializer_class = PropertyCollectionSerializer
         fields = [
             "id",
             "main_image",
@@ -135,8 +160,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
         ]
 
     def get_rate(self, obj: Property) -> Optional[float]:
-        from core_apps.features.services.reputation.visibility import summary
-        return summary("property_stay", obj.id)["average"]
+        return stay_rating(obj)
 
     def get_rental_schema_version(self, obj: Property):
         return 1 if obj.rental_inventory else None

@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 from ..models import AccountSubscription
+from .purchase_routing import routing
 
 
 def workspace_for(value):
@@ -33,6 +34,10 @@ def plan_payload(plan, language):
         "name": snapshot[f"name_{language}"],
         "description": snapshot[f"description_{language}"],
         "active": plan.active,
+        "purchase_routes": {
+            platform: routing("subscription", platform, product_id=str(plan.id))
+            for platform in ("ios", "android", "web")
+        },
         "sort_order": plan.sort_order,
     }
 

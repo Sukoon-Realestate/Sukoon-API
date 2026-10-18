@@ -3,18 +3,19 @@
 import math
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
-from config.advanced_housing import require_mock_mode
+from config.advanced_housing import require_mock_mode, mock_mode_available
 from core_apps.properties.models import Property
 
 VERSION = "corporate-assumptions-v2"
 
 
-def capture(user, data, staff_ids, unit_ids):
+def capture(user, data, staff_ids, unit_ids, *, frozen=None):
     raw = data.get("planning_assumptions", {})
     if not raw:
         return {}
-    require_mock_mode()
+    simulated = mock_mode_available()
     if not isinstance(raw, dict) or set(raw) - {
+        "departure_at",
         "site_name",
         "latitude",
         "longitude",
@@ -36,8 +37,8 @@ def capture(user, data, staff_ids, unit_ids):
         "policy_version": VERSION,
         "owner_id": str(user.id),
         "provenance": "coordinator_declared",
-        "provider": "mock_haversine_v2",
-        "simulated": True,
+        "provider": "mock_haversine_v2" if simulated else "google_routes",
+        "simulated": simulated,
     }
     for key, limit in (("site_name", 160), ("shift_label", 120), ("rationale", 1000)):
         value = raw.get(key, "")
@@ -106,8 +107,22 @@ def capture(user, data, staff_ids, unit_ids):
             }
         )
     result["unavailable_property_ids"] = sorted(set(unavailable))
+    departure = raw.get("departure_at", "")
+    if not isinstance(departure, str) or len(departure) > 80:
+        raise ValidationError({"departure_at": "Use an ISO instant with timezone."})
+    result["departure_at"] = departure
     result["routes"] = {}
     for prop in Property.objects.filter(id__in=unit_ids):
+        if not simulated:
+            from .routes import estimate
+
+            result["routes"][str(prop.id)] = estimate(
+                user,
+                prop,
+                result,
+                frozen=(frozen or {}).get("routes", {}).get(str(prop.id)),
+            )
+            continue
         minutes = None
         if None not in (
             result["latitude"],
@@ -152,6 +167,7 @@ def source_data(value):
     return {
         key: value[key]
         for key in (
+            "departure_at",
             "site_name",
             "latitude",
             "longitude",
@@ -197,13 +213,17 @@ def metrics(snapshot, assignments):
     moving = assumption.get("moving_per_person_minor")
     return {
         "commute": {
-            "status": "mock_estimate" if known else "unknown",
+            "status": (
+                ("mock_estimate" if assumption.get("simulated") else "route_estimate")
+                if known
+                else "unknown"
+            ),
             "source": assumption.get("provider"),
             "timing": "shift_specific_routing_unsupported",
             "average_minutes": round(sum(values) / len(values), 1) if known else None,
             "maximum_minutes": max(values) if known else None,
             "distribution": people,
-            "simulated": bool(assumption),
+            "simulated": assumption.get("simulated", False),
         },
         "estimated_transport_minor": (
             transport * snapshot["months"] if transport is not None else None
@@ -220,6 +240,10 @@ def metrics(snapshot, assignments):
         "planned_arrival_count": len(assignments),
         "proposed_move_count": None,
         "baseline_occupancy": "not_established",
-        "estimate_provenance": "coordinator_declared_mock_routes",
+        "estimate_provenance": (
+            "coordinator_declared_mock_routes"
+            if assumption.get("simulated")
+            else "provider_route_snapshot"
+        ),
         "assumption_count": len(assumption) if assumption else 0,
     }

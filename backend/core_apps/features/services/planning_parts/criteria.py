@@ -95,10 +95,9 @@ def criteria(raw, *, allow_existing_start=False):
     if not isinstance(raw, dict):
         raise ValidationError({"criteria": "Supply housing criteria."})
     city = get_object_or_404(City, id=raw.get("city_id"))
-    if raw.get("district_ids", []) != []:
-        raise ValidationError(
-            {"district_ids": "District IDs are not supported by this catalog."}
-        )
+    from .districts import validate_districts
+
+    district_ids, districts = validate_districts(city, raw.get("district_ids", []))
     scope = raw.get("rental_scope", "")
     period = raw.get("price_period", "monthly")
     if scope not in {
@@ -149,7 +148,9 @@ def criteria(raw, *, allow_existing_start=False):
     return {
         "city_id": str(city.id),
         "city": {"id": str(city.id), "name": city.name, "slug": city.slug},
-        "district_ids": [],
+        "district_ids": district_ids,
+        "districts": districts,
+        "district_scope": "selected" if district_ids else "all_city",
         "rental_scope": scope,
         "property_type": raw.get("property_type", ""),
         "budget_min": money(low) if low is not None else None,

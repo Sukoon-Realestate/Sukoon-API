@@ -7,6 +7,9 @@ from .policy import ReviewError, require_actor
 
 
 def membership(user, company, *, signer=False, admin=False, lock=False):
+    from core_apps.common.recovery import require_scope
+
+    require_scope("company_authority")
     require_actor(user)
     query = (
         CompanyMembership.objects.select_for_update()
@@ -28,6 +31,12 @@ def membership(user, company, *, signer=False, admin=False, lock=False):
 
 
 def permitted(user, binding, company, *, submit=False, history=False, lock=False):
+    from core_apps.common.recovery import RecoveryRequired, require_scope
+
+    try:
+        require_scope("company_authority")
+    except RecoveryRequired:
+        return False
     if not binding or binding.state != "accepted" or not company:
         return False
     if company.pk not in {binding.renter_company_id, binding.landlord_company_id}:

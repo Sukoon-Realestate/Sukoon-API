@@ -2,7 +2,10 @@ from django.urls import path
 from . import billing_views as billing
 from . import subscription_views as subscriptions
 
+from .purchase_routing_views import purchase_route
+
 urlpatterns = [
+    path("billing/purchase-routing/", purchase_route),
     path("subscription-plans/", subscriptions.plans, name="subscription-plans"),
     path("subscriptions/current/", subscriptions.current, name="current-subscription"),
     path("billing/invoices/", billing.invoices, name="billing-invoices"),

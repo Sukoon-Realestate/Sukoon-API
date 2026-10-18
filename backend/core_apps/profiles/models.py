@@ -62,6 +62,7 @@ class Profile(TimeStampedModel):
 
 
 class UserSettings(TimeStampedModel):
+    revision = models.PositiveIntegerField(default=1)
     user = models.OneToOneField(
         User,
         verbose_name=_("User"),
@@ -168,3 +169,18 @@ class Contract(TimeStampedModel):
 
     def __str__(self):
         return f"Contract {self.id} - {self.property_title} ({self.tenant.email})"
+
+
+class NotificationPreferenceChange(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    revision = models.PositiveIntegerField()
+    previous = models.JSONField(default=dict)
+    current = models.JSONField(default=dict)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "revision"],
+                name="unique_notification_preference_revision",
+            )
+        ]

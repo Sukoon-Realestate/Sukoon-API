@@ -40,7 +40,11 @@ def _file_value(value):
     try:
         if hasattr(value, "seek"):
             value.seek(0)
-        chunks = value.chunks() if hasattr(value, "chunks") else iter(lambda: value.read(65536), b"")
+        chunks = (
+            value.chunks()
+            if hasattr(value, "chunks")
+            else iter(lambda: value.read(65536), b"")
+        )
         for chunk in chunks:
             digest.update(chunk)
     finally:
@@ -58,7 +62,10 @@ def _normalize(value):
     if hasattr(value, "read") and (hasattr(value, "chunks") or hasattr(value, "name")):
         return {"__file__": _file_value(value)}
     if isinstance(value, dict):
-        return {str(key): _normalize(item) for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))}
+        return {
+            str(key): _normalize(item)
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+        }
     if isinstance(value, (list, tuple)):
         return [_normalize(item) for item in value]
     if isinstance(value, (UUID, Decimal, date, datetime)):
@@ -84,7 +91,15 @@ def _active_record(*, user, operation, key):
         user=user, operation=operation, request_key=key
     )
     record = records.first()
-    if record and record.created_at < cutoff:
+    # A support creation receipt remains the recovery identity for its ticket.
+    # Expiry must not turn an old lost-response retry into a second inquiry.
+    if (
+        record
+        and record.created_at < cutoff
+        and not operation.startswith(
+            ("support.ticket.", "property.visit.create:", "viewing.command:")
+        )
+    ):
         records.delete()
         return None
     return record

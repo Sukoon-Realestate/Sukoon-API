@@ -1,5 +1,11 @@
 import logging
-from djoser.email import PasswordChangedConfirmationEmail
+from djoser.email import (
+    PasswordChangedConfirmationEmail,
+    PasswordResetEmail,
+    ActivationEmail,
+)
+from djoser.conf import settings as djoser_settings
+from .services.recovery_tokens import recovery_token_generator
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +22,21 @@ class SafePasswordChangedConfirmationEmail(PasswordChangedConfirmationEmail):
         except Exception as exc:
             # ! Do not fail a successful password change if SMTP fails
             logger.error(
-                "Failed to send password changed confirmation email to %s: %s",
-                to,
-                exc,
+                "Password change notice delivery failed (%s)", type(exc).__name__
             )
+
+
+class RecoveryPasswordResetEmail(PasswordResetEmail):
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["token"] = recovery_token_generator.make_token(context["user"])
+        context["url"] = djoser_settings.PASSWORD_RESET_CONFIRM_URL.format(**context)
+        return context
+
+
+class RecoveryActivationEmail(ActivationEmail):
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["token"] = recovery_token_generator.make_token(context["user"])
+        context["url"] = djoser_settings.ACTIVATION_URL.format(**context)
+        return context

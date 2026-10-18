@@ -49,6 +49,7 @@ def add_ticket_reply(
     Rejects replies to resolved/closed tickets with TicketClosedConflict.
     """
     ticket = get_ticket_detail(user, ticket_id, workspace=workspace)
+    ticket = Ticket.objects.select_for_update().get(pk=ticket.pk)
 
     if ticket.status in [Ticket.Status.RESOLVED, Ticket.Status.CLOSED]:
         raise TicketClosedConflict("لا يمكن الرد على تذكرة دعم تم حلها أو إغلاقها.")
@@ -65,7 +66,8 @@ def add_ticket_reply(
     )
 
     ticket.updated_at = timezone.now()
-    ticket.save(update_fields=["updated_at"])
+    ticket.revision += 1
+    ticket.save(update_fields=["revision", "updated_at"])
 
     logger.info("Added reply to ticket %s by user %s", ticket.reference, user.id)
     return get_ticket_detail(user, ticket_id, workspace=workspace)

@@ -60,6 +60,7 @@ class Ticket(TimeStampedModel):
         db_index=True,
     )
     rental_context = models.JSONField(default=dict, blank=True)
+    revision = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = _("Support Ticket")

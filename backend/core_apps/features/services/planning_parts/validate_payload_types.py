@@ -12,12 +12,17 @@ from .selection_payload import require_planning
 
 
 def criteria_payload(value):
+    from .districts import district_projection
+
     def major(key):
         amount = (value.get(key) or {}).get("amount_minor")
         return str(Decimal(amount) / 100) if amount is not None else ""
 
     return {
         "city": value.get("city", {}),
+        "district_ids": value.get("district_ids", []),
+        "districts": district_projection(value),
+        "district_scope": "selected" if value.get("district_ids") else "all_city",
         "filters": {
             "city": value.get("city_id", ""),
             "rental_scope": value.get("rental_scope", ""),

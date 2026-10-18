@@ -8,7 +8,26 @@ from ...models import PropertyVisit
 from ...services import PropertyVisitService
 
 
+class ViewingContextSerializer(serializers.Serializer):
+    kind = serializers.ChoiceField(
+        choices=["personal", "student", "company"], default="personal"
+    )
+    company_id = serializers.UUIDField(required=False)
+    representative_membership_id = serializers.UUIDField(required=False)
+    academic_plan_id = serializers.UUIDField(required=False)
+
+    def validate(self, attrs):
+        if attrs["kind"] == "company" and not all(
+            attrs.get(key) for key in ("company_id", "representative_membership_id")
+        ):
+            raise serializers.ValidationError(
+                "Select a company and its current representative."
+            )
+        return attrs
+
+
 class PropertyVisitCreateSerializer(serializers.ModelSerializer):
+    viewing_context = ViewingContextSerializer(required=False, write_only=True)
     expected_offer_revision = serializers.IntegerField(
         required=False, write_only=True, min_value=1
     )
@@ -22,6 +41,7 @@ class PropertyVisitCreateSerializer(serializers.ModelSerializer):
             "note",
             "offer_id",
             "expected_offer_revision",
+            "viewing_context",
             "offer_snapshot",
             "created_at",
             "updated_at",

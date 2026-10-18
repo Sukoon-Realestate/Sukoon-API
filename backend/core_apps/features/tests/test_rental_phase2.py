@@ -644,6 +644,8 @@ def run_interest_to_activation(
     )
     assert maintenance.status_code == 201, maintenance.data
     item = maintenance.data["resource"]
+    from unittest.mock import patch
+    appointment = timezone.now() + timedelta(days=1)
     for client, action in (
         (owner_client, "acknowledge"),
         (owner_client, "propose_appointment"),
@@ -652,26 +654,29 @@ def run_interest_to_activation(
         (owner_client, "report_resolved"),
         (tenant_client, "confirm_resolved"),
     ):
-        grant(client, item["id"], action)
-        current = client.get(f"/api/v1/features/v1/maintenance-requests/{item['id']}/")
-        assert current.status_code == 200, current.data
-        assert action in current.data["allowed_actions"]
-        maintenance = client.post(
-            f"/api/v1/features/v1/maintenance-requests/{item['id']}/actions/",
-            {
-                "action": action,
-                **(
-                    {"appointment_at": (timezone.now() + timedelta(days=1)).isoformat()}
-                    if action == "propose_appointment"
-                    else {}
-                ),
-                "expected_revision": item["revision"],
-                "request_key": str(uuid.uuid4()),
-            },
-            format="json",
-        )
-        assert maintenance.status_code == 200, maintenance.data
-        item = maintenance.data["resource"]
+        current_time = appointment if action in {"start_work", "report_resolved", "confirm_resolved"} else timezone.now()
+        with patch("django.utils.timezone.now", return_value=current_time):
+            grant(client, item["id"], action)
+            current = client.get(f"/api/v1/features/v1/maintenance-requests/{item['id']}/")
+            assert current.status_code == 200, current.data
+            assert action in current.data["allowed_actions"]
+            maintenance = client.post(
+                f"/api/v1/features/v1/maintenance-requests/{item['id']}/actions/",
+                {
+                    "action": action,
+                    **(
+                        {"appointment_at": appointment.isoformat(),
+                         "appointment_ends_at": (appointment + timedelta(hours=1)).isoformat()}
+                        if action == "propose_appointment"
+                        else {}
+                    ),
+                    "expected_revision": item["revision"],
+                    "request_key": str(uuid.uuid4()),
+                },
+                format="json",
+            )
+            assert maintenance.status_code == 200, maintenance.data
+            item = maintenance.data["resource"]
     assert item["status"] == "resolved"
 
     import json, os

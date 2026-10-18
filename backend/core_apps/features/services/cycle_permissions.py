@@ -10,13 +10,16 @@ from ..models import (
     RentalHandover,
 )
 from ..providers import fake_provider_available
+from .maintenance_access import access_window_current, appointment_reviewable
+from django.utils import timezone
 
 
 MAINTENANCE_TRANSITIONS = {
     "acknowledge": ({"open"}, "acknowledged"),
-    "propose_appointment": ({"open", "acknowledged"}, "appointment_proposed"),
+    "propose_appointment": ({"open", "acknowledged", "appointment_proposed", "scheduled"}, "appointment_proposed"),
     "accept_appointment": ({"appointment_proposed"}, "scheduled"),
     "start_work": ({"acknowledged", "scheduled"}, "in_progress"),
+    "report_missed": ({"scheduled"}, "acknowledged"),
     "report_resolved": ({"in_progress"}, "resolution_reported"),
     "confirm_resolved": ({"resolution_reported"}, "resolved"),
     "reopen": ({"resolution_reported", "resolved"}, "open"),
@@ -34,9 +37,6 @@ def cycle_actions(user, subject):
         or not user.is_verified
     ):
         return []
-    if not fake_provider_available():
-        from .reputation.eligibility import can_review_lease
-        return ["review_rental"] if isinstance(subject, Lease) and can_review_lease(subject, user) else []
     lease = (
         subject
         if isinstance(subject, Lease)
@@ -48,6 +48,14 @@ def cycle_actions(user, subject):
     )
     if lease.legacy_read_only or user.pk not in {lease.owner_id, lease.tenant_id}:
         return []
+    if not fake_provider_available() and not isinstance(subject, MaintenanceRequest):
+        if not isinstance(subject, Lease):
+            return []
+        from .reputation.eligibility import can_review_lease
+        actions = ["review_rental"] if can_review_lease(subject, user) else []
+        if lease.status in {Lease.Status.ACTIVE, Lease.Status.TERMINATION_PENDING, Lease.Status.ENDED}:
+            actions.append("create_maintenance_request")
+        return actions
     if isinstance(subject, Lease):
         actions = ["request_statement", "create_rental_dispute"]
         if lease.status in {
@@ -104,14 +112,17 @@ def cycle_actions(user, subject):
         if user.pk != lease.tenant_id:
             actions = [action for action in actions if action not in tenant_only]
         if (
-            subject.appointment_version != subject.access_approved_version
-            or not subject.appointment_at
+            not access_window_current(subject)
             or (
                 subject.proposed_cost_minor
                 and subject.cost_version != subject.approved_cost_version
             )
         ):
             actions = [action for action in actions if action != "start_work"]
+        if not appointment_reviewable(subject):
+            actions = [action for action in actions if action != "accept_appointment"]
+        if not subject.appointment_ends_at or timezone.now() < subject.appointment_ends_at:
+            actions = [action for action in actions if action != "report_missed"]
         payer_id = lease.owner_id if subject.cost_payer == "owner" else lease.tenant_id
         if (
             subject.proposed_cost_minor

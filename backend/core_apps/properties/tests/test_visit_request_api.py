@@ -73,6 +73,7 @@ class TestTenantVisitRequestScreens:
             "post_visit_decision",
             "post_visit_actions",
             "rental_continuation",
+            "viewing_context",
         }
         assert set(card["property"]) == {"id", "title", "location", "price"}
         assert card["id"] == str(visit.id)
@@ -189,8 +190,9 @@ class TestPropertyVisitReviewAPI:
         # The legacy route has no explicit overall score/final confirmation.
         assert response.status_code == status.HTTP_409_CONFLICT
         assert not PropertyVisitReview.objects.filter(visit=visit).exists()
-        assert not PropertyRating.objects.filter(user=user, property=property_obj).exists()
-
+        assert not PropertyRating.objects.filter(
+            user=user, property=property_obj
+        ).exists()
 
     def test_legacy_review_retries_do_not_create_rows(
         self,
@@ -231,7 +233,6 @@ class TestPropertyVisitReviewAPI:
         assert changed.status_code == status.HTTP_409_CONFLICT
         assert not PropertyVisitReview.objects.filter(visit=visit).exists()
 
-
     def test_legacy_criteria_cannot_infer_an_overall_score(
         self,
         auth_client,
@@ -264,7 +265,6 @@ class TestPropertyVisitReviewAPI:
         )
         assert response.status_code == status.HTTP_409_CONFLICT
         assert not PropertyVisitReview.objects.filter(visit=visit).exists()
-
 
     def test_rejects_review_before_visit_and_invalid_scores(
         self,
@@ -584,7 +584,11 @@ class TestPropertyReviewListAPI:
 
         # Verify summary
         summary = data["summary"]
-        assert summary == {"total_reviews": 0, "average_rating": None, "context_type": "viewing"}
+        assert summary == {
+            "total_reviews": 0,
+            "average_rating": None,
+            "context_type": "viewing",
+        }
 
         # Verify results
         results = data["results"]

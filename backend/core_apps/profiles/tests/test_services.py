@@ -76,6 +76,8 @@ class TestProfileService:
         assert data["user"]["initial"] == user.first_name[0]
 
     def test_update_user_profile_atomic(self, user):
+        user.profile.phone_number = "+201012345432"
+        user.profile.save()
         update_data = {
             "full_name": "محمد أحمد",
             "phone_number": "+201012345432",

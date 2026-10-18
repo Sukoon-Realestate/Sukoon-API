@@ -119,7 +119,6 @@ admin.site.register(
             "RentalInventoryUnit",
             "ReservationHold",
             "RentalConsentRecord",
-            "RentalOperationalCase",
             "RentalAuditEvent",
             "RentalProviderInstruction",
             "GroupBookingProposal",
@@ -132,3 +131,4 @@ admin.site.register(
 admin.site.register(RentalCommercialPolicy, FinancialHistoryAdmin)
 
 from . import student_admin  # noqa: E402,F401
+from . import case_admin  # noqa: E402,F401

@@ -102,6 +102,15 @@ class PropertyValidationMixin:
             raise serializers.ValidationError(
                 {"city": "The selected city does not belong to this governorate."}
             )
+        district = attrs.get(
+            "district_catalog", getattr(self.instance, "district_catalog", None)
+        )
+        if district and (not city or district.city_id != city.pk):
+            raise serializers.ValidationError(
+                {"district_catalog": "Choose a district in the selected city."}
+            )
+        if "district_catalog" in attrs and district:
+            attrs["district"] = district.name
         video_duration = attrs.get("video_duration")
         if video_duration is not None and (video_duration < 1 or video_duration > 60):
             raise serializers.ValidationError(

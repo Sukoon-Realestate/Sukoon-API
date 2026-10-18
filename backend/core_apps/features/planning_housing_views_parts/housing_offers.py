@@ -74,9 +74,15 @@ def housing_offers(request, request_id):
             raise RentalConflict(
                 "The offer limit for this request was reached.", code="offer_limit"
             )
-        if str(prop.city.id) != item.criteria["city_id"] or (
-            item.criteria["rental_scope"]
-            and item.criteria["rental_scope"] != snapshot["rental_scope"]
+        from ..services.planning_parts.districts import district_matches
+
+        if (
+            not district_matches(prop, item.criteria)
+            or str(prop.city.id) != item.criteria["city_id"]
+            or (
+                item.criteria["rental_scope"]
+                and item.criteria["rental_scope"] != snapshot["rental_scope"]
+            )
         ):
             raise ValidationError(
                 {

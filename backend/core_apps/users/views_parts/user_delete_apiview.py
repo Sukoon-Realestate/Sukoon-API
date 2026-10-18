@@ -1,6 +1,7 @@
 """Views: user delete apiview."""
 
 from django.conf import settings
+from django.db.models.deletion import ProtectedError
 from django.shortcuts import render
 from django.views import View
 from rest_framework import generics, permissions, status
@@ -171,7 +172,19 @@ class UserDeleteAPIView(generics.DestroyAPIView):
         serializer.is_valid(raise_exception=True)
 
         instance = self.get_object()
-        self.perform_destroy(instance)
+        try:
+            self.perform_destroy(instance)
+        except ProtectedError:
+            from core_apps.users.services.account_closure import retain_closure_request
+            ticket = retain_closure_request(instance)
+            response = Response({
+                "message": f"تعذر حذف الحساب لوجود سجلات والتزامات يجب الحفاظ عليها. تم تسجيل طلب مراجعة الخصوصية في الدعم برقم {ticket.reference}. لم يُحذف حسابك أو تُلغَ التزاماتك.",
+                "ticket_id": str(ticket.id),
+                "status": "awaiting_policy",
+                "workspace": ticket.workspace,
+            }, status=status.HTTP_409_CONFLICT)
+            response["Cache-Control"] = "private, no-store"
+            return response
 
         response = Response(status=status.HTTP_200_OK)
 

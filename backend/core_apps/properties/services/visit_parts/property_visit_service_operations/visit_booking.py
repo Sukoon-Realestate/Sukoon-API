@@ -16,6 +16,13 @@ class VisitBookingMixin:
         """
         Creates a property visit request.
         """
+        from ....models import Property
+        from ...viewing_access import prepare_context
+
+        context = prepare_context(tenant, validated_data.pop("viewing_context", {}))
+        tenant = context.pop("tenant", tenant)
+        property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        validated_data.update(context)
         # Validate that tenant is not the property owner
         if property_obj.owner == tenant:
             raise ValidationError(_("You cannot book a visit for your own property."))
@@ -54,6 +61,11 @@ class VisitBookingMixin:
         elif property_obj.rental_inventory:
             raise ValidationError(_("Select a rental offer before requesting a visit."))
 
+        from core_apps.features.services.rental_lifecycle.habitability import (
+            assert_habitable,
+        )
+
+        assert_habitable(property_obj, validated_data.get("offer_snapshot", {}))
         visit_date = validated_data.get("visit_date")
         visit_time = validated_data.get("visit_time")
         # Every booking must use an enabled owner-configured slot. Hold its
@@ -103,14 +115,19 @@ class VisitBookingMixin:
             tenant=tenant, property=property_obj, **validated_data
         )
 
+        from ...viewing_commands import notify
+
+        notification = None
+
         # * Notify property owner of new visit request (O-NOTIF-01 Item 1)
         try:
             from core_apps.notifications.models import Notification
             from core_apps.notifications.services import NotificationService
 
             tenant_name = tenant.get_full_name or tenant.email.split("@")[0]
-            NotificationService.create_notification(
+            notification = NotificationService.create_notification(
                 user=property_obj.owner,
+                send_push=False,
                 notification_type=Notification.NotificationType.VISIT_REQUEST,
                 title="طلب زيارة جديد!",
                 body=f"{tenant_name} تطلب زيارة {property_obj.title} - {visit.visit_date} {visit.visit_time}",
@@ -132,4 +149,5 @@ class VisitBookingMixin:
         except Exception as exc:
             logger.error("Failed to notify owner of visit request: %s", exc)
 
+        notify(visit, "requested", notification)
         return visit

@@ -223,7 +223,7 @@ class TenancyInvitation(TimeStampedModel):
                 name="unique_live_tenancy_invitation",
             ),
             models.UniqueConstraint(
-                fields=["source_visit"],
+                fields=["source_decision"],
                 condition=Q(status__in=["pending", "accepted"], lease__isnull=True),
                 name="unique_live_visit_invitation",
             ),

@@ -200,6 +200,8 @@ class TestProfileEditScreenAPI:
         assert data["gender_label"] == "ذكر"
 
     def test_patch_updates_profile_and_full_name(self, auth_client, user):
+        user.profile.phone_number = "+201098765432"
+        user.profile.save()
         payload = {
             "full_name": "علي محمود",
             "phone_number": "+201098765432",
@@ -413,4 +415,3 @@ class TestProfileEditScreenAPI:
             format="json",
         )
         assert res.status_code == status.HTTP_400_BAD_REQUEST
-

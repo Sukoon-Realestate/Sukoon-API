@@ -13,11 +13,10 @@ class TicketAttachmentSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj) -> str:
         request = self.context.get("request")
-        if obj.file and hasattr(obj.file, "url"):
-            url = obj.file.url
-            if request and not url.startswith("http"):
-                return request.build_absolute_uri(url)
-            return url
+        url = obj.file_url
+        if url:
+            url += f"?workspace={obj.message.ticket.workspace}"
+            return request.build_absolute_uri(url) if request else url
         return ""
 
 
@@ -54,6 +53,7 @@ class TicketDetailSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "reference",
+            "revision",
             "subject",
             "category",
             "status",

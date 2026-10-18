@@ -6,6 +6,7 @@ from core_apps.common.renderers import GenericJsonRenderer
 from ...filters import PropertyVisitFilter
 from ...models import PropertyVisit
 from ...permissions import IsTenantOrPropertyOwner
+from ...services.viewing_access import for_user
 from ...serializers import (
     PropertyVisitDetailSerializer,
     PropertyVisitUpdateSerializer,
@@ -35,7 +36,7 @@ class TenantPropertyVisitListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return (
-            PropertyVisit.objects.filter(tenant=self.request.user)
+            for_user(self.request.user)
             .select_related("property", "property__owner", "tenant")
             .all()
         )
@@ -126,7 +127,7 @@ class TenantVisitRequestListAPIView(generics.ListAPIView):
     filterset_class = PropertyVisitFilter
 
     def get_queryset(self):
-        return PropertyVisit.objects.filter(tenant=self.request.user).select_related(
+        return for_user(self.request.user).select_related(
             "property",
             "property__owner",
             "property__owner__profile",
@@ -146,7 +147,7 @@ class TenantVisitRequestDetailAPIView(generics.RetrieveAPIView):
     lookup_field = "id"
 
     def get_queryset(self):
-        return PropertyVisit.objects.filter(tenant=self.request.user).select_related(
+        return for_user(self.request.user).select_related(
             "property",
             "property__owner",
             "property__owner__profile",

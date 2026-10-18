@@ -36,6 +36,8 @@ class SearchAlertSerializer(serializers.ModelSerializer):
             "can_manage",
             "revision",
             "last_matched_at",
+            "last_checked_at",
+            "matching_status",
             "filters",
         ]
 
@@ -53,6 +55,21 @@ class AlertCreateSerializer(serializers.Serializer):
     def validate_filters(self, value):
         if not isinstance(value, dict):
             raise serializers.ValidationError("Filters must be an object.")
+        if "district_ids" in value and not isinstance(value["district_ids"], list):
+            raise serializers.ValidationError("district_ids must be a list.")
+        if value.get("district_ids"):
+            from core_apps.properties.models import City
+            from ..services.planning_parts.districts import validate_districts
+            from uuid import UUID
+
+            try:
+                city = City.objects.get(id=UUID(str(value.get("city", ""))))
+            except (ValueError, City.DoesNotExist):
+                raise serializers.ValidationError(
+                    "Select the catalog city before its districts."
+                )
+            identities, districts = validate_districts(city, value["district_ids"])
+            value = {**value, "district_ids": identities, "districts": districts}
         allowed_scopes = {"", "entire_property", "room", "room_group", "bed"}
         if value.get("rental_scope", "") not in allowed_scopes:
             raise serializers.ValidationError("Unsupported rental_scope.")

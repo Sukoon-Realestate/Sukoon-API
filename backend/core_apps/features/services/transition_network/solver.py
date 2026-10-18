@@ -123,6 +123,15 @@ def validate_cycle(intents, sources, endpoint=None):
             else intents[(index + 1) % len(intents)]
         )
         source = endpoint if outgoing is None else sources[str(outgoing.id)]
+        from ..planning_parts.districts import district_matches
+
+        prop = (
+            outgoing.lease.property
+            if outgoing is not None
+            else Property.objects.get(id=source["selection"]["property_id"])
+        )
+        if not district_matches(prop, incoming.criteria):
+            return None
         criteria = incoming.criteria
         start, end = date.fromisoformat(criteria["start_on"]), date.fromisoformat(
             criteria["end_on"]

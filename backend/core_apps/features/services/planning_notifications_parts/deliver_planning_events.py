@@ -16,6 +16,9 @@ def deliver_planning_events():
     from ..planning_access import planning_subject
     from rest_framework.exceptions import NotFound, PermissionDenied
 
+    from core_apps.common.recovery import require_scope
+
+    generation = require_scope("notifications")
     delivered = 0
     retry_before = timezone.now() - timedelta(minutes=2)
     for identifier in (
@@ -35,8 +38,46 @@ def deliver_planning_events():
             if event.attempts and event.updated_at >= retry_before:
                 continue
             try:
-                if event.destination.get("action_type") in {"open_reviews", "open_review_opportunity", "open_review_section"}:
+                if event.destination.get("action_type") == "open_search_alert":
+                    from ...models import SearchAlert
+
+                    if not SearchAlert.objects.filter(
+                        id=event.destination.get("target_id"),
+                        user=event.recipient,
+                        revision=event.destination.get("revision"),
+                        enabled=True,
+                        deleted_at__isnull=True,
+                    ).exists():
+                        raise NotFound()
+                elif event.destination.get("event_kind") == "viewing_changed":
+                    from core_apps.properties.models import PropertyVisit
+                    from core_apps.properties.services.viewing_access import can_read
+
+                    visit = PropertyVisit.objects.filter(
+                        id=event.destination.get("visit_id"),
+                        revision=event.destination.get("revision"),
+                    ).first()
+                    if not visit or not can_read(visit, event.recipient):
+                        raise NotFound()
+                elif event.destination.get("action_type") == "open_support_ticket":
+                    from core_apps.support.services import get_ticket_detail
+                    from core_apps.support.models import Ticket
+
+                    try:
+                        get_ticket_detail(
+                            event.recipient,
+                            event.destination["target_id"],
+                            workspace=event.destination.get("workspace"),
+                        )
+                    except Ticket.DoesNotExist as error:
+                        raise NotFound() from error
+                elif event.destination.get("action_type") in {
+                    "open_reviews",
+                    "open_review_opportunity",
+                    "open_review_section",
+                }:
                     from ..reputation.tasks import authorize_notification
+
                     authorize_notification(event)
                 elif event.destination.get("action_type") == "open_company_work":
                     from ..company.access import company_for
@@ -114,12 +155,28 @@ def deliver_planning_events():
                     planning_subject(event.recipient, event.destination["target_id"])
             except (NotFound, Http404, PermissionDenied):
                 event.delivered_at = timezone.now()
-                event.save(update_fields=["delivered_at", "updated_at"])
+                event.delivery_status = "stale_or_unauthorized"
+                event.save(
+                    update_fields=["delivered_at", "delivery_status", "updated_at"]
+                )
                 continue
             if event.notification_id is None:
                 event.notification = NotificationService.create_notification(
                     user=event.recipient,
-                    title=("تحديث بخصوص تقييم في سكون / Review update" if event.destination.get("action_type") in {"open_reviews", "open_review_opportunity", "open_review_section"} else "تحديث بشأن طلب السكن / Housing update"),
+                    title=(
+                        "تحديث من دعم سكون / Support update"
+                        if event.destination.get("action_type") == "open_support_ticket"
+                        else (
+                            "تحديث بخصوص تقييم في سكون / Review update"
+                            if event.destination.get("action_type")
+                            in {
+                                "open_reviews",
+                                "open_review_opportunity",
+                                "open_review_section",
+                            }
+                            else "تحديث بشأن طلب السكن / Housing update"
+                        )
+                    ),
                     body="افتح التطبيق لمراجعة التفاصيل / Open the app to review.",
                     category="housing_planning",
                     data={**event.destination, "event_id": str(event.id)},
@@ -128,19 +185,24 @@ def deliver_planning_events():
             if event.destination.get("decision_id"):
                 from ...models import ReviewModerationDecision
                 from ..reputation.visibility import decision_notice
-                decision = ReviewModerationDecision.objects.filter(id=event.destination["decision_id"]).first()
+
+                decision = ReviewModerationDecision.objects.filter(
+                    id=event.destination["decision_id"]
+                ).first()
                 if decision:
                     decision_notice(decision, event.recipient)
+            event.delivery_status = "attempting"
             event.attempts += 1
             event.save()
         # The external call is outside the database transaction. Event ID deduplicates delivery.
         try:
+            require_scope("notifications", generation)
             sent = FCMService.send_push_to_user(
                 user=event.recipient,
                 title=event.notification.title,
                 body=event.notification.body,
                 data=event.notification.data,
-                notification_type="general",
+                notification_type=event.notification.notification_type,
             )
             # FCM reports delivery failures as zero as well as exceptions. Keep
             # the durable event pending when an eligible active device exists.
@@ -148,16 +210,27 @@ def deliver_planning_events():
 
             if (
                 sent == 0
-                and FCMService.should_send_to_user(event.recipient, "general")
+                and FCMService.should_send_to_user(
+                    event.recipient, event.notification.notification_type
+                )
                 and DeviceToken.objects.filter(
                     user=event.recipient, is_active=True
                 ).exists()
             ):
+                PlanningEvent.objects.filter(
+                    pk=event.pk, delivered_at__isnull=True
+                ).update(delivery_status="retry_pending")
                 continue
         except Exception:
+            PlanningEvent.objects.filter(pk=event.pk, delivered_at__isnull=True).update(
+                delivery_status="retry_pending"
+            )
             continue
+        require_scope("notifications", generation)
         PlanningEvent.objects.filter(pk=event.pk, delivered_at__isnull=True).update(
-            delivered_at=timezone.now()
+            delivered_at=timezone.now(),
+            delivery_status="provider_accepted" if sent else "no_delivery",
+            provider_accepted_at=timezone.now() if sent else None,
         )
         delivered += 1
     return delivered

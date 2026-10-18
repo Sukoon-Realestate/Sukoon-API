@@ -11,7 +11,10 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from ..journey import canonical_user
-from ..token_serializers import CanonicalTokenObtainPairSerializer
+from ..token_serializers import (
+    CanonicalTokenObtainPairSerializer,
+    CanonicalTokenRefreshSerializer,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -87,8 +90,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = CanonicalTokenRefreshSerializer
+
     def post(self, request: Request, *args, **kwargs) -> Response:
-        refresh_token = request.COOKIES.get("refresh")
+        refresh_token = request.COOKIES.get("refresh") or request.data.get("refresh")
 
         if not refresh_token:
             return Response(
@@ -143,6 +148,10 @@ class CustomProviderAuthView(ProviderAuthView):
 class LogoutAPIView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
 
+        from ..services.sessions import revoke_current
+
+        if request.user.is_authenticated:
+            revoke_current(request.user, request.auth)
         response = Response(status=status.HTTP_200_OK)
 
         response.delete_cookie("access")
@@ -153,7 +162,9 @@ class LogoutAPIView(APIView):
 
 
 def _issue_jwt(user) -> dict:
-    refresh = RefreshToken.for_user(user)
+    from ..services.sessions import issue_refresh
+
+    refresh = issue_refresh(user)
     return {"access": str(refresh.access_token), "refresh": str(refresh)}
 
 

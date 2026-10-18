@@ -89,9 +89,17 @@ class FactBody(CommandBody):
 
 
 class CaseBody(CommandBody):
+    reported_started_at = s.DateTimeField(required=False)
+    physical_keys = s.ListField(
+        child=s.CharField(max_length=100), max_length=100, required=False
+    )
+    reported_severity = s.ChoiceField(
+        choices=["unassessed", "minor", "major", "urgent"], default="unassessed"
+    )
     lease_id = s.UUIDField()
     kind = s.ChoiceField(
         choices=[
+            "habitability",
             "move_in_mismatch",
             "access_failure",
             "owner_cancellation",

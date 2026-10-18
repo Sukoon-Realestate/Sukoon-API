@@ -35,6 +35,9 @@ class PropertyDetailSerializer(PropertyDetailMediaMixin, serializers.ModelSerial
     property_type = serializers.SlugRelatedField(slug_field="slug", read_only=True)
     governorate = GovernorateSerializer(read_only=True)
     city = CitySerializer(read_only=True)
+    district_catalog = serializers.UUIDField(
+        source="district_catalog.id", read_only=True, allow_null=True
+    )
     amenities = serializers.SerializerMethodField()
     is_fav = serializers.BooleanField(read_only=True, default=False)
     is_saved = serializers.BooleanField(read_only=True, default=False)
@@ -42,6 +45,7 @@ class PropertyDetailSerializer(PropertyDetailMediaMixin, serializers.ModelSerial
 
     def get_rating(self, obj):
         from core_apps.features.services.reputation.visibility import summary
+
         return summary("property_stay", obj.id)["average"]
 
     price = serializers.SerializerMethodField()
@@ -96,6 +100,7 @@ class PropertyDetailSerializer(PropertyDetailMediaMixin, serializers.ModelSerial
             "governorate",
             "city",
             "district",
+            "district_catalog",
             "street",
             "building_year",
             "deposit",
@@ -120,6 +125,7 @@ class PropertyDetailSerializer(PropertyDetailMediaMixin, serializers.ModelSerial
 
     def get_virtual_tours(self, obj: Property) -> list:
         from core_apps.virtual_tours.sessions import available
+
         # General details only contain overview hints. Offer-scoped reads have
         # a separate no-store endpoint and never enter the public listing cache.
         return available(obj)

@@ -65,7 +65,8 @@ def calculate(identifier):
         return "corporate_housing_simulation" in ready_services(
             enabled_services()
         ) and (
-            not (snapshot or {}).get("planning_assumptions") or mock_mode_available()
+            not (snapshot or {}).get("planning_assumptions", {}).get("simulated")
+            or mock_mode_available()
         )
 
     if not ready():

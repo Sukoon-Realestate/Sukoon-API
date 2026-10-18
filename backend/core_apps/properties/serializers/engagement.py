@@ -3,6 +3,10 @@ from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
 
 from ..models import Property, SavedProperty
+from .property_parts.property_collection import (
+    PropertyCollectionSerializer,
+    stay_rating,
+)
 
 
 class SavedPropertyCardSerializer(serializers.ModelSerializer):
@@ -13,8 +17,7 @@ class SavedPropertyCardSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
 
     def get_rating(self, obj):
-        from core_apps.features.services.reputation.visibility import summary
-        return summary("property_stay", obj.id)["average"]
+        return stay_rating(obj)
 
     saved_at = serializers.DateTimeField(read_only=True)
     is_saved = serializers.SerializerMethodField()
@@ -22,6 +25,7 @@ class SavedPropertyCardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Property
+        list_serializer_class = PropertyCollectionSerializer
         fields = [
             "id",
             "main_image",

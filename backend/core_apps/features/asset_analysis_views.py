@@ -1,4 +1,5 @@
 from django.http import Http404
+from config.advanced_housing import manual_review_available, mock_mode_available
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from .asset_passport_models import (
@@ -87,6 +88,11 @@ def workspace(request, asset_id):
             )
     return Response(
         {
+            "analysis_mode": (
+                "manual"
+                if manual_review_available()
+                else "mock" if mock_mode_available() else "disabled"
+            ),
             "id": str(asset.id),
             "revision": asset.revision,
             "label": asset.label,
@@ -135,7 +141,7 @@ def job_detail(request, record_id):
 
 @planning_api(["POST"], None)
 def review_finding(request, record_id):
-    gated(request)
+    # Preserve authorized review of an existing manual case after creation is disabled.
     return mutate(
         request,
         "asset.finding_review",

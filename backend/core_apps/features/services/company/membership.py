@@ -27,6 +27,9 @@ def invite(user, company_id, email, roles):
     company = company_for(user, company_id, "admin", lock=True)
     if not roles or set(roles) - ROLES:
         raise ValidationError({"roles": "Select supported company roles."})
+    from .grant_security import require_nonprivileged_onboarding
+
+    require_nonprivileged_onboarding(roles)
     token = secrets.token_urlsafe(32)
     invitation = CompanyInvitation.objects.create(
         company=company,
@@ -74,6 +77,9 @@ def accept_invitation(user, token):
         raise RentalConflict(
             "The invitation is no longer available.", code="invitation_expired"
         )
+    from .grant_security import require_nonprivileged_onboarding
+
+    require_nonprivileged_onboarding(invitation.roles)
     member, created = CompanyMembership.objects.get_or_create(
         company=invitation.company, user=user
     )

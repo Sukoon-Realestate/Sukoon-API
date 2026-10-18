@@ -1,3 +1,4 @@
+from django.db import models
 from django.db.models import Q
 
 from core_apps.profiles.services.profile_service import mask_phone_number
@@ -18,6 +19,14 @@ def _qualifying_visits(viewer, counterpart, property_obj=None):
     )
     if property_obj is not None:
         queryset = queryset.filter(property=property_obj)
+    # A revoked company representative does not retain a historical phone grant.
+    queryset = queryset.filter(
+        Q(company__isnull=True)
+        | Q(
+            company__memberships__user_id=models.F("tenant_id"),
+            company__memberships__is_active=True,
+        )
+    ).distinct()
     return queryset
 
 
@@ -27,6 +36,12 @@ def is_phone_disclosed(viewer, counterpart, property_obj=None, visit=None):
     if viewer.pk == counterpart.pk or not viewer.is_active or not counterpart.is_active:
         return False
     if visit is not None:
+        if visit.company_id:
+            from .services.viewing_access import participant
+
+            attendee = viewer if viewer.pk != visit.property.owner_id else counterpart
+            if not participant(visit, attendee):
+                return False
         participants_match = (
             visit.property.owner_id == viewer.pk and visit.tenant_id == counterpart.pk
         ) or (

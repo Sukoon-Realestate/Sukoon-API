@@ -22,11 +22,12 @@ class IsOwner(permissions.BasePermission):
         return owner == request.user
 
 
-
 class IsTenantOrPropertyOwner(permissions.BasePermission):
     """
     Custom permission to only allow tenants of a visit request or owners of the property to view/edit it.
     """
 
     def has_object_permission(self, request, view, obj):
-        return obj.tenant == request.user or obj.property.owner == request.user
+        from .services.viewing_access import can_read
+
+        return can_read(obj, request.user)

@@ -60,11 +60,18 @@ def mock_discovery():
 
 
 def ready_services(enabled):
-    from config.advanced_housing import PROVIDER_SERVICES, mock_mode_available
+    from config.advanced_housing import (
+        PROVIDER_SERVICES,
+        mock_mode_available,
+        manual_review_available,
+    )
 
     result = [
-        service for service in enabled
-        if service not in PROVIDER_SERVICES or mock_mode_available()
+        service
+        for service in enabled
+        if service not in PROVIDER_SERVICES
+        or mock_mode_available()
+        or (service == "asset_assisted_analysis" and manual_review_available())
     ]
     from ...providers import fake_provider_available
 
@@ -153,7 +160,7 @@ def route_matrix(origins, destination):
         body,
         {
             "X-Goog-Api-Key": settings.PLANNING_ROUTES_API_KEY,
-            "X-Goog-FieldMask": "originIndex,destinationIndex,status,condition,duration,fallbackInfo",
+            "X-Goog-FieldMask": "originIndex,destinationIndex,status,condition,duration,distanceMeters,fallbackInfo",
         },
     )
     if not isinstance(raw, list):
@@ -193,6 +200,12 @@ def route_matrix(origins, destination):
             raise DiscoveryUnavailable(code="invalid_provider_response") from None
         results[index] = {
             "duration_seconds": math.ceil(seconds),
+            "distance_meters": (
+                element.get("distanceMeters")
+                if type(element.get("distanceMeters")) is int
+                and element["distanceMeters"] >= 0
+                else None
+            ),
             "status": "ok",
             "timing_fallback": bool(element.get("fallbackInfo")),
         }

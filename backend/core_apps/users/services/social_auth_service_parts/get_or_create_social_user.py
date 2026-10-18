@@ -128,11 +128,11 @@ def _verify_facebook(token: str) -> dict:
             timeout=5,
         )
         if response.status_code != 200:
-            logger.warning("Facebook token verification failed: %s", response.text)
+            logger.warning("Facebook token verification rejected (HTTP %s)", response.status_code)
             raise ValidationError("Facebook token is invalid or expired.")
         return response.json()
     except Exception as exc:
-        logger.error("Facebook API connection error: %s", exc)
+        logger.error("Facebook API connection error (%s)", type(exc).__name__)
         raise ValidationError("Failed to verify Facebook token.")
 
 

@@ -135,3 +135,22 @@ class City(TimeStampedModel):
             governorate=self.governorate,
         )
         super().save(*args, **kwargs)
+
+
+class District(TimeStampedModel):
+    """Maintained city catalog; never inferred from a property's free text."""
+
+    city = models.ForeignKey(City, on_delete=models.PROTECT, related_name="districts")
+    name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["name", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["city", "name"], name="unique_district_name_per_city"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.name}, {self.city.name}"

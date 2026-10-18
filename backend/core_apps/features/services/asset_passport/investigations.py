@@ -255,7 +255,11 @@ def warranty_for(user, identifier, *, lock=False):
 
 
 def claim(user, row, data):
-    require_mock_mode()
+    from config.advanced_housing import manual_review_available
+
+    manual = manual_review_available()
+    if not manual:
+        require_mock_mode()
     row.claim_note = text_field(data, "reason", required=True, limit=1200)
     source = evidence.source_for(user, row.source_kind, row.source_id)
     if source.revision != row.source_revision:
@@ -263,6 +267,38 @@ def claim(user, row, data):
             "The warranty document source changed. Record a new reference.",
             code="stale_revision",
         )
+    if manual:
+        if not row.starts_on <= timezone.localdate() < row.ends_on_exclusive:
+            raise ValidationError(
+                "This reference is outside its recorded warranty period; coverage needs independent provider review."
+            )
+        if row.service_case_id:
+            raise RentalConflict(
+                "Follow the original service case; do not create a second external claim.",
+                code="original_case_exists",
+            )
+        from ..rental_lifecycle.cases import open_system_case
+
+        row.service_case = open_system_case(
+            kind="maintenance",
+            source_key=f"warranty:{row.id}",
+            lease=source.lease,
+            actor=user,
+            reason=row.claim_note,
+            next_action="Verify the provider, coverage and sharing consent before any manual handoff. No external claim has been sent.",
+        )
+        row.status = "manual_review_pending"
+        row.provider_result = {
+            "mode": "manual",
+            "externally_submitted": False,
+            "acknowledged": False,
+            "blocker": "provider_registry_and_sharing_consent_required",
+            "service_case_id": str(row.service_case.id),
+        }
+        row.revision += 1
+        row.save()
+        audit(row, user, "asset_warranty_manual_review_requested")
+        return row
     row.status = "mock_claim_received"
     row.mock_result = {
         "provider": "mock_warranty_v2",
@@ -293,5 +329,7 @@ def warranty_payload(row):
         "source_revision": row.source_revision,
         "claim_note": row.claim_note,
         "mock_result": row.mock_result,
-        "allowed_actions": ["read", "claim"],
+        "provider_result": row.provider_result,
+        "service_case_id": str(row.service_case.id) if row.service_case_id else None,
+        "allowed_actions": ["read"] if row.service_case_id else ["read", "claim"],
     }

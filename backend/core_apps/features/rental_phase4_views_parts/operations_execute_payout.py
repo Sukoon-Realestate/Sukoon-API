@@ -17,7 +17,12 @@ from ..models import (
     RentalPayout,
 )
 from ..renderers import FeatureJsonRenderer
-from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
+from ..services.rental_phase2 import (
+    RentalConflict,
+    remember_mutation,
+    replay_operation,
+    fingerprint,
+)
 from .handover_respond import evaluate_owner_payables, payout_payload
 
 
@@ -50,14 +55,12 @@ def payout_detail(request, payout_id):
     return Response(payout_payload(item))
 
 
-def _require_payout_role(user):
-    profile = getattr(user, "staff_profile", None)
-    if not user.is_superuser and (
-        not profile
-        or not profile.is_active
-        or profile.role_name != StaffProfile.RoleName.PAYOUT_OPERATOR
-    ):
-        raise PermissionDenied("Payout execution requires the payout operator role.")
+def _require_payout_role(user, *, lock=False):
+    from ..services.financial_authority import require_financial_actor
+
+    return require_financial_actor(
+        user, {StaffProfile.RoleName.PAYOUT_OPERATOR}, "payout.execute", lock=lock
+    )
 
 
 @api_view(["POST"])
@@ -81,7 +84,7 @@ def operations_execute_payout(request):
     with transaction.atomic():
         from core_apps.users.models import User
 
-        User.objects.select_for_update(no_key=True).get(pk=request.user.pk)
+        _require_payout_role(request.user, lock=True)
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])
@@ -125,6 +128,21 @@ def operations_execute_payout(request):
             raise RentalConflict(
                 "The reviewed beneficiary is not ready.", code="payout_held"
             )
+        from core_apps.users.services.sensitive_actions import consume
+
+        consume(
+            request,
+            action="payout.execute",
+            resource_id=lease.id,
+            revision=lease.revision,
+            payload={
+                "command": request.data,
+                "amount_minor": sum(x.net_minor for x in payables),
+                "currency": "EGP",
+                "beneficiary_revision": profile.revision,
+                "beneficiary_account_digest": fingerprint(profile.provider_account_id),
+            },
+        )
         payout = RentalPayout.objects.create(
             batch=batch,
             owner=payables[0].lease.owner,

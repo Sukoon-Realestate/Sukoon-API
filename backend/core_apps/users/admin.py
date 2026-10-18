@@ -7,6 +7,32 @@ from django.utils.translation import gettext_lazy as _
 User = get_user_model()
 
 
+from .models import SecurityEvent
+
+
+@admin.register(SecurityEvent)
+class SecurityEventAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "created_at",
+        "action",
+        "decision",
+        "security_epoch",
+        "policy_version",
+    )
+    list_filter = ("action", "decision")
+    readonly_fields = tuple(field.name for field in SecurityEvent._meta.fields)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm

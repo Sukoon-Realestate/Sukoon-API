@@ -28,8 +28,13 @@ def submit_decision(actor, visit_id, data):
             "property", "property__owner", "tenant"
         ),
         id=visit_id,
-        tenant=actor,
     )
+    from ..viewing_access import participant
+
+    if not participant(visit, actor):
+        from rest_framework.exceptions import NotFound
+
+        raise NotFound()
     # Include the visit in the actor/operation-scoped fingerprint. Never persist
     # the reason again in the general-purpose idempotency response store.
     digest = fingerprint({"visit_id": str(visit.id), **data})
@@ -59,7 +64,7 @@ def submit_decision(actor, visit_id, data):
                 "This request key was used for different data.", "idempotency_conflict"
             )
         return visit, False
-    existing = decision_for(visit)
+    existing = decision_for(visit, actor)
     if existing:
         if existing.value != data["decision"] or existing.reason != data.get(
             "reason", ""
@@ -71,7 +76,7 @@ def submit_decision(actor, visit_id, data):
     else:
         if visit.revision != data["expected_revision"]:
             raise DecisionConflict("The visit details have changed.", "stale_revision")
-        invitation, ambiguous = linked_invitation(visit)
+        invitation, ambiguous = linked_invitation(visit, actor)
         legacy_lease, legacy_ambiguous = (
             historical_agreement(visit) if not invitation else (None, False)
         )
@@ -131,13 +136,22 @@ def validate_invitation_source(property_obj, tenant, data, *, lock=False):
         invalid(
             "The tenant's positive decision is required.", "source_decision_required"
         )
-    visits = PropertyVisit.objects.select_related("post_visit_decision")
+    visits = PropertyVisit.objects.all()
     if lock:
         visits = visits.select_for_update(of=("self",))
-    visit = get_object_or_404(
-        visits, id=data["source_visit_id"], property=property_obj, tenant=tenant
-    )
-    decision = decision_for(visit)
+    visit = get_object_or_404(visits, id=data["source_visit_id"], property=property_obj)
+    from ..viewing_access import participant
+
+    if visit.company_id:
+        raise DecisionConflict(
+            "A company visit cannot create a personal tenancy invitation.",
+            "corporate_contract_policy_required",
+        )
+    if not participant(visit, tenant):
+        raise DecisionConflict(
+            "The attendee no longer has authority for this viewing.", "source_mismatch"
+        )
+    decision = decision_for(visit, tenant)
     if (
         not decision
         or str(decision.id) != str(data["source_decision_id"])
@@ -154,7 +168,9 @@ def validate_invitation_source(property_obj, tenant, data, *, lock=False):
         raise DecisionConflict(
             "The invitation must preserve the visited offer.", "offer_mismatch"
         )
-    if visit.rental_invitations.filter(lease__status__in=LIVE_LEASE_STATUSES).exists():
+    if visit.rental_invitations.filter(
+        tenant=tenant, lease__status__in=LIVE_LEASE_STATUSES
+    ).exists():
         raise DecisionConflict(
             "This visit already has an agreement.", "continuation_exists"
         )

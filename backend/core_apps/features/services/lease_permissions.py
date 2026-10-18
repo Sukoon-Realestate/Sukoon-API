@@ -66,7 +66,8 @@ def agreement_actions(user, lease):
         return ["cancel_draft"] if can_cancel_draft(user, lease) else []
     actions = ["cancel_draft"] if can_cancel_draft(user, lease) else []
     if not fake_provider_available():
-        return actions
+        from .cycle_permissions import cycle_actions
+        return actions + cycle_actions(user, lease)
     if lease.status == Lease.Status.DRAFT:
         if str(user.id) not in lease.reviewed_by:
             actions.append("accept_review")

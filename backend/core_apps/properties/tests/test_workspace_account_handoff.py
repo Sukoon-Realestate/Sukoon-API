@@ -106,6 +106,9 @@ class TestWorkspaceAccountContract:
     def test_profile_edit_syncs_across_my_account_and_owner_profile(
         self, auth_client, user
     ):
+        # Existing verified contact is retained; contact changes use security recovery.
+        user.profile.phone_number = "+201098765432"
+        user.profile.save(update_fields=["phone_number"])
         # 1. Update profile via profiles/edit/
         edit_url = reverse("profile-edit")
         edit_payload = {

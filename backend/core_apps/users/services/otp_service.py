@@ -57,11 +57,11 @@ def send_otp_email(email: str, otp: str, user_name: str = "") -> bool:
             recipient_list=[email],
             fail_silently=False,
         )
-        logger.info("OTP verification email sent successfully to %s", email)
+        logger.info("OTP verification email dispatched")
         return True
     except Exception as exc:
         # ! Do not crash registration/resend if SMTP fails
-        logger.error("Failed to send OTP verification email to %s: %s", email, exc)
+        logger.error("OTP verification email dispatch failed (%s)", type(exc).__name__)
         return False
 
 
@@ -74,11 +74,16 @@ def create_and_send_otp(user: Any) -> str:
     if not email:
         raise ValidationError({"email": _("User must have a valid email address.")})
 
+    from core_apps.common.recovery import security_epoch
+
+    user = get_user_model().objects.get(pk=user.pk)
     otp = generate_otp()
     cache_key = f"otp:{email}"
     cache_data = {
         "otp": otp,
         "attempts": 0,
+        "security_epoch": user.security_epoch,
+        "recovery_epoch": security_epoch(),
         "user_id": str(getattr(user, "id", "")),
     }
 
@@ -140,14 +145,27 @@ def verify_email_otp(email: str, otp: str) -> Any:
     except User.DoesNotExist:
         raise ValidationError({"email": _("User with this email does not exist.")})
 
-    user.is_verified = True
-    user.save(update_fields=["is_verified"])
+    from django.db import transaction
+    from core_apps.common.recovery import security_epoch
+
+    with transaction.atomic():
+        user = User.objects.select_for_update().get(pk=user.pk)
+        if (
+            record.get("security_epoch", 0) != user.security_epoch
+            or record.get("recovery_epoch", "unconfigured") != security_epoch()
+        ):
+            cache.delete(cache_key)
+            raise ValidationError(
+                {"otp": _("Request a new verification code after account recovery.")}
+            )
+        user.is_verified = True
+        user.save(update_fields=["is_verified"])
 
     # * Invalidate OTP cache and cooldown
     cache.delete(cache_key)
     cache.delete(f"otp_cooldown:{normalized_email}")
 
-    logger.info("User %s (%s) verified email successfully.", user.id, normalized_email)
+    logger.info("User %s verified email successfully.", user.id)
     return user
 
 

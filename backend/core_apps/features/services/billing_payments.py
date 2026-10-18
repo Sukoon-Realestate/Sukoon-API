@@ -16,6 +16,9 @@ from .rental_phase3 import quote_fingerprint
 
 def validate_payable(invoice, user, revision):
     require_actor(user)
+    from .purchase_routing import require_legacy_checkout
+
+    require_legacy_checkout(invoice.purpose)
     if not checkout_available():
         raise PermissionDenied(
             {

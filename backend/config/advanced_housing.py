@@ -49,14 +49,25 @@ def require_mock_mode():
         )
 
 
+def manual_review_available():
+    from django.conf import settings
+
+    return getattr(settings, "ADVANCED_HOUSING_PROVIDER_MODE", "disabled") == "manual"
+
+
 def provider_configuration():
     available = mock_mode_available()
+    manual = manual_review_available()
     return {
         "policy_version": POLICY_VERSION,
         "provider_mode": "mock" if available else "disabled",
         "simulated": available,
         "planning_only": not available,
         **{service: available for service in PROVIDER_SERVICES},
+        "asset_assisted_analysis": available or manual,
+        "asset_analysis_mode": (
+            "manual" if manual else "mock" if available else "disabled"
+        ),
         "individual_consent_required": True,
         "automatic_liability": False,
         "conditional_policy": "all_consents_before_holds_then_independent_obligations",

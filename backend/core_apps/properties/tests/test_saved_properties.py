@@ -115,7 +115,7 @@ class TestSavedPropertyAPI:
         assert card["property_type"] == "apartment"
         assert card["area"] == 90
         assert card["price"] == "6500.00"
-        assert card["rating"] == 4.5
+        assert card["rating"] is None  # Legacy rows cannot establish a stay experience.
         assert card["is_saved"] is True
         assert card["saved_at"] is not None
 
@@ -167,7 +167,15 @@ class TestSavedPropertyAPI:
             response = auth_client.get(reverse("saved-property-list"))
 
         assert response.status_code == status.HTTP_200_OK
-        assert len(queries.captured_queries) <= 3
+        # One batched current F66 query replaces a query for every card.
+        assert len(queries.captured_queries) <= 4
+        for index in range(5, 10):
+            property_obj = create_property(another_user, title=f"Saved {index}")
+            SavedProperty.objects.create(user=user, property=property_obj)
+        with CaptureQueriesContext(connection) as expanded:
+            response = auth_client.get(reverse("saved-property-list"))
+        assert response.status_code == status.HTTP_200_OK
+        assert len(expanded.captured_queries) == len(queries.captured_queries)
 
     def test_list_rejects_invalid_filter_value(self, auth_client):
         response = auth_client.get(
