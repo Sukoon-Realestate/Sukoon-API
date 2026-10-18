@@ -267,6 +267,16 @@ RENTAL_CHECKOUT_TTL_MINUTES = int(getenv("RENTAL_CHECKOUT_TTL_MINUTES", "15"))
 RENTAL_CHECKOUT_ALLOWED_ORIGINS = []
 RENTAL_CHECKOUT_RETURN_URL = ""
 RENTAL_CHECKOUT_EXTERNAL_SCHEMES = []
+
+# Paymob configuration only; payment routes and provider activation are separate.
+PAYMOB_API_KEY = getenv("PAYMOB_API_KEY", "").strip()
+PAYMOB_PUBLIC_KEY = getenv("PAYMOB_PUBLIC_KEY", "").strip()
+PAYMOB_SECRET_KEY = getenv("PAYMOB_SECRET_KEY", "").strip()
+PAYMOB_HMAC_SECRET = getenv("PAYMOB_HMAC_SECRET", "").strip()
+PAYMOB_INTEGRATION_ID = getenv("PAYMOB_INTEGRATION_ID", "").strip()
+PAYMOB_WEBHOOK_URL = getenv("PAYMOB_WEBHOOK_URL", "").strip()
+PAYMOB_RETURN_URL = getenv("PAYMOB_RETURN_URL", "").strip()
+
 USE_IN_MEMORY_CHANNEL_LAYER = getenv(
     "USE_IN_MEMORY_CHANNEL_LAYER", "False"
 ).lower() in ("true", "1", "yes")

@@ -9,6 +9,7 @@ from rest_framework import permissions
 
 from core_apps.properties.views import PropertyListAPIView
 from core_apps.common.runtime_views import health
+from core_apps.common import paymob_views
 from core_apps.common.app_associations import (
     android_asset_links,
     apple_app_site_association,
@@ -29,6 +30,14 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path(
+        "api/v1/payments/paymob/webhook/", paymob_views.webhook, name="paymob-webhook"
+    ),
+    path(
+        "api/v1/payments/paymob/return/",
+        paymob_views.payment_return,
+        name="paymob-return",
+    ),
     path("health/", health, name="runtime-health"),
     path(
         ".well-known/assetlinks.json", android_asset_links, name="android-asset-links"
