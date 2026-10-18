@@ -10,7 +10,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from core_apps.admin_api.models import StaffProfile
-from ..models import RentalDispute, RentalEvidence
+from ..models import RentalDispute, RentalEvidence, PrivateAccessRevocation
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from ..services.rental_phase6 import evaluate_financial_closure
@@ -21,6 +21,7 @@ from .refund_execute import SUBJECT_MODELS, dispute_payload, _dispute
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
+@transaction.atomic
 def disputes(request):
     if request.method == "GET":
         workspace = request.query_params.get("workspace")
@@ -31,6 +32,11 @@ def disputes(request):
         )
         if request.query_params.get("lease_id"):
             queryset = queryset.filter(lease__id=request.query_params["lease_id"])
+        queryset = queryset.exclude(
+            lease_id__in=PrivateAccessRevocation.objects.filter(
+                user=request.user
+            ).values("lease_id")
+        )
         results = [
             dispute_payload(x, request.user)
             for x in queryset.prefetch_related("evidence")
@@ -38,7 +44,14 @@ def disputes(request):
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
-    lease = _lease(request, request.data.get("lease_id"))
+    lease = _lease(request, request.data.get("lease_id"), lock=True)
+    request_key = request.data.get("request_key")
+    if not request_key:
+        raise ValidationError({"request_key": "Required."})
+    operation = f"dispute.create.{lease.id}"
+    replay = replay_operation(request.user, operation, request_key, request.data)
+    if replay:
+        return Response(replay[0], status=replay[1])
     kind = request.data.get("subject_kind")
     model = SUBJECT_MODELS.get(kind)
     if not model:
@@ -56,13 +69,6 @@ def disputes(request):
     )
     if len(evidence) != len(set(evidence_ids)):
         raise ValidationError({"evidence_ids": "Invalid evidence."})
-    request_key = request.data.get("request_key")
-    if not request_key:
-        raise ValidationError({"request_key": "Required."})
-    operation = f"dispute.create.{lease.id}"
-    replay = replay_operation(request.user, operation, request_key, request.data)
-    if replay:
-        return Response(replay[0], status=replay[1])
     item = RentalDispute.objects.create(
         lease=lease,
         opened_by=request.user,
@@ -108,9 +114,23 @@ def dispute_respond(request, dispute_id):
     if replay:
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
+        if action in {"resolve", "reject"}:
+            from core_apps.admin_api.permissions import require_staff_actor
+
+            require_staff_actor(
+                request.user, {StaffProfile.RoleName.DISPUTE_RESOLVER}, lock=True
+            )
         item = _dispute(request, dispute_id, allow_operations=True, lock=True)
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
         if item.revision != int(request.data.get("expected_revision", 0)):
             raise RentalConflict("Dispute revision conflict.", code="stale_revision")
+        if item.status != RentalDispute.Status.OPEN:
+            raise RentalConflict(
+                "A resolved or rejected dispute cannot be changed.",
+                code="terminal_dispute",
+            )
         if action == "reply":
             if request.user not in (item.lease.owner, item.lease.tenant):
                 raise PermissionDenied("Only parties may reply.")
@@ -124,6 +144,10 @@ def dispute_respond(request, dispute_id):
                 },
             ]
         elif action in {"resolve", "reject"}:
+            if request.user.pk in {item.lease.owner_id, item.lease.tenant_id}:
+                raise PermissionDenied(
+                    "Dispute resolution requires an independent operator."
+                )
             profile = getattr(request.user, "staff_profile", None)
             if not request.user.is_superuser and (
                 not profile
@@ -164,6 +188,9 @@ def document_payload(item):
         "title": item.title,
         "status": item.status,
         "sha256": item.sha256,
+        "created_at": item.created_at.isoformat(),
+        "failure_code": item.failure_code,
+        "media_type": item.media_type,
         "starts_on": str(item.starts_on) if item.starts_on else None,
         "ends_on_exclusive": (
             str(item.ends_on_exclusive) if item.ends_on_exclusive else None

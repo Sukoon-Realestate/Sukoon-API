@@ -11,7 +11,12 @@ class ProfileStatusMixin:
         """
         Aggregates data for Screen 2: 'ملخص الحساب' (Account Summary).
         """
-        from core_apps.properties.models import PropertyVisit, SavedProperty
+        from core_apps.properties.models import (
+            PropertyVisit,
+            PropertyVisitDecision,
+            SavedProperty,
+        )
+        from core_apps.chat.models import Conversation
 
         profile, _ = Profile.objects.get_or_create(user=user)
 
@@ -26,14 +31,18 @@ class ProfileStatusMixin:
         completion_percentage = cls.calculate_profile_completion(user, profile)
 
         saved_count = SavedProperty.objects.filter(user=user).count()
-        confirmed_visits = PropertyVisit.objects.filter(
-            tenant=user, status=PropertyVisit.Status.CONFIRMED
-        ).count()
         total_visits = PropertyVisit.objects.filter(tenant=user).count()
         completed_visits_count = (
-            confirmed_visits if confirmed_visits > 0 else total_visits
+            PropertyVisitDecision.objects.filter(tenant=user, attended=True)
+            .values("visit_id")
+            .distinct()
+            .count()
         )
-        active_chats_count = confirmed_visits
+        active_chats_count = (
+            Conversation.objects.filter(kind="direct", participant_set__user=user)
+            .distinct()
+            .count()
+        )
 
         is_verified = user.is_verified
         id_title = "هويتك موثّقة" if is_verified else "التحقق من الهوية"
@@ -102,18 +111,6 @@ class ProfileStatusMixin:
             .first()
         )
 
-        if user.is_verified:
-            return {
-                "status": "approved",
-                "full_name": full_name,
-                "submitted_at": (
-                    latest_submission.created_at.isoformat()
-                    if latest_submission
-                    else (user.date_joined.isoformat() if user.date_joined else None)
-                ),
-                "rejection_reason": "",
-            }
-
         if latest_submission:
             if latest_submission.status == KYCSubmission.Status.APPROVED:
                 return {
@@ -137,18 +134,6 @@ class ProfileStatusMixin:
                     "submitted_at": latest_submission.created_at.isoformat(),
                     "rejection_reason": "",
                 }
-
-        # Check if profile has documents uploaded even if no KYCSubmission object exists yet
-        has_documents = bool(profile.id_face and profile.id_back)
-        if has_documents:
-            return {
-                "status": "pending",
-                "full_name": full_name,
-                "submitted_at": (
-                    profile.updated_at.isoformat() if profile.updated_at else None
-                ),
-                "rejection_reason": "",
-            }
 
         return {
             "status": "incomplete",

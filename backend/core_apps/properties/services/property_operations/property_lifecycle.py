@@ -64,6 +64,14 @@ class PropertyLifecycleMixin:
         else:
             new_hidden = bool(is_hidden)
 
+        # Historical owner edits left a stale approval flag on pending content.
+        # Hiding and showing that content must never act as reviewer approval.
+        if property_obj.status in {
+            Property.Status.UNDER_REVIEW,
+            Property.Status.NEEDS_REVISION,
+        }:
+            property_obj.is_verified = False
+
         if new_hidden:
             property_obj.status = Property.Status.HIDDEN
         else:
@@ -72,5 +80,5 @@ class PropertyLifecycleMixin:
             else:
                 property_obj.status = Property.Status.UNDER_REVIEW
 
-        property_obj.save(update_fields=["status", "updated_at"])
+        property_obj.save(update_fields=["status", "is_verified", "updated_at"])
         return property_obj

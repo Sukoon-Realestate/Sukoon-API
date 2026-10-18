@@ -42,6 +42,9 @@ def submit_change_for_signature(request, change_id, kind):
             require_no_departure(item.lease)
         if int(request.data.get("expected_revision", 0)) != item.revision:
             raise RentalConflict("Change revision conflict.", code="stale_revision")
+        from ..services.change_terms import validate_changed_terms
+
+        validate_changed_terms(item.terms)
         generated = get_rental_provider().generate_agreement(
             item.id, item.revision, item.terms
         )
@@ -85,6 +88,9 @@ def change_signing_session(request, change_id, kind):
             raise RentalConflict("Change is not awaiting signatures.")
         if str(request.user.id) in item.signed_by:
             raise RentalConflict("You already signed this change document.")
+        from ..services.change_terms import validate_changed_terms
+
+        validate_changed_terms(item.terms)
         if (
             int(request.data.get("expected_revision", 0)) != item.revision
             or str(request.data.get("document_id")) != str(item.document_id)

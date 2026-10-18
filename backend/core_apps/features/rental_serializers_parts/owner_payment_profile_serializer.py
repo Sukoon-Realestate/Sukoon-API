@@ -38,6 +38,18 @@ class RentalTermsSerializer(serializers.Serializer):
     renewal_commission_rate_bps = serializers.IntegerField(min_value=0)
 
     def validate(self, attrs):
+        if attrs["deposit_holder"] != "platform" and attrs["deposit"]["amount_minor"]:
+            raise serializers.ValidationError(
+                {
+                    "deposit_holder": "Owner-held deposits require an approved external custody and return process; use supported platform custody."
+                }
+            )
+        if attrs["billing_anchor_day"] != attrs["starts_on"].day:
+            raise serializers.ValidationError(
+                {
+                    "billing_anchor_day": "Billing follows the tenancy start-date anniversary."
+                }
+            )
         if attrs["ends_on_exclusive"] <= attrs["starts_on"]:
             raise serializers.ValidationError(
                 {"ends_on_exclusive": "Must be after starts_on."}

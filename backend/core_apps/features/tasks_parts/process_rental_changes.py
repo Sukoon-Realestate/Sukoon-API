@@ -153,6 +153,30 @@ def process_rental_changes(self):
             }:
                 continue
             change.lease = lease
+            if change.kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
+                from rest_framework.exceptions import ValidationError
+                from ..services.change_terms import validate_changed_terms
+                from ..services.rental_lifecycle.cases import open_system_case
+
+                if change.status != RentalChange.Status.SIGNED:
+                    continue
+                try:
+                    validate_changed_terms(change.terms)
+                    if not change.document_id or not change.document_hash:
+                        raise ValidationError(
+                            "The signed document identity is missing."
+                        )
+                except ValidationError:
+                    # Preserve signed consent and all existing obligations. A bad
+                    # historical row must not abort every other due change.
+                    open_system_case(
+                        kind="agreement_terms_review",
+                        source_key=f"change-terms:{change.id}:{change.revision}",
+                        lease=lease,
+                        reason="The signed change has unsupported terms or missing document provenance.",
+                        next_action="Review the original signed change with both parties. Do not rewrite signed terms or infer new consent.",
+                    )
+                    continue
             if change.kind == RentalChange.Kind.AMENDMENT:
                 if change.status != RentalChange.Status.SIGNED:
                     continue
@@ -199,6 +223,9 @@ def process_rental_changes(self):
                     offer_snapshot=lease.offer_snapshot,
                     tenancy_root_id=lease.tenancy_root_id,
                     terms=change.terms,
+                    policy_version=change.terms["policy_version"],
+                    document_id=change.document_id,
+                    document_hash=change.document_hash,
                     activated_at=now,
                 )
                 change.result_lease = renewal

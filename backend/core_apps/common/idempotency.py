@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db import IntegrityError, transaction
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.exceptions import APIException, ValidationError
+from rest_framework.exceptions import APIException, ValidationError, PermissionDenied
 
 from core_apps.features.models import IdempotencyRecord
 
@@ -97,7 +97,7 @@ def _active_record(*, user, operation, key):
         record
         and record.created_at < cutoff
         and not operation.startswith(
-            ("support.ticket.", "property.visit.create:", "viewing.command:")
+            ("support.ticket.", "property.", "viewing.command:", "identity.submit")
         )
     ):
         records.delete()
@@ -106,6 +106,10 @@ def _active_record(*, user, operation, key):
 
 
 def _replay(record, expected_fingerprint):
+    if record.recovery_status == IdempotencyRecord.RecoveryStatus.ABSENT_FINAL:
+        raise IdempotencyConflict(
+            "This operation was closed without execution. Review and use a new request key."
+        )
     if record.fingerprint != expected_fingerprint:
         raise IdempotencyConflict()
     if record.recovery_status == IdempotencyRecord.RecoveryStatus.PENDING:
@@ -121,6 +125,7 @@ def execute_idempotent(
     payload,
     action,
     request_subject_id=None,
+    auth_claims=None,
 ):
     """Execute ``action`` once and atomically persist its response.
 
@@ -132,12 +137,29 @@ def execute_idempotent(
         return data, response_status, False
 
     expected_fingerprint = fingerprint(payload)
-    record = _active_record(user=user, operation=operation, key=key)
+    record = (
+        None
+        if recoverable_operation(operation)
+        else _active_record(user=user, operation=operation, key=key)
+    )
     if record:
         return _replay(record, expected_fingerprint)
 
     try:
         with transaction.atomic():
+            if recoverable_operation(operation):
+                from core_apps.users.models import User
+
+                current = User.objects.select_for_update().get(pk=user.pk)
+                if (
+                    not current.is_active
+                    or current.security_epoch != user.security_epoch
+                ):
+                    raise PermissionDenied("Account authority changed. Sign in again.")
+                if auth_claims is not None:
+                    from core_apps.users.services.sessions import validate_session
+
+                    validate_session(current, auth_claims)
             record = _active_record(user=user, operation=operation, key=key)
             if record:
                 return _replay(record, expected_fingerprint)
@@ -165,3 +187,40 @@ def execute_idempotent(
 
 def response_headers(replayed):
     return {"Idempotency-Replayed": "true"} if replayed else {}
+
+
+def recoverable_operation(operation):
+    return operation == "property.create" or operation.startswith(
+        ("property.update:", "property.image.upload:", "support.ticket.create:")
+    )
+
+
+@transaction.atomic
+def resolve_or_close(*, user, operation, key, auth_claims=None):
+    """Serialize against execution; absence becomes durable only after fencing.
+
+    Caller owns resource authorization. No previously committed effect is reversed.
+    """
+    from core_apps.users.models import User
+
+    if not key or not recoverable_operation(operation):
+        raise ValidationError("Unsupported recovery identity.")
+    current = User.objects.select_for_update().get(pk=user.pk)
+    if not current.is_active or current.security_epoch != user.security_epoch:
+        raise PermissionDenied("Account authority changed. Sign in again.")
+    if auth_claims is not None:
+        from core_apps.users.services.sessions import validate_session
+
+        validate_session(current, auth_claims)
+    record = _active_record(user=current, operation=operation, key=key)
+    if record is None:
+        record = IdempotencyRecord.objects.create(
+            user=current,
+            operation=operation,
+            request_key=key,
+            fingerprint="",
+            response_data={"code": "operation_closed_without_execution"},
+            response_status=409,
+            recovery_status=IdempotencyRecord.RecoveryStatus.ABSENT_FINAL,
+        )
+    return record

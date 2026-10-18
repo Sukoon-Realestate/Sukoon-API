@@ -1,6 +1,7 @@
 """Property: property image upload apiview."""
 
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from core_apps.common.idempotency import (
@@ -49,7 +50,13 @@ class PropertyImageUploadAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
+        @transaction.atomic
         def upload_image():
+            current = Property.objects.select_for_update().get(pk=property_obj.pk)
+            if current.owner_id != request.user.pk:
+                raise permissions.exceptions.PermissionDenied(
+                    "Only the current owner can upload listing media."
+                )
             img_obj = PropertyService.upload_property_image(
                 property_obj=property_obj,
                 image=serializer.validated_data["image"],
@@ -65,6 +72,7 @@ class PropertyImageUploadAPIView(generics.CreateAPIView):
 
         data, response_status, replayed = execute_idempotent(
             user=request.user,
+            auth_claims=request.auth,
             operation=f"property.image.upload:{property_obj.id}",
             key=request_key,
             payload=serializer.validated_data,

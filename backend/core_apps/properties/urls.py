@@ -1,3 +1,4 @@
+from .views.operation_recovery import PropertyOperationRecovery
 from django.urls import path
 from .views.districts import DistrictListAPIView
 from .views.viewing_commands import viewing_command, viewing_receipt
@@ -48,6 +49,11 @@ from .views import (
 )
 
 urlpatterns = [
+    path(
+        "operation-recovery/",
+        PropertyOperationRecovery.as_view(),
+        name="property-operation-recovery",
+    ),
     path(
         "viewing-companies/<uuid:company_id>/representatives/",
         representatives,

@@ -20,6 +20,7 @@ class PropertyUpdateMixin:
         from core_apps.features.services.rental_phase2 import RentalConflict
 
         property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        was_hidden = property_obj.status == Property.Status.HIDDEN
         if property_obj.retired_at:
             raise RentalConflict(
                 "This inventory identity has been retired.", code="inventory_retired"
@@ -165,8 +166,13 @@ class PropertyUpdateMixin:
         for attr, value in data.items():
             setattr(property_obj, attr, value)
 
-        # On every owner edit, set status to under_review
-        property_obj.status = Property.Status.UNDER_REVIEW
+        # Approval applies to the reviewed content, not to every future edit.
+        # Preserve an owner's deliberate unlisting while invalidating approval;
+        # an explicit later unhide must return this revision to review.
+        property_obj.is_verified = False
+        property_obj.status = (
+            Property.Status.HIDDEN if was_hidden else Property.Status.UNDER_REVIEW
+        )
         property_obj.save()
         if hasattr(property_obj, "_prefetched_objects_cache"):
             property_obj._prefetched_objects_cache.clear()

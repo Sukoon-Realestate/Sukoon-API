@@ -12,11 +12,15 @@ from ..models import (
 from ..providers import fake_provider_available
 from .maintenance_access import access_window_current, appointment_reviewable
 from django.utils import timezone
+from .settlements_parts.prepare_settlement import settlement_precondition_error
 
 
 MAINTENANCE_TRANSITIONS = {
     "acknowledge": ({"open"}, "acknowledged"),
-    "propose_appointment": ({"open", "acknowledged", "appointment_proposed", "scheduled"}, "appointment_proposed"),
+    "propose_appointment": (
+        {"open", "acknowledged", "appointment_proposed", "scheduled"},
+        "appointment_proposed",
+    ),
     "accept_appointment": ({"appointment_proposed"}, "scheduled"),
     "start_work": ({"acknowledged", "scheduled"}, "in_progress"),
     "report_missed": ({"scheduled"}, "acknowledged"),
@@ -31,11 +35,7 @@ MAINTENANCE_TRANSITIONS = {
 
 
 def cycle_actions(user, subject):
-    if (
-        not user
-        or not user.is_active
-        or not user.is_verified
-    ):
+    if not user or not user.is_active or not user.is_verified:
         return []
     lease = (
         subject
@@ -52,8 +52,13 @@ def cycle_actions(user, subject):
         if not isinstance(subject, Lease):
             return []
         from .reputation.eligibility import can_review_lease
+
         actions = ["review_rental"] if can_review_lease(subject, user) else []
-        if lease.status in {Lease.Status.ACTIVE, Lease.Status.TERMINATION_PENDING, Lease.Status.ENDED}:
+        if lease.status in {
+            Lease.Status.ACTIVE,
+            Lease.Status.TERMINATION_PENDING,
+            Lease.Status.ENDED,
+        }:
             actions.append("create_maintenance_request")
         return actions
     if isinstance(subject, Lease):
@@ -73,17 +78,10 @@ def cycle_actions(user, subject):
                 "create_termination",
                 "create_external_payment",
             ]
-        if (
-            lease.status
-            in {
-                Lease.Status.ENDED,
-                Lease.Status.TERMINATION_PENDING,
-                Lease.Status.CANCELLED,
-            }
-            or lease.occupancy_status == Lease.OccupancyStatus.RETURNED
-        ):
+        if not settlement_precondition_error(lease):
             actions.append("propose_settlement")
         from .reputation.eligibility import can_review_lease
+
         if can_review_lease(lease, user):
             actions.append("review_rental")
         if lease.invoices.filter(
@@ -111,17 +109,17 @@ def cycle_actions(user, subject):
             actions = [action for action in actions if action not in owner_only]
         if user.pk != lease.tenant_id:
             actions = [action for action in actions if action not in tenant_only]
-        if (
-            not access_window_current(subject)
-            or (
-                subject.proposed_cost_minor
-                and subject.cost_version != subject.approved_cost_version
-            )
+        if not access_window_current(subject) or (
+            subject.proposed_cost_minor
+            and subject.cost_version != subject.approved_cost_version
         ):
             actions = [action for action in actions if action != "start_work"]
         if not appointment_reviewable(subject):
             actions = [action for action in actions if action != "accept_appointment"]
-        if not subject.appointment_ends_at or timezone.now() < subject.appointment_ends_at:
+        if (
+            not subject.appointment_ends_at
+            or timezone.now() < subject.appointment_ends_at
+        ):
             actions = [action for action in actions if action != "report_missed"]
         payer_id = lease.owner_id if subject.cost_payer == "owner" else lease.tenant_id
         if (
@@ -134,6 +132,18 @@ def cycle_actions(user, subject):
     if isinstance(subject, RentalChange):
         if subject.kind == RentalChange.Kind.EXTERNAL_PAYMENT:
             return []  # Financial operations approval is not a participant action.
+        from .change_terms import changed_terms_blocker
+
+        if changed_terms_blocker(subject):
+            return (
+                ["reject", "request_changes"]
+                if subject.status
+                in {
+                    RentalChange.Status.PROPOSED,
+                    RentalChange.Status.CHANGES_REQUESTED,
+                }
+                else []
+            )
         if subject.status in {
             RentalChange.Status.PROPOSED,
             RentalChange.Status.CHANGES_REQUESTED,
@@ -156,7 +166,7 @@ def cycle_actions(user, subject):
     if isinstance(subject, FinalSettlement):
         if subject.status == FinalSettlement.Status.ACCEPTED:
             return []
-        actions = ["propose_settlement"]
+        actions = [] if settlement_precondition_error(lease) else ["propose_settlement"]
         if subject.status == FinalSettlement.Status.PROPOSED:
             actions.append("dispute")
             if str(user.id) not in subject.accepted_by:

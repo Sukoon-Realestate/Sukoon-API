@@ -86,26 +86,26 @@ def change_respond(request, change_id, kind):
         )
     item = _change(request, change_id, kind)
     if kind == RentalChange.Kind.EXTERNAL_PAYMENT:
-        profile = getattr(request.user, "staff_profile", None)
-        if not request.user.is_superuser and (
-            not profile
-            or not profile.is_active
-            or profile.role_name
-            not in {
-                StaffProfile.RoleName.FINANCIAL_APPROVER,
-                StaffProfile.RoleName.PSP_RECONCILIATION,
-            }
-        ):
-            raise PermissionDenied("External payment claims require operations review.")
+        from ..services.financial_authority import require_financial_actor
+
+        finance_roles = {
+            StaffProfile.RoleName.FINANCIAL_APPROVER,
+            StaffProfile.RoleName.PSP_RECONCILIATION,
+        }
+        require_financial_actor(request.user, finance_roles, "external_payment.review")
     operation = f"rental_change.respond.{item.id}.{request.user.id}"
-    replay = replay_operation(
-        request.user, operation, request.data["request_key"], request.data
-    )
-    if replay:
-        return Response(replay[0], status=replay[1])
     note = validated_note(request.data)
     with transaction.atomic():
+        if kind == RentalChange.Kind.EXTERNAL_PAYMENT:
+            require_financial_actor(
+                request.user, finance_roles, "external_payment.review", lock=True
+            )
         item = _change(request, change_id, kind, lock=True)
+        replay = replay_operation(
+            request.user, operation, request.data["request_key"], request.data
+        )
+        if replay:
+            return Response(replay[0], status=replay[1])
         if int(request.data.get("expected_revision", 0)) != item.revision:
             raise RentalConflict("Change revision conflict.", code="stale_revision")
         if item.status not in {
@@ -122,6 +122,10 @@ def change_respond(request, change_id, kind):
         elif kind == RentalChange.Kind.EXTERNAL_PAYMENT:
             item.status = RentalChange.Status.ACCEPTED
         else:
+            if kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
+                from ..services.change_terms import validate_changed_terms
+
+                validate_changed_terms(item.terms)
             approvals = set(item.approvals)
             approvals.add(str(request.user.id))
             item.approvals = sorted(approvals)

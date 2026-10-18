@@ -83,6 +83,7 @@ class TicketListCreateAPIView(generics.ListCreateAPIView):
         payload = {**serializer.validated_data, "attachments": attachments}
         data, response_status, replayed = execute_idempotent(
             user=request.user,
+            auth_claims=request.auth,
             operation=f"support.ticket.create:{serializer.validated_data['workspace']}",
             key=request_key,
             payload=payload,
@@ -168,6 +169,7 @@ class TicketReplyAPIView(APIView):
         payload = {**serializer.validated_data, "workspace": workspace or ""}
         data, response_status, replayed = execute_idempotent(
             user=request.user,
+            auth_claims=request.auth,
             operation=f"support.ticket.reply:{ticket.id}",
             key=request_key,
             payload=payload,

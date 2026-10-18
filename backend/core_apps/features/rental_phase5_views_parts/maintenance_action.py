@@ -8,7 +8,13 @@ from rest_framework.exceptions import NotFound, PermissionDenied, ValidationErro
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from core_apps.admin_api.models import StaffProfile
-from ..models import Lease, MaintenanceEvent, MaintenanceRequest, RentalChange
+from ..models import (
+    Lease,
+    MaintenanceEvent,
+    MaintenanceRequest,
+    RentalChange,
+    PrivateAccessRevocation,
+)
 from ..renderers import FeatureJsonRenderer
 from ..rental_serializers_parts.maintenance_cost_decision_serializer import (
     MaintenanceCostDecisionSerializer,
@@ -42,7 +48,9 @@ def maintenance_action(request, request_id):
     transitions = MAINTENANCE_TRANSITIONS
     with transaction.atomic():
         item = _maintenance(request, request_id, lock=True)
-        replay = replay_operation(request.user, operation, request.data["request_key"], request.data)
+        replay = replay_operation(
+            request.user, operation, request.data["request_key"], request.data
+        )
         if replay:
             return Response(replay[0], status=replay[1])
         if int(request.data.get("expected_revision", 0)) != item.revision:
@@ -63,17 +71,31 @@ def maintenance_action(request, request_id):
                 code="consent_required",
             )
         if action == "accept_appointment" and not appointment_reviewable(item):
-            raise RentalConflict("Review a new bounded appointment before approving access.", code="appointment_expired")
+            raise RentalConflict(
+                "Review a new bounded appointment before approving access.",
+                code="appointment_expired",
+            )
         if action == "report_missed" and not str(request.data.get("note", "")).strip():
             raise ValidationError({"note": "Describe the missed appointment."})
         if action in {"approve_cost", "reject_cost"}:
-            responsible = item.lease.owner if item.cost_payer == "owner" else item.lease.tenant
-            if request.user != responsible or not request.user.is_active or not request.user.is_verified:
-                raise PermissionDenied("Only the current responsible payer may decide this cost.")
+            responsible = (
+                item.lease.owner if item.cost_payer == "owner" else item.lease.tenant
+            )
+            if (
+                request.user != responsible
+                or not request.user.is_active
+                or not request.user.is_verified
+            ):
+                raise PermissionDenied(
+                    "Only the current responsible payer may decide this cost."
+                )
             decision = MaintenanceCostDecisionSerializer(data=request.data)
             decision.is_valid(raise_exception=True)
-            if (decision.validated_data["cost_version"] != item.cost_version
-                or not item.proposed_cost_minor or item.approved_cost_version == item.cost_version):
+            if (
+                decision.validated_data["cost_version"] != item.cost_version
+                or not item.proposed_cost_minor
+                or item.approved_cost_version == item.cost_version
+            ):
                 raise RentalConflict("Cost version conflict.", code="stale_revision")
         if action not in cycle_actions(request.user, item):
             raise PermissionDenied(
@@ -107,7 +129,9 @@ def maintenance_action(request, request_id):
             if not request.data.get("appointment_at"):
                 raise ValidationError({"appointment_at": "Required."})
             item.appointment_at = parse_datetime(request.data["appointment_at"])
-            item.appointment_ends_at = parse_datetime(str(request.data.get("appointment_ends_at", "")))
+            item.appointment_ends_at = parse_datetime(
+                str(request.data.get("appointment_ends_at", ""))
+            )
             if not item.appointment_at:
                 raise ValidationError({"appointment_at": "Must be an ISO date-time."})
             from django.utils import timezone
@@ -120,7 +144,9 @@ def maintenance_action(request, request_id):
                 or item.appointment_ends_at <= item.appointment_at
             ):
                 raise ValidationError(
-                    {"appointment_at": "Use future start and end date-times with their timezones."}
+                    {
+                        "appointment_at": "Use future start and end date-times with their timezones."
+                    }
                 )
             item.appointment_version += 1
             item.access_approved_version = None
@@ -140,7 +166,11 @@ def maintenance_action(request, request_id):
             {
                 "appointment_version": item.appointment_version,
                 "access_approved_version": item.access_approved_version,
-                "appointment_ends_at": item.appointment_ends_at.isoformat() if item.appointment_ends_at else None,
+                "appointment_ends_at": (
+                    item.appointment_ends_at.isoformat()
+                    if item.appointment_ends_at
+                    else None
+                ),
                 "cost_version": item.cost_version,
                 "approved_cost_version": item.approved_cost_version,
             },
@@ -156,10 +186,18 @@ def maintenance_action(request, request_id):
                 else None
             ),
             cost_minor=item.proposed_cost_minor if "cost" in action else None,
-            metadata={"cost_version": item.cost_version} if "cost" in action else {
-                "appointment_version": item.appointment_version,
-                "appointment_ends_at": item.appointment_ends_at.isoformat() if item.appointment_ends_at else None,
-            },
+            metadata=(
+                {"cost_version": item.cost_version}
+                if "cost" in action
+                else {
+                    "appointment_version": item.appointment_version,
+                    "appointment_ends_at": (
+                        item.appointment_ends_at.isoformat()
+                        if item.appointment_ends_at
+                        else None
+                    ),
+                }
+            ),
         )
         output = remember_mutation(
             user=request.user,
@@ -175,9 +213,12 @@ def maintenance_action(request, request_id):
 
 
 def change_payload(item, user=None):
+    from ..services.change_terms import changed_terms_blocker
+
+    blocker = changed_terms_blocker(item)
     return {
         "allowed_actions": cycle_actions(user, item),
-        "blocking_reasons": [],
+        "blocking_reasons": [blocker] if blocker else [],
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "invoice_id": str(item.invoice.id) if item.invoice else None,
@@ -211,26 +252,34 @@ def _change(request, change_id, expected_kind=None, lock=False):
     item = get_object_or_404(queryset, id=change_id)
     if expected_kind and item.kind != expected_kind:
         raise NotFound()
-    profile = getattr(request.user, "staff_profile", None)
-    operations_external = item.kind == RentalChange.Kind.EXTERNAL_PAYMENT and (
-        request.user.is_superuser
-        or (
-            profile
-            and profile.is_active
-            and profile.role_name
-            in {
-                StaffProfile.RoleName.FINANCIAL_APPROVER,
-                StaffProfile.RoleName.PSP_RECONCILIATION,
-            }
-        )
-    )
-    if (
-        request.user not in (item.lease.owner, item.lease.tenant)
-        and not operations_external
-    ):
-        raise NotFound()
     if lock:
         lease = Lease.objects.select_for_update().get(pk=item.lease_id)
         item = queryset.select_for_update(of=("self",)).get(pk=item.pk)
         item.lease = lease
+    from core_apps.users.models import User
+
+    current = User.objects.get(pk=request.user.pk)
+    if (
+        not current.is_active
+        or PrivateAccessRevocation.objects.filter(
+            lease=item.lease, user=current
+        ).exists()
+    ):
+        raise NotFound()
+    operations_external = item.kind == RentalChange.Kind.EXTERNAL_PAYMENT and (
+        current.is_superuser
+        or StaffProfile.objects.filter(
+            user=current,
+            is_active=True,
+            role_name__in={
+                StaffProfile.RoleName.FINANCIAL_APPROVER,
+                StaffProfile.RoleName.PSP_RECONCILIATION,
+            },
+        ).exists()
+    )
+    if (
+        current.pk not in (item.lease.owner_id, item.lease.tenant_id)
+        and not operations_external
+    ):
+        raise NotFound()
     return item

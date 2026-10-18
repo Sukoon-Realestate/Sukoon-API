@@ -1,6 +1,7 @@
 """Property: property detail apiview."""
 
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 from django.db.models import Avg, BooleanField, Exists, FloatField, OuterRef, Q, Value
 from django.db.models.functions import Coalesce
 from rest_framework import generics, permissions, status
@@ -89,6 +90,7 @@ class PropertyCreateAPIView(generics.CreateAPIView):
 
         data, response_status, replayed = execute_idempotent(
             user=request.user,
+            auth_claims=request.auth,
             operation="property.create",
             key=request_key,
             payload=serializer.validated_data,
@@ -110,6 +112,7 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.AllowAny]
     lookup_field = "id"
+    http_method_names = ["get", "patch", "head", "options"]
 
     def get_queryset(self):
         queryset = Property.objects.select_related(
@@ -179,15 +182,69 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
             raise permissions.exceptions.PermissionDenied(
                 "You are not the owner of this property listing."
             )
-        serializer = PropertySerializer(
-            instance, data=request.data, partial=True, context={"request": request}
+        key = get_idempotency_key(request)
+
+        def update_property():
+            with transaction.atomic():
+                current = Property.objects.select_for_update().get(pk=instance.pk)
+                if current.owner_id != request.user.pk:
+                    raise permissions.exceptions.PermissionDenied(
+                        "Only the current owner can edit a listing."
+                    )
+                expected = request.headers.get("If-Unmodified-Since")
+                from django.utils.dateparse import parse_datetime
+
+                try:
+                    matches = (
+                        not expected or parse_datetime(expected) == current.updated_at
+                    )
+                except (ValueError, TypeError):
+                    matches = False
+                if not matches:
+                    from core_apps.common.idempotency import IdempotencyConflict
+
+                    raise IdempotencyConflict(
+                        "Property changed. Reload and review before saving."
+                    )
+                serializer = PropertySerializer(
+                    current,
+                    data=request.data,
+                    partial=True,
+                    context={"request": request},
+                )
+                serializer.is_valid(raise_exception=True)
+                updated = serializer.save()
+                data = PropertyDetailSerializer(
+                    updated, context={"request": request}
+                ).data
+                return (
+                    {"message": "Property changes submitted for review.", **data},
+                    200,
+                    updated.id,
+                )
+
+        payload = (
+            {
+                key: (
+                    request.data.getlist(key)
+                    if len(request.data.getlist(key)) > 1
+                    else request.data.get(key)
+                )
+                for key in request.data
+            }
+            if hasattr(request.data, "getlist")
+            else dict(request.data)
         )
-        serializer.is_valid(raise_exception=True)
-        updated_instance = serializer.save()
-        data = PropertyDetailSerializer(
-            updated_instance, context={"request": request}
-        ).data
+        payload["expected_updated_at"] = request.headers.get("If-Unmodified-Since", "")
+        data, response_status, replayed = execute_idempotent(
+            user=request.user,
+            auth_claims=request.auth,
+            operation=f"property.update:{instance.id}",
+            key=key,
+            payload=payload,
+            action=update_property,
+            request_subject_id=instance.id,
+        )
         return Response(
-            {"message": "Property changes submitted for review.", **data},
-            status=status.HTTP_200_OK,
+            data, status=response_status, headers=response_headers(replayed)
         )

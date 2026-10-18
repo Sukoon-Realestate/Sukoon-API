@@ -683,6 +683,7 @@ def test_signed_renewal_survives_worker_order_and_applies_only_once(phase5_lease
         "starts_on": str(today),
         "ends_on_exclusive": str(today + timedelta(days=60)),
         "handover_on": str(today),
+        "billing_anchor_day": today.day,
     }
     body = command(
         lease_revision=lease.revision,
@@ -758,6 +759,7 @@ def test_renewal_flutter_optional_dates_are_normalized_and_start_is_authoritativ
         "starts_on": str(lease.end_date),
         "handover_on": str(lease.end_date),
         "ends_on_exclusive": str(lease.end_date + timedelta(days=31)),
+        "billing_anchor_day": lease.end_date.day,
     }
     body = command(
         lease_revision=lease.revision,

@@ -9,20 +9,28 @@ from ..refunds import remaining_components
 from .financial_snapshot import CHARGE_TYPES
 
 
-def prepare_settlement(lease, lines):
+def settlement_precondition_error(lease):
+    if lease.terms.get("deposit_holder") == "owner" and lease.terms.get(
+        "deposit", {}
+    ).get("amount_minor"):
+        return (
+            "deposit_custody_review_required",
+            "The agreed owner-held deposit requires custody reconciliation before final settlement.",
+        )
     if lease.legacy_read_only:
-        raise RentalConflict("Legacy records require reconciliation before settlement.")
+        return (
+            "legacy_reconciliation",
+            "Legacy records require reconciliation before settlement.",
+        )
     if lease.occupancy_status not in {"returned", "not_started"}:
-        raise RentalConflict(
+        return (
+            "occupancy_not_returned",
             "Return possession before agreeing the final financial settlement.",
-            code="occupancy_not_returned",
         )
     if lease.status not in {"ended", "cancelled"}:
-        raise RentalConflict("This tenancy is not ready for final settlement.")
+        return "tenancy_not_ended", "This tenancy is not ready for final settlement."
     if lease.disputes.filter(status="open").exists():
-        raise RentalConflict(
-            "Resolve open disputes before executing settlement.", code="dispute_open"
-        )
+        return "dispute_open", "Resolve open disputes before executing settlement."
     if (
         lease.refund_requests.filter(
             status__in=["requested", "approved", "processing"]
@@ -32,10 +40,17 @@ def prepare_settlement(lease, lines):
             payment_status__in=["created", "pending", "authorized"],
         ).exists()
     ):
-        raise RentalConflict(
+        return (
+            "financial_action_pending",
             "Reconcile pending financial operations first.",
-            code="financial_action_pending",
         )
+    return None
+
+
+def prepare_settlement(lease, lines):
+    error = settlement_precondition_error(lease)
+    if error:
+        raise RentalConflict(error[1], code=error[0])
     invoices = list(
         lease.invoices.exclude(status__in=["cancelled", "written_off"]).order_by(
             "due_date", "pkid"

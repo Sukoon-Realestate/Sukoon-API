@@ -19,6 +19,7 @@ ROLES = {
     "payout_operator",
 }
 CASE_KINDS = {
+    "agreement_terms_review",
     "habitability",
     "habitability_impact",
     "student_verification",
@@ -174,10 +175,31 @@ def case_queryset(user):
     return own
 
 
+def agreement_case_blocker(item):
+    if item.kind != "agreement_terms_review":
+        return None
+    from uuid import UUID
+    from ...models import RentalChange
+
+    try:
+        change_id = UUID(item.source_key.split(":")[1])
+    except (ValueError, IndexError):
+        change_id = None
+    if (
+        not change_id
+        or not RentalChange.objects.filter(
+            pk=change_id, lease_id=item.lease_id, status=RentalChange.Status.APPLIED
+        ).exists()
+    ):
+        return "The signed change still requires an authorized correction; closing this case does not correct the agreement."
+    return None
+
+
 def case_payload(item, user):
     from .habitability import projection
 
     operator = independent_case_operator(item, user)
+    blocker = agreement_case_blocker(item)
     from ...models import RentalAuditEvent
 
     replies = RentalAuditEvent.objects.filter(
@@ -217,12 +239,12 @@ def case_payload(item, user):
         ],
         "allowed_actions": (
             ["assign", "triage", "reopen", "reply"]
-            + (["resolve"] if item.assigned_to_id == user.pk else [])
+            + (["resolve"] if item.assigned_to_id == user.pk and not blocker else [])
             + (["link_remedy"] if item.team == "finance" else [])
             if operator
             else ["reply"]
         ),
-        "blocking_reasons": [],
+        "blocking_reasons": [blocker] if blocker else [],
         "evidence_ids": [
             str(value) for value in item.evidence.values_list("id", flat=True)
         ],
@@ -343,6 +365,9 @@ def case_action(item, user, data):
             else:
                 raise ValidationError({"action": "Supply a linked financial remedy."})
         elif action == "resolve":
+            blocker = agreement_case_blocker(item)
+            if blocker:
+                raise RentalConflict(blocker, code="reconciliation_required")
             if item.team == "finance":
                 require_staff(
                     user,

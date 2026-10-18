@@ -110,6 +110,11 @@ def issue_invoice(period):
         if combined
         else 0
     )
+    if deposit_minor and period.lease.terms.get("deposit_holder") != "platform":
+        raise RentalConflict(
+            "Owner-held deposit terms need an approved custody correction before platform collection.",
+            code="deposit_custody_unsupported",
+        )
     total = period.amount_minor + deposit_minor
     if combined and DepositAgreement.objects.filter(lease=period.lease).exists():
         raise RentalConflict("A deposit obligation already exists for this agreement.")
@@ -177,6 +182,14 @@ def generate_billing_schedule(lease):
     lease = Lease.objects.select_for_update().get(pk=lease.pk)
     if lease.billing_periods.exists():
         return lease.billing_periods.all()
+    if (
+        lease.terms.get("billing_anchor_day", lease.start_date.day)
+        != lease.start_date.day
+    ):
+        raise RentalConflict(
+            "The agreed billing anchor requires correction before schedule generation.",
+            code="billing_anchor_unsupported",
+        )
     starts_on = lease.start_date
     ends_on = lease.end_date
     activation = lease.activated_at or timezone.now()

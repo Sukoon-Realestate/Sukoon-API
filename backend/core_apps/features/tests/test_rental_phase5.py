@@ -50,7 +50,10 @@ def phase5_lease(db):
         is_verified=True,
         is_ownership_verified=True,
     )
+    from .test_rental_phase2 import agreement_terms
+
     terms = {
+        **agreement_terms(date(2026, 1, 1), date(2027, 1, 1)),
         "starts_on": "2026-01-01",
         "ends_on_exclusive": "2027-01-01",
         "handover_on": "2026-01-01",
@@ -140,13 +143,22 @@ def test_complete_maintenance_vocabulary_and_exact_cost_approval(phase5_lease):
     appointment = (timezone.now() + timedelta(days=1)).isoformat()
     assert (
         action(
-            owner_client, item_id, "propose_appointment", 5, appointment_at=appointment,
-            appointment_ends_at=(timezone.now() + timedelta(days=1, hours=1)).isoformat()
+            owner_client,
+            item_id,
+            "propose_appointment",
+            5,
+            appointment_at=appointment,
+            appointment_ends_at=(
+                timezone.now() + timedelta(days=1, hours=1)
+            ).isoformat(),
         ).status_code
         == 200
     )
     assert action(tenant_client, item_id, "accept_appointment", 6).status_code == 200
-    with patch("django.utils.timezone.now", return_value=timezone.now() + timedelta(days=1, minutes=1)):
+    with patch(
+        "django.utils.timezone.now",
+        return_value=timezone.now() + timedelta(days=1, minutes=1),
+    ):
         assert action(owner_client, item_id, "start_work", 7).status_code == 200
     assert action(owner_client, item_id, "report_resolved", 8).status_code == 200
     assert action(tenant_client, item_id, "confirm_resolved", 9).status_code == 200

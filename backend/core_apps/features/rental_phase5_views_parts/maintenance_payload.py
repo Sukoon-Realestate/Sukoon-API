@@ -2,7 +2,7 @@
 
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
-from ..models import Lease, MaintenanceRequest, RentalEvidence
+from ..models import Lease, MaintenanceRequest, RentalEvidence, PrivateAccessRevocation
 from ..providers import require_rental_provider
 from ..services.cycle_permissions import cycle_actions
 
@@ -32,10 +32,19 @@ def _money(value):
     )
 
 
+def _assert_private_access(lease, user):
+    if (
+        not user.is_active
+        or PrivateAccessRevocation.objects.filter(lease=lease, user=user).exists()
+    ):
+        raise NotFound()
+
+
 def _lease(request, lease_id, lock=False, servicing=False):
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
         if servicing:
             from ..services.rental_lifecycle.common import require_actor
+
             require_actor(request.user)
         else:
             require_rental_provider(request.user)
@@ -45,6 +54,7 @@ def _lease(request, lease_id, lock=False, servicing=False):
     lease = get_object_or_404(queryset, id=lease_id)
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()
+    _assert_private_access(lease, request.user)
     if lease.legacy_read_only:
         raise PermissionDenied("Legacy rentals are read-only.")
     return lease
@@ -80,7 +90,9 @@ def maintenance_payload(item, user=None):
             item.appointment_at.isoformat() if item.appointment_at else None
         ),
         "appointment_version": item.appointment_version,
-        "appointment_ends_at": item.appointment_ends_at.isoformat() if item.appointment_ends_at else None,
+        "appointment_ends_at": (
+            item.appointment_ends_at.isoformat() if item.appointment_ends_at else None
+        ),
         "access_approved_version": item.access_approved_version,
         "proposed_cost": _money(item.proposed_cost_minor),
         "cost_payer": item.cost_payer or None,
@@ -110,9 +122,12 @@ def _maintenance(request, request_id, lock=False):
     queryset = MaintenanceRequest.objects.select_related(
         "lease__owner", "lease__tenant"
     ).prefetch_related("events", "evidence")
-    if lock:
-        queryset = queryset.select_for_update(of=("self",))
     item = get_object_or_404(queryset, id=request_id)
+    if lock:
+        lease = Lease.objects.select_for_update().get(pk=item.lease_id)
+        item = queryset.select_for_update(of=("self",)).get(pk=item.pk)
+        item.lease = lease
     if request.user not in (item.lease.owner, item.lease.tenant):
         raise NotFound()
+    _assert_private_access(item.lease, request.user)
     return item

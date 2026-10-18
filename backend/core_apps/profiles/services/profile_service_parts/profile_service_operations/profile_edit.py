@@ -16,6 +16,16 @@ class ProfileEditMixin:
 
         from rest_framework.exceptions import PermissionDenied
 
+        if {
+            "id_face",
+            "id_back",
+            "confirmation_selfi",
+            "national_id",
+        } & validated_data.keys():
+            raise PermissionDenied(
+                "Identity evidence must be submitted through the versioned identity-review flow."
+            )
+
         nested = validated_data.get("user", {})
         new_email = (
             nested.get("email", validated_data.get("email"))

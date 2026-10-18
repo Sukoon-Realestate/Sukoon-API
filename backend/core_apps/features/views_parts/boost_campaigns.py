@@ -25,6 +25,7 @@ from .rental_operation_lookup import _replay, _remember, _paginate
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
+@transaction.atomic
 def boost_campaigns(request):
     if request.method == "GET":
         return _paginate(
@@ -37,6 +38,11 @@ def boost_campaigns(request):
         raise ValidationError(
             {key: "This field is required." for key in required - set(request.data)}
         )
+    property_obj = get_object_or_404(
+        Property.objects.select_for_update(),
+        id=request.data["property_id"],
+        owner=request.user,
+    )
     replay = _replay(
         request.user, "boost.create", request.data["request_key"], request.data
     )
@@ -87,6 +93,7 @@ def boost_campaigns(request):
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
+@transaction.atomic
 def search_alerts(request):
     if request.method == "GET":
         return _paginate(
@@ -97,6 +104,9 @@ def search_alerts(request):
     serializer = AlertCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     payload = serializer.validated_data
+    from django.contrib.auth import get_user_model
+
+    get_user_model().objects.select_for_update().get(pk=request.user.pk)
     replay = _replay(request.user, "alert.create", payload["request_key"], request.data)
     if replay:
         return replay
@@ -123,25 +133,34 @@ def search_alerts(request):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def search_alert_detail(request, alert_id):
-    alert = get_object_or_404(
-        SearchAlert, id=alert_id, user=request.user, deleted_at__isnull=True
-    )
+    alert = get_object_or_404(SearchAlert, id=alert_id, user=request.user)
     if request.method == "GET":
+        if alert.deleted_at:
+            from rest_framework.exceptions import NotFound
+
+            raise NotFound()
         return Response(SearchAlertSerializer(alert, context={"request": request}).data)
     serializer = RevisionRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    if serializer.validated_data["revision"] != alert.revision:
-        return Response(
-            {"message": "Alert revision conflict."}, status=status.HTTP_409_CONFLICT
-        )
     operation = "alert.delete" if request.method == "DELETE" else "alert.update"
-    replay = _replay(
-        request.user, operation, serializer.validated_data["request_key"], request.data
-    )
-    if replay:
-        return replay
     with transaction.atomic():
         alert = SearchAlert.objects.select_for_update().get(pk=alert.pk)
+        replay = _replay(
+            request.user,
+            operation,
+            serializer.validated_data["request_key"],
+            request.data,
+        )
+        if replay:
+            return replay
+        if alert.deleted_at:
+            from rest_framework.exceptions import NotFound
+
+            raise NotFound()
+        if serializer.validated_data["revision"] != alert.revision:
+            return Response(
+                {"message": "Alert revision conflict."}, status=status.HTTP_409_CONFLICT
+            )
         if request.method == "DELETE":
             alert.enabled = False
             alert.deleted_at = timezone.now()

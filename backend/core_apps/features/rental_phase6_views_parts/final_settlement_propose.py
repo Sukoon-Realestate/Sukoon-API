@@ -41,9 +41,14 @@ def _lease(request, lease_id, lock=False):
 
 
 def settlement_payload(item, user=None):
+    from ..services.settlements_parts.prepare_settlement import (
+        settlement_precondition_error,
+    )
+
+    error = settlement_precondition_error(item.lease)
     return {
         "allowed_actions": cycle_actions(user, item),
-        "blocking_reasons": [],
+        "blocking_reasons": [error[1]] if error else [],
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "revision": item.revision,

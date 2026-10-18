@@ -15,6 +15,13 @@ def invoice_payment_allowed(user, invoice):
     from ...providers import checkout_available
 
     lease = invoice.lease
+    if (
+        lease.terms.get("deposit_holder") == "owner"
+        and invoice.lines.filter(
+            line_type="security_deposit", amount_minor__gt=0
+        ).exists()
+    ):
+        return False
     return bool(
         user
         and user.is_active

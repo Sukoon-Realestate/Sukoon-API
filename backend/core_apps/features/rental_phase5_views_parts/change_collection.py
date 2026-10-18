@@ -75,6 +75,10 @@ def change_collection(request, lease_id, kind):
         RentalChange.Kind.RENEWAL,
     } and not request.data.get("terms"):
         raise ValidationError({"terms": "Full proposed terms are required."})
+    if kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
+        from ..services.change_terms import validate_changed_terms
+
+        validate_changed_terms(terms)
     if (
         kind == RentalChange.Kind.RENEWAL
         and request.data["terms"].get("renewal_commission_rate_bps") != 0

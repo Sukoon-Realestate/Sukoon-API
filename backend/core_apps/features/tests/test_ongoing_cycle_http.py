@@ -174,6 +174,7 @@ def test_paid_tenancy_month_end_extension_amendment_and_renewal_over_http(
         "starts_on": str(renewal_start),
         "ends_on_exclusive": str(renewal_end),
         "handover_on": str(renewal_start),
+        "billing_anchor_day": renewal_start.day,
         "renewal_commission_rate_bps": 0,
     }
     renewal = sign_change(
@@ -184,6 +185,9 @@ def test_paid_tenancy_month_end_extension_amendment_and_renewal_over_http(
     assert process_rental_changes()["applied"] == 0
     renewal.refresh_from_db()
     renewed = renewal.result_lease
+    assert renewed.document_id == renewal.document_id
+    assert renewed.document_hash == renewal.document_hash
+    assert renewed.policy_version == terms["policy_version"]
     assert renewed.tenancy_root_id == lease.tenancy_root_id
     assert (
         renewed.offer_id == lease.offer_id

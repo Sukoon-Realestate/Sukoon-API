@@ -82,3 +82,34 @@ def test_old_receipt_replays_without_new_ticket(auth_client):
 
 def test_receipt_requires_authentication(api_client):
     assert lookup(api_client, "key").status_code == 401
+
+
+def test_resolution_fences_late_creation_and_allows_reviewed_new_command(auth_client):
+    result = auth_client.post(
+        reverse("support-ticket-creation-receipt"),
+        {"workspace": "tenant"},
+        format="json",
+        HTTP_IDEMPOTENCY_KEY="not-transmitted",
+    )
+    assert (
+        result.status_code == 200 and result.json()["data"]["outcome"] == "absent_final"
+    )
+    assert create(auth_client, "not-transmitted").status_code == 409
+    assert Ticket.objects.count() == 0
+    assert create(auth_client, "reviewed-new-command").status_code == 201
+    assert Ticket.objects.count() == 1
+
+
+def test_resolution_preserves_committed_ticket(auth_client):
+    original = create(auth_client, "committed").json()["data"]
+    result = auth_client.post(
+        reverse("support-ticket-creation-receipt"),
+        {"workspace": "tenant"},
+        format="json",
+        HTTP_IDEMPOTENCY_KEY="committed",
+    )
+    assert (
+        result.status_code == 200
+        and result.json()["data"]["ticket"]["id"] == original["id"]
+    )
+    assert Ticket.objects.count() == 1

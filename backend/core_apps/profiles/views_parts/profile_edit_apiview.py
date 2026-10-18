@@ -29,6 +29,7 @@ User = get_user_model()
 
 
 class ProfileListAPIView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProfileSerializer
     renderer_classes = [GenericJsonRenderer]
     pagination_class = StandardResultsSetPagination
@@ -37,8 +38,15 @@ class ProfileListAPIView(generics.ListAPIView):
     filterset_fields = ["gender"]
 
     def get_queryset(self) -> List[Profile]:
-        return Profile.objects.exclude(user__is_staff=True).exclude(
-            user__is_superuser=True
+        return Profile.objects.none()
+
+    def list(self, request, *args, **kwargs):
+        return Response(
+            {
+                "code": "legacy_directory_retired",
+                "message": "Use consent-based roommate discovery. The legacy identity directory is unavailable.",
+            },
+            status=status.HTTP_410_GONE,
         )
 
 
@@ -57,6 +65,7 @@ class ProfileDetailAPIView(generics.RetrieveAPIView):
 
 
 class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = UpdateProfileSerializer
     renderer_classes = [GenericJsonRenderer]
 
@@ -68,10 +77,10 @@ class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):
         return profile
 
     def perform_update(self, serializer: UpdateProfileSerializer):
-        user_data = serializer.validated_data.pop("user", {})
-        profile = serializer.save()
-        User.objects.filter(id=self.request.user.id).update(**user_data)
-        return profile
+        serializer.instance = ProfileService.update_user_profile(
+            user=self.request.user, validated_data=serializer.validated_data
+        )
+        return serializer.instance
 
 
 class MyAccountDetailAPIView(generics.RetrieveAPIView):

@@ -18,6 +18,7 @@ from ..models import (
     RentalHandover,
     RentalPayout,
     RentInvoice,
+    PrivateAccessRevocation,
 )
 from ..providers import fake_provider_available
 from ..renderers import FeatureJsonRenderer
@@ -150,21 +151,28 @@ def dispute_payload(item, user=None):
 
 
 def _dispute(request, dispute_id, allow_operations=False, lock=False):
+    if lock:
+        lease_id = get_object_or_404(RentalDispute, id=dispute_id).lease_id
+        Lease.objects.select_for_update().get(pk=lease_id)
     queryset = RentalDispute.objects.select_related(
         "lease__owner", "lease__tenant"
     ).prefetch_related("evidence")
     if lock:
         queryset = queryset.select_for_update(of=("self",))
     item = get_object_or_404(queryset, id=dispute_id)
-    profile = getattr(request.user, "staff_profile", None)
-    operator = allow_operations and (
-        request.user.is_superuser
-        or (
-            profile
-            and profile.is_active
-            and profile.role_name == StaffProfile.RoleName.DISPUTE_RESOLVER
-        )
-    )
-    if request.user not in (item.lease.owner, item.lease.tenant) and not operator:
+    operator = False
+    if allow_operations:
+        from core_apps.admin_api.permissions import require_staff_actor
+
+        try:
+            require_staff_actor(request.user, {StaffProfile.RoleName.DISPUTE_RESOLVER})
+            operator = True
+        except PermissionDenied:
+            pass
+    party = request.user in (item.lease.owner, item.lease.tenant)
+    revoked = PrivateAccessRevocation.objects.filter(
+        lease=item.lease, user=request.user
+    ).exists()
+    if (party and revoked) or (not party and not operator):
         raise NotFound()
     return item
