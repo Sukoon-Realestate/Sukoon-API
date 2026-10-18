@@ -43,44 +43,9 @@ def process_rental_closure(self):
             document = RentalDocument.objects.select_for_update().get(pk=candidate.pk)
             if document.status != RentalDocument.Status.QUEUED:
                 continue
-            ledger = [
-                {
-                    "reference": tx.reference,
-                    "kind": tx.kind,
-                    "entries": list(
-                        tx.entries.values(
-                            "account",
-                            "direction",
-                            "amount_minor",
-                            "currency",
-                            "exponent",
-                        )
-                    ),
-                }
-                for tx in document.lease.ledger_transactions.prefetch_related(
-                    "entries"
-                ).order_by("occurred_at", "pkid")
-                if (
-                    not document.starts_on
-                    or tx.occurred_at.date() >= document.starts_on
-                )
-                and (
-                    not document.ends_on_exclusive
-                    or tx.occurred_at.date() < document.ends_on_exclusive
-                )
-            ]
-            content = json.dumps(
-                {"lease_id": str(document.lease.id), "ledger": ledger}, sort_keys=True
-            ).encode()
-            document.private_content = content
-            document.sha256 = hashlib.sha256(content).hexdigest()
-            document.storage_key = (
-                f"rental-documents/{document.lease.id}/{document.id}/{document.sha256}"
-            )
-            document.status = RentalDocument.Status.READY
-            document.revision += 1
-            document.save()
-            generated += 1
+            from ..services.private_rental_documents import generate
+
+            generated += int(generate(document))
     for lease in Lease.objects.all().iterator():
         evaluate_financial_closure(lease)
         evaluated += 1

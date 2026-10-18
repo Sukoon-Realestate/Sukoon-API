@@ -1,4 +1,5 @@
 from django.urls import include, path
+from .rental_phase6_views_parts.lease_reviews import document_content
 
 from . import views
 from .continuation_views import continuation_items
@@ -13,6 +14,11 @@ from .models import RentalChange
 from .rental_lifecycle_views import habitability
 
 urlpatterns = [
+    path(
+        "rental-documents/<uuid:document_id>/content/",
+        document_content,
+        name="rental-document-content",
+    ),
     path("rental-cases/<uuid:case_id>/habitability/", habitability.assessment),
     path("continuation-items/", continuation_items, name="continuation-items"),
     path("", include("core_apps.features.advanced_execution_urls")),

@@ -69,20 +69,41 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
             {"user_id": "You cannot start a conversation with yourself."}
         )
 
+    from django.contrib.auth import get_user_model
+    from django.db.models import Count
+
+    people = list(
+        get_user_model()
+        .objects.select_for_update()
+        .filter(pk__in=[user.pk, other_user.pk])
+        .order_by("pk")
+    )
+    if len(people) != 2 or not all(person.is_active for person in people):
+        raise PermissionDenied("Both conversation participants must be active.")
+    pair_key = ":".join(sorted([str(user.id), str(other_user.id)]))
+
     if direct_message_blocked(user, other_user, lock=True):
         raise PermissionDenied("Messaging consent is not active for this connection.")
 
+    canonical = Conversation.objects.filter(direct_pair_key=pair_key).first()
+    if canonical:
+        return canonical
+
     # Find an existing conversation shared by both users
     existing = (
-        Conversation.objects.filter(kind="direct", participant_set__user=user)
+        Conversation.objects.annotate(member_count=Count("participants", distinct=True))
+        .filter(kind="direct", member_count=2, participant_set__user=user)
         .filter(participant_set__user=other_user)
         .distinct()
+        .order_by("created_at", "pk")
         .first()
     )
     if existing:
+        existing.direct_pair_key = pair_key
+        existing.save(update_fields=["direct_pair_key"])
         return existing
 
-    conversation = Conversation.objects.create()
+    conversation = Conversation.objects.create(direct_pair_key=pair_key)
     ConversationParticipant.objects.bulk_create(
         [
             ConversationParticipant(conversation=conversation, user=user),

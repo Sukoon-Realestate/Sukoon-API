@@ -6,6 +6,9 @@ from core_apps.common.models import TimeStampedModel
 
 
 class Conversation(TimeStampedModel):
+    direct_pair_key = models.CharField(
+        max_length=73, null=True, blank=True, unique=True, editable=False
+    )
     kind = models.CharField(max_length=24, default="direct", db_index=True)
     housing_group = models.OneToOneField(
         "features.HousingGroup",

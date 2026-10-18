@@ -5,9 +5,14 @@ from django.db import IntegrityError, transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
+from rest_framework.decorators import (
+    api_view,
+    permission_classes,
+    renderer_classes,
+    authentication_classes,
+)
 from rest_framework.exceptions import PermissionDenied, ValidationError
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from ..models import RentalChange, RentalDocument, RentalHandover, RentalReview
 from ..providers import get_rental_provider
@@ -26,15 +31,18 @@ def lease_documents(request, lease_id):
         RentalDocument.objects.get_or_create(
             lease=lease,
             document_type=RentalDocument.DocumentType.CONTRACT,
-            title="Rental agreement",
-            defaults={"requested_by": request.user},
+            source_reference=str(lease.document_id),
+            defaults={"requested_by": request.user, "title": "Rental agreement"},
         )
     for invoice in lease.invoices.exclude(receipt_id__isnull=True):
         RentalDocument.objects.get_or_create(
             lease=lease,
             document_type=RentalDocument.DocumentType.RECEIPT,
-            title=f"Receipt {invoice.reference}",
-            defaults={"requested_by": request.user},
+            source_reference=str(invoice.receipt_id),
+            defaults={
+                "requested_by": request.user,
+                "title": f"Receipt record {invoice.reference} (JSON)",
+            },
         )
     for change in lease.rental_changes.filter(
         status__in=[RentalChange.Status.SIGNED, RentalChange.Status.APPLIED]
@@ -42,8 +50,11 @@ def lease_documents(request, lease_id):
         RentalDocument.objects.get_or_create(
             lease=lease,
             document_type=RentalDocument.DocumentType.CHANGE,
-            title=f"{change.get_kind_display()} {change.id}",
-            defaults={"requested_by": request.user},
+            source_reference=str(change.id),
+            defaults={
+                "requested_by": request.user,
+                "title": f"{change.get_kind_display()} {change.id}",
+            },
         )
     results = [document_payload(x) for x in lease.private_documents.all()]
     return Response(
@@ -64,15 +75,28 @@ def document_download(request, document_id):
     _lease(request, document.lease.id)
     if document.status != RentalDocument.Status.READY:
         raise RentalConflict("Document is not ready.")
+    if not document.private_content:
+        raise RentalConflict("The source document bytes are unavailable.")
+    from ..services.private_rental_documents import download_url
+
     expires = timezone.now() + timedelta(minutes=5)
     return Response(
         {
             "id": str(document.id),
             "subject_id": str(document.lease.id),
-            "url": get_rental_provider().create_private_download(document.id, expires),
+            "url": download_url(request, document),
             "expires_at": expires.isoformat(),
         }
     )
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+@authentication_classes([])
+def document_content(request, document_id):
+    from ..services.private_rental_documents import content_response
+
+    return content_response(document_id, request.query_params.get("token", ""))
 
 
 @api_view(["POST"])
@@ -80,7 +104,25 @@ def document_download(request, document_id):
 @renderer_classes([FeatureJsonRenderer])
 @transaction.atomic
 def rental_statement_create(request):
-    lease = _lease(request, request.data.get("lease_id"))
+    # Sensitive authorization and account revocation use account -> resource order.
+    from core_apps.users.models import User
+
+    User.objects.select_for_update().get(pk=request.user.pk)
+    lease = _lease(request, request.data.get("lease_id"), lock=True)
+    from django.utils.dateparse import parse_date
+
+    starts, ends = request.data.get("starts_on"), request.data.get("ends_on_exclusive")
+    try:
+        if (
+            (starts and not parse_date(starts))
+            or (ends and not parse_date(ends))
+            or (starts and ends and parse_date(starts) >= parse_date(ends))
+        ):
+            raise ValueError()
+    except (ValueError, TypeError):
+        raise ValidationError(
+            "Supply valid statement dates with an exclusive end after the start."
+        )
     request_key = request.data.get("request_key")
     if not request_key:
         raise ValidationError({"request_key": "Required."})
@@ -92,6 +134,10 @@ def rental_statement_create(request):
     from core_apps.users.services.sensitive_actions import consume
 
     require_scope("private_artifacts")
+    if request.data.get("expected_revision") != lease.revision:
+        raise RentalConflict(
+            "Reload the current lease before exporting.", code="stale_revision"
+        )
     consume(
         request,
         action="private.export",
@@ -110,8 +156,8 @@ def rental_statement_create(request):
         requested_by=request.user,
         document_type=RentalDocument.DocumentType.STATEMENT,
         title="Rental statement",
-        starts_on=request.data.get("starts_on"),
-        ends_on_exclusive=request.data.get("ends_on_exclusive"),
+        starts_on=parse_date(starts) if starts else None,
+        ends_on_exclusive=parse_date(ends) if ends else None,
     )
     return Response(
         remember_mutation(

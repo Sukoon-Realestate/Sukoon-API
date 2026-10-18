@@ -44,6 +44,19 @@ class RentalDocument(TimeStampedModel):
     sha256 = models.CharField(max_length=64, blank=True, default="")
     storage_key = models.CharField(max_length=255, blank=True, default="")
     private_content = models.BinaryField(null=True, blank=True, editable=False)
+    source_reference = models.CharField(max_length=100, blank=True, default="")
+    failure_code = models.CharField(max_length=80, blank=True, default="")
+    media_type = models.CharField(max_length=80, default="application/json")
+
+    class Meta:
+        ordering = ["-created_at", "-updated_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["lease", "document_type", "source_reference"],
+                condition=~Q(source_reference=""),
+                name="unique_rental_document_source",
+            )
+        ]
 
 
 class RentalReview(TimeStampedModel):
