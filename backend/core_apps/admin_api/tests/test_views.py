@@ -150,10 +150,12 @@ class TestAdminViews:
             "audience": "all",
         }
         res = api_client.post(url, payload, format="json")
-        assert res.status_code == status.HTTP_201_CREATED
-        assert res.data["title"] == "إشعار اختبار"
+        assert res.status_code == status.HTTP_503_SERVICE_UNAVAILABLE
+        assert "No recipients were notified" in str(res.data)
 
-    def test_send_push_notification_invalid_body_returns_400(self, api_client, superuser):
+    def test_send_push_notification_invalid_body_returns_400(
+        self, api_client, superuser
+    ):
         api_client.force_authenticate(user=superuser)
         url = reverse("admin-system-notifications-send")
         payload = {
@@ -187,16 +189,16 @@ class TestAdminViews:
     def test_platform_settings_get_and_post(self, api_client, superuser):
         api_client.force_authenticate(user=superuser)
         url = reverse("admin-settings")
-        
+
         # GET
         get_res = api_client.get(url)
         assert get_res.status_code == status.HTTP_200_OK
         assert "maxReviewHours" in get_res.data
 
         # POST
-        post_res = api_client.post(url, {"maxReviewHours": False, "tenantDocsRequired": True}, format="json")
+        post_res = api_client.post(
+            url, {"maxReviewHours": False, "tenantDocsRequired": True}, format="json"
+        )
         assert post_res.status_code == status.HTTP_200_OK
         assert post_res.data["maxReviewHours"] is False
         assert post_res.data["tenantDocsRequired"] is True
-
-

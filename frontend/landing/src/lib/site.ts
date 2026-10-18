@@ -8,7 +8,7 @@ export const SITE_NAME_AR = "سكون";
 
 // Organization-level blurb for structured data; the per-locale page description lives in i18n/dictionaries.
 export const SITE_DESCRIPTION =
-  "Sukoon is a real estate rental platform that connects property owners and tenants directly, with no broker and no commission. Every property is reviewed before it is published and every account is verified.";
+  "Sukoon connects owners and tenants directly. Identity review and listing review are separate steps. Supported rental terms charge the owner 10% of first-period base rent, with 0% renewal commission and no tenant service fee.";
 
 export const THEME_COLOR = "#f6f2e9";
 

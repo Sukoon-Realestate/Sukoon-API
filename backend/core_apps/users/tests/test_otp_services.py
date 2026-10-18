@@ -73,10 +73,12 @@ class TestOtpService:
         verified_user = verify_email_otp(user.email, otp)
 
         assert verified_user.id == user.id
-        assert verified_user.is_verified is True
+        assert verified_user.is_email_verified is True
+        assert verified_user.is_verified is False
 
         user.refresh_from_db()
-        assert user.is_verified is True
+        assert user.is_email_verified is True
+        assert user.is_verified is False
         assert cache.get(f"otp:{user.email.lower()}") is None
 
     def test_verify_email_otp_invalid_code_raises(self, user):
@@ -134,8 +136,8 @@ class TestOtpService:
         assert "Please wait before requesting another" in str(exc_info.value)
 
     def test_resend_verification_otp_already_verified_raises(self, user):
-        user.is_verified = True
-        user.save(update_fields=["is_verified"])
+        user.is_email_verified = True
+        user.save(update_fields=["is_email_verified"])
 
         with pytest.raises(ValidationError) as exc_info:
             resend_verification_otp(user.email)
@@ -167,7 +169,10 @@ class TestOtpService:
 
 
 def test_otp_failure_log_does_not_store_email_code_or_provider_detail(caplog):
-    with patch("core_apps.users.services.otp_service.send_mail", side_effect=OSError("private@example.test code=765432 token=secret")):
+    with patch(
+        "core_apps.users.services.otp_service.send_mail",
+        side_effect=OSError("private@example.test code=765432 token=secret"),
+    ):
         assert send_otp_email("private@example.test", "765432") is False
     assert "private@example.test" not in caplog.text
     assert "765432" not in caplog.text and "secret" not in caplog.text

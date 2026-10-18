@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, APIException
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +19,12 @@ OTP_EXPIRATION_SECONDS: int = getattr(
 )  # ? 10 minutes
 OTP_COOLDOWN_SECONDS: int = getattr(settings, "OTP_COOLDOWN_SECONDS", 60)  # ? 1 minute
 MAX_OTP_ATTEMPTS: int = 5
+
+
+class OTPDeliveryUnavailable(APIException):
+    status_code = 503
+    default_code = "otp_delivery_unconfirmed"
+    default_detail = "Email delivery could not be confirmed. Wait briefly, then request another code."
 
 
 def generate_otp(length: int = OTP_LENGTH) -> str:
@@ -50,7 +56,7 @@ def send_otp_email(email: str, otp: str, user_name: str = "") -> bool:
     from_email = getattr(settings, "DEFAULT_FROM_EMAIL", None)
 
     try:
-        send_mail(
+        accepted = send_mail(
             subject=subject,
             message=message,
             from_email=from_email,
@@ -58,7 +64,7 @@ def send_otp_email(email: str, otp: str, user_name: str = "") -> bool:
             fail_silently=False,
         )
         logger.info("OTP verification email dispatched")
-        return True
+        return accepted == 1
     except Exception as exc:
         # ! Do not crash registration/resend if SMTP fails
         logger.error("OTP verification email dispatch failed (%s)", type(exc).__name__)
@@ -90,7 +96,11 @@ def create_and_send_otp(user: Any) -> str:
     cache.set(cache_key, cache_data, timeout=OTP_EXPIRATION_SECONDS)
 
     user_name = getattr(user, "get_full_name", "") or getattr(user, "first_name", "")
-    send_otp_email(email=email, otp=otp, user_name=user_name)
+    if not send_otp_email(email=email, otp=otp, user_name=user_name):
+        # SMTP failure can be ambiguous. The current code remains valid, but
+        # no success is acknowledged and retry remains bounded.
+        cache.set(f"otp_cooldown:{email}", True, timeout=OTP_COOLDOWN_SECONDS)
+        raise OTPDeliveryUnavailable()
 
     return otp
 
@@ -98,7 +108,7 @@ def create_and_send_otp(user: Any) -> str:
 def verify_email_otp(email: str, otp: str) -> Any:
     """
     ? Validates the provided OTP against the cached record.
-    ? Marks user.is_verified = True upon success and deletes the cache key.
+    ? Marks email possession only; identity review is an independent decision.
     """
     if not email:
         raise ValidationError({"email": _("Email is required.")})
@@ -158,8 +168,10 @@ def verify_email_otp(email: str, otp: str) -> Any:
             raise ValidationError(
                 {"otp": _("Request a new verification code after account recovery.")}
             )
-        user.is_verified = True
-        user.save(update_fields=["is_verified"])
+        if not user.is_active:
+            raise ValidationError({"email": _("This account is inactive.")})
+        user.is_email_verified = True
+        user.save(update_fields=["is_email_verified"])
 
     # * Invalidate OTP cache and cooldown
     cache.delete(cache_key)
@@ -184,7 +196,7 @@ def resend_verification_otp(email: str) -> str:
     except User.DoesNotExist:
         raise ValidationError({"email": _("User with this email does not exist.")})
 
-    if user.is_verified:
+    if user.is_email_verified:
         raise ValidationError({"email": _("This email is already verified.")})
 
     # * Cooldown check

@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from core_apps.admin_api.permissions import IsAdminStaff
+from core_apps.admin_api.permissions import IsUserManager
 from core_apps.admin_api.serializers import (
     AdminUserListSerializer,
     AdminUserSuspendSerializer,
@@ -25,7 +25,7 @@ class AdminUserListAPIView(generics.ListAPIView):
     Returns a paginated list of all platform users with filtering and search capabilities.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsUserManager]
     serializer_class = AdminUserListSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = AdminUserFilter
@@ -42,7 +42,7 @@ class AdminUserDetailAPIView(APIView):
     property listings, KYC status, and recent activity logs.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsUserManager]
 
     def get(self, request, user_id):
         user_detail = get_admin_user_detail(user_id)
@@ -59,7 +59,7 @@ class AdminUserSuspendAPIView(APIView):
     }
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsUserManager]
 
     def post(self, request, user_id):
         serializer = AdminUserSuspendSerializer(data=request.data)
@@ -68,7 +68,9 @@ class AdminUserSuspendAPIView(APIView):
 
         user = suspend_user(user_id=user_id, admin_user=request.user, reason=reason)
         return Response(
-            {"message": f"تم إيقاف حساب المستخدم {user.get_full_name or user.email} بنجاح."},
+            {
+                "message": f"تم إيقاف حساب المستخدم {user.get_full_name or user.email} بنجاح."
+            },
             status=status.HTTP_200_OK,
         )
 
@@ -78,11 +80,13 @@ class AdminUserUnsuspendAPIView(APIView):
     Reactivates a previously suspended user account.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsUserManager]
 
     def post(self, request, user_id):
         user = unsuspend_user(user_id=user_id, admin_user=request.user)
         return Response(
-            {"message": f"تم إعادة تنشيط حساب المستخدم {user.get_full_name or user.email} بنجاح."},
+            {
+                "message": f"تم إعادة تنشيط حساب المستخدم {user.get_full_name or user.email} بنجاح."
+            },
             status=status.HTTP_200_OK,
         )

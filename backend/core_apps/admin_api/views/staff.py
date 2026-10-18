@@ -2,7 +2,7 @@ import logging
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from core_apps.admin_api.permissions import IsAdminStaff
+from core_apps.admin_api.permissions import IsAdminStaff, IsSystemOwner
 from core_apps.admin_api.serializers import (
     StaffProfileListSerializer,
     StaffInviteSerializer,
@@ -54,7 +54,7 @@ class AdminStaffInviteAPIView(APIView):
     }
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSystemOwner]
 
     def post(self, request):
         serializer = StaffInviteSerializer(data=request.data)
@@ -64,7 +64,13 @@ class AdminStaffInviteAPIView(APIView):
         email = serializer.validated_data["email"]
         role_name = serializer.validated_data.get("role_name", "مراجع KYC")
 
-        staff = invite_staff_member(email=email, name=name, role_name=role_name)
+        staff = invite_staff_member(
+            email=email,
+            name=name,
+            role_name=role_name,
+            actor=request.user,
+            reason=serializer.validated_data["reason"],
+        )
         return Response(
             {"message": f"تمت إضافة المشرف {name} بدور {role_name} بنجاح."},
             status=status.HTTP_201_CREATED,
@@ -76,12 +82,16 @@ class AdminStaffDeleteAPIView(APIView):
     Revokes staff access for an administrator.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSystemOwner]
 
     def delete(self, request, staff_id):
-        staff = remove_staff_member(staff_id)
+        staff = remove_staff_member(
+            staff_id, actor=request.user, reason=request.data.get("reason", "")
+        )
         return Response(
-            {"message": f"تم سحب صلاحيات المشرف {staff.user.get_full_name or staff.user.email} بنجاح."},
+            {
+                "message": f"تم سحب صلاحيات المشرف {staff.user.get_full_name or staff.user.email} بنجاح."
+            },
             status=status.HTTP_200_OK,
         )
 
@@ -96,12 +106,5 @@ class AdminPermissionsMatrixAPIView(APIView):
     def get(self, request):
         return Response(DEFAULT_PERMISSIONS_MATRIX, status=status.HTTP_200_OK)
 
-    def patch(self, request):
-        matrix_data = request.data
-        return Response(
-            {
-                "message": "تم تحديث مصفوفة الصلاحيات بنجاح.",
-                "matrix": matrix_data,
-            },
-            status=status.HTTP_200_OK,
-        )
+    # Role rules are enforced in source. There is no editable matrix store.
+    http_method_names = ["get", "head", "options"]

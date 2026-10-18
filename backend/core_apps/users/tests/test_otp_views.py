@@ -114,7 +114,8 @@ class TestVerifyEmailView:
         assert "Email verified successfully" in res.data.get("message", "")
 
         user.refresh_from_db()
-        assert user.is_verified is True
+        assert user.is_email_verified is True
+        assert user.is_verified is False
 
         # Auth cookies set
         assert "access" in res.cookies
@@ -136,7 +137,8 @@ class TestVerifyEmailView:
 
         assert res.status_code == status.HTTP_200_OK
         user.refresh_from_db()
-        assert user.is_verified is True
+        assert user.is_email_verified is True
+        assert user.is_verified is False
 
     def test_verify_email_wrong_otp_returns_400(self, api_client, user):
         create_and_send_otp(user)
@@ -197,8 +199,8 @@ class TestResendOtpView:
         assert res2.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_resend_otp_already_verified_returns_400(self, api_client, user):
-        user.is_verified = True
-        user.save(update_fields=["is_verified"])
+        user.is_email_verified = True
+        user.save(update_fields=["is_email_verified"])
 
         res = api_client.post(RESEND_URL, {"email": user.email}, format="json")
         assert res.status_code == status.HTTP_400_BAD_REQUEST

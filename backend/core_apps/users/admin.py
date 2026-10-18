@@ -35,6 +35,7 @@ class SecurityEventAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
+    readonly_fields = ("is_verified", "is_email_verified")
     form = UserChangeForm
     add_form = UserCreationForm
 

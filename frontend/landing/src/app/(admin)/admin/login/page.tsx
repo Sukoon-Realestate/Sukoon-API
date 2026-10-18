@@ -22,19 +22,9 @@ export default function AdminLoginPage() {
     setSubmitting(true);
     try {
       const success = await login(address, secret);
-      if (!success) {
-        if (address.trim().toLowerCase() === 'admin@sukoon.com') {
-          loginDemo();
-        } else {
-          setError('تعذر تسجيل الدخول. تحقق من البريد الإلكتروني وكلمة المرور ثم حاول مرة أخرى.');
-        }
-      }
+      if (!success) setError('Login was not confirmed. Check credentials and administrative access.');
     } catch {
-      if (address.trim().toLowerCase() === 'admin@sukoon.com') {
-        loginDemo();
-      } else {
-        setError('تعذر تسجيل الدخول. تحقق من الاتصال بالخادم ثم حاول مرة أخرى.');
-      }
+      setError('Login was not confirmed. Check the server connection.');
     } finally {
       setSubmitting(false);
     }
@@ -61,7 +51,7 @@ export default function AdminLoginPage() {
         <p className="text-xs leading-6 text-[var(--text-muted)]">إذا نسيت كلمة المرور، تواصل مع مسؤول المنصة لاستعادة الوصول.</p>
         <button type="submit" disabled={submitting} className="admin-button admin-button-primary w-full !min-h-12">{submitting ? 'جاري تسجيل الدخول…' : 'تسجيل الدخول'}<ArrowLeft size={17} aria-hidden /></button>
       </form>
-      {!isBackendEnabled() && <div className="mt-7 border-t border-[var(--divider)] pt-5"><p className="text-xs text-[var(--text-muted)] mb-3">تستعرض نسخة تجريبية ببيانات توضيحية.</p><button type="button" disabled={submitting} onClick={() => void signIn('admin@sukoon.com', 'password123')} className="admin-button admin-button-secondary w-full">استكشاف لوحة الإدارة التجريبية<ArrowLeft size={15} aria-hidden /></button></div>}
+      {!isBackendEnabled() && <div className="mt-7 border-t border-[var(--divider)] pt-5"><p className="text-xs text-[var(--text-muted)] mb-3">تستعرض نسخة تجريبية ببيانات توضيحية.</p><button type="button" disabled={submitting} onClick={loginDemo} className="admin-button admin-button-secondary w-full">استكشاف لوحة الإدارة التجريبية<ArrowLeft size={15} aria-hidden /></button></div>}
     </div></main>
   </div>;
 }

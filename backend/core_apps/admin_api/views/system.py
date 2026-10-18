@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from core_apps.admin_api.permissions import IsAdminStaff
+from core_apps.admin_api.permissions import IsSystemOwner
 from core_apps.admin_api.services.system_service import (
     get_system_health,
     get_audit_logs,
@@ -19,7 +19,7 @@ class AdminSystemHealthAPIView(APIView):
     Returns system health indicators, server uptime, API performance stats, and admin notes.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSystemOwner]
 
     def get(self, request):
         health_data = get_system_health()
@@ -29,13 +29,13 @@ class AdminSystemHealthAPIView(APIView):
 class AdminAuditLogsAPIView(APIView):
     """
     Returns paginated audit activity logs.
-    
+
     Query Params:
     - type: 'all' | 'kyc' | 'props' | 'users' | 'system'
     - search: str
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSystemOwner]
     pagination_class = PageNumberPagination
 
     def get(self, request):
@@ -49,7 +49,9 @@ class AdminAuditLogsAPIView(APIView):
         if page is not None:
             return paginator.get_paginated_response(page)
 
-        return Response({"results": logs, "count": len(logs)}, status=status.HTTP_200_OK)
+        return Response(
+            {"results": logs, "count": len(logs)}, status=status.HTTP_200_OK
+        )
 
 
 class AdminPushCampaignsAPIView(APIView):
@@ -57,7 +59,7 @@ class AdminPushCampaignsAPIView(APIView):
     Returns list of sent push notification campaigns.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSystemOwner]
 
     def get(self, request):
         campaigns = get_push_campaigns()
@@ -67,7 +69,7 @@ class AdminPushCampaignsAPIView(APIView):
 class AdminSendPushNotificationAPIView(APIView):
     """
     Broadcasts or queues a new push notification campaign.
-    
+
     Request body:
     {
         "title": "عروض الصيف",
@@ -76,7 +78,7 @@ class AdminSendPushNotificationAPIView(APIView):
     }
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSystemOwner]
 
     def post(self, request):
         title = request.data.get("title")

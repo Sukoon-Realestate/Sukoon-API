@@ -14,27 +14,26 @@ class TestProfileListView:
         res = api_client.get(PROFILE_LIST_URL)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_returns_paginated_profiles(self, auth_client):
+    def test_legacy_directory_is_retired(self, auth_client):
         res = auth_client.get(PROFILE_LIST_URL)
-        assert res.status_code == status.HTTP_200_OK
-        assert "results" in api_json(res)["data"]
+        assert res.status_code == status.HTTP_410_GONE
+        assert api_json(res)["data"] is None
 
     def test_excludes_staff_profiles(self, auth_client, superuser):
         res = auth_client.get(PROFILE_LIST_URL)
-        profile_ids = [str(p["id"]) for p in api_json(res)["data"]["results"]]
-        assert str(superuser.profile.id) not in profile_ids
+        assert res.status_code == status.HTTP_410_GONE
+        assert str(superuser.profile.id) not in str(api_json(res))
+        assert superuser.email not in str(api_json(res))
 
-    def test_filter_by_gender(self, auth_client):
+    def test_filter_cannot_restore_retired_directory(self, auth_client):
         res = auth_client.get(PROFILE_LIST_URL, {"gender": "male"})
-        assert res.status_code == status.HTTP_200_OK
-        for profile in api_json(res)["data"]["results"]:
-            assert profile["gender"] == "male"
+        assert res.status_code == status.HTTP_410_GONE
+        assert api_json(res)["data"] is None
 
-    def test_search_by_first_name(self, auth_client, user):
+    def test_search_cannot_restore_retired_directory(self, auth_client, user):
         res = auth_client.get(PROFILE_LIST_URL, {"search": user.first_name})
-        assert res.status_code == status.HTTP_200_OK
-        ids = [str(p["id"]) for p in api_json(res)["data"]["results"]]
-        assert str(user.profile.id) in ids
+        assert res.status_code == status.HTTP_410_GONE
+        assert api_json(res)["data"] is None
 
 
 @pytest.mark.django_db
@@ -88,15 +87,16 @@ class TestProfileUpdateView:
         user.profile.refresh_from_db()
         assert user.profile.gender == "female"
 
-    def test_update_phone_number(self, auth_client, user):
+    def test_contact_change_requires_reverification(self, auth_client, user):
+        original = str(user.profile.phone_number)
         res = auth_client.patch(
             PROFILE_UPDATE_URL,
             {"phone_number": "+14155552671"},
             format="json",
         )
-        assert res.status_code == status.HTTP_200_OK
+        assert res.status_code == status.HTTP_403_FORBIDDEN
         user.profile.refresh_from_db()
-        assert str(user.profile.phone_number) == "+14155552671"
+        assert str(user.profile.phone_number) == original
 
     def test_update_phone_number_invalid_returns_400(self, auth_client, user):
         res = auth_client.patch(
@@ -106,7 +106,7 @@ class TestProfileUpdateView:
         )
         assert res.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_update_kyc_fields(self, auth_client, user):
+    def test_legacy_update_cannot_replace_identity_evidence(self, auth_client, user):
         from unittest.mock import patch
         from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -144,7 +144,19 @@ class TestProfileUpdateView:
             "type": "upload",
         }
 
-        with patch("cloudinary.uploader.upload", side_effect=mock_upload_response):
+        before = {
+            name: str(getattr(user.profile, name))
+            for name in (
+                "national_id",
+                "avatar",
+                "id_face",
+                "id_back",
+                "confirmation_selfi",
+            )
+        }
+        with patch(
+            "cloudinary.uploader.upload", side_effect=mock_upload_response
+        ) as upload:
             res = auth_client.patch(
                 PROFILE_UPDATE_URL,
                 {
@@ -156,10 +168,7 @@ class TestProfileUpdateView:
                 },
                 format="multipart",
             )
-        assert res.status_code == status.HTTP_200_OK
+        assert res.status_code == status.HTTP_403_FORBIDDEN
+        upload.assert_not_called()
         user.profile.refresh_from_db()
-        assert user.profile.national_id == "123456789"
-        assert "avatar" in str(user.profile.avatar)
-        assert "face" in str(user.profile.id_face)
-        assert "back" in str(user.profile.id_back)
-        assert "selfie" in str(user.profile.confirmation_selfi)
+        assert {name: str(getattr(user.profile, name)) for name in before} == before

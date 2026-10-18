@@ -47,6 +47,9 @@ def get_or_create_social_user(
         social = SocialAccount.objects.select_related("user").get(
             provider=provider, provider_uid=provider_uid
         )
+        if email_verified and email.strip().casefold() == social.user.email.casefold():
+            UserModel.objects.filter(pk=social.user_id).update(is_email_verified=True)
+            social.user.is_email_verified = True
         return social.user
     except SocialAccount.DoesNotExist:
         pass
@@ -69,6 +72,8 @@ def get_or_create_social_user(
             provider_uid=provider_uid,
             email=email,
         )
+        UserModel.objects.filter(pk=user.pk).update(is_email_verified=True)
+        user.is_email_verified = True
         return user
 
     # No email and no existing SocialAccount — cannot resolve identity.
@@ -128,7 +133,9 @@ def _verify_facebook(token: str) -> dict:
             timeout=5,
         )
         if response.status_code != 200:
-            logger.warning("Facebook token verification rejected (HTTP %s)", response.status_code)
+            logger.warning(
+                "Facebook token verification rejected (HTTP %s)", response.status_code
+            )
             raise ValidationError("Facebook token is invalid or expired.")
         return response.json()
     except Exception as exc:

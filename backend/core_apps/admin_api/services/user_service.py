@@ -29,9 +29,10 @@ def get_admin_users_queryset():
 import uuid
 from django.core.exceptions import ValidationError as DjangoValidationError
 
+
 def _get_user_by_identifier(user_id, prefetch=False):
     """
-    Finds a user by UUID, Email, or Name safely without unhandled UUID exceptions.
+    Resolve the canonical account identity. Names and emails are not commands.
     """
     str_id = str(user_id).strip()
     qs = User.objects.none()
@@ -41,13 +42,7 @@ def _get_user_by_identifier(user_id, prefetch=False):
         uuid_obj = uuid.UUID(str_id)
         qs = User.objects.filter(id=uuid_obj)
     except (ValueError, TypeError, AttributeError):
-        # 2. Try email or name slug
-        first_part = str_id.replace("-", " ").split()[0] if str_id else ""
-        qs = User.objects.filter(
-            Q(email__iexact=str_id)
-            | Q(first_name__iexact=str_id)
-            | Q(first_name__icontains=first_part)
-        )
+        raise NotFound("A canonical user UUID is required.")
 
     if prefetch:
         qs = qs.select_related("profile").prefetch_related(
@@ -73,7 +68,9 @@ def get_admin_user_detail(user_id):
     user_type = "مالك" if is_owner else "مستأجر"
 
     # Determine KYC status
-    latest_kyc = profile.kyc_submissions.order_by("-created_at").first() if profile else None
+    latest_kyc = (
+        profile.kyc_submissions.order_by("-created_at").first() if profile else None
+    )
     if latest_kyc:
         if latest_kyc.status == KYCSubmission.Status.APPROVED:
             kyc_status = "موثق"
@@ -95,20 +92,24 @@ def get_admin_user_detail(user_id):
     # Build activity log
     activity_log = []
     for vr in user.visits.order_by("-created_at")[:5]:
-        activity_log.append({
-            "id": f"vr-{vr.id}",
-            "title": f"طلب معاينة لعقار #{vr.property.title if hasattr(vr, 'property') else ''}",
-            "time": vr.created_at.strftime("%Y-%m-%d %H:%M"),
-            "type": "visit",
-        })
+        activity_log.append(
+            {
+                "id": f"vr-{vr.id}",
+                "title": f"طلب معاينة لعقار #{vr.property.title if hasattr(vr, 'property') else ''}",
+                "time": vr.created_at.strftime("%Y-%m-%d %H:%M"),
+                "type": "visit",
+            }
+        )
     if profile:
         for kyc in profile.kyc_submissions.order_by("-created_at")[:3]:
-            activity_log.append({
-                "id": f"kyc-{kyc.id}",
-                "title": f"تحديث حالة التوثيق إلى: {kyc.get_status_display()}",
-                "time": kyc.created_at.strftime("%Y-%m-%d %H:%M"),
-                "type": "kyc",
-            })
+            activity_log.append(
+                {
+                    "id": f"kyc-{kyc.id}",
+                    "title": f"تحديث حالة التوثيق إلى: {kyc.get_status_display()}",
+                    "time": kyc.created_at.strftime("%Y-%m-%d %H:%M"),
+                    "type": "kyc",
+                }
+            )
 
     return {
         "id": str(user.id),
@@ -122,7 +123,11 @@ def get_admin_user_detail(user_id):
         "is_active": user.is_active,
         "is_verified": user.is_verified,
         "regDate": user.date_joined.strftime("%Y/%m/%d"),
-        "phone": str(profile.phone_number) if profile and profile.phone_number else "غير متوفر",
+        "phone": (
+            str(profile.phone_number)
+            if profile and profile.phone_number
+            else "غير متوفر"
+        ),
         "national_id": profile.national_id if profile else "",
         "avatar": profile.avatar.url if profile and profile.avatar else None,
         "visitRequests": user.visits.count(),
@@ -137,7 +142,15 @@ def suspend_user(user_id, admin_user, reason="إيقاف إداري"):
     """
     Suspends a user account and logs the action.
     """
+    from core_apps.admin_api.permissions import require_staff_actor
+
+    require_staff_actor(admin_user, {"system_owner", "main_admin"}, lock=True)
     user = _get_user_by_identifier(user_id)
+    if user.is_superuser or hasattr(user, "staff_profile"):
+        raise ValidationError(
+            "Use staff authority management for administrative accounts."
+        )
+    user = User.objects.select_for_update().get(pk=user.pk)
 
     if not user.is_active:
         raise ValidationError("User account is already suspended.")
@@ -165,7 +178,15 @@ def unsuspend_user(user_id, admin_user):
     """
     Reactivates a suspended user account.
     """
+    from core_apps.admin_api.permissions import require_staff_actor
+
+    require_staff_actor(admin_user, {"system_owner", "main_admin"}, lock=True)
     user = _get_user_by_identifier(user_id)
+    if user.is_superuser or hasattr(user, "staff_profile"):
+        raise ValidationError(
+            "Use staff authority management for administrative accounts."
+        )
+    user = User.objects.select_for_update().get(pk=user.pk)
 
     if user.is_active:
         raise ValidationError("User account is already active.")

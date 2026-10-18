@@ -1,4 +1,5 @@
 from django.urls import path
+from .views.session import AdminSessionAPIView
 from .views import (
     AdminDashboardStatsView,
     AdminExecutiveDashboardStatsView,
@@ -42,6 +43,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("session/", AdminSessionAPIView.as_view(), name="admin-session"),
     # Dashboard stats
     path("dashboard/", AdminDashboardStatsView.as_view(), name="admin-dashboard-stats"),
     path("dashboard/executive/", AdminExecutiveDashboardStatsView.as_view(), name="admin-executive-dashboard"),

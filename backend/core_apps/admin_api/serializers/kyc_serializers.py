@@ -38,9 +38,9 @@ class KYCSubmissionListSerializer(serializers.ModelSerializer):
         return "مالك" if obj.profile.user.properties.exists() else "مستأجر"
 
     def get_nationalIdMask(self, obj):
-        nid = obj.profile.national_id
+        nid = obj.evidence_snapshot.get("national_id", "")
         if not nid or len(nid) < 6:
-            return "298•••••12"
+            return ""
         return f"{nid[:3]}•••••{nid[-2:]}"
 
     def get_waitTime(self, obj):

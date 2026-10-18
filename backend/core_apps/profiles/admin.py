@@ -4,6 +4,7 @@ from .models import Profile, UserSettings
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
+    readonly_fields = ("national_id", "id_face", "id_back", "confirmation_selfi")
     list_display = ["id", "user", "gender", "birth_date", "phone_number", "national_id"]
     list_display_links = ["id", "user"]
 

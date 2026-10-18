@@ -73,12 +73,7 @@ export default function ReportsQueuePage() {
         prev.map((r) => (r.id === report.id ? { ...r, status: 'موقوف مؤقتاً' } : r))
       );
       showToast(`تم إيقاف حساب ${report.reportedUser} وتحديث حالة البلاغ`, 'success');
-    } catch {
-      setReports((prev) =>
-        prev.map((r) => (r.id === report.id ? { ...r, status: 'موقوف مؤقتاً' } : r))
-      );
-      showToast(`تم إيقاف حساب ${report.reportedUser} وتحديث حالة البلاغ`, 'success');
-    }
+    } catch { showToast('The result was not confirmed. Refresh the original record before retrying.', 'error'); }
   };
 
   return (

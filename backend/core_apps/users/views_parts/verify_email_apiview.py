@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from core_apps.common.renderers import GenericJsonRenderer
+from core_apps.common.idempotency import request_key
 from ..journey import canonical_user
 from core_apps.users.serializers import (
     CompleteRegisterSerializer,
@@ -148,6 +149,7 @@ class CompleteRegisterAPIView(APIView):
         result = complete_user_registration(
             user=request.user,
             validated_data=serializer.validated_data,
+            request_key=request_key(request),
         )
 
         return Response(result, status=status.HTTP_200_OK)

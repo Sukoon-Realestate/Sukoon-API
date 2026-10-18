@@ -1,3 +1,2 @@
-// The admin dashboard is served under /admin; the landing app owns "/".
-// Keep in sync with landing/next.config.ts rewrites.
+// Compatibility standalone dashboard. The merged app owns its own /admin routes.
 export const BASE_PATH = '/admin';

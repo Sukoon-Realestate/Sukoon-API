@@ -125,48 +125,17 @@ def delete_user_account(user: Any) -> None:
 
 # * Complete user registration / KYC documents service
 @transaction.atomic
-def complete_user_registration(user: Any, validated_data: dict) -> dict:
+def complete_user_registration(
+    user: Any, validated_data: dict, *, request_key=None
+) -> dict:
     """
     Updates missing KYC documents / national ID on user's profile.
     Preserves existing data when fields are omitted.
     Returns registration completion status, verification status, and missing fields list.
     """
-    from core_apps.profiles.models import Profile
+    from .identity_submission import submit_identity
 
-    profile, _ = Profile.objects.get_or_create(user=user)
-
-    national_id = validated_data.get("national_id")
-    front_id_image = validated_data.get("front_id_image")
-    back_id_image = validated_data.get("back_id_image")
-    selfie_image = validated_data.get("selfie_image")
-
-    if national_id:
-        profile.national_id = national_id
-    if front_id_image:
-        profile.id_face = front_id_image
-    if back_id_image:
-        profile.id_back = back_id_image
-    if selfie_image:
-        profile.confirmation_selfi = selfie_image
-
-    profile.save()
-
-    missing_fields = []
-    if not profile.national_id:
-        missing_fields.append("national_id")
-    if not profile.id_face:
-        missing_fields.append("front_id_image")
-    if not profile.id_back:
-        missing_fields.append("back_id_image")
-
-    registration_complete = len(missing_fields) == 0
-    verification_status = "approved" if user.is_verified else "pending"
-
-    return {
-        "registration_complete": registration_complete,
-        "verification_status": verification_status,
-        "missing_fields": missing_fields,
-    }
+    return submit_identity(user, validated_data, request_key=request_key)
 
 
 # * Change user password service

@@ -6,8 +6,8 @@ const ar = {
   meta: {
     title: "سكون – سكنك القادم من المالك مباشرة",
     description:
-      "سكون يجمع المالك والمستأجر في مكان واحد، بدون سمسار وبدون عمولة. نراجع كل عقار قبل نشره، وكل الحسابات موثّقة.",
-    ogAlt: "سكون: سكنك القادم من المالك مباشرة، بدون سمسار وبدون عمولة.",
+      "سكون يجمع المالك والمستأجر مباشرة. مراجعة الهوية مستقلة عن مراجعة العقار. عمولة التأجير على المالك 10% من إيجار الفترة الأولى، وعمولة التجديد 0%، ورسوم خدمة المستأجر صفر.",
+    ogAlt: "سكون: سكنك القادم من المالك مباشرة، تواصل مباشر وسياسة رسوم واضحة.",
   },
   loading: "جارٍ التحميل…",
   header: {
@@ -35,7 +35,7 @@ const ar = {
     titleLead: "سكنك القادم،",
     titleHighlight: "من المالك مباشرة.",
     subtitle:
-      "سكون يجمع المالك والمستأجر في مكان واحد، بدون سمسار وبدون عمولة. نراجع كل عقار قبل نشره، وكل الحسابات موثّقة.",
+      "سكون يجمع المالك والمستأجر مباشرة. مراجعة الهوية مستقلة عن مراجعة العقار. عمولة التأجير على المالك 10% من إيجار الفترة الأولى، وعمولة التجديد 0%، ورسوم خدمة المستأجر صفر.",
     tenantPrompt: "تبحث عن سكن؟",
     tenantLink: "كيف تستأجر",
     ownerPrompt: "لديك عقار للإيجار؟",
@@ -44,8 +44,8 @@ const ar = {
   trust: {
     label: "سكون باختصار",
     items: [
-      { title: "بدون عمولة", body: "لا سمسار ولا وسيط" },
-      { title: "كل عقار مُراجَع", body: "قبل أن يظهر لك" },
+      { title: "رسوم واضحة", body: "لا سمسار ولا وسيط" },
+      { title: "حالة مراجعة واضحة", body: "راجع حالة العقار قبل المتابعة" },
       { title: "حسابات موثّقة", body: "تعرف مع من تتعامل" },
       { title: "شات وحجز معاينة", body: "من داخل التطبيق" },
     ],
@@ -75,9 +75,9 @@ const ar = {
       title: "تبحث عن سكن؟",
       steps: [
         { title: "أنشئ حسابك ووثّقه", body: "سجّل ببياناتك الشخصية مرة واحدة." },
-        { title: "تصفّح عقارات تمت مراجعتها", body: "كل عقار تراه في سكون راجعناه قبل نشره." },
+        { title: "تصفّح العقارات وحالة مراجعتها", body: "ظهور العقار في البحث لا يعني اعتماده؛ راجع حالة المراجعة والتفاصيل قبل المتابعة." },
         { title: "تكلّم مع المالك واحجز معاينة", body: "اسأل عن أي تفصيلة في الشات، واختر الموعد المناسب لك." },
-        { title: "اتفق مع المالك مباشرة", body: "بدون سمسار، وبدون عمولة." },
+        { title: "اتفق مع المالك مباشرة", body: "اتفاق مباشر وفق شروط الرسوم المعروضة." },
       ],
     },
     owner: {
@@ -97,12 +97,12 @@ const ar = {
     subtitle:
       "اسمنا يعني الهدوء وراحة البال، وكل ميزة في التطبيق موجودة لتجعل الإيجار أوضح وأسهل للطرفين.",
     commission: {
-      // ? Copied verbatim from the design; the EN equivalent reads "Non-profit at launch".
-      badge: "سكون بدون سمسار او عموله",
-      titleLines: ["بدون سمسار،", "بدون عمولة"],
-      body: "لا وسيط بينك وبين الطرف الآخر، ولا عمولة تدفعها لأحد.",
-      stat: "0%",
-      statLabel: "عمولة",
+      // Display the supported rental policy rather than an unimplemented launch promise.
+      badge: "سياسة التأجير",
+      titleLines: ["بدون سمسار،", "رسوم واضحة"],
+      body: "عمولة التأجير على المالك 10% من إيجار الفترة الأولى، وعمولة التجديد 0%. لا توجد رسوم خدمة على المستأجر.",
+      stat: "10%",
+      statLabel: "عمولة المالك على إيجار الفترة الأولى",
     },
     verified: {
       initial: "م",
@@ -110,13 +110,13 @@ const ar = {
       role: "مالك عقار",
       badge: "موثّق",
       title: "حسابات موثّقة",
-      body: "يوثّق كل مستخدم حسابه بمعلوماته الشخصية، فتعرف دائمًا مع من تتعامل.",
+      body: "تظهر حالة التحقق بعد مراجعة مستندات الهوية؛ إنشاء الحساب وحده لا يعني توثيقه.",
     },
     review: {
       checks: ["تفاصيل العقار", "بيانات العقار"],
       status: "جاهز للنشر",
-      title: "مراجعة كاملة لكل عقار",
-      body: "قبل نشر أي عقار، نراجع تفاصيله وبياناته بالكامل.",
+      title: "مراجعة بيانات العقار",
+      body: "الإعلان وموافقة المراجعة خطوتان مختلفتان. راجع حالة العقار وتفاصيله قبل الاتفاق.",
     },
     chat: {
       question: "هل الشقة متاحة للمعاينة هذا الأسبوع؟",
@@ -137,8 +137,8 @@ const ar = {
     title: "لديك سؤال؟",
     subtitle: "إجابات سريعة عن أكثر ما يسأل عنه الناس.",
     items: [
-      { question: "هل يأخذ سكون عمولة؟", answer: "لا. لا يوجد سمسار ولا وسيط ولا عمولة، وسكون غير ربحي في بدايته." },
-      { question: "كيف تتأكدون من العقارات؟", answer: "نراجع تفاصيل وبيانات كل عقار بالكامل قبل نشره على التطبيق." },
+      { question: "هل يأخذ سكون عمولة؟", answer: "نعم، في مسار التأجير المدعوم يدفع المالك 10% من إيجار الفترة الأولى. عمولة التجديد 0% ورسوم خدمة المستأجر صفر. راجع الشروط قبل الموافقة." },
+      { question: "كيف تتأكدون من العقارات؟", answer: "تخضع بيانات العقار للمراجعة، لكن ظهور الإعلان في البحث لا يعني اعتماده. راجع حالة المراجعة وتحقق من التفاصيل قبل الاتفاق." },
       { question: "لماذا أوثّق حسابي؟", answer: "حتى يعرف كل طرف مع من يتعامل. يتم التوثيق بمعلوماتك الشخصية." },
       { question: "متى ينزل التطبيق؟", answer: "قريبًا على App Store و Google Play." },
     ],
@@ -148,6 +148,8 @@ const ar = {
     subtitle: "التطبيق قادم قريبًا على App Store و Google Play",
   },
   footer: {
+    unavailable: "غير متاح",
+    unavailableHelp: "غير متاح حتى إعداد وجهة عامة معتمدة.",
     privacy: "الخصوصية",
     terms: "الشروط",
     contact: "تواصل معنا",
@@ -169,8 +171,8 @@ const en: Dictionary = {
   meta: {
     title: "Sukoon – Your next home, straight from the owner",
     description:
-      "Sukoon brings owners and tenants together in one place, with no broker and no commission. We review every property before it goes live, and every account is verified.",
-    ogAlt: "Sukoon: your next home, straight from the owner, with no broker and no commission.",
+      "Sukoon connects owners and tenants directly. Identity and listing review are separate. Owners pay 10% of first-period base rent, with 0% renewal commission and no tenant service fee.",
+    ogAlt: "Sukoon: your next home, straight from the owner, with direct communication and clear rental fees.",
   },
   loading: "Loading…",
   header: {
@@ -198,7 +200,7 @@ const en: Dictionary = {
     titleLead: "Your next home,",
     titleHighlight: "straight from the owner.",
     subtitle:
-      "Sukoon brings owners and tenants together in one place, with no broker and no commission. We review every property before it goes live, and every account is verified.",
+      "Sukoon connects owners and tenants directly. Identity and listing review are separate. Owners pay 10% of first-period base rent, with 0% renewal commission and no tenant service fee.",
     tenantPrompt: "Looking for a place?",
     tenantLink: "How renting works",
     ownerPrompt: "Have a property to rent?",
@@ -207,8 +209,8 @@ const en: Dictionary = {
   trust: {
     label: "Sukoon at a glance",
     items: [
-      { title: "No commission", body: "No broker, no middleman" },
-      { title: "Every listing reviewed", body: "Before you ever see it" },
+      { title: "Clear fees", body: "No broker, no middleman" },
+      { title: "Visible review status", body: "Check the listing status before continuing" },
       { title: "Verified accounts", body: "Know who you’re dealing with" },
       { title: "Chat & book viewings", body: "Right inside the app" },
     ],
@@ -238,9 +240,9 @@ const en: Dictionary = {
       title: "Looking for a place?",
       steps: [
         { title: "Create and verify your account", body: "Sign up once with your personal details." },
-        { title: "Browse reviewed listings", body: "Every property on Sukoon was checked before it went live." },
+        { title: "Browse listings and their review status", body: "Appearing in search does not establish approval. Check the review status and property details before continuing." },
         { title: "Chat and book a viewing", body: "Ask the owner anything, then pick a time that suits you." },
-        { title: "Agree with the owner directly", body: "No broker. No commission." },
+        { title: "Agree with the owner directly", body: "Agree directly under the displayed fee policy." },
       ],
     },
     owner: {
@@ -260,11 +262,11 @@ const en: Dictionary = {
     subtitle:
       "Sukoon means calm in Arabic, and every feature in the app is there to make renting clearer and easier for both sides.",
     commission: {
-      badge: "Non-profit at launch",
-      titleLines: ["No broker.", "No commission."],
-      body: "Nobody in the middle, and no commission to pay anyone.",
-      stat: "0%",
-      statLabel: "commission",
+      badge: "Rental fee policy",
+      titleLines: ["No broker.", "Clear fees."],
+      body: "The owner pays 10% of first-period base rent. Renewal commission is 0%; the tenant service fee is zero.",
+      stat: "10%",
+      statLabel: "owner commission on first-period rent",
     },
     verified: {
       initial: "M",
@@ -272,13 +274,13 @@ const en: Dictionary = {
       role: "Property owner",
       badge: "Verified",
       title: "Verified accounts",
-      body: "Every user verifies their account with personal details, so you always know who you’re dealing with.",
+      body: "Identity status reflects document review. Creating an account alone does not establish identity verification.",
     },
     review: {
       checks: ["Property details", "Property information"],
       status: "Ready to publish",
-      title: "Every property, fully reviewed",
-      body: "Before any property goes live, we review all of its details and information.",
+      title: "Property information review",
+      body: "Listing a property and approving its information are separate steps. Check the review status and details before agreeing.",
     },
     chat: {
       question: "Is the apartment free to view this week?",
@@ -301,11 +303,11 @@ const en: Dictionary = {
     items: [
       {
         question: "Does Sukoon take a commission?",
-        answer: "No. There’s no broker, no middleman and no commission, and Sukoon is non-profit at launch.",
+        answer: "For the supported rental flow, the owner pays 10% of first-period base rent. Renewal commission is 0% and the tenant service fee is zero. Review the agreement before accepting.",
       },
       {
         question: "How do you check properties?",
-        answer: "We fully review every property’s details and information before it’s published in the app.",
+        answer: "Property information is subject to review, but appearing in search does not establish approval. Check the review status and confirm the details before agreeing.",
       },
       {
         question: "Why do I need to verify my account?",
@@ -319,6 +321,8 @@ const en: Dictionary = {
     subtitle: "The app is coming soon to the App Store and Google Play.",
   },
   footer: {
+    unavailable: "Unavailable",
+    unavailableHelp: "Unavailable until an approved public destination is configured.",
     privacy: "Privacy",
     terms: "Terms",
     contact: "Contact us",

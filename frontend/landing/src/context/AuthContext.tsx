@@ -1,165 +1,101 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { adminPath, adminRelativePath } from '@/lib/basePath';
 import { apiClient } from '@/lib/api/client';
+import { isBackendEnabled } from '@/lib/api/config';
+import { adminPath, adminRelativePath } from '@/lib/basePath';
 
-interface UserProfile {
-  name: string;
-  email: string;
-  role: string;
-}
-
+interface UserProfile { id: string; name: string; email: string; role: string; canManageStaff: boolean; }
 interface AuthContextType {
-  isAuthenticated: boolean;
-  user: UserProfile | null;
-  login: (email: string, pass: string) => Promise<boolean>;
-  loginDemo: () => void;
-  logout: () => void;
-  isLoading: boolean;
+  isAuthenticated: boolean; user: UserProfile | null; isLoading: boolean;
+  login: (email: string, pass: string) => Promise<boolean>; loginDemo: () => void; logout: () => void;
 }
-
-const AuthContext = createContext<AuthContextType>({
-  isAuthenticated: false,
-  user: null,
-  login: async () => false,
-  loginDemo: () => {},
-  logout: () => {},
-  isLoading: true,
-});
-
+const AuthContext = createContext<AuthContextType>({ isAuthenticated: false, user: null, isLoading: true, login: async () => false, loginDemo: () => {}, logout: () => {} });
 export const useAuth = () => useContext(AuthContext);
+const demoProfile: UserProfile = { id: 'demo', name: 'Demo administrator', email: 'admin@sukoon.com', role: 'system_owner', canManageStaff: true };
+function confirmedProfile(value: UserProfile): UserProfile {
+  const roles = new Set(['system_owner', 'main_admin', 'kyc_reviewer', 'property_reviewer', 'support', 'financial_approver', 'psp_reconciliation', 'payout_operator', 'refund_operator', 'dispute_resolver', 'staff']);
+  if (!value || typeof value.id !== 'string' || !value.id.trim() ||
+      typeof value.name !== 'string' || typeof value.email !== 'string' ||
+      !roles.has(value.role) || typeof value.canManageStaff !== 'boolean' ||
+      value.canManageStaff !== (value.role === 'system_owner')) throw new Error('Invalid administrative session');
+  return value;
+}
+function clearStoredAuth() {
+  for (const key of ['sukoon_access_token', 'sukoon_admin_auth', 'sukoon_user', 'sukoon_admin_mode']) localStorage.removeItem(key);
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Hydrate persisted auth after the initial render so server and client agree.
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    void Promise.resolve().then(() => {
-      try {
-        const authenticated = localStorage.getItem('sukoon_admin_auth') === 'true';
-        const stored = localStorage.getItem('sukoon_user');
-        setIsAuthenticated(authenticated);
-        if (authenticated && stored) {
-          try { setUser(JSON.parse(stored)); } catch { setUser(null); }
-        }
-      } catch {
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    });
-  }, []);
-
+  const generation = useRef(0);
   const router = useRouter();
   const pathname = adminRelativePath(usePathname());
+  const isAuthenticated = user !== null;
+
+  useEffect(() => {
+    const epoch = ++generation.current;
+    const restore = async () => {
+      try {
+        const mode = isBackendEnabled() ? 'live' : 'demo';
+        if (localStorage.getItem('sukoon_admin_mode') !== mode) { clearStoredAuth(); return; }
+        const profile = mode === 'live' ? confirmedProfile(await apiClient<UserProfile>('/api/v1/admin/session/')) : demoProfile;
+        if (epoch === generation.current) setUser(profile);
+      } catch { if (epoch === generation.current) { clearStoredAuth(); setUser(null); } }
+      finally { if (epoch === generation.current) setIsLoading(false); }
+    };
+    void restore();
+    return () => { generation.current++; };
+  }, []);
 
   const loginDemo = () => {
-    const profile: UserProfile = {
-      name: 'سيف النظام',
-      email: 'admin@sukoon.com',
-      role: 'مالك النظام',
-    };
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('sukoon_access_token', 'mock_jwt_access_token_demo_mode');
-        localStorage.setItem('sukoon_admin_auth', 'true');
-        localStorage.setItem('sukoon_user', JSON.stringify(profile));
-      } catch {}
-    }
-    setIsAuthenticated(true);
-    setUser(profile);
+    if (isBackendEnabled()) return;
+    generation.current++;
+    clearStoredAuth();
+    localStorage.setItem('sukoon_admin_mode', 'demo');
+    setUser(demoProfile);
     router.push(adminPath('/'));
   };
-
-  const login = async (email: string, pass: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
+    if (!isBackendEnabled()) return false; // Demo entry is explicit, never a password fallback.
+    const epoch = ++generation.current;
     try {
-      const res = await apiClient<{ access?: string; data?: { access?: string } }>('/api/v1/auth/login/', {
-        method: 'POST',
-        body: JSON.stringify({ email: email.trim(), password: pass.trim() }),
-      });
-
-      // Extract access token if returned (support both direct and GenericJsonRenderer wrappers)
-      const accessToken = res?.data?.access || res?.access || 'mock_jwt_access_token_demo_mode';
-      if (typeof window !== 'undefined') {
-        try {
-          localStorage.setItem('sukoon_access_token', accessToken);
-        } catch {}
-      }
-
-      const profile: UserProfile = {
-        name: email.startsWith('admin') ? 'سيف النظام' : email.split('@')[0],
-        email: email.trim(),
-        role: email.startsWith('admin') ? 'مالك النظام' : 'مشرف',
-      };
-
-      setIsAuthenticated(true);
+      const result = await apiClient<{ access: string }>('/api/v1/auth/login/', { method: 'POST', body: { email: email.trim(), password } });
+      if (epoch !== generation.current) return false;
+      if (!result.access || result.access.startsWith('mock_')) throw new Error('Missing authoritative session');
+      localStorage.setItem('sukoon_access_token', result.access);
+      const profile = confirmedProfile(await apiClient<UserProfile>('/api/v1/admin/session/'));
+      if (epoch !== generation.current) return false;
+      localStorage.setItem('sukoon_admin_mode', 'live');
       setUser(profile);
-      if (typeof window !== 'undefined') {
-        try {
-          localStorage.setItem('sukoon_admin_auth', 'true');
-          localStorage.setItem('sukoon_user', JSON.stringify(profile));
-        } catch {}
-      }
       router.push(adminPath('/'));
       return true;
     } catch {
+      if (epoch === generation.current) { clearStoredAuth(); setUser(null); }
       return false;
     }
   };
-
   const logout = async () => {
-    try {
-      await apiClient('/api/v1/auth/logout/', { method: 'POST' });
-    } catch {
-      // ignore
-    }
-    setIsAuthenticated(false);
+    generation.current++;
     setUser(null);
-    localStorage.removeItem('sukoon_access_token');
-    localStorage.removeItem('sukoon_admin_auth');
-    localStorage.removeItem('sukoon_user');
+    const command = isBackendEnabled() ? apiClient('/api/v1/auth/logout/', { method: 'POST' }) : Promise.resolve();
+    clearStoredAuth();
     router.push(adminPath('/login'));
+    try { await command; } catch { /* Local access remains cleared; the server session may require revocation. */ }
   };
-
-  // Listen for unauthorized 401 events across the app
   useEffect(() => {
-    const handleUnauthorized = () => {
-      setIsAuthenticated(false);
-      setUser(null);
-      if (typeof window !== 'undefined') {
-        try {
-          localStorage.removeItem('sukoon_access_token');
-          localStorage.removeItem('sukoon_admin_auth');
-          localStorage.removeItem('sukoon_user');
-        } catch {}
-      }
-      if (pathname !== '/login') {
-        router.push(adminPath('/login'));
-      }
-    };
-
-    window.addEventListener('auth:unauthorized', handleUnauthorized);
-    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
-  }, [pathname, router]);
-
-  // Protected route guard: if not auth and not on /login -> redirect to /login
+    const unauthorized = () => { generation.current++; clearStoredAuth(); setUser(null); setIsLoading(false); };
+    window.addEventListener('auth:unauthorized', unauthorized);
+    return () => window.removeEventListener('auth:unauthorized', unauthorized);
+  }, []);
   useEffect(() => {
-    if (!isLoading) {
-      if (!isAuthenticated && pathname !== '/login') {
-        router.push(adminPath('/login'));
-      } else if (isAuthenticated && pathname === '/login') {
-        router.push(adminPath('/'));
-      }
-    }
+    if (isLoading) return;
+    if (!isAuthenticated && pathname !== '/login') router.push(adminPath('/login'));
+    else if (isAuthenticated && pathname === '/login') router.push(adminPath('/'));
   }, [isLoading, isAuthenticated, pathname, router]);
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, loginDemo, logout, isLoading }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ isAuthenticated, user, login, loginDemo, logout, isLoading }}>
+    {!isBackendEnabled() && <div role="status">DEMO — simulated records; no live commands.</div>}
+    {children}
+  </AuthContext.Provider>;
 };

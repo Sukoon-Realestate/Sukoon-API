@@ -2,7 +2,7 @@ import logging
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from core_apps.admin_api.permissions import IsAdminStaff
+from core_apps.admin_api.permissions import IsPropertyReviewer
 from core_apps.admin_api.serializers.moderation_serializers import (
     ModerationItemSerializer,
     ModerationMetricsSerializer,
@@ -21,7 +21,7 @@ class AdminModerationListAPIView(generics.ListAPIView):
     Returns a paginated list of properties requiring content moderation.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsPropertyReviewer]
     serializer_class = ModerationItemSerializer
 
     def get_queryset(self):
@@ -33,7 +33,7 @@ class AdminModerationMetricsAPIView(APIView):
     Returns aggregated metrics for suspicious and flagged content moderation.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsPropertyReviewer]
 
     def get(self, request):
         metrics = get_moderation_metrics()
@@ -46,7 +46,7 @@ class AdminModerationDeleteAPIView(APIView):
     Hides/removes flagged content from the platform.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsPropertyReviewer]
 
     def post(self, request, property_id):
         delete_moderation_item(property_id, request.user)

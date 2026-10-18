@@ -53,7 +53,7 @@ export default function UserProfilePage() {
 
   const handleSendWarning = () => {
     if (!user) return;
-    showToast(`تم إرسال تحذير إداري إلى ${user.name} بنجاح`, 'info');
+    showToast('إرسال التحذيرات غير متاح. لم يتم إرسال أي رسالة.', 'error');
   };
 
   const handleToggleSuspend = async () => {
@@ -79,7 +79,7 @@ export default function UserProfilePage() {
 
   const handleExportData = () => {
     if (!user) return;
-    showToast(`جاري تجهيز وتنزيل ملف بيانات ${user.name}...`, 'success');
+    showToast('تصدير بيانات المستخدم غير متاح. لم يتم إنشاء ملف.', 'error');
   };
 
   if (isLoading) {
@@ -181,7 +181,7 @@ export default function UserProfilePage() {
             {/* Admin Action Buttons */}
             <div className="w-full space-y-2 mt-6 pt-4 border-t border-[var(--divider)]">
               <button
-                onClick={() => setShowWarnModal(true)}
+                disabled title="إرسال التحذيرات غير متاح"
                 className="w-full py-2.5 px-4 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <AlertOctagon className="w-4 h-4 text-amber-400" />
@@ -201,7 +201,7 @@ export default function UserProfilePage() {
               </button>
 
               <button
-                onClick={handleExportData}
+                disabled title="تصدير البيانات غير متاح"
                 className="w-full py-2.5 px-4 rounded-xl border border-[var(--card-border)] bg-[var(--card-hover)]/60 hover:bg-[var(--card-hover)] text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Download className="w-4 h-4 text-[var(--text-muted)]" />

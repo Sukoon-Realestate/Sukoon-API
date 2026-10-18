@@ -62,10 +62,7 @@ export default function ContentModerationPage() {
       await deleteModerationItem(targetId);
       setItems((prev) => prev.filter((i) => i.id !== selectedToDelete.id));
       showToast(`تم حذف المحتوى المخالف "${selectedToDelete.title}" بنجاح`, 'success');
-    } catch {
-      setItems((prev) => prev.filter((i) => i.id !== selectedToDelete.id));
-      showToast(`تم حذف المحتوى المخالف "${selectedToDelete.title}" بنجاح`, 'success');
-    } finally {
+    } catch { showToast('The result was not confirmed. Refresh the original record before retrying.', 'error'); } finally {
       setSelectedToDelete(null);
     }
   };

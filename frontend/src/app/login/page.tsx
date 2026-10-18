@@ -29,32 +29,10 @@ export default function AdminLoginPage() {
     const success = await login(email, password);
     setIsSubmitting(false);
 
-    if (!success) {
-      if (email.trim().toLowerCase() === 'admin@sukoon.com') {
-        loginDemo();
-      } else {
-        setErrorMsg('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-      }
-    }
+    if (!success) setErrorMsg('Login was not confirmed. Check your credentials and administrative access.');
   };
 
-  const handleQuickDemo = async () => {
-    setEmail('admin@sukoon.com');
-    setPassword('password123');
-    setIsSubmitting(true);
-    setErrorMsg('');
-
-    try {
-      const ok = await login('admin@sukoon.com', 'password123');
-      if (!ok) {
-        loginDemo();
-      }
-    } catch {
-      loginDemo();
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const handleQuickDemo = () => { if (!isBackendEnabled()) loginDemo(); };
 
   return (
     <div className="min-h-screen w-full bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center p-4 relative overflow-hidden font-sans dir-rtl">

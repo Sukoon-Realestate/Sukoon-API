@@ -8,8 +8,8 @@
     },
     "revenueBreakdown": {
       "platformFees": { "value": "12,425 ج", "percent": 5 },
-      "managedRentals": { "value": "211,225 ج", "percent": 85 },
-      "kycFees": { "value": "24,850 ج", "percent": 10 }
+      "subscriptions": { "value": "211,225 ج", "percent": 85 },
+      "advertising": { "value": "24,850 ج", "percent": 10 }
     },
     "sixMonthTrend": [
       { "month": "أبريل", "value": 180000 },

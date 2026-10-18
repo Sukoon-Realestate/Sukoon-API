@@ -5,7 +5,7 @@ from rest_framework import status
 
 @pytest.mark.django_db
 class TestCompleteRegisterAPI:
-    def test_complete_register_updates_national_id_and_returns_pending(
+    def test_complete_register_without_documents_stays_incomplete(
         self, auth_client, user
     ):
         url = reverse("complete-register")
@@ -15,10 +15,12 @@ class TestCompleteRegisterAPI:
         res = auth_client.post(url, payload, format="multipart")
         assert res.status_code == status.HTTP_200_OK
         data = res.json()["data"]
-        assert data["verification_status"] == "pending"
+        assert data["verification_status"] == "incomplete"
         assert "front_id_image" in data["missing_fields"]
         assert "back_id_image" in data["missing_fields"]
         assert data["registration_complete"] is False
+        assert data["submission_id"] is None
+        assert not user.profile.kyc_submissions.exists()
 
         # Verify user profile was updated
         user.profile.refresh_from_db()

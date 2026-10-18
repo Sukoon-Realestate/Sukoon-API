@@ -13,6 +13,9 @@ class User(AbstractUser):
     last_name = models.CharField(_("Last Name"), max_length=50)
     email = models.EmailField(_("Email"), max_length=254, unique=True)
     is_verified = models.BooleanField(_("Is Verified"), default=False)
+    is_email_verified = models.BooleanField(
+        _("Email possession verified"), default=False
+    )
 
     security_epoch = models.PositiveIntegerField(default=0)
     sensitive_actions_frozen = models.BooleanField(default=False)

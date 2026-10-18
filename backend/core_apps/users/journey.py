@@ -22,7 +22,10 @@ def journey_summary(user):
 def account_category(user):
     """Private presentation discriminator; never a role or authorization grant."""
     from core_apps.features.models import StudentProfile, CompanyMembership
-    student = StudentProfile.objects.filter(user=user).values_list("id", flat=True).first()
+
+    student = (
+        StudentProfile.objects.filter(user=user).values_list("id", flat=True).first()
+    )
     companies = CompanyMembership.objects.filter(user=user, is_active=True).count()
     return {
         "account_kind": "company" if companies else "student" if student else "normal",
@@ -42,6 +45,7 @@ def canonical_user(user):
             getattr(getattr(user, "profile", None), "phone_number", "") or ""
         ),
         "is_verified": user.is_verified,
+        "is_email_verified": user.is_email_verified,
         **journey_summary(user),
     }
 

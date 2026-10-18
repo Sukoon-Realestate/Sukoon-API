@@ -53,6 +53,10 @@ class StaffProfileListSerializer(serializers.ModelSerializer):
 
 
 class StaffInviteSerializer(serializers.Serializer):
-    name = serializers.CharField(required=True)
+    name = serializers.CharField(required=True, max_length=150)
     email = serializers.EmailField(required=True)
-    role_name = serializers.CharField(required=False, default="مراجع KYC")
+    role_name = serializers.ChoiceField(
+        choices=StaffProfile.RoleName.choices,
+        default=StaffProfile.RoleName.KYC_REVIEWER,
+    )
+    reason = serializers.CharField(max_length=500)

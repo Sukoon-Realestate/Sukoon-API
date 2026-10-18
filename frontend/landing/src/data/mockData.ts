@@ -466,8 +466,8 @@ export const financialMetrics = {
 
 export const revenueBreakdownData = {
   platformFees: { value: '12,425 ج', percent: 5 },
-  managedRentals: { value: '211,225 ج', percent: 85 },
-  kycFees: { value: '24,850 ج', percent: 10 },
+  subscriptions: { value: '211,225 ج', percent: 85 },
+  advertising: { value: '24,850 ج', percent: 10 },
 };
 
 export const sixMonthRevenueTrend = [

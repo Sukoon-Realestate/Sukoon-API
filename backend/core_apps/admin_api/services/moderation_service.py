@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 # * Moderation Querysets and Business Logic
 
+
 def get_moderation_items_queryset():
     """
     Returns properties currently pending moderation, flagged, or under review.
@@ -16,7 +17,9 @@ def get_moderation_items_queryset():
     # ? Query properties under review or revision
     return (
         Property.objects.select_related("owner", "property_type", "governorate", "city")
-        .filter(status__in=[Property.Status.UNDER_REVIEW, Property.Status.NEEDS_REVISION])
+        .filter(
+            status__in=[Property.Status.UNDER_REVIEW, Property.Status.NEEDS_REVISION]
+        )
         .order_by("-created_at")
     )
 
@@ -26,9 +29,13 @@ def get_moderation_metrics():
     Returns aggregated metrics for suspicious and flagged content.
     """
     # ? Derived from live database properties and reports
-    under_review_count = Property.objects.filter(status=Property.Status.UNDER_REVIEW).count()
-    needs_revision_count = Property.objects.filter(status=Property.Status.NEEDS_REVISION).count()
-    
+    under_review_count = Property.objects.filter(
+        status=Property.Status.UNDER_REVIEW
+    ).count()
+    needs_revision_count = Property.objects.filter(
+        status=Property.Status.NEEDS_REVISION
+    ).count()
+
     misleading_reports = UserReport.objects.filter(reason_type="misleading").count()
     abusive_reports = UserReport.objects.filter(reason_type="abusive").count()
     spam_reports = UserReport.objects.filter(reason_type="spam").count()
@@ -36,8 +43,8 @@ def get_moderation_metrics():
 
     suspicious_images = spam_reports + under_review_count
     misleading_desc = misleading_reports + needs_revision_count
-    phone_in_photos = fraud_reports if fraud_reports > 0 else 1
-    inappropriate_content = abusive_reports if abusive_reports > 0 else 1
+    phone_in_photos = fraud_reports
+    inappropriate_content = abusive_reports
 
     return {
         "suspiciousImages": suspicious_images,
@@ -52,8 +59,13 @@ def delete_moderation_item(property_id, reviewer):
     """
     Hides/removes flagged property content from the platform.
     """
+    from core_apps.admin_api.permissions import require_staff_actor
+
+    require_staff_actor(
+        reviewer, {"system_owner", "main_admin", "property_reviewer"}, lock=True
+    )
     try:
-        property_obj = Property.objects.get(id=property_id)
+        property_obj = Property.objects.select_for_update().get(id=property_id)
     except (Property.DoesNotExist, ValueError):
         raise NotFound(f"Property with ID {property_id} was not found.")
 

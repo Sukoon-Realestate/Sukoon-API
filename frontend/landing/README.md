@@ -1,36 +1,19 @@
-# Sukoon Landing Page
+# Sokoun merged public and administrative application
 
-Marketing site for the Sukoon app. It's a standalone Next.js app that lives under `frontend/` and is fully separate from the admin dashboard: it has its own `package.json`, its own build and its own deploy.
+This Next.js application serves public Arabic/English pages and the administrative interface in the same build. `src/app/(landing)/[lang]` owns public routes; `src/app/(admin)/admin` owns `/admin`. There is no admin rewrite or required second zone.
 
-Frontend only: no API calls, no auth. Both locales are statically prerendered.
-
-## Routing: landing at `/`, admin at `/admin`
-
-The landing page and the admin dashboard are two separate Next.js apps served under one origin, using Next.js [multi-zones](https://nextjs.org/docs/app/guides/multi-zones):
-
-| URL | Served by |
-|---|---|
-| `/`, `/ar`, `/en` | this app (port 3000) |
-| `/admin`, `/admin/*` | admin app (`frontend/`, `basePath: '/admin'`, port 3001), proxied by the rewrites in `next.config.ts` |
-
-- `ADMIN_URL` (default `http://localhost:3001`) tells this app where the admin app runs. Set it to the admin deployment's URL in production. It's read when the server starts, so changing it needs a restart or rebuild.
-- Links from this app to the admin must be plain `<a href="/admin">`, not `<Link>`, because moving between zones needs a full page load.
+The older standalone dashboard in `frontend/src/app` still builds separately with `basePath: /admin`. It is a compatibility build, not the process serving `/admin` when the merged application runs. Shared security fixes must cover both until that compatibility build is retired.
 
 ## Commands
 
-Local development uses Webpack to work around Turbopack's `No link element found for chunk ...css` hot reload error. Both `npm run dev` here and the parent frontend launcher apply this option; production builds keep their existing bundler. After switching an already-open browser session, reload the page to discard the old Turbopack runtime.
+- From `frontend`: `npm run dev` launches the merged application on port 3000. `-p` selects a different port.
+- From `frontend/landing`: `npm run dev`, `npm run build`, `npm run start`, or `npm run lint` operate on this merged application.
+- To run the compatibility dashboard explicitly, invoke `next dev --port 3001` from `frontend`; its routes include `/admin`.
+- `ADMIN_URL` does not control routing in the merged application.
 
-```bash
-# From frontend/ — runs both zones; open http://localhost:3000 and /admin
-npm run dev
+Live API mode is the default. Demo mode requires explicit `NEXT_PUBLIC_ENABLE_BACKEND=false` or `NEXT_PUBLIC_USE_MOCK_DATA=true`, and displays a demo banner. Live failures never fall back to demo records.
 
-# This app only (/admin will fail without the admin server running)
-cd landing && npm run dev
-npm run build
-npm run lint
-```
-
-From the repo root: `make frontend-dev` (both zones), plus `make landing-install`, `make landing-dev` and `make landing-build`.
+Public footer destinations use `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL`, and `NEXT_PUBLIC_CONTACT_URL`. Only approved HTTPS URLs should be configured; absent destinations are visibly unavailable. No legal text or contact address is inferred.
 
 ## Structure
 
@@ -56,10 +39,10 @@ src/
 
 - `components/ui/Logo.tsx` is a text placeholder. Replace it with the official SVG wordmark.
 - The store buttons are non-interactive ("coming soon"). Turn them into links once the store listings are live.
-- The footer links (Privacy / Terms / Contact) point to `#`. Each one has a `TODO` in `SiteFooter.tsx`.
+- Approved legal/contact destinations remain deployment configuration requirements; unavailable entries do not pretend to navigate.
 - `lib/site.ts`: `SOCIAL_LINKS` supplies the footer's Instagram and TikTok links and the Organization schema's `sameAs` profiles. The `BUSINESS` details remain empty `TODO`s; the LocalBusiness schema switches on by itself once name, phone, street and city are filled in.
 
-Run `grep -rn "TODO" src` to list them all.
+Run `rg -n "TODO" src` to list them all.
 
 ## SEO & metadata
 

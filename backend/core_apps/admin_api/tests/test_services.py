@@ -9,6 +9,8 @@ from core_apps.admin_api.services import (
     remove_staff_member,
 )
 from core_apps.admin_api.models import KYCSubmission
+from core_apps.users.services.identity_submission import submit_identity
+from rest_framework.exceptions import ValidationError
 
 
 @pytest.mark.django_db
@@ -32,26 +34,41 @@ def test_user_suspend_unsuspend(user, superuser):
 
 @pytest.mark.django_db
 def test_kyc_approve_reject(user, superuser):
-    sub = KYCSubmission.objects.create(profile=user.profile, status=KYCSubmission.Status.PENDING)
+    result = submit_identity(
+        user,
+        {
+            "national_id": "29001011234567",
+            "front_id_image": "image/upload/v1/front.jpg",
+            "back_id_image": "image/upload/v1/back.jpg",
+        },
+    )
+    sub = KYCSubmission.objects.get(id=result["submission_id"])
     approve_kyc_submission(sub.id, reviewer=superuser)
     sub.refresh_from_db()
     user.refresh_from_db()
     assert sub.status == KYCSubmission.Status.APPROVED
     assert user.is_verified is True
 
-    reject_kyc_submission(sub.id, reviewer=superuser, reason="Document blurred")
+    with pytest.raises(ValidationError):
+        reject_kyc_submission(sub.id, reviewer=superuser, reason="Document blurred")
     sub.refresh_from_db()
     user.refresh_from_db()
-    assert sub.status == KYCSubmission.Status.REJECTED
-    assert user.is_verified is False
+    assert sub.status == KYCSubmission.Status.APPROVED
+    assert user.is_verified is True
 
 
 @pytest.mark.django_db
 def test_staff_invite_and_remove(superuser):
-    staff = invite_staff_member("newstaff@example.com", "Test Admin", "مشرف رئيسي")
+    staff = invite_staff_member(
+        "newstaff@example.com",
+        "Test Admin",
+        "main_admin",
+        actor=superuser,
+        reason="Approved role grant",
+    )
     assert staff.user.is_staff is True
     assert staff.is_active is True
 
-    remove_staff_member(staff.id)
+    remove_staff_member(staff.id, actor=superuser, reason="Approved role removal")
     staff.refresh_from_db()
     assert staff.is_active is False

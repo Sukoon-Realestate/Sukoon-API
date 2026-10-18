@@ -2,7 +2,7 @@ import logging
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from core_apps.admin_api.permissions import IsAdminStaff
+from core_apps.admin_api.permissions import IsSystemOwner
 from core_apps.admin_api.services.settings_service import (
     get_platform_settings,
     update_platform_settings,
@@ -16,7 +16,7 @@ class AdminPlatformSettingsAPIView(APIView):
     Returns and updates platform general rules and verification settings.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSystemOwner]
 
     def get(self, request):
         settings_data = get_platform_settings()

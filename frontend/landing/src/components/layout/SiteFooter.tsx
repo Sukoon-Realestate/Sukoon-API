@@ -14,13 +14,14 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
     { label: dict.nav.download, href: `#${SECTION_IDS.download}` },
   ];
 
+  const destination = (value: string | undefined) => {
+    if (!value) return undefined;
+    try { const url = new URL(value); return url.protocol === 'https:' ? url.href : undefined; } catch { return undefined; }
+  };
   const links = [
-    // TODO: create the privacy policy page (/[lang]/privacy), link it here and add it to sitemap.ts.
-    { label: dict.footer.privacy, href: "#" },
-    // TODO: create the terms of use page (/[lang]/terms), link it here and add it to sitemap.ts.
-    { label: dict.footer.terms, href: "#" },
-    // TODO: point at the real contact channel (mailto: with BUSINESS.email in lib/site.ts, or a /contact page).
-    { label: dict.footer.contact, href: "#" },
+    { label: dict.footer.privacy, href: destination(process.env.NEXT_PUBLIC_PRIVACY_URL) },
+    { label: dict.footer.terms, href: destination(process.env.NEXT_PUBLIC_TERMS_URL) },
+    { label: dict.footer.contact, href: destination(process.env.NEXT_PUBLIC_CONTACT_URL) },
   ];
 
   return (
@@ -86,9 +87,8 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
             <ul className="flex gap-6 text-sm text-fg/70">
               {links.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="transition-colors hover:text-fg">
-                    {link.label}
-                  </a>
+                  {link.href ? <a href={link.href} className="transition-colors hover:text-fg">{link.label}</a>
+                    : <span aria-disabled="true" title={dict.footer.unavailableHelp}>{link.label} — {dict.footer.unavailable}</span>}
                 </li>
               ))}
             </ul>

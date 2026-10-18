@@ -40,9 +40,9 @@ export default function FinancialDashboardPage() {
   };
 
   const revenueBreakdown = data?.revenueBreakdown || {
-    platformFees: { value: '–', percent: 5 },
-    managedRentals: { value: '–', percent: 85 },
-    kycFees: { value: '–', percent: 10 },
+    platformFees: { value: '–', percent: 0 },
+    subscriptions: { value: '–', percent: 0 },
+    advertising: { value: '–', percent: 0 },
   };
 
   return (
@@ -54,6 +54,7 @@ export default function FinancialDashboardPage() {
       />
 
       <div className="admin-page-body space-y-6">
+        <p role="note">Posted EGP ledger revenue only. Rent liabilities, deposits and unearned commission are excluded. Provider settlement is separate.</p>
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
@@ -115,7 +116,7 @@ export default function FinancialDashboardPage() {
               {/* Row 1: Platform Fees */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-[var(--foreground)]">رسوم المنصة (5%)</span>
+                  <span className="text-[var(--foreground)]">Earned commission (posted ledger)</span>
                   <span className="text-[var(--text-muted)] font-mono">
                     {revenueBreakdown.platformFees.value}
                   </span>
@@ -131,15 +132,15 @@ export default function FinancialDashboardPage() {
               {/* Row 2: Managed Rentals */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-[var(--foreground)]">إيجارات مُدارة</span>
+                  <span className="text-[var(--foreground)]">Subscription revenue</span>
                   <span className="text-[var(--text-muted)] font-mono">
-                    {revenueBreakdown.managedRentals.value}
+                    {revenueBreakdown.subscriptions.value}
                   </span>
                 </div>
                 <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
                   <div
                     className="h-full bg-blue-600 rounded-full transition-all duration-500"
-                    style={{ width: `${revenueBreakdown.managedRentals.percent}%` }}
+                    style={{ width: `${revenueBreakdown.subscriptions.percent}%` }}
                   ></div>
                 </div>
               </div>
@@ -147,15 +148,15 @@ export default function FinancialDashboardPage() {
               {/* Row 3: KYC Fees */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-[var(--foreground)]">رسوم توثيق</span>
+                  <span className="text-[var(--foreground)]">Advertising revenue</span>
                   <span className="text-[var(--text-muted)] font-mono">
-                    {revenueBreakdown.kycFees.value}
+                    {revenueBreakdown.advertising.value}
                   </span>
                 </div>
                 <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
                   <div
                     className="h-full bg-amber-500 rounded-full transition-all duration-500"
-                    style={{ width: `${revenueBreakdown.kycFees.percent}%` }}
+                    style={{ width: `${revenueBreakdown.advertising.percent}%` }}
                   ></div>
                 </div>
               </div>

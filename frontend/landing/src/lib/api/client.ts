@@ -57,17 +57,11 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
       body: finalBody,
       ...restOptions,
     });
-  } catch (networkError) {
-    console.warn(`[Sukoon API] Backend is unreachable at ${url}. Seamlessly falling back to mock data:`, networkError);
-    return handleMockRequest<T>(endpoint, options);
+  } catch {
+    throw new Error('Connection interrupted. The result is unknown; refresh the original record before retrying.');
   }
 
   if (!response.ok) {
-    if (response.status >= 500) {
-      console.warn(`[Sukoon API] Server error ${response.status} from ${url}. Falling back to mock data.`);
-      return handleMockRequest<T>(endpoint, options);
-    }
-
     let errorData: any = null;
     try {
       errorData = await response.json();
@@ -92,7 +86,7 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
       }
     }
 
-    throw new Error(errorMessage);
+    throw new Error(response.status >= 500 ? 'Server outcome is unconfirmed. Refresh the original record before retrying.' : errorMessage);
   }
 
   const json: unknown = await response.json();

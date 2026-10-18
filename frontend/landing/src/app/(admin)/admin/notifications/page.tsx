@@ -51,13 +51,7 @@ export default function PushNotificationsPage() {
     }
   };
 
-  const handleSchedule = () => {
-    if (!title.trim() || !body.trim()) {
-      showToast('الرجاء كتابة عنوان ونص الإشعار لجدولته', 'error');
-      return;
-    }
-    showToast(`تم جدولة إرسال الإشعار غداً الساعة 10:00 ص`, 'info');
-  };
+  const handleSchedule = () => showToast('Scheduling is unavailable; nothing was queued.', 'error');
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -75,6 +69,7 @@ export default function PushNotificationsPage() {
               إرسال إشعار جديد
             </h3>
 
+            <p role="status">Broadcast delivery is unavailable. No recipients are notified and no campaign is scheduled.</p>
             {/* Target Audience */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-[var(--text-subtle)]">
@@ -160,7 +155,7 @@ export default function PushNotificationsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <button
                 type="button"
-                disabled={isSending}
+                disabled title="Broadcast delivery is unavailable until a durable dispatcher is connected."
                 onClick={handleSendNow}
                 className="py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
@@ -169,7 +164,7 @@ export default function PushNotificationsPage() {
 
               <button
                 type="button"
-                onClick={handleSchedule}
+                disabled title="Scheduling is unavailable." onClick={handleSchedule}
                 className="py-3.5 bg-[var(--card-hover)] hover:bg-[var(--badge-bg-muted)] text-[var(--foreground)] font-extrabold text-sm rounded-xl border border-[var(--card-border)] transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>جدولة</span>

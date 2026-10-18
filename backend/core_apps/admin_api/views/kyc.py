@@ -3,7 +3,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from core_apps.admin_api.permissions import IsAdminStaff
+from core_apps.admin_api.permissions import IsIdentityReviewer
 from core_apps.admin_api.serializers import (
     KYCSubmissionListSerializer,
     KYCRejectActionSerializer,
@@ -25,7 +25,7 @@ class AdminKYCListAPIView(generics.ListAPIView):
     Returns a paginated list of KYC verification submissions.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsIdentityReviewer]
     serializer_class = KYCSubmissionListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = KYCSubmissionFilter
@@ -39,7 +39,7 @@ class AdminKYCMetricsAPIView(APIView):
     Returns KYC overview statistics (pending, accepted today, rejected today, reviewed today).
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsIdentityReviewer]
 
     def get(self, request):
         metrics = get_kyc_metrics()
@@ -51,7 +51,7 @@ class AdminKYCDetailAPIView(APIView):
     Returns complete detail for a specific KYC submission including document images.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsIdentityReviewer]
 
     def get(self, request, submission_id):
         detail = get_kyc_detail(submission_id)
@@ -63,12 +63,14 @@ class AdminKYCApproveAPIView(APIView):
     Approves a KYC submission and verifies the user.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsIdentityReviewer]
 
     def post(self, request, submission_id):
         submission = approve_kyc_submission(submission_id, reviewer=request.user)
         return Response(
-            {"message": f"تمت الموافقة على توثيق المستخدم {submission.profile.user.email} بنجاح."},
+            {
+                "message": f"تمت الموافقة على توثيق المستخدم {submission.profile.user.email} بنجاح."
+            },
             status=status.HTTP_200_OK,
         )
 
@@ -83,7 +85,7 @@ class AdminKYCRejectAPIView(APIView):
     }
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsIdentityReviewer]
 
     def post(self, request, submission_id):
         serializer = KYCRejectActionSerializer(data=request.data)
@@ -94,6 +96,8 @@ class AdminKYCRejectAPIView(APIView):
             submission_id, reviewer=request.user, reason=reason
         )
         return Response(
-            {"message": f"تم رفض طلب التوثيق للمستخدم {submission.profile.user.email}."},
+            {
+                "message": f"تم رفض طلب التوثيق للمستخدم {submission.profile.user.email}."
+            },
             status=status.HTTP_200_OK,
         )

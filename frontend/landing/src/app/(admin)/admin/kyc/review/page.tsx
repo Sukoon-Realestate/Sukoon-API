@@ -19,7 +19,7 @@ import { LogoLoader } from '@/components/ui/LogoLoader';
 
 function IndividualKycReviewContent() {
   const searchParams = useSearchParams();
-  const submissionId = searchParams.get('id') || 'kyc-1';
+  const submissionId = searchParams.get('id') || '';
 
   const [kycData, setKycData] = useState<KycDetail | null>(null);
   const [internalNote, setInternalNote] = useState('');
@@ -40,7 +40,7 @@ function IndividualKycReviewContent() {
           else if (data.status === 'rejected') setStatus('مرفوض');
         }
       } catch (err) {
-        console.warn('Could not fetch KYC detail, using fallback state:', err);
+        setKycData(null); showToast('Identity evidence could not be loaded.', 'error');
       } finally {
         setIsLoading(false);
       }
@@ -55,6 +55,7 @@ function IndividualKycReviewContent() {
   const gender = kycData?.gender || 'غير محدد';
 
   const handleConfirmDecision = async () => {
+    if (!kycData?.id || !kycData.canReview) { showToast('Load the current pending submission before deciding.', 'error'); return; }
     try {
       if (modalType === 'approve') {
         if (kycData?.id) await approveKyc(kycData.id);
@@ -65,18 +66,11 @@ function IndividualKycReviewContent() {
         setStatus('مرفوض');
         showToast('تم رفض طلب التوثيق وتثبيت الحالة في النظام', 'error');
       } else if (modalType === 'reupload') {
-        setStatus('إعادة رفع');
-        showToast(`تم إرسال طلب إعادة رفع المستندات إلى ${userName}`, 'info');
-      }
-    } catch {
-      if (modalType === 'approve') {
-        setStatus('مقبول');
-        showToast(`تمت الموافقة على توثيق هوية ${userName} بنجاح`, 'success');
-      } else if (modalType === 'reject') {
+        await rejectKyc(kycData.id, internalNote || 'Please submit clearer identity evidence.');
         setStatus('مرفوض');
-        showToast('تم رفض طلب التوثيق وتثبيت الحالة في النظام', 'error');
+        showToast('Resubmission requested through the recorded rejection reason.', 'success');
       }
-    } finally {
+    } catch { showToast('The result was not confirmed. Refresh the original record before retrying.', 'error'); } finally {
       setModalType(null);
     }
   };

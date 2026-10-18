@@ -14,6 +14,9 @@ def get_platform_settings():
 
 @transaction.atomic
 def update_platform_settings(payload, actor=None):
+    from core_apps.admin_api.permissions import require_staff_actor
+
+    require_staff_actor(actor, {"system_owner"}, lock=True)
     if (
         not isinstance(payload, dict)
         or set(payload) - set(default_platform_preferences())

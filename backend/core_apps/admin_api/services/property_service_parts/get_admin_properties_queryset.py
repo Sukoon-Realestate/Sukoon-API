@@ -26,16 +26,7 @@ def _get_property_by_identifier(prop_id):
     except (ValueError, TypeError, AttributeError):
         pass
 
-    # Try slug or title lookup if ID matches a prefix or mock ID (e.g. prop-1)
-    prop = Property.objects.filter(
-        Q(title__icontains=str_id) | Q(district__icontains=str_id)
-    ).first()
-    if not prop:
-        # Fallback to first property if nothing found to avoid hard crashing on mock id references
-        prop = Property.objects.first()
-    if not prop:
-        raise NotFound(f"Property with identifier '{prop_id}' was not found.")
-    return prop
+    raise NotFound("A current canonical property UUID is required.")
 
 
 def get_admin_properties_queryset(status=None, property_type=None, search=None):

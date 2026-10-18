@@ -45,7 +45,9 @@ class TestVerificationStatusAPI:
         data = res.json()["data"]
         assert data["status"] == "pending"
 
-    def test_approved_status_when_user_is_verified(self, auth_client, user):
+    def test_legacy_verified_flag_alone_does_not_establish_identity_review(
+        self, auth_client, user
+    ):
         user.is_verified = True
         user.first_name = "كريم"
         user.last_name = "محمود"
@@ -54,7 +56,7 @@ class TestVerificationStatusAPI:
         res = auth_client.get(VERIFICATION_STATUS_URL)
         assert res.status_code == status.HTTP_200_OK
         data = res.json()["data"]
-        assert data["status"] == "approved"
+        assert data["status"] == "incomplete"
         assert "كريم" in data["full_name"]
 
     def test_rejected_status_returns_rejection_reason(self, auth_client, user):

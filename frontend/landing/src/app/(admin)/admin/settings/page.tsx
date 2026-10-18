@@ -84,44 +84,21 @@ export default function PlatformSettingsPage() {
   };
 
   const handleRemoveAdmin = async (id: string, name: string) => {
-    try {
-      await deleteStaff(id);
-      setAdmins((prev) => prev.filter((a) => a.id !== id));
-      showToast(`تم حذف المشرف ${name} وسحب صلاحياته بنجاح`, 'info');
-    } catch (err) {
-      console.error('Failed to delete staff:', err);
-      setAdmins((prev) => prev.filter((a) => a.id !== id));
-      showToast(`تم حذف المشرف ${name} بنجاح`, 'info');
-    }
+    const reason = window.prompt('Reason for revoking access:');
+    if (!reason?.trim()) return;
+    try { await deleteStaff(id, reason); setAdmins((previous) => previous.filter((item) => item.id !== id)); showToast('Access revoked.', 'success'); }
+    catch { showToast('Revocation was not confirmed. Refresh staff before retrying.', 'error'); }
   };
-
   const handleAddAdmin = async () => {
-    const newName = prompt('أدخل اسم المشرف الجديد:');
-    if (!newName || !newName.trim()) return;
-
-    const email = `staff_${Date.now()}@sukoon.com`;
-    const roleName = 'مراجع KYC';
-
+    const name = window.prompt('Staff name:');
+    const email = name?.trim() ? window.prompt('Actual staff email:') : null;
+    const reason = email?.trim() ? window.prompt('Reason for granting access:') : null;
+    if (!name?.trim() || !email?.trim() || !reason?.trim()) return;
     try {
-      await inviteStaff({
-        name: newName.trim(),
-        email,
-        role_name: roleName,
-      });
-    } catch (err) {
-      console.warn('Invite staff error:', err);
-    }
-
-    const created: AdminUserItem = {
-      id: `admin-${Date.now()}`,
-      name: newName.trim(),
-      email,
-      roleName,
-      timeAgo: 'الآن',
-      avatarColor: 'bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-300',
-    };
-    setAdmins((prev) => [...prev, created]);
-    showToast(`تمت إضافة المشرف ${newName} بنجاح`, 'success');
+      await inviteStaff({ name, email, role_name: 'kyc_reviewer', reason });
+      setAdmins((await fetchStaffList()).results);
+      showToast('Access saved. No invitation email was sent.', 'success');
+    } catch { showToast('The result was not confirmed. Refresh staff before retrying.', 'error'); }
   };
 
   return (
@@ -149,6 +126,7 @@ export default function PlatformSettingsPage() {
           </button>
         </div>
 
+        <p role="note">These stored dashboard preferences do not change identity requirements, authorization, or approved financial policies.</p>
         {/* Top Grid: Verification & Property Settings */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Verification Settings (6 cols) */}

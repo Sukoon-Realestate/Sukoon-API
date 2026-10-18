@@ -104,6 +104,8 @@ export interface KycMetrics {
 }
 
 export interface KycDetail {
+  canReview: boolean;
+  evidenceDigest: string;
   id: string;
   user_id: string;
   userName: string;
@@ -366,8 +368,8 @@ export interface FinancialSummary {
   };
   revenueBreakdown: {
     platformFees: { value: string; percent: number };
-    managedRentals: { value: string; percent: number };
-    kycFees: { value: string; percent: number };
+    subscriptions: { value: string; percent: number };
+    advertising: { value: string; percent: number };
   };
   sixMonthTrend: Array<{
     month: string;

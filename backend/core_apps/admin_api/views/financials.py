@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from core_apps.admin_api.permissions import IsAdminStaff
+from core_apps.admin_api.permissions import IsFinancialStaff
 from core_apps.admin_api.services.financials_service import (
     get_financial_summary,
     get_transactions_list,
@@ -17,7 +17,7 @@ class AdminFinancialSummaryAPIView(APIView):
     Returns financial KPIs, revenue breakdown, and six-month revenue trend.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsFinancialStaff]
 
     def get(self, request):
         data = get_financial_summary()
@@ -27,13 +27,13 @@ class AdminFinancialSummaryAPIView(APIView):
 class AdminTransactionListAPIView(APIView):
     """
     Returns paginated financial transactions list.
-    
+
     Query Params:
     - status: 'all' | 'paid' | 'pending' | 'refunded'
     - search: str
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsFinancialStaff]
     pagination_class = PageNumberPagination
 
     def get(self, request):
@@ -47,4 +47,6 @@ class AdminTransactionListAPIView(APIView):
         if page is not None:
             return paginator.get_paginated_response(page)
 
-        return Response({"results": txns, "count": len(txns)}, status=status.HTTP_200_OK)
+        return Response(
+            {"results": txns, "count": len(txns)}, status=status.HTTP_200_OK
+        )
