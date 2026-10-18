@@ -82,6 +82,16 @@ class PropertyCreateAPIView(generics.CreateAPIView):
             )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        payload = dict(serializer.validated_data)
+        if "rental_inventory" in payload:
+            # Validation assigns fresh server IDs. They describe the result,
+            # not the original command, and must not change its retry identity.
+            import json
+
+            inventory = request.data["rental_inventory"]
+            payload["rental_inventory"] = (
+                json.loads(inventory) if isinstance(inventory, str) else inventory
+            )
 
         def create_property():
             self.perform_create(serializer)
@@ -93,7 +103,7 @@ class PropertyCreateAPIView(generics.CreateAPIView):
             auth_claims=request.auth,
             operation="property.create",
             key=request_key,
-            payload=serializer.validated_data,
+            payload=payload,
             action=create_property,
         )
         return Response(
