@@ -54,7 +54,7 @@ from core_apps.properties.models import (
 )
 
 
-def company_api(methods, throttles=None):
+def company_api(methods, throttles=None, *, recovery_required=True):
     def decorate(fn):
         if throttles is not None:
             fn = throttle_classes(throttles)(fn)
@@ -66,7 +66,8 @@ def company_api(methods, throttles=None):
         def endpoint(request, *args, **kwargs):
             from core_apps.common.recovery import require_scope
 
-            require_scope("company_authority")
+            if recovery_required:
+                require_scope("company_authority")
             try:
                 return fn(request, *args, **kwargs)
             except IntegrityError:
@@ -101,19 +102,28 @@ def mutate(request, operation, authorize, execute, mapper, creating=False):
     return Response(data, status=status)
 
 
-@company_api(["GET"])
+@company_api(["GET"], recovery_required=False)
 def capabilities(request):
+    from core_apps.common.recovery import RecoveryRequired, scope_available
     from .services.company.staff import delivery_ready
 
+    # This response contains configuration only, never company/member records.
+    # Keep it readable while the authority fence blocks the protected routes.
+    available = scope_available("company_authority")
     return Response(
         {
-            "new_bookings": bool(getattr(settings, "COMPANY_HOUSING_ENABLED", False)),
-            "portfolio_creation": True,
-            "staff_provisioning": True,
-            "activation_email_delivery": delivery_ready(),
-            "account_contexts": True,
-            "assigned_approvals": True,
-            "internal_request_discussions": True,
+            "available": available,
+            "blocking_reasons": (
+                [] if available else [str(RecoveryRequired.default_detail)]
+            ),
+            "new_bookings": available
+            and bool(getattr(settings, "COMPANY_HOUSING_ENABLED", False)),
+            "portfolio_creation": available,
+            "staff_provisioning": available,
+            "activation_email_delivery": available and delivery_ready(),
+            "account_contexts": available,
+            "assigned_approvals": available,
+            "internal_request_discussions": available,
             "contracting": False,
             "payments": False,
         }
