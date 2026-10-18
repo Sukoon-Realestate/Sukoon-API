@@ -13,6 +13,7 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
     { label: dict.nav.features, id: SECTION_IDS.features },
     { label: dict.nav.howItWorks, id: SECTION_IDS.howItWorks },
     { label: dict.nav.why, id: SECTION_IDS.why },
+    { label: lang === "ar" ? "اشتراك تجريبي" : "Test plan", id: SECTION_IDS.testSubscription },
     { label: dict.nav.faq, id: SECTION_IDS.faq },
   ];
 

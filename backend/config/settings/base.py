@@ -276,6 +276,9 @@ PAYMOB_HMAC_SECRET = getenv("PAYMOB_HMAC_SECRET", "").strip()
 PAYMOB_INTEGRATION_ID = getenv("PAYMOB_INTEGRATION_ID", "").strip()
 PAYMOB_WEBHOOK_URL = getenv("PAYMOB_WEBHOOK_URL", "").strip()
 PAYMOB_RETURN_URL = getenv("PAYMOB_RETURN_URL", "").strip()
+PAYMOB_TEST_CHECKOUT_ENABLED = getenv(
+    "PAYMOB_TEST_CHECKOUT_ENABLED", "false"
+).lower() in ("true", "1", "yes")
 
 USE_IN_MEMORY_CHANNEL_LAYER = getenv(
     "USE_IN_MEMORY_CHANNEL_LAYER", "False"

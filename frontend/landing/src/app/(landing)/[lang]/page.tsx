@@ -9,6 +9,7 @@ import { WhySukoon } from "@/components/sections/WhySukoon";
 import { ProductFeatures } from "@/components/sections/ProductFeatures";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
+import { TestSubscription } from "@/components/sections/TestSubscription";
 import { InViewObserver } from "@/components/layout/InViewObserver";
 import { landingPageGraph, serializeJsonLd } from "@/lib/structuredData";
 
@@ -30,6 +31,7 @@ export default async function LandingPage({ params }: PageProps<"/[lang]">) {
         <ProductFeatures dict={dict} />
         <HowItWorks dict={dict} />
         <WhySukoon dict={dict} />
+        <TestSubscription lang={lang} />
         <Faq dict={dict} />
         <FinalCta dict={dict} />
       </main>

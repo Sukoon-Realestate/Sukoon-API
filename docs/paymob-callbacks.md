@@ -15,6 +15,7 @@ PAYMOB_HMAC_SECRET=<account HMAC secret>
 PAYMOB_INTEGRATION_ID=5991528
 PAYMOB_WEBHOOK_URL=https://api.sukoon.rent/api/v1/payments/paymob/webhook/
 PAYMOB_RETURN_URL=https://api.sukoon.rent/api/v1/payments/paymob/return/
+PAYMOB_TEST_CHECKOUT_ENABLED=true
 ```
 
 Deploy the backend and apply its migration with the server's environment:
@@ -50,10 +51,33 @@ The callback receiver requires the HMAC secret and integration ID; otherwise it
 returns 503. Other bad requests return 400, 403 or 415 as appropriate. The
 receiver accepts only POST and the return page accepts only GET.
 
+## Landing-page test subscription
+
+The Arabic and English landing pages include a test subscription card at
+`#test-subscription`. Its form posts to
+`/api/v1/payments/paymob/test-checkout/` and opens Paymob Unified Checkout.
+The frontend uses `NEXT_PUBLIC_API_URL` if set, otherwise `https://api.sukoon.rent`.
+No Paymob credentials are needed on the frontend. Native form navigation avoids
+requiring browser CORS access to the checkout endpoint.
+
+This is one **EGP 10** sandbox payment, not an automatically renewing subscription.
+It does not create an account subscription or grant benefits. The backend sets the
+price, currency, payment method and callback URLs; browser-provided overrides are
+ignored. Billing details are validated and sent to Paymob without being stored
+locally. Requests are throttled to five per minute per anonymous client IP.
+
+Set `PAYMOB_TEST_CHECKOUT_ENABLED=true` on the API service to enable this flow.
+It defaults to disabled and also requires test secret/public keys, an integration
+ID, HMAC secret and HTTPS callback URLs. Live credentials are rejected even if
+the enable flag remains set. Set the flag to `false` to disable test checkout.
+
+Deploy the backend (including the callback migration) and landing page before
+using the test form. Use Paymob test card data, never real card data, for this flow.
+
 ## Verification
 
 ```sh
-pipenv run pytest core_apps/common/test_paymob_callbacks.py --ds=config.settings.test
+pipenv run pytest core_apps/common/test_paymob_callbacks.py core_apps/common/test_paymob_checkout.py --ds=config.settings.test
 ```
 
 Tests cover signed callbacks, tampering, duplicate deliveries, separate state

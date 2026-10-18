@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="{% if arabic %}ar{% else %}en{% endif %}" dir="{% if arabic %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Sukoon · {% if arabic %}الدفع التجريبي{% else %}Test checkout{% endif %}</title>
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f4f7f5; color: #163b30; font: 17px/1.6 system-ui, sans-serif; }
+    main { max-width: 440px; margin: 24px; padding: 36px; background: white; border-radius: 20px; }
+    a { color: #163b30; }
+  </style>
+</head>
+<body><main>
+  <h1>{% if arabic %}تعذّر فتح الدفع التجريبي{% else %}Test checkout couldn’t open{% endif %}</h1>
+  <p>{% if invalid_details %}{% if arabic %}راجع الاسم والبريد الإلكتروني ورقم الموبايل المصري مع كود الدولة +20، وحاول مرة أخرى.{% else %}Check your name, email and Egyptian mobile number, including country code +20, then try again.{% endif %}{% else %}{% if arabic %}الدفع التجريبي غير متاح حاليًا. حاول مرة أخرى لاحقًا.{% else %}Test checkout is currently unavailable. Please try again later.{% endif %}{% endif %}</p>
+  <a href="{{ return_url }}">{% if arabic %}العودة إلى سكون{% else %}Return to Sukoon{% endif %}</a>
+</main></body>
+</html>
