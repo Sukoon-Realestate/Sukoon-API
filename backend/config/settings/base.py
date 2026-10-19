@@ -572,10 +572,5 @@ CELERY_BEAT_SCHEDULE["reconcile-reviews"] = {
     "schedule": 300.0,
 }
 
-# Recovery control and journal are outside the restored primary database.
-RECOVERY_CONTROL_FILE = getenv("RECOVERY_CONTROL_FILE", "")
-RECOVERY_ENVIRONMENT = getenv("RECOVERY_ENVIRONMENT", "")
-RECOVERY_JOURNAL_ADAPTER = getenv("RECOVERY_JOURNAL_ADAPTER", "")
-RECOVERY_JOURNAL_DSN = getenv("RECOVERY_JOURNAL_DSN", "")
-RECOVERY_LOCAL_JOURNAL = getenv("RECOVERY_LOCAL_JOURNAL", "")
+# Independent disaster recovery is deferred. Account-sensitive action assurance remains separate.
 SECURITY_ASSURANCE_PROVIDER = getenv("SECURITY_ASSURANCE_PROVIDER", "")

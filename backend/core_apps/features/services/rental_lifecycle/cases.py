@@ -79,6 +79,26 @@ def open_system_case(
             "effect": "escalation_only",
             "source": "existing_operational_fallback",
         }
+    from ..business_policies import current, snapshot
+
+    response_policy = current("D01")
+    if response_policy:
+        urgent = kind in {
+            "habitability",
+            "habitability_impact",
+            "access_failure",
+            "move_in_mismatch",
+        }
+        case_hours = response_policy.rules[
+            "urgent_case_hours" if urgent else "case_hours"
+        ]
+        deadline_policy = {
+            "version": response_policy.version,
+            "case_hours": case_hours,
+            "basis": "elapsed_hours",
+            "effect": "escalation_only",
+            "business_policy": snapshot(response_policy),
+        }
     if hold and hold.reconciliation_deadline:
         due_at = hold.reconciliation_deadline
         deadline_policy = {
@@ -166,13 +186,9 @@ def case_queryset(user):
         | Q(hold__actor=user)
     )
     from ..company.tenancy_access import visible, roles, PRIVATE_ONLY
-    from core_apps.common.recovery import scope_available
 
-    if scope_available("company_authority"):
-        corporate_ids = [
-            t.lease_id for t in visible(user) if roles(t, user) - PRIVATE_ONLY
-        ]
-        own = own | RentalOperationalCase.objects.filter(lease_id__in=corporate_ids)
+    corporate_ids = [t.lease_id for t in visible(user) if roles(t, user) - PRIVATE_ONLY]
+    own = own | RentalOperationalCase.objects.filter(lease_id__in=corporate_ids)
     if staff_role(user, ROLES):
         qs = RentalOperationalCase.objects.all()
         role = getattr(getattr(user, "staff_profile", None), "role_name", "")
@@ -239,10 +255,19 @@ def case_payload(item, user):
 
     operator = independent_case_operator(item, user)
     blocker = agreement_case_blocker(item)
+    from ..business_policies import current
+
+    can_review = bool(
+        current("D25")
+        and not item.baseline.get("review_pending")
+        and (item.status == "resolved" or item.due_at <= timezone.now())
+    )
     from ...models import RentalAuditEvent
 
     replies = RentalAuditEvent.objects.filter(
-        subject_kind=item._meta.model_name, subject_id=item.id, action="case.reply"
+        subject_kind=item._meta.model_name,
+        subject_id=item.id,
+        action__in=["case.reply", "case.review_requested"],
     ).order_by("created_at")
     return {
         "id": str(item.id),
@@ -281,7 +306,7 @@ def case_payload(item, user):
             + (["resolve"] if item.assigned_to_id == user.pk and not blocker else [])
             + (["link_remedy"] if item.team == "finance" else [])
             if operator
-            else ["reply"]
+            else ["reply"] + (["request_review"] if can_review else [])
         ),
         "blocking_reasons": [blocker] if blocker else [],
         "evidence_ids": [
@@ -336,7 +361,33 @@ def case_action(item, user, data):
             "The approved restriction requires a separate inspected clearance.",
             code="habitability_restricted",
         )
-    if action == "reply":
+    if action == "request_review":
+        from ..policy_registry import approved_policy
+        from ..business_policies import snapshot
+
+        policy = approved_policy("D25", "cases.request_review")
+        if item.baseline.get("review_pending") or (
+            item.status != "resolved" and item.due_at > timezone.now()
+        ):
+            raise RentalConflict(
+                "A review is already pending or the existing response target has not passed.",
+                code="review_not_due",
+            )
+        item.baseline = {
+            **item.baseline,
+            "review_pending": True,
+            "review_policy": snapshot(policy),
+        }
+        item.status = "reopened" if item.status == "resolved" else "under_review"
+        item.resolution_code = ""
+        item.resolution = ""
+        item.due_at = timezone.now() + timedelta(
+            hours=policy.rules["reassessment_hours"]
+        )
+        item.escalated_at = None
+        item.next_action = "An independent operator must review the original evidence and remaining canonical obligations."
+        audit(item, user, "case.review_requested", reason)
+    elif action == "reply":
         audit(item, user, "case.reply", reason)
     else:
         require_staff(user, ROLES)
@@ -469,6 +520,7 @@ def case_action(item, user, data):
             ):
                 raise RentalConflict("No executed payout supports this resolution.")
             item.status = "resolved"
+            item.baseline = {**item.baseline, "review_pending": False}
             item.resolution_code = data["resolution_code"]
             item.resolution = reason
         else:

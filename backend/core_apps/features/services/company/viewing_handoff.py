@@ -140,7 +140,6 @@ def filter_offers(query, request):
 
 
 def continuation(visit, user, decision, base):
-    from core_apps.common.recovery import scope_available
 
     result = {
         **base,
@@ -151,9 +150,6 @@ def continuation(visit, user, decision, base):
         "status": "company_review_required",
         "blocked_reason": "company_coordinator_required",
     }
-    if not scope_available("company_authority"):
-        result["blocked_reason"] = "recovery_required"
-        return result
     coordinator = CompanyMembership.objects.filter(
         company=visit.company, user=user, is_active=True, is_coordinator=True
     ).exists()

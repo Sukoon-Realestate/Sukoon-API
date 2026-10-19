@@ -24,9 +24,7 @@ def activate_inventory(lease):
         props = properties(lease.company_tenancy, lock=True)
     else:
         props = [Property.objects.select_for_update().get(pk=lease.property_id)]
-    from core_apps.common.recovery import require_scope
 
-    require_scope("inventory_commitments")
     from ..rental_lifecycle.habitability import assert_habitable
 
     for prop in props:

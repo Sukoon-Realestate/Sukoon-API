@@ -68,9 +68,7 @@ def can_read(item, user):
 
 
 def get(user, identity, *, lock=False):
-    from core_apps.common.recovery import require_scope
 
-    require_scope("company_authority")
     require_actor(user)
     item = get_object_or_404(CompanyContractPreparation, id=identity)
     if lock:
@@ -82,9 +80,7 @@ def get(user, identity, *, lock=False):
 
 
 def visible(user):
-    from core_apps.common.recovery import require_scope
 
-    require_scope("company_authority")
     require_actor(user)
     membership = Q(
         booking__request__company__memberships__user=user,

@@ -707,7 +707,9 @@ def test_frozen_participant_blocks_progression_and_security_epoch_invalidates_co
 
 
 @pytest.mark.django_db
-def test_quarantine_does_not_expose_new_company_records(cycle, settings):
+def test_missing_disaster_recovery_config_preserves_current_company_authority(
+    cycle, settings
+):
     item = create(cycle)
     settings.RECOVERY_TEST_BYPASS = False
     settings.RECOVERY_CONTROL_FILE = ""
@@ -717,15 +719,18 @@ def test_quarantine_does_not_expose_new_company_records(cycle, settings):
         f"company-contract-preparations/{item.id}/",
         f"companies/{cycle['company'].id}/mandates/",
     ]:
-        assert client.get(API + path).status_code == 503
+        assert client.get(API + path).status_code == 200
     assert (
         client.post(
             API + f"company-contract-preparations/{item.id}/withdraw/",
             command(expected_revision=item.revision),
             format="json",
         ).status_code
-        == 503
+        == 200
     )
+    assert authenticated(person("unrelated-policy-viewer")).get(
+        API + f"company-contract-preparations/{item.id}/"
+    ).status_code in {403, 404}
 
 
 @pytest.mark.django_db

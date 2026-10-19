@@ -6,7 +6,6 @@ from django.db import transaction
 from django.db.models import F, Q
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
-from core_apps.common.recovery import require_scope
 from core_apps.properties.filters import PropertyFilter
 from core_apps.notifications.services import NotificationService
 from ..models import SearchAlert
@@ -17,7 +16,6 @@ from .planning_parts.districts import filter_districts
 
 
 def record_search_matches(limit=100):
-    generation = require_scope("notifications")
     now = timezone.now()
     due = (
         SearchAlert.objects.filter(
@@ -69,7 +67,6 @@ def record_search_matches(limit=100):
             except ValidationError:
                 alert.matching_status = "criteria_need_review"
                 latest = None
-            require_scope("notifications", generation)
             if latest:
                 key = hashlib.sha256(
                     f"{alert.id}:{alert.revision}:{latest.id}:{latest.updated_at.isoformat()}".encode()

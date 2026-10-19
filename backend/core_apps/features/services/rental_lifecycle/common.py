@@ -61,8 +61,17 @@ def lifecycle_policy(capability=None):
         if version
         else None
     )
-    rules = policy.lifecycle_rules if policy else {}
+    rules = dict(policy.lifecycle_rules) if policy else {}
     validate_lifecycle_rules(rules)
+    from ..business_policies import current, snapshot
+
+    hold_policy = current("D17")
+    if hold_policy:
+        from ..business_policy_catalog import validate_rules
+
+        validate_rules("D17", hold_policy.rules)
+        rules.update(hold_policy.rules)
+        rules["business_policies"] = {"D17": snapshot(hold_policy)}
     if capability and rules.get(capability) is not True:
         raise RentalConflict(
             "This rental capability is not enabled.", code="capability_unavailable"

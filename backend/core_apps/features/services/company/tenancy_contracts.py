@@ -26,11 +26,9 @@ from . import tenancy_access as access, contract_access, contract_snapshot
 
 @transaction.atomic
 def verify_mandate(user, identity, data):
-    from core_apps.common.recovery import require_scope
     from core_apps.users.models import User
     from core_apps.admin_api.models import StaffProfile
 
-    require_scope("company_authority")
     user = User.objects.select_for_update(no_key=True).get(pk=user.pk)
     StaffProfile.objects.select_for_update().filter(user=user).first()
     if user.sensitive_actions_frozen:
@@ -145,6 +143,7 @@ def create(user, identity, data):
     properties = list(Property.objects.filter(id__in=props).order_by("pkid"))
     policy = ensure_policy()
     terms = {
+        "business_policies": booking.snapshot.get("business_policies", {}),
         "renter_kind": "company",
         "renter_company_id": snapshot["company_id"],
         "renter_company_name": snapshot["company_name"],
@@ -348,9 +347,7 @@ def signing_session(item, user, data):
         document_hash=lease.document_hash,
     ).exists():
         raise RentalConflict("Resume or reconcile the original signing session.")
-    from core_apps.common.recovery import require_scope
 
-    require_scope("provider_outbound")
     hosted = get_rental_provider().create_signing_session(
         lease.id, user.id, data["request_key"]
     )

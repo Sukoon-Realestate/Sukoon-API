@@ -97,12 +97,10 @@ def expire_rental_sources_and_holds(self):
         ).values_list("property_id", flat=True)
     )
     expired_holds, expired_agreements = 0, 0
-    from core_apps.common.recovery import scope_available
 
-    if scope_available("company_authority"):
-        from ..services.company.tenancy_expiry import expire_due
+    from ..services.company.tenancy_expiry import expire_due
 
-        expired_agreements += expire_due(now)
+    expired_agreements += expire_due(now)
     for root in sorted(roots):
         with transaction.atomic():
             prop = Property.objects.select_for_update().get(pk=root)
@@ -161,11 +159,8 @@ def run_rental_billing_cycle(self):
             # Corporate changes lock company -> all properties -> lease before
             # changing scheduled periods. Billing must use the same order.
             if candidate.lease.renter_company_id:
-                from core_apps.common.recovery import scope_available
                 from ..services.rental_lifecycle.locks import lock_financial_lease
 
-                if not scope_available("company_authority"):
-                    continue
                 lease = lock_financial_lease(candidate.lease)
             else:
                 lease = candidate.lease

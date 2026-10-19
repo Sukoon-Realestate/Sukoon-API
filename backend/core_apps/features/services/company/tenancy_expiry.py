@@ -56,9 +56,7 @@ def expire(item, now=None):
 
 def expire_due(now=None):
     now = now or timezone.now()
-    from core_apps.common.recovery import require_scope
 
-    require_scope("company_authority")
     count = 0
     for item in CompanyTenancy.objects.filter(
         lease__hold_expires_at__lte=now,

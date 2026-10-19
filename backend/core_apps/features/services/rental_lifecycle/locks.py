@@ -6,9 +6,7 @@ from ...models import Lease
 
 def lock_financial_lease(lease):
     if lease.renter_company_id:
-        from core_apps.common.recovery import require_scope
 
-        require_scope("company_authority")
         from ..company.tenancy_access import lock_lease
 
         return lock_lease(lease)

@@ -29,6 +29,7 @@ class PolicyDecision(TimeStampedModel):
     historical_treatment = models.TextField(blank=True, default="")
     audit_reason = models.TextField(blank=True, default="")
     disclosure = models.TextField(blank=True, default="")
+    presentation = models.JSONField(default=dict, blank=True)
     revision = models.PositiveIntegerField(default=1)
 
     class Meta:
@@ -45,11 +46,11 @@ class PolicyDecision(TimeStampedModel):
             raise ValidationError("Unsupported policy decision status.")
 
         if (
-            not re.fullmatch(r"D(?:0[1-9]|[12][0-9]|3[0-3])", self.code)
+            not re.fullmatch(r"D(?:0[1-9]|[12][0-9]|3[0-5])", self.code)
             or not self.version.strip()
         ):
             raise ValidationError(
-                "Use a stable D01-D33 decision and a nonempty version."
+                "Use a stable D01-D35 decision and a nonempty version."
             )
         if not isinstance(self.scope, list) or any(
             not isinstance(item, str) or not item for item in self.scope
@@ -107,6 +108,7 @@ class PolicyDecision(TimeStampedModel):
                     "review_at",
                     "rules",
                     "disclosure",
+                    "presentation",
                     "evidence_requirements",
                     "actions_and_consequences",
                     "historical_treatment",
@@ -124,3 +126,17 @@ class PolicyDecision(TimeStampedModel):
                         "Publish a new policy version; approved evidence is immutable."
                     )
         super().save(*args, **kwargs)
+
+
+class PolicyDecisionHead(models.Model):
+    """Serialize publication of an existing policy family; never store rules here."""
+
+    code = models.CharField(max_length=4, primary_key=True)
+    revision = models.PositiveIntegerField(default=0)
+    current = models.ForeignKey(
+        PolicyDecision,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="publication_heads",
+    )

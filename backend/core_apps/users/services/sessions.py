@@ -9,12 +9,7 @@ from ..models import User, AuthSession, SecurityEvent
 
 
 def validate_session(user, claims):
-    from core_apps.common.recovery import security_epoch
 
-    if claims.get("recovery_epoch", "unconfigured") != security_epoch():
-        raise AuthenticationFailed(
-            "Session requires recovery verification.", code="session_revoked"
-        )
     if not user.is_active or claims.get("security_epoch", 0) != user.security_epoch:
         raise AuthenticationFailed(
             "Session revoked. Sign in again.", code="session_revoked"
@@ -54,9 +49,7 @@ def issue_refresh(user):
         security_epoch=current.security_epoch,
         expires_at=datetime.fromtimestamp(refresh["exp"], tz=dt_timezone.utc),
     )
-    from core_apps.common.recovery import security_epoch
 
-    refresh["recovery_epoch"] = security_epoch()
     refresh["security_epoch"] = current.security_epoch
     refresh["session_id"] = str(session.id)
     return refresh

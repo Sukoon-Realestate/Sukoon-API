@@ -60,7 +60,6 @@ def mock_discovery():
 
 
 def ready_services(enabled):
-    from core_apps.common.recovery import scope_available
     from config.advanced_housing import (
         PROVIDER_SERVICES,
         mock_mode_available,
@@ -74,12 +73,6 @@ def ready_services(enabled):
         or mock_mode_available()
         or (service == "asset_assisted_analysis" and manual_review_available())
     ]
-    if not scope_available("company_authority"):
-        result = [
-            service
-            for service in result
-            if service not in {"company_housing", "residential_portfolios"}
-        ]
     from ...providers import fake_provider_available
 
     if not fake_provider_available() and "student_verification" in result:

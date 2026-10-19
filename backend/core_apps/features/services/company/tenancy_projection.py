@@ -14,6 +14,9 @@ from . import tenancy_access as access
 
 
 def payload(item, user):
+    from ..business_policies import public_bound
+    from django.utils.translation import get_language
+
     roles = access.roles(item, user)
     commercial = bool(roles - access.PRIVATE_ONLY)
     lease = item.lease
@@ -291,6 +294,13 @@ def payload(item, user):
         "ends_on_exclusive": str(lease.end_date),
         "terms_digest": item.terms_digest,
         "document_hash": lease.document_hash if commercial else "",
+        "business_policies": (
+            public_bound(
+                lease.terms, "ar" if (get_language() or "").startswith("ar") else "en"
+            )
+            if commercial
+            else []
+        ),
         "terms": lease.terms if commercial else {},
         "reviewed_roles": list(item.contract_reviews) if commercial else [],
         "actions": allowed,

@@ -7,7 +7,6 @@ from django.core import signing
 from django.http import HttpResponse, Http404
 from django.urls import reverse
 from django.utils import timezone
-from core_apps.common.recovery import require_scope, security_epoch
 from core_apps.users.models import User, AuthSession
 from ..models import (
     RentalDocument,
@@ -27,7 +26,6 @@ def fail(document, reason):
 
 
 def generate(document):
-    require_scope("private_artifacts")
     lease = document.lease
     payload = {
         "type": document.document_type,
@@ -162,7 +160,6 @@ def generate(document):
 
 
 def download_url(request, document):
-    generation = require_scope("private_artifacts")
     token = signing.dumps(
         {
             "document": str(document.id),
@@ -170,8 +167,6 @@ def download_url(request, document):
             "epoch": request.user.security_epoch,
             "revision": document.revision,
             "digest": document.sha256,
-            "generation": generation,
-            "recovery_epoch": security_epoch(),
             "session": (request.auth or {}).get("session_id"),
         },
         salt=SALT,
@@ -189,9 +184,6 @@ def content_response(document_id, token):
     try:
         claims = signing.loads(token, salt=SALT, max_age=300)
         if claims["document"] != str(document_id):
-            raise ValueError()
-        require_scope("private_artifacts", generation=claims["generation"])
-        if claims["recovery_epoch"] != security_epoch():
             raise ValueError()
         user = User.objects.get(
             id=claims["user"], is_active=True, security_epoch=claims["epoch"]
@@ -214,7 +206,6 @@ def content_response(document_id, token):
             sha256=claims["digest"],
         )
         if document.lease.renter_company_id:
-            require_scope("company_authority")
             from .company.tenancy_access import commercial_read
 
             if not commercial_read(document.lease, user):

@@ -54,7 +54,7 @@ from core_apps.properties.models import (
 )
 
 
-def company_api(methods, throttles=None, *, recovery_required=True):
+def company_api(methods, throttles=None):
     def decorate(fn):
         if throttles is not None:
             fn = throttle_classes(throttles)(fn)
@@ -64,10 +64,7 @@ def company_api(methods, throttles=None, *, recovery_required=True):
         @renderer_classes([FeatureJsonRenderer])
         @wraps(fn)
         def endpoint(request, *args, **kwargs):
-            from core_apps.common.recovery import require_scope
 
-            if recovery_required:
-                require_scope("company_authority")
             try:
                 return fn(request, *args, **kwargs)
             except IntegrityError:
@@ -102,21 +99,18 @@ def mutate(request, operation, authorize, execute, mapper, creating=False):
     return Response(data, status=status)
 
 
-@company_api(["GET"], recovery_required=False)
+@company_api(["GET"])
 def capabilities(request):
-    from core_apps.common.recovery import RecoveryRequired, scope_available
     from .services.company.staff import delivery_ready
     from .providers import fake_provider_available
 
     # This response contains configuration only, never company/member records.
-    # Keep it readable while the authority fence blocks the protected routes.
-    available = scope_available("company_authority")
+    # Actor and resource authority are checked by each protected operation.
+    available = True
     return Response(
         {
             "available": available,
-            "blocking_reasons": (
-                [] if available else [str(RecoveryRequired.default_detail)]
-            ),
+            "blocking_reasons": [],
             "new_bookings": available
             and bool(getattr(settings, "COMPANY_HOUSING_ENABLED", False)),
             "portfolio_creation": available,
@@ -130,9 +124,7 @@ def capabilities(request):
             "contracting": available,
             "tenancy_servicing": available,
             "provider_mode": "mock" if fake_provider_available() else "unavailable",
-            "payments": available
-            and fake_provider_available()
-            and scope_available("provider_outbound"),
+            "payments": fake_provider_available(),
         }
     )
 

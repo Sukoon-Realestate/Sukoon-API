@@ -217,6 +217,6 @@ from .advanced_execution_models import (
     AdvancedExecutionStep,
 )
 
-from .model_parts.policy_decisions import PolicyDecision
+from .model_parts.policy_decisions import PolicyDecision, PolicyDecisionHead
 
 from .model_parts.habitability import HabitabilityRestriction

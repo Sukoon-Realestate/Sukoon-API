@@ -62,5 +62,3 @@ cloudinary.config(
 
 # Explicit isolated mock finance tests; security tests disable this bypass.
 SECURITY_TEST_BYPASS = True
-
-RECOVERY_TEST_BYPASS = True

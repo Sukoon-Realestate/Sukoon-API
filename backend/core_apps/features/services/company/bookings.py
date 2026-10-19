@@ -211,7 +211,10 @@ def select_offer(user, request_id, data):
             "The supported commercial policy must be configured before quoting.",
             code="policy_not_configured",
         )
+    from ..business_policies import freeze
+
     snapshot.update(
+        business_policies=freeze(["D02", "D05", "D08", "D09", "D17", "D23", "D25"]),
         source_viewing=request.source_viewing_snapshot,
         company_id=str(request.company.id),
         company_name=request.company.name,
@@ -567,6 +570,9 @@ def withdraw_item(user, item_id, data):
 
 
 def item_payload(item):
+    from ..business_policies import public_bound
+    from django.utils.translation import get_language
+
     hold = item.hold
     status = item.status
     if (
@@ -597,6 +603,9 @@ def item_payload(item):
         "decision_reason": item.approvals.order_by("-created_at")
         .values_list("reason", flat=True)
         .first(),
+        "business_policies": public_bound(
+            item.snapshot, "ar" if (get_language() or "").startswith("ar") else "en"
+        ),
         "snapshot": item.snapshot,
         "snapshot_digest": item.snapshot_digest,
         "quote_expires_at": item.quote_expires_at.isoformat(),

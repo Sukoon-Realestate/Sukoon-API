@@ -112,10 +112,17 @@ def test_stale_worker_persists_external_fact_but_cannot_apply_local_success(reco
     assert item.provider_reference == "synthetic-external-001"
 
 
-def test_recovery_epoch_invalidates_restored_session(recovery, user):
+def test_deferred_global_epoch_does_not_replace_account_session_authority(
+    recovery, user
+):
     path, state = recovery
     token = issue_refresh(user)
-    path.write_text(json.dumps({**state, "security_epoch": "s2"}))
+    path.write_text(
+        json.dumps({**state, "security_epoch": "s2", "mode": "quarantined"})
+    )
+    validate_session(user, token)
+    user.security_epoch += 1
+    user.save(update_fields=["security_epoch"])
     with pytest.raises(AuthenticationFailed):
         validate_session(user, token)
 
@@ -131,7 +138,9 @@ def test_journal_corruption_fails_closed(recovery):
         reconcile_instruction(item)
 
 
-def test_restore_epoch_invalidates_password_links_and_cached_otp(recovery, user):
+def test_account_epoch_invalidates_links_and_otp_without_global_recovery(
+    recovery, user
+):
     from core_apps.users.services.recovery_tokens import recovery_token_generator
     from core_apps.users.services.otp_service import (
         create_and_send_otp,
@@ -142,14 +151,20 @@ def test_restore_epoch_invalidates_password_links_and_cached_otp(recovery, user)
     path, state = recovery
     link = recovery_token_generator.make_token(user)
     code = create_and_send_otp(user)
+    path.write_text(
+        json.dumps({**state, "security_epoch": "s2", "mode": "quarantined"})
+    )
     assert recovery_token_generator.check_token(user, link)
-    path.write_text(json.dumps({**state, "security_epoch": "s2"}))
+    user.security_epoch += 1
+    user.save(update_fields=["security_epoch"])
     assert not recovery_token_generator.check_token(user, link)
     with pytest.raises(ValidationError):
         verify_email_otp(user.email, code)
 
 
-def test_verified_callback_during_quarantine_is_rejected_without_ack(recovery, user):
+def test_orphan_callback_is_rejected_by_domain_without_recovery_dependency(
+    recovery, user
+):
     from core_apps.features.providers import sign_fake_webhook
     from core_apps.features.models import ProviderWebhookEvent
     from rest_framework.test import APIClient
@@ -170,5 +185,5 @@ def test_verified_callback_during_quarantine_is_rejected_without_ack(recovery, u
         format="json",
         HTTP_X_RENTAL_SIGNATURE=sign_fake_webhook(body),
     )
-    assert response.status_code == 503
+    assert response.status_code == 404
     assert not ProviderWebhookEvent.objects.exists()

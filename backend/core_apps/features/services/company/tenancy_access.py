@@ -4,7 +4,6 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, PermissionDenied
-from core_apps.common.recovery import require_scope
 from core_apps.properties.models import Property
 from core_apps.users.models import User
 from ...models import Company, CompanyMembership, CompanyTenancy, Lease
@@ -121,7 +120,6 @@ def roles(item, user):
 
 
 def get(user, identity, *, lock=False):
-    require_scope("company_authority")
     require_actor(user)
     item = get_object_or_404(
         CompanyTenancy.objects.select_related("lease"), id=identity
@@ -212,7 +210,6 @@ def require_delegate(item, user, kind):
 def commercial_read(lease, user):
     if not lease.renter_company_id:
         return user.pk in {lease.owner_id, lease.tenant_id}
-    require_scope("company_authority")
     return bool(roles(lease.company_tenancy, user) - PRIVATE_ONLY)
 
 
@@ -220,7 +217,6 @@ def can_pay(lease, user):
     if not lease.renter_company_id:
         return user.pk == lease.tenant_id
     try:
-        require_scope("company_authority")
         require_delegate(lease.company_tenancy, user, "pay")
         return True
     except (PermissionDenied, RentalConflict):

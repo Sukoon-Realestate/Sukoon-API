@@ -6,7 +6,6 @@ from rest_framework.exceptions import NotFound, PermissionDenied, ValidationErro
 from core_apps.features.company_models import Company, CompanyMembership
 from core_apps.features.planning_models import GroupProcess
 from ..models import PropertyVisit
-from core_apps.common.recovery import scope_available
 
 
 def group_process(visit):
@@ -22,8 +21,7 @@ def participant(visit, user):
         return False
     if visit.company_id:
         return (
-            scope_available("company_authority")
-            and visit.tenant_id == user.pk
+            visit.tenant_id == user.pk
             and CompanyMembership.objects.filter(
                 company_id=visit.company_id, user=user, is_active=True
             ).exists()
@@ -53,7 +51,6 @@ def can_read(visit, user):
         return True
     return bool(
         visit.company_id
-        and scope_available("company_authority")
         and CompanyMembership.objects.filter(
             company_id=visit.company_id, user=user, is_active=True, is_coordinator=True
         ).exists()
@@ -89,11 +86,7 @@ def for_user(user):
         )
         | Q(groupprocess__in=processes)
     ).distinct()
-    return (
-        result
-        if scope_available("company_authority")
-        else result.filter(company__isnull=True)
-    )
+    return result
 
 
 def prepare_context(actor, raw):

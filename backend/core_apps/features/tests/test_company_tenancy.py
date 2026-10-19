@@ -889,9 +889,9 @@ def test_company_new_business_off_keeps_existing_obligation_servicing(
         authenticated(cycle["coordinator"])
         .get(API + f"company-tenancies/{item.id}/")
         .status_code
-        == 503
+        == 200
     )
-    assert act(item, cycle["coordinator"], "reconcile").status_code == 503
+    assert act(item, cycle["coordinator"], "reconcile").status_code == 200
 
 
 @pytest.mark.django_db(transaction=True)

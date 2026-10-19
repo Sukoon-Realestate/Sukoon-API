@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<p>Publish only a supported rule change. Current contracts, financial records and accepted case/hold snapshots retain their original terms. This action does not create a provider transaction or another person's consent.</p>
+<form method="get">
+  <label for="policy-family">Policy family</label>
+  <select name="code" id="policy-family">
+    {% for code, title in policy_choices %}
+      <option value="{{ code }}" {% if code == selected_code %}selected{% endif %}>{{ code }} — {{ title }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Review this policy</button>
+</form>
+<h2>{{ definition.title.0 }}</h2>
+<p>{{ definition.description.0 }}</p>
+<p>Current version: {{ current.version|default:"Not published" }}. Reviewed publication revision: {{ definition.head_revision }}.</p>
+<p>Implemented consumer: {{ definition.consumer }}</p>
+<p>Supported numeric ranges: {{ definition.bounds }}. Supported choices: {{ definition.choices }}.</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Publish this new version</button>
+</form>
+{% endblock %}

@@ -1,4 +1,11 @@
-"""Independent recovery fence and an explicitly LOCAL drill journal.
+"""DEFERRED: independent recovery prototype; no active application consumers.
+
+The product owner removed the independent journal/reopening dependency on
+2026-10-19. This module is retained only for historical isolated drill evidence.
+Ordinary account revocation and command/provider identities remain in their
+own domain services. Do not import this prototype into runtime paths.
+
+Independent recovery fence and an explicitly LOCAL drill journal.
 
 The local fsync journal is suitable for an isolated primary-database-loss drill,
 not an approved independent production failure domain. Production has no default

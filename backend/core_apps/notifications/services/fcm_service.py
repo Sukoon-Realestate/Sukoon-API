@@ -171,12 +171,7 @@ class FCMService:
         """
         Sends a single push notification to a device token using FCM v1 HTTP API.
         """
-        from core_apps.common.recovery import require_scope, RecoveryRequired
 
-        try:
-            require_scope("notifications")
-        except RecoveryRequired:
-            return False
         creds = credentials or cls.get_credentials()
         proj_id = project_id or cls.get_project_id()
 

@@ -1,6 +1,7 @@
 """Additive settlement corrections under the existing funded-settlement rules."""
 
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
 from core_apps.users.models import User
 from ...models import FinalSettlement, SettlementAdjustment
@@ -43,6 +44,9 @@ def propose(item, user, data):
     original = get_object_or_404(
         FinalSettlement, lease=item.lease, execution_status="executed"
     )
+    from ..business_policies import bound
+
+    correction_policy = bound(item.lease.terms, "D09")
     lines = closure.settlement_lines(item.lease, data["lines"])
     if not lines:
         raise RentalConflict("Describe at least one supported additive correction.")
@@ -63,10 +67,27 @@ def propose(item, user, data):
             "lines": lines,
             "plan": plan,
             "financial_snapshot": financial_snapshot(item.lease),
+            "correction_policy": correction_policy,
         },
         required,
         data["reason"],
     )
+    if (
+        correction_policy
+        and original.executed_at
+        and (timezone.now() - original.executed_at).total_seconds()
+        > correction_policy["rules"]["late_review_days"] * 86400
+    ):
+        from ..rental_lifecycle.cases import open_system_case
+
+        open_system_case(
+            kind="company_tenancy_review",
+            source_key=f"late-company-adjustment:{item.id}:{item.changes.filter(kind='settlement_adjustment').latest('pkid').id}",
+            lease=item.lease,
+            actor=user,
+            reason="The additive correction was requested after the accepted additional-review target.",
+            next_action="Review the correction with the independent financial reviewer. Elapsed time does not erase the claim or execute a financial adjustment.",
+        )
     item.lease.financial_closure_status = "reopened_for_adjustment"
     item.lease.save()
     closure.close_budget(item)

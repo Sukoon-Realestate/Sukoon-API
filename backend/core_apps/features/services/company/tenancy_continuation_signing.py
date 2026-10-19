@@ -113,9 +113,7 @@ def sign(item, user, data):
 
 @transaction.atomic
 def complete(session):
-    from core_apps.common.recovery import require_scope
 
-    require_scope("company_authority")
     change = CompanyTenancyChange.objects.get(rental_change=session.change)
     item = change.tenancy
     item.lease = access.lock_lease(item.lease)

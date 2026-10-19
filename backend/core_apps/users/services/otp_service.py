@@ -80,8 +80,6 @@ def create_and_send_otp(user: Any) -> str:
     if not email:
         raise ValidationError({"email": _("User must have a valid email address.")})
 
-    from core_apps.common.recovery import security_epoch
-
     user = get_user_model().objects.get(pk=user.pk)
     otp = generate_otp()
     cache_key = f"otp:{email}"
@@ -89,7 +87,6 @@ def create_and_send_otp(user: Any) -> str:
         "otp": otp,
         "attempts": 0,
         "security_epoch": user.security_epoch,
-        "recovery_epoch": security_epoch(),
         "user_id": str(getattr(user, "id", "")),
     }
 
@@ -156,14 +153,10 @@ def verify_email_otp(email: str, otp: str) -> Any:
         raise ValidationError({"email": _("User with this email does not exist.")})
 
     from django.db import transaction
-    from core_apps.common.recovery import security_epoch
 
     with transaction.atomic():
         user = User.objects.select_for_update().get(pk=user.pk)
-        if (
-            record.get("security_epoch", 0) != user.security_epoch
-            or record.get("recovery_epoch", "unconfigured") != security_epoch()
-        ):
+        if record.get("security_epoch", 0) != user.security_epoch:
             cache.delete(cache_key)
             raise ValidationError(
                 {"otp": _("Request a new verification code after account recovery.")}

@@ -96,15 +96,14 @@ def test_empty_optional_statement_bounds_remain_unknown_not_invalid_dates(phase6
 
 
 @pytest.mark.parametrize(
-    "boundary", ["expiry", "logout", "recovery_epoch", "quarantine"]
+    "boundary", ["expiry", "logout", "account_epoch", "inactive_account"]
 )
-def test_issued_private_link_rechecks_revocation_and_recovery(
+def test_issued_private_link_rechecks_expiry_revocation_and_account_authority(
     phase6_lease, monkeypatch, boundary
 ):
     import time
     from datetime import timedelta
     from django.utils import timezone
-    from core_apps.common.recovery import RecoveryRequired
     from core_apps.users.models import AuthSession
     from core_apps.features.services import private_rental_documents as documents
 
@@ -130,14 +129,10 @@ def test_issued_private_link_rechecks_revocation_and_recovery(
         monkeypatch.setattr("django.core.signing.time.time", lambda: later)
     elif boundary == "logout":
         AuthSession.objects.filter(pk=session.pk).update(revoked_at=timezone.now())
-    elif boundary == "recovery_epoch":
-        monkeypatch.setattr(documents, "security_epoch", lambda: "new-recovery-epoch")
+    elif boundary == "account_epoch":
+        tenant.security_epoch += 1
+        tenant.save(update_fields=["security_epoch"])
     else:
-
-        def quarantined(*args, **kwargs):
-            raise RecoveryRequired()
-
-        monkeypatch.setattr(documents, "require_scope", quarantined)
-    assert APIClient().get(target).status_code == (
-        503 if boundary == "quarantine" else 404
-    )
+        tenant.is_active = False
+        tenant.save(update_fields=["is_active"])
+    assert APIClient().get(target).status_code == 404

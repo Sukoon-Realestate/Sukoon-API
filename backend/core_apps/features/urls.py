@@ -2,6 +2,7 @@ from django.urls import include, path
 from .rental_phase6_views_parts.lease_reviews import document_content
 
 from . import views
+from . import business_policy_views
 from .continuation_views import continuation_items
 from . import rental_phase2_views as views_phase2
 from . import rental_phase3_views as views_phase3
@@ -14,6 +15,21 @@ from .models import RentalChange
 from .rental_lifecycle_views import habitability
 
 urlpatterns = [
+    path(
+        "business-policies/",
+        business_policy_views.current_policies,
+        name="business-policies",
+    ),
+    path(
+        "business-policies/<str:code>/versions/<str:version>/",
+        business_policy_views.policy_version,
+        name="business-policy-version",
+    ),
+    path(
+        "operator/business-policies/",
+        business_policy_views.administer_policies,
+        name="business-policy-administration",
+    ),
     path(
         "rental-documents/<uuid:document_id>/content/",
         document_content,

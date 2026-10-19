@@ -15,9 +15,7 @@ class TicketAttachmentAPIView(APIView):
     renderer_classes = [GenericJsonRenderer]
 
     def get(self, request, id):
-        from core_apps.common.recovery import require_scope
 
-        require_scope("private_artifacts")
         if not request.user.is_active:
             raise PermissionDenied()
         attachment = get_object_or_404(

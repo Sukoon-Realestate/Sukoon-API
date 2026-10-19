@@ -153,9 +153,11 @@ def test_employee_cannot_book_on_company_behalf_and_revoked_representative_loses
     )
 
 
+@pytest.mark.parametrize("company_enabled", [True, False])
 def test_company_proceed_cannot_become_a_personal_invitation(
-    rental_participants, visit
+    rental_participants, visit, settings, company_enabled
 ):
+    settings.COMPANY_HOUSING_ENABLED = company_enabled
     owner, actor, other, prop, _ = rental_participants
     company, member = company_for(actor)
     visit.company, visit.context_kind = company, "company"
@@ -163,9 +165,8 @@ def test_company_proceed_cannot_become_a_personal_invitation(
     response = authenticated(actor).post(path(visit), body(visit), format="json")
     assert response.status_code == 200
     visit.refresh_from_db()
-    assert (
-        response.data["rental_continuation"]["blocked_reason"]
-        == "corporate_contract_policy_required"
+    assert response.data["rental_continuation"]["blocked_reason"] == (
+        None if company_enabled else "company_new_business_disabled"
     )
     denied = authenticated(owner).post(
         "/api/v1/features/v1/tenancy-invitations/", invite_body(visit), format="json"

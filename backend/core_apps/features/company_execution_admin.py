@@ -46,16 +46,8 @@ class CompanyExecutionAdmin(FinancialHistoryAdmin):
         ] + super().get_urls()
 
     def review(self, request, object_id):
-        from core_apps.common.recovery import require_scope, RecoveryRequired
         from django.http import HttpResponse
 
-        try:
-            require_scope("company_authority")
-        except RecoveryRequired:
-            return HttpResponse(
-                "Company authority is awaiting recovery verification. No review was recorded.",
-                status=503,
-            )
         item = get_object_or_404(CompanyMandate, pk=object_id)
         roles = {"kyc_reviewer"} if item.kind == "sign" else {"financial_approver"}
         if not staff_role(request.user, roles):

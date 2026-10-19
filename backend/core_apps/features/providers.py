@@ -84,9 +84,7 @@ class FakeRentalProvider:
         return b"EICAR-STANDARD-ANTIVIRUS-TEST-FILE" not in content
 
     def create_private_download(self, evidence_id, expires_at):
-        from core_apps.common.recovery import require_scope
 
-        require_scope("private_artifacts")
         token = hmac.new(
             settings.RENTAL_PROVIDER_WEBHOOK_SECRET.encode(),
             f"evidence:{evidence_id}:{expires_at.isoformat()}".encode(),

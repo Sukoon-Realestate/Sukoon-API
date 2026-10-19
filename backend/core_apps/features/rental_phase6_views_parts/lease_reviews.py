@@ -81,9 +81,7 @@ def lease_documents(request, lease_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def document_download(request, document_id):
-    from core_apps.common.recovery import require_scope
 
-    require_scope("private_artifacts")
     document = get_object_or_404(
         RentalDocument.objects.select_related("lease"), id=document_id
     )
@@ -145,10 +143,8 @@ def rental_statement_create(request):
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])
-    from core_apps.common.recovery import require_scope
     from core_apps.users.services.sensitive_actions import consume
 
-    require_scope("private_artifacts")
     if request.data.get("expected_revision") != lease.revision:
         raise RentalConflict(
             "Reload the current lease before exporting.", code="stale_revision"

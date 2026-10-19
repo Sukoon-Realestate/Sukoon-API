@@ -139,9 +139,7 @@ def create_structured_signing_session(request, lease_id):
             document_hash=lease.document_hash,
         ).exists():
             raise RentalConflict("You already signed this agreement document.")
-        from core_apps.common.recovery import require_scope
 
-        require_scope("provider_outbound")
         from ..services.rental_lifecycle.habitability import assert_habitable
 
         assert_habitable(lease.property, lease.offer_snapshot)

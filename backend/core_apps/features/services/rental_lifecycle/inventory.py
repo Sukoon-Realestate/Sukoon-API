@@ -202,9 +202,7 @@ def expire_property_holds(prop, now=None):
 def assert_available(
     prop, snapshot, starts_on, ends_on, *, exclude_lease=None, exclude_hold=None
 ):
-    from core_apps.common.recovery import require_scope
 
-    require_scope("inventory_commitments")
     from .habitability import assert_habitable
 
     assert_habitable(prop, snapshot)

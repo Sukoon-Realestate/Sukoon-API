@@ -159,9 +159,7 @@ def rental_evidence_detail(request, evidence_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def rental_evidence_download(request, evidence_id):
-    from core_apps.common.recovery import require_scope
 
-    require_scope("private_artifacts")
     item = _evidence(request, evidence_id)
     if item.malware_status != RentalEvidence.MalwareStatus.SAFE:
         raise RentalConflict("Evidence is not ready for download.")

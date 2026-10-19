@@ -47,10 +47,7 @@ def process_rental_closure(self):
 
             generated += int(generate(document))
     for lease in Lease.objects.all().iterator():
-        from core_apps.common.recovery import scope_available
 
-        if lease.renter_company_id and not scope_available("company_authority"):
-            continue
         with transaction.atomic():
             from ..services.rental_lifecycle.locks import lock_financial_lease
 

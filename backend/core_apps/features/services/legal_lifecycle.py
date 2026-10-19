@@ -64,10 +64,7 @@ def end_due_leases():
     ).values_list("pk", flat=True):
         with transaction.atomic():
             lease = Lease.objects.get(pk=identifier)
-            from core_apps.common.recovery import scope_available
 
-            if lease.renter_company_id and not scope_available("company_authority"):
-                continue
             from .rental_lifecycle.locks import lock_financial_lease
 
             lease = lock_financial_lease(lease)

@@ -16,9 +16,6 @@ def deliver_planning_events():
     from ..planning_access import planning_subject
     from rest_framework.exceptions import NotFound, PermissionDenied
 
-    from core_apps.common.recovery import require_scope
-
-    generation = require_scope("notifications")
     delivered = 0
     retry_before = timezone.now() - timedelta(minutes=2)
     for identifier in (
@@ -234,7 +231,6 @@ def deliver_planning_events():
             event.save()
         # The external call is outside the database transaction. Event ID deduplicates delivery.
         try:
-            require_scope("notifications", generation)
             sent = FCMService.send_push_to_user(
                 user=event.recipient,
                 title=event.notification.title,
@@ -264,7 +260,6 @@ def deliver_planning_events():
                 delivery_status="retry_pending"
             )
             continue
-        require_scope("notifications", generation)
         PlanningEvent.objects.filter(pk=event.pk, delivered_at__isnull=True).update(
             delivered_at=timezone.now(),
             delivery_status="provider_accepted" if sent else "no_delivery",

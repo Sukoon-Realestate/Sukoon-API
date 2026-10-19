@@ -113,7 +113,15 @@ class CaseBody(CommandBody):
 
 class CaseActionBody(CommandBody):
     action = s.ChoiceField(
-        choices=["reply", "assign", "triage", "resolve", "reopen", "link_remedy"]
+        choices=[
+            "reply",
+            "request_review",
+            "assign",
+            "triage",
+            "resolve",
+            "reopen",
+            "link_remedy",
+        ]
     )
     reason = s.CharField(max_length=4000)
     status = s.CharField(max_length=30, required=False)
