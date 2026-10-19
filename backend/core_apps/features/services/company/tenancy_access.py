@@ -55,6 +55,7 @@ PRIVATE_ONLY = {
     "approver",
     "new_owner",
     "financial_reviewer",
+    "prior_signer",
 }
 OPEN_REVIEW = [
     "pending",
@@ -87,6 +88,8 @@ def roles(item, user):
         result.add("employee")
     for change in item.changes.filter(state__in=OPEN_REVIEW):
         for role, identity in change.snapshot["required"].items():
+            if identity == str(user.id) and role.startswith("prior_signer_"):
+                result.add("prior_signer")
             if (
                 identity == str(user.id)
                 and role
@@ -168,6 +171,9 @@ def visible(user):
     external = CompanyTenancy.objects.filter(changes__state__in=OPEN_REVIEW).filter(
         Q(changes__snapshot__required__new_owner=str(user.id))
         | Q(changes__snapshot__required__financial_reviewer=str(user.id))
+        | Q(changes__snapshot__required__prior_signer_0=str(user.id))
+        | Q(changes__snapshot__required__prior_signer_1=str(user.id))
+        | Q(changes__snapshot__required__prior_signer_2=str(user.id))
     )
     return (
         (ordinary | invited | external)

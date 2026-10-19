@@ -499,6 +499,9 @@ def portfolio_offers(request):
         if str(requirement.company.id) != request.query_params.get("company_id"):
             raise PermissionDenied("The request belongs to another company context.")
         starts, ends = requirement.starts_on, requirement.ends_on_exclusive
+        from .services.company.viewing_handoff import filter_offers
+
+        qs = filter_offers(qs, requirement)
     return page(
         request,
         qs.order_by("-created_at", "id"),

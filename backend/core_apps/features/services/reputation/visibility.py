@@ -20,7 +20,7 @@ def subject_user(section):
         ):
             return None
         return case.party_b
-    if section.subject_id == case.party_a.id:
+    if case.party_a_id and section.subject_id == case.party_a.id:
         return case.party_a
     if section.subject_id == case.party_b.id:
         return case.party_b

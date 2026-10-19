@@ -127,6 +127,14 @@ class PortfolioOffer(TimeStampedModel):
 
 
 class CompanyHousingRequest(TimeStampedModel):
+    source_visit = models.OneToOneField(
+        "properties.PropertyVisit",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="company_housing_request",
+    )
+    source_viewing_snapshot = models.JSONField(default=dict)
     company = models.ForeignKey(
         Company, on_delete=models.PROTECT, related_name="housing_requests"
     )

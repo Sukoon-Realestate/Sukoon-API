@@ -115,11 +115,15 @@ def payload(item, user):
             pass
     return {
         "id": str(item.id),
+        "company_tenancy_id": (
+            str(item.lease.company_tenancy.id) if item.lease.renter_company_id else ""
+        ),
         "lease_id": str(item.lease.id),
         "property_name": item.lease.property.title,
         "state": item.state,
         "revision": item.revision,
-        "can_assign": item.state == "accepted"
+        "can_assign": not item.lease.renter_company_id
+        and item.state == "accepted"
         and item.booking_id is not None
         and (
             user.pk == item.booking.request.coordinator_id
@@ -145,7 +149,11 @@ def payload(item, user):
         ),
         "can_view_assignments": item.state == "accepted"
         and item.booking_id is not None,
-        "required_roles": required_roles(item),
+        "required_roles": (
+            ["owner", "signer"]
+            if item.lease.renter_company_id
+            else required_roles(item)
+        ),
         "confirmed_roles": list(item.approvals),
         "allowed_roles": (
             [r for r in roles if r not in item.approvals]

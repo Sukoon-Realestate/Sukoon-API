@@ -22,6 +22,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--expected-sha", required=True)
         parser.add_argument(
+            "--profile", choices=["staging_mock", "probe"], default="staging_mock"
+        )
+        parser.add_argument(
             "--since",
             help="Require tasks dispatched after this ISO-8601 UTC timestamp.",
         )
@@ -49,11 +52,34 @@ class Command(BaseCommand):
         failures = report["failures"]
         if release_sha() == "unknown" or release_sha() != options["expected_sha"]:
             failures.append("api_release_mismatch")
+        profile = options["profile"]
+        report["verification_scope"] = (
+            "isolated_transport_only"
+            if profile == "probe"
+            else "staging_mock_schedules"
+        )
+        profile_checks = (
+            {
+                "probe_settings": settings.SETTINGS_MODULE
+                == "config.settings.background_probe",
+                "providers_disabled": settings.RENTAL_PROVIDER_BACKEND == "disabled"
+                and not settings.RENTAL_FAKE_PROVIDER_ALLOWED,
+                "isolated_schedule": set(settings.CELERY_BEAT_SCHEDULE)
+                == {"background-connectivity-probe"},
+                "isolated_queue": settings.CELERY_TASK_DEFAULT_QUEUE
+                == "sokoun-background-probe",
+            }
+            if profile == "probe"
+            else {
+                "staging_mock": settings.SETTINGS_MODULE
+                == "config.settings.staging_mock",
+                "fake_provider_explicit": settings.RENTAL_PROVIDER_BACKEND == "fake"
+                and settings.RENTAL_FAKE_PROVIDER_ALLOWED,
+            }
+        )
         for name, passed in {
             "debug_disabled": settings.DEBUG is False,
-            "staging_mock": settings.SETTINGS_MODULE == "config.settings.staging_mock",
-            "fake_provider_explicit": settings.RENTAL_PROVIDER_BACKEND == "fake"
-            and settings.RENTAL_FAKE_PROVIDER_ALLOWED,
+            **profile_checks,
             "worker_execution_not_eager": not settings.CELERY_TASK_ALWAYS_EAGER,
             "runtime_evidence_enabled": settings.RUNTIME_EVIDENCE_ENABLED,
             "redis_channels": settings.CHANNEL_LAYERS["default"]["BACKEND"]

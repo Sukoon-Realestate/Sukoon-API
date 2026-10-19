@@ -18,8 +18,14 @@ from ..rental_phase2 import RentalConflict, fingerprint, add_months
 from ..rental_phase3_parts.issue_invoice import cairo_instant
 from . import tenancy_access as access, tenancy_changes as changes
 
-KINDS = {"renewal", "amendment", "ownership"}
-OPEN = {"pending", "accepted", "pending_signatures", "review_required"}
+KINDS = {"renewal", "amendment", "ownership", "continuation_release"}
+OPEN = {
+    "pending",
+    "accepted",
+    "pending_signatures",
+    "review_required",
+    "resolution_pending",
+}
 
 
 def assert_no_continuation(item):
@@ -201,6 +207,11 @@ def propose(item, user, data):
 
 
 def revalidate(item, change):
+    if change.kind == "continuation_release":
+        from .tenancy_resolution import source
+
+        source(item, change)
+        return
     body = change.snapshot["content"]
     if (
         change.snapshot["terms_digest"] != item.terms_digest
@@ -269,7 +280,7 @@ def revalidate(item, change):
 
 def reserve(item, change):
     revalidate(item, change)
-    if change.kind == "ownership":
+    if change.kind in {"ownership", "continuation_release"}:
         change.rental_change.status = "accepted"
         change.rental_change.save()
         return
@@ -331,6 +342,11 @@ def reserve(item, change):
 
 
 def release(item, change):
+    if change.kind == "continuation_release":
+        from .tenancy_resolution import release_review
+
+        release_review(item, change)
+        return
     if change.rental_change_id and change.rental_change.signing_sessions.exists():
         raise RentalConflict(
             "Reconcile the original signing session before any release; its outcome may be unknown."
@@ -355,6 +371,11 @@ def apply_signed(item, change):
         raise RentalConflict(
             "Authoritative signatures for the exact continuation are required."
         )
+    if change.kind == "continuation_release":
+        from .tenancy_resolution import apply_signed as resolve_signed
+
+        resolve_signed(item, change)
+        return
     if change.kind == "ownership":
         from .tenancy_ownership import apply
 

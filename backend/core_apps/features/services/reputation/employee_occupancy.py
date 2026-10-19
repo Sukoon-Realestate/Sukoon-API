@@ -59,9 +59,34 @@ def confirmed(assignment):
         raise ReviewError("occupancy_not_ended")
     start, end = rows["arrival"], rows["departure"]
     expected = fingerprint(assignment)
+
+    def matches(row):
+        source = row.source_snapshot.get("assignment", {})
+        if source == expected:
+            return True
+        if not item.lease.renter_company_id or any(
+            source.get(k) != v for k, v in expected.items() if k != "ends_on"
+        ):
+            return False
+        from .corporate_experience import tenancy
+
+        original_end = source.get("ends_on")
+        for change in (
+            tenancy(item)
+            .changes.filter(kind="renewal", state="applied")
+            .order_by("applied_at", "id")
+        ):
+            content = change.snapshot["content"]
+            previous = next(
+                (r for r in content["roster"] if r["id"] == str(assignment.id)), None
+            )
+            if previous and previous["ends_on_exclusive"] == original_end:
+                original_end = content["ends_on_exclusive"]
+        return original_end == expected["ends_on"]
+
     if (
-        start.source_snapshot.get("assignment") != expected
-        or end.source_snapshot.get("assignment") != expected
+        not matches(start)
+        or not matches(end)
         or end.possession_on < start.possession_on
         or end.accepted_at < start.accepted_at
         or any(not {"employee", "landlord"}.issubset(x.approvals) for x in (start, end))
@@ -123,6 +148,9 @@ def payload(assignment, user):
     roles = ["employee"] if user.pk == assignment.employee_id else ["landlord"]
     return {
         "id": str(assignment.id),
+        "company_tenancy_id": (
+            str(item.lease.company_tenancy.id) if item.lease.renter_company_id else ""
+        ),
         "binding_id": str(item.id),
         "property_name": assignment.property.title,
         "employee_name": assignment.employee.get_full_name,
@@ -148,7 +176,7 @@ def payload(assignment, user):
                             or landlord_confirmable(user, item, x.possession_on)
                         )
                     ]
-                    if x.state == "pending"
+                    if x.state == "pending" and not item.lease.renter_company_id
                     else []
                 ),
             }

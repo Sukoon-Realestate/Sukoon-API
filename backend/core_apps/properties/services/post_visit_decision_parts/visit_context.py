@@ -92,3 +92,35 @@ def record_event(visit, decision):
         send_push=False,
     )
     event.save(update_fields=["notification", "updated_at"])
+    if visit.company_id and decision.value == "proceed":
+        from core_apps.features.company_models import CompanyMembership
+
+        for member in CompanyMembership.objects.filter(
+            company=visit.company,
+            is_active=True,
+            is_coordinator=True,
+            user__is_active=True,
+        ).select_related("user"):
+            destination = {
+                **data,
+                "workspace": "tenant",
+                "company_id": str(visit.company.id),
+                "event_kind": "company_viewing_decision",
+            }
+            destination.pop("event_id", None)
+            task, created = PlanningEvent.objects.get_or_create(
+                recipient=member.user,
+                event_key=f"company.viewing_decision:{decision.id}:{member.user_id}",
+                defaults={"destination": destination},
+            )
+            if created:
+                destination["event_id"] = str(task.id)
+                task.notification = NotificationService.create_notification(
+                    user=member.user,
+                    title="متابعة معاينة الشركة / Company viewing follow-up",
+                    body="راجع المعاينة وابدأ طلب سكن للشركة / Review the viewing and prepare a company housing request.",
+                    category="visit_post_decision",
+                    data=destination,
+                    send_push=False,
+                )
+                task.save(update_fields=["notification", "updated_at"])

@@ -117,6 +117,32 @@ def deliver_planning_events():
                         "revision"
                     ):
                         raise NotFound()
+                elif event.destination.get("event_kind") == "company_viewing_decision":
+                    from core_apps.properties.models import PropertyVisitDecision
+                    from core_apps.properties.services.viewing_access import can_read
+                    from ..company.viewing_handoff import validate_source
+                    from ..rental_phase2 import RentalConflict
+
+                    decision = (
+                        PropertyVisitDecision.objects.select_related(
+                            "visit__property", "visit__tenant"
+                        )
+                        .filter(
+                            id=event.destination.get("source_decision_id"),
+                            visit__id=event.destination.get("target_id"),
+                            visit__company__id=event.destination.get("company_id"),
+                            visit__company__memberships__user=event.recipient,
+                            visit__company__memberships__is_active=True,
+                            visit__company__memberships__is_coordinator=True,
+                        )
+                        .first()
+                    )
+                    if not decision or not can_read(decision.visit, event.recipient):
+                        raise NotFound()
+                    try:
+                        validate_source(decision.visit, decision)
+                    except RentalConflict:
+                        raise NotFound()
                 elif event.destination.get("event_kind") == "visit_post_decision":
                     from core_apps.properties.models import PropertyVisitDecision
 

@@ -142,6 +142,8 @@ def payload(item, user):
                     )
                     if commercial
                     or set(own_roles) & {"approver", "new_owner", "financial_reviewer"}
+                    or row.kind == "continuation_release"
+                    and any(r.startswith("prior_signer_") for r in own_roles)
                     else {
                         k: row.snapshot["content"][k]
                         for k in [
@@ -160,7 +162,13 @@ def payload(item, user):
                     else []
                 ),
                 "can_withdraw": row.state
-                in {"pending", "waiting_departure", "accepted", "pending_signatures"}
+                in {
+                    "pending",
+                    "waiting_departure",
+                    "accepted",
+                    "pending_signatures",
+                    "review_required",
+                }
                 and not (
                     row.rental_change_id and row.rental_change.signing_sessions.exists()
                 )
@@ -171,7 +179,10 @@ def payload(item, user):
                     str(row.rental_change.id) if row.rental_change_id else ""
                 ),
                 "signing_roles": [
-                    r for r in own_roles if r in {"owner", "signer", "new_owner"}
+                    r
+                    for r in own_roles
+                    if r in {"owner", "signer", "new_owner"}
+                    or r.startswith("prior_signer_")
                 ],
                 "continuation_actions": continuation_actions(
                     row, user, roles, provider
@@ -524,12 +535,19 @@ def continuation_actions(row, user, roles, provider):
     if not row.rental_change_id:
         return []
     result = []
+    if (
+        row.kind in {"renewal", "amendment", "ownership"}
+        and row.state in {"accepted", "pending_signatures", "review_required"}
+        and roles & {"owner", "signer"}
+    ):
+        result.append("release_continuation")
     if row.state == "accepted" and "owner" in roles and provider:
         result.append("submit_continuation")
     own = [
         r
         for r, identity in row.snapshot["required"].items()
-        if identity == str(user.id) and r in {"owner", "signer", "new_owner"}
+        if identity == str(user.id)
+        and (r in {"owner", "signer", "new_owner"} or r.startswith("prior_signer_"))
     ]
     if (
         row.state == "pending_signatures"

@@ -72,6 +72,12 @@ def continuation(
         "invoice_id": None,
         "compatibility_version": "visit_decision_v1",
     }
+    if visit.company_id:
+        from core_apps.features.services.company.viewing_handoff import (
+            continuation as company_continuation,
+        )
+
+        return company_continuation(visit, actor, decision, base)
     if legacy_lease:
         base.update(
             status=f"agreement_{legacy_lease.status}",

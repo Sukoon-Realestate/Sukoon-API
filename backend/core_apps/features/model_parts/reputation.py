@@ -28,6 +28,7 @@ class ReviewCase(TimeStampedModel):
     party_a = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
+        null=True,
         related_name="review_cases_a",
     )
     party_b = models.ForeignKey(
@@ -64,6 +65,11 @@ class ReviewCase(TimeStampedModel):
 
     class Meta:
         constraints = [
+            models.CheckConstraint(
+                check=Q(party_a__isnull=False)
+                | Q(company__isnull=False, company_binding__isnull=False),
+                name="review_person_or_bound_company",
+            ),
             models.CheckConstraint(
                 check=~Q(party_a=models.F("party_b")), name="review_distinct_parties"
             ),

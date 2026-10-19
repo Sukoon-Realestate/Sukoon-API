@@ -135,6 +135,9 @@ class MembershipBody(CommandBody):
 
 
 class RequestBody(CommandBody):
+    source_visit_id = serializers.UUIDField(required=False)
+    source_decision_id = serializers.UUIDField(required=False)
+    source_visit_revision = serializers.IntegerField(min_value=1, required=False)
     title = serializers.CharField(max_length=200)
     purpose = serializers.CharField(max_length=5000)
     cost_center = serializers.CharField(max_length=100, allow_blank=True, default="")
@@ -148,6 +151,9 @@ class RequestBody(CommandBody):
     def validate(self, data):
         from .services.company.request_period import monthly_periods
 
+        source = {"source_visit_id", "source_decision_id", "source_visit_revision"}
+        if set(data) & source and not source <= set(data):
+            raise serializers.ValidationError("Supply the complete viewing source.")
         # Time-dependent admission belongs after operation-receipt replay.
         monthly_periods(data["starts_on"], data["ends_on_exclusive"])
         return data

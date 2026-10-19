@@ -178,6 +178,12 @@ def generate_tenancy(lease):
 
     lease = lock_tenancy(lease)
     binding = binding_for_root(lease)
+    if lease.renter_company_id:
+        if not binding:
+            raise ReviewError("experience_not_confirmed")
+        from .corporate_experience import generate
+
+        return generate(binding)
     from ...models import CompanyBookingItem, CompanyLeaseBinding
 
     if not binding and (

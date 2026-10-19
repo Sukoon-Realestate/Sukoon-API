@@ -84,13 +84,25 @@ def generate_employee(assignment):
     binding, start, end = confirmed(assignment)
     owner, day, previous = binding.lease.owner, start.possession_on, None
     periods = []
-    for change in transitions(binding.lease):
+    if binding.lease.renter_company_id:
+        from .corporate_experience import owner_periods
+
+        periods = [
+            (owner, day, until, previous, change)
+            for owner, day, until, _, previous, change in owner_periods(
+                binding, start.possession_on, end.possession_on, end.accepted_at
+            )
+        ]
+    for change in [] if binding.lease.renter_company_id else transitions(binding.lease):
         if start.possession_on < change.effective_on < end.possession_on:
             periods.append((owner, day, change.effective_on, previous, change))
             owner, day, previous = change.next_owner, change.effective_on, change
         elif change.effective_on <= start.possession_on:
             owner, previous = change.next_owner, change
-    periods.append((owner, day, end.possession_on, previous, None))
+    if not binding.lease.renter_company_id:
+        periods.append((owner, day, end.possession_on, previous, None))
+    if not periods:
+        raise ReviewError("experience_not_confirmed")
     result = []
     for owner, day, until, previous, change in periods:
         landlord = (
@@ -146,6 +158,10 @@ def valid_company_source(case):
     binding = case.company_binding
     if not binding or binding.state != "accepted":
         return False
+    if binding.lease.renter_company_id:
+        from .corporate_experience import valid
+
+        return valid(case)
     source = binding.source_snapshot
     if (
         str(binding.lease.owner.id) != source.get("owner_id")

@@ -20,6 +20,8 @@ ROLES = {
 }
 CASE_KINDS = {
     "company_tenancy_review",
+    "company_continuation_review",
+    "company_continuation_signing",
     "agreement_terms_review",
     "habitability",
     "habitability_impact",
@@ -163,14 +165,12 @@ def case_queryset(user):
         | Q(lease__tenant=user)
         | Q(hold__actor=user)
     )
-    from ..company.tenancy_access import visible, roles
+    from ..company.tenancy_access import visible, roles, PRIVATE_ONLY
     from core_apps.common.recovery import scope_available
 
     if scope_available("company_authority"):
         corporate_ids = [
-            t.lease_id
-            for t in visible(user)
-            if roles(t, user) - {"employee", "incoming_employee"}
+            t.lease_id for t in visible(user) if roles(t, user) - PRIVATE_ONLY
         ]
         own = own | RentalOperationalCase.objects.filter(lease_id__in=corporate_ids)
     if staff_role(user, ROLES):
@@ -187,6 +187,24 @@ def case_queryset(user):
 
 
 def agreement_case_blocker(item):
+    if item.kind in {"company_continuation_review", "company_continuation_signing"}:
+        from uuid import UUID
+        from ...models import CompanyTenancyChange
+
+        try:
+            source_id = UUID(item.source_key.rsplit(":", 1)[-1])
+        except (ValueError, TypeError):
+            source_id = None
+        query = CompanyTenancyChange.objects.filter(tenancy__lease=item.lease)
+        change = None
+        if source_id:
+            change = (
+                query.filter(id=source_id).first()
+                if item.kind == "company_continuation_review"
+                else query.filter(rental_change__signing_sessions__id=source_id).first()
+            )
+        if not change or change.state not in {"applied", "resolved_unapplied"}:
+            return "Complete canonical continuation reconciliation or the separately signed mutual release before resolving this case."
     if item.kind == "company_tenancy_review" and item.lease_id:
         lease = item.lease
         if (

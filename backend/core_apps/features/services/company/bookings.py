@@ -50,10 +50,14 @@ def save_request(user, company, data):
     require_new_business()
     member_for(user, company, "coordinate")
     validate_request_period(data)
+    from .viewing_handoff import source_for_creation
+
+    source = source_for_creation(user, company, data)
     item = CompanyHousingRequest.objects.create(
         company=company,
         requester=user,
         coordinator=user,
+        **source,
         **{k: data[k] for k in REQUEST_FIELDS if k in data}
     )
     audit(item, user, "company_housing_request_created")
@@ -68,6 +72,10 @@ def update_request(user, request_id, data):
     require_new_business()
     item = request_for(user, request_id, lock=True)
     require_revision(item, data["expected_revision"])
+    if data.get("source_visit_id") and str(data["source_visit_id"]) != str(
+        item.source_viewing_snapshot.get("visit_id", "")
+    ):
+        raise RentalConflict("A request's viewing provenance cannot be replaced.")
     if item.items.exists():
         raise RentalConflict(
             "This request already has packages. Create a new request to change its terms.",
@@ -105,6 +113,9 @@ def select_offer(user, request_id, data):
     )
     require_revision(offer, data["offer_revision"])
     props = resolve_scope(offer, lock=True)
+    from .viewing_handoff import validate_selection
+
+    validate_selection(request, offer, props)
     for prop in props:
         expire_property_holds(prop)
         assert_available(
@@ -201,6 +212,7 @@ def select_offer(user, request_id, data):
             code="policy_not_configured",
         )
     snapshot.update(
+        source_viewing=request.source_viewing_snapshot,
         company_id=str(request.company.id),
         company_name=request.company.name,
         requester_id=str(request.requester.id),
@@ -613,6 +625,7 @@ def request_payload(request, viewer=None):
     return {
         "id": str(request.id),
         "company_id": str(request.company.id),
+        "source_viewing": request.source_viewing_snapshot,
         "revision": request.revision,
         "can_edit": bool(
             viewer

@@ -15,6 +15,7 @@ from . import (
     tenancy_changes as changes,
     tenancy_commercial as commercial,
 )
+from .tenancy_resolution import signing_role
 
 
 def validate_review(item, change):
@@ -67,9 +68,8 @@ def submit(item, user, data):
 
 def sign(item, user, data):
     change = get_change(item, data)
-    signing_roles = {"owner", "signer", "new_owner"}
     role = data["role"]
-    if role not in signing_roles:
+    if not signing_role(role):
         raise PermissionDenied("Only actual contract signatories can sign this change.")
     changes.authorize_role(item, change, user, role, positive=True)
     event = change.rental_change
@@ -135,11 +135,18 @@ def complete(session):
     required = {
         identity
         for role, identity in change.snapshot["required"].items()
-        if role in {"owner", "signer", "new_owner"}
+        if signing_role(role)
     }
-    if required.issubset(event.signed_by):
+    resolving = change.state in {"resolution_pending", "resolved_unapplied"}
+    if required.issubset(event.signed_by) and change.state != "resolved_unapplied":
         event.status = "signed"
     event.save()
+    if resolving:
+        return access.changed(
+            item,
+            session.signer,
+            "company_original_signature_retained_during_resolution",
+        ).lease.rental_changes.get(pk=event.pk)
     try:
         # Inner savepoint preserves the independently established signature
         # when a changed prerequisite prevents the business effect.
