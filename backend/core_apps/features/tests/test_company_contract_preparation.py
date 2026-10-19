@@ -175,7 +175,8 @@ def test_complete_ordinary_review_cycle_stops_before_provider(cycle, settings):
     assert result.status_code == 200, result.data
     view = result.data["resource"]
     assert view["effective_state"] == "ready_for_provider"
-    assert view["blocking_reasons"] == ["signature_provider_unavailable"]
+    assert view["blocking_reasons"] == ["execution_authority_required"]
+    assert not view["can_create_agreement"]
     assert not Lease.objects.exists() and not PaymentAttempt.objects.exists()
     assert RentalInventoryDayLock.objects.exists()
     assert CompanyBudgetReservation.objects.get(item=cycle["item"]).status == "reserved"

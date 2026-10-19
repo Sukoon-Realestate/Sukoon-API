@@ -61,7 +61,7 @@ def _settle_attempt(attempt):
 
 @transaction.atomic
 def process_provider_event(event):
-    # Shared order across captures, refunds, settlements and payouts: lease, attempt, event.
+    # Shared financial roots precede attempt/event locks, including company portfolios.
     lease_id = PaymentAttempt.objects.values_list("invoice__lease_id", flat=True).get(
         pk=event.payment_attempt_id
     )
@@ -70,12 +70,9 @@ def process_provider_event(event):
             "This provider event is not a rental payment.",
             code="invalid_payment_domain",
         )
-    from core_apps.properties.models import Property
+    from ..rental_lifecycle.locks import lock_financial_lease
 
-    Property.objects.select_for_update().get(
-        pk=Lease.objects.values_list("property_id", flat=True).get(pk=lease_id)
-    )
-    Lease.objects.select_for_update().get(pk=lease_id)
+    lock_financial_lease(Lease.objects.get(pk=lease_id))
     attempt = PaymentAttempt.objects.select_for_update().get(
         pk=event.payment_attempt_id
     )
@@ -147,10 +144,13 @@ def process_provider_event(event):
                 blocking_reasons=["A chargeback is unresolved."],
                 updated_at=timezone.now(),
             )
-            invoice.lease.financial_closure_status = (
-                invoice.lease.FinancialClosureStatus.OPEN
-            )
-            invoice.lease.save(update_fields=["financial_closure_status", "updated_at"])
+            from ..rental_phase6 import evaluate_financial_closure
+
+            evaluate_financial_closure(invoice.lease)
+            if invoice.lease.renter_company_id:
+                from ..company.tenancy_access import notify
+
+                notify(invoice.lease.company_tenancy)
         event.processed = True
     else:
         raise ValidationError({"type": "Unsupported payment provider event."})

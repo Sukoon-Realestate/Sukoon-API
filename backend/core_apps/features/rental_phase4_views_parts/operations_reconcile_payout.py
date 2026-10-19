@@ -30,7 +30,9 @@ def operations_reconcile_payout(request, payout_id):
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
         candidate = get_object_or_404(RentalPayout, id=payout_id)
-        Lease.objects.select_for_update().get(pk=candidate.lease_id)
+        from ..services.rental_lifecycle.locks import lock_financial_lease
+
+        lock_financial_lease(Lease.objects.get(pk=candidate.lease_id))
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])

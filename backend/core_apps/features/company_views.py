@@ -106,6 +106,7 @@ def mutate(request, operation, authorize, execute, mapper, creating=False):
 def capabilities(request):
     from core_apps.common.recovery import RecoveryRequired, scope_available
     from .services.company.staff import delivery_ready
+    from .providers import fake_provider_available
 
     # This response contains configuration only, never company/member records.
     # Keep it readable while the authority fence blocks the protected routes.
@@ -126,8 +127,12 @@ def capabilities(request):
             "internal_request_discussions": available,
             "contract_preparation": available,
             "independent_mandates": available,
-            "contracting": False,
-            "payments": False,
+            "contracting": available,
+            "tenancy_servicing": available,
+            "provider_mode": "mock" if fake_provider_available() else "unavailable",
+            "payments": available
+            and fake_provider_available()
+            and scope_available("provider_outbound"),
         }
     )
 

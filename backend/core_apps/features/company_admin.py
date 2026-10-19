@@ -14,6 +14,9 @@ from .company_contract_models import (
     CompanyMandate,
     CompanyContractPreparation,
     CompanyPreparationConsent,
+    CompanyTenancy,
+    CompanyTenancyChange,
+    CompanyMaintenanceScope,
 )
 from core_apps.properties.models import (
     ResidentialComplex,
@@ -65,9 +68,11 @@ admin.site.register(
         CompanyStaffBatch,
         CompanyStaffBatchRow,
         CompanyWorkContactProof,
-        CompanyMandate,
         CompanyContractPreparation,
         CompanyPreparationConsent,
+        CompanyTenancy,
+        CompanyTenancyChange,
+        CompanyMaintenanceScope,
     ],
     FinancialHistoryAdmin,
 )

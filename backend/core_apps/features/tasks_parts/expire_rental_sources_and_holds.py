@@ -97,6 +97,12 @@ def expire_rental_sources_and_holds(self):
         ).values_list("property_id", flat=True)
     )
     expired_holds, expired_agreements = 0, 0
+    from core_apps.common.recovery import scope_available
+
+    if scope_available("company_authority"):
+        from ..services.company.tenancy_expiry import expire_due
+
+        expired_agreements += expire_due(now)
     for root in sorted(roots):
         with transaction.atomic():
             prop = Property.objects.select_for_update().get(pk=root)
@@ -126,8 +132,11 @@ def reconcile_rental_provider_sessions(self):
         status="created", expires_at__lte=now
     ).update(status="expired", updated_at=now)
     signing = SigningSession.objects.filter(
-        status="pending", expires_at__lte=now
+        status="pending", expires_at__lte=now, lease__renter_company__isnull=True
     ).update(status="expired", updated_at=now)
+    # A corporate signature can have succeeded externally before timeout.
+    # Its original pending evidence is reconciled by the company lifecycle;
+    # a generic session timeout must not permit another send or inventory release.
     return {"expired_onboarding": onboarding, "expired_signing": signing}
 
 

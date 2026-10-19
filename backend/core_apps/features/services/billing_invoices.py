@@ -43,6 +43,13 @@ def authorized_invoice(user, invoice_id, lock=False):
     if lock:
         query = query.select_for_update(of=("self",))
     invoice = get_object_or_404(query, id=invoice_id)
+    if invoice.lease_id and invoice.lease.renter_company_id:
+        from .company.tenancy_access import commercial_read
+        from rest_framework.exceptions import NotFound
+
+        if not commercial_read(invoice.lease, user):
+            raise NotFound()
+        return invoice
     payer_id = (
         invoice.lease.tenant_id if invoice.purpose == "rent" else invoice.payer_id
     )

@@ -67,6 +67,11 @@ def company_subject(user, identifier):
 
     if not scope_available("company_authority"):
         return None
+    from .tenancy_access import visible
+
+    tenancy = visible(user).filter(id=identifier).first()
+    if tenancy:
+        return tenancy
     from ...company_contract_models import CompanyMandate, CompanyContractPreparation
     from .contract_access import can_read
 
@@ -202,6 +207,13 @@ def authority_review_subject(user, identifier):
         ResidentialMedia,
     )
     from ..rental_lifecycle.common import staff_role
+    from ...models import CompanyMandate
+
+    mandate = CompanyMandate.objects.filter(id=identifier).first()
+    if mandate and staff_role(
+        user, {"kyc_reviewer"} if mandate.kind == "sign" else {"financial_approver"}
+    ):
+        return mandate
 
     for model, roles in (
         (Company, {"kyc_reviewer"}),
@@ -228,6 +240,12 @@ def actions(user, capability, identifier=""):
     item = company_subject(user, identifier)
     if item is None:
         return []
+    from ...models import CompanyTenancy
+
+    if isinstance(item, CompanyTenancy):
+        from .tenancy_projection import payload
+
+        return ["read"] + payload(item, user)["actions"]
     from ...company_contract_models import CompanyMandate, CompanyContractPreparation
 
     if isinstance(item, CompanyContractPreparation):
@@ -239,6 +257,7 @@ def actions(user, capability, identifier=""):
             + (["contract_respond"] if view["responses"] else [])
             + (["contract_withdraw"] if view["can_withdraw"] else [])
             + (["contract_reserve"] if view["can_reserve"] else [])
+            + (["contract_agreement"] if view["can_create_agreement"] else [])
         )
     if isinstance(item, CompanyMandate):
         from .mandates import payload

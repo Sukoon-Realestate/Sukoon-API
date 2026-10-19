@@ -19,6 +19,10 @@ from .submission import command, audit
 
 
 def signed(lease):
+    if lease.renter_company_id:
+        raise ReviewError(
+            "experience_not_confirmed"
+        )  # Binding is created by canonical company signatures.
     signers = set(
         lease.signing_sessions.filter(
             status="completed",

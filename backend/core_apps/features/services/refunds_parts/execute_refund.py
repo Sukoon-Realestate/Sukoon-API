@@ -21,7 +21,9 @@ from .remaining_components import captured_components, validate_allocations
 @transaction.atomic
 def execute_refund(refund):
     # Shared lease lock orders settlement, refunds, capture and payouts consistently.
-    lease = Lease.objects.select_for_update().get(pk=refund.lease_id)
+    from ..rental_lifecycle.locks import lock_financial_lease
+
+    lease = lock_financial_lease(Lease.objects.get(pk=refund.lease_id))
     refund = RefundRequest.objects.select_for_update().get(pk=refund.pk)
     if refund.status != RefundRequest.Status.APPROVED:
         return refund

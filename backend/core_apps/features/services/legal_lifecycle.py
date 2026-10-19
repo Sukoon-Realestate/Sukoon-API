@@ -48,6 +48,10 @@ def end_lease_if_due(lease):
         label="Agreement term ended",
         description="Possession return and financial closure require their separate confirmations.",
     )
+    if lease.renter_company_id:
+        from .company.tenancy_access import notify
+
+        notify(lease.company_tenancy)
     return True
 
 
@@ -59,6 +63,13 @@ def end_due_leases():
         end_date__lte=timezone.localdate(),
     ).values_list("pk", flat=True):
         with transaction.atomic():
-            lease = Lease.objects.select_for_update().get(pk=identifier)
+            lease = Lease.objects.get(pk=identifier)
+            from core_apps.common.recovery import scope_available
+
+            if lease.renter_company_id and not scope_available("company_authority"):
+                continue
+            from .rental_lifecycle.locks import lock_financial_lease
+
+            lease = lock_financial_lease(lease)
             changed += int(end_lease_if_due(lease))
     return changed

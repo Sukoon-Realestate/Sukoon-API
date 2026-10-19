@@ -46,7 +46,11 @@ def cycle_actions(user, subject):
             else subject.lease
         )
     )
-    if lease.legacy_read_only or user.pk not in {lease.owner_id, lease.tenant_id}:
+    if (
+        lease.renter_company_id
+        or lease.legacy_read_only
+        or user.pk not in {lease.owner_id, lease.tenant_id}
+    ):
         return []
     if not fake_provider_available() and not isinstance(subject, MaintenanceRequest):
         if not isinstance(subject, Lease):

@@ -22,11 +22,26 @@ from .final_settlement_propose import _lease
 from .disputes import document_payload
 
 
+def document_lease(request, lease_id, *, lock=False):
+    from ..models import Lease
+
+    lease = get_object_or_404(Lease, id=lease_id)
+    if not lease.renter_company_id:
+        return _lease(request, lease_id, lock=lock)
+    from ..services.company.tenancy_access import get, commercial_read
+    from rest_framework.exceptions import NotFound
+
+    item = get(request.user, lease.company_tenancy.id, lock=lock)
+    if not commercial_read(item.lease, request.user):
+        raise NotFound()
+    return item.lease
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def lease_documents(request, lease_id):
-    lease = _lease(request, lease_id)
+    lease = document_lease(request, lease_id)
     if lease.document_id:
         RentalDocument.objects.get_or_create(
             lease=lease,
@@ -72,7 +87,7 @@ def document_download(request, document_id):
     document = get_object_or_404(
         RentalDocument.objects.select_related("lease"), id=document_id
     )
-    _lease(request, document.lease.id)
+    document_lease(request, document.lease.id)
     if document.status != RentalDocument.Status.READY:
         raise RentalConflict("Document is not ready.")
     if not document.private_content:
@@ -108,7 +123,7 @@ def rental_statement_create(request):
     from core_apps.users.models import User
 
     User.objects.select_for_update().get(pk=request.user.pk)
-    lease = _lease(request, request.data.get("lease_id"), lock=True)
+    lease = document_lease(request, request.data.get("lease_id"), lock=True)
     from django.utils.dateparse import parse_date
 
     starts, ends = request.data.get("starts_on"), request.data.get("ends_on_exclusive")

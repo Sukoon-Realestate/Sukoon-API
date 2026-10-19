@@ -23,6 +23,10 @@ def visit_decision(visit):
 
 
 def stay_evidence(lease, *, require_end=True):
+    if lease.renter_company_id:
+        # Employee experience is derived from EmployeeOccupancyConfirmation.
+        # Personal ballots cannot impersonate the corporate renter.
+        raise ReviewError("experience_not_confirmed")
     if lease.legacy_read_only:
         raise ReviewError("experience_not_confirmed")
     # Renewals retain tenancy_root_id; the source handovers must be in the same

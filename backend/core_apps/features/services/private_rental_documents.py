@@ -34,6 +34,13 @@ def generate(document):
         "lease_id": str(lease.id),
         "generated_at": timezone.now().isoformat(),
     }
+    if lease.renter_company_id:
+        payload["renter"] = {
+            "kind": "company",
+            "company_id": str(lease.renter_company.id),
+            "name": lease.renter_company.name,
+            "employees_are_debtors": False,
+        }
     if document.document_type in {"contract", "change"}:
         # No retrieval adapter exists for the provider's signed artifact bytes.
         return fail(document, "signed_source_artifact_unavailable")
@@ -193,7 +200,13 @@ def content_response(document_id, token):
             revision=claims["revision"],
             sha256=claims["digest"],
         )
-        if user.pk not in {document.lease.owner_id, document.lease.tenant_id}:
+        if document.lease.renter_company_id:
+            require_scope("company_authority")
+            from .company.tenancy_access import commercial_read
+
+            if not commercial_read(document.lease, user):
+                raise ValueError()
+        elif user.pk not in {document.lease.owner_id, document.lease.tenant_id}:
             raise ValueError()
         if PrivateAccessRevocation.objects.filter(
             lease=document.lease, user=user

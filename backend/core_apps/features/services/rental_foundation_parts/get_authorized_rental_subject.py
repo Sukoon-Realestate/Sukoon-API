@@ -70,7 +70,35 @@ def get_authorized_rental_subject(user, subject_id):
     ):
         item = model.objects.filter(id=subject_id, **actor_filter).first()
         if item:
+            lease = (
+                item.lease
+                if isinstance(item, SigningSession)
+                else (
+                    item.change.lease
+                    if isinstance(item, ChangeSigningSession)
+                    else (
+                        item.invoice.lease
+                        if isinstance(item, (CheckoutSession, PaymentQuote))
+                        else None
+                    )
+                )
+            )
+            if lease and lease.renter_company_id:
+                from ..company.tenancy_access import commercial_read
+
+                if not commercial_read(lease, user):
+                    raise NotFound()
             return item
+
+    quote = PaymentQuote.objects.filter(
+        id=subject_id, invoice__lease__renter_company__isnull=False
+    ).first()
+    if quote:
+        from ..company.tenancy_access import commercial_read
+
+        if commercial_read(quote.invoice.lease, user):
+            return quote
+        raise NotFound()
 
     owner_profile = OwnerPaymentProfile.objects.filter(id=subject_id).first()
     if owner_profile:
@@ -102,7 +130,9 @@ def get_authorized_rental_subject(user, subject_id):
         Lease.objects.filter(id=subject_id).select_related("owner", "tenant").first()
     )
     if lease:
-        if user in (lease.owner, lease.tenant):
+        from ..company.tenancy_access import commercial_read
+
+        if commercial_read(lease, user):
             return lease
         raise NotFound()
 
@@ -112,7 +142,9 @@ def get_authorized_rental_subject(user, subject_id):
         .first()
     )
     if invoice:
-        if user in (invoice.lease.owner, invoice.lease.tenant):
+        from ..company.tenancy_access import commercial_read
+
+        if commercial_read(invoice.lease, user):
             return invoice
         raise NotFound()
 
@@ -122,7 +154,9 @@ def get_authorized_rental_subject(user, subject_id):
         .first()
     )
     if attempt:
-        if user in (attempt.invoice.lease.owner, attempt.invoice.lease.tenant):
+        from ..company.tenancy_access import commercial_read
+
+        if commercial_read(attempt.invoice.lease, user):
             return attempt
         raise NotFound()
 
@@ -147,6 +181,12 @@ def get_authorized_rental_subject(user, subject_id):
         if item:
             if isinstance(item, RentalEvidence) and item.purpose == "student":
                 if item.uploader_id == user.pk and not item.deleted_at:
+                    return item
+                raise NotFound()
+            from ..company.tenancy_access import commercial_read
+
+            if item.lease.renter_company_id and isinstance(item, RentalEvidence):
+                if commercial_read(item.lease, user):
                     return item
                 raise NotFound()
             if user in (item.lease.owner, item.lease.tenant):

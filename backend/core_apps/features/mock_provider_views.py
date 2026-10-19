@@ -128,7 +128,20 @@ def signing_complete(request, session_id, change=False):
         if change:
             subject = RentalChange.objects.select_for_update().get(pk=session.change_id)
         else:
-            subject = Lease.objects.select_for_update().get(pk=session.lease_id)
+            from .services.rental_lifecycle.locks import lock_financial_lease
+
+            subject = lock_financial_lease(Lease.objects.get(pk=session.lease_id))
+            if subject.renter_company_id:
+                from .services.company.tenancy_access import (
+                    get,
+                    require_role,
+                    require_delegate,
+                )
+
+                item = get(request.user, subject.company_tenancy.id)
+                require_role(item, request.user, {"owner", "signer"}, sensitive=True)
+                if request.user.pk != subject.owner_id:
+                    require_delegate(item, request.user, "sign")
         replay = _replay(request, data, operation)
         if replay is not None:
             return replay
@@ -166,7 +179,13 @@ def payment_event(request, attempt_id):
         )
         if candidate.invoice.lease_id is None:
             raise NotFound()
-        Lease.objects.select_for_update().get(pk=candidate.invoice.lease_id)
+        from .services.rental_lifecycle.locks import lock_financial_lease
+
+        lease = lock_financial_lease(candidate.invoice.lease)
+        if lease.renter_company_id:
+            from .services.company.tenancy_access import require_delegate
+
+            require_delegate(lease.company_tenancy, request.user, "pay")
         attempt = get_object_or_404(
             PaymentAttempt.objects.select_for_update(),
             id=attempt_id,

@@ -187,6 +187,8 @@ def decide(user, identity, action, data):
 
 
 def payload(item, user):
+    from .tenancy_access import execution_mandate
+
     member = member_for(user, item.company)
     independent = member.is_admin and user.pk not in {
         item.proposed_by_id,
@@ -229,5 +231,10 @@ def payload(item, user):
         "reason": (
             item.reason if member.is_admin or item.membership.user_id == user.pk else ""
         ),
-        "binding_execution_authorized": False,
+        "binding_execution_authorized": execution_mandate(item),
+        "execution_verified_until": (
+            item.execution_verified_until.isoformat()
+            if item.execution_verified_until
+            else None
+        ),
     }

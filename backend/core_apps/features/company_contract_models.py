@@ -32,6 +32,11 @@ class CompanyMandate(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+", null=True
     )
     reviewed_at = models.DateTimeField(null=True)
+    execution_reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+", null=True
+    )
+    execution_reference = models.CharField(max_length=200, blank=True)
+    execution_verified_until = models.DateTimeField(null=True)
 
     class Meta:
         constraints = [
@@ -86,3 +91,63 @@ class CompanyPreparationConsent(TimeStampedModel):
                 name="company_preparation_consent_once",
             )
         ]
+
+
+class CompanyTenancy(TimeStampedModel):
+    """Company-specific responsibilities around one canonical lease and ledger."""
+
+    lease = models.OneToOneField(
+        "features.Lease", on_delete=models.PROTECT, related_name="company_tenancy"
+    )
+    preparation = models.OneToOneField(
+        CompanyContractPreparation, on_delete=models.PROTECT, related_name="tenancy"
+    )
+    coordinator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="coordinated_company_tenancies",
+    )
+    signer_mandate = models.ForeignKey(
+        CompanyMandate, on_delete=models.PROTECT, related_name="signed_tenancies"
+    )
+    payer_mandate = models.ForeignKey(
+        CompanyMandate, on_delete=models.PROTECT, related_name="funded_tenancies"
+    )
+    source_snapshot = models.JSONField()
+    terms_digest = models.CharField(max_length=64)
+    contract_reviews = models.JSONField(default=dict)
+
+    @property
+    def revision(self):
+        return self.lease.revision
+
+
+class CompanyTenancyChange(TimeStampedModel):
+    """Exact bilateral/individual review; effects remain in canonical records."""
+
+    tenancy = models.ForeignKey(
+        CompanyTenancy, on_delete=models.PROTECT, related_name="changes"
+    )
+    kind = models.CharField(max_length=24)
+    state = models.CharField(max_length=24, default="pending")
+    revision = models.PositiveIntegerField(default=1)
+    proposed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    snapshot = models.JSONField()
+    snapshot_digest = models.CharField(max_length=64)
+    decisions = models.JSONField(default=dict)
+    reason = models.TextField()
+    applied_at = models.DateTimeField(null=True)
+
+
+class CompanyMaintenanceScope(TimeStampedModel):
+    request = models.OneToOneField(
+        "features.MaintenanceRequest",
+        on_delete=models.PROTECT,
+        related_name="company_scope",
+    )
+    tenancy = models.ForeignKey(
+        CompanyTenancy, on_delete=models.PROTECT, related_name="maintenance_scopes"
+    )
+    property = models.ForeignKey("properties.Property", on_delete=models.PROTECT)
+    access_consents = models.JSONField(default=dict)
+    cost_consent = models.JSONField(default=dict)

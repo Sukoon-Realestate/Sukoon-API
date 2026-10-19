@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p>This review records inspected authority evidence. It does not sign an agreement, charge a payment, or approve a financial policy.</p>
+<dl>
+  <dt>Company</dt><dd>{{ item.company.name }} — {{ item.company.registration_number }}</dd>
+  <dt>Delegate</dt><dd>{{ item.membership.user.get_full_name }}</dd>
+  <dt>Responsibility</dt><dd>{{ item.get_kind_display }}</dd>
+  <dt>Approved exposure</dt><dd>{{ item.limit_minor }} EGP minor units (100 minor units = 1 EGP)</dd>
+  <dt>Mandate period</dt><dd>{{ item.valid_from }} — {{ item.valid_until }}</dd>
+  <dt>Original evidence reference</dt><dd>{{ item.evidence_reference }}</dd>
+  <dt>Proposed by</dt><dd>{{ item.proposed_by.get_full_name }}</dd>
+  <dt>Company reviewer</dt><dd>{{ item.reviewed_by.get_full_name }}</dd>
+  <dt>Current execution verification</dt><dd>{{ item.execution_verified_until|default:"Not verified" }}</dd>
+</dl>
+<p>The operator must independently inspect the referenced mandate and its exact company, person, scope, limit and expiry. A company member or either original reviewer cannot verify this mandate.</p>
+<form method="post">{% csrf_token %}
+  <input type="hidden" name="request_key" value="{{ request_key }}">
+  <input type="hidden" name="revision" value="{{ item.revision }}">
+  <p><label>Inspected evidence reference <input name="evidence_reference" maxlength="200" required value="{{ request.POST.evidence_reference }}"></label></p>
+  <p><label>Verification expiry with UTC offset <input name="verified_until" required placeholder="2026-11-01T12:00:00+02:00" value="{{ request.POST.verified_until }}"></label></p>
+  <p><label>Review reason <textarea name="reason" maxlength="2000" required>{{ request.POST.reason }}</textarea></label></p>
+  <button type="submit">Record independently verified authority</button>
+</form>
+{% endblock %}

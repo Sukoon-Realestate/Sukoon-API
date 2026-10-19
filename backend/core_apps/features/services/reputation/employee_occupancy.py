@@ -159,6 +159,9 @@ def payload(assignment, user):
 
 def assign(user, identity, body):
     item = binding_for(user, identity)
+    from ..rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(item.lease)
     coordinate(user, item)
 
     def action():
@@ -188,9 +191,16 @@ def assign(user, identity, body):
             or member.user_id in {locked.lease.owner_id, locked.lease.tenant_id}
         ):
             raise ReviewError("company_lease_mismatch")
-        if EmployeeAssignment.objects.filter(
-            employee=member.user, starts_on__lt=end, ends_on_exclusive__gt=start
-        ).exists():
+        from ..company.assignment_locks import lock_people
+
+        lock_people([member.user.id])
+        if (
+            EmployeeAssignment.objects.filter(
+                employee=member.user, starts_on__lt=end, ends_on_exclusive__gt=start
+            )
+            .exclude(occupancy_status__in=["returned", "cancelled"])
+            .exists()
+        ):
             raise ReviewError("occupancy_overlap")
         assignment = EmployeeAssignment.objects.create(
             item=locked.booking,
@@ -208,6 +218,9 @@ def assign(user, identity, body):
 def propose(user, identity, body):
     assignment = get_object_or_404(EmployeeAssignment, id=identity)
     item = read(user, assignment)
+    from ..rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(item.lease)
 
     def action():
         from .eligibility import lock_tenancy
@@ -264,6 +277,9 @@ def propose(user, identity, body):
 def confirm(user, identity, body):
     record = get_object_or_404(EmployeeOccupancyConfirmation, id=identity)
     item = read(user, record.assignment)
+    from ..rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(item.lease)
     role = body.get("role")
 
     def action():

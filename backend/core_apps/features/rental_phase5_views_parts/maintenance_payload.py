@@ -52,6 +52,9 @@ def _lease(request, lease_id, lock=False, servicing=False):
     if lock:
         queryset = queryset.select_for_update(of=("self",))
     lease = get_object_or_404(queryset, id=lease_id)
+    from ..services.rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(lease)
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()
     _assert_private_access(lease, request.user)
@@ -123,6 +126,9 @@ def _maintenance(request, request_id, lock=False):
         "lease__owner", "lease__tenant"
     ).prefetch_related("events", "evidence")
     item = get_object_or_404(queryset, id=request_id)
+    from ..services.rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(item.lease)
     if lock:
         lease = Lease.objects.select_for_update().get(pk=item.lease_id)
         item = queryset.select_for_update(of=("self",)).get(pk=item.pk)

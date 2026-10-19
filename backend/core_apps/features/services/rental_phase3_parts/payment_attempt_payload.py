@@ -15,6 +15,8 @@ def invoice_payment_allowed(user, invoice):
     from ...providers import checkout_available
 
     lease = invoice.lease
+    from ..company.tenancy_access import can_pay
+
     if (
         lease.terms.get("deposit_holder") == "owner"
         and invoice.lines.filter(
@@ -26,7 +28,7 @@ def invoice_payment_allowed(user, invoice):
         user
         and user.is_active
         and user.is_verified
-        and user.pk == lease.tenant_id
+        and can_pay(lease, user)
         and checkout_available()
         and not lease.legacy_read_only
         and (
@@ -175,6 +177,21 @@ def _activate_after_initial_capture(lease, attempt):
     lease.activated_at = timezone.now()
     lease.revision += 1
     lease.save(update_fields=["status", "activated_at", "revision", "updated_at"])
+    if lease.renter_company_id:
+        from ...models import CompanyBudgetReservation
+
+        item = lease.company_tenancy
+        item.lease = lease
+        booking = item.preparation.booking
+        booking.status = "active"
+        booking.revision += 1
+        booking.save()
+        CompanyBudgetReservation.objects.filter(item=booking, status="reserved").update(
+            status="committed"
+        )
+        from ..company.tenancy_access import notify
+
+        notify(item)
     RentalTimelineEvent.objects.create(
         lease=lease,
         kind="activated",

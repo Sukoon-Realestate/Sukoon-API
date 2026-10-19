@@ -113,7 +113,7 @@ def tenancy_invitation_respond(request, invitation_id):
 
 def _lease_queryset(user, workspace):
     if workspace == "owner":
-        return Lease.objects.filter(owner=user)
+        return Lease.objects.filter(owner=user, renter_company__isnull=True)
     if workspace == "tenant":
         return Lease.objects.filter(tenant=user)
     raise ValidationError({"workspace": "Must be owner or tenant."})

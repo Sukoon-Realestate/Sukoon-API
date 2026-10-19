@@ -30,6 +30,7 @@ def is_read_only(lease):
 def can_cancel_draft(user, lease):
     return bool(
         user
+        and not lease.renter_company_id
         and user.is_active
         and user.is_verified
         and user.pk == lease.owner_id
@@ -55,6 +56,9 @@ def can_revoke_invitation(user, invitation):
 def agreement_actions(user, lease):
     from ..providers import fake_provider_available
 
+    if lease.renter_company_id:
+        return []  # Company responsibilities use the company tenancy projection.
+
     if (
         not user
         or not user.is_active
@@ -67,6 +71,7 @@ def agreement_actions(user, lease):
     actions = ["cancel_draft"] if can_cancel_draft(user, lease) else []
     if not fake_provider_available():
         from .cycle_permissions import cycle_actions
+
         return actions + cycle_actions(user, lease)
     if lease.status == Lease.Status.DRAFT:
         if str(user.id) not in lease.reviewed_by:

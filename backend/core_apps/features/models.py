@@ -146,6 +146,9 @@ from .company_contract_models import (
     CompanyMandate,
     CompanyContractPreparation,
     CompanyPreparationConsent,
+    CompanyTenancy,
+    CompanyTenancyChange,
+    CompanyMaintenanceScope,
 )
 
 from .model_parts.reputation import (

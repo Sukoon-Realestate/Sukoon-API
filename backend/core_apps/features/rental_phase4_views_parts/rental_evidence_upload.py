@@ -21,7 +21,27 @@ from ..models import RentalEvidence
 from ..providers import get_rental_provider
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
-from .handover_payload import PNG_MAGIC, MAX_EVIDENCE_BYTES, _lease, evidence_payload
+from .handover_payload import (
+    PNG_MAGIC,
+    MAX_EVIDENCE_BYTES,
+    _lease as _personal_lease,
+    evidence_payload,
+)
+
+
+def _lease(request, identity, *, lock=False):
+    from ..models import Lease
+
+    lease = get_object_or_404(Lease, id=identity)
+    if not lease.renter_company_id:
+        return _personal_lease(request, identity, lock=lock)
+    from ..providers import require_rental_provider
+    from ..services.company.tenancy_access import get, require_role
+
+    require_rental_provider(request.user)
+    item = get(request.user, lease.company_tenancy.id, lock=lock)
+    require_role(item, request.user, {"owner", "coordinator", "payer"})
+    return item.lease
 
 
 @api_view(["POST"])
@@ -43,6 +63,7 @@ def rental_evidence_upload(request):
     except ValueError:
         raise ValidationError({"request_key": "Must be a UUID."})
     operation = f"rental_evidence.upload.{lease_id}"
+    lease = _lease(request, lease_id)
     existing = RentalEvidence.objects.filter(
         uploader=request.user, lease__id=lease_id, request_key=request_key
     ).first()
@@ -74,6 +95,15 @@ def rental_evidence_upload(request):
     if digest != claimed_digest:
         raise ValidationError({"sha256": "Digest does not match the uploaded bytes."})
     with transaction.atomic():
+        lease = _lease(request, lease_id, lock=True)
+        record = replay_operation(
+            request.user,
+            operation,
+            request_key,
+            {"lease_id": str(lease_id), "sha256": claimed_digest},
+        )
+        if record:
+            return Response(record[0], status=record[1])
         evidence = RentalEvidence(
             lease=lease,
             uploader=request.user,
@@ -111,7 +141,9 @@ def _evidence(request, evidence_id):
         deleted_at__isnull=True,
         purpose="rental",
     )
-    if request.user not in (item.lease.owner, item.lease.tenant):
+    from ..services.company.tenancy_access import commercial_read
+
+    if not commercial_read(item.lease, request.user):
         raise NotFound()
     return item
 

@@ -71,4 +71,10 @@ def test_open_scope_keeps_existing_company_protocol(user, settings):
     data = client.get(API + "company-capabilities/").json()["data"]
     assert data["available"] and data["new_bookings"] and data["portfolio_creation"]
     assert data["blocking_reasons"] == []
-    assert data["contracting"] is False and data["payments"] is False
+    assert data["contracting"] is True and data["tenancy_servicing"] is True
+    from core_apps.features.providers import fake_provider_available
+
+    assert data["payments"] is fake_provider_available()
+    assert data["provider_mode"] == (
+        "mock" if fake_provider_available() else "unavailable"
+    )

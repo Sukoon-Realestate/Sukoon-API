@@ -79,6 +79,10 @@ def deliver_planning_events():
                     from ..reputation.tasks import authorize_notification
 
                     authorize_notification(event)
+                elif event.destination.get("action_type") == "open_company_tenancy":
+                    from ..company.tenancy_access import get
+
+                    get(event.recipient, event.destination["target_id"])
                 elif event.destination.get("action_type") == "open_company_contract":
                     from ..company.contract_access import get
 

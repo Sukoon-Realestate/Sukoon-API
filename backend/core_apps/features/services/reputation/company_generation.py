@@ -149,7 +149,8 @@ def valid_company_source(case):
     source = binding.source_snapshot
     if (
         str(binding.lease.owner.id) != source.get("owner_id")
-        or str(binding.lease.tenant.id) != source.get("tenant_id")
+        or (str(binding.lease.tenant.id) if binding.lease.tenant_id else None)
+        != source.get("tenant_id")
         or str(binding.lease.document_id) != source.get("document_id")
         or binding.lease.document_hash != source.get("document_hash")
         or binding.lease.status

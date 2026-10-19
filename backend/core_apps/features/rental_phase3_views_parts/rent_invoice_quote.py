@@ -21,6 +21,8 @@ from ..services.rental_phase3 import (
     invoice_payment_allowed,
     quote_fingerprint,
 )
+from ..services.company.tenancy_access import commercial_read, can_pay
+from ..services.rental_lifecycle.locks import lock_financial_lease as _lock_lease
 
 
 class PaymentReconcileThrottle(UserRateThrottle):
@@ -39,16 +41,10 @@ def _invoice(request, invoice_id, lock=False):
         candidate = get_object_or_404(queryset, id=invoice_id)
         if candidate.lease_id is None:
             raise NotFound()
-        from core_apps.properties.models import Property
-
-        Property.objects.select_for_update().get(pk=candidate.lease.property_id)
-        Lease.objects.select_for_update().get(pk=candidate.lease_id)
+        _lock_lease(candidate.lease)
         queryset = queryset.select_for_update(of=("self",))
     invoice = get_object_or_404(queryset, id=invoice_id)
-    if invoice.lease_id is None or request.user not in (
-        invoice.lease.owner,
-        invoice.lease.tenant,
-    ):
+    if invoice.lease_id is None or not commercial_read(invoice.lease, request.user):
         raise NotFound()
     return invoice
 
@@ -58,19 +54,14 @@ def _attempt(request, attempt_id, lock=False):
     if lock:
         candidate = get_object_or_404(queryset, id=attempt_id)
         if candidate.invoice.lease_id is not None:
-            from core_apps.properties.models import Property
-
-            Property.objects.select_for_update().get(
-                pk=candidate.invoice.lease.property_id
-            )
-            Lease.objects.select_for_update().get(pk=candidate.invoice.lease_id)
+            _lock_lease(candidate.invoice.lease)
         queryset = queryset.select_for_update(of=("self",))
     attempt = get_object_or_404(queryset, id=attempt_id)
     if attempt.invoice.lease_id is None:
         if request.user.pk != attempt.payer_id:
             raise NotFound()
         return attempt
-    if request.user not in (attempt.invoice.lease.owner, attempt.invoice.lease.tenant):
+    if not commercial_read(attempt.invoice.lease, request.user):
         raise NotFound()
     return attempt
 
@@ -132,20 +123,15 @@ def rent_invoice_quote(request, invoice_id):
         request_key = uuid.UUID(str(request_key))
     except (ValueError, TypeError):
         raise ValidationError({"request_key": "Must be a UUID."})
-    replay = replay_operation(
-        request.user, f"invoice.quote.{invoice_id}", request_key, request.data
-    )
-    if replay:
-        return Response(replay[0], status=replay[1])
     with transaction.atomic():
         invoice = _invoice(request, invoice_id, lock=True)
+        if not can_pay(invoice.lease, request.user):
+            raise PermissionDenied("Current authority to pay this invoice is required.")
         replay = replay_operation(
             request.user, f"invoice.quote.{invoice_id}", request_key, request.data
         )
         if replay:
             return Response(replay[0], status=replay[1])
-        if request.user != invoice.lease.tenant:
-            raise PermissionDenied("Only the tenant can quote this invoice.")
         if not checkout_available():
             raise PermissionDenied(
                 {

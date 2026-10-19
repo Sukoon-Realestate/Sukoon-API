@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 from django.db import IntegrityError, transaction
-from django.db.models import F
+from django.db.models import F, Q
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 from core_apps.properties.models import Property
@@ -105,6 +105,17 @@ def hold_coverage(lease, *, require_live=True):
     reservation = ReservationHold.objects.filter(lease=lease).first()
     end = reservation.blocked_until_exclusive if reservation else lease.end_date
     expected_days = (end - lease.start_date).days
+    if lease.renter_company_id:
+        from ..company.tenancy_access import properties
+
+        expected = {
+            (prop.pk, key, lease.start_date + timedelta(days=i))
+            for prop in properties(lease.company_tenancy)
+            for key in unit_keys(prop, {"rental_scope": "entire_property"})
+            for i in range(expected_days)
+        }
+        actual = set(rows.values_list("property_id", "unit__physical_key", "stay_on"))
+        return bool(expected and rows.count() == len(expected) and actual == expected)
     keys = unit_keys(lease.property, lease.offer_snapshot)
     return bool(
         expected_days > 0
@@ -123,7 +134,10 @@ def expire_property_holds(prop, now=None):
     released = 0
     lease_ids = list(
         prop.rental_day_locks.filter(
-            kind="hold", expires_at__lte=now, lease__isnull=False
+            kind="hold",
+            expires_at__lte=now,
+            lease__isnull=False,
+            lease__renter_company__isnull=True,
         )
         .values_list("lease_id", flat=True)
         .distinct()
@@ -219,10 +233,10 @@ def assert_available(
             )
     # Physical return is independent of contractual end. A known overstay blocks a new promise.
     occupied = Lease.objects.filter(
-        property=prop,
+        Q(property=prop) | Q(inventory_day_locks__property=prop),
         end_date__lte=timezone.localdate(),
         occupancy_status__in=["occupied", "move_out_pending", "handover_disputed"],
-    )
+    ).distinct()
     from ...models import RentalChange
 
     continued = RentalChange.objects.filter(

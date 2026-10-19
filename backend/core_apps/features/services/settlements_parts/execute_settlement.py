@@ -22,7 +22,9 @@ from .apply_credit import _apply_credit
 
 @transaction.atomic
 def execute_settlement(item):
-    lease = Lease.objects.select_for_update().get(pk=item.lease_id)
+    from ..rental_lifecycle.locks import lock_financial_lease
+
+    lease = lock_financial_lease(Lease.objects.get(pk=item.lease_id))
     item = FinalSettlement.objects.select_for_update().get(pk=item.pk)
     if item.execution_status == "executed":
         return item
@@ -148,7 +150,7 @@ def execute_settlement(item):
         RefundRequest.objects.create(
             lease=lease,
             payment_attempt=attempt,
-            requester=lease.tenant,
+            requester=attempt.payer if lease.renter_company_id else lease.tenant,
             approved_by=item.proposed_by,
             request_key=uuid.uuid5(item.id, f"settlement-refund:{index}"),
             amount_minor=allocation["amount_minor"],

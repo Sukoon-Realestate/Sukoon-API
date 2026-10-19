@@ -6,8 +6,19 @@ from . import company_work_views as w
 from . import company_chat_views as c
 from . import portfolio_views as p
 from . import company_contract_views as contracts
+from . import company_tenancy_views as tenancies
 
 urlpatterns = [
+    path("company-tenancies/", tenancies.collection),
+    path("company-tenancies/<uuid:tenancy_id>/", tenancies.detail),
+    path("company-tenancies/<uuid:tenancy_id>/<slug:action>/", tenancies.action),
+    path(
+        "company-contract-preparations/<uuid:preparation_id>/agreement/",
+        tenancies.create,
+    ),
+    path(
+        "company-mandates/<uuid:mandate_id>/execution-review/", tenancies.verify_mandate
+    ),
     path("companies/<uuid:company_id>/mandates/", contracts.mandates),
     path("company-mandates/<uuid:mandate_id>/<slug:action>/", contracts.mandate_action),
     path(

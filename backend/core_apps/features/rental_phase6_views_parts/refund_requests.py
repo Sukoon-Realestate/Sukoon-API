@@ -144,7 +144,9 @@ def refund_respond(request, refund_id):
     if replay:
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
-        Lease.objects.select_for_update().get(pk=item.lease_id)
+        from ..services.rental_lifecycle.locks import lock_financial_lease
+
+        lock_financial_lease(Lease.objects.get(pk=item.lease_id))
         item = _refund(request, refund_id, allow_operations=True, lock=True)
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:

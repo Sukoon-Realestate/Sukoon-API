@@ -96,7 +96,9 @@ def operations_execute_payout(request):
         )
         if len(lease_ids) != 1:
             raise ValidationError("A payout batch must target one lease.")
-        lease = Lease.objects.select_for_update().get(pk=lease_ids[0])
+        from ..services.rental_lifecycle.locks import lock_financial_lease
+
+        lease = lock_financial_lease(Lease.objects.get(pk=lease_ids[0]))
         evaluate_owner_payables(lease)
         payables = list(
             OwnerPayable.objects.select_for_update(of=("self",))

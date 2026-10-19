@@ -183,7 +183,9 @@ def _get_authorized_invoice(request, invoice_id):
         id=invoice_id,
         purpose="rent",
     )
-    if request.user not in (invoice.lease.owner, invoice.lease.tenant):
+    from ..services.company.tenancy_access import commercial_read
+
+    if not commercial_read(invoice.lease, request.user):
         raise NotFound()
     return invoice
 

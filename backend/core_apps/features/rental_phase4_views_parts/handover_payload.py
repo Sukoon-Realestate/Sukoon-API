@@ -22,8 +22,11 @@ def _lease(request, lease_id, lock=False):
         require_rental_provider(request.user)
     queryset = Lease.objects.select_related("owner", "tenant")
     if lock:
-        queryset = queryset.select_for_update()
+        queryset = queryset.select_for_update(of=("self",))
     lease = get_object_or_404(queryset, id=lease_id)
+    from ..services.rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(lease)
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()
     return lease
@@ -70,8 +73,11 @@ def _handover(request, handover_id, lock=False):
         "lease__owner", "lease__tenant"
     ).prefetch_related("evidence")
     if lock:
-        queryset = queryset.select_for_update()
+        queryset = queryset.select_for_update(of=("self",))
     handover = get_object_or_404(queryset, id=handover_id)
+    from ..services.rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(handover.lease)
     if request.user not in (handover.lease.owner, handover.lease.tenant):
         raise NotFound()
     return handover

@@ -33,6 +33,9 @@ def _lease(request, lease_id, lock=False):
     if lock:
         queryset = queryset.select_for_update(of=("self",))
     lease = get_object_or_404(queryset, id=lease_id)
+    from ..services.rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(lease)
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()
     if PrivateAccessRevocation.objects.filter(lease=lease, user=request.user).exists():

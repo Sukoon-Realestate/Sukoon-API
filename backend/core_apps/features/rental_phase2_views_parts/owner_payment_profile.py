@@ -122,6 +122,11 @@ def _participant_proposal(request, proposal_id, lock=False):
 
 
 def _participant_lease(request, lease_id, lock=False):
+    from ..services.rental_lifecycle.locks import require_personal_workflow
+
+    require_personal_workflow(
+        get_object_or_404(Lease, id=lease_id, renter_company__isnull=True)
+    )
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
         require_rental_provider(request.user)
     queryset = Lease.objects.select_related("property", "owner", "tenant")

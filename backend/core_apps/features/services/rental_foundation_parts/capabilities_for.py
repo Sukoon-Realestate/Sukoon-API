@@ -38,6 +38,44 @@ def capabilities_for(user, subject, requested_action=""):
 
     phase2_ready = fake_provider_available()
     if isinstance(subject, Lease):
+        if subject.renter_company_id:
+            from ..company.tenancy_access import roles, commercial_read
+
+            corporate_roles = roles(subject.company_tenancy, user)
+            corporate_actions = []
+            if (
+                phase2_ready
+                and subject.status == "pending_signatures"
+                and corporate_roles & {"owner", "signer"}
+            ):
+                corporate_actions.append("sign")
+            if phase2_ready and corporate_roles & {"owner", "coordinator", "payer"}:
+                corporate_actions.append("upload_evidence")
+            if commercial_read(subject, user):
+                corporate_actions.append("request_statement")
+            if not user.is_verified or not user.is_active:
+                corporate_actions = []
+            return {
+                "account_id": str(user.id),
+                "account_verified": bool(user.is_active and user.is_verified),
+                "enabled_capabilities": (
+                    ["rental_agreements", "rental_handovers", "rental_settlement"]
+                    if phase2_ready
+                    else []
+                )
+                + (
+                    ["signed_documents"]
+                    if "request_statement" in corporate_actions
+                    else []
+                ),
+                "allowed_actions": corporate_actions,
+                "policy_version": POLICY_VERSION,
+                "blocking_reasons": (
+                    []
+                    if not requested_action or requested_action in corporate_actions
+                    else ["Use the current company tenancy responsibility."]
+                ),
+            }
         allowed.extend(agreement_actions(user, subject))
         enabled.append("rental_center")
         if not subject.legacy_read_only:
@@ -137,6 +175,7 @@ def capabilities_for(user, subject, requested_action=""):
 
     if isinstance(subject, Lease):
         from ..reputation.eligibility import can_review_lease
+
         if can_review_lease(subject, user):
             enabled.append("rental_reviews")
             allowed.append("review_rental")

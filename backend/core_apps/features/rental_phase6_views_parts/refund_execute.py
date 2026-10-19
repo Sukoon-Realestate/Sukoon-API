@@ -69,7 +69,9 @@ def refund_execute(request, refund_id):
     operation = f"refund.{'recover' if recover else 'execute'}.{item.id}"
     with transaction.atomic():
         require_financial_actor(request.user, roles, "refund.execute", lock=True)
-        lease = Lease.objects.select_for_update().get(pk=item.lease_id)
+        from ..services.rental_lifecycle.locks import lock_financial_lease
+
+        lease = lock_financial_lease(Lease.objects.get(pk=item.lease_id))
         item = RefundRequest.objects.select_for_update().get(pk=item.pk)
         replay = replay_operation(request.user, operation, key, request.data)
         if replay:
@@ -153,7 +155,9 @@ def dispute_payload(item, user=None):
 def _dispute(request, dispute_id, allow_operations=False, lock=False):
     if lock:
         lease_id = get_object_or_404(RentalDispute, id=dispute_id).lease_id
-        Lease.objects.select_for_update().get(pk=lease_id)
+        from ..services.rental_lifecycle.locks import lock_financial_lease
+
+        lock_financial_lease(Lease.objects.get(pk=lease_id))
     queryset = RentalDispute.objects.select_related(
         "lease__owner", "lease__tenant"
     ).prefetch_related("evidence")

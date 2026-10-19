@@ -38,12 +38,18 @@ def payload(item, user):
     manages = access.manages(item, user)
     employee_only = roles == ["employee"] and not manages
     blocking = []
-    if item.state != "withdrawn":
+    finished = item.state in {"withdrawn", "agreement_created"}
+    if not finished:
         try:
             snapshots.revalidate(item)
         except APIException as error:
             codes = error.get_codes()
             blocking.append(codes if isinstance(codes, str) else "source_changed")
+    if (
+        not finished
+        and item.booking.request.coordinator_id == item.booking.offer.owner_id
+    ):
+        blocking.append("independent_coordinator_required")
     if item.booking.status == "withdrawn":
         effective = "withdrawn"
     else:
@@ -58,7 +64,7 @@ def payload(item, user):
     shown = [r for r in rows if not employee_only or r.actor_id == user.pk]
     allowed = []
     enabled = getattr(settings, "COMPANY_HOUSING_ENABLED", False)
-    if effective != "withdrawn":
+    if not finished:
         for row in rows:
             if row.actor_id == user.pk and row.role in roles:
                 if row.decision == "pending":
@@ -68,6 +74,14 @@ def payload(item, user):
                 if row.decision == "accepted":
                     allowed.append({"role": row.role, "decision": "withdrawn"})
     source = item.snapshot
+    from .tenancy_access import execution_mandate
+
+    execution_ready = all(
+        execution_mandate(
+            m, exposure=source["full_term_rent_minor"] + source["deposit_minor"]
+        )
+        for m in [item.signer_mandate, item.payer_mandate]
+    )
     placements = [
         p
         for p in source["placements"]
@@ -111,12 +125,17 @@ def payload(item, user):
         ),
         "blocking_reasons": blocking
         + (
-            ["signature_provider_unavailable"]
-            if effective == "ready_for_provider"
+            ["execution_authority_required"]
+            if effective == "ready_for_provider" and not execution_ready
             else []
         ),
-        "can_revise": manages and effective != "withdrawn" and enabled,
-        "can_withdraw": manages and effective != "withdrawn",
+        "can_revise": manages and not finished and enabled,
+        "can_withdraw": manages and not finished,
+        "tenancy_id": str(item.tenancy.id) if hasattr(item, "tenancy") else "",
+        "can_create_agreement": manages
+        and effective == "ready_for_provider"
+        and enabled
+        and execution_ready,
         "can_reserve": manages and effective == "ready_for_hold" and enabled,
         "new_business_enabled": enabled,
         "responses": allowed,

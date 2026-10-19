@@ -109,7 +109,7 @@ def respond(user, identity, data):
     item = access.get(user, identity, lock=True)
     require_revision(item, data["expected_revision"])
     if (
-        item.state == "withdrawn"
+        item.state not in {"awaiting_reviews", "changes_requested", "reviews_complete"}
         or item.booking.status == "withdrawn"
         or data["snapshot_digest"] != item.snapshot_digest
     ):

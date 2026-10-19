@@ -144,4 +144,10 @@ def evaluate_financial_closure(lease, *, increment_revision=True):
             lease.revision += 1
             fields.append("revision")
         lease.save(update_fields=fields)
+    if lease.renter_company_id:
+        from .company.tenancy_closure import close_budget
+
+        item = lease.company_tenancy
+        item.lease = lease
+        close_budget(item)
     return reasons

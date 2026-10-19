@@ -65,6 +65,11 @@ def apply_fake_rental_event(payload):
             session = get_object_or_404(
                 SigningSession, provider_session_id=provider_session_id
             )
+            if session.lease.renter_company_id:
+                from ..services.company.tenancy_contracts import complete_signature
+
+                complete_signature(session)
+                return {"status": "accepted"}
             from core_apps.properties.models import Property
 
             Property.objects.select_for_update().get(pk=session.lease.property_id)

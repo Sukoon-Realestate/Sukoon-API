@@ -22,7 +22,7 @@ from ..providers import (
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from ..services.rental_phase3 import invoice_balance_minor, invoice_payment_allowed
-from .rent_invoice_quote import _money, _invoice
+from .rent_invoice_quote import _money, _invoice, can_pay
 from .owner_payables import _validated_navigation, apply_fake_payment_event
 
 
@@ -41,16 +41,10 @@ def rent_invoice_checkout(request, invoice_id):
     except ValueError:
         raise ValidationError("quote_id and request_key must be UUIDs.")
     operation = f"invoice.checkout.{invoice_id}"
-    _invoice(
-        request, invoice_id
-    )  # Reauthorize before returning any historical receipt.
-    replay = replay_operation(request.user, operation, request_key, request.data)
-    if replay:
-        return Response(replay[0], status=replay[1])
     with transaction.atomic():
         invoice = _invoice(request, invoice_id, lock=True)
-        if request.user != invoice.lease.tenant:
-            raise PermissionDenied("Only the tenant can pay this invoice.")
+        if not can_pay(invoice.lease, request.user):
+            raise PermissionDenied("Current authority to pay this invoice is required.")
         if not checkout_available():
             return Response(
                 {

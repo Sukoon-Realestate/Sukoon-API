@@ -19,6 +19,7 @@ ROLES = {
     "payout_operator",
 }
 CASE_KINDS = {
+    "company_tenancy_review",
     "agreement_terms_review",
     "habitability",
     "habitability_impact",
@@ -162,6 +163,16 @@ def case_queryset(user):
         | Q(lease__tenant=user)
         | Q(hold__actor=user)
     )
+    from ..company.tenancy_access import visible, roles
+    from core_apps.common.recovery import scope_available
+
+    if scope_available("company_authority"):
+        corporate_ids = [
+            t.lease_id
+            for t in visible(user)
+            if roles(t, user) - {"employee", "incoming_employee"}
+        ]
+        own = own | RentalOperationalCase.objects.filter(lease_id__in=corporate_ids)
     if staff_role(user, ROLES):
         qs = RentalOperationalCase.objects.all()
         role = getattr(getattr(user, "staff_profile", None), "role_name", "")
@@ -176,6 +187,16 @@ def case_queryset(user):
 
 
 def agreement_case_blocker(item):
+    if item.kind == "company_tenancy_review" and item.lease_id:
+        lease = item.lease
+        if (
+            lease.company_tenancy.changes.filter(
+                state__in=["pending", "waiting_departure"]
+            ).exists()
+            or lease.signing_sessions.filter(status="review_required").exists()
+            or (item.hold_id and item.hold.status == "reconciliation_pending")
+        ):
+            return "Reconcile the pending company change or original provider instruction before closing this case."
     if item.kind != "agreement_terms_review":
         return None
     from uuid import UUID
@@ -257,6 +278,11 @@ def independent_case_operator(item, user):
     interested = {item.opened_by_id}
     if item.lease_id:
         interested.update({item.lease.owner_id, item.lease.tenant_id})
+        if (
+            item.lease.renter_company_id
+            and item.lease.renter_company.memberships.filter(user=user).exists()
+        ):
+            return False
     if item.hold_id:
         interested.add(item.hold.actor_id)
     if user.pk in interested:

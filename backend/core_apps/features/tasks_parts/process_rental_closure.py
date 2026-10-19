@@ -47,10 +47,25 @@ def process_rental_closure(self):
 
             generated += int(generate(document))
     for lease in Lease.objects.all().iterator():
-        evaluate_financial_closure(lease)
+        from core_apps.common.recovery import scope_available
+
+        if lease.renter_company_id and not scope_available("company_authority"):
+            continue
+        with transaction.atomic():
+            from ..services.rental_lifecycle.locks import lock_financial_lease
+
+            lease = lock_financial_lease(lease)
+            previous = lease.financial_closure_status
+            evaluate_financial_closure(lease)
+            if lease.renter_company_id:
+                from ..services.company.tenancy_access import notify
+
+                tenancy = lease.company_tenancy
+                if previous != lease.financial_closure_status:
+                    notify(tenancy)
         evaluated += 1
         for participant in (lease.owner, lease.tenant):
-            if not participant.is_active:
+            if participant is not None and not participant.is_active:
                 _, created = PrivateAccessRevocation.objects.get_or_create(
                     lease=lease, user=participant, defaults={"reason": "account_closed"}
                 )

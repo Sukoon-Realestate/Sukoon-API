@@ -75,6 +75,15 @@ class Lease(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name="tenant_digital_leases",
+        null=True,
+        blank=True,
+    )
+    renter_company = models.ForeignKey(
+        "features.Company",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="contractual_leases",
     )
     template_id = models.CharField(max_length=80)
     template_version = models.CharField(max_length=40)
@@ -115,6 +124,13 @@ class Lease(TimeStampedModel):
     class Meta:
         ordering = ["-created_at", "-updated_at"]
         constraints = [
+            models.CheckConstraint(
+                check=(
+                    Q(tenant__isnull=False, renter_company__isnull=True)
+                    | Q(tenant__isnull=True, renter_company__isnull=False)
+                ),
+                name="lease_exact_renter_party",
+            ),
             models.UniqueConstraint(
                 fields=["property", "offer_id"],
                 condition=Q(
@@ -129,7 +145,7 @@ class Lease(TimeStampedModel):
                     ],
                 ),
                 name="unique_live_lease_per_accommodation",
-            )
+            ),
         ]
 
 
