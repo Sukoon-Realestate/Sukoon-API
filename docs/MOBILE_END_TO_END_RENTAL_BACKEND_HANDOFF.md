@@ -142,6 +142,7 @@ The billing-schedule endpoint returns persisted `[start, end_exclusive)` periods
 - `POST features/v1/rent-invoices/{id}/quote/`
 - `POST features/v1/rent-invoices/{id}/checkout/`
 - `GET features/v1/payment-attempts/?invoice_id={id}&request_key={uuid}`
+- `POST features/v1/payment-attempts/` — resolve one original rent checkout using `{"action":"resolve_checkout","invoice_id":"uuid","request_key":"original-uuid"}`.
 - `GET features/v1/payment-attempts/{id}/`
 - `POST features/v1/payment-attempts/{id}/reconcile/`
 - `GET features/v1/owner-payables/?workspace=owner`
@@ -151,6 +152,12 @@ Activation generates Cairo billing periods anchored to the original contract day
 Quote responses are canonical mutations whose `resource` contains `quote_id`, invoice ID/revision, nested payer and zero-fee Money values, `rental-policy-v1`, SHA-256 fingerprint, and five-minute expiry. Checkout requires that exact unexpired quote, matching invoice revision, invoice ID, and a new request UUID. Its resource contains the persisted attempt/session IDs, amount, fifteen-minute fake hosted URL, exact HTTPS origin allowlist, attempt-bound return state, configured return URL, and approved external schemes. A second live intention is rejected; replaying the same request key returns the original receipt/resource.
 
 Recovery GETs never create a charge. They return at most the authenticated payer's exact invoice/request-key attempt, `absence_confirmed`, and an existing unexpired active session when resumable. Hosted return data and `success=true` do not capture funds.
+
+Database absence alone returns `absence_confirmed=false`. The payer's explicit Check action can POST `resolve_checkout`, using the original key. The command revalidates current payment authority under the same company/property, lease and invoice locks as checkout. If the original attempt exists, its current projection and resumable session are returned. Otherwise, only when no operation receipt exists, the command persists an `IdempotencyRecord` with `recovery_status=absent_final`. Later checkout using that closed key receives HTTP 409; the original key can never become a new charge. Repeated resolution returns the same outcome. A later reviewed payment uses a fresh quote/intention and still requires all current checkout conditions.
+
+This recovery command remains available when new checkout is disabled. Owner, employee and coordinator visibility alone does not grant the company payer command. Both responses are private/no-store. Automatic polling remains GET-only. A lost resolution response remains unknown until a fresh read or explicit repeated resolution; neither path replays checkout. Closing absence does not cancel an existing attempt, release inventory, refund money, or settle the invoice. POST resolution is for rent invoices with a lease; subscription/promotion invoices retain their own purchase recovery contract.
+
+Only the existing simulated checkout adapter is currently implemented. A future external adapter must preserve a durable original dispatch identity and reconcile external acceptance after rollback/interruption before declaring an operation absent. The database closure test is not evidence about an unconfigured provider.
 
 Only an HMAC-verified provider event can establish capture. Fake events are deduplicated by provider event ID and digest, bind exact amount/currency/account, and tolerate settlement arriving before capture. Capture posts balanced receivable/PSP and owner-liability/commission-reserve transactions, creates an allocation and receipt, and calculates the one-time 10% deduction on first-period base rent. PSP settlement remains a separate state. Owner payables expose gross, commission, processing fee, net, settlement/payout states, and blocking reasons.
 

@@ -28,6 +28,11 @@ def replay_operation(user, operation, request_key, payload):
     ).first()
     if not record:
         return None
+    if record.recovery_status == IdempotencyRecord.RecoveryStatus.ABSENT_FINAL:
+        raise RentalConflict(
+            "This operation was closed without execution. Review and use a new request key.",
+            code="operation_closed_without_execution",
+        )
     if record.fingerprint != fingerprint(payload):
         raise RentalConflict(
             "This request_key was already used for a different intention.",

@@ -837,6 +837,33 @@ def test_revoked_payer_cannot_replay_quote_or_checkout(signed_agreement):
 
 
 @pytest.mark.django_db
+def test_checkout_recovery_requires_current_company_payer(signed_agreement):
+    cycle, item = signed_agreement
+    invoice = item.lease.invoices.get()
+    path = API + "payment-attempts/"
+    body = command(action="resolve_checkout", invoice_id=str(invoice.id))
+    for role in ["employee", "coordinator", "owner"]:
+        assert authenticated(cycle[role]).post(
+            path, body, format="json"
+        ).status_code in {403, 404}
+    result = authenticated(cycle["payer"]).post(path, body, format="json")
+    assert result.status_code == 200 and result.data["absence_confirmed"] is True
+    item.payer_mandate.state = "revoked"
+    item.payer_mandate.save()
+    assert (
+        authenticated(cycle["payer"])
+        .post(
+            path,
+            command(action="resolve_checkout", invoice_id=str(invoice.id)),
+            format="json",
+        )
+        .status_code
+        == 403
+    )
+    assert not invoice.payment_attempts.exists()
+
+
+@pytest.mark.django_db
 def test_operator_authority_review_is_independent_and_admin_form_uses_same_command(
     cycle, client, settings
 ):
