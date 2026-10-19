@@ -840,3 +840,12 @@
 - **Verification:** Four failing-before cases; 23 corrected and adjacent PostgreSQL checks passed. Fifty-six Flutter checks passed. Eight actual Android checkpoints passed across the original two synthetic appointments and a read-only continuation after a test-harness logout correction. Native controls recorded proceed/decline, private-reason exclusion, employee isolation, coordinator request-form entry/cancel and declined-source denial. Attendance is a user attestation, not independent physical evidence.
 - **Scope:** No model, migration, financial rule, provider instruction, worker activation or company rollout change. Existing request revision/idempotency, participant authority, company handoff source checks and independent approvals remain. Unrelated identity changes are preserved.
 - **Files:** `backend/core_apps/features/services/company/viewing_handoff.py`, `backend/core_apps/properties/services/post_visit_decision_parts/continuation.py`, `backend/core_apps/features/tests/test_company_viewing_handoff.py`; sibling app labels, native/Flutter tests and English evidence reports.
+
+
+## 2026-10-20
+
+### Connect reputation operator decisions and retain report closure explanations
+- **What:** Added reasoned Django admin queues and canonical decisions for reputation sections, reports and appeals; exposed each resolved report's existing audit explanation to its authorized reporter.
+- **Why:** Moderation APIs existed without a current administrative entry, and report case reads returned an empty resolution despite a recorded decision reason.
+- **Details:** Preserved source-party and independent appeal boundaries, immutable score/wording and publication gates, revision checks, original operation receipts, CSRF and private responses. Generic record mutations remain disabled. A second distinct report closure is rejected; resolved cases retain history without another decision form. No migration, financial policy, provider, company activation or paid resource was changed. Verification: 58 PostgreSQL tests, 12 actual Chrome checks and a clean Django system check in isolated local environments.
+- **Files:** `backend/core_apps/features/reputation_admin.py`, `admin.py`, `reputation_views.py`, `services/reputation/moderation.py`, `templates/admin/reputation/inspect.html`, `tests/test_reputation_admin.py`, `backend/docs/rating_api.md`.

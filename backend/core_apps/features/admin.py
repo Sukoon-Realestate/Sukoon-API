@@ -4,6 +4,7 @@ from . import chargeback_admin  # noqa: F401
 from . import company_admin  # noqa: F401
 from . import company_execution_admin  # noqa: F401
 from . import portfolio_admin  # noqa: F401
+from . import reputation_admin  # noqa: F401
 from .billing_admin import FinancialHistoryAdmin
 
 from .models import (

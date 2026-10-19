@@ -406,7 +406,11 @@ class ReviewCaseView(ReviewView):
                 "id": str(item.id),
                 "state": getattr(item, "state", getattr(item, "status", "")),
                 "revision": item.revision,
-                "resolution": getattr(item, "resolution", ""),
+                "resolution": (
+                    moderation.report_resolution(item)
+                    if isinstance(item, ReviewReport)
+                    else getattr(item, "resolution", "")
+                ),
             }
         )
 
@@ -644,7 +648,9 @@ class ReviewResolveCaseView(ReviewView):
         if not item:
             raise NotFound()
         if isinstance(item, ReviewReport):
-            moderation.require_moderator(request.user, item.section)
+            return Response(
+                moderation.resolve_report(request.user, identity, request.data)
+            )
         elif not request.user.has_perm("features.review_eligibility"):
             raise PermissionDenied()
         elif request.user.pk in {
@@ -666,11 +672,8 @@ class ReviewResolveCaseView(ReviewView):
             reason = text_value(request.data["reason"], 1000)
             if not reason:
                 raise ReviewError("invalid_review_text", 400)
-            if isinstance(locked, ReviewReport):
-                locked.state = "resolved"
-            else:
-                # Resolution never creates a handover or attendance attestation.
-                locked.status, locked.resolution = "resolved", reason
+            # Resolution never creates a handover or attendance attestation.
+            locked.status, locked.resolution = "resolved", reason
             locked.revision += 1
             locked.save()
             submission.audit(locked, request.user, "operator_case_resolved", reason)

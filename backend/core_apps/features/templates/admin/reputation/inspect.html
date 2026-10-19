@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<p>Record {{ record_id }}. Inspect only for an authorized moderation purpose.</p>
+<form method="get">
+  {{ access_form.as_p }}
+  <button type="submit">Inspect content</button>
+</form>
+{% if item %}
+<p>Section {{ section.id }} — state {{ section.content_state }} — revision {{ section.revision }}.</p>
+<p>Recorded score: {{ section.overall_score }}. Scores and original wording cannot be rewritten.</p>
+<h2>Original content</h2><pre>{{ section.original_comment }}</pre>
+<h2>Current public wording</h2><pre>{{ section.public_comment }}</pre>
+{% if reply %}<h2>Reply</h2><p>{{ reply.id }} — {{ reply.content_state }} — revision {{ reply.revision }}</p><pre>{{ reply.original_comment }}</pre>{% endif %}
+{% if not is_section %}<h2>Case</h2><p>{{ item.state }} — revision {{ item.revision }}</p><pre>{{ item.detail }}</pre><p>{{ resolution }}</p>{% endif %}
+<h2>Recorded decisions</h2>
+<ul>{% for decision in section.decisions.all %}<li>{{ decision.id }} — {{ decision.action }} — {{ decision.reason }}</li>{% empty %}<li>No recorded decision.</li>{% endfor %}</ul>
+<p>Approval does not release the mutual submission/deadline gate. A reply uses its own displayed revision. Redaction can only remove original characters. Appeal resolution requires a different moderator.</p>
+{% if can_decide %}<form method="post">
+  {% csrf_token %}
+  <input type="hidden" name="access_reason" value="{{ access_form.cleaned_data.access_reason }}">
+  {{ decision_form.as_p }}
+  <button type="submit">Record decision</button>
+</form>{% else %}<p>This case is resolved. Its recorded outcome remains available above.</p>{% endif %}
+{% endif %}
+{% endblock %}

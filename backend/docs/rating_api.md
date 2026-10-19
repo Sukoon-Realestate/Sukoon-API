@@ -192,3 +192,14 @@ Under the existing admin API:
 - POST `review-windows/{case_id}/extend/`: the same incident evidence, `expected_revision`, `extension_days` from 1 to 30. One extension applies to the complete case before disclosure. Expired or released windows are rejected.
 
 The recovery CLI accepts the identical JSON contract through `recover_review_outage --operator <user UUID> --request-file <path>`. `backfill_review_ancestry` only copies original historical snapshots and reports sources that remain unknown.
+
+
+## Operator browser entry (20 October 2026)
+
+Django Admin exposes Review sections, Review reports and Review appeals to current staff with `features.moderate_reviews`. Queues show identity/state/revision; **Inspect with a reason** records an audit event before revealing private content. Source parties, active source-company members and conflicted appeal reviewers are excluded. Generic model creation, editing and deletion are disabled.
+
+Section and reply decisions call the existing moderation command using the displayed target revision and original request identity. The reply has its own revision. Eligibility revocation is shown only with the additional `features.review_eligibility` permission. Report resolution and independent appeal resolution call canonical commands. Approval cannot release the original publication time gate or change a score. The forms retain CSRF protection and private/no-store responses.
+
+A resolved report projects its existing `operator_case_resolved` audit reason through `GET reviews/cases/{id}/` to its reporter. There is no historical backfill or invented explanation. The original successful close request remains idempotent across browser and API entry; a different command cannot close the same resolved report again. Resolved report/appeal pages retain their explanation without a new decision control.
+
+Verification: 58 local PostgreSQL tests (ten admin plus 48 existing reputation tests), 12 actual Chrome checks, and Django system checks. Synthetic historical prerequisites, local verification, native mobile workflows and hosted operation remain distinct.

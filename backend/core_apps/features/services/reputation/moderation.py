@@ -11,6 +11,7 @@ from ...models import (
     ReviewReport,
     ReviewModerationDecision,
     ReviewAppeal,
+    ReviewAuditEvent,
 )
 from .policy import (
     ReviewError,
@@ -163,6 +164,49 @@ def require_moderator(user, section, permission="moderate_reviews"):
     for company in (case.company, case.landlord_company):
         if company and company.memberships.filter(user=user, is_active=True).exists():
             raise ReviewError("conflict_of_interest")
+
+
+def report_resolution(report):
+    if report.state != "resolved":
+        return ""
+    return (
+        ReviewAuditEvent.objects.filter(
+            subject_id=report.id, action="operator_case_resolved"
+        )
+        .order_by("-created_at", "-id")
+        .values_list("reason", flat=True)
+        .first()
+        or ""
+    )
+
+
+def resolve_report(user, identity, body):
+    report = ReviewReport.objects.select_related("section").filter(id=identity).first()
+    if not report:
+        raise NotFound()
+    require_moderator(user, report.section)
+
+    def action():
+        keys(
+            body,
+            ["request_key", "expected_revision", "reason"],
+            ["request_key", "expected_revision", "reason"],
+        )
+        locked = ReviewReport.objects.select_for_update().get(pk=report.pk)
+        require_moderator(user, locked.section)
+        revision(locked, body["expected_revision"])
+        if locked.state != "open":
+            raise ReviewError("review_not_eligible")
+        reason = text_value(body["reason"], 1000)
+        if not reason:
+            raise ReviewError("invalid_review_text", 400)
+        locked.state = "resolved"
+        locked.revision += 1
+        locked.save(update_fields=["state", "revision", "updated_at"])
+        audit(locked, user, "operator_case_resolved", reason)
+        return {"id": str(locked.id), "state": "resolved", "revision": locked.revision}
+
+    return command(user, f"review.resolve_case.{identity}", body, action, report.id)
 
 
 def moderate(user, identity, body, *, appeal=None):
