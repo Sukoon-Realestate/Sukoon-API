@@ -15,6 +15,7 @@ def normalize_request(data):
         "content",
         "attachment_ids",
         "reply_to_message_id",
+        "membership_period",
     }
     if not isinstance(data, dict) or set(data) - permitted:
         raise ValidationError("Unsupported message fields.")
@@ -71,6 +72,10 @@ def send_group_message(conversation, sender, data):
     conversation, participant, _ = authorize(
         conversation, sender, action="send_message", lock=True
     )
+    if "membership_period" in data and str(data["membership_period"]) != str(
+        participant.membership_period
+    ):
+        raise ChatConflict("Refresh the current chat membership before retrying.")
     existing = Message.objects.filter(
         conversation=conversation, sender=sender, client_message_id=client_id
     ).first()

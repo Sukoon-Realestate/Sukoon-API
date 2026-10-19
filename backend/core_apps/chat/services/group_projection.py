@@ -139,6 +139,9 @@ def summary(conversation, user):
         "allowed_actions": actions(member),
         "limits": limits(),
         "can_send": True,
+        # Exact sender/client identity and payload are serialized by group_send.
+        # A retry may additionally fence its original membership period.
+        "idempotent_message_retry": True,
         "last_message": preview,
         "last_message_at": latest.created_at.isoformat() if latest else None,
         "event_cursor": encode_cursor(

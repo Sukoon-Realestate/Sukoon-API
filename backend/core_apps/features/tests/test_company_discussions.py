@@ -36,6 +36,86 @@ def message(content="Synthetic company discussion"):
     return {"client_message_id": str(uuid.uuid4()), "kind": "text", "content": content}
 
 
+@pytest.mark.django_db
+def test_unknown_company_send_can_retry_exact_identity_with_membership_fence(
+    company_setup,
+):
+    _, coordinator, _, company = company_setup[:4]
+    request = company_setup[-1]
+    conversation = Conversation.objects.get(company_request=request)
+    client = authenticated(coordinator)
+    projection = client.get(
+        f"{API}companies/{company.id}/housing-requests/{request.id}/discussion/"
+    ).json()["data"]
+    assert projection["idempotent_message_retry"] is True
+    data = {**message(), "membership_period": projection["membership_period"]}
+    base = f"/api/v1/chat/conversations/{conversation.id}/messages/"
+    lookup = base + f"by-client-id/{data['client_message_id']}/"
+    assert client.get(lookup).status_code == 404
+    first = client.post(base + "create/", data, format="json")
+    second = client.post(base + "create/", data, format="json")
+    assert first.status_code == second.status_code == 201
+    assert first.json()["data"]["id"] == second.json()["data"]["id"]
+    assert Message.objects.filter(
+        conversation=conversation, client_message_id=data["client_message_id"]
+    ).count() == 1
+    assert ChatEvent.objects.filter(
+        conversation=conversation, kind="message.new"
+    ).count() == 1
+    changed = client.post(
+        base + "create/", {**data, "content": "Changed"}, format="json"
+    )
+    assert changed.status_code == 409
+
+
+@pytest.mark.django_db(transaction=True)
+def test_late_original_and_company_retry_commit_once(company_setup):
+    if connection.vendor != "postgresql":
+        pytest.skip("Real row-lock proof requires PostgreSQL")
+    coordinator = company_setup[1]
+    conversation = Conversation.objects.get(company_request=company_setup[-1])
+    original = message()
+    retry = {
+        **original,
+        "membership_period": summary(conversation, coordinator)["membership_period"],
+    }
+    results = parallel_calls(
+        lambda index: send_group_message(
+            conversation, coordinator, original if index == 0 else retry
+        ).id
+    )
+    assert results[0] == results[1]
+    assert Message.objects.filter(conversation=conversation).count() == 1
+    assert ChatEvent.objects.filter(
+        conversation=conversation, kind="message.new"
+    ).count() == 1
+
+
+@pytest.mark.django_db
+def test_company_retry_rejects_wrong_period_and_authority_revocation(company_setup):
+    coordinator, company = company_setup[1], company_setup[3]
+    conversation = Conversation.objects.get(company_request=company_setup[-1])
+    client = authenticated(coordinator)
+    base = f"/api/v1/chat/conversations/{conversation.id}/messages/"
+    original = {
+        **message(),
+        "membership_period": summary(conversation, coordinator)["membership_period"],
+    }
+    wrong_period = client.post(
+        base + "create/",
+        {**original, "membership_period": str(uuid.uuid4())},
+        format="json",
+    )
+    assert wrong_period.status_code == 409
+    lookup = base + f"by-client-id/{original['client_message_id']}/"
+    assert client.get(lookup).status_code == 404
+    CompanyMembership.objects.filter(company=company, user=coordinator).update(
+        is_active=False
+    )
+    assert client.post(base + "create/", original, format="json").status_code == 403
+    assert not Message.objects.filter(conversation=conversation).exists()
+
+
 def backup(company):
     user = User.objects.create_user(
         email="backup-case@example.invalid",
