@@ -25,29 +25,35 @@ function IndividualKycReviewContent() {
 
   const [kycData, setKycData] = useState<KycDetail | null>(null);
   const [internalNote, setInternalNote] = useState('');
-  const [status, setStatus] = useState<'قيد المراجعة' | 'مقبول' | 'مرفوض' | 'إعادة رفع'>('قيد المراجعة');
+  const [status, setStatus] = useState<'غير متاح' | 'قيد المراجعة' | 'مقبول' | 'مرفوض'>('غير متاح');
   const [modalType, setModalType] = useState<'approve' | 'reject' | 'reupload' | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeciding, setIsDeciding] = useState(false);
   const { showToast } = useToast();
 
   useEffect(() => {
+    let current = true;
+    setKycData(null);
+    setStatus('غير متاح');
+    setModalType(null);
+    setInternalNote('');
+    setIsLoading(Boolean(submissionId));
     async function loadDetail() {
       if (!submissionId) return;
       setIsLoading(true);
       try {
         const data = await fetchKycDetail(submissionId);
-        if (data) {
-          setKycData(data);
-          if (data.status === 'approved') setStatus('مقبول');
-          else if (data.status === 'rejected') setStatus('مرفوض');
-        }
-      } catch (err) {
-        setKycData(null); showToast('Identity evidence could not be loaded.', 'error');
+        if (!current) return;
+        setKycData(data);
+        if (data) setStatus(data.status === 'approved' ? 'مقبول' : data.status === 'rejected' ? 'مرفوض' : 'قيد المراجعة');
+      } catch {
+        if (current) showToast('Identity evidence could not be loaded.', 'error');
       } finally {
-        setIsLoading(false);
+        if (current) setIsLoading(false);
       }
     }
-    loadDetail();
+    void loadDetail();
+    return () => { current = false; };
   }, [submissionId]);
 
   const userName = kycData?.userName || 'مستخدم';
@@ -57,25 +63,38 @@ function IndividualKycReviewContent() {
   const gender = kycData?.gender || 'غير محدد';
 
   const handleConfirmDecision = async () => {
-    if (!kycData?.id || !kycData.canReview) { showToast('Load the current pending submission before deciding.', 'error'); return; }
+    if (isDeciding || !modalType || kycData?.id !== submissionId || !kycData?.canReview) { showToast('Load the current pending submission before deciding.', 'error'); return; }
+    if (modalType !== 'approve' && !internalNote.trim()) { showToast('Enter the reason that will be visible to the applicant.', 'error'); return; }
+    setIsDeciding(true);
     try {
       if (modalType === 'approve') {
         if (kycData?.id) await approveKyc(kycData.id);
         setStatus('مقبول');
         showToast(`تمت الموافقة على توثيق هوية ${userName} بنجاح`, 'success');
       } else if (modalType === 'reject') {
-        if (kycData?.id) await rejectKyc(kycData.id, internalNote || 'المستندات غير مطابقة');
+        if (kycData?.id) await rejectKyc(kycData.id, internalNote.trim());
         setStatus('مرفوض');
         showToast('تم رفض طلب التوثيق وتثبيت الحالة في النظام', 'error');
       } else if (modalType === 'reupload') {
-        await rejectKyc(kycData.id, internalNote || 'Please submit clearer identity evidence.');
+        await rejectKyc(kycData.id, internalNote.trim());
         setStatus('مرفوض');
         showToast('Resubmission requested through the recorded rejection reason.', 'success');
       }
-    } catch { showToast('The result was not confirmed. Refresh the original record before retrying.', 'error'); } finally {
+    } catch { showToast('The result was not confirmed. Reload the original record before retrying.', 'error'); } finally {
+      // Reconcile the authoritative original record before permitting another decision.
+      setKycData(null);
+      setStatus('غير متاح');
+      try {
+        const current = await fetchKycDetail(submissionId);
+        setKycData(current);
+        if (current) setStatus(current.status === 'approved' ? 'مقبول' : current.status === 'rejected' ? 'مرفوض' : 'قيد المراجعة');
+      } catch { showToast('Reload the page to read the current review result.', 'error'); }
+      setIsDeciding(false);
       setModalType(null);
     }
   };
+
+  const canDecide = !isLoading && !isDeciding && kycData?.id === submissionId && kycData?.canReview === true;
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -108,8 +127,6 @@ function IndividualKycReviewContent() {
                     ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                     : status === 'مرفوض'
                     ? 'bg-rose-50 text-rose-700 border-rose-200'
-                    : status === 'إعادة رفع'
-                    ? 'bg-blue-50 text-blue-700 border-blue-200'
                     : 'bg-amber-50 text-amber-700 border-amber-200'
                 }`}
               >
@@ -136,19 +153,19 @@ function IndividualKycReviewContent() {
 
               <div className="flex items-center justify-between">
                 <span className="text-[var(--text-subtle)] font-medium">تاريخ رفع الطلب</span>
-                <span className="font-bold text-[var(--foreground)]">{kycData?.submittedAt || 'اليوم 08:30 ص'}</span>
+                <span className="font-bold text-[var(--foreground)]">{kycData?.submittedAt || 'غير متاح'}</span>
               </div>
             </div>
 
-            {/* System Automated Check Banner */}
-            <div className="w-full mt-6 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-xl p-3 flex items-start gap-2.5 text-right">
-              <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+            {/* No biometric provider result is present in this request contract. */}
+            <div className="w-full mt-6 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-xl p-3 flex items-start gap-2.5 text-right">
+              <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div>
-                <h5 className="font-bold text-xs text-emerald-800 dark:text-emerald-300">
-                  تطابق بصمة الوجه (AI: 98.4%)
+                <h5 className="font-bold text-xs text-amber-800 dark:text-amber-300">
+                  لا تتوفر نتيجة تحقق آلي معتمدة
                 </h5>
-                <p className="text-[11px] text-emerald-700/80 dark:text-emerald-400 mt-0.5">
-                  تم فحص حيوية الصورة الذاتية وتطابق ملامح الوجه مع صورة الهوية بنجاح.
+                <p className="text-[11px] text-amber-700/80 dark:text-amber-400 mt-0.5">
+                  عرض الصور لا يثبت حيوية الوجه أو تطابقه مع الهوية. راجع المستندات قبل تسجيل القرار.
                 </p>
               </div>
             </div>
@@ -168,9 +185,6 @@ function IndividualKycReviewContent() {
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-xs text-[var(--foreground)]">
                       وجه بطاقة الهوية (Front)
-                    </span>
-                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 rounded">
-                      واضح
                     </span>
                   </div>
                   <div className="w-full h-44 bg-slate-200 dark:bg-slate-700/50 rounded-lg flex items-center justify-center border border-dashed border-slate-300 dark:border-slate-600 overflow-hidden">
@@ -193,9 +207,6 @@ function IndividualKycReviewContent() {
                     <span className="font-bold text-xs text-[var(--foreground)]">
                       ظهر بطاقة الهوية (Back)
                     </span>
-                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 rounded">
-                      واضح
-                    </span>
                   </div>
                   <div className="w-full h-44 bg-slate-200 dark:bg-slate-700/50 rounded-lg flex items-center justify-center border border-dashed border-slate-300 dark:border-slate-600 overflow-hidden">
                     {kycData?.idBackUrl ? (
@@ -215,7 +226,7 @@ function IndividualKycReviewContent() {
               {/* Live Selfie Check */}
               <div className="border border-[var(--card-border)] rounded-xl p-4 bg-[var(--badge-bg-muted)] space-y-2 mt-4">
                 <span className="font-bold text-xs text-[var(--foreground)] block">
-                  صورة السيلفي الحية للتأكيد (Selfie Check)
+                  صورة السيلفي المرفوعة
                 </span>
                 <div className="w-full h-48 bg-slate-200 dark:bg-slate-700/50 rounded-lg flex items-center justify-center border border-dashed border-slate-300 dark:border-slate-600 overflow-hidden">
                   {kycData?.selfieUrl ? (
@@ -224,7 +235,7 @@ function IndividualKycReviewContent() {
                     <div className="text-center p-4">
                       <User className="w-8 h-8 text-slate-400 mx-auto mb-1" />
                       <span className="text-xs text-[var(--text-muted)] font-medium">
-                        صورة السيلفي الحية ملتقطة من تطبيق الجوال
+                        لم تُرفق صورة سيلفي
                       </span>
                     </div>
                   )}
@@ -240,12 +251,12 @@ function IndividualKycReviewContent() {
 
               <div>
                 <label className="text-xs font-bold text-[var(--foreground)] block mb-1.5">
-                  ملاحظة إدارية داخلية (اختياري / سبب الرفض):
+                  سبب الرفض أو طلب إعادة الرفع (يظهر للمستخدم):
                 </label>
                 <textarea
                   value={internalNote}
                   onChange={(e) => setInternalNote(e.target.value)}
-                  placeholder="اكتب ملاحظة للفريق أو سبب الرفض في حال عدم وضوح المستندات..."
+                  placeholder="اكتب السبب الذي سيظهر للمستخدم عند الرفض أو طلب إعادة الرفع..."
                   rows={3}
                   className="w-full p-3 bg-[var(--input-bg)] rounded-xl border border-[var(--card-border)] text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all placeholder:text-[var(--text-subtle)]"
                 ></textarea>
@@ -253,6 +264,7 @@ function IndividualKycReviewContent() {
 
               <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                 <button
+                  disabled={!canDecide}
                   onClick={() => setModalType('approve')}
                   className="w-full sm:flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-md shadow-emerald-600/20"
                 >
@@ -261,6 +273,7 @@ function IndividualKycReviewContent() {
                 </button>
 
                 <button
+                  disabled={!canDecide}
                   onClick={() => setModalType('reupload')}
                   className="w-full sm:flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-md shadow-amber-500/20"
                 >
@@ -269,6 +282,7 @@ function IndividualKycReviewContent() {
                 </button>
 
                 <button
+                  disabled={!canDecide}
                   onClick={() => setModalType('reject')}
                   className="w-full sm:flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-md shadow-rose-600/20"
                 >
@@ -295,10 +309,10 @@ function IndividualKycReviewContent() {
         }
         message={
           modalType === 'approve'
-            ? 'سيتم منح المستخدم شارة "موثق" وتمكينه من إجراء المعاملات العقارية الكاملة.'
+            ? 'سيُسجَّل اعتماد الهوية. تظل المعاملات الأخرى خاضعة لصلاحياتها وشروطها المستقلة.'
             : modalType === 'reject'
-            ? 'سيتم إشعار المستخدم برفض المستندات مع ذكر السبب المسجل في الملاحظات.'
-            : 'سيتم إرسال إشعار للمستخدم يطلب منه إعادة تصوير بطاقة الهوية بجودة أوضح.'
+            ? 'سيُسجَّل رفض المستندات والسبب ليتمكن المستخدم من مراجعته وإعادة التقديم.'
+            : 'سيُسجَّل رفض الطلب مع السبب الذي أدخلته ليتمكن المستخدم من إعادة التقديم.'
         }
         variant={
           modalType === 'approve' ? 'success' : modalType === 'reject' ? 'danger' : 'warning'
