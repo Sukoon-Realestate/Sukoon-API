@@ -144,7 +144,7 @@ def get_authorized_rental_subject(user, subject_id):
     if invoice:
         from ..company.tenancy_access import commercial_read
 
-        if commercial_read(invoice.lease, user):
+        if invoice.beneficiary_id == user.pk or commercial_read(invoice.lease, user):
             return invoice
         raise NotFound()
 
@@ -156,7 +156,9 @@ def get_authorized_rental_subject(user, subject_id):
     if attempt:
         from ..company.tenancy_access import commercial_read
 
-        if commercial_read(attempt.invoice.lease, user):
+        if attempt.invoice.beneficiary_id == user.pk or commercial_read(
+            attempt.invoice.lease, user
+        ):
             return attempt
         raise NotFound()
 

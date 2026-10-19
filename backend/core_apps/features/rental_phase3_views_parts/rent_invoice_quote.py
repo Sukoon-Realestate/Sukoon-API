@@ -44,7 +44,10 @@ def _invoice(request, invoice_id, lock=False):
         _lock_lease(candidate.lease)
         queryset = queryset.select_for_update(of=("self",))
     invoice = get_object_or_404(queryset, id=invoice_id)
-    if invoice.lease_id is None or not commercial_read(invoice.lease, request.user):
+    if invoice.lease_id is None or (
+        invoice.beneficiary_id != request.user.pk
+        and not commercial_read(invoice.lease, request.user)
+    ):
         raise NotFound()
     return invoice
 
@@ -61,7 +64,9 @@ def _attempt(request, attempt_id, lock=False):
         if request.user.pk != attempt.payer_id:
             raise NotFound()
         return attempt
-    if not commercial_read(attempt.invoice.lease, request.user):
+    if attempt.invoice.beneficiary_id != request.user.pk and not commercial_read(
+        attempt.invoice.lease, request.user
+    ):
         raise NotFound()
     return attempt
 

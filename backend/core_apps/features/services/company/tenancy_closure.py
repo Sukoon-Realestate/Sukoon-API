@@ -256,10 +256,9 @@ def propose_authority(item, user, data):
         company=item.lease.renter_company,
         kind="pay",
     )
-    exposure = (
-        item.source_snapshot["full_term_rent_minor"]
-        + item.source_snapshot["deposit_minor"]
-    )
+    from .tenancy_commercial import exposure as current_exposure
+
+    exposure = current_exposure(item)
     if item.lease.owner_id in {signer.membership.user_id, payer.membership.user_id}:
         raise PermissionDenied(
             "The owner cannot represent the renting company in this tenancy."
@@ -338,6 +337,8 @@ def propose_authority(item, user, data):
 
 
 def apply_authority(item, change):
+    from .tenancy_commercial import exposure as current_exposure
+
     body = change.snapshot["content"]
     if (
         str(item.signer_mandate.id) != body["previous_signer"]
@@ -357,8 +358,7 @@ def apply_authority(item, change):
     if not all(
         access.execution_mandate(
             m,
-            exposure=item.source_snapshot["full_term_rent_minor"]
-            + item.source_snapshot["deposit_minor"],
+            exposure=current_exposure(item),
         )
         for m in next_mandates
     ):

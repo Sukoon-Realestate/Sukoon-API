@@ -152,11 +152,29 @@ def run_rental_billing_cycle(self):
     now = timezone.now()
     issued = 0
     with transaction.atomic():
-        for period in BillingPeriod.objects.select_for_update().filter(
+        candidates = BillingPeriod.objects.filter(
             status=BillingPeriod.Status.SCHEDULED,
             issue_at__lte=now,
             lease__status__in=[Lease.Status.ACTIVE, Lease.Status.TERMINATION_PENDING],
-        ):
+        ).order_by("lease_id", "sequence")
+        for candidate in candidates:
+            # Corporate changes lock company -> all properties -> lease before
+            # changing scheduled periods. Billing must use the same order.
+            if candidate.lease.renter_company_id:
+                from core_apps.common.recovery import scope_available
+                from ..services.rental_lifecycle.locks import lock_financial_lease
+
+                if not scope_available("company_authority"):
+                    continue
+                lease = lock_financial_lease(candidate.lease)
+            else:
+                lease = candidate.lease
+            period = BillingPeriod.objects.select_for_update().get(pk=candidate.pk)
+            if period.status != "scheduled" or lease.status not in {
+                "active",
+                "termination_pending",
+            }:
+                continue
             issue_invoice(period)
             issued += 1
         overdue = (

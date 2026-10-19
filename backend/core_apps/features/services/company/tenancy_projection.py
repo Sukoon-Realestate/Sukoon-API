@@ -15,7 +15,7 @@ from . import tenancy_access as access
 
 def payload(item, user):
     roles = access.roles(item, user)
-    commercial = bool(roles - {"employee", "incoming_employee"})
+    commercial = bool(roles - access.PRIVATE_ONLY)
     lease = item.lease
     booking = item.preparation.booking
     assignments = list(
@@ -106,6 +106,19 @@ def payload(item, user):
         and "administrator" in roles
     ):
         allowed += ["replace_authority"]
+    if lease.status == "active" and roles & {"owner", "signer"}:
+        from .tenancy_commercial import KINDS, OPEN
+
+        if not item.changes.filter(kind__in=KINDS, state__in=OPEN).exists():
+            allowed += ["commercial_change", "ownership_change"]
+    if (
+        lease.status in {"ended", "cancelled"}
+        and roles & {"owner", "payer"}
+        and FinalSettlement.objects.filter(
+            lease=lease, execution_status="executed"
+        ).exists()
+    ):
+        allowed += ["settlement_adjustment"]
     change_rows = []
     for row in item.changes.order_by("-created_at")[:100]:
         if not commercial and str(user.id) not in row.snapshot["required"].values():
@@ -124,14 +137,18 @@ def payload(item, user):
                 "digest": row.snapshot_digest,
                 "reason": row.reason,
                 "content": (
-                    review_content(row.snapshot["content"], lease)
+                    review_content(
+                        row.snapshot["content"], lease, redact_people=not commercial
+                    )
                     if commercial
+                    or set(own_roles) & {"approver", "new_owner", "financial_reviewer"}
                     else {
                         k: row.snapshot["content"][k]
                         for k in [
                             "property_id",
                             "property_name",
                             "effective_on",
+                            "ends_on_exclusive",
                             "employee_name",
                         ]
                         if k in row.snapshot["content"]
@@ -142,10 +159,24 @@ def payload(item, user):
                     if row.state == "pending"
                     else []
                 ),
-                "can_withdraw": row.state in {"pending", "waiting_departure"}
+                "can_withdraw": row.state
+                in {"pending", "waiting_departure", "accepted", "pending_signatures"}
+                and not (
+                    row.rental_change_id and row.rental_change.signing_sessions.exists()
+                )
                 and (user.pk == row.proposed_by_id or "coordinator" in roles),
                 "can_resume": row.state == "waiting_departure"
                 and "coordinator" in roles,
+                "rental_change_id": (
+                    str(row.rental_change.id) if row.rental_change_id else ""
+                ),
+                "signing_roles": [
+                    r for r in own_roles if r in {"owner", "signer", "new_owner"}
+                ],
+                "continuation_actions": continuation_actions(
+                    row, user, roles, provider
+                ),
+                "signing_sessions": continuation_sessions(row, user),
                 "decisions": (
                     row.decisions
                     if commercial
@@ -200,6 +231,7 @@ def payload(item, user):
                 ],
             }
         )
+    allowed += sorted({a for r in change_rows for a in r["continuation_actions"]})
     if any(r["roles_to_decide"] for r in change_rows):
         allowed.append("respond_change")
     if any(r["can_withdraw"] for r in change_rows):
@@ -208,6 +240,9 @@ def payload(item, user):
         allowed.append("resume_change")
     if any(r["actions"] for r in maintenance_rows):
         allowed.append("maintenance_action")
+    from .tenancy_continuation_projection import choices
+
+    continuation_choices = choices(item, user, roles)
     source = item.source_snapshot
     replacement_mandates = []
     if "administrator" in roles:
@@ -220,7 +255,14 @@ def payload(item, user):
             )
         ]
     unit_rows = access.properties(item)
+    from ..rental_phase2 import add_months
+
     return {
+        "current_rent_minor": lease.rent_amount_minor if commercial else None,
+        "suggested_renewal_end": (
+            str(add_months(lease.end_date, 1)) if commercial else ""
+        ),
+        **continuation_choices,
         "id": str(item.id),
         "lease_id": str(lease.id),
         "revision": lease.revision,
@@ -420,7 +462,7 @@ def payload(item, user):
     }
 
 
-def review_content(content, lease):
+def review_content(content, lease, *, redact_people=False):
     from ...rental_phase4_views_parts.handover_payload import evidence_payload
 
     def evidence(ids):
@@ -431,7 +473,14 @@ def review_content(content, lease):
             )
         ]
 
-    result = dict(content)
+    from copy import deepcopy
+
+    result = deepcopy(content)
+    if redact_people:
+        result.pop("roster", None)
+        if "terms" in result:
+            for key in ["placements", "employee_placements"]:
+                result["terms"].pop(key, None)
     result["evidence"] = evidence(content.get("evidence_ids", []))
     if "lines" in content:
         result["lines"] = [
@@ -469,3 +518,54 @@ def assignment_actions(item, row, user):
         ).exists():
             actions.append("replace_employee")
     return actions
+
+
+def continuation_actions(row, user, roles, provider):
+    if not row.rental_change_id:
+        return []
+    result = []
+    if row.state == "accepted" and "owner" in roles and provider:
+        result.append("submit_continuation")
+    own = [
+        r
+        for r, identity in row.snapshot["required"].items()
+        if identity == str(user.id) and r in {"owner", "signer", "new_owner"}
+    ]
+    if (
+        row.state == "pending_signatures"
+        and own
+        and provider
+        and str(user.id) not in row.rental_change.signed_by
+    ):
+        result.append("sign_continuation")
+    if row.state == "review_required" and roles & {
+        "owner",
+        "coordinator",
+        "signer",
+        "payer",
+    }:
+        result.append("resume_continuation")
+    return result
+
+
+def continuation_sessions(row, user):
+    if not row.rental_change_id:
+        return []
+    return [
+        {
+            "id": str(s.id),
+            "document_id": str(s.document_id),
+            "document_hash": s.document_hash,
+            "state": s.status,
+            "hosted_url": (
+                s.hosted_url
+                if s.status == "pending" and s.expires_at > timezone.now()
+                else ""
+            ),
+            "expires_at": s.expires_at.isoformat(),
+            **mock_completion_metadata(
+                "change-signing-sessions", s.id, s.change_revision
+            ),
+        }
+        for s in row.rental_change.signing_sessions.filter(signer=user)
+    ]

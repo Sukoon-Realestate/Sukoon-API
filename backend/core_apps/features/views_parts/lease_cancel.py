@@ -146,7 +146,11 @@ def lease_cancel(request, lease_id):
 
 def _invoice_queryset(user, workspace):
     if workspace == "owner":
-        return RentInvoice.objects.filter(lease__owner=user)
+        from django.db.models import Q
+
+        return RentInvoice.objects.filter(
+            Q(beneficiary=user) | Q(beneficiary__isnull=True, lease__owner=user)
+        )
     if workspace == "tenant":
         return RentInvoice.objects.filter(lease__tenant=user)
     raise ValidationError({"workspace": "Must be owner or tenant."})
@@ -185,7 +189,9 @@ def _get_authorized_invoice(request, invoice_id):
     )
     from ..services.company.tenancy_access import commercial_read
 
-    if not commercial_read(invoice.lease, request.user):
+    if invoice.beneficiary_id != request.user.pk and not commercial_read(
+        invoice.lease, request.user
+    ):
         raise NotFound()
     return invoice
 

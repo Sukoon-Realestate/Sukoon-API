@@ -4,6 +4,10 @@ from .company_serializers import CommandBody
 from .company_tenancy_serializers import ExecutionAuthorityBody, command_body
 from .rental_lifecycle_views.common import validated
 from .services.company import (
+    tenancy_commercial as commercial,
+    tenancy_continuation_signing as continuation,
+    tenancy_ownership as ownership,
+    tenancy_adjustments as adjustments,
     tenancy_access as access,
     tenancy_contracts as contracts,
     tenancy_changes as changes,
@@ -79,6 +83,12 @@ def open_case(item, user, data):
 
 
 HANDLERS = {
+    "commercial_change": commercial.propose,
+    "ownership_change": ownership.propose,
+    "settlement_adjustment": adjustments.propose,
+    "submit_continuation": continuation.submit,
+    "sign_continuation": continuation.sign,
+    "resume_continuation": continuation.resume,
     "review": contracts.review,
     "submit_signature": contracts.submit,
     "sign": contracts.signing_session,
@@ -135,6 +145,11 @@ def authorize_action(item, user, action, body):
     )
 
     permissions = {
+        "commercial_change": {"owner", "signer"},
+        "ownership_change": {"owner", "signer"},
+        "settlement_adjustment": {"owner", "payer"},
+        "submit_continuation": {"owner"},
+        "resume_continuation": {"owner", "coordinator", "signer", "payer"},
         "review": {body.get("role")},
         "submit_signature": {"owner"},
         "sign": {"owner", "signer"},
@@ -149,11 +164,11 @@ def authorize_action(item, user, action, body):
     }
     if action in permissions:
         access.require_role(item, user, permissions[action])
-    if action in {"respond_change", "withdraw_change"}:
+    if action in {"respond_change", "withdraw_change", "sign_continuation"}:
         change = get_object_or_404(
             CompanyTenancyChange, tenancy=item, id=body["change_id"]
         )
-        if action == "respond_change":
+        if action in {"respond_change", "sign_continuation"}:
             changes.authorize_role(item, change, user, body["role"], positive=False)
         elif user.pk != change.proposed_by_id and "coordinator" not in access.roles(
             item, user

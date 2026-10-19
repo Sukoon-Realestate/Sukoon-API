@@ -130,10 +130,13 @@ def process_rental_changes(self):
 
     now = timezone.now()
     expired_sessions = ChangeSigningSession.objects.filter(
-        status="pending", expires_at__lte=now
+        change__lease__renter_company__isnull=True,
+        status="pending",
+        expires_at__lte=now,
     ).update(status="expired", updated_at=now)
     applied = 0
     for candidate in RentalChange.objects.filter(
+        lease__renter_company__isnull=True,
         status__in=[RentalChange.Status.ACCEPTED, RentalChange.Status.SIGNED],
         effective_on__lte=timezone.localdate(),
     ).select_related("lease")[:100]:

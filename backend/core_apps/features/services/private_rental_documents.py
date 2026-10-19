@@ -81,6 +81,19 @@ def generate(document):
             return fail(document, "accepted_settlement_unavailable")
         payload.update(
             {
+                "adjustments": [
+                    {
+                        "id": str(a.id),
+                        "original_settlement_id": str(settlement.id),
+                        "reason": a.company_change.reason,
+                        "lines": a.lines,
+                        "accepted_by": a.accepted_by,
+                        "execution_status": a.execution_status,
+                        "execution_plan": a.execution_plan,
+                        "executed_at": a.executed_at,
+                    }
+                    for a in settlement.adjustments.order_by("created_at")
+                ],
                 "settlement_id": str(settlement.id),
                 "revision": settlement.revision,
                 "lines": settlement.lines,

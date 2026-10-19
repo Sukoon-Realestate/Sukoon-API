@@ -145,6 +145,10 @@ def complete_change_signature(provider_session_id):
         session = get_object_or_404(
             ChangeSigningSession, provider_session_id=provider_session_id
         )
+        if session.change.lease.renter_company_id:
+            from ..services.company.tenancy_continuation_signing import complete
+
+            return complete(session)
         item = RentalChange.objects.select_for_update().get(pk=session.change_id)
         session = ChangeSigningSession.objects.select_for_update().get(pk=session.pk)
         if session.status == "completed":

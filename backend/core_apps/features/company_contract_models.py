@@ -137,6 +137,13 @@ class CompanyTenancyChange(TimeStampedModel):
     decisions = models.JSONField(default=dict)
     reason = models.TextField()
     applied_at = models.DateTimeField(null=True)
+    rental_change = models.OneToOneField(
+        "features.RentalChange",
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="company_review",
+    )
+    reserved_rent_minor = models.PositiveBigIntegerField(default=0)
 
 
 class CompanyMaintenanceScope(TimeStampedModel):

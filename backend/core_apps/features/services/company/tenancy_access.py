@@ -49,6 +49,22 @@ def member(item, user):
     ).first()
 
 
+PRIVATE_ONLY = {
+    "employee",
+    "incoming_employee",
+    "approver",
+    "new_owner",
+    "financial_reviewer",
+}
+OPEN_REVIEW = [
+    "pending",
+    "waiting_departure",
+    "accepted",
+    "pending_signatures",
+    "review_required",
+]
+
+
 def roles(item, user):
     if not user or not user.is_active:
         return set()
@@ -69,14 +85,34 @@ def roles(item, user):
             result.add("payer")
     if item.preparation.booking.assignments.filter(employee=user).exists():
         result.add("employee")
-    for change in item.changes.filter(state__in=["pending", "waiting_departure"]):
+    for change in item.changes.filter(state__in=OPEN_REVIEW):
         for role, identity in change.snapshot["required"].items():
             if (
                 identity == str(user.id)
                 and role
-                in {"incoming_employee", "new_signer", "new_payer", "new_coordinator"}
-                and membership
+                in {
+                    "incoming_employee",
+                    "new_signer",
+                    "new_payer",
+                    "new_coordinator",
+                    "approver",
+                    "new_owner",
+                    "financial_reviewer",
+                }
+                and (membership or role in {"new_owner", "financial_reviewer"})
             ):
+                if role == "approver" and not membership.is_approver:
+                    continue
+                if role == "financial_reviewer":
+                    from ..rental_lifecycle.common import staff_role
+
+                    if not staff_role(user, {"financial_approver"}):
+                        continue
+                if role == "new_owner" and any(
+                    p.owner_id != user.pk or not p.is_ownership_verified
+                    for p in properties(item)
+                ):
+                    continue
                 result.add(role)
     return result
 
@@ -121,15 +157,20 @@ def visible(user):
     invited = CompanyTenancy.objects.filter(
         lease__renter_company__memberships__user=user,
         lease__renter_company__memberships__is_active=True,
-        changes__state__in=["pending", "waiting_departure"],
+        changes__state__in=OPEN_REVIEW,
     ).filter(
         Q(changes__snapshot__required__incoming_employee=str(user.id))
         | Q(changes__snapshot__required__new_signer=str(user.id))
         | Q(changes__snapshot__required__new_payer=str(user.id))
         | Q(changes__snapshot__required__new_coordinator=str(user.id))
+        | Q(changes__snapshot__required__approver=str(user.id))
+    )
+    external = CompanyTenancy.objects.filter(changes__state__in=OPEN_REVIEW).filter(
+        Q(changes__snapshot__required__new_owner=str(user.id))
+        | Q(changes__snapshot__required__financial_reviewer=str(user.id))
     )
     return (
-        (ordinary | invited)
+        (ordinary | invited | external)
         .exclude(lease__private_access_revocations__user=user)
         .distinct()
         .order_by("-created_at", "id")
@@ -153,11 +194,9 @@ def require_role(item, user, allowed, *, sensitive=False):
 def require_delegate(item, user, kind):
     require_role(item, user, {"signer" if kind == "sign" else "payer"}, sensitive=True)
     mandate = item.signer_mandate if kind == "sign" else item.payer_mandate
-    if not execution_mandate(
-        mandate,
-        exposure=item.source_snapshot["full_term_rent_minor"]
-        + item.source_snapshot["deposit_minor"],
-    ):
+    from .tenancy_commercial import exposure
+
+    if not execution_mandate(mandate, exposure=exposure(item)):
         raise RentalConflict(
             "An independently verified current company mandate is required.",
             code="execution_authority_required",
@@ -168,7 +207,7 @@ def commercial_read(lease, user):
     if not lease.renter_company_id:
         return user.pk in {lease.owner_id, lease.tenant_id}
     require_scope("company_authority")
-    return bool(roles(lease.company_tenancy, user) - {"employee", "incoming_employee"})
+    return bool(roles(lease.company_tenancy, user) - PRIVATE_ONLY)
 
 
 def can_pay(lease, user):
@@ -198,7 +237,7 @@ def notify(item):
             is_active=True, is_admin=True
         ).values_list("user_id", flat=True)
     )
-    for change in item.changes.filter(state__in=["pending", "waiting_departure"]):
+    for change in item.changes.filter(state__in=OPEN_REVIEW):
         people.update(
             User.objects.filter(
                 id__in=change.snapshot["required"].values()

@@ -94,6 +94,11 @@ def post_ledger_transaction(
 
 @transaction.atomic
 def issue_invoice(period):
+    candidate = BillingPeriod.objects.select_related("lease").get(pk=period.pk)
+    if candidate.lease.renter_company_id:
+        from ..rental_lifecycle.locks import lock_financial_lease
+
+        lock_financial_lease(candidate.lease)
     period = (
         BillingPeriod.objects.select_for_update()
         .select_related("lease")

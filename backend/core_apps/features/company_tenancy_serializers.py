@@ -9,7 +9,7 @@ class ExecutionAuthorityBody(CommandBody):
 
 
 class TenancyCommandBody(CommandBody):
-    role = serializers.CharField(max_length=30, required=False)
+    role = serializers.CharField(max_length=60, required=False)
     digest = serializers.RegexField(r"^[0-9a-f]{64}$", required=False)
     reason = serializers.CharField(max_length=2000, allow_blank=True, default="")
     decision = serializers.ChoiceField(choices=["accept", "decline"], required=False)
@@ -19,6 +19,10 @@ class TenancyCommandBody(CommandBody):
     confirmation_id = serializers.UUIDField(required=False)
     employee_id = serializers.UUIDField(required=False)
     property_id = serializers.UUIDField(required=False)
+    new_owner_id = serializers.UUIDField(required=False)
+    financial_reviewer_id = serializers.UUIDField(required=False)
+    ends_on_exclusive = serializers.DateField(required=False)
+    rent_minor = serializers.IntegerField(min_value=1, max_value=10**12, required=False)
     possession_on = serializers.DateField(required=False)
     effective_on = serializers.DateField(required=False)
     condition = serializers.DictField(required=False)
@@ -52,6 +56,19 @@ class TenancyCommandBody(CommandBody):
 
 
 REQUIRED_FIELDS = {
+    "commercial_change": [
+        "kind",
+        "effective_on",
+        "ends_on_exclusive",
+        "rent_minor",
+        "reviewer_membership_id",
+        "reason",
+    ],
+    "ownership_change": ["new_owner_id", "reason"],
+    "settlement_adjustment": ["lines", "financial_reviewer_id", "reason"],
+    "submit_continuation": ["change_id", "digest"],
+    "sign_continuation": ["change_id", "digest", "role"],
+    "resume_continuation": ["change_id", "digest"],
     "review": ["role", "digest"],
     "submit_signature": [],
     "sign": ["digest"],

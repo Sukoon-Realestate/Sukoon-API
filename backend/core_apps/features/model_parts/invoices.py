@@ -108,6 +108,20 @@ class RentInvoice(TimeStampedModel):
     credits_minor = models.PositiveBigIntegerField(default=0)
     applied_minor = models.PositiveBigIntegerField(default=0)
     receipt_id = models.UUIDField(null=True, blank=True)
+    beneficiary = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="beneficiary_invoices",
+    )
+
+    def save(self, *args, **kwargs):
+        # Freeze the creditor when the obligation is first issued. A later
+        # ownership transition must never redirect an existing receivable.
+        if self._state.adding and self.lease_id and not self.beneficiary_id:
+            self.beneficiary_id = self.lease.owner_id
+        return super().save(*args, **kwargs)
 
     class Meta:
         constraints = [

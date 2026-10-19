@@ -111,9 +111,12 @@ def payment_attempt_reconcile(request, attempt_id):
 def owner_payables(request):
     if request.query_params.get("workspace") != "owner":
         raise ValidationError({"workspace": "Must be owner."})
-    queryset = OwnerPayable.objects.filter(lease__owner=request.user).select_related(
-        "lease", "invoice"
-    )
+    from django.db.models import Q
+
+    queryset = OwnerPayable.objects.filter(
+        Q(invoice__beneficiary=request.user)
+        | Q(invoice__beneficiary__isnull=True, lease__owner=request.user)
+    ).select_related("lease", "invoice")
     if request.query_params.get("lease_id"):
         queryset = queryset.filter(lease__id=request.query_params["lease_id"])
     results = [

@@ -69,6 +69,7 @@ from .model_parts.maintenance_changes import (
 )
 from .model_parts.settlements import (
     FinalSettlement,
+    SettlementAdjustment,
     RefundRequest,
     RentalDispute,
     RentalDocument,

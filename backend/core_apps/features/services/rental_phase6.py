@@ -37,6 +37,13 @@ def settlement_balances(lease, lines):
 
 def closure_blocking_reasons(lease):
     reasons = []
+    if (
+        lease.renter_company_id
+        and lease.company_tenancy.changes.filter(
+            kind="settlement_adjustment", state__in=["pending", "accepted"]
+        ).exists()
+    ):
+        reasons.append("An independently reviewed settlement correction remains open.")
     if lease.status not in {Lease.Status.ENDED, Lease.Status.CANCELLED}:
         reasons.append("The legal agreement has not ended.")
     if lease.invoices.filter(

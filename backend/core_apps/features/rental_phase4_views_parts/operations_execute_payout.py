@@ -112,7 +112,7 @@ def operations_execute_payout(request):
                 "Every payable must be eligible and unallocated.", code="payout_held"
             )
         if (
-            len({x.lease.owner_id for x in payables}) != 1
+            len({(x.invoice.beneficiary_id or x.lease.owner_id) for x in payables}) != 1
             or len({x.lease_id for x in payables}) != 1
         ):
             raise ValidationError("A payout batch must target one owner and lease.")
@@ -120,7 +120,7 @@ def operations_execute_payout(request):
             approved_by=request.user, request_key=request_key
         )
         profile = OwnerPaymentProfile.objects.select_for_update().get(
-            owner=payables[0].lease.owner
+            owner=(payables[0].invoice.beneficiary or payables[0].lease.owner)
         )
         if (
             not profile.payout_ready
@@ -147,7 +147,7 @@ def operations_execute_payout(request):
         )
         payout = RentalPayout.objects.create(
             batch=batch,
-            owner=payables[0].lease.owner,
+            owner=(payables[0].invoice.beneficiary or payables[0].lease.owner),
             lease=payables[0].lease,
             amount_minor=sum(x.net_minor for x in payables),
             masked_beneficiary=profile.masked_beneficiary,

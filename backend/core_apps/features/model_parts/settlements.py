@@ -45,6 +45,33 @@ class FinalSettlement(TimeStampedModel):
     history = models.JSONField(default=list, blank=True)
 
 
+class SettlementAdjustment(TimeStampedModel):
+    """An additive approved execution; never replaces the original settlement."""
+
+    original = models.ForeignKey(
+        FinalSettlement, on_delete=models.PROTECT, related_name="adjustments"
+    )
+    lease = models.ForeignKey(
+        Lease, on_delete=models.PROTECT, related_name="settlement_adjustments"
+    )
+    company_change = models.OneToOneField(
+        "features.CompanyTenancyChange",
+        on_delete=models.PROTECT,
+        related_name="settlement_adjustment",
+    )
+    proposed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+"
+    )
+    revision = models.PositiveIntegerField(default=1)
+    status = models.CharField(max_length=20, default="accepted")
+    lines = models.JSONField(default=list)
+    accepted_by = models.JSONField(default=list)
+    financial_snapshot = models.JSONField(default=dict)
+    execution_plan = models.JSONField(default=dict)
+    execution_status = models.CharField(max_length=20, default="not_started")
+    executed_at = models.DateTimeField(null=True)
+
+
 class RefundRequest(TimeStampedModel):
     class Status(models.TextChoices):
         REQUESTED = "requested", "Requested"

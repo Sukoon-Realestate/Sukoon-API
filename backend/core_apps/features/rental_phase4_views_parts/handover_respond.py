@@ -34,11 +34,13 @@ def lease_deposit(request, lease_id):
 
 
 def evaluate_owner_payables(lease):
-    profile = OwnerPaymentProfile.objects.filter(owner=lease.owner).first()
     move_in = lease.handovers.filter(
         kind=RentalHandover.Kind.MOVE_IN, status=RentalHandover.Status.ACCEPTED
     ).exists()
     for payable in lease.owner_payables.select_for_update():
+        profile = OwnerPaymentProfile.objects.filter(
+            owner_id=payable.invoice.beneficiary_id or lease.owner_id
+        ).first()
         if payable.payout_status in {
             "submitted",
             "processing",

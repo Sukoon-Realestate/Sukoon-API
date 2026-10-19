@@ -6,6 +6,7 @@ from django.utils import timezone
 from ...models import (
     DepositAgreement,
     FinalSettlement,
+    SettlementAdjustment,
     InvoiceLine,
     Lease,
     OwnerPayable,
@@ -25,7 +26,9 @@ def execute_settlement(item):
     from ..rental_lifecycle.locks import lock_financial_lease
 
     lease = lock_financial_lease(Lease.objects.get(pk=item.lease_id))
-    item = FinalSettlement.objects.select_for_update().get(pk=item.pk)
+    if type(item) not in {FinalSettlement, SettlementAdjustment}:
+        raise RentalConflict("Unsupported settlement execution source.")
+    item = type(item).objects.select_for_update().get(pk=item.pk)
     if item.execution_status == "executed":
         return item
     if item.status != "accepted":

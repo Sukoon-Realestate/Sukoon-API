@@ -26,6 +26,14 @@ def propose(item, user, kind, content, required, reason):
         raise RentalConflict(
             "Resolve or withdraw the existing change before proposing another."
         )
+    from .tenancy_commercial import KINDS, OPEN
+
+    if item.changes.filter(kind__in=KINDS, state__in=OPEN).exists() and kind not in {
+        "authority"
+    }:
+        raise RentalConflict(
+            "Resolve the open contract continuation before changing its underlying obligations."
+        )
     snapshot = {
         "content": content,
         "required": required,
@@ -48,6 +56,8 @@ def propose(item, user, kind, content, required, reason):
 
 
 def authorize_role(item, change, user, role, *, positive):
+    from .tenancy_commercial import exposure as current_exposure
+
     if not user.is_active or (positive and not user.is_verified):
         raise PermissionDenied("Current verified account access is required.")
     if change.snapshot["required"].get(role) != str(user.id):
@@ -70,8 +80,7 @@ def authorize_role(item, change, user, role, *, positive):
         )
         if mandate.membership.user_id != user.pk or not access.execution_mandate(
             mandate,
-            exposure=item.source_snapshot["full_term_rent_minor"]
-            + item.source_snapshot["deposit_minor"],
+            exposure=current_exposure(item),
         ):
             raise PermissionDenied(
                 "Replacement execution authority is no longer valid."
@@ -106,6 +115,31 @@ def authorize_role(item, change, user, role, *, positive):
         raise PermissionDenied(
             "The incoming coordinator needs current assigned company authority."
         )
+    if positive and role == "approver":
+        from .tenancy_commercial import approver
+
+        body = change.snapshot["content"]
+        member = approver(item, body["reviewer_membership_id"], change.proposed_by)
+        if member.user_id != user.pk or member.revision != body["reviewer_revision"]:
+            raise PermissionDenied("The independent approval authority changed.")
+    if positive and role.startswith("resident_"):
+        if not CompanyMembership.objects.filter(
+            company=item.lease.renter_company,
+            user=user,
+            is_active=True,
+            is_employee=True,
+        ).exists():
+            raise PermissionDenied(
+                "Current employee membership is required for extended accommodation."
+            )
+    if positive and role == "new_owner":
+        from .tenancy_ownership import validate
+
+        validate(item, change)
+    if positive and role == "financial_reviewer":
+        from .tenancy_adjustments import reviewer
+
+        reviewer(item, user, change.snapshot["required"])
     if positive and (
         user.security_epoch != change.snapshot["actor_epochs"].get(str(user.id))
         or user.sensitive_actions_frozen
@@ -155,7 +189,12 @@ def withdraw(item, user, data):
         id=data["change_id"],
         tenancy=item,
     )
-    if change.state not in {"pending", "waiting_departure"}:
+    if change.state not in {
+        "pending",
+        "waiting_departure",
+        "accepted",
+        "pending_signatures",
+    }:
         raise RentalConflict("An applied or closed change cannot be withdrawn.")
     if user.pk != change.proposed_by_id and not access.roles(item, user) & {
         "coordinator"
@@ -163,6 +202,10 @@ def withdraw(item, user, data):
         raise PermissionDenied(
             "Only the proposer or assigned coordinator can withdraw this change."
         )
+    if change.kind in {"renewal", "amendment", "ownership"}:
+        from .tenancy_commercial import release
+
+        release(item, change)
     change.state = "withdrawn"
     change.revision += 1
     change.save()
@@ -177,7 +220,16 @@ def apply(item, change):
 
     if change.snapshot["terms_digest"] != item.terms_digest:
         raise RentalConflict("The underlying company contract changed.")
-    if change.kind == "replacement":
+    if change.kind in {"renewal", "amendment", "ownership"}:
+        from .tenancy_commercial import reserve
+
+        reserve(item, change)
+        return
+    if change.kind == "settlement_adjustment":
+        from .tenancy_adjustments import apply as apply_adjustment
+
+        apply_adjustment(item, change)
+    elif change.kind == "replacement":
         applied = tenancy_occupancy.apply_replacement(item, change)
         if not applied:
             change.state = "waiting_departure"
@@ -195,6 +247,10 @@ def apply(item, change):
         raise RentalConflict("Unsupported company tenancy change.")
     change.state, change.applied_at = "applied", timezone.now()
     change.save()
+    if change.kind == "settlement_adjustment":
+        from ..rental_phase6 import evaluate_financial_closure
+
+        evaluate_financial_closure(item.lease, increment_revision=False)
 
 
 def resume(item, user, data):

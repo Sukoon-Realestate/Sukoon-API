@@ -42,6 +42,13 @@ class IdempotencyRecord(TimeStampedModel):
 
 
 class RentalInventoryDayLock(TimeStampedModel):
+    company_change = models.ForeignKey(
+        "features.CompanyTenancyChange",
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="inventory_locks",
+    )
+
     class Kind(models.TextChoices):
         HOLD = "hold", "Hold"
         OCCUPIED = "occupied", "Occupied"
