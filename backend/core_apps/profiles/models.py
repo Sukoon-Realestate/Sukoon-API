@@ -36,18 +36,21 @@ class Profile(TimeStampedModel):
         verbose_name=_("Avatar"),
     )
     id_face = CloudinaryField(
+        type="authenticated",
         folder="profile_documents/id_face/",
         null=True,
         blank=True,
         verbose_name=_("ID Face"),
     )
     id_back = CloudinaryField(
+        type="authenticated",
         folder="profile_documents/id_back/",
         null=True,
         blank=True,
         verbose_name=_("ID Back"),
     )
     confirmation_selfi = CloudinaryField(
+        type="authenticated",
         folder="profile_documents/selfie/",
         null=True,
         blank=True,

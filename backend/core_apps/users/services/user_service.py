@@ -67,7 +67,11 @@ def delete_user_account(user: Any) -> None:
         for attr in ("avatar", "id_face", "id_back", "confirmation_selfi"):
             field = getattr(profile, attr, None)
             if field and hasattr(field, "public_id") and field.public_id:
-                cloudinary_public_ids.append(str(field.public_id))
+                cloudinary_public_ids.append(
+                    (str(field.public_id), field.type, field.resource_type)
+                    if field.type == "authenticated"
+                    else str(field.public_id)
+                )
 
     # Property images if user owns listings
     try:
@@ -106,7 +110,12 @@ def delete_user_account(user: Any) -> None:
 
             for pid in cloudinary_public_ids:
                 try:
-                    cloudinary.uploader.destroy(pid)
+                    if isinstance(pid, tuple):
+                        cloudinary.uploader.destroy(
+                            pid[0], type=pid[1], resource_type=pid[2], invalidate=True
+                        )
+                    else:
+                        cloudinary.uploader.destroy(pid)
                 except Exception as c_exc:
                     logger.warning(
                         "Cloudinary cleanup failed for user %s (%s)",

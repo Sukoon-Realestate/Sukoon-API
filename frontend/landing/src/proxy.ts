@@ -12,6 +12,8 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   // Admin routes are not localized; the (admin) route group serves them directly.
   if (pathname === "/admin" || pathname.startsWith("/admin/")) return;
+  // Preserve API methods and bodies; API paths must never enter locale routing.
+  if (pathname === "/api" || pathname.startsWith("/api/")) return;
 
   const segment = pathname.split("/")[1] ?? "";
   if (hasLocale(segment)) return;

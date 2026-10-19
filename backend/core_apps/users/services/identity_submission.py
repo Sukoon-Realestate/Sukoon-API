@@ -10,8 +10,10 @@ from core_apps.users.models import User
 
 def evidence_snapshot(profile):
     def image(field):
+        from core_apps.profiles.identity_media import reference
+
         value = getattr(profile, field)
-        return value.url if value and hasattr(value, "url") else str(value or "")
+        return reference(value)
 
     return {
         "national_id": profile.national_id or "",

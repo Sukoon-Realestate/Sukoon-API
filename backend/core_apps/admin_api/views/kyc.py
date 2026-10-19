@@ -1,4 +1,6 @@
 import logging
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -18,6 +20,22 @@ from core_apps.admin_api.services import (
 from core_apps.admin_api.filters import KYCSubmissionFilter
 
 logger = logging.getLogger(__name__)
+
+
+@method_decorator(never_cache, name="dispatch")
+class AdminKYCIdentityMediaAPIView(APIView):
+    permission_classes = [IsIdentityReviewer]
+
+    def get(self, request, submission_id, field):
+        from django.shortcuts import get_object_or_404
+        from rest_framework.exceptions import NotFound
+        from core_apps.admin_api.models import KYCSubmission
+        from core_apps.profiles.identity_media import IDENTITY_FIELDS, identity_bytes
+
+        if field not in IDENTITY_FIELDS:
+            raise NotFound()
+        submission = get_object_or_404(KYCSubmission, id=submission_id)
+        return identity_bytes(submission.evidence_snapshot.get(field))
 
 
 class AdminKYCListAPIView(generics.ListAPIView):

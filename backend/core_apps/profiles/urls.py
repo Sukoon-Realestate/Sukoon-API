@@ -1,5 +1,6 @@
 from django.urls import path
 from core_apps.users.views import UserDeleteAPIView
+from .identity_views import IdentityMediaAPIView
 
 from .views import (
     AccountSummaryDetailAPIView,
@@ -17,6 +18,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("identity-media/<slug:field>/", IdentityMediaAPIView.as_view(), name="identity-media"),
     path("all/", ProfileListAPIView.as_view(), name="profile-list"),
     path("user/my-profile/", ProfileDetailAPIView.as_view(), name="profile-detail"),
     path("user/update/", ProfileUpdateAPIView.as_view(), name="profile-update"),

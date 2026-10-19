@@ -59,6 +59,16 @@ def get_kyc_detail(submission_id):
     evidence = submission.evidence_snapshot
     is_owner = user.properties.exists()
 
+    def media_url(field):
+        from django.urls import reverse
+        from core_apps.profiles.identity_media import reference
+
+        if not reference(evidence.get(field)).startswith("image/authenticated/"):
+            return None
+        return reverse(
+            "admin-kyc-media", kwargs={"submission_id": submission.id, "field": field}
+        )
+
     return {
         "id": str(submission.id),
         "user_id": str(user.id),
@@ -69,9 +79,9 @@ def get_kyc_detail(submission_id):
         "nationalId": evidence.get("national_id", ""),
         "birthDate": evidence.get("birth_date", ""),
         "gender": evidence.get("gender", ""),
-        "idFaceUrl": evidence.get("id_face"),
-        "idBackUrl": evidence.get("id_back"),
-        "selfieUrl": evidence.get("confirmation_selfi"),
+        "idFaceUrl": media_url("id_face"),
+        "idBackUrl": media_url("id_back"),
+        "selfieUrl": media_url("confirmation_selfi"),
         "evidenceDigest": submission.evidence_digest,
         "canReview": bool(
             submission.evidence_digest

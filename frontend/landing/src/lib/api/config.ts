@@ -6,4 +6,4 @@ export function isBackendEnabled(): boolean {
   const demo = process.env.NEXT_PUBLIC_USE_MOCK_DATA?.trim().toLowerCase();
   return !demo || !['true', '1', 'yes'].includes(demo);
 }
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || '';

@@ -53,9 +53,33 @@ class ProfileSerializer(serializers.ModelSerializer):
     phone_number = PhoneNumberField(read_only=True)
     city = ProfileCitySerializer(read_only=True)
     avatar = CloudinarySerializerField(read_only=True)
-    id_face = CloudinarySerializerField(read_only=True)
-    id_back = CloudinarySerializerField(read_only=True)
-    confirmation_selfi = CloudinarySerializerField(read_only=True)
+    id_face = serializers.SerializerMethodField()
+    id_back = serializers.SerializerMethodField()
+    confirmation_selfi = serializers.SerializerMethodField()
+
+    def _identity_url(self, obj, field):
+        from django.urls import reverse
+        from ..identity_media import reference, version
+
+        asset = getattr(obj, field)
+        if not reference(asset).startswith("image/authenticated/"):
+            return None
+        url = (
+            reverse("identity-media", kwargs={"field": field})
+            + "?version="
+            + version(asset)
+        )
+        request = self.context.get("request")
+        return request.build_absolute_uri(url) if request else url
+
+    def get_id_face(self, obj):
+        return self._identity_url(obj, "id_face")
+
+    def get_id_back(self, obj):
+        return self._identity_url(obj, "id_back")
+
+    def get_confirmation_selfi(self, obj):
+        return self._identity_url(obj, "confirmation_selfi")
 
     class Meta:
         model = Profile
@@ -87,6 +111,12 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
     id_face = CloudinarySerializerField(required=False, allow_null=True)
     id_back = CloudinarySerializerField(required=False, allow_null=True)
     confirmation_selfi = CloudinarySerializerField(required=False, allow_null=True)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        for field in ("id_face", "id_back", "confirmation_selfi"):
+            data[field] = ProfileSerializer._identity_url(self, instance, field)
+        return data
 
     class Meta:
         model = Profile

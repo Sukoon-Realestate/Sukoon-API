@@ -60,3 +60,7 @@ The domain is `SITE_URL` in `src/lib/site.ts` (`https://sukoon.rent`). Canonical
 - The JSON-LD (`lib/structuredData.ts`) includes Organization, WebSite, WebPage and FAQPage, all built from the visible copy.
 - The share card renders Arabic through HarfBuzz (`lib/og/shapeText.ts`). Satori, which `next/og` uses, can't order or measure Arabic text correctly. The fonts are in `src/assets/fonts/` (IBM Plex Sans Arabic, OFL).
 - To regenerate the icons after a logo change, replace the three files in `app/` (the admin app keeps its own copy in `frontend/src/app/`).
+
+## API connection
+
+Use same-origin `/api/v1/*` calls with server-only `SOKOUN_API_PROXY_URL` set to the Django origin and an empty `NEXT_PUBLIC_API_URL`. Locale routing deliberately excludes API paths so POST bodies are forwarded without a redirect. The optional direct browser URL requires correctly configured backend CORS; the inspected deployment did not allow a localhost frontend. Real failures never fall back to demo records. Both frontend variants support the same proxy configuration.

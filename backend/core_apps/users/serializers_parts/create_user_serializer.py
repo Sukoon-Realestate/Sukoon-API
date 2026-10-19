@@ -5,6 +5,7 @@ from djoser.serializers import UserCreatePasswordRetypeSerializer, UserSerialize
 from rest_framework import serializers
 from phonenumber_field.serializerfields import PhoneNumberField
 from core_apps.profiles.serializers import CloudinarySerializerField
+from core_apps.profiles.identity_media import IdentityImageField
 from ..journey import PrivateJourneySerializerMixin
 
 
@@ -119,9 +120,9 @@ class CompleteRegisterSerializer(serializers.Serializer):
             "min_length": "National ID must be exactly 14 digits.",
         },
     )
-    front_id_image = CloudinarySerializerField(required=False, allow_null=True)
-    back_id_image = CloudinarySerializerField(required=False, allow_null=True)
-    selfie_image = CloudinarySerializerField(required=False, allow_null=True)
+    front_id_image = IdentityImageField(required=False, allow_null=True)
+    back_id_image = IdentityImageField(required=False, allow_null=True)
+    selfie_image = IdentityImageField(required=False, allow_null=True)
 
     def validate_national_id(self, value: str) -> str:
         value = value.strip()

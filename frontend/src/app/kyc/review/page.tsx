@@ -1,5 +1,7 @@
 'use client';
 
+import { IdentityImage } from '@/components/ui/IdentityImage';
+
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
@@ -173,7 +175,7 @@ function IndividualKycReviewContent() {
                   </div>
                   <div className="w-full h-44 bg-slate-200 dark:bg-slate-700/50 rounded-lg flex items-center justify-center border border-dashed border-slate-300 dark:border-slate-600 overflow-hidden">
                     {kycData?.idFaceUrl ? (
-                      <img src={kycData.idFaceUrl} alt="ID Front" className="w-full h-full object-cover" />
+                      <IdentityImage src={kycData.idFaceUrl} alt="ID Front" className="w-full h-full object-cover" />
                     ) : (
                       <div className="text-center p-4">
                         <FileText className="w-8 h-8 text-slate-400 mx-auto mb-1" />
@@ -197,7 +199,7 @@ function IndividualKycReviewContent() {
                   </div>
                   <div className="w-full h-44 bg-slate-200 dark:bg-slate-700/50 rounded-lg flex items-center justify-center border border-dashed border-slate-300 dark:border-slate-600 overflow-hidden">
                     {kycData?.idBackUrl ? (
-                      <img src={kycData.idBackUrl} alt="ID Back" className="w-full h-full object-cover" />
+                      <IdentityImage src={kycData.idBackUrl} alt="ID Back" className="w-full h-full object-cover" />
                     ) : (
                       <div className="text-center p-4">
                         <FileText className="w-8 h-8 text-slate-400 mx-auto mb-1" />
@@ -217,7 +219,7 @@ function IndividualKycReviewContent() {
                 </span>
                 <div className="w-full h-48 bg-slate-200 dark:bg-slate-700/50 rounded-lg flex items-center justify-center border border-dashed border-slate-300 dark:border-slate-600 overflow-hidden">
                   {kycData?.selfieUrl ? (
-                    <img src={kycData.selfieUrl} alt="Selfie" className="w-full h-full object-cover" />
+                    <IdentityImage src={kycData.selfieUrl} alt="Selfie" className="w-full h-full object-cover" />
                   ) : (
                     <div className="text-center p-4">
                       <User className="w-8 h-8 text-slate-400 mx-auto mb-1" />

@@ -4,36 +4,11 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ### 1. Environment Variables Configuration
 
-Copy `.env.example` to `.env.local` to configure whether to connect to a live backend or use local static dummy data:
+Use `.env.example` for a real backend connection. Browser API requests default to the frontend origin. Set the server-only `SOKOUN_API_PROXY_URL` to the Django origin (for example `http://127.0.0.1:8000` locally); Next forwards `/api/v1/*` and preserves methods, request bodies, response headers and status. Do not include credentials or a path in this value. Keep `NEXT_PUBLIC_API_URL` empty for this mode. Deploy both the frontend process and the backend; the Django `/admin/` is a separate interface.
 
-```bash
-cp .env.example .env.local
-```
+An explicit `NEXT_PUBLIC_API_URL` retains direct cross-origin access only when that backend explicitly allows the frontend origin, credentials and required pagination headers. Do not disable browser security or enable wildcard credentialed CORS to make it work.
 
-| Variable | Default | Description |
-|---|---|---|
-| `NEXT_PUBLIC_ENABLE_BACKEND` | `false` | Set to `true` to connect to the live Django backend API, or `false` to use static dummy JSON data files in `src/data/mock/`. |
-| `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | The live Django backend API URL (active when `NEXT_PUBLIC_ENABLE_BACKEND=true`). |
-
-> **Note:** If backend is not deployed yet or you are running locally without Django running, keep `NEXT_PUBLIC_ENABLE_BACKEND=false`. All pages, authentication, search, metrics, and actions will run offline using the static dummy JSON files.
-
-### 2. Run the Development Server
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Live backend mode is the default. Demo fixtures require explicit `NEXT_PUBLIC_ENABLE_BACKEND=false`; their results do not verify real operations.
 
 ## Learn More
 

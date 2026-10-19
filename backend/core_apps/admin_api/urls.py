@@ -1,5 +1,6 @@
 from django.urls import path
 from .views.session import AdminSessionAPIView
+from .views.kyc import AdminKYCIdentityMediaAPIView
 from .views import (
     AdminDashboardStatsView,
     AdminExecutiveDashboardStatsView,
@@ -59,6 +60,7 @@ urlpatterns = [
     path("users/<str:user_id>/unsuspend/", AdminUserUnsuspendAPIView.as_view(), name="admin-user-unsuspend-str"),
 
     # KYC verification queue
+    path("kyc/<uuid:submission_id>/media/<slug:field>/", AdminKYCIdentityMediaAPIView.as_view(), name="admin-kyc-media"),
     path("kyc/", AdminKYCListAPIView.as_view(), name="admin-kyc-list"),
     path("kyc/metrics/", AdminKYCMetricsAPIView.as_view(), name="admin-kyc-metrics"),
     path("kyc/<uuid:submission_id>/", AdminKYCDetailAPIView.as_view(), name="admin-kyc-detail"),
