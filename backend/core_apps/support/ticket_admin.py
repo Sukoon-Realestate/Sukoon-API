@@ -11,6 +11,16 @@ from .services.staff_replies import can_service_tickets, reply_as_staff
 
 
 class TicketReplyForm(forms.ModelForm):
+    service_action = forms.ChoiceField(
+        choices=(("reply", "Reply"), ("resolve", "Resolve general inquiry")),
+        initial="reply",
+        required=False,
+        help_text="Resolution is limited to unlinked general inquiries, not domain cases.",
+    )
+    acknowledge_resolution = forms.BooleanField(
+        required=False,
+        label="Only the general inquiry is resolved; no contract, payment, access or retention decision is made.",
+    )
     reply = forms.CharField(
         widget=forms.Textarea,
         max_length=4000,
@@ -27,6 +37,17 @@ class TicketReplyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["expected_revision"].initial = self.instance.revision
+
+    def clean(self):
+        data = super().clean()
+        if data.get("service_action") == "resolve":
+            if not data.get("acknowledge_resolution"):
+                self.add_error(
+                    "acknowledge_resolution", "Acknowledge the limited effect."
+                )
+            if not data.get("reply", "").strip():
+                self.add_error("reply", "Explain how the general inquiry was answered.")
+        return data
 
 
 @admin.register(Ticket)
@@ -45,7 +66,14 @@ class TicketAdmin(admin.ModelAdmin):
         "rental_context",
         "conversation",
     )
-    fields = (*readonly_fields, "reply", "expected_revision", "request_key")
+    fields = (
+        *readonly_fields,
+        "service_action",
+        "reply",
+        "acknowledge_resolution",
+        "expected_revision",
+        "request_key",
+    )
     actions = None
 
     def has_module_permission(self, request):
@@ -102,6 +130,10 @@ class TicketAdmin(admin.ModelAdmin):
                 body=form.cleaned_data["reply"],
                 expected_revision=form.cleaned_data["expected_revision"],
                 request_key=str(form.cleaned_data["request_key"]),
+                resolve_inquiry=form.cleaned_data.get("service_action") == "resolve",
+                acknowledge_resolution=form.cleaned_data.get(
+                    "acknowledge_resolution", False
+                ),
             )
         except APIException as error:
             request.support_reply_failed = True

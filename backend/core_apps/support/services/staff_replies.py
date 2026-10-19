@@ -14,8 +14,26 @@ def can_service_tickets(user):
     return staff_role(user, {"support"})
 
 
+def can_resolve_inquiry(ticket):
+    """General advice has no authority to settle linked or protected cases."""
+    return (
+        ticket.category == Ticket.Category.OTHER
+        and not ticket.rental_context
+        and not ticket.reference.startswith("PRIVACY-")
+    )
+
+
 @transaction.atomic
-def reply_as_staff(*, user, ticket_id, body, expected_revision, request_key):
+def reply_as_staff(
+    *,
+    user,
+    ticket_id,
+    body,
+    expected_revision,
+    request_key,
+    resolve_inquiry=False,
+    acknowledge_resolution=False,
+):
     from core_apps.users.models import User
     from core_apps.admin_api.models import StaffProfile
 
@@ -31,12 +49,21 @@ def reply_as_staff(*, user, ticket_id, body, expected_revision, request_key):
     clean = body.strip()
     if not 1 <= len(clean) <= 4000 or not request_key or len(request_key) > 100:
         raise ValidationError("Supply the reply and its original operation key.")
+    if resolve_inquiry and acknowledge_resolution is not True:
+        raise ValidationError("Acknowledge that only the general inquiry is resolved.")
+    action = "resolve" if resolve_inquiry else "reply"
 
     def apply():
         if type(expected_revision) is not int or expected_revision != ticket.revision:
             raise RentalConflict("Review the current ticket.", code="stale_revision")
         if ticket.status in {Ticket.Status.CLOSED, Ticket.Status.RESOLVED}:
             raise RentalConflict("This inquiry is closed.")
+        if resolve_inquiry and not can_resolve_inquiry(ticket):
+            raise RentalConflict(
+                "Linked rental, verification and retention cases require their domain "
+                "resolution. Only an unlinked general inquiry can be resolved here.",
+                code="domain_resolution_required",
+            )
         message = TicketMessage.objects.create(
             ticket=ticket,
             sender="support",
@@ -44,11 +71,13 @@ def reply_as_staff(*, user, ticket_id, body, expected_revision, request_key):
             body=clean,
         )
         ticket.revision += 1
-        ticket.status = Ticket.Status.IN_PROGRESS
+        ticket.status = (
+            Ticket.Status.RESOLVED if resolve_inquiry else Ticket.Status.IN_PROGRESS
+        )
         ticket.save(update_fields=["revision", "status", "updated_at"])
         PlanningEvent.objects.get_or_create(
             recipient=ticket.user,
-            event_key=f"support.reply:{message.id}",
+            event_key=f"support.{action}:{message.id}",
             defaults={
                 "destination": {
                     "action_type": "open_support_ticket",
@@ -63,8 +92,12 @@ def reply_as_staff(*, user, ticket_id, body, expected_revision, request_key):
             subject_kind="support_ticket",
             subject_id=ticket.id,
             subject_revision=ticket.revision,
-            action="support.reply",
-            reason="Advice-only reply; no domain remedy executed.",
+            action=f"support.{action}",
+            reason=(
+                "General inquiry resolved; no domain remedy executed."
+                if resolve_inquiry
+                else "Advice-only reply; no domain remedy executed."
+            ),
             metadata={"message_id": str(message.id)},
         )
         return (
@@ -72,17 +105,20 @@ def reply_as_staff(*, user, ticket_id, body, expected_revision, request_key):
                 "ticket_id": str(ticket.id),
                 "message_id": str(message.id),
                 "revision": ticket.revision,
-                "effect": "advice_only",
+                "effect": "inquiry_resolved" if resolve_inquiry else "advice_only",
             },
             200,
             message.id,
         )
 
+    payload = {"body": clean, "expected_revision": expected_revision}
+    if resolve_inquiry:
+        payload["acknowledge_resolution"] = acknowledge_resolution
     return execute_idempotent(
         user=user,
-        operation=f"support.ticket.staff_reply:{ticket.id}",
+        operation=f"support.ticket.staff_{action}:{ticket.id}",
         key=request_key,
-        payload={"body": clean, "expected_revision": expected_revision},
+        payload=payload,
         request_subject_id=ticket.id,
         action=apply,
     )
