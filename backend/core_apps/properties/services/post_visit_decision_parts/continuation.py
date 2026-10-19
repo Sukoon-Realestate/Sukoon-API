@@ -77,7 +77,7 @@ def continuation(
             continuation as company_continuation,
         )
 
-        return company_continuation(visit, actor, decision, base)
+        return company_continuation(visit, actor, decision, base, actions)
     if legacy_lease:
         base.update(
             status=f"agreement_{legacy_lease.status}",

@@ -70,6 +70,62 @@ def viewed(company_setup):
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize("decision_value", ["proceed", "decline"])
+def test_company_representative_can_reach_first_post_visit_decision(
+    company_setup, decision_value
+):
+    owner, coordinator, representative, company, _, props, _, _ = company_setup
+    yesterday = timezone.localtime() - timedelta(days=1)
+    visit = PropertyVisit.objects.create(
+        property=props[0], tenant=representative, requested_by=coordinator,
+        company=company, context_kind="company", status="confirmed",
+        visit_date=yesterday.date(), visit_time=yesterday.time().replace(tzinfo=None),
+        accepted_at=yesterday - timedelta(days=1),
+    )
+    before = visit_context(visit, representative)
+    assert before["post_visit_actions"]["can_submit"] is True
+    assert before["rental_continuation"]["next_actor"] == "tenant"
+    assert before["rental_continuation"]["next_action"] == "submit_post_visit_decision"
+    for observer in [owner, coordinator]:
+        projection = visit_context(visit, observer)
+        assert projection["post_visit_actions"]["can_submit"] is False
+        assert projection["rental_continuation"]["next_action"] is None
+    submit_decision(representative, visit.id, {
+        "decision": decision_value, "attended": True,
+        "reason": "Private reason" if decision_value == "decline" else "",
+        "expected_revision": visit.revision, "request_key": str(uuid.uuid4()),
+    })
+    visit.refresh_from_db()
+    after = visit_context(visit, coordinator)["rental_continuation"]
+    if decision_value == "proceed":
+        assert after["status"] == "company_request_available"
+        assert after["next_action"] == "create_company_request"
+    else:
+        assert after["status"] == "declined"
+        assert after["next_action"] is None and after["next_actor"] is None
+    assert not CompanyHousingRequest.objects.filter(source_visit=visit).exists()
+    assert not Lease.objects.exists() and not ReservationHold.objects.exists()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("status,future", [("pending", False), ("confirmed", True)])
+def test_company_viewing_cannot_offer_decision_before_eligibility(
+    company_setup, status, future
+):
+    _, coordinator, representative, company, _, props, _, _ = company_setup
+    day = timezone.localtime() + timedelta(days=1 if future else -1)
+    visit = PropertyVisit.objects.create(
+        property=props[0], tenant=representative, requested_by=coordinator,
+        company=company, context_kind="company", status=status,
+        visit_date=day.date(), visit_time=day.time().replace(tzinfo=None),
+    )
+    projection = visit_context(visit, representative)
+    assert projection["post_visit_actions"]["can_submit"] is False
+    assert projection["rental_continuation"]["status"] == "visit_not_eligible"
+    assert projection["rental_continuation"]["next_action"] is None
+
+
+@pytest.mark.django_db
 def test_company_viewing_command_replay_and_real_package_handoff(viewed):
     setup, visit, decision, body = viewed
     owner, coordinator, representative, company, _, _, offer, _ = setup

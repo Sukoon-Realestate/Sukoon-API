@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from core_apps.properties.models import PropertyVisit, PropertyVisitDecision, Property
 from core_apps.properties.services.viewing_access import participant
 from core_apps.properties.services.post_visit_decision_parts.linked_invitation import (
@@ -139,7 +140,7 @@ def filter_offers(query, request):
     return query.filter(owner=prop.owner).filter(scope).distinct()
 
 
-def continuation(visit, user, decision, base):
+def continuation(visit, user, decision, base, actions):
 
     result = {
         **base,
@@ -160,6 +161,31 @@ def continuation(visit, user, decision, base):
             result.update(
                 next_action="open_company_request", company_request_id=str(linked.id)
             )
+        return result
+    if decision is None:
+        from core_apps.properties.services.post_visit_decision_parts.linked_invitation import (
+            scheduled_at,
+        )
+
+        # Recording the representative's own attendance/decision precedes the
+        # coordinator's company handoff. It creates no company contract consent.
+        result.update(base)
+        if actions["can_submit"] or (
+            visit.status == "confirmed" and scheduled_at(visit) <= timezone.now()
+        ):
+            result.update(
+                status="awaiting_tenant_decision",
+                next_actor="tenant",
+                next_action=(
+                    "submit_post_visit_decision" if actions["can_submit"] else None
+                ),
+                blocked_reason=None,
+            )
+        return result
+    if decision.value == "decline":
+        result.update(
+            status="declined", next_actor=None, next_action=None, blocked_reason=None
+        )
         return result
     try:
         validate_source(visit, decision)
