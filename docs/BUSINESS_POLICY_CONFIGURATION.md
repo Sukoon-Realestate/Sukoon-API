@@ -46,3 +46,9 @@ Primary-database restore rollback is no longer covered by an independent journal
 ## Verification
 
 288 focused PostgreSQL/Django tests passed in the isolated `policy_configuration_settings` environment after all backend changes. They cover the changed policy, company, hold, case, private-document, account/OTP, push/privacy and viewing paths. Five retained tests exercise the deferred drill prototype; they do not prove active recovery coverage. Django checks and migration drift review are separate from production execution. Flutter/native/deployed results are maintained in the application repository's `docs/sokoun-business-flows/POLICY_CONFIGURATION_AND_RECOVERY_DEFERRAL.md` and its verification artifacts. No full-product or real-provider completion claim is made.
+
+## Hosted staging simulation correction
+
+The deployed service selected `config.settings.staging_mock`; its old implicit fake-provider opt-in became visible when the independent recovery gate was removed. The deployment check detected this before any verification invoked a provider action. Staging simulation now independently requires `RENTAL_STAGING_SIMULATION_ENABLED=true`, in addition to selecting the simulation profile and the existing non-production guard. Default is false. Checkout and mock discovery follow this opt-in. Local explicit test settings remain simulated. This does not introduce a new recovery dependency or a real provider.
+
+27 additional focused tests passed for the opt-in, production refusal, mock API contract and recovery-independent company availability. Three overlap the earlier 288-test run. Deployed false availability and unchanged canonical-data hashes must be checked after this correction; the first deployed true observation is retained in the application evidence ledger.
