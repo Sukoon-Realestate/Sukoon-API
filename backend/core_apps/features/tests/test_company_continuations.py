@@ -479,6 +479,7 @@ def test_settlement_adjustment_additive_independent_and_replay_safe(active_agree
         )
         assert bad.status_code == 403, bad.data
         for mandate in cycle["mandates"]:
+            mandate.refresh_from_db()
             mandate.limit_minor = 120100
             mandate.save()
         insufficient = act(
