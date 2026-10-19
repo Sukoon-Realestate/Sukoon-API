@@ -50,7 +50,7 @@ COMPANY_ACTIVATION_EMAIL_ENABLED = (
 ## Application definition
 
 DJANGO_APPS = [
-    "django.contrib.admin",
+    "core_apps.common.admin_apps.SokounAdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",

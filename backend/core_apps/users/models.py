@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from core_apps.users.managers import UserManager
 from core_apps.common.models import TimeStampedModel
+from django.utils.crypto import salted_hmac
 
 
 class User(AbstractUser):
@@ -27,6 +28,19 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
     objects = UserManager()
+
+    def _get_session_auth_hash(self, secret=None):
+        # Preserve untouched legacy browser sessions. Once account-wide
+        # revocation occurs, browser authentication must share the same epoch
+        # boundary as JWT sessions, including SECRET_KEY fallback support.
+        if self.security_epoch == 0:
+            return super()._get_session_auth_hash(secret=secret)
+        return salted_hmac(
+            "sokoun.auth.browser_session",
+            f"{self.password}:{self.security_epoch}",
+            secret=secret,
+            algorithm="sha256",
+        ).hexdigest()
 
     class Meta:
         verbose_name = _("User")
