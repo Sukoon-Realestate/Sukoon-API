@@ -423,6 +423,9 @@ def hold_item(user, item_id, data):
         raise RentalConflict(
             "The budget reservation is no longer valid.", code="budget_exceeded"
         )
+    from .contract_preparation import require_reviews_for_booking
+
+    require_reviews_for_booking(item)
     props = resolve_scope(item.offer, lock=True)
     current = scope_snapshot(item.offer, props)
     if any(item.snapshot.get(k) != value for k, value in current.items()):
@@ -502,6 +505,9 @@ def hold_item(user, item_id, data):
     item.status = "held"
     item.revision += 1
     item.save()
+    from .contract_preparation import hold_recorded
+
+    hold_recorded(item, user)
     audit(
         item,
         user,
@@ -542,6 +548,9 @@ def withdraw_item(user, item_id, data):
     item.revision += 1
     item.save()
     audit(item, user, "company_package_withdrawn", data.get("reason", ""))
+    from .contract_preparation import cancel_for_booking
+
+    cancel_for_booking(item, user)
     return item
 
 
@@ -586,6 +595,12 @@ def item_payload(item):
         "deposit_minor": item.deposit_minor,
         "lease_id": str(item.lease.id) if item.lease_id else None,
         "contract_progression_available": False,
+        "contract_preparation_available": item.status in {"approved", "held"},
+        "contract_preparation_id": (
+            str(item.contract_preparation.id)
+            if hasattr(item, "contract_preparation")
+            else None
+        ),
     }
 
 

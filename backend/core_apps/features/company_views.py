@@ -124,6 +124,8 @@ def capabilities(request):
             "account_contexts": available,
             "assigned_approvals": available,
             "internal_request_discussions": available,
+            "contract_preparation": available,
+            "independent_mandates": available,
             "contracting": False,
             "payments": False,
         }

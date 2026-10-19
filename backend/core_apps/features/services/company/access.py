@@ -62,10 +62,27 @@ def request_for(user, identity, action="coordinate", lock=False):
 
 
 def company_subject(user, identifier):
+    from django.db.models import Q
     from core_apps.common.recovery import scope_available
 
     if not scope_available("company_authority"):
         return None
+    from ...company_contract_models import CompanyMandate, CompanyContractPreparation
+    from .contract_access import can_read
+
+    preparation = CompanyContractPreparation.objects.filter(id=identifier).first()
+    if preparation and can_read(preparation, user):
+        return preparation
+    mandate = CompanyMandate.objects.filter(id=identifier).first()
+    if (
+        mandate
+        and CompanyMembership.objects.filter(
+            company=mandate.company, user=user, is_active=True
+        )
+        .filter(Q(is_admin=True) | Q(is_coordinator=True) | Q(pk=mandate.membership_id))
+        .exists()
+    ):
+        return mandate
     from ...company_models import CompanyBookingItem, CompanyInvitation, PortfolioOffer
     from core_apps.properties.models import (
         ResidentialBuilding,
@@ -211,6 +228,24 @@ def actions(user, capability, identifier=""):
     item = company_subject(user, identifier)
     if item is None:
         return []
+    from ...company_contract_models import CompanyMandate, CompanyContractPreparation
+
+    if isinstance(item, CompanyContractPreparation):
+        from .contract_projection import payload
+
+        view = payload(item, user)
+        return (
+            ["read"]
+            + (["contract_respond"] if view["responses"] else [])
+            + (["contract_withdraw"] if view["can_withdraw"] else [])
+            + (["contract_reserve"] if view["can_reserve"] else [])
+        )
+    if isinstance(item, CompanyMandate):
+        from .mandates import payload
+
+        return ["read"] + [
+            "mandate_" + action for action in payload(item, user)["actions"]
+        ]
     if capability == "residential_portfolios":
         return [
             "read",
@@ -244,6 +279,7 @@ def actions(user, capability, identifier=""):
     result = ["read"]
     if member.is_admin:
         result += [
+            "mandate_propose",
             "invite",
             "update_member",
             "budget",
@@ -257,7 +293,14 @@ def actions(user, capability, identifier=""):
         result += ["withdraw"]
     if getattr(settings, "COMPANY_HOUSING_ENABLED", False):
         if member.is_coordinator:
-            result += ["create_request", "edit_request", "select", "hold", "submit"]
+            result += [
+                "create_request",
+                "edit_request",
+                "select",
+                "hold",
+                "submit",
+                "prepare_contract",
+            ]
         if member.is_approver:
             if (
                 isinstance(item, CompanyBookingItem)

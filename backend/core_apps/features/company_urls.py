@@ -5,8 +5,21 @@ from . import company_staff_views as s
 from . import company_work_views as w
 from . import company_chat_views as c
 from . import portfolio_views as p
+from . import company_contract_views as contracts
 
 urlpatterns = [
+    path("companies/<uuid:company_id>/mandates/", contracts.mandates),
+    path("company-mandates/<uuid:mandate_id>/<slug:action>/", contracts.mandate_action),
+    path(
+        "company-booking-items/<uuid:item_id>/contract-preparation/",
+        contracts.preparation,
+    ),
+    path("company-contract-preparations/", contracts.preparations),
+    path("company-contract-preparations/<uuid:preparation_id>/", contracts.detail),
+    path(
+        "company-contract-preparations/<uuid:preparation_id>/<slug:action>/",
+        contracts.preparation_action,
+    ),
     path("residential-assets/<slug:kind>/<uuid:asset_id>/changes/", p.change_history),
     path(
         "residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",

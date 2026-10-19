@@ -142,6 +142,11 @@ from .company_staff_models import (
     CompanyStaffBatchRow,
     CompanyWorkContactProof,
 )
+from .company_contract_models import (
+    CompanyMandate,
+    CompanyContractPreparation,
+    CompanyPreparationConsent,
+)
 
 from .model_parts.reputation import (
     ReviewCase,

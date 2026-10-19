@@ -79,6 +79,7 @@ def company_payload(company, user):
             is_active=True, can_execute_payments=True
         ).exists(),
         "corporate_contracting": False,
+        "contract_preparation": True,
         "corporate_payments": False,
     }
     if member.is_admin or member.is_approver:

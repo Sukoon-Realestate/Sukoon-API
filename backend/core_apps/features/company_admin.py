@@ -10,6 +10,11 @@ from .company_staff_models import (
     CompanyStaffBatchRow,
     CompanyWorkContactProof,
 )
+from .company_contract_models import (
+    CompanyMandate,
+    CompanyContractPreparation,
+    CompanyPreparationConsent,
+)
 from core_apps.properties.models import (
     ResidentialComplex,
     ResidentialBuilding,
@@ -60,6 +65,9 @@ admin.site.register(
         CompanyStaffBatch,
         CompanyStaffBatchRow,
         CompanyWorkContactProof,
+        CompanyMandate,
+        CompanyContractPreparation,
+        CompanyPreparationConsent,
     ],
     FinancialHistoryAdmin,
 )

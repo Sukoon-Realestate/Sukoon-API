@@ -227,3 +227,62 @@ FIELD_LABELS.update(
         "Content Type": "نوع الملف",
     }
 )
+
+# Ordinary company mandate and exact placement review. These are preparation
+# acknowledgments, never a provider signature or a financial outcome.
+MESSAGES.update(
+    {
+        "Choose a future mandate expiry within 366 days of its start.": "حدد انتهاء صلاحية مستقبليا للتفويض خلال 366 يوما من بدايته.",
+        "Resolve or revoke the existing mandate before replacing it.": "أكمل مراجعة التفويض الحالي أو ألغِه قبل استبداله.",
+        "Complete the company authority review before proposing a mandate.": "أكمل مراجعة صلاحيات الشركة قبل اقتراح تفويض.",
+        "This mandate is outside your company responsibilities.": "هذا التفويض خارج نطاق مسؤولياتك في الشركة.",
+        "Only an administrator or the delegate can revoke this mandate.": "يمكن لمسؤول الشركة أو المفوض فقط إلغاء هذا التفويض.",
+        "This mandate is already closed.": "هذا التفويض مغلق بالفعل.",
+        "An independent administrator must review this mandate.": "يجب أن يراجع هذا التفويض مسؤول مستقل عن مقدمه والمفوض.",
+        "Refresh the mandate and current membership before review.": "حدث التفويض والعضوية الحالية قبل المراجعة.",
+        "Choose at most 500 distinct named employees.": "اختر حتى 500 موظف محدد دون تكرار.",
+        "Explain the declined or withdrawn review.": "وضح سبب رفض المراجعة أو سحب الموافقة.",
+        "Activate every named employee before preparing the contract.": "أكمل تفعيل كل موظف محدد قبل تحضير التعاقد.",
+        "Every named occupant needs current employee access and an active verified account.": "يحتاج كل مقيم محدد إلى عضوية موظف حالية وحساب نشط وموثق.",
+        "Select named employees before preparing a company contract.": "حدد أسماء الموظفين قبل تحضير تعاقد الشركة.",
+        "Review an approved uncommitted company package.": "راجع حزمة شركة معتمدة لم تتحول إلى التزام تعاقدي.",
+        "Complete the company authority review first.": "أكمل مراجعة صلاحيات الشركة أولا.",
+        "Obtain a new quote and approval before continuing.": "احصل على عرض سعر وموافقة جديدين قبل المتابعة.",
+        "Review current arrival dates before continuing.": "راجع مواعيد الوصول الحالية قبل المتابعة.",
+        "The current owner must have active verified access.": "يجب أن يكون حساب المالك الحالي نشطا وموثقا.",
+        "The property owner cannot approve the renting company's package.": "لا يمكن لمالك العقار اعتماد حزمة الشركة المستأجرة.",
+        "A current independent budget approval is required.": "تلزم موافقة ميزانية مستقلة وسارية.",
+        "The inventory hold expired. Withdraw and obtain a current package.": "انتهت صلاحية حجز الوحدات. اسحب الحزمة وجهز حزمة حالية.",
+        "Inventory or commercial terms changed. Review a new package.": "تغيرت الوحدات أو الشروط التجارية. راجع حزمة جديدة.",
+        "Assign each named employee exactly once; do not add unapproved occupants.": "خصص سكنا لكل موظف محدد مرة واحدة دون إضافة مقيمين غير معتمدين.",
+        "Choose selected units with sufficient explicitly recorded capacity.": "اختر وحدات من الحزمة بسعة مسجلة وكافية للمقيمين.",
+        "Choose current independently approved signing and payment mandates covering the full exposure.": "اختر تفويضي توقيع ودفع ساريين ومعتمدين باستقلال ويغطيان كامل الإيجار والتأمين.",
+        "The property owner cannot represent the renting company in this package.": "لا يمكن لمالك العقار تمثيل الشركة المستأجرة في هذه الحزمة.",
+        "Restore active account authority before approving this company plan.": "استعد صلاحيات الحساب النشطة قبل اعتماد خطة الشركة.",
+        "People, mandates or approved source changed. Prepare a fresh review cycle.": "تغير المشاركون أو التفويضات أو البيانات المعتمدة. جهز دورة مراجعة جديدة.",
+        "This preparation was withdrawn. Start a new package.": "تم سحب هذا التحضير. ابدأ حزمة جديدة.",
+        "Review the current company preparation before responding.": "راجع تحضير الشركة الحالي قبل الرد.",
+        "Respond only for your own assigned responsibility.": "أرسل الرد عن مسؤوليتك المسندة إليك فقط.",
+        "This review is already recorded. A changed plan requires fresh review.": "هذه المراجعة مسجلة بالفعل. تحتاج الخطة المعدلة إلى مراجعة جديدة.",
+        "Only the currently assigned coordinator can withdraw this package.": "يمكن للمنسق المسؤول حاليا فقط سحب هذه الحزمة.",
+        "This preparation is already withdrawn.": "تم سحب هذا التحضير بالفعل.",
+        "Only the currently assigned coordinator can reserve this package.": "يمكن للمنسق المسؤول حاليا فقط حجز هذه الحزمة.",
+        "Every assigned participant must confirm the current plan before this reservation.": "يجب أن يؤكد كل مشارك معني الخطة الحالية قبل هذا الحجز.",
+        "Unsupported mandate action.": "إجراء التفويض غير مدعوم.",
+        "Unsupported preparation action.": "إجراء التحضير غير مدعوم.",
+    }
+)
+FIELD_LABELS.update(
+    {
+        "Membership Id": "العضوية",
+        "Valid From": "بداية الصلاحية",
+        "Valid Until": "نهاية الصلاحية",
+        "Limit Minor": "حد التفويض",
+        "Evidence Reference": "مرجع مستند التفويض",
+        "Signer Mandate Id": "تفويض الموقّع",
+        "Payer Mandate Id": "تفويض الدافع",
+        "Placements": "تخصيص الوحدات للموظفين",
+        "Employee Id": "الموظف",
+        "Snapshot Digest": "نسخة الخطة المراجعة",
+    }
+)
