@@ -29,6 +29,7 @@ def operations_reconcile_payout(request, payout_id):
     if replay:
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
+        _require_payout_role(request.user, lock=True)
         candidate = get_object_or_404(RentalPayout, id=payout_id)
         from ..services.rental_lifecycle.locks import lock_financial_lease
 

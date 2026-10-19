@@ -19,7 +19,10 @@ from .capture_attempt import _capture_attempt
 
 
 def _settle_attempt(attempt):
-    if attempt.payment_status != PaymentAttempt.Status.CAPTURED:
+    if attempt.payment_status not in {
+        PaymentAttempt.Status.CAPTURED,
+        PaymentAttempt.Status.CHARGEDBACK,
+    }:
         return False
     if attempt.settlement_status == "settled":
         return True
@@ -50,11 +53,20 @@ def _settle_attempt(attempt):
         )
     OwnerPayable.objects.filter(payment_attempt=attempt).update(
         settlement_status="settled",
-        blocking_reasons=["Move-in is not accepted."],
         updated_at=timezone.now(),
     )
     from ...rental_phase4_views import evaluate_owner_payables
 
+    replacement = getattr(attempt, "chargeback_replacement", None)
+    if replacement:
+        from ..chargebacks.facts import changed
+
+        changed(replacement.chargeback, "replacement_settled")
+    original_chargeback = getattr(attempt, "chargeback", None)
+    if original_chargeback:
+        from ..chargebacks.facts import changed
+
+        changed(original_chargeback, "original_settled")
     evaluate_owner_payables(attempt.invoice.lease)
     return True
 
@@ -87,9 +99,15 @@ def process_provider_event(event):
             code="invalid_provider_signature",
         )
     payload = event.payload
+    from ..chargebacks.facts import EVENTS, apply_fact, open_dispute
+
     if (
         payload.get("currency") != attempt.currency
-        or int(payload.get("amount_minor", -1)) != attempt.amount_minor
+        or type(payload.get("amount_minor")) is not int
+        or (
+            event.event_type != "payment.chargeback.restored"
+            and payload.get("amount_minor") != attempt.amount_minor
+        )
     ):
         raise RentalConflict("Provider amount or currency mismatch.")
     if event.event_type == "payment.captured":
@@ -107,6 +125,8 @@ def process_provider_event(event):
             attempt.revision += 1
             attempt.save()
         event.processed = True
+    elif event.event_type in EVENTS:
+        event.processed = apply_fact(attempt, event)
     elif event.event_type == "payment.chargeback":
         # Keep a reversal pending until the original capture is recorded.
         if attempt.payment_status not in {
@@ -114,43 +134,7 @@ def process_provider_event(event):
             PaymentAttempt.Status.CHARGEDBACK,
         }:
             return event
-        if attempt.payment_status != PaymentAttempt.Status.CHARGEDBACK:
-            amount = int(payload["amount_minor"])
-            attempt.payment_status = PaymentAttempt.Status.CHARGEDBACK
-            attempt.revision += 1
-            attempt.save(update_fields=["payment_status", "revision", "updated_at"])
-            invoice = RentInvoice.objects.select_for_update().get(pk=attempt.invoice_id)
-            invoice.applied_minor = max(invoice.applied_minor - amount, 0)
-            invoice.status = (
-                RentInvoice.Status.DUE
-                if invoice.applied_minor == 0
-                else RentInvoice.Status.PARTIALLY_PAID
-            )
-            invoice.revision += 1
-            invoice.save()
-            post_ledger_transaction(
-                reference=f"chargeback:{attempt.id}",
-                kind="chargeback",
-                lease=invoice.lease,
-                invoice=invoice,
-                attempt=attempt,
-                entries=[
-                    ("chargeback_receivable", LedgerEntry.Direction.DEBIT, amount),
-                    ("platform_cash", LedgerEntry.Direction.CREDIT, amount),
-                ],
-            )
-            OwnerPayable.objects.filter(payment_attempt=attempt).update(
-                payout_status="held",
-                blocking_reasons=["A chargeback is unresolved."],
-                updated_at=timezone.now(),
-            )
-            from ..rental_phase6 import evaluate_financial_closure
-
-            evaluate_financial_closure(invoice.lease)
-            if invoice.lease.renter_company_id:
-                from ..company.tenancy_access import notify
-
-                notify(invoice.lease.company_tenancy)
+        open_dispute(attempt, event)
         event.processed = True
     else:
         raise ValidationError({"type": "Unsupported payment provider event."})
@@ -164,4 +148,19 @@ def process_provider_event(event):
             processed=False,
         ).order_by("sequence", "created_at"):
             process_provider_event(pending)
+    if event.event_type == "payment.chargeback" and event.processed:
+        for pending in ProviderWebhookEvent.objects.filter(
+            payment_attempt=attempt,
+            provider=event.provider,
+            payload__chargeback_event_id=event.provider_event_id,
+            event_type__in=EVENTS,
+            processed=False,
+        ).order_by("sequence", "created_at"):
+            try:
+                with transaction.atomic():
+                    process_provider_event(pending)
+            except RentalConflict:
+                # Retain rejected source evidence for reconciliation; a malformed
+                # later fact cannot roll back the authenticated original debit.
+                continue
     return event

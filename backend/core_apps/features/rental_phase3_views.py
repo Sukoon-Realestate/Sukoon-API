@@ -72,3 +72,4 @@ from .rental_phase3_views_parts.rent_invoice_checkout import (
     rent_invoice_checkout,
     fake_payment_webhook,
 )
+from .rental_phase3_views_parts.rent_invoice_payments import rent_invoice_payments

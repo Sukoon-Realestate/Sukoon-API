@@ -340,10 +340,15 @@ def signing_session(item, user, data):
     lease = item.lease
     if lease.status != "pending_signatures" or data["digest"] != lease.document_hash:
         raise RentalConflict("Review the current signing document.")
+    from .tenancy_initial_recovery import pending
+
+    if pending(item):
+        raise RentalConflict(
+            "Resolve or withdraw the separate agreement release before starting another original signing session."
+        )
     validate_unsigned(item)
     if lease.signing_sessions.filter(
         signer=user,
-        status__in=["pending", "completed", "review_required"],
         document_hash=lease.document_hash,
     ).exists():
         raise RentalConflict("Resume or reconcile the original signing session.")
@@ -374,14 +379,40 @@ def signing_session(item, user, data):
     return access.changed(item, user, "company_signing_session_opened")
 
 
-def complete_signature(session):
-    """Called only after the existing provider adapter authenticates the event."""
+def complete_signature(session, *, reconcile=False):
+    """Retain authenticated facts; manual resume only rechecks a retained fact."""
     initial = session.lease.company_tenancy
     lease = access.lock_lease(initial.lease)
     item = CompanyTenancy.objects.select_for_update().get(pk=initial.pk)
     item.lease = lease
     session = SigningSession.objects.select_for_update().get(pk=session.pk)
-    if session.status in {"completed", "review_required"}:
+    if session.status == "completed":
+        return
+    if reconcile:
+        if session.status != "review_required" or not session.completed_at:
+            raise RentalConflict(
+                "Only a previously authenticated signature fact can be reconciled."
+            )
+    elif session.status == "review_required":
+        return
+    from .tenancy_initial_recovery import pending, applied
+
+    if pending(item) or applied(item):
+        # A separate signed release covers the exact original document. Late
+        # original events remain facts, never permission to restart the lease.
+        session.status = "review_required"
+        session.completed_at = session.completed_at or timezone.now()
+        session.save()
+        access.changed(
+            item,
+            None,
+            "company_original_signature_retained_during_release",
+            metadata={
+                "session_id": str(session.id),
+                "provider_session_id": session.provider_session_id,
+                "document_hash": session.document_hash,
+            },
+        )
         return
     from rest_framework.exceptions import APIException
 
@@ -400,7 +431,12 @@ def complete_signature(session):
             "The signing result arrived after the reviewed session changed or expired."
         )
     if failure:
-        session.status, session.completed_at = "review_required", timezone.now()
+        if reconcile:
+            # Keep the original provider receipt timestamp and case unchanged.
+            # A refresh cannot turn an expired or changed source into approval.
+            return
+        session.status = "review_required"
+        session.completed_at = session.completed_at or timezone.now()
         session.save()
         from ..rental_lifecycle.cases import open_system_case
 
@@ -424,7 +460,8 @@ def complete_signature(session):
         raise PermissionDenied(
             "The signing session is not for a current contract party."
         )
-    session.status, session.completed_at = "completed", timezone.now()
+    session.status = "completed"
+    session.completed_at = session.completed_at or timezone.now()
     session.save()
     done = set(
         lease.signing_sessions.filter(
@@ -470,7 +507,9 @@ def cancel(item, user, data):
     access.require_role(item, user, {"owner", "coordinator"})
     lease = item.lease
     if (
-        lease.status not in {"draft", "expired"}
+        lease.status not in {"draft", "expired", "pending_signatures"}
+        or lease.status == "pending_signatures"
+        and lease.signing_sessions.exists()
         or lease.signing_sessions.filter(
             status__in=["pending", "completed", "review_required"]
         ).exists()

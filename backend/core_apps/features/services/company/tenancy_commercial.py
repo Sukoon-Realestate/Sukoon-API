@@ -18,7 +18,13 @@ from ..rental_phase2 import RentalConflict, fingerprint, add_months
 from ..rental_phase3_parts.issue_invoice import cairo_instant
 from . import tenancy_access as access, tenancy_changes as changes
 
-KINDS = {"renewal", "amendment", "ownership", "continuation_release"}
+KINDS = {
+    "renewal",
+    "amendment",
+    "ownership",
+    "continuation_release",
+    "agreement_release",
+}
 OPEN = {
     "pending",
     "accepted",
@@ -207,6 +213,11 @@ def propose(item, user, data):
 
 
 def revalidate(item, change):
+    if change.kind == "agreement_release":
+        from .tenancy_initial_recovery import revalidate as revalidate_initial
+
+        revalidate_initial(item, change)
+        return
     if change.kind == "continuation_release":
         from .tenancy_resolution import source
 
@@ -280,7 +291,7 @@ def revalidate(item, change):
 
 def reserve(item, change):
     revalidate(item, change)
-    if change.kind in {"ownership", "continuation_release"}:
+    if change.kind in {"ownership", "continuation_release", "agreement_release"}:
         change.rental_change.status = "accepted"
         change.rental_change.save()
         return
@@ -342,6 +353,11 @@ def reserve(item, change):
 
 
 def release(item, change):
+    if change.kind == "agreement_release":
+        from .tenancy_initial_recovery import withdraw
+
+        withdraw(item, change)
+        return
     if change.kind == "continuation_release":
         from .tenancy_resolution import release_review
 
@@ -371,6 +387,11 @@ def apply_signed(item, change):
         raise RentalConflict(
             "Authoritative signatures for the exact continuation are required."
         )
+    if change.kind == "agreement_release":
+        from .tenancy_initial_recovery import apply_signed as release_initial
+
+        release_initial(item, change)
+        return
     if change.kind == "continuation_release":
         from .tenancy_resolution import apply_signed as resolve_signed
 

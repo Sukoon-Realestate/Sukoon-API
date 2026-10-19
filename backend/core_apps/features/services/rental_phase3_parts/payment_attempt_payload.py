@@ -16,6 +16,7 @@ def invoice_payment_allowed(user, invoice):
 
     lease = invoice.lease
     from ..company.tenancy_access import can_pay
+    from ..chargebacks.funding import checkout_allowed
 
     if (
         lease.terms.get("deposit_holder") == "owner"
@@ -30,6 +31,7 @@ def invoice_payment_allowed(user, invoice):
         and user.is_verified
         and can_pay(lease, user)
         and checkout_available()
+        and checkout_allowed(invoice)
         and not lease.legacy_read_only
         and (
             lease.status
@@ -83,12 +85,19 @@ def payment_attempt_payload(attempt, user=None):
         return purchase_attempt_payload(attempt)
     from ...providers import mock_completion_metadata
     from ..refunds import remaining_components
+    from ..chargebacks.funding import can_refund
+    from ..chargebacks.projection import payload as chargeback_payload
 
     invoice = attempt.invoice
     receipt = getattr(attempt, "receipt", None)
     refundable_components = remaining_components(attempt)
     refundable = sum(refundable_components.values())
     return {
+        "chargeback": (
+            chargeback_payload(attempt.chargeback)
+            if hasattr(attempt, "chargeback")
+            else None
+        ),
         **mock_completion_metadata("payment-attempts", attempt.id, attempt.revision),
         "refundable_balance": {
             "amount_minor": refundable,
@@ -100,7 +109,7 @@ def payment_attempt_payload(attempt, user=None):
             ["request_refund"]
             if user is not None
             and user.pk == attempt.payer_id
-            and attempt.payment_status == "captured"
+            and can_refund(attempt)
             and refundable > 0
             else []
         ),

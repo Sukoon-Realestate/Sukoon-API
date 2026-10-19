@@ -70,6 +70,7 @@ REQUIRED_FIELDS = {
     "sign_continuation": ["change_id", "digest", "role"],
     "resume_continuation": ["change_id", "digest"],
     "release_continuation": ["change_id", "digest", "reason"],
+    "release_agreement": ["digest", "reason"],
     "review": ["role", "digest"],
     "submit_signature": [],
     "sign": ["digest"],

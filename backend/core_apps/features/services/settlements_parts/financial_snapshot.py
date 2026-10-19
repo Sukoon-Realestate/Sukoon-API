@@ -21,7 +21,16 @@ LINE_TYPES = CHARGE_TYPES | {"deposit_return", "refund", "credit", "write_off"}
 
 def financial_snapshot(lease):
     deposit = DepositAgreement.objects.filter(lease=lease).first()
+    from ...models import RentalChargeback
+
+    chargebacks = [
+        {"id": str(row.id), "revision": row.revision}
+        for row in RentalChargeback.objects.filter(
+            payment_attempt__invoice__lease=lease
+        ).order_by("pkid")
+    ]
     return {
+        **({"chargebacks": chargebacks} if chargebacks else {}),
         "invoices": [
             {
                 "id": str(x.id),

@@ -229,6 +229,9 @@ def close_budget(item):
 
 def reconcile(item, user, data):
     access.require_role(item, user, {"owner", "coordinator", "signer", "payer"})
+    from .tenancy_initial_recovery import reconcile as reconcile_initial
+
+    reconcile_initial(item)
     from .tenancy_expiry import expire
 
     expire(item)

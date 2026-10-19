@@ -10,6 +10,13 @@ from .financial_snapshot import CHARGE_TYPES
 
 
 def settlement_precondition_error(lease):
+    from ..chargebacks.projection import lease_blockers
+
+    if lease_blockers(lease):
+        return (
+            "chargeback_reconciliation_required",
+            "Reconcile the original chargeback and its real funding before allocating a final settlement.",
+        )
     if lease.terms.get("deposit_holder") == "owner" and lease.terms.get(
         "deposit", {}
     ).get("amount_minor"):
@@ -145,10 +152,16 @@ def prepare_settlement(lease, lines):
     refunds = []
     return_left, rent_left = available, refund_due
     for attempt in (
-        PaymentAttempt.objects.filter(invoice__lease=lease, payment_status="captured")
+        PaymentAttempt.objects.filter(
+            invoice__lease=lease, payment_status__in=["captured", "chargedback"]
+        )
         .select_related("invoice")
         .order_by("pkid")
     ):
+        from ..chargebacks.funding import can_refund
+
+        if not can_refund(attempt):
+            continue
         components = remaining_components(attempt)
         # Applied deposit is reserved by the plan before allocating its return.
         deposit_return = min(return_left, components["deposit"])

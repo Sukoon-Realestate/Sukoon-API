@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p>Original provider: {{ item.provider }}. Original event: {{ item.opening_event.provider_event_id }}. Dispute: {{ item.provider_dispute_id }}.</p>
+<p>Original amount: {{ item.amount_minor }} minor units {{ item.currency }} (exponent {{ item.exponent }}). Final provider outcome: {{ item.outcome }}.</p>
+<p>Actually restored: {{ projection.funds_restored_minor }}. Replacement funding settled: {{ projection.replacement_settled_minor }}. Excess still owed: {{ projection.excess_refund_remaining_minor }}.</p>
+<ul>{% for reason in projection.blocking_reasons %}<li>{{ reason }}</li>{% empty %}<li>The chargeback itself is reconciled. Other tenancy obligations are evaluated separately.</li>{% endfor %}</ul>
+<p>Provider decisions and bank movements are separate evidence. This console cannot manufacture a provider result, recover money by a note, forgive a debt, or cancel an executed payout.</p>
+{% for refund in projection.excess_refunds %}
+<section><p>Excess refund {{ refund.id }}: {{ refund.amount_minor }} minor units; status {{ refund.status }}.</p>
+{% if refund.status == 'requested' and can_approve %}
+<form method="post">{% csrf_token %}
+<input type="hidden" name="request_key" value="{{ request_key }}">
+<input type="hidden" name="expected_revision" value="{{ item.revision }}">
+<input type="hidden" name="action" value="approve_excess_refund">
+<input type="hidden" name="refund_id" value="{{ refund.id }}">
+<label>Independent approval reason <textarea name="reason" required maxlength="2000"></textarea></label>
+<button type="submit">Approve exact excess refund</button>
+</form>{% endif %}
+{% if refund.status == 'requested' and not can_approve %}<p>Your role can inspect this evidence. Approval requires an independent current financial approver or refund operator.</p>{% endif %}
+<p>Execution retains the existing protected refund endpoint, its sensitive-action proof and original provider instruction. Provider absence remains an explicit execution boundary.</p></section>
+{% endfor %}
+{% endblock %}

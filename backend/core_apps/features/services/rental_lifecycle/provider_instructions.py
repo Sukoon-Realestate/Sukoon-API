@@ -108,6 +108,8 @@ def hold_payout_for_review(payout, error):
 def validate_payout_instruction(payout):
     """Recheck before dispatch; a later profile edit cannot silently redirect funds."""
     from ...models import OwnerPaymentProfile, RefundRequest
+    from django.db.models import Q
+    from ..chargebacks.projection import payable_funding_ready, payable_funding_sources
 
     profile = (
         OwnerPaymentProfile.objects.select_for_update()
@@ -139,21 +141,21 @@ def validate_payout_instruction(payout):
         or sum(value.net_minor for value in payables) != payout.amount_minor
         or any(
             value.payout_status not in {"submitted", "processing"}
-            or (
-                value.payment_attempt
-                and (
-                    value.payment_attempt.payment_status != "captured"
-                    or value.payment_attempt.settlement_status != "settled"
-                )
-            )
+            or not payable_funding_ready(value)
             for value in payables
         )
     ):
         raise RentalConflict(
             "The reserved payout balance needs reconciliation.", code="payout_held"
         )
+    source_ids = {
+        attempt.pk for value in payables for attempt in payable_funding_sources(value)
+    }
     if RefundRequest.objects.filter(
-        payment_attempt_id__in=[value.payment_attempt_id for value in payables],
+        Q(payment_attempt_id__in=source_ids)
+        | Q(
+            payment_attempt__chargeback_replacement__chargeback__payment_attempt_id__in=source_ids
+        ),
         status__in=["requested", "approved", "processing"],
     ).exists():
         raise RentalConflict(

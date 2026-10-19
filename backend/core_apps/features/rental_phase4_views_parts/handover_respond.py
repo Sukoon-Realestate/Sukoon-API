@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from ..models import (
     DepositAgreement,
     OwnerPaymentProfile,
-    PaymentAttempt,
     RentalHandover,
     RentalPayout,
 )
@@ -53,18 +52,24 @@ def evaluate_owner_payables(lease):
             payable.payout_status,
             payable.blocking_reasons,
         )
-        if payable.source_reference and payable.settlement_status != "settled":
-            deposit = DepositAgreement.objects.filter(lease=lease).first()
-            if (
-                deposit
-                and not PaymentAttempt.objects.filter(
-                    invoice=deposit.invoice, payment_status="captured"
-                )
-                .exclude(settlement_status="settled")
-                .exists()
-            ):
-                payable.settlement_status = "settled"
+        from ..services.chargebacks.projection import (
+            payable_funding_ready,
+            payable_funding_sources,
+        )
+
+        funded = payable_funding_ready(payable)
+        if funded:
+            payable.settlement_status = "settled"
         reasons = []
+        if not funded:
+            reasons.append(
+                "A chargeback of the original cash source requires canonical financial reconciliation."
+                if any(
+                    attempt.payment_status == "chargedback"
+                    for attempt in payable_funding_sources(payable)
+                )
+                else "The original cash source requires canonical financial reconciliation."
+            )
         if payable.settlement_status != "settled":
             reasons.append("PSP settlement is pending.")
         if not move_in:

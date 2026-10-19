@@ -1,4 +1,5 @@
 from django.urls import include, path
+from .chargeback_views import chargeback_detail
 from .rental_phase6_views_parts.lease_reviews import document_content
 
 from . import views
@@ -15,6 +16,7 @@ from .models import RentalChange
 from .rental_lifecycle_views import habitability
 
 urlpatterns = [
+    path("operator/chargebacks/<uuid:chargeback_id>/", chargeback_detail, name="operator-chargeback-detail"),
     path(
         "business-policies/",
         business_policy_views.current_policies,
@@ -195,6 +197,11 @@ urlpatterns = [
         name="rent-invoice-quote",
     ),
     path("payment-attempts/", views_phase3.payment_attempts, name="payment-attempts"),
+    path(
+        "rent-invoices/<uuid:invoice_id>/payments/",
+        views_phase3.rent_invoice_payments,
+        name="rent-invoice-payments",
+    ),
     path(
         "payment-attempts/<uuid:attempt_id>/",
         views_phase3.payment_attempt_detail,

@@ -69,7 +69,9 @@ def rent_invoice_checkout(request, invoice_id):
             raise RentalConflict("Invoice revision conflict.", code="stale_revision")
         if quote.expires_at <= timezone.now():
             raise RentalConflict("The payment quote expired.", code="quote_expired")
-        if quote.payer_amount_minor != invoice_balance_minor(invoice):
+        from ..services.chargebacks.funding import quote_amount
+
+        if quote.payer_amount_minor != quote_amount(invoice):
             raise RentalConflict(
                 "The quote no longer matches the invoice.", code="document_changed"
             )

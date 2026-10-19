@@ -6,6 +6,7 @@ from ...models import (
     RentalOperationalCase,
     RentalEvidence,
     FinalSettlement,
+    RentalChargeback,
 )
 from ...providers import fake_provider_available, mock_completion_metadata
 from ..rental_phase3 import invoice_balance_minor, invoice_payment_allowed
@@ -16,8 +17,12 @@ from . import tenancy_access as access
 def payload(item, user):
     from ..business_policies import public_bound
     from django.utils.translation import get_language
+    from ..chargebacks.projection import payload as chargeback_payload
 
     roles = access.roles(item, user)
+    from . import tenancy_initial_recovery as initial_recovery
+
+    release_pending = initial_recovery.pending(item)
     commercial = bool(roles - access.PRIVATE_ONLY)
     lease = item.lease
     booking = item.preparation.booking
@@ -58,8 +63,11 @@ def payload(item, user):
         ):
             allowed += ["submit_signature"]
     if (
-        lease.status in {"draft", "expired"}
+        lease.status in {"draft", "expired", "pending_signatures"}
         and roles & {"owner", "coordinator"}
+        and not (
+            lease.status == "pending_signatures" and lease.signing_sessions.exists()
+        )
         and not lease.signing_sessions.filter(
             status__in=["pending", "completed", "review_required"]
         ).exists()
@@ -71,8 +79,16 @@ def payload(item, user):
         and roles & {"owner", "signer"}
         and provider
         and not blockers
+        and not release_pending
+        and not lease.signing_sessions.filter(
+            signer=user, document_id=lease.document_id, document_hash=lease.document_hash
+        ).exists()
     ):
         allowed += ["sign"]
+    if roles & {"owner", "signer"} and initial_recovery.can_propose(item):
+        allowed += ["release_agreement"]
+    if release_pending:
+        blockers.append("initial_release_pending")
     if lease.status in {"active", "termination_pending", "ended"}:
         if roles & {"owner", "coordinator"} and (
             lease.occupancy_status
@@ -367,6 +383,14 @@ def payload(item, user):
         ],
         "changes": change_rows,
         "maintenance": maintenance_rows,
+        "chargebacks": (
+            [
+                chargeback_payload(row)
+                for row in RentalChargeback.objects.filter(
+                    payment_attempt__invoice__lease=lease
+                )
+            ] if commercial else []
+        ),
         "invoices": (
             [
                 {
@@ -497,6 +521,11 @@ def review_content(content, lease, *, redact_people=False):
     from copy import deepcopy
 
     result = deepcopy(content)
+    if content.get("policy_scope") == "company.agreement.release":
+        from ..business_policies import public
+        from django.utils.translation import get_language
+
+        result["release_policy"] = public(content["policy"], get_language())
     if redact_people:
         result.pop("roster", None)
         if "terms" in result:

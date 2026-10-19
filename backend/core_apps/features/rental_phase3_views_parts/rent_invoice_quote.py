@@ -97,6 +97,8 @@ def _active_session(attempt):
 
 
 def quote_payload(quote):
+    from ..services.chargebacks.funding import quote_disclosure
+
     return {
         "quote_id": str(quote.id),
         "invoice_id": str(quote.invoice.id),
@@ -110,6 +112,9 @@ def quote_payload(quote):
         "policy_version": quote.policy_version,
         "fingerprint": quote.fingerprint,
         "expires_at": quote.expires_at.isoformat(),
+        "chargeback_replacement": quote_disclosure(
+            quote.invoice, quote.payer_amount_minor
+        ),
     }
 
 
@@ -148,7 +153,9 @@ def rent_invoice_quote(request, invoice_id):
             raise RentalConflict("Invoice revision conflict.", code="stale_revision")
         if not invoice_payment_allowed(request.user, invoice):
             raise RentalConflict("This invoice is not payable.")
-        balance = invoice_balance_minor(invoice)
+        from ..services.chargebacks.funding import quote_amount
+
+        balance = quote_amount(invoice)
         if not balance or invoice.status not in {
             RentInvoice.Status.DUE,
             RentInvoice.Status.OVERDUE,

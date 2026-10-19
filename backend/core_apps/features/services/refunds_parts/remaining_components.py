@@ -28,7 +28,19 @@ def captured_components(attempt):
 
 def remaining_components(attempt, *, exclude_refund=None):
     remaining = dict(captured_components(attempt))
-    refunds = attempt.refund_requests.exclude(status__in=["rejected", "failed"])
+    chargeback = getattr(attempt, "chargeback", None)
+    if chargeback:
+        remaining = {"rent": 0, "deposit": 0}
+        for row in chargeback.restorations.all():
+            for name in remaining:
+                remaining[name] += row.components.get(name, 0)
+    refunds = attempt.refund_requests.exclude(
+        status__in=["rejected", "failed"]
+    ).exclude(purpose="chargeback_excess")
+    if chargeback:
+        refunds = refunds.exclude(
+            id__in=chargeback.source_snapshot.get("prior_refund_ids", [])
+        )
     if exclude_refund:
         refunds = refunds.exclude(pk=exclude_refund.pk)
     for refund in refunds:

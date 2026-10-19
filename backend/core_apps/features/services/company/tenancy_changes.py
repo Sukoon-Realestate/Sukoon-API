@@ -164,6 +164,10 @@ def respond(item, user, data):
         raise RentalConflict("Your decision is already recorded for this revision.")
     change.decisions[role] = {"actor_id": str(user.id), "decision": decision}
     if decision == "decline":
+        if change.kind == "agreement_release":
+            from .tenancy_initial_recovery import withdraw
+
+            withdraw(item, change)
         if change.kind == "continuation_release":
             from .tenancy_resolution import release_review
 
@@ -208,7 +212,13 @@ def withdraw(item, user, data):
         raise PermissionDenied(
             "Only the proposer or assigned coordinator can withdraw this change."
         )
-    if change.kind in {"renewal", "amendment", "ownership", "continuation_release"}:
+    if change.kind in {
+        "renewal",
+        "amendment",
+        "ownership",
+        "continuation_release",
+        "agreement_release",
+    }:
         from .tenancy_commercial import release
 
         release(item, change)
@@ -226,7 +236,13 @@ def apply(item, change):
 
     if change.snapshot["terms_digest"] != item.terms_digest:
         raise RentalConflict("The underlying company contract changed.")
-    if change.kind in {"renewal", "amendment", "ownership", "continuation_release"}:
+    if change.kind in {
+        "renewal",
+        "amendment",
+        "ownership",
+        "continuation_release",
+        "agreement_release",
+    }:
         from .tenancy_commercial import reserve
 
         reserve(item, change)

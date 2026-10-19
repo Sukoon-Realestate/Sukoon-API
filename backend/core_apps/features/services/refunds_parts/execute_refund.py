@@ -31,15 +31,24 @@ def execute_refund(refund):
         pk=refund.payment_attempt_id
     )
     invoice = RentInvoice.objects.select_for_update().get(pk=attempt.invoice_id)
-    if attempt.payment_status != PaymentAttempt.Status.CAPTURED:
+    if refund.purpose == "chargeback_excess":
+        from ..chargebacks.refunds import execute
+
+        return execute(refund)
+    from ..chargebacks.funding import can_refund, refund_source
+
+    if not can_refund(attempt):
         raise RentalConflict(
             "Only a confirmed capture can be refunded.", code="payment_not_captured"
         )
     split = validate_allocations(
         attempt, refund.amount_minor, refund.allocations, exclude_refund=refund
     )
+    original = refund_source(attempt)
     payable = (
-        OwnerPayable.objects.select_for_update().filter(payment_attempt=attempt).first()
+        OwnerPayable.objects.select_for_update()
+        .filter(payment_attempt=original)
+        .first()
     )
     if (
         payable
@@ -57,13 +66,21 @@ def execute_refund(refund):
         raise RentalConflict("The captured deposit agreement is missing.")
     commission = 0
     if payable and split["rent"]:
-        previous = attempt.refund_requests.filter(status="succeeded")
+        from django.db.models import Q
+
+        previous = RefundRequest.objects.filter(
+            Q(payment_attempt=original)
+            | Q(
+                payment_attempt__chargeback_replacement__chargeback__payment_attempt=original
+            ),
+            status="succeeded",
+        ).exclude(purpose="chargeback_excess")
         original_commission = payable.commission_minor
         if payable.payout_status != "succeeded":
             original_commission += (
                 previous.aggregate(total=Sum("commission_reversal_minor"))["total"] or 0
             )
-        original_rent = captured_components(attempt)["rent"]
+        original_rent = captured_components(original)["rent"]
         returned_rent = sum(
             item.allocations.get("rent", item.amount_minor) for item in previous
         )
@@ -188,4 +205,9 @@ def execute_refund(refund):
 
     evaluate_owner_payables(lease)
     evaluate_financial_closure(lease)
+    chargeback = getattr(original, "chargeback", None)
+    if chargeback:
+        from ..chargebacks.facts import changed
+
+        changed(chargeback, "ordinary_refund_recorded")
     return refund

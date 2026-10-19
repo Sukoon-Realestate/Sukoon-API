@@ -78,10 +78,9 @@ def closure_blocking_reasons(lease):
         reasons.append("A refund is pending.")
     if lease.disputes.filter(status=RentalDispute.Status.OPEN).exists():
         reasons.append("A dispute is unresolved.")
-    if lease.invoices.filter(
-        payment_attempts__payment_status=PaymentAttempt.Status.CHARGEDBACK
-    ).exists():
-        reasons.append("A chargeback is unresolved.")
+    from .chargebacks.projection import lease_blockers
+
+    reasons.extend(lease_blockers(lease))
     if lease.owner_payables.exclude(
         payout_status__in=["succeeded", "cancelled"]
     ).exists():

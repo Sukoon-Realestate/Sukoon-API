@@ -1,5 +1,6 @@
 from django.contrib import admin
 from . import business_policy_admin  # noqa: F401
+from . import chargeback_admin  # noqa: F401
 from . import company_admin  # noqa: F401
 from . import company_execution_admin  # noqa: F401
 from . import portfolio_admin  # noqa: F401

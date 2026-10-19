@@ -33,10 +33,22 @@ CATALOG = {
     "D02": {
         "title": ["Cancellation and missing participants", "الإلغاء وغياب الأطراف"],
         "description": [
-            "Uncommitted drafts may be withdrawn. Potentially signed changes require reconciliation and a separate mutually signed release. Nonresponse opens an operational case and never signs for someone else.",
-            "يمكن سحب المسودات غير الملزمة. التعديلات المحتمل توقيعها تحتاج مراجعة وتسوية مستقلة بتوقيعات الأطراف. عدم الرد يستدعي حالة متابعة ولا يسمح بالتوقيع عن الغير.",
+            (
+                'Uncommitted drafts may be withdrawn. Potentially signed changes require '
+                'reconciliation and a separate mutually signed release. An initial company '
+                'agreement may use that release only before possession, invoices or financial '
+                'execution. Nonresponse opens an operational case and never signs for someone '
+                'else.'
+            ),
+            (
+                'يمكن سحب المسودات غير الملزمة. التعديلات المحتمل توقيعها تحتاج مراجعة وتسوية '
+                'مستقلة بتوقيعات الأطراف. يمكن استخدام هذه التسوية للعقد الأول للشركة فقط قبل '
+                'الحيازة أو الفواتير أو التنفيذ المالي. عدم الرد يستدعي حالة متابعة ولا يسمح '
+                'بالتوقيع عن الغير.'
+            ),
         ],
-        "scope": ["company.continuation.release"],
+        "scope": ["company.continuation.release", "company.agreement.release"],
+        "legacy_scope": ["company.continuation.release"],
         "rules": {
             "resolution_mode": "mutual_signed_release",
             "nonresponse": "operator_review",
@@ -45,7 +57,11 @@ CATALOG = {
             "resolution_mode": ["mutual_signed_release"],
             "nonresponse": ["operator_review"],
         },
-        "consumer": "company.tenancy_resolution; exact original signatories and independent current mandates",
+        "consumer": (
+            'company.tenancy_resolution and company.tenancy_initial_recovery; exact original '
+            'signatories and independent current mandates; initial release only before possession '
+            'or financial execution'
+        ),
     },
     "D05": {
         "title": ["Monthly rental periods", "فترات الإيجار الشهرية"],

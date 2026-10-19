@@ -77,7 +77,9 @@ def refund_requests(request):
                 "Refund exceeds the remaining refundable capture balance.",
                 code="refund_exceeds_balance",
             )
-        if attempt.payment_status != "captured":
+        from ..services.chargebacks.funding import can_refund
+
+        if not can_refund(attempt):
             raise RentalConflict(
                 "Only confirmed captures can be refunded.", code="payment_not_captured"
             )
@@ -140,14 +142,31 @@ def refund_respond(request, refund_id):
     if not request_key:
         raise ValidationError({"request_key": "Required."})
     operation = f"refund.respond.{item.id}"
-    replay = replay_operation(request.user, operation, request_key, request.data)
-    if replay:
-        return Response(replay[0], status=replay[1])
     with transaction.atomic():
         from ..services.rental_lifecycle.locks import lock_financial_lease
 
+        if item.purpose == "chargeback_excess":
+            from ..services.chargebacks.operations import require_operator
+            from ..services.financial_authority import require_financial_actor
+
+            require_financial_actor(
+                request.user,
+                {
+                    StaffProfile.RoleName.REFUND_OPERATOR,
+                    StaffProfile.RoleName.FINANCIAL_APPROVER,
+                },
+                "chargeback.approve_refund",
+                lock=True,
+            )
+            require_operator(request.user, item.lease, lock=True)
         lock_financial_lease(Lease.objects.get(pk=item.lease_id))
         item = _refund(request, refund_id, allow_operations=True, lock=True)
+        if item.purpose == "chargeback_excess":
+            require_operator(request.user, item.lease, lock=True)
+            if action != "approve":
+                raise RentalConflict(
+                    "Rejecting a review cannot erase evidenced excess funds; retain the refund for reconciliation."
+                )
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])

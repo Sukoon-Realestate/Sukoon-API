@@ -19,6 +19,7 @@ ROLES = {
     "payout_operator",
 }
 CASE_KINDS = {
+    "chargeback",
     "company_tenancy_review",
     "company_continuation_review",
     "company_continuation_signing",
@@ -130,6 +131,7 @@ def open_system_case(
                     "finance"
                     if kind
                     in {
+                        "chargeback",
                         "payment_unknown",
                         "capture_after_release",
                         "beneficiary_issue",
@@ -203,6 +205,14 @@ def case_queryset(user):
 
 
 def agreement_case_blocker(item):
+    if item.kind == "chargeback" and item.payment_attempt_id:
+        from ..chargebacks.projection import blockers
+        from ...models import RentalChargeback
+
+        chargeback = RentalChargeback.objects.filter(payment_attempt_id=item.payment_attempt_id).first()
+        reasons = blockers(chargeback) if chargeback else ["Reconcile the original chargeback evidence."]
+        if reasons:
+            return " ".join(reasons)
     if item.kind in {"company_continuation_review", "company_continuation_signing"}:
         from uuid import UUID
         from ...models import CompanyTenancyChange
@@ -222,13 +232,22 @@ def agreement_case_blocker(item):
         if not change or change.state not in {"applied", "resolved_unapplied"}:
             return "Complete canonical continuation reconciliation or the separately signed mutual release before resolving this case."
     if item.kind == "company_tenancy_review" and item.lease_id:
+        from ..company import tenancy_initial_recovery as initial_recovery
+
         lease = item.lease
+        tenancy = lease.company_tenancy
+        tenancy.lease = lease
+        released = initial_recovery.applied(tenancy)
         if (
-            lease.company_tenancy.changes.filter(
-                state__in=["pending", "waiting_departure"]
-            ).exists()
-            or lease.signing_sessions.filter(status="review_required").exists()
-            or (item.hold_id and item.hold.status == "reconciliation_pending")
+            tenancy.changes.filter(state__in=["pending", "waiting_departure"]).exists()
+            or initial_recovery.pending(tenancy)
+            or (
+                not released
+                and (
+                    lease.signing_sessions.filter(status="review_required").exists()
+                    or (item.hold_id and item.hold.status == "reconciliation_pending")
+                )
+            )
         ):
             return "Reconcile the pending company change or original provider instruction before closing this case."
     if item.kind != "agreement_terms_review":
@@ -252,6 +271,15 @@ def agreement_case_blocker(item):
 
 def case_payload(item, user):
     from .habitability import projection
+    from ..chargebacks.projection import payload as chargeback_payload
+    from ...models import RentalChargeback
+
+    chargeback = (
+        RentalChargeback.objects.filter(
+            payment_attempt_id=item.payment_attempt_id
+        ).first()
+        if item.kind == "chargeback" else None
+    )
 
     operator = independent_case_operator(item, user)
     blocker = agreement_case_blocker(item)
@@ -273,6 +301,7 @@ def case_payload(item, user):
         "id": str(item.id),
         "revision": item.revision,
         "kind": item.kind,
+        "chargeback": chargeback_payload(chargeback) if chargeback else None,
         "habitability": projection(item),
         "status": item.status,
         "lease_id": str(item.lease.id) if item.lease else None,

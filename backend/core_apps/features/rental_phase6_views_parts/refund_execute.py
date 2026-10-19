@@ -73,6 +73,10 @@ def refund_execute(request, refund_id):
 
         lease = lock_financial_lease(Lease.objects.get(pk=item.lease_id))
         item = RefundRequest.objects.select_for_update().get(pk=item.pk)
+        if item.purpose == "chargeback_excess":
+            from ..services.chargebacks.operations import require_operator
+
+            require_operator(request.user, lease, lock=True)
         replay = replay_operation(request.user, operation, key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])

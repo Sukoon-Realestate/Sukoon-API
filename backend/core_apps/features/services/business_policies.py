@@ -37,7 +37,10 @@ def current(code):
         effective_at__lte=timezone.now(),
         presentation__contract="public-business-policy-v1",
     ).order_by("-effective_at", "-pkid")
-    required = set(CATALOG.get(code, {}).get("scope", []))
+    spec = CATALOG.get(code, {})
+    # Expanded prospective scopes do not hide immutable older publications.
+    # A new consumer must require its own explicit scope before using a policy.
+    required = set(spec.get("legacy_scope", spec.get("scope", [])))
     return next((item for item in candidates if required.issubset(item.scope)), None)
 
 

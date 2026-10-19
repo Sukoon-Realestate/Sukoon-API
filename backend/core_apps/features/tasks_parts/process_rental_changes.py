@@ -75,7 +75,9 @@ def reconcile_approved_payouts(self):
         :100
     ]:
         with transaction.atomic():
-            Lease.objects.select_for_update().get(pk=candidate.lease_id)
+            from ..services.rental_lifecycle.locks import lock_financial_lease
+
+            lock_financial_lease(Lease.objects.get(pk=candidate.lease_id))
             payout = RentalPayout.objects.select_for_update().get(pk=candidate.pk)
             if payout.status != RentalPayout.Status.CREATED:
                 continue

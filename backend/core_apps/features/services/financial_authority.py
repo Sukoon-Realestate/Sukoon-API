@@ -8,8 +8,12 @@ from .rental_lifecycle.common import staff_role
 
 
 def require_financial_actor(user, roles, action, *, lock=False):
+    if not getattr(user, "is_authenticated", False) or user.pk is None:
+        raise PermissionDenied("A current authenticated financial actor is required.")
     query = User.objects.select_for_update() if lock else User.objects
-    current = query.get(pk=user.pk)
+    current = query.filter(pk=user.pk).first()
+    if current is None:
+        raise PermissionDenied("A current authenticated financial actor is required.")
     if lock:
         StaffProfile.objects.select_for_update().filter(user=current).first()
     if current.sensitive_actions_frozen:

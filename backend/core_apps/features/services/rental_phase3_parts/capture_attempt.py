@@ -30,6 +30,10 @@ def _capture_attempt(attempt):
     invoice = RentInvoice.objects.select_for_update().get(pk=attempt.invoice_id)
     lease = Lease.objects.select_for_update().get(pk=invoice.lease_id)
     invoice.lease = lease
+    from ..chargebacks.funding import capture_replacement
+
+    if capture_replacement(attempt, invoice):
+        return attempt
     if attempt.amount_minor != invoice_balance_minor(invoice):
         raise RentalConflict("Captured amount does not match invoice balance.")
     attempt.payment_status = PaymentAttempt.Status.CAPTURED

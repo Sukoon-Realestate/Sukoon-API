@@ -181,7 +181,10 @@ def test_chargeback_before_capture_and_duplicate_events_are_monotonic(phase3_lea
     assert reversal.processed
     process_provider_event(event(attempt, "captured"))
     process_provider_event(event(attempt, "failed"))
-    process_provider_event(event(attempt, "chargeback"))
+    duplicate = event(attempt, "chargeback")
+    duplicate.payload = {**duplicate.payload, "dispute_id": reversal.provider_event_id}
+    duplicate.save()
+    process_provider_event(duplicate)
     attempt.refresh_from_db()
     assert attempt.payment_status == "chargedback"
     assert (
