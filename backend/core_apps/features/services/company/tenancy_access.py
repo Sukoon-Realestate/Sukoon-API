@@ -155,26 +155,58 @@ def visible(user):
             )
         )
     )
+    # Keep the open state and named responsibility on the same related change.
+    # Chaining separate filters can join a closed assignment to another open
+    # change and accidentally restore the former reviewer's discovery access.
     invited = CompanyTenancy.objects.filter(
-        lease__renter_company__memberships__user=user,
-        lease__renter_company__memberships__is_active=True,
-        changes__state__in=OPEN_REVIEW,
-    ).filter(
-        Q(changes__snapshot__required__incoming_employee=str(user.id))
-        | Q(changes__snapshot__required__new_signer=str(user.id))
-        | Q(changes__snapshot__required__new_payer=str(user.id))
-        | Q(changes__snapshot__required__new_coordinator=str(user.id))
-        | Q(changes__snapshot__required__approver=str(user.id))
+        Q(
+            lease__renter_company__memberships__user=user,
+            lease__renter_company__memberships__is_active=True,
+            changes__state__in=OPEN_REVIEW,
+        )
+        & (
+            Q(changes__snapshot__required__incoming_employee=str(user.id))
+            | Q(changes__snapshot__required__new_signer=str(user.id))
+            | Q(changes__snapshot__required__new_payer=str(user.id))
+            | Q(changes__snapshot__required__new_coordinator=str(user.id))
+            | Q(
+                changes__snapshot__required__approver=str(user.id),
+                lease__renter_company__memberships__is_approver=True,
+            )
+        )
     )
-    external = CompanyTenancy.objects.filter(changes__state__in=OPEN_REVIEW).filter(
-        Q(changes__snapshot__required__new_owner=str(user.id))
-        | Q(changes__snapshot__required__financial_reviewer=str(user.id))
-        | Q(changes__snapshot__required__prior_signer_0=str(user.id))
+    from ..rental_lifecycle.common import staff_role
+
+    external_roles = (
+        Q(changes__snapshot__required__prior_signer_0=str(user.id))
         | Q(changes__snapshot__required__prior_signer_1=str(user.id))
         | Q(changes__snapshot__required__prior_signer_2=str(user.id))
     )
+    if staff_role(user, {"financial_approver"}):
+        external_roles |= Q(
+            changes__snapshot__required__financial_reviewer=str(user.id)
+        )
+    external = CompanyTenancy.objects.filter(
+        external_roles, changes__state__in=OPEN_REVIEW
+    )
+    # Ownership depends on every exact source unit, not only the invitation or
+    # a company membership. Reuse the detail authority check for this narrow
+    # candidate set rather than grant disclosure from a historical snapshot.
+    ownership_candidates = (
+        CompanyTenancy.objects.filter(
+            changes__state__in=OPEN_REVIEW,
+            changes__snapshot__required__new_owner=str(user.id),
+        )
+        .distinct()
+        .select_related("lease")
+    )
+    incoming_owner = CompanyTenancy.objects.filter(
+        pk__in=[
+            item.pk for item in ownership_candidates if "new_owner" in roles(item, user)
+        ]
+    )
     return (
-        (ordinary | invited | external)
+        (ordinary | invited | external | incoming_owner)
         .exclude(lease__private_access_revocations__user=user)
         .distinct()
         .order_by("-created_at", "id")

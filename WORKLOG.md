@@ -809,3 +809,18 @@
 - **Details:** Absent identity now raises the controlled permission denial consumed by the admin module. Current active role, frozen-account, independent-party and locked-effect authorization checks remain in force. No financial or provider state changes.
 - **Verification:** Three before-fix regressions failed; the three corrected cases plus six adjacent admin/deposit-payout checks passed (nine total). A real Chrome browser rerun on frozen source 20261019T200259 passed 20 history/review checks across active finance, reconciliation, ordinary staff and inactive finance; each role logged in through the real form.
 - **Files:** `services/financial_authority.py`, `tests/test_financial_admin_access.py`; sibling company finding GAP-064 and scenario SC-162.
+
+### Recheck company review discovery after authority changes
+
+- **What:** Closed GAP-066: tenancy collection discovery now enforces current approver, financial-reviewer and exact incoming-owner authority, and binds the named recipient to the same open review.
+- **Why:** Four real HTTP/PostgreSQL reproductions showed detail correctly denying access while collection still disclosed the tenancy and historical review content. Chained relation filters could also join a closed assignment to a different open review.
+- **Details:** Preserve current owner, contractual representatives and own resident-history discovery; company filters and counts use the authorized query. Reuse existing exact-unit ownership authority for the narrow incoming-owner candidate set. No model, migration, policy, provider, financial or inventory change.
+- **Verification:** Four regressions failed before the fix and passed after it. The expanded ten-case file plus four adjacent ownership, additive-settlement, receipt-revocation and coordinator-succession cases passed 14 tests on isolated PostgreSQL. Existing native runs retain their frozen backend until they finish. New native ownership/correction tests remain separate, pending execution.
+- **Files:** `backend/core_apps/features/services/company/tenancy_access.py`, `backend/core_apps/features/tests/test_company_tenancy_list_authority.py`; sibling English GAP-066/SC-164 evidence.
+
+### Verify the preceding connected deployment and independent admin controls
+
+- **What:** Verified deployed API commit `08866a6b50dddea2ddc11b03b45466728d6a9f1d`, with 51 changed backend file hashes matching the reviewed source, and published prospective D02 initial-release scope using the existing policy administration command.
+- **Details:** D02 head revision 2, version `2026-10-19.initial-release.1`, retains the supported operator-review and mutually signed release rules. Existing accepted contract and financial snapshots remain unchanged. Company activation stays disabled; no new paid resource, worker, fake live provider or financial action was introduced.
+- **Verification:** Canonical hashes for 10 leases, two invoices and the empty payment/payable/company-tenancy sets remained unchanged. Anonymous live admin login and health returned 200; anonymous invoice history returned 401. Six additional real local browser checks verified independent excess-refund approval, required reason, cancellation before submission, exact original identities and refreshed canonical approval; approval did not execute a refund.
+- **Files:** No new application change in this verification entry; deployment and browser artifacts are retained in the sibling `docs/sokoun-business-flows/verification-2026-10-19` directory.
