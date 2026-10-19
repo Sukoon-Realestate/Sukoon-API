@@ -61,6 +61,10 @@ class TestSetPasswordAPIView:
         res = auth_client.post(SET_PASSWORD_URL, payload)
         assert res.status_code == status.HTTP_200_OK
 
+        # The actual rendered command contract must be readable by the mobile
+        # empty-command receipt parser before it clears the revoked session.
+        assert res.json()["data"] is None
+
         user.refresh_from_db()
         assert user.check_password("BrandNewSecurePass123!") is True
         assert user.check_password("Testpass123!") is False

@@ -159,7 +159,8 @@ class SetPasswordAPIView(generics.GenericAPIView):
     """
     POST auth/users/set_password/
     Allows authenticated users to change their password.
-    Keeps the current session/cookie valid.
+    Revokes all sessions after the password change. The client must sign out
+    after receiving the canonical empty command acknowledgment.
 
     Request Body:
     {
@@ -184,6 +185,6 @@ class SetPasswordAPIView(generics.GenericAPIView):
         )
 
         return Response(
-            {"message": "تم تغيير كلمة المرور بنجاح", "data": {}},
+            {"message": "تم تغيير كلمة المرور بنجاح", "data": None},
             status=status.HTTP_200_OK,
         )
