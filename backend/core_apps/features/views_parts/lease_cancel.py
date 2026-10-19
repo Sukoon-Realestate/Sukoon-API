@@ -156,9 +156,8 @@ def _invoice_queryset(user, workspace):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def rent_invoices(request):
-    RentInvoice.objects.filter(
-        purpose="rent", status=RentInvoice.Status.DUE, due_date__lt=timezone.localdate()
-    ).update(status=RentInvoice.Status.OVERDUE)
+    # The billing worker owns overdue transitions, including approved extensions
+    # and revision changes. Listing invoices must remain a read-only projection.
     queryset = _invoice_queryset(
         request.user, request.query_params.get("workspace")
     ).select_related("lease", "lease__property")

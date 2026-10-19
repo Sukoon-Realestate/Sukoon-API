@@ -366,7 +366,8 @@ def decide(user, item_id, data):
 def hold_item(user, item_id, data):
     require_new_business()
     item = get_object_or_404(CompanyBookingItem, id=item_id)
-    company = company_for(user, item.request.company.id, "coordinate", lock=True)
+    request = request_for(user, item.request.id, lock=True)
+    company = request.company
     item = (
         CompanyBookingItem.objects.select_for_update()
         .select_related("request", "offer")
@@ -514,7 +515,7 @@ def hold_item(user, item_id, data):
 def withdraw_item(user, item_id, data):
     """Release only an uncommitted package; available with new bookings disabled."""
     item = get_object_or_404(CompanyBookingItem, id=item_id)
-    company_for(user, item.request.company.id, "coordinate", lock=True)
+    request_for(user, item.request.id, lock=True)
     item = CompanyBookingItem.objects.select_for_update().get(pk=item.pk)
     require_revision(item, data["expected_revision"])
     if item.lease_id or item.invitation_id:

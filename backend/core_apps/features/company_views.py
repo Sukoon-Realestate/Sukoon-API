@@ -339,6 +339,9 @@ def item_action(request, item_id, action):
             "approve" if action == "decide" else "coordinate",
             lock=True,
         )
+        # The company lock may have waited for a reassignment to commit. Refresh
+        # before authorization, including the authorization of receipt replay.
+        item.refresh_from_db()
         if action != "decide" and item.request.coordinator_id != request.user.pk:
             raise PermissionDenied(
                 "Only the assigned coordinator can manage this request."

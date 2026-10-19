@@ -146,7 +146,15 @@ def actions(user, capability, subject_id=""):
     if capability == "student_planning":
         result = ["read"]
         if item.status == "planning":
-            result += ["requirements", "review", "withdraw"]
+            participant = (
+                item.participants.select_related("membership").filter(user=user).first()
+            )
+            if (
+                participant
+                and participant.status != "withdrawn"
+                and participant_current(participant)
+            ):
+                result += ["requirements", "review", "withdraw"]
             if coordinator_for(user, item):
                 result += ["edit", "complete"]
         return result

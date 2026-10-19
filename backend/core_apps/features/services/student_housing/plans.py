@@ -249,13 +249,15 @@ def review(user, plan, data, *, withdraw=False):
         raise RentalConflict(
             "Review the current requirements.", code="document_changed"
         )
-    if plan.status != "planning" or not participant_current(row):
+    if (
+        plan.status != "planning"
+        or row.status == "withdrawn"
+        or not participant_current(row)
+    ):
         raise PermissionDenied("Current participation is required.")
     if plan.group_id and plan.roster_revision != plan.group.roster_revision:
         raise RentalConflict("Review the changed group roster.", code="roster_changed")
-    if not withdraw and (
-        data["consent"] is not True or not row.requirements or row.status == "withdrawn"
-    ):
+    if not withdraw and (data["consent"] is not True or not row.requirements):
         raise ValidationError(
             {
                 "consent": "Review your requirements and explicitly confirm participation."

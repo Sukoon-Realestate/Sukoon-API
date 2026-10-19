@@ -50,11 +50,14 @@ def company_for(user, identity, action="read", lock=False):
 
 def request_for(user, identity, action="coordinate", lock=False):
     request = get_object_or_404(CompanyHousingRequest, id=identity)
-    company_for(user, request.company.id, action, lock=lock)
+    company = company_for(user, request.company.id, action, lock=lock)
+    if lock:
+        # Reassignment holds the company lock. Check the request loaded after
+        # acquiring it, not an assignment read while another writer still ran.
+        request = CompanyHousingRequest.objects.select_for_update().get(pk=request.pk)
     if action == "coordinate" and request.coordinator_id != user.pk:
         raise PermissionDenied("Only the assigned coordinator can manage this request.")
-    if lock:
-        request = CompanyHousingRequest.objects.select_for_update().get(pk=request.pk)
+    request.company = company
     return request
 
 
