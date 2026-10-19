@@ -18,6 +18,7 @@ class UserCreationForm(admin_forms.UserCreationForm):
         fields = ["email", "first_name", "last_name"]
 
     error_messages = {
+        **admin_forms.UserCreationForm.error_messages,
         "duplicate_email": "A user with this email already exists.",
     }
 

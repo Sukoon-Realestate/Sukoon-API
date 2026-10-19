@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { apiClient } from '@/lib/api/client';
+import { apiClient, ApiError } from '@/lib/api/client';
 import { isBackendEnabled } from '@/lib/api/config';
 const adminPath = (path: string) => path;
 const adminRelativePath = (path: string) => path;
@@ -30,6 +30,8 @@ function clearStoredAuth() {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [restoreError, setRestoreError] = useState(false);
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
   const generation = useRef(0);
   const router = useRouter();
   const pathname = adminRelativePath(usePathname());
@@ -37,18 +39,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const epoch = ++generation.current;
+    setIsLoading(true);
+    setRestoreError(false);
     const restore = async () => {
       try {
         const mode = isBackendEnabled() ? 'live' : 'demo';
         if (localStorage.getItem('sukoon_admin_mode') !== mode) { clearStoredAuth(); return; }
         const profile = mode === 'live' ? confirmedProfile(await apiClient<UserProfile>('/api/v1/admin/session/')) : demoProfile;
         if (epoch === generation.current) setUser(profile);
-      } catch { if (epoch === generation.current) { clearStoredAuth(); setUser(null); } }
+      } catch (error) {
+        if (epoch === generation.current) {
+          setUser(null);
+          if (error instanceof ApiError && (error.status === 401 || error.status === 403)) clearStoredAuth();
+          else setRestoreError(true);
+        }
+      }
       finally { if (epoch === generation.current) setIsLoading(false); }
     };
     void restore();
     return () => { generation.current++; };
-  }, []);
+  }, [restoreAttempt]);
 
   const loginDemo = () => {
     if (isBackendEnabled()) return;
@@ -91,12 +101,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => window.removeEventListener('auth:unauthorized', unauthorized);
   }, []);
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || restoreError) return;
     if (!isAuthenticated && pathname !== '/login') router.push(adminPath('/login'));
     else if (isAuthenticated && pathname === '/login') router.push(adminPath('/'));
-  }, [isLoading, isAuthenticated, pathname, router]);
+  }, [isLoading, restoreError, isAuthenticated, pathname, router]);
   return <AuthContext.Provider value={{ isAuthenticated, user, login, loginDemo, logout, isLoading }}>
     {!isBackendEnabled() && <div role="status">DEMO — simulated records; no live commands.</div>}
-    {children}
+    {restoreError ? <div role="alert" className="m-auto p-6">
+      <p>تعذّر تأكيد جلسة الإدارة. أعد المحاولة عند عودة الاتصال.</p>
+      <button type="button" onClick={() => setRestoreAttempt(value => value + 1)}>إعادة المحاولة</button>
+      <button type="button" onClick={() => { clearStoredAuth(); setRestoreError(false); setUser(null); router.push(adminPath('/login')); }}>العودة لتسجيل الدخول</button>
+    </div> : !isLoading && (isAuthenticated || pathname === '/login') ? children
+      : <div role="status" className="m-auto p-6">جاري التحقق من جلسة الإدارة…</div>}
   </AuthContext.Provider>;
 };

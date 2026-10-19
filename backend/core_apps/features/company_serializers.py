@@ -146,13 +146,10 @@ class RequestBody(CommandBody):
     deposit_limit_minor = serializers.IntegerField(min_value=0, max_value=10**12)
 
     def validate(self, data):
-        if (
-            data["ends_on_exclusive"] <= data["starts_on"]
-            or (data["ends_on_exclusive"] - data["starts_on"]).days > 3660
-        ):
-            raise serializers.ValidationError(
-                "Select a valid exclusive-end rental interval."
-            )
+        from .services.company.request_period import monthly_periods
+
+        # Time-dependent admission belongs after operation-receipt replay.
+        monthly_periods(data["starts_on"], data["ends_on_exclusive"])
         return data
 
 

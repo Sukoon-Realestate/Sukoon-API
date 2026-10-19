@@ -183,6 +183,41 @@ def test_new_upload_uses_authenticated_provider_type_and_immutable_reference():
     )
 
 
+def test_base64_retry_preserves_original_operation_and_upload():
+    _, client = actor("proof-retry")
+    image = io.BytesIO()
+    Image.new("RGB", (2, 2), "white").save(image, format="PNG")
+    body = {
+        "front_id_image": "data:image/png;base64,"
+        + base64.b64encode(image.getvalue()).decode()
+    }
+    resource = CloudinaryResource(
+        public_id="proof-retry",
+        type="authenticated",
+        resource_type="image",
+        format="png",
+        version=1,
+    )
+    with patch(
+        "cloudinary.models.uploader.upload_resource", return_value=resource
+    ) as upload:
+        first = client.post(
+            reverse("complete-register"),
+            body,
+            format="json",
+            HTTP_IDEMPOTENCY_KEY="proof-original",
+        )
+        repeat = client.post(
+            reverse("complete-register"),
+            body,
+            format="json",
+            HTTP_IDEMPOTENCY_KEY="proof-original",
+        )
+    assert first.status_code == repeat.status_code == 200
+    assert first.data == repeat.data
+    assert upload.call_count == 1
+
+
 def test_conversion_reconciles_provider_success_after_lost_response(tmp_path):
     from django.core.management import call_command
     import cloudinary.api

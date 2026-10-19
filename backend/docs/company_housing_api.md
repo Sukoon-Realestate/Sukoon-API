@@ -47,7 +47,7 @@ Batch result messages are localized on detail reads without rewriting the persis
 | GET | `companies/{id}/occupants/` | Coordinator; minimal active employee identities, no private personal-rental data. |
 | POST | `companies/{id}/budget/` | Admin; cannot reduce limits below reserved/committed obligations. |
 | GET, POST | `companies/{id}/housing-requests/` | Assigned coordinator/approver read; coordinator creates. |
-| GET | `company-housing-requests/{id}/` | Assigned coordinator or assigned approver of the same company. |
+| GET, POST | `company-housing-requests/{id}/` | Read: assigned coordinator or assigned approver. POST: assigned active coordinator may correct a request before any package exists, with original operation identity and expected revision. |
 | POST | `company-housing-requests/{id}/coordinator/` | Admin explicitly reassigns to an active coordinator. |
 | POST | `company-housing-requests/{id}/items/` | Coordinator selects exact published offer and receives immutable package. |
 | POST | `company-booking-items/{id}/submit/` | Assigned coordinator, fresh quote and configured independent approver. |
@@ -158,7 +158,7 @@ Request creation:
 }
 ```
 
-Title ≤200, purpose ≤5000, cost center ≤100, location ≤300, headcount 1–10000, ceilings 0–10^12. End must follow start. Quote/hold additionally apply the configured future-date/maximum-duration policy and whole monthly periods. Request facts alone do not allocate accommodation.
+Title ≤200, purpose ≤5000, cost center ≤100, location ≤300, headcount 1–10000, ceilings 0–10^12. Creation and correction require 1–120 whole calendar months, using the existing clamped month-end convention, and a server-current/future start. Quote/hold additionally apply the configured maximum-duration policy. A replay of an acknowledged original command remains recoverable after the start date passes. Request facts alone do not allocate accommodation.
 
 Selecting an item: command fields using the current request revision, `offer_id`, `offer_revision` ≥1, `occupant_ids` (0–1000 exact active employee UUIDs), optional `staff_ids` (pending employee-eligible company staff UUIDs). The backend rejects duplicate/foreign/inactive people, resolves all units and capacity, checks the full date interval and current supported policy, then stores a 24-hour immutable package. Unknown capacity blocks approval progression. Offers from multiple owners become separate items.
 
@@ -431,3 +431,11 @@ Migrations: `properties` 0024, 0025, 0026; `virtual_tours` 0002. They preserve l
 
 
 Owner-increment evidence: 252 distinct selected backend cases verified across the combined regression and corrected owner runs; the 20 owner cases include real PostgreSQL concurrency and staff review-console authorization. The only initial failure was a new test URL, corrected and rerun successfully. Django checks, migration drift checks and all migrations on a fresh isolated PostgreSQL database passed. No deployment/provider or native-device verification is implied.
+
+## Planning request correction (19 October 2026)
+
+POST `company-housing-requests/{id}/` accepts the same full fields as request creation, plus the current `expected_revision` and a stable `request_key`. It returns the canonical request with an operation receipt. Only the currently assigned active coordinator can write; another coordinator or approver cannot inherit the assignment. The company and request are locked in the existing order before revision checks.
+
+`can_edit` is a current server projection and defaults to false in older clients. Correction requires new-business capability and no package records at all. Even a withdrawn package retains immutable history, so its request cannot be rewritten; create a new request instead. The request's conversation identity stays the same, and correction creates no hold, invoice, signature or approval. Lost-response retry must retain the original key/payload; a new command with a stale revision returns conflict.
+
+The Flutter editor preserves EGP minor units, offers exact decimal inputs, retains account/environment-scoped drafts and returns to a refreshed request after acknowledgment. Whole-month validation appears before submission, while server time and current policy remain authoritative.

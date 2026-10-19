@@ -2,6 +2,10 @@ import { isBackendEnabled, API_BASE_URL } from './config';
 import { handleMockRequest } from './mockHandler';
 import { BASE_PATH } from '../basePath';
 
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number) { super(message); }
+}
+
 export interface RequestOptions extends Omit<RequestInit, 'body'> {
   params?: Record<string, string | number | boolean | undefined | null>;
   body?: any;
@@ -33,9 +37,12 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     Accept: 'application/json',
   };
 
+  // Bind rejection handling to the credential used by this exact request.
+  let requestToken: string | null = null;
   // Attach Bearer token if present in localStorage
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('sukoon_access_token');
+    requestToken = token;
     if (token) {
       defaultHeaders['Authorization'] = `Bearer ${token}`;
     }
@@ -71,7 +78,8 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     const errorMessage = typeof errorData?.message === 'string' && errorData.message.trim()
       ? errorData.message : 'حدث خطأ في الاتصال بالخادم';
 
-    if (response.status === 401 && !endpoint.includes('/auth/login/')) {
+    if (response.status === 401 && !endpoint.includes('/auth/login/') &&
+        typeof window !== 'undefined' && localStorage.getItem('sukoon_access_token') === requestToken) {
       if (typeof window !== 'undefined') {
         try {
           localStorage.removeItem('sukoon_access_token');
@@ -86,7 +94,7 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
       }
     }
 
-    throw new Error(response.status >= 500 ? 'Server outcome is unconfirmed. Refresh the original record before retrying.' : errorMessage);
+    throw new ApiError(response.status >= 500 ? 'Server outcome is unconfirmed. Refresh the original record before retrying.' : errorMessage, response.status);
   }
 
   const json: unknown = await response.json();

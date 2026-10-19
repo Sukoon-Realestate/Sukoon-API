@@ -254,7 +254,7 @@ def actions(user, capability, identifier=""):
         result += ["withdraw"]
     if getattr(settings, "COMPANY_HOUSING_ENABLED", False):
         if member.is_coordinator:
-            result += ["create_request", "select", "hold", "submit"]
+            result += ["create_request", "edit_request", "select", "hold", "submit"]
         if member.is_approver:
             if (
                 isinstance(item, CompanyBookingItem)

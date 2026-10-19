@@ -20,7 +20,6 @@ class IdentityImageField(serializers.ImageField):
         if isinstance(data, str):
             import base64
             import binascii
-            import uuid
             from django.core.files.uploadedfile import SimpleUploadedFile
 
             if not data.startswith("data:image/") or ";base64," not in data:
@@ -43,7 +42,9 @@ class IdentityImageField(serializers.ImageField):
             except (ValueError, binascii.Error):
                 raise serializers.ValidationError("Invalid base64 image data.")
             data = SimpleUploadedFile(
-                uuid.uuid4().hex + "." + extension, content, content_type=header[5:]
+                hashlib.sha256(content).hexdigest() + "." + extension,
+                content,
+                content_type=header[5:],
             )
         image = super().to_internal_value(data)
         if image.content_type not in {

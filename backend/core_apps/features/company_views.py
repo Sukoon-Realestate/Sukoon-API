@@ -288,8 +288,17 @@ def housing_requests(request, company_id):
     )
 
 
-@company_api(["GET"])
+@company_api(["GET", "POST"])
 def housing_request(request, request_id):
+    if request.method == "POST":
+        data = validated(RequestBody, request.data)
+        return mutate(
+            request,
+            "company.housing_request.update",
+            lambda: request_for(request.user, request_id, lock=True),
+            lambda _: bookings.update_request(request.user, request_id, data),
+            lambda item: bookings.request_payload(item, request.user),
+        )
     item = get_object_or_404(CompanyHousingRequest, id=request_id)
     member = member_for(request.user, item.company)
     if not (

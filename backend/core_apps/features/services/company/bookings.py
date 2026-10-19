@@ -27,36 +27,59 @@ from ..rental_phase2 import (
     assert_owner_ready,
 )
 from ..rental_lifecycle.reservations import confirmation_current
-from ..rental_phase2_parts.remember_mutation import add_months
+from .request_period import monthly_periods, validate_request_period
 from .access import company_for, request_for, member_for, require_new_business
 from .offers import resolve_scope, scope_snapshot
+
+
+REQUEST_FIELDS = (
+    "title",
+    "purpose",
+    "cost_center",
+    "location",
+    "starts_on",
+    "ends_on_exclusive",
+    "headcount",
+    "commitment_ceiling_minor",
+    "deposit_limit_minor",
+)
 
 
 @transaction.atomic
 def save_request(user, company, data):
     require_new_business()
     member_for(user, company, "coordinate")
-    fields = (
-        "title",
-        "purpose",
-        "cost_center",
-        "location",
-        "starts_on",
-        "ends_on_exclusive",
-        "headcount",
-        "commitment_ceiling_minor",
-        "deposit_limit_minor",
-    )
+    validate_request_period(data)
     item = CompanyHousingRequest.objects.create(
         company=company,
         requester=user,
         coordinator=user,
-        **{k: data[k] for k in fields if k in data}
+        **{k: data[k] for k in REQUEST_FIELDS if k in data}
     )
     audit(item, user, "company_housing_request_created")
     from core_apps.chat.services.company_access import provision
 
     provision(item, user)
+    return item
+
+
+@transaction.atomic
+def update_request(user, request_id, data):
+    require_new_business()
+    item = request_for(user, request_id, lock=True)
+    require_revision(item, data["expected_revision"])
+    if item.items.exists():
+        raise RentalConflict(
+            "This request already has packages. Create a new request to change its terms.",
+            code="request_has_packages",
+        )
+    validate_request_period(data)
+    for key in REQUEST_FIELDS:
+        if key in data:
+            setattr(item, key, data[key])
+    item.revision += 1
+    item.save()
+    audit(item, user, "company_housing_request_updated")
     return item
 
 
@@ -90,20 +113,7 @@ def select_offer(user, request_id, data):
             request.starts_on,
             request.ends_on_exclusive + timedelta(days=rules["turnover_days"]),
         )
-    months = next(
-        (
-            n
-            for n in range(1, 121)
-            if add_months(request.starts_on, n) == request.ends_on_exclusive
-        ),
-        None,
-    )
-    if months is None:
-        raise ValidationError(
-            {
-                "ends_on_exclusive": "This offer supports whole monthly billing periods, up to ten years."
-            }
-        )
+    months = monthly_periods(request.starts_on, request.ends_on_exclusive)
     occupants = list(
         CompanyMembership.objects.filter(
             company=request.company,
@@ -579,6 +589,8 @@ def item_payload(item):
 
 
 def request_payload(request, viewer=None):
+    from django.conf import settings
+
     items = list(request.items.select_related("hold", "lease", "request"))
     confirmed = [i for i in items if i.lease_id and i.lease.status == "active"]
     covered = sum(i.snapshot.get("capacity") or 0 for i in confirmed)
@@ -586,6 +598,19 @@ def request_payload(request, viewer=None):
         "id": str(request.id),
         "company_id": str(request.company.id),
         "revision": request.revision,
+        "can_edit": bool(
+            viewer
+            and viewer.is_active
+            and not items
+            and request.coordinator_id == viewer.pk
+            and getattr(settings, "COMPANY_HOUSING_ENABLED", False)
+            and CompanyMembership.objects.filter(
+                company=request.company,
+                user=viewer,
+                is_active=True,
+                is_coordinator=True,
+            ).exists()
+        ),
         "title": request.title,
         "purpose": request.purpose,
         "cost_center": request.cost_center,
