@@ -7,7 +7,9 @@ from .common import endpoint, page
 
 @endpoint(["GET"])
 def rental_deal(request, subject_id):
-    return Response(deal_projection(request.user, subject_id))
+    response = Response(deal_projection(request.user, subject_id))
+    response["Cache-Control"] = "private, no-store"
+    return response
 
 
 @endpoint(["GET"])

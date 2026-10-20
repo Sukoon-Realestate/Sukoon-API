@@ -140,6 +140,7 @@ class PostVisitContextMixin:
             from ...services.post_visit_decision import visit_context
 
             output.update(visit_context(instance, request.user))
+            output["stay_preferences"] = instance.stay_preferences
         return output
 
 

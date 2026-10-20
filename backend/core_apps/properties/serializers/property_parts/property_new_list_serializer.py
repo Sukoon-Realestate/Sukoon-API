@@ -92,7 +92,8 @@ class PropertyNewListSerializer(serializers.ModelSerializer):
         return 1 if obj.rental_inventory else None
 
     def get_rental_summary(self, obj: Property):
-        return build_rental_summary(obj)
+        matches = getattr(self.context.get("request"), "student_offer_matches", {})
+        return build_rental_summary(obj, matches.get(obj.pk))
 
 
 class MyPropertyListSerializer(serializers.ModelSerializer):

@@ -1,6 +1,7 @@
 """Property: property list serializer."""
 
 from typing import Optional
+from decimal import Decimal
 from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
 from ...models import Property, PropertyImage, PropertyType
@@ -71,7 +72,7 @@ class PropertyImageUpdateSerializer(serializers.ModelSerializer):
         fields = ["name", "description"]
 
 
-def build_rental_summary(obj: Property):
+def build_rental_summary(obj: Property, offer_ids=None):
     if not obj.rental_inventory:
         return None
     from core_apps.features.services.rental_lifecycle.habitability import (
@@ -87,21 +88,25 @@ def build_rental_summary(obj: Property):
     offers = [
         offer
         for offer in obj.rental_inventory.get("offers", [])
-        if not offer.get("archived")
+        if (offer_ids is None or str(offer.get("id")) in offer_ids)
+        and not offer.get("archived")
         and offer.get("availability") == "available"
         and not offer_restricted(obj, offer, restricted)
     ]
+    periods = {offer.get("terms", {}).get("price_period") for offer in offers}
+    period = (
+        next(iter(periods))
+        if offer_ids is not None and len(periods) == 1
+        else obj.rental_price_period
+    )
     minimum = obj.rental_min_price
-    if restricted:
-        from decimal import Decimal
-
+    if restricted or offer_ids is not None:
         minimum = min(
             (
                 Decimal(str(offer["terms"]["price"]))
                 for offer in offers
                 if offer.get("terms", {}).get("price") is not None
-                and offer.get("terms", {}).get("price_period")
-                == obj.rental_price_period
+                and offer.get("terms", {}).get("price_period") == period
             ),
             default=None,
         )
@@ -115,7 +120,9 @@ def build_rental_summary(obj: Property):
             (
                 offer
                 for offer in offers
-                if str(offer.get("terms", {}).get("price")) == f"{minimum:.2f}"
+                if offer.get("terms", {}).get("price") is not None
+                and Decimal(str(offer["terms"]["price"])) == minimum
+                and offer["terms"].get("price_period") == period
             ),
             None,
         )
@@ -124,7 +131,7 @@ def build_rental_summary(obj: Property):
         "scopes": scopes,
         "labels": labels,
         "price": (f"{minimum:.2f}" if minimum is not None else None),
-        "price_period": obj.rental_price_period or None,
+        "price_period": period or None,
         "price_scope": cheapest.get("rental_scope") if cheapest else None,
         "starting_from": len(offers) > 1 and minimum is not None,
     }
@@ -166,4 +173,5 @@ class PropertyListSerializer(serializers.ModelSerializer):
         return 1 if obj.rental_inventory else None
 
     def get_rental_summary(self, obj: Property):
-        return build_rental_summary(obj)
+        matches = getattr(self.context.get("request"), "student_offer_matches", {})
+        return build_rental_summary(obj, matches.get(obj.pk))

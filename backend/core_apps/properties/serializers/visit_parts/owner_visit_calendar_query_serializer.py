@@ -26,7 +26,40 @@ class ViewingContextSerializer(serializers.Serializer):
         return attrs
 
 
+class StayPreferencesSerializer(serializers.Serializer):
+    starts_on = serializers.DateField(required=False)
+    ends_on_exclusive = serializers.DateField(required=False)
+    occupants = serializers.IntegerField(min_value=1, max_value=20, default=1)
+
+    def to_internal_value(self, data):
+        if isinstance(data, dict) and set(data) - {
+            "starts_on",
+            "ends_on_exclusive",
+            "occupants",
+        }:
+            raise serializers.ValidationError(
+                "Only stay dates and occupants may be shared."
+            )
+        return super().to_internal_value(data)
+
+    def validate(self, attrs):
+        start, end = attrs.get("starts_on"), attrs.get("ends_on_exclusive")
+        if bool(start) != bool(end) or (start and end <= start):
+            raise serializers.ValidationError(
+                "Choose both stay dates, with an end after the start."
+            )
+        if start and start < timezone.localdate():
+            raise serializers.ValidationError(
+                "The requested stay cannot begin in the past."
+            )
+        return {
+            key: value.isoformat() if isinstance(value, date) else value
+            for key, value in attrs.items()
+        }
+
+
 class PropertyVisitCreateSerializer(serializers.ModelSerializer):
+    stay_preferences = StayPreferencesSerializer(required=False, allow_null=True)
     viewing_context = ViewingContextSerializer(required=False, write_only=True)
     expected_offer_revision = serializers.IntegerField(
         required=False, write_only=True, min_value=1
@@ -42,6 +75,7 @@ class PropertyVisitCreateSerializer(serializers.ModelSerializer):
             "offer_id",
             "expected_offer_revision",
             "viewing_context",
+            "stay_preferences",
             "offer_snapshot",
             "created_at",
             "updated_at",

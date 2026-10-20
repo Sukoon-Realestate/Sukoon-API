@@ -39,6 +39,9 @@ def deal_projection(user, identifier):
         invitation = interest.invitations.order_by("-created_at").first()
     if invitation:
         lease = invitation.lease
+    if lease and lease.private_access_revocations.filter(user=user).exists():
+        # A still-visible application cannot reopen a revoked private tenancy.
+        raise NotFound()
     prop = lease.property if lease else interest.property
     hold = (
         ReservationHold.objects.filter(
@@ -80,7 +83,14 @@ def deal_projection(user, identifier):
         if lease
         else []
     )
+    from .journey import lease_journey, application_journey
+
     return {
+        "journey_summary": (
+            lease_journey(lease, user)
+            if lease
+            else application_journey(interest, proposal, invitation, user)
+        ),
         "id": str(source.id),
         "revision": getattr(source, "revision", 1),
         "property_id": str(prop.id),

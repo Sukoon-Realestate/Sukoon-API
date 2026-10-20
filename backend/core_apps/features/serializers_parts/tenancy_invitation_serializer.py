@@ -13,6 +13,7 @@ class TenancyInvitationResponseSerializer(serializers.Serializer):
 
 
 class TenancyInvitationSerializer(serializers.ModelSerializer):
+    requested_stay = serializers.SerializerMethodField()
     source_visit_id = serializers.UUIDField(
         source="source_visit.id", read_only=True, allow_null=True
     )
@@ -65,9 +66,23 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
             "allowed_actions",
             "blocking_reasons",
             "source_visit_id",
+            "requested_stay",
             "source_decision_id",
             "provenance_version",
         ]
+
+    def get_requested_stay(self, obj):
+        # Disclosed preferences only. They never override independently reviewed terms.
+        if obj.source_visit_id:
+            return obj.source_visit.stay_preferences
+        if obj.interest_id:
+            item = obj.interest
+            return {
+                "starts_on": str(item.desired_start),
+                "ends_on_exclusive": str(item.desired_end) if item.desired_end else "",
+                "occupants": item.occupants,
+            }
+        return None
 
     def get_eligible_for_lease(self, obj):
         from ..services.tenancy_invitations import invitation_is_eligible

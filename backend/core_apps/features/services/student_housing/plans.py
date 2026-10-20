@@ -376,4 +376,7 @@ def payload(plan, user):
             opened_by=user, baseline__academic_plan_id=str(plan.id)
         )
     ]
+    from .progress import next_step
+
+    value["next_step"] = next_step(plan, user, value)
     return value

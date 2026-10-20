@@ -88,6 +88,38 @@ def rental_interests(request):
         validate_interest_capacity(snapshot, data["occupants"])
         if data["desired_start"] < timezone.localdate():
             raise ValidationError({"desired_start": "Cannot be in the past."})
+        desired_end = data.get("desired_end")
+        if desired_end:
+            from ..services.rental_phase2 import add_months
+
+            minimum = max(1, int(snapshot["terms"].get("rental_period") or 1))
+            if desired_end < add_months(
+                data["desired_start"], minimum
+            ) or desired_end > add_months(data["desired_start"], 60):
+                raise ValidationError(
+                    {
+                        "desired_end": "Review the minimum monthly term and requested end date."
+                    }
+                )
+            months = (
+                (desired_end.year - data["desired_start"].year) * 12
+                + desired_end.month
+                - data["desired_start"].month
+            )
+            if add_months(data["desired_start"], months) > desired_end:
+                months -= 1
+            if data["months"] != months:
+                raise ValidationError(
+                    {
+                        "months": "Use the whole calendar months within the requested dates."
+                    }
+                )
+            if academic and desired_end != academic["desired_end"]:
+                raise ValidationError(
+                    {"desired_end": "Use the reviewed academic dates."}
+                )
+            if not academic:
+                academic["desired_end"] = desired_end
         from ..services.rental_lifecycle.applications import valid_interest_share
 
         grant = (

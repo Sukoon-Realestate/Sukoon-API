@@ -2,6 +2,7 @@
 
 import copy
 from django.db import IntegrityError, transaction
+from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
@@ -34,12 +35,68 @@ from .tenancy_invitation_respond import _lease_queryset
 @renderer_classes([FeatureJsonRenderer])
 def leases(request):
     if request.method == "GET":
-        queryset = _lease_queryset(
-            request.user, request.query_params.get("workspace")
-        ).select_related("property", "owner", "tenant")
+        queryset = (
+            _lease_queryset(request.user, request.query_params.get("workspace"))
+            .exclude(private_access_revocations__user=request.user)
+            .select_related("property", "owner", "tenant")
+        )
         if request.query_params.get("property_id"):
             queryset = queryset.filter(property__id=request.query_params["property_id"])
-        return _paginate(request, queryset, LeaseSerializer)
+        period = request.query_params.get("period", "all")
+        if period not in {"all", "current", "upcoming", "ended", "pending_settlement"}:
+            raise ValidationError(
+                {"period": "Choose a supported rental period filter."}
+            )
+        today = timezone.localdate()
+        if period == "current":
+            queryset = queryset.filter(
+                status__in=["active", "termination_pending"],
+                start_date__lte=today,
+                end_date__gt=today,
+            )
+        elif period == "upcoming":
+            queryset = queryset.filter(start_date__gt=today).exclude(
+                status__in=["ended", "cancelled"]
+            )
+        elif period in {"ended", "pending_settlement"}:
+            queryset = queryset.filter(status__in=["ended", "cancelled"])
+        search = request.query_params.get("search", "").strip()
+        if search:
+            queryset = queryset.filter(property__title__icontains=search)
+        if period == "pending_settlement":
+            from ..services.rental_phase6 import closure_blocking_reasons
+
+            completed = [
+                item.pk
+                for item in queryset.filter(financial_closure_status="closed")
+                if not closure_blocking_reasons(item)
+            ]
+            queryset = queryset.exclude(pk__in=completed)
+        bucket = request.query_params.get("housing_bucket")
+        if bucket:
+            if bucket not in {"current", "history"}:
+                raise ValidationError({"housing_bucket": "Choose current or history."})
+            from ..services.rental_phase6 import closure_blocking_reasons
+
+            # Historical membership cannot manufacture a personal contract party.
+            queryset = queryset.filter(renter_company__isnull=True)
+            completed_ids = [
+                item.pk
+                for item in queryset.filter(
+                    status__in=["ended", "cancelled"], financial_closure_status="closed"
+                )
+                if not closure_blocking_reasons(item)
+            ]
+            queryset = (
+                queryset.filter(pk__in=completed_ids)
+                if bucket == "history"
+                else queryset.exclude(pk__in=completed_ids)
+            )
+        response = _paginate(request, queryset, LeaseSerializer)
+        if bucket:
+            response.data["housing_bucket_version"] = 1
+        response["Cache-Control"] = "private, no-store"
+        return response
     if "invitation_id" in request.data and "terms" in request.data:
         from ..rental_phase2_views import create_structured_lease
 
@@ -155,7 +212,10 @@ def leases(request):
 
 def _get_authorized_lease(request, lease_id):
     lease = get_object_or_404(
-        Lease.objects.select_related("property", "owner", "tenant"), id=lease_id
+        Lease.objects.select_related("property", "owner", "tenant").exclude(
+            private_access_revocations__user=request.user
+        ),
+        id=lease_id,
     )
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()

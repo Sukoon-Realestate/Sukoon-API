@@ -61,6 +61,21 @@ class VisitBookingMixin:
         elif property_obj.rental_inventory:
             raise ValidationError(_("Select a rental offer before requesting a visit."))
 
+        stay = validated_data.get("stay_preferences")
+        if stay:
+            from ....serializers.visit_parts.owner_visit_calendar_query_serializer import (
+                StayPreferencesSerializer,
+            )
+
+            checked = StayPreferencesSerializer(data=stay)
+            checked.is_valid(raise_exception=True)
+            validated_data["stay_preferences"] = checked.validated_data
+            capacity = (validated_data.get("offer_snapshot") or {}).get("capacity")
+            if capacity is not None and checked.validated_data["occupants"] > capacity:
+                raise ValidationError(
+                    "The requested occupants exceed the selected accommodation capacity."
+                )
+
         from core_apps.features.services.rental_lifecycle.habitability import (
             assert_habitable,
         )

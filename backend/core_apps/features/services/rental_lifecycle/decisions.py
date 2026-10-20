@@ -211,6 +211,9 @@ def decision_summary(prop, data, actor=None):
         ),
         "blocking_reasons": blockers,
     }
+    from ..student_housing.discovery import eligibility
+
+    projection["student_eligibility"] = eligibility(prop, snapshot, actor, data)
     return {
         **projection,
         "digest": fingerprint(projection),

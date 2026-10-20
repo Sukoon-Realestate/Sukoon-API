@@ -7,7 +7,7 @@ from rest_framework import filters, generics, permissions
 from rest_framework.response import Response
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.features.models import BoostCampaign
-from ...filters import PropertyFilter
+from ...filters import PropertyFilter, PropertyOrderingFilter
 from ...models import Property, PropertyVisit
 from ...serializers import PropertyListSerializer, PropertyNewListSerializer
 from .property_filter_options_apiview import PropertyPagination
@@ -44,7 +44,7 @@ class PropertyListAPIView(generics.ListAPIView):
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
-        filters.OrderingFilter,
+        PropertyOrderingFilter,
     ]
     filterset_class = PropertyFilter
     search_fields = [
@@ -95,6 +95,10 @@ class PropertyListAPIView(generics.ListAPIView):
             # ! Mutate the paginated payload before rendering; DRF Response.data
             # ! is the unrendered dict, so this is safe.
             response.data["banner"] = self._get_upcoming_visit_banner()
+            if hasattr(request, "student_offer_matches"):
+                response.data["student_search_version"] = 1
+            if getattr(request, "rental_search_version", None):
+                response.data["rental_search_version"] = 1
             return response
 
         serializer = self.get_serializer(queryset, many=True)
@@ -154,7 +158,7 @@ class PropertyNewListAPIView(generics.ListAPIView):
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
-        filters.OrderingFilter,
+        PropertyOrderingFilter,
     ]
     filterset_class = PropertyFilter
     search_fields = [
@@ -165,3 +169,13 @@ class PropertyNewListAPIView(generics.ListAPIView):
         "district",
     ]
     ordering_fields = ["price", "created_at"]
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        if hasattr(request, "student_offer_matches") and isinstance(
+            response.data, dict
+        ):
+            response.data["student_search_version"] = 1
+            if getattr(request, "rental_search_version", None):
+                response.data["rental_search_version"] = 1
+        return response

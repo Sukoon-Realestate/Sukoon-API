@@ -16,9 +16,11 @@ from .common import endpoint, validated, mutate
 @endpoint(["GET"])
 def property_decision(request, property_id):
     data = validated(SelectionBody, request.query_params.dict())
-    return Response(
+    response = Response(
         decision_summary(property_for(request.user, property_id), data, request.user)
     )
+    response["Cache-Control"] = "private, no-store"
+    return response
 
 
 @endpoint(["POST"])

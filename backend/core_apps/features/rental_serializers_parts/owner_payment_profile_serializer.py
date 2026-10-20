@@ -215,6 +215,7 @@ class RentalInterestBodySerializer(serializers.Serializer):
     offer_id = serializers.CharField(max_length=64)
     offer_revision = serializers.IntegerField(min_value=1)
     desired_start = serializers.DateField()
+    desired_end = serializers.DateField(required=False)
     months = serializers.IntegerField(min_value=1, max_value=60)
     occupants = serializers.IntegerField(min_value=1, max_value=20)
     message = serializers.CharField(max_length=2000, required=False, allow_blank=True)

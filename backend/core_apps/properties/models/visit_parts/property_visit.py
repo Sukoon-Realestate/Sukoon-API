@@ -63,6 +63,7 @@ class PropertyVisit(TimeStampedModel):
     note = models.TextField(_("Note"), blank=True, default="")
     offer_id = models.CharField(max_length=64, blank=True, default="")
     offer_snapshot = models.JSONField(null=True, blank=True)
+    stay_preferences = models.JSONField(null=True, blank=True)
     revision = models.PositiveIntegerField(default=1)
 
     def save(self, *args, **kwargs):
@@ -81,6 +82,7 @@ class PropertyVisit(TimeStampedModel):
                 "tenant_id",
                 "offer_id",
                 "offer_snapshot",
+                "stay_preferences",
             }
             updated = kwargs.get("update_fields")
             changed = any(

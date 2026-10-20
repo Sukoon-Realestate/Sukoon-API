@@ -4,6 +4,9 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes, renderer_classes
+from rest_framework.permissions import AllowAny
+from .renderers import FeatureJsonRenderer
 from .student_models import (
     Campus,
     StudentProfile,
@@ -43,7 +46,9 @@ from .student_serializers import (
 )
 
 
-@planning_api(["GET"], "student_planning")
+@api_view(["GET"])
+@permission_classes([AllowAny])
+@renderer_classes([FeatureJsonRenderer])
 def campuses(request):
     query = request.query_params.get("search", "").strip()[:200]
     qs = Campus.objects.filter(active=True, university__active=True).select_related(

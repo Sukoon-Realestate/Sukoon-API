@@ -1,4 +1,5 @@
 import django_filters
+from rest_framework.filters import OrderingFilter
 
 from .models import Property, PropertyVisit, PropertyType
 
@@ -39,15 +40,46 @@ class PropertyFilter(django_filters.FilterSet):
     district_ids = DistrictIdsFilter(
         field_name="district_catalog__id", lookup_expr="in"
     )
-    price_min = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
-    price_max = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
+    price_min = django_filters.NumberFilter(method="filter_price_min")
+    price_max = django_filters.NumberFilter(method="filter_price_max")
+    price_period = django_filters.CharFilter(method="filter_price_period")
     bedrooms_min = django_filters.NumberFilter(field_name="bedrooms", lookup_expr="gte")
     rental_scope = django_filters.CharFilter(method="filter_rental_scope")
+
+    @property
+    def student_search(self):
+        return (
+            self.data.get("student_search") == "true"
+            or "rental_search_version" in self.data
+        )
+
+    def filter_price_min(self, queryset, name, value):
+        return queryset if self.student_search else queryset.filter(price__gte=value)
+
+    def filter_price_max(self, queryset, name, value):
+        return queryset if self.student_search else queryset.filter(price__lte=value)
+
+    def filter_price_period(self, queryset, name, value):
+        return queryset if self.student_search else queryset.filter(price_period=value)
+
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
+        if self.student_search:
+            from core_apps.features.services.student_housing.discovery import (
+                filter_properties,
+            )
+
+            queryset = filter_properties(queryset, self.data, self.request)
+        return queryset
 
     def filter_rental_scope(self, queryset, name, value):
         if value not in {"entire_property", "room", "room_group", "bed"}:
             return queryset.none()
-        return queryset.filter(rental_scopes__contains=f",{value},")
+        return (
+            queryset
+            if self.student_search
+            else queryset.filter(rental_scopes__contains=f",{value},")
+        )
 
     class Meta:
         model = Property
@@ -84,3 +116,23 @@ class PropertyVisitFilter(django_filters.FilterSet):
     class Meta:
         model = PropertyVisit
         fields = ["status"]
+
+
+class PropertyOrderingFilter(OrderingFilter):
+    """Student budgets and ordering use the same matched-offer price basis."""
+
+    def get_ordering(self, request, queryset, view):
+        ordering = super().get_ordering(request, queryset, view)
+        if (
+            request.query_params.get("student_search") == "true"
+            or "rental_search_version" in request.query_params
+        ) and ordering:
+            return [
+                (
+                    "student_comparison_price"
+                    if key == "price"
+                    else "-student_comparison_price" if key == "-price" else key
+                )
+                for key in ordering
+            ] + ["pk"]
+        return ordering
