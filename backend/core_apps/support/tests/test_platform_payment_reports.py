@@ -227,3 +227,18 @@ def test_assigned_finance_console_has_reachable_read_only_report(
     assert response.status_code == 200
     assert b"Private evidence belongs only" in response.content
     assert b'name="reply"' not in response.content
+
+
+def test_anonymous_admin_login_does_not_query_assigned_private_reports(
+    client, settings
+):
+    from django.contrib.auth.models import AnonymousUser
+    from core_apps.support.services.payment_reports import readable_tickets
+
+    settings.STATICFILES_STORAGE = (
+        "django.contrib.staticfiles.storage.StaticFilesStorage"
+    )
+    assert not readable_tickets(AnonymousUser()).exists()
+    response = client.get(reverse("admin:login"))
+    assert response.status_code == 200
+    assert b'name="username"' in response.content

@@ -30,6 +30,10 @@ def open_report(ticket, lease_id):
 
 
 def readable_tickets(user):
+    # Django builds its available-app projection on the anonymous login page.
+    # Never pass AnonymousUser (or an inactive identity) into an FK query.
+    if not user or not getattr(user, "is_authenticated", False) or not user.is_active:
+        return Ticket.objects.none()
     from .staff_replies import can_service_tickets
     from core_apps.features.services.rental_lifecycle.cases import (
         independent_case_operator,

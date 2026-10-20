@@ -102,14 +102,21 @@ it does not modify invoice amounts or signed terms.
 
 ## Executed local evidence
 
-The payment/report regression selection passed 32 PostgreSQL test cases;
+The payment/report regression selection passed 33 PostgreSQL test cases;
 the connected regression run passed 102 cases before the additional admin
-reader test was added (103 distinct cases across the final selections).
+reader and anonymous-login tests were added (104 distinct cases across the
+final selections).
 Tests cover Cairo calendar boundaries, approved extension, paid/revoked
 suppression, company roles, concurrent event generation, retries, historical
 claim review, private evidence, report recovery and a rendered Django admin
 view. The admin test uses ordinary static storage instead of a production
 `collectstatic` manifest.
+
+The first deployment smoke check exposed an anonymous-admin-login regression:
+the scoped report reader attempted to use `AnonymousUser` in an assignment
+query. A new test reproduced that failure. The reader now returns an empty
+queryset before any identity query for anonymous/inactive users, and both
+anonymous login and assigned-finance admin rendering pass.
 
 Actual isolated Redis/Celery/beat execution created durable inbox reminders.
 Actual billing worker execution issued one synthetic period, and its repeat
