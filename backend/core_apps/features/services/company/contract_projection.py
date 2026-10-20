@@ -129,7 +129,18 @@ def payload(item, user):
             if effective == "ready_for_provider" and not execution_ready
             else []
         ),
-        "can_revise": manages and not finished and enabled,
+        # This editor can replace delegates/placements, but it cannot renew an
+        # immutable quote, released hold, arrival period or approved offer.
+        # Keep withdrawal available so the coordinator can select new supply.
+        "can_revise": manages
+        and not finished
+        and enabled
+        and not {
+            "quote_expired",
+            "hold_expired",
+            "dates_expired",
+            "offer_changed",
+        }.intersection(blocking),
         "can_withdraw": manages and not finished,
         "tenancy_id": str(item.tenancy.id) if hasattr(item, "tenancy") else "",
         "can_create_agreement": manages
