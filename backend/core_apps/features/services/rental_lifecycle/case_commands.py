@@ -16,13 +16,24 @@ def act_on_case(user, case_id, data, *, command_data=None):
 
         StaffProfile.objects.select_for_update().filter(user=current).first()
         item = get_object_or_404(case_queryset(current), id=case_id)
-        if item.property_id:
+        if item.lease_id and item.lease.renter_company_id:
+            from ..company.tenancy_access import lock_lease
+            from ...models import CompanyTenancy
+
+            lock_lease(item.lease)
+            CompanyTenancy.objects.select_for_update().get(lease=item.lease)
+        elif item.property_id:
             Property.objects.select_for_update().get(pk=item.property_id)
         if item.lease_id:
             Lease.objects.select_for_update().get(pk=item.lease_id)
-        return get_object_or_404(
+        item = get_object_or_404(
             case_queryset(current).select_for_update(of=("self",)), id=case_id
         )
+        if data.get("action") == "prepare_company_change":
+            from ..company.service_requests import require_operator
+
+            require_operator(item, current)
+        return item
 
     def execute(item):
         current = User.objects.get(pk=user.pk)

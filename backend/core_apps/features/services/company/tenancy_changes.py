@@ -192,6 +192,16 @@ def respond(item, user, data):
     )
 
 
+def can_withdraw(item, change, user):
+    from .service_requests import requester_can_withdraw
+
+    return (
+        user.pk == change.proposed_by_id
+        or "coordinator" in access.roles(item, user)
+        or requester_can_withdraw(item, change, user)
+    )
+
+
 def withdraw(item, user, data):
     change = get_object_or_404(
         CompanyTenancyChange.objects.select_for_update(),
@@ -206,9 +216,7 @@ def withdraw(item, user, data):
         "review_required",
     }:
         raise RentalConflict("An applied or closed change cannot be withdrawn.")
-    if user.pk != change.proposed_by_id and not access.roles(item, user) & {
-        "coordinator"
-    }:
+    if not can_withdraw(item, change, user):
         raise PermissionDenied(
             "Only the proposer or assigned coordinator can withdraw this change."
         )

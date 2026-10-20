@@ -14,14 +14,23 @@ from .services.rental_lifecycle.cases import (
 )
 from .services.rental_lifecycle.common import staff_role
 from .services.rental_lifecycle.case_commands import act_on_case
+from . import company_service_form
 
 
-class CaseCommandForm(forms.ModelForm):
+class CaseCommandForm(forms.ModelForm, company_service_form.CompanyServiceFormFields):
     command_action = forms.ChoiceField(
         choices=[("", "Review only")]
         + [
             (v, v.replace("_", " "))
-            for v in ["assign", "triage", "reply", "link_remedy", "resolve", "reopen"]
+            for v in [
+                "assign",
+                "triage",
+                "reply",
+                "link_remedy",
+                "resolve",
+                "reopen",
+                "prepare_company_change",
+            ]
         ],
         required=False,
     )
@@ -71,6 +80,7 @@ class CaseCommandForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["expected_revision"].initial = self.instance.revision
+        company_service_form.configure(self)
 
     def clean(self):
         data = super().clean()
@@ -78,6 +88,7 @@ class CaseCommandForm(forms.ModelForm):
             self.add_error(
                 "decision_reason", "Explain this decision and the evidence reviewed."
             )
+        self.company_proposal = company_service_form.proposal(self)
         return data
 
 
@@ -126,6 +137,7 @@ class RentalCaseAdmin(admin.ModelAdmin):
         "next_step",
         "expected_revision",
         "request_key",
+        *company_service_form.FIELDS,
     )
     actions = None
 
@@ -178,6 +190,11 @@ class RentalCaseAdmin(admin.ModelAdmin):
                 if form.cleaned_data.get(source)
             }
         )
+        if action == "prepare_company_change":
+            data.update(
+                tenancy_revision=form.cleaned_data["tenancy_revision"],
+                company_proposal=form.company_proposal,
+            )
         try:
             serializer = CaseActionBody(data=data)
             serializer.is_valid(raise_exception=True)

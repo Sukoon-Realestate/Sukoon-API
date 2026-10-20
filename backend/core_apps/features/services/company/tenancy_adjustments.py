@@ -41,6 +41,11 @@ def propose(item, user, data):
     access.require_role(item, user, {"owner", "payer"}, sensitive=True)
     if user.pk != item.lease.owner_id:
         access.require_delegate(item, user, "pay")
+    return prepare(item, user, data)
+
+
+def prepare(item, user, data):
+    """Called only after participant or assigned case-operator authorization."""
     original = get_object_or_404(
         FinalSettlement, lease=item.lease, execution_status="executed"
     )

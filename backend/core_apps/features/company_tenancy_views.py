@@ -17,6 +17,7 @@ from .services.company import (
     tenancy_occupancy as occupancy,
     tenancy_maintenance as maintenance,
     tenancy_projection as projection,
+    service_requests,
 )
 from .services.company.contract_access import get as preparation_for
 from .services.rental_lifecycle.common import require_revision, require_staff
@@ -85,6 +86,7 @@ def open_case(item, user, data):
 
 
 HANDLERS = {
+    "request_service": service_requests.request,
     "commercial_change": commercial.propose,
     "ownership_change": ownership.propose,
     "settlement_adjustment": adjustments.propose,
@@ -148,6 +150,8 @@ def authorize_action(item, user, action, body):
         EmployeeOccupancyConfirmation,
     )
 
+    if action == "request_service":
+        service_requests.authorize_request(item, user, body.get("kind"))
     permissions = {
         "commercial_change": {"owner", "signer"},
         "ownership_change": {"owner", "signer"},
@@ -176,9 +180,7 @@ def authorize_action(item, user, action, body):
         )
         if action in {"respond_change", "sign_continuation"}:
             changes.authorize_role(item, change, user, body["role"], positive=False)
-        elif user.pk != change.proposed_by_id and "coordinator" not in access.roles(
-            item, user
-        ):
+        elif not changes.can_withdraw(item, change, user):
             raise PermissionDenied(
                 "Only the proposer or current coordinator can withdraw this review."
             )

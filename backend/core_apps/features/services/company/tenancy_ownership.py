@@ -44,6 +44,11 @@ def validate(item, change):
 
 def propose(item, user, data):
     access.require_role(item, user, {"owner", "signer"}, sensitive=True)
+    return prepare(item, user, data)
+
+
+def prepare(item, user, data):
+    """Called only after participant or assigned case-operator authorization."""
     commercial.assert_no_continuation(item)
     if item.lease.status != "active":
         raise RentalConflict("Ownership continuation requires an active contract.")

@@ -19,6 +19,7 @@ ROLES = {
     "payout_operator",
 }
 CASE_KINDS = {
+    "company_service_request",
     "chargeback",
     "company_tenancy_review",
     "company_continuation_review",
@@ -205,12 +206,23 @@ def case_queryset(user):
 
 
 def agreement_case_blocker(item):
+    from ..company.service_requests import blocker
+
+    service_blocker = blocker(item)
+    if service_blocker:
+        return service_blocker
     if item.kind == "chargeback" and item.payment_attempt_id:
         from ..chargebacks.projection import blockers
         from ...models import RentalChargeback
 
-        chargeback = RentalChargeback.objects.filter(payment_attempt_id=item.payment_attempt_id).first()
-        reasons = blockers(chargeback) if chargeback else ["Reconcile the original chargeback evidence."]
+        chargeback = RentalChargeback.objects.filter(
+            payment_attempt_id=item.payment_attempt_id
+        ).first()
+        reasons = (
+            blockers(chargeback)
+            if chargeback
+            else ["Reconcile the original chargeback evidence."]
+        )
         if reasons:
             return " ".join(reasons)
     if item.kind in {"company_continuation_review", "company_continuation_signing"}:
@@ -278,7 +290,8 @@ def case_payload(item, user):
         RentalChargeback.objects.filter(
             payment_attempt_id=item.payment_attempt_id
         ).first()
-        if item.kind == "chargeback" else None
+        if item.kind == "chargeback"
+        else None
     )
 
     operator = independent_case_operator(item, user)
@@ -297,16 +310,32 @@ def case_payload(item, user):
         subject_id=item.id,
         action__in=["case.reply", "case.review_requested"],
     ).order_by("created_at")
+    from ..company import service_requests
+
+    service = service_requests.projection(item, user)
+    service_actions = []
+    if service and item.status != "resolved" and not service["proposal_id"]:
+        if operator and item.assigned_to_id == user.pk:
+            service_actions.append("prepare_company_change")
+        if item.opened_by_id == user.pk:
+            service_actions.append("withdraw_company_request")
     return {
         "id": str(item.id),
         "revision": item.revision,
         "kind": item.kind,
+        "company_service": service,
         "chargeback": chargeback_payload(chargeback) if chargeback else None,
         "habitability": projection(item),
         "status": item.status,
         "lease_id": str(item.lease.id) if item.lease else None,
         "reason": item.reason,
-        "next_action": item.next_action,
+        "next_action": (
+            "The canonical proposal is complete. The assigned operator must record its actual outcome and close the service request."
+            if service
+            and service["proposal_state"] in service_requests.TERMINAL
+            and item.status != "resolved"
+            else item.next_action
+        ),
         "responsible_team": item.team,
         "assigned": item.assigned_to_id is not None,
         "response_target": item.baseline.get("response_target"),
@@ -330,7 +359,8 @@ def case_payload(item, user):
             }
             for row in replies
         ],
-        "allowed_actions": (
+        "allowed_actions": service_actions
+        + (
             ["assign", "triage", "reopen", "reply"]
             + (["resolve"] if item.assigned_to_id == user.pk and not blocker else [])
             + (["link_remedy"] if item.team == "finance" else [])
@@ -390,7 +420,12 @@ def case_action(item, user, data):
             "The approved restriction requires a separate inspected clearance.",
             code="habitability_restricted",
         )
-    if action == "request_review":
+    if action == "withdraw_company_request":
+        from ..company.service_requests import withdraw
+
+        withdraw(item, user)
+        audit(item, user, "case.request_withdrawn", reason)
+    elif action == "request_review":
         from ..policy_registry import approved_policy
         from ..business_policies import snapshot
 
@@ -424,7 +459,11 @@ def case_action(item, user, data):
             raise PermissionDenied(
                 "An independent operator authorized for this team is required."
             )
-        if action == "assign":
+        if action == "prepare_company_change":
+            from ..company.service_requests import prepare
+
+            prepare(item, user, data)
+        elif action == "assign":
             from core_apps.users.models import User
 
             target = User.objects.filter(id=data.get("assignee_id")).first()
@@ -489,6 +528,9 @@ def case_action(item, user, data):
             else:
                 raise ValidationError({"action": "Supply a linked financial remedy."})
         elif action == "resolve":
+            from ..company.service_requests import validate_resolution
+
+            validate_resolution(item, data)
             blocker = agreement_case_blocker(item)
             if blocker:
                 raise RentalConflict(blocker, code="reconciliation_required")

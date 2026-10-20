@@ -15,6 +15,7 @@ from . import tenancy_access as access
 
 
 def payload(item, user):
+    from .tenancy_changes import can_withdraw
     from ..business_policies import public_bound
     from django.utils.translation import get_language
     from ..chargebacks.projection import payload as chargeback_payload
@@ -81,7 +82,9 @@ def payload(item, user):
         and not blockers
         and not release_pending
         and not lease.signing_sessions.filter(
-            signer=user, document_id=lease.document_id, document_hash=lease.document_hash
+            signer=user,
+            document_id=lease.document_id,
+            document_hash=lease.document_hash,
         ).exists()
     ):
         allowed += ["sign"]
@@ -138,6 +141,8 @@ def payload(item, user):
         ).exists()
     ):
         allowed += ["settlement_adjustment"]
+    if {"ownership_change", "settlement_adjustment"} & set(allowed):
+        allowed += ["request_service"]
     change_rows = []
     for row in item.changes.order_by("-created_at")[:100]:
         if not commercial and str(user.id) not in row.snapshot["required"].values():
@@ -191,7 +196,7 @@ def payload(item, user):
                 and not (
                     row.rental_change_id and row.rental_change.signing_sessions.exists()
                 )
-                and (user.pk == row.proposed_by_id or "coordinator" in roles),
+                and can_withdraw(item, row, user),
                 "can_resume": row.state == "waiting_departure"
                 and "coordinator" in roles,
                 "rental_change_id": (
@@ -389,7 +394,9 @@ def payload(item, user):
                 for row in RentalChargeback.objects.filter(
                     payment_attempt__invoice__lease=lease
                 )
-            ] if commercial else []
+            ]
+            if commercial
+            else []
         ),
         "invoices": (
             [

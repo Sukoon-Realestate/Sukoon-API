@@ -121,6 +121,8 @@ class CaseActionBody(CommandBody):
             "resolve",
             "reopen",
             "link_remedy",
+            "prepare_company_change",
+            "withdraw_company_request",
         ]
     )
     reason = s.CharField(max_length=4000)
@@ -130,6 +132,8 @@ class CaseActionBody(CommandBody):
     payout_id = s.UUIDField(required=False)
     resolution_code = s.CharField(max_length=40, required=False)
     next_action = s.CharField(max_length=500, required=False)
+    tenancy_revision = s.IntegerField(min_value=1, required=False)
+    company_proposal = s.DictField(required=False)
 
 
 class ClaimBody(CommandBody):

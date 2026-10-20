@@ -104,6 +104,7 @@ REQUIRED_FIELDS = {
     "maintenance_action": ["maintenance_id", "maintenance_action", "reason"],
     "reconcile": [],
     "open_case": ["reason"],
+    "request_service": ["kind", "reason"],
 }
 
 
