@@ -47,3 +47,24 @@ Focused regression sources:
 Fixtures are synthetic and signing/payment prerequisites use the explicitly fake
 adapter. Local tests, native Android observations, deployed API source and real
 provider operation are separate evidence levels.
+
+## Deployment verification
+
+The 20 October deployment initially served the new source before migration
+`features.0061_company_rental_value` had been applied. Platform health remained
+green, while authenticated company-request and operational-case admin lists
+returned HTTP 500 because the added columns were absent.
+
+The live migration graph was inspected and contained only this forward migration.
+Its source hash matched the reviewed migration. It was applied with bounded
+database lock/statement timeouts. The two affected tables had zero rows before
+and after the update. Both authenticated admin lists then returned HTTP 200.
+No contract, financial, consent, provider or worker configuration was changed.
+
+For a schema-changing release, verify the migration plan and apply the reviewed
+schema through the authorized deployment process before accepting the release.
+Do not treat a healthy container or `/health/` response as evidence that migrations
+or private workflows work. The existing web Procfile does not run migrations.
+Check an authenticated affected list/action as well as anonymous access denial.
+An empty operator list confirms the query path; it does not establish a real
+customer case or provider completion.

@@ -254,6 +254,9 @@ def test_sourcing_admin_form_displays_requirements_and_commits_canonical_recomme
     case.refresh_from_db()
     client = Client()
     client.force_login(agent)
+    queue = reverse("admin:features_rentaloperationalcase_changelist")
+    assert client.get(queue).status_code == 200
+    assert client.get(queue, {"q": "__no_matching_sourcing_case__"}).status_code == 200
     url = reverse("admin:features_rentaloperationalcase_change", args=[case.pk])
     page = client.get(url)
     assert page.status_code == 200 and b"sourcing_requirements" in page.content
