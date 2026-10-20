@@ -112,6 +112,25 @@ def reconcile():
 def authorize_notification(item):
     identity = item.destination.get("target_id")
     kind = item.destination.get("review_event")
+    case_id = item.destination.get("review_case_id")
+    if case_id:
+        from .case_history import owned_case
+        from ...models import ReviewReport, ReviewAppeal
+
+        # A case result belongs to its original applicant, including after the
+        # source opinion is withdrawn. Company or moderator roles add no access.
+        case = owned_case(item.recipient, case_id)
+        if (
+            isinstance(case, ReviewReport)
+            and kind == "review_report_resolved"
+            and str(case.section.id) == str(identity)
+        ) or (
+            isinstance(case, ReviewAppeal)
+            and kind == "review_appeal_resolved"
+            and str(case.decision.section.id) == str(identity)
+        ):
+            return
+        raise NotFound()
     if kind in {"review_opportunity_opened", "review_reminder"}:
         opp = opportunity_for(item.recipient, identity)
         if kind == "review_reminder" and (

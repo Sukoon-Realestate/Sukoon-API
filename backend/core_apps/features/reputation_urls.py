@@ -39,6 +39,7 @@ urlpatterns = [
         "reviews/moderation-decisions/<uuid:identity>/appeals/",
         v.ReviewAppealView.as_view(),
     ),
+    path("reviews/cases/", v.ReviewCaseHistoryView.as_view()),
     path("reviews/cases/<uuid:identity>/", v.ReviewCaseView.as_view()),
     path("reputation-grants/recipients/", v.ReputationRecipientsView.as_view()),
     path("reputation-grants/", v.ReputationGrantsView.as_view()),

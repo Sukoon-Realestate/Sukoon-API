@@ -390,15 +390,20 @@ class ReviewAppealView(ReviewView):
         )
 
 
+class ReviewCaseHistoryView(ReviewView):
+    def get(self, request):
+        from .services.reputation import case_history
+
+        return self.page(
+            request, case_history.for_user(request.user), case_history.summary
+        )
+
+
 class ReviewCaseView(ReviewView):
     def get(self, request, identity):
-        item = (
-            ReviewReport.objects.filter(id=identity, reporter=request.user).first()
-            or ReviewAppeal.objects.filter(id=identity, appellant=request.user).first()
-            or RentalOperationalCase.objects.filter(
-                id=identity, opened_by=request.user, kind="review_eligibility"
-            ).first()
-        )
+        from .services.reputation.case_history import owned_case
+
+        item = owned_case(request.user, identity)
         if not item:
             raise NotFound()
         return Response(

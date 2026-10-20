@@ -204,6 +204,7 @@ def resolve_report(user, identity, body):
         locked.revision += 1
         locked.save(update_fields=["state", "revision", "updated_at"])
         audit(locked, user, "operator_case_resolved", reason)
+        event(locked.section, locked.reporter, "review_report_resolved", str(locked.id))
         return {"id": str(locked.id), "state": "resolved", "revision": locked.revision}
 
     return command(user, f"review.resolve_case.{identity}", body, action, report.id)

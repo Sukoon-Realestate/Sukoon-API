@@ -26,6 +26,11 @@ def event(item, recipient, kind, suffix=""):
                 "target_id": str(item.id),
                 "review_event": kind,
                 **(
+                    {"review_case_id": suffix}
+                    if kind in {"review_report_resolved", "review_appeal_resolved"}
+                    else {}
+                ),
+                **(
                     {"decision_id": suffix}
                     if kind == "review_moderation_decision"
                     else {}
