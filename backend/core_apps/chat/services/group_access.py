@@ -9,6 +9,10 @@ from core_apps.chat.models import Conversation, ConversationParticipant
 
 
 def authorize(conversation, user, *, action="read_chat", lock=False):
+    if conversation.kind == "direct":
+        from .direct_access import authorize as direct_authorize
+
+        return direct_authorize(conversation, user, action=action, lock=lock)
     if conversation.kind == "company_request":
         from .company_access import authorize as company_authorize
 
@@ -48,6 +52,10 @@ def authorize(conversation, user, *, action="read_chat", lock=False):
 
 
 def actions(membership):
+    from .direct_access import DirectConversationGrant, actions as direct_actions
+
+    if isinstance(membership, DirectConversationGrant):
+        return direct_actions(membership)
     result = [
         "read_chat",
         "send_message",
@@ -80,6 +88,10 @@ def unread_count(conversation, participant):
 
 
 def eligible_participants(conversation):
+    if conversation.kind == "direct":
+        from .direct_access import eligible_participants as direct_participants
+
+        return direct_participants(conversation)
     if conversation.kind == "company_request":
         from .company_access import eligible_participants as company_participants
 
@@ -117,6 +129,10 @@ def total_unread_count(user):
 
 
 def lock_conversation_root(conversation):
+    if conversation.kind == "direct":
+        from .direct_access import lock_root
+
+        return lock_root(conversation)
     if conversation.kind == "company_request":
         from .company_access import lock_root
 

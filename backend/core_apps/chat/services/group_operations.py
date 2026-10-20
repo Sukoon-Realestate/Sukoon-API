@@ -32,6 +32,9 @@ def mark_group_read(conversation, user, sequence):
         participant.save(
             update_fields=["last_read_sequence", "last_read_at", "updated_at"]
         )
+        if conversation.kind == "direct":
+            participant.unread_count = unread_count(conversation, participant)
+            participant.save(update_fields=["unread_count"])
         record_event(
             conversation,
             "message.read",
@@ -68,6 +71,15 @@ def delete_group_message(conversation, user, identity):
             ]
         )
         message.attachments.update(state="revoked")
+        if conversation.kind == "direct":
+            # The legacy inbox remains in use by conversation lists/old clients.
+            # A deleted message must not survive in its preview or unread count.
+            if message.sequence == conversation.last_sequence:
+                conversation.last_message_preview = ""
+                conversation.save(update_fields=["last_message_preview"])
+            for recipient in conversation.participant_set.all():
+                recipient.unread_count = unread_count(conversation, recipient)
+                recipient.save(update_fields=["unread_count"])
         # Authorization is revoked in this transaction. Physical derivatives are
         # removed by the periodic cleanup worker, which can safely retry I/O.
         record_event(conversation, "message.deleted", message=message, actor=user)

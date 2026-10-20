@@ -73,37 +73,57 @@ def _notify(event, user):
     )
 
     company = conversation.kind == "company_request"
-    group_id = "" if company else str(conversation.housing_group.id)
+    direct = conversation.kind == "direct"
+    group_id = "" if company or direct else str(conversation.housing_group.id)
     destination = (
         {
-            "type": "company_request_chat",
-            "action_type": "open_company_discussion",
-            "target_id": str(conversation.company_request.id),
-            "company_id": str(conversation.company_request.company.id),
+            "type": "new_message",
             "conversation_id": str(conversation.id),
             "message_id": str(event.message.id),
-            "schema_version": "1",
-            "workspace": "tenant",
+            "sender_id": str(event.actor.id),
         }
-        if company
-        else {
-            "type": "housing_group_chat",
-            "event_kind": "housing_group_chat",
-            "group_id": group_id,
-            "conversation_id": str(conversation.id),
-            "message_id": str(event.message.id),
-            "event_id": str(event.id),
-            "deep_link": f"https://sokoun.app/housing-groups/{group_id}/chat?message_id={event.message.id}",
-        }
+        if direct
+        else (
+            {
+                "type": "company_request_chat",
+                "action_type": "open_company_discussion",
+                "target_id": str(conversation.company_request.id),
+                "company_id": str(conversation.company_request.company.id),
+                "conversation_id": str(conversation.id),
+                "message_id": str(event.message.id),
+                "schema_version": "1",
+                "workspace": "tenant",
+            }
+            if company
+            else {
+                "type": "housing_group_chat",
+                "event_kind": "housing_group_chat",
+                "group_id": group_id,
+                "conversation_id": str(conversation.id),
+                "message_id": str(event.message.id),
+                "event_id": str(event.id),
+                "deep_link": f"https://sokoun.app/housing-groups/{group_id}/chat?message_id={event.message.id}",
+            }
+        )
     )
     notification = NotificationService.create_notification(
         user=user,
         title=(
-            "رسالة جديدة في مناقشة الشركة" if company else "رسالة جديدة في شات الجروب"
+            "رسالة جديدة"
+            if direct
+            else (
+                "رسالة جديدة في مناقشة الشركة"
+                if company
+                else "رسالة جديدة في شات الجروب"
+            )
         ),
         body="افتح سكون لقراءة الرسالة",
         notification_type="new_message",
-        category="company_request_chat" if company else "housing_group_chat",
+        category=(
+            "chat"
+            if direct
+            else "company_request_chat" if company else "housing_group_chat"
+        ),
         icon_type="chat",
         data=destination,
         send_push=False,
@@ -112,14 +132,17 @@ def _notify(event, user):
     delivery.save(update_fields=["notification", "updated_at"])
 
 
-def deliver_pushes(limit=100):
+def deliver_pushes(limit=100, *, event_pk=None):
     """Claim once before provider I/O. Provider exactly-once delivery is not assumed."""
     from core_apps.notifications.services.fcm_service import FCMService
     from contextlib import nullcontext
 
-    ids = ChatNotificationDelivery.objects.filter(
+    pending = ChatNotificationDelivery.objects.filter(
         push_claimed_at__isnull=True, notification__isnull=False
-    ).values_list("pk", flat=True)[:limit]
+    )
+    if event_pk is not None:
+        pending = pending.filter(event_id=event_pk)
+    ids = pending.values_list("pk", flat=True)[:limit]
     for identity in ids:
         initial = ChatNotificationDelivery.objects.select_related(
             "event__conversation"

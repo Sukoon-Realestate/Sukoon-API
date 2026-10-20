@@ -79,6 +79,22 @@ class GroupChatSummaryAPIView(APIView):
         )
 
 
+class DirectChatSummaryAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @transaction.atomic
+    def get(self, request, id):
+        conversation, _, _ = authorize(
+            get_object_or_404(Conversation, id=id, kind="direct"),
+            request.user,
+            lock=True,
+        )
+        return Response(
+            summary(conversation, request.user),
+            headers={"Cache-Control": "private, no-store"},
+        )
+
+
 class GroupMessageLookupAPIView(APIView):
     permission_classes = [IsAuthenticated]
 

@@ -3,7 +3,8 @@ import json
 from uuid import UUID
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
-from core_apps.chat.models import ChatAttachment, Message
+from core_apps.chat.models import ChatAttachment, Message, ConversationParticipant
+from django.db.models import F
 from .group_access import authorize, visible_messages
 from .group_limits import ChatConflict, limits
 
@@ -80,7 +81,16 @@ def send_group_message(conversation, sender, data):
         conversation=conversation, sender=sender, client_message_id=client_id
     ).first()
     if existing:
-        if existing.payload_fingerprint != fingerprint:
+        legacy_match = (
+            conversation.kind == "direct"
+            and not existing.payload_fingerprint
+            and existing.kind == "text"
+            and payload["kind"] == "text"
+            and existing.content == payload["content"]
+            and not payload["attachment_ids"]
+            and not payload["reply_to_message_id"]
+        )
+        if existing.payload_fingerprint != fingerprint and not legacy_match:
             raise ChatConflict()
         if existing.sequence < participant.visible_from_sequence:
             raise ChatConflict(
@@ -140,7 +150,11 @@ def send_group_message(conversation, sender, data):
         attachment.save(update_fields=["message", "state", "position", "updated_at"])
     conversation.last_message_at = message.created_at
     # Group previews are always computed against the viewer's current boundary.
-    conversation.last_message_preview = ""
+    conversation.last_message_preview = (
+        (message.content or {"image": "📷", "voice": "🎙️"}.get(message.kind, ""))[:200]
+        if conversation.kind == "direct"
+        else ""
+    )
     conversation.save(
         update_fields=[
             "last_sequence",
@@ -149,5 +163,9 @@ def send_group_message(conversation, sender, data):
             "updated_at",
         ]
     )
+    if conversation.kind == "direct":
+        ConversationParticipant.objects.filter(conversation=conversation).exclude(
+            user=sender,
+        ).update(unread_count=F("unread_count") + 1)
     record_event(conversation, "message.new", message=message, actor=sender)
     return message

@@ -60,14 +60,16 @@ def test_postgres_concurrent_send_same_identity(chat_group):
 
 def test_outbox_crash_retry_and_muted_delayed_push(chat_group):
     _, conversation, user, member = chat_group
-    send_group_message(conversation, user, message_request())
-    event = ChatEvent.objects.get(conversation=conversation, kind="message.new")
     with patch("core_apps.chat.services.group_outbox.get_channel_layer") as layer:
 
         async def crash(*args, **kwargs):
             raise RuntimeError("worker died before fanout")
 
         layer.return_value.group_send = crash
+        # A socket outage during the new immediate post-commit attempt still
+        # acknowledges the stored message and leaves the same durable event.
+        send_group_message(conversation, user, message_request())
+        event = ChatEvent.objects.get(conversation=conversation, kind="message.new")
         with pytest.raises(RuntimeError):
             deliver_event(event.pk)
     event.refresh_from_db()
@@ -88,7 +90,8 @@ def test_committed_removal_blocks_queued_outbound_content(chat_group):
     from core_apps.chat.services.group_events import event_payload
 
     group, conversation, user, member = chat_group
-    send_group_message(conversation, user, message_request("Private"))
+    with patch("core_apps.chat.services.group_events._publish_committed_event"):
+        send_group_message(conversation, user, message_request("Private"))
     event = ChatEvent.objects.get(conversation=conversation, kind="message.new")
     group.memberships.filter(user=member).update(status="removed")
     assert event_payload(event, member) is None

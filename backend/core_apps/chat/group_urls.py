@@ -5,12 +5,14 @@ from .views.group_attachments import (
 )
 from .views.group_commands import GroupMessageDeleteAPIView, GroupPreferencesAPIView
 from .views.group_history import (
+    DirectChatSummaryAPIView,
     GroupEventsAPIView,
     GroupMessageContextAPIView,
     GroupMessageLookupAPIView,
 )
 
 urlpatterns = [
+    path("conversations/<uuid:id>/chat/", DirectChatSummaryAPIView.as_view()),
     path(
         "conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
         GroupMessageLookupAPIView.as_view(),

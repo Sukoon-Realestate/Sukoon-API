@@ -22,8 +22,33 @@ def record_event(conversation, kind, *, message=None, actor=None, data=None):
         actor=actor,
         data=data or {},
     )
-    transaction.on_commit(_wake_worker)
+    transaction.on_commit(
+        lambda: _publish_committed_event(
+            event.pk, immediate_push=conversation.kind == "direct"
+        )
+    )
     return event
+
+
+def _publish_committed_event(identity, *, immediate_push=False):
+    """Online delivery must not wait for Celery; the log remains the retry source.
+
+    Only event identities enter the channel layer. Each consumer reauthorizes
+    the recipient immediately before exposing content. A failed dispatch never
+    changes a committed send into a rejection or loses its durable event.
+    """
+    try:
+        from .group_outbox import deliver_event, deliver_pushes
+
+        deliver_event(identity)
+        if immediate_push:
+            # Preserve direct chat's existing post-commit push attempt without
+            # making it depend on a newly provisioned worker. Durable claims
+            # serialize this attempt with a concurrent worker.
+            deliver_pushes(event_pk=identity)
+    except Exception:
+        logger.exception("Immediate chat delivery failed; event remains queued.")
+    _wake_worker()
 
 
 def _wake_worker():

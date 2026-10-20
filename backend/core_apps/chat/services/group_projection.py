@@ -49,7 +49,11 @@ def message_payload(message, participant, membership):
         )
         .exclude(user_id=message.sender_id)
     )
-    permitted = [] if deleted or message.kind == "system" else ["reply"]
+    permitted = (
+        []
+        if deleted or message.kind == "system" or "reply" not in actions(membership)
+        else ["reply"]
+    )
     if (
         not deleted
         and message.kind != "system"
@@ -112,12 +116,14 @@ def summary(conversation, user):
             "content": latest.content[:160] if not latest.deleted_at else "",
         }
     company = conversation.kind == "company_request"
+    direct = conversation.kind == "direct"
     request = conversation.company_request if company else None
+    other = conversation.participants.exclude(pk=user.pk).first() if direct else None
     return {
         "id": str(conversation.id),
         "conversation_id": str(conversation.id),
         "conversation_type": conversation.kind,
-        "group_id": None if company else str(conversation.housing_group.id),
+        "group_id": None if company or direct else str(conversation.housing_group.id),
         **(
             {
                 "company_id": str(request.company.id),
@@ -127,7 +133,11 @@ def summary(conversation, user):
             if company
             else {}
         ),
-        "title": request.title if company else conversation.housing_group.name,
+        "title": (
+            (sender_payload(other)["name"] if other else "")
+            if direct
+            else request.title if company else conversation.housing_group.name
+        ),
         "active_member_count": eligible_participants(conversation).count(),
         "membership_id": str(member.id),
         "membership_period": str(participant.membership_period),
@@ -138,7 +148,7 @@ def summary(conversation, user):
         "is_muted": participant.is_muted,
         "allowed_actions": actions(member),
         "limits": limits(),
-        "can_send": True,
+        "can_send": "send_message" in actions(member),
         # Exact sender/client identity and payload are serialized by group_send.
         # A retry may additionally fence its original membership period.
         "idempotent_message_retry": True,

@@ -51,6 +51,12 @@ def typing_payload(event, user):
     )
     if not actor or timezone.now().isoformat() > event["expires_at"]:
         return None
+    # Historical read access can survive withdrawal of direct-message consent.
+    # Recheck the actor when delivering a queued event, not only at publication.
+    try:
+        authorize(conversation, actor.user, action="send_message")
+    except APIException:
+        return None
     return {
         "type": "typing.started" if event["started"] else "typing.stopped",
         "payload": {

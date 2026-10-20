@@ -43,8 +43,15 @@ def send_message(
             {"content": "You are not a participant in this conversation."}
         )
 
+    from ..direct_access import lock_root, prepare_locked
+
+    conversation = prepare_locked(lock_root(conversation))
+    if not conversation.participants.filter(pk=sender.pk, is_active=True).exists():
+        raise PermissionDenied("An active participant is required.")
     for recipient in conversation.participants.exclude(pk=sender.pk):
-        if direct_message_blocked(sender, recipient, lock=True):
+        if not recipient.is_active or direct_message_blocked(
+            sender, recipient, lock=True
+        ):
             raise PermissionDenied(
                 "Messaging consent is not active for this connection."
             )
@@ -56,7 +63,11 @@ def send_message(
             client_message_id=client_message_id,
         ).first()
         if existing:
-            if existing.content != content:
+            if (
+                existing.content != content
+                or existing.kind != "text"
+                or existing.reply_to_id
+            ):
                 raise ChatMessageConflict()
             return existing
     try:
@@ -68,6 +79,7 @@ def send_message(
                 sender=sender,
                 content=content,
                 client_message_id=client_message_id,
+                sequence=conversation.last_sequence + 1,
             )
     except IntegrityError:
         if not client_message_id:
@@ -77,12 +89,13 @@ def send_message(
             sender=sender,
             client_message_id=client_message_id,
         )
-        if message.content != content:
+        if message.content != content or message.kind != "text" or message.reply_to_id:
             raise ChatMessageConflict()
         return message
 
     preview = content[:200] if len(content) > 200 else content
     Conversation.objects.filter(pk=conversation.pk).update(
+        last_sequence=message.sequence,
         last_message_at=message.created_at,
         last_message_preview=preview,
     )
@@ -94,15 +107,11 @@ def send_message(
         user=sender
     ).update(unread_count=F("unread_count") + 1)
 
-    # Broadcast via channel layer and notify recipients on transaction commit
-    transaction.on_commit(
-        lambda: _broadcast_new_message(conversation=conversation, message=message)
-    )
-    transaction.on_commit(
-        lambda: _notify_recipients(
-            conversation=conversation, sender=sender, preview=preview, message=message
-        )
-    )
+    # Share durable events with media sends, including current access at delivery.
+    from ..group_events import record_event
+
+    conversation.refresh_from_db()
+    record_event(conversation, "message.new", message=message, actor=sender)
 
     return message
 
@@ -144,13 +153,21 @@ def mark_conversation_read(*, conversation: Conversation, user) -> None:
     """
     if conversation.kind in {"housing_group", "company_request"}:
         raise ValidationError("Group reads require an explicit last_read_sequence.")
-    updated = ConversationParticipant.objects.filter(
-        conversation=conversation,
-        user=user,
-    ).update(last_read_at=timezone.now(), unread_count=0)
-    if not updated:
+    if not ConversationParticipant.objects.filter(
+        conversation=conversation, user=user
+    ).exists():
         raise PermissionDenied("Not a participant.")
+    from ..direct_access import lock_root, prepare_locked
+    from ..group_operations import mark_group_read
 
-    transaction.on_commit(
-        lambda: _broadcast_read_receipt(conversation=conversation, reader=user)
+    conversation = prepare_locked(lock_root(conversation))
+    mark_group_read(conversation, user, conversation.last_sequence)
+    # Preserve the legacy read acknowledgement and empty-conversation timestamp.
+    ConversationParticipant.objects.filter(conversation=conversation, user=user).update(
+        last_read_at=timezone.now(),
+        unread_count=0,
     )
+    if conversation.last_sequence == 0:
+        transaction.on_commit(
+            lambda: _broadcast_read_receipt(conversation=conversation, reader=user)
+        )

@@ -43,15 +43,24 @@ class GroupChatConsumerMixin:
         try:
             identity = UUID(str(content.get("conversation_id")))
         except (ValueError, TypeError):
-            if content.get("protocol") == "group.v1":
+            if content.get("protocol") in {"group.v1", "chat.v1"}:
                 raise ValidationError("Supply a valid conversation identity.")
             return None
         conversation = Conversation.objects.filter(id=identity).first()
-        if not conversation or conversation.kind not in {
-            "housing_group",
-            "company_request",
-        }:
-            if content.get("protocol") == "group.v1":
+        rich_direct = (
+            conversation
+            and conversation.kind == "direct"
+            and content.get("protocol") in {"group.v1", "chat.v1"}
+        )
+        if not conversation or (
+            not rich_direct
+            and conversation.kind
+            not in {
+                "housing_group",
+                "company_request",
+            }
+        ):
+            if content.get("protocol") in {"group.v1", "chat.v1"}:
                 raise NotFound()
             return None
         kind = content.get("type")

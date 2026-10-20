@@ -130,7 +130,10 @@ class ConversationReadAPIView(APIView):
 
     def post(self, request, id):
         conversation = get_object_or_404(Conversation, id=id)
-        if conversation.kind in {"housing_group", "company_request"}:
+        if (
+            conversation.kind in {"housing_group", "company_request"}
+            or "last_read_sequence" in request.data
+        ):
             from core_apps.chat.services.group_operations import mark_group_read
 
             return Response(

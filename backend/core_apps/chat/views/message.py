@@ -31,7 +31,10 @@ class MessageListAPIView(ListAPIView):
 
     def list(self, request, *args, **kwargs):
         conversation = get_object_or_404(Conversation, id=kwargs["id"])
-        if conversation.kind in {"housing_group", "company_request"}:
+        if (
+            conversation.kind in {"housing_group", "company_request"}
+            or request.query_params.get("protocol") == "chat.v1"
+        ):
             from .group_history import history_response
 
             return history_response(conversation, request.user, request.query_params)
@@ -68,7 +71,10 @@ class MessageCreateAPIView(APIView):
 
     def post(self, request, id):
         conversation = get_object_or_404(Conversation, id=id)
-        if conversation.kind in {"housing_group", "company_request"}:
+        if (
+            conversation.kind in {"housing_group", "company_request"}
+            or "kind" in request.data
+        ):
             from core_apps.chat.services.group_send import send_group_message
             from core_apps.chat.services.group_access import authorize
             from core_apps.chat.services.group_projection import message_payload

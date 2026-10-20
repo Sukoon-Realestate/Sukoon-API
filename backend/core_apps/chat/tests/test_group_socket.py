@@ -30,6 +30,9 @@ async def test_group_socket_ack_rest_replay_and_revocation(chat_group):
     assert ack["type"] == "message.ack" and ack["payload"]["sequence"] == 1
     assert ack["payload"]["sender"]["id"] == str(user.id)
     assert "email" not in ack["payload"]["sender"]
+    broadcast = await socket.receive_json_from()
+    assert broadcast["type"] == "message.new"
+    assert broadcast["payload"]["id"] == ack["payload"]["id"]
 
     @database_sync_to_async
     def replay():
@@ -55,6 +58,47 @@ async def test_group_socket_ack_rest_replay_and_revocation(chat_group):
     assert error["type"] == "chat.error" and error["payload"]["status"] == 403
     assert error["payload"]["conversation_id"] == str(conversation.id)
     await socket.disconnect()
+
+
+async def test_group_delivers_to_both_sockets_without_a_worker(chat_group):
+    _, conversation, user, member = chat_group
+    sockets = []
+    try:
+        for actor in (user, member):
+            socket = WebsocketCommunicator(ChatConsumer.as_asgi(), "/ws/chat/")
+            socket.scope["user"] = actor
+            assert (await socket.connect())[0]
+            sockets.append(socket)
+        body = message_request("Immediate group delivery")
+        await sockets[0].send_json_to(
+            {
+                "type": "message.send",
+                "protocol": "group.v1",
+                "conversation_id": str(conversation.id),
+                **body,
+            }
+        )
+        sender_packets = [await sockets[0].receive_json_from() for _ in range(2)]
+        assert {packet["type"] for packet in sender_packets} == {
+            "message.ack",
+            "message.new",
+        }
+        received = await sockets[1].receive_json_from()
+        assert received["type"] == "message.new"
+        assert received["payload"]["client_message_id"] == body["client_message_id"]
+        assert received["payload"]["content"] == body["content"]
+        assert (
+            await database_sync_to_async(
+                lambda: ChatEvent.objects.filter(
+                    conversation=conversation,
+                    delivered_at__isnull=False,
+                ).count()
+            )()
+            == 1
+        )
+    finally:
+        for socket in sockets:
+            await socket.disconnect()
 
 
 async def test_read_only_open_and_typing_are_not_persisted_messages(chat_group):

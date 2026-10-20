@@ -879,3 +879,14 @@
 - **Validation:** Six focused regressions plus four adjacent preparation cases passed. A prior test-harness UUID/internal-key mismatch was corrected before retaining the four permission contradictions. Black and diff checks passed. The native withdrawal-to-requote continuation and hosted source verification are recorded separately after execution.
 - **Scope:** Permission projection only; no model/migration, financial rule, original consent rewrite, provider command, worker provisioning or live company activation. Existing direct enforcement remains unchanged.
 - **Files:** `backend/core_apps/features/services/company/contract_projection.py`, `tests/test_company_preparation_requote.py`, `backend/docs/company_housing_api.md`; sibling Android quote-expiry test and English findings/evidence.
+
+
+## 2026-10-21
+
+### Repair chat realtime delivery and connect private direct media
+
+- **What:** Deliver committed group messages immediately over authenticated personal sockets, retain the durable outbox, and connect direct conversations to the same authorized image/voice/history/recovery protocol. Add the FFmpeg system package for real AAC validation on App Platform.
+- **Why:** Group delivery depended on a worker, direct chat lacked the connected media contract, and device testing found independent client origin/event/parser/image-isolate defects. The running server also lacked ffmpeg and ffprobe.
+- **Details:** Direct legacy and rich sends share canonical sequences and operation identities under ordered locks. Historical read access survives consent withdrawal without retaining send or typing authority. Unrelated actors cannot download private attachments. Direct post-commit push attempts retain their previous worker independence and use durable claims to prevent concurrent worker duplication. No model/schema migration, commercial policy, paid resource or provider activation is included. The existing ephemeral attachment directory remains a deployment persistence boundary; the read-only live probe found zero stored attachments.
+- **Validation:** The original isolated PostgreSQL chat run passed 93 tests with two optional platform-clip skips; seven company-discussion cases passed. The final focused 23-case PostgreSQL run passed, including the added queued-typing privacy and direct-push deduplication regressions. Flutter and real Samsung voice/gallery/socket verification are recorded in the sibling CHAT_SOCKET_AND_MEDIA_IMPLEMENTATION.md report; source/local evidence does not establish live FCM delivery or durable hosting storage.
+- **Files:** backend/core_apps/chat/services/{direct_access,group_access,group_events,group_outbox,group_projection,group_send,group_operations,group_typing}.py; legacy send and conversation/message/history views; group consumer/routes; direct/media/socket/concurrency tests; backend/Aptfile; sibling shared chat UI/data/Cubit/tests and English implementation report.
