@@ -9,6 +9,7 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 from django.conf import settings
 from rest_framework.exceptions import ValidationError
 from .group_limits import ChatUnavailable, limits
+from .group_media_process import codec_environment
 
 
 def inspect_image(path):
@@ -70,7 +71,13 @@ def inspect_voice(path):
             "json",
             str(path),
         ]
-        result = subprocess.run(command, capture_output=True, timeout=15, check=True)
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            timeout=15,
+            check=True,
+            env=codec_environment(command[0]),
+        )
         data = json.loads(result.stdout)
         streams = data["streams"]
         audio = [s for s in streams if s.get("codec_type") == "audio"]
@@ -106,6 +113,7 @@ def inspect_voice(path):
             capture_output=True,
             timeout=20,
             check=True,
+            env=codec_environment(getattr(settings, "CHAT_FFMPEG", "ffmpeg")),
         )
         return (
             Path(path).read_bytes(),
@@ -119,6 +127,12 @@ def inspect_voice(path):
         )
     except FileNotFoundError:
         raise ChatUnavailable("Voice verification is unavailable.")
+    except subprocess.CalledProcessError as exc:
+        if exc.returncode == 127:
+            raise ChatUnavailable("Voice verification is unavailable.") from exc
+        raise ValidationError(
+            {"file": "Supply a valid AAC/M4A voice note within the duration limit."}
+        ) from exc
     except (ValueError, KeyError, TypeError, subprocess.SubprocessError):
         raise ValidationError(
             {"file": "Supply a valid AAC/M4A voice note within the duration limit."}

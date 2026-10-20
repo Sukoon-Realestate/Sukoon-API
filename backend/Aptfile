@@ -1,2 +1,7 @@
 # Private voice attachments require real AAC inspection and decoding.
 ffmpeg
+# Keep the build-stack ABI and nested library directories available at runtime.
+libvpx7
+libpulse0
+libblas3
+liblapack3
