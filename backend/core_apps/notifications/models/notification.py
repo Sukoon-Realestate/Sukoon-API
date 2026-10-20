@@ -39,6 +39,8 @@ class Notification(TimeStampedModel):
         RENTAL_REFUND = "rental_refund", _("Rental Refund")
         RENTAL_DISPUTE = "rental_dispute", _("Rental Dispute")
         RENTAL_DOCUMENT = "rental_document", _("Rental Document")
+        RENT_PAYMENT_REMINDER = "rent_payment_reminder", _("Rent Payment Reminder")
+        RENT_INITIAL_PAYMENT_DUE = "rent_initial_payment_due", _("First Rent Invoice")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

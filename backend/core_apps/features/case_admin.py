@@ -142,6 +142,7 @@ class RentalCaseAdmin(admin.ModelAdmin):
         "lease",
         "housing_request",
         "reason",
+        "support_report",
         "sourcing_requirements",
         "payment_attempt",
         "assigned_to",
@@ -165,6 +166,23 @@ class RentalCaseAdmin(admin.ModelAdmin):
 
         return format_html(
             "<pre>{}</pre>", json.dumps(projection(obj), indent=2, ensure_ascii=False)
+        )
+
+    @admin.display(description="Private support report")
+    def support_report(self, obj):
+        from django.urls import reverse
+        from django.utils.html import format_html
+        from core_apps.support.models import Ticket
+
+        identity = obj.baseline.get("support_ticket_id")
+        if obj.kind != "off_platform_payment_report" or not identity:
+            return "—"
+        ticket = Ticket.objects.filter(id=identity).only("pkid").first()
+        if not ticket:
+            return "—"
+        return format_html(
+            '<a href="{}">Review report and private evidence (assigned operator only)</a>',
+            reverse("admin:support_ticket_change", args=[ticket.pk]),
         )
 
     fields = (

@@ -80,7 +80,6 @@ def cycle_actions(user, subject):
                 "create_amendment",
                 "create_renewal",
                 "create_termination",
-                "create_external_payment",
             ]
         if not settlement_precondition_error(lease):
             actions.append("propose_settlement")

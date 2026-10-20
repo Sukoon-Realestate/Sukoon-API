@@ -20,6 +20,7 @@ from ..services.rental_phase2 import (
     reserve_inventory_days,
 )
 from ..services.tenancy_invitations import resolve_offer_snapshot
+from ..services.platform_rent_payments import reviewed_terms
 from .owner_payment_profile import (
     _replay_response,
     _json_safe,
@@ -119,7 +120,10 @@ def create_structured_lease(request):
             raise RentalConflict("The reviewed terms changed.", code="document_changed")
         from ..services.reputation.ancestry import from_property
 
-        snapshot = {**snapshot, "reputation_ancestry": from_property(invitation.property)}
+        snapshot = {
+            **snapshot,
+            "reputation_ancestry": from_property(invitation.property),
+        }
         lease = Lease.objects.create(
             property=invitation.property,
             owner=request.user,
@@ -133,7 +137,7 @@ def create_structured_lease(request):
             rent_exponent=2,
             offer_id=data["offer_id"],
             offer_snapshot=snapshot,
-            terms=_json_safe(data["terms"]),
+            terms=reviewed_terms(_json_safe(data["terms"])),
             policy_version="rental-policy-v1",
             legacy_read_only=False,
             hold_expires_at=timezone.now()

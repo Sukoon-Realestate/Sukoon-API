@@ -4,7 +4,7 @@ import logging
 import uuid
 from typing import Any, List, Optional
 from django.db import transaction
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import NotFound, ValidationError
 from core_apps.support.models import Ticket, TicketAttachment, TicketMessage
 
 
@@ -67,9 +67,22 @@ def create_ticket(
         "payment_attempt_id",
         "subject_kind",
         "subject_id",
+        "issue_code",
     }
     if set(rental_context) - allowed_context:
         raise ValidationError({"rental_context": "Contains unsupported fields."})
+    issue = rental_context.get("issue_code")
+    if issue is not None:
+        from core_apps.features.services.platform_rent_payments import ISSUE_CODES
+
+        if (
+            not isinstance(issue, str)
+            or issue not in ISSUE_CODES
+            or category != "payment"
+        ):
+            raise ValidationError(
+                {"rental_context": "Choose a supported payment issue."}
+            )
     if rental_context:
         from core_apps.features.models import Lease, PaymentAttempt, RentInvoice
         from core_apps.features.services.rental_foundation import (
@@ -80,6 +93,15 @@ def create_ticket(
         for key in ("lease_id", "invoice_id", "payment_attempt_id", "subject_id"):
             if rental_context.get(key):
                 resolved[key] = get_authorized_rental_subject(user, rental_context[key])
+        for key, model in (
+            ("lease_id", Lease),
+            ("invoice_id", RentInvoice),
+            ("payment_attempt_id", PaymentAttempt),
+        ):
+            if key in resolved and not isinstance(resolved[key], model):
+                raise ValidationError(
+                    {"rental_context": f"{key} must identify its stated record type."}
+                )
         lease_ids = set()
         for value in resolved.values():
             if isinstance(value, Lease):
@@ -92,6 +114,15 @@ def create_ticket(
             raise ValidationError(
                 {"rental_context": "All rental IDs must belong to one lease."}
             )
+        from core_apps.features.models import PrivateAccessRevocation
+
+        if (
+            not user.is_active
+            or PrivateAccessRevocation.objects.filter(
+                user=user, lease_id__in=lease_ids
+            ).exists()
+        ):
+            raise NotFound()
 
     if len(subject) < 3 or len(subject) > 160:
         raise ValidationError(
@@ -136,6 +167,7 @@ def create_ticket(
                 }
             )
         from core_apps.support.services.private_attachments import clean_image
+
         clean_image(att)
 
     reference = generate_ticket_reference()
@@ -163,11 +195,17 @@ def create_ticket(
     try:
         for att in attachments:
             from core_apps.support.services.private_attachments import store_image
+
             stored.append(store_image(initial_message, att))
     except Exception:
         for attachment in stored:
             attachment.private_file.delete(save=False)
         raise
+
+    if issue:
+        from core_apps.support.services.payment_reports import open_report
+
+        open_report(ticket, next(iter(lease_ids), None))
 
     logger.info(
         "Created support ticket %s (%s) for user %s in workspace %s",

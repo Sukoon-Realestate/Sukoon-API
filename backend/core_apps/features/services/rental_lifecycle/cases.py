@@ -19,6 +19,7 @@ ROLES = {
     "payout_operator",
 }
 CASE_KINDS = {
+    "off_platform_payment_report",
     "company_service_request",
     "chargeback",
     "company_tenancy_review",
@@ -140,6 +141,7 @@ def open_system_case(
                         "beneficiary_issue",
                         "refund_failure",
                         "payout_failure",
+                        "off_platform_payment_report",
                     }
                     else "support"
                 )
@@ -180,6 +182,8 @@ def notify_case_participants(item, action):
         ]
         if user
     }
+    if item.kind == "off_platform_payment_report":
+        recipients = {item.opened_by} if item.opened_by else set()
     if item.housing_request_id:
         requirement = item.housing_request
         recipients = set()
@@ -209,6 +213,8 @@ def case_queryset(user):
 
     corporate_ids = [t.lease_id for t in visible(user) if roles(t, user) - PRIVATE_ONLY]
     own = own | RentalOperationalCase.objects.filter(lease_id__in=corporate_ids)
+    # A relationship to the agreement does not disclose another party's report.
+    own = own.exclude(Q(kind="off_platform_payment_report") & ~Q(opened_by=user))
     if staff_role(user, ROLES):
         qs = RentalOperationalCase.objects.all()
         role = getattr(getattr(user, "staff_profile", None), "role_name", "")
@@ -218,6 +224,14 @@ def case_queryset(user):
             qs = qs.filter(team="support")
         elif not user.is_superuser:
             qs = qs.filter(team="finance")
+        excluded_reports = [
+            item.pk
+            for item in qs.filter(kind="off_platform_payment_report").select_related(
+                "lease"
+            )
+            if not independent_case_operator(item, user)
+        ]
+        qs = qs.exclude(pk__in=excluded_reports)
         return qs | own
     return own
 
@@ -381,7 +395,11 @@ def case_payload(item, user):
         + (
             ["assign", "triage", "reopen", "reply"]
             + (["resolve"] if item.assigned_to_id == user.pk and not blocker else [])
-            + (["link_remedy"] if item.team == "finance" else [])
+            + (
+                ["link_remedy"]
+                if item.team == "finance" and item.kind != "off_platform_payment_report"
+                else []
+            )
             if operator
             else ["reply"] + (["request_review"] if can_review else [])
         ),
@@ -455,6 +473,9 @@ def case_action(item, user, data):
     from ..company import sourcing
 
     sourcing.validate_case_action(item, data)
+    from core_apps.support.services.payment_reports import validate_action, sync_review
+
+    validate_action(item, data)
     reason = str(data.get("reason", "")).strip()
     if not reason:
         raise ValidationError({"reason": "Explain the action."})
@@ -661,5 +682,6 @@ def case_action(item, user, data):
         audit(item, user, f"case.{action}", reason)
     item.revision += 1
     item.save()
+    sync_review(item, user, action)
     notify_case_participants(item, f"case.{action}")
     return item

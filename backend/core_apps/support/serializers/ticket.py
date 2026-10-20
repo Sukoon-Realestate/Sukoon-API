@@ -47,6 +47,16 @@ class TicketListSerializer(serializers.ModelSerializer):
 
 class TicketDetailSerializer(serializers.ModelSerializer):
     messages = TicketMessageSerializer(many=True, read_only=True)
+    rental_context = serializers.SerializerMethodField()
+
+    def get_rental_context(self, obj):
+        context = dict(obj.rental_context)
+        request = self.context.get("request")
+        # General support remains available before verification. The financial
+        # case workspace has its own verified-account prerequisite.
+        if request is not None and not request.user.is_verified:
+            context.pop("case_id", None)
+        return context
 
     class Meta:
         model = Ticket

@@ -179,6 +179,9 @@ def issue_invoice(period):
             ),
         ],
     )
+    from ..rent_payment_reminders import record_invoice
+
+    record_invoice(invoice)
     return invoice
 
 

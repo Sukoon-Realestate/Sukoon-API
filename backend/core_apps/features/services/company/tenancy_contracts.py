@@ -167,6 +167,9 @@ def create(user, identity, data):
         "placements": snapshot["placements"],
         "policy_version": policy.version,
     }
+    from ..platform_rent_payments import reviewed_terms
+
+    terms = reviewed_terms(terms)
     lease = Lease.objects.create(
         property=properties[0],
         owner=booking.offer.owner,

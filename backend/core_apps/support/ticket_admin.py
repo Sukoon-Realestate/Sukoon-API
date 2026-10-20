@@ -8,6 +8,7 @@ from django.utils.html import format_html, format_html_join
 from rest_framework.exceptions import APIException
 from .models import Ticket
 from .services.staff_replies import can_service_tickets, reply_as_staff
+from .services.payment_reports import readable_tickets, can_read_ticket
 
 
 class TicketReplyForm(forms.ModelForm):
@@ -77,10 +78,24 @@ class TicketAdmin(admin.ModelAdmin):
     actions = None
 
     def has_module_permission(self, request):
-        return can_service_tickets(request.user)
+        return (
+            can_service_tickets(request.user) or readable_tickets(request.user).exists()
+        )
 
     def has_view_permission(self, request, obj=None):
-        return can_service_tickets(request.user)
+        return (
+            self.has_module_permission(request)
+            if obj is None
+            else can_read_ticket(request.user, obj)
+        )
+
+    def get_queryset(self, request):
+        return readable_tickets(request.user)
+
+    def get_fields(self, request, obj=None):
+        return (
+            self.fields if can_service_tickets(request.user) else self.readonly_fields
+        )
 
     def has_change_permission(self, request, obj=None):
         return can_service_tickets(request.user) and (

@@ -140,6 +140,10 @@ SOKOUN_RELEASE_SHA = getenv("SOKOUN_RELEASE_SHA", "")
 RUNTIME_EVIDENCE_ENABLED = getenv("RUNTIME_EVIDENCE_ENABLED", "False").lower() == "true"
 RUNTIME_EVIDENCE_NAMESPACE = getenv("RUNTIME_EVIDENCE_NAMESPACE", "sukoon")
 CELERY_BEAT_SCHEDULE = {
+    "rent-payment-notifications": {
+        "task": "core_apps.features.tasks.process_rent_payment_notifications",
+        "schedule": 300.0,
+    },
     "expire-advertisements": {
         "task": "core_apps.advertising.tasks.expire_advertisements",
         "schedule": 300.0,
@@ -153,7 +157,7 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 300.0,
     },
     "run-rental-billing-cycle": {
-        "task": "core_apps.features.tasks.run_rental_billing_cycle",
+        "task": "core_apps.features.tasks_parts.expire_rental_sources_and_holds.run_rental_billing_cycle",
         "schedule": 300.0,
     },
     "reconcile-ambiguous-rental-payments": {

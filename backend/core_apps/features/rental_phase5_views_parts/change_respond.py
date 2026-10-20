@@ -58,12 +58,9 @@ def external_claim_create(request, invoice_id):
     invoice = get_object_or_404(
         RentInvoice.objects.select_related("lease"), id=invoice_id, purpose="rent"
     )
-    mutable = request.data.copy()
-    mutable["invoice_id"] = str(invoice.id)
-    request._full_data = mutable
-    return change_collection(
-        request, invoice.lease.id, RentalChange.Kind.EXTERNAL_PAYMENT
-    )
+    from ..services.platform_rent_payments import reject_external_claim
+
+    return reject_external_claim(request, invoice)
 
 
 @api_view(["GET"])

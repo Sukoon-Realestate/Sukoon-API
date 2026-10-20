@@ -22,6 +22,7 @@ from ..services.rental_phase2 import (
     reserve_inventory_days,
 )
 from ..services.tenancy_invitations import resolve_offer_snapshot
+from ..services.platform_rent_payments import reviewed_terms
 from .owner_payment_profile import (
     _replay_response,
     _participant_lease,
@@ -81,7 +82,7 @@ def update_structured_lease(request, lease_id):
         lease.start_date = data["terms"]["starts_on"]
         lease.end_date = data["terms"]["ends_on_exclusive"]
         lease.rent_amount_minor = data["terms"]["monthly_rent"]["amount_minor"]
-        lease.terms = _json_safe(data["terms"])
+        lease.terms = reviewed_terms(_json_safe(data["terms"]))
         lease.offer_snapshot = snapshot
         lease.reviewed_by = []
         lease.document_id = None

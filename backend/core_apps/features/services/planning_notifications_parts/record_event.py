@@ -150,16 +150,33 @@ def record_lease_reminders():
     )
     created = 0
     for lease in leases.iterator():
-        for user, workspace in ((lease.owner, "owner"), (lease.tenant, "tenant")):
-            if not user.is_active:
+        parties = [(lease.owner, "owner"), (lease.tenant, "tenant")]
+        if lease.renter_company_id:
+            from ..company.tenancy_access import roles
+
+            item = lease.company_tenancy
+            coordinator = item.coordinator
+            parties = [(lease.owner, "owner")]
+            if "coordinator" in roles(item, coordinator):
+                parties.append((coordinator, "tenant"))
+        for user, workspace in parties:
+            if not user or not user.is_active:
                 continue
             _, new = PlanningEvent.objects.get_or_create(
                 recipient=user,
                 event_key=f"lease.end:{lease.id}:{lease.end_date}",
                 defaults={
                     "destination": {
-                        "action_type": "open_rental_center",
-                        "target_id": str(lease.id),
+                        "action_type": (
+                            "open_company_tenancy"
+                            if lease.renter_company_id
+                            else "open_rental_center"
+                        ),
+                        "target_id": (
+                            str(lease.company_tenancy.id)
+                            if lease.renter_company_id
+                            else str(lease.id)
+                        ),
                         "lease_id": str(lease.id),
                         "workspace": workspace,
                         "schema_version": "1",

@@ -50,8 +50,11 @@ from .tasks_parts.process_rental_changes import (
 from .tasks_parts.process_rental_closure import (
     process_rental_closure,
 )
+from .tasks_parts.rent_payment_notifications import process_rent_payment_notifications
+
 
 @shared_task
 def reconcile_reviews():
     from .services.reputation.tasks import reconcile
+
     return reconcile()

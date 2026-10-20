@@ -222,8 +222,20 @@ def test_extension_preserves_due_at_and_external_claim_is_not_capture(phase5_lea
         },
         format="json",
     )
-    claim_id = claim.data["resource"]["id"]
-    assert claim.data["resource"]["status"] == "review_required"
+    assert claim.status_code == 409
+    assert claim.data["code"] == "external_payment_not_supported"
+    # Historical review remains available; the retired command cannot create it.
+    historical = RentalChange.objects.create(
+        lease=lease,
+        invoice=invoice,
+        requester=tenant,
+        kind=RentalChange.Kind.EXTERNAL_PAYMENT,
+        status=RentalChange.Status.REVIEW_REQUIRED,
+        reason="Historical report",
+        amount_minor=1_000_000,
+        method="bank_transfer",
+    )
+    claim_id = str(historical.id)
     assert (
         client_for(tenant)
         .post(

@@ -16,6 +16,16 @@ from .maintenance_action import change_payload
 
 
 def change_collection(request, lease_id, kind):
+    if request.method == "POST" and kind == RentalChange.Kind.EXTERNAL_PAYMENT:
+        from ..services.platform_rent_payments import reject_external_claim
+
+        invoice = get_object_or_404(
+            RentInvoice,
+            id=request.data.get("invoice_id"),
+            lease__id=lease_id,
+            purpose="rent",
+        )
+        return reject_external_claim(request, invoice)
     lease = _lease(request, lease_id)
     if request.method == "GET":
         results = [
@@ -155,6 +165,11 @@ def change_collection(request, lease_id, kind):
                     {"terms": "A reviewed agreement template and version are required."}
                 )
             effective_date = starts
+        from ..services.platform_rent_payments import reviewed_terms
+
+        reviewed = request.data.get("terms", {})
+        if kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
+            reviewed = reviewed_terms(reviewed)
         item = RentalChange.objects.create(
             lease=lease,
             invoice=invoice,
@@ -172,7 +187,7 @@ def change_collection(request, lease_id, kind):
             effective_on=effective_date,
             amount_minor=(request.data.get("amount") or {}).get("amount_minor"),
             method=request.data.get("method", ""),
-            terms=request.data.get("terms", {}),
+            terms=reviewed,
             previous_terms=(
                 lease.terms
                 if kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}

@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound, PermissionDenied
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.support.models import TicketAttachment
-from core_apps.support.services.staff_replies import can_service_tickets
+from core_apps.support.services.payment_reports import can_read_ticket
 from core_apps.support.services.private_attachments import clean_image
 
 
@@ -28,7 +28,7 @@ class TicketAttachmentAPIView(APIView):
         )
         # Operator access uses current console-role authority and is audited.
         # An attachment identifier never grants a consumer another user's media.
-        operator = request.user.is_staff and can_service_tickets(request.user)
+        operator = request.user.is_staff and can_read_ticket(request.user, ticket)
         if not owner and not operator:
             raise NotFound()
         field = attachment.private_file or attachment.file
