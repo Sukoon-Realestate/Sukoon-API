@@ -148,6 +148,14 @@ class CompanyHousingRequest(TimeStampedModel):
     purpose = models.TextField()
     cost_center = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=300)
+    project_code = models.CharField(max_length=100, blank=True, default="")
+    worksite_latitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True
+    )
+    worksite_longitude = models.DecimalField(
+        max_digits=9, decimal_places=6, null=True, blank=True
+    )
+    requirements = models.JSONField(default=list, blank=True)
     starts_on = models.DateField()
     ends_on_exclusive = models.DateField()
     headcount = models.PositiveSmallIntegerField()

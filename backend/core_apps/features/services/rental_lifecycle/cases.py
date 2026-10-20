@@ -59,6 +59,7 @@ def open_system_case(
     attempt=None,
     actor=None,
     evidence=None,
+    housing_request=None,
 ):
     prop = lease.property if lease else (hold.property if hold else None)
     from .common import lifecycle_policy
@@ -118,6 +119,7 @@ def open_system_case(
         source_key=source_key,
         defaults={
             "kind": kind,
+            "housing_request": housing_request,
             "lease": lease,
             "property": prop,
             "hold": hold,
@@ -178,6 +180,18 @@ def notify_case_participants(item, action):
         ]
         if user
     }
+    if item.housing_request_id:
+        requirement = item.housing_request
+        recipients = set()
+        if requirement.company.memberships.filter(
+            user=requirement.coordinator,
+            is_active=True,
+            is_coordinator=True,
+            user__is_active=True,
+        ).exists():
+            recipients.add(requirement.coordinator)
+        if item.assigned_to_id and independent_case_operator(item, item.assigned_to):
+            recipients.add(item.assigned_to)
     record_rental_event(item, recipients, action, "open_rental_case")
 
 
@@ -187,7 +201,10 @@ def case_queryset(user):
         | Q(lease__owner=user)
         | Q(lease__tenant=user)
         | Q(hold__actor=user)
-    )
+    ).filter(housing_request__isnull=True)
+    from ..company.sourcing import visible_requests
+
+    own = own | RentalOperationalCase.objects.filter(visible_requests(user))
     from ..company.tenancy_access import visible, roles, PRIVATE_ONLY
 
     corporate_ids = [t.lease_id for t in visible(user) if roles(t, user) - PRIVATE_ONLY]
@@ -310,7 +327,7 @@ def case_payload(item, user):
         subject_id=item.id,
         action__in=["case.reply", "case.review_requested"],
     ).order_by("created_at")
-    from ..company import service_requests
+    from ..company import service_requests, sourcing
 
     service = service_requests.projection(item, user)
     service_actions = []
@@ -324,6 +341,7 @@ def case_payload(item, user):
         "revision": item.revision,
         "kind": item.kind,
         "company_service": service,
+        "sourcing": sourcing.projection(item),
         "chargeback": chargeback_payload(chargeback) if chargeback else None,
         "habitability": projection(item),
         "status": item.status,
@@ -371,11 +389,36 @@ def case_payload(item, user):
         "evidence_ids": [
             str(value) for value in item.evidence.values_list("id", flat=True)
         ],
+        **(
+            {
+                "allowed_actions": (
+                    []
+                    if item.status == "resolved"
+                    else (
+                        ["reply", "assign", "triage"]
+                        + (
+                            ["recommend_offers", "resolve"]
+                            if item.assigned_to_id == user.pk
+                            else []
+                        )
+                        if operator
+                        else ["reply", "withdraw_sourcing"]
+                    )
+                )
+            }
+            if item.kind == sourcing.KIND
+            else {}
+        ),
     }
 
 
 def independent_case_operator(item, user):
     if not staff_role(user, ROLES):
+        return False
+    if (
+        item.housing_request_id
+        and item.housing_request.company.memberships.filter(user=user).exists()
+    ):
         return False
     interested = {item.opened_by_id}
     if item.lease_id:
@@ -409,6 +452,9 @@ def independent_case_operator(item, user):
 def case_action(item, user, data):
     require_revision(item, data.get("expected_revision"))
     action = data.get("action")
+    from ..company import sourcing
+
+    sourcing.validate_case_action(item, data)
     reason = str(data.get("reason", "")).strip()
     if not reason:
         raise ValidationError({"reason": "Explain the action."})
@@ -420,7 +466,12 @@ def case_action(item, user, data):
             "The approved restriction requires a separate inspected clearance.",
             code="habitability_restricted",
         )
-    if action == "withdraw_company_request":
+    if action in {"recommend_offers", "withdraw_sourcing"}:
+        if item.kind != sourcing.KIND:
+            raise ValidationError("This action requires a company sourcing case.")
+        sourcing.action(item, user, data)
+        audit(item, user, f"case.{action}", reason)
+    elif action == "withdraw_company_request":
         from ..company.service_requests import withdraw
 
         withdraw(item, user)
@@ -480,6 +531,7 @@ def case_action(item, user, data):
         elif action == "triage":
             if data.get("status") not in {
                 "triaged",
+                "waiting_for_company",
                 "waiting_for_tenant",
                 "waiting_for_owner",
                 "waiting_for_provider",
@@ -531,6 +583,13 @@ def case_action(item, user, data):
             from ..company.service_requests import validate_resolution
 
             validate_resolution(item, data)
+            if (
+                item.kind != sourcing.KIND
+                and data.get("resolution_code") in sourcing.OUTCOMES
+            ):
+                raise ValidationError(
+                    "This outcome belongs only to sourcing assistance."
+                )
             blocker = agreement_case_blocker(item)
             if blocker:
                 raise RentalConflict(blocker, code="reconciliation_required")
@@ -578,6 +637,8 @@ def case_action(item, user, data):
                 "refund_executed",
                 "payout_executed",
                 "no_action_required",
+                "recommendations_delivered",
+                "no_suitable_offer",
             }:
                 raise ValidationError(
                     {"resolution_code": "A supported resolution is required."}

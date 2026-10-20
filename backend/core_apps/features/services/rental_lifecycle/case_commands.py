@@ -16,6 +16,13 @@ def act_on_case(user, case_id, data, *, command_data=None):
 
         StaffProfile.objects.select_for_update().filter(user=current).first()
         item = get_object_or_404(case_queryset(current), id=case_id)
+        if item.housing_request_id:
+            from ...models import Company, CompanyHousingRequest
+
+            Company.objects.select_for_update().get(pk=item.housing_request.company_id)
+            CompanyHousingRequest.objects.select_for_update().get(
+                pk=item.housing_request_id
+            )
         if item.lease_id and item.lease.renter_company_id:
             from ..company.tenancy_access import lock_lease
             from ...models import CompanyTenancy

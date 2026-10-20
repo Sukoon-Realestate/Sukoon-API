@@ -20,6 +20,13 @@ class RentalOperationalCase(TimeStampedModel):
         blank=True,
         related_name="operational_cases",
     )
+    housing_request = models.ForeignKey(
+        "CompanyHousingRequest",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="assistance_cases",
+    )
     hold = models.ForeignKey(
         "ReservationHold",
         on_delete=models.PROTECT,
@@ -68,6 +75,14 @@ class RentalOperationalCase(TimeStampedModel):
     revision = models.PositiveIntegerField(default=1)
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=("housing_request",),
+                condition=models.Q(kind="company_sourcing")
+                & ~models.Q(status="resolved"),
+                name="one_open_company_sourcing",
+            )
+        ]
         indexes = [
             models.Index(fields=["status", "due_at"], name="rental_case_queue_idx")
         ]

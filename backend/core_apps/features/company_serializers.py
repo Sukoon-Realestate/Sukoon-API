@@ -1,5 +1,6 @@
 """Strict discriminated input: hidden fields cannot leak between creation modes."""
 
+from decimal import Decimal
 from rest_framework import serializers
 from .portfolio_fields import AssetFacts
 
@@ -142,6 +143,28 @@ class RequestBody(CommandBody):
     purpose = serializers.CharField(max_length=5000)
     cost_center = serializers.CharField(max_length=100, allow_blank=True, default="")
     location = serializers.CharField(max_length=300)
+    project_code = serializers.CharField(
+        max_length=100, allow_blank=True, required=False
+    )
+    worksite_latitude = serializers.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        min_value=Decimal("-90"),
+        max_value=Decimal("90"),
+        allow_null=True,
+        required=False,
+    )
+    worksite_longitude = serializers.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        min_value=Decimal("-180"),
+        max_value=Decimal("180"),
+        allow_null=True,
+        required=False,
+    )
+    requirements = serializers.ListField(
+        child=serializers.CharField(max_length=60), max_length=20, required=False
+    )
     starts_on = serializers.DateField()
     ends_on_exclusive = serializers.DateField()
     headcount = serializers.IntegerField(min_value=1, max_value=10000)
@@ -154,6 +177,23 @@ class RequestBody(CommandBody):
         source = {"source_visit_id", "source_decision_id", "source_visit_revision"}
         if set(data) & source and not source <= set(data):
             raise serializers.ValidationError("Supply the complete viewing source.")
+        from .services.company.discovery import requirement_catalog
+
+        if (data.get("worksite_latitude") is None) != (
+            data.get("worksite_longitude") is None
+        ):
+            raise serializers.ValidationError(
+                "Supply both worksite coordinates or neither."
+            )
+        known = {row["value"] for row in requirement_catalog("en")}
+        if set(data.get("requirements", [])) - known:
+            raise serializers.ValidationError(
+                {"requirements": "Choose supported property requirements."}
+            )
+        if len(set(data.get("requirements", []))) != len(data.get("requirements", [])):
+            raise serializers.ValidationError(
+                {"requirements": "Remove duplicate requirements."}
+            )
         # Time-dependent admission belongs after operation-receipt replay.
         monthly_periods(data["starts_on"], data["ends_on_exclusive"])
         return data

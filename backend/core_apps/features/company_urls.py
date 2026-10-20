@@ -1,4 +1,5 @@
 from django.urls import path
+from . import company_rental_value_views as value
 from . import company_views as v
 from . import company_admin_views as a
 from . import company_staff_views as s
@@ -9,6 +10,14 @@ from . import company_contract_views as contracts
 from . import company_tenancy_views as tenancies
 
 urlpatterns = [
+    path("companies/<uuid:company_id>/rental-summary/", value.rental_summary),
+    path("companies/<uuid:company_id>/housing-report/", value.housing_report),
+    path("company-requirements/", value.catalog),
+    path("company-housing-requests/<uuid:request_id>/assistance/", value.assistance),
+    path(
+        "companies/<uuid:company_id>/staff-batches/import-preview/",
+        value.import_preview,
+    ),
     path("company-tenancies/", tenancies.collection),
     path("company-tenancies/<uuid:tenancy_id>/", tenancies.detail),
     path("company-tenancies/<uuid:tenancy_id>/<slug:action>/", tenancies.action),

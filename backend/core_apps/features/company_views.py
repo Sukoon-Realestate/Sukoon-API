@@ -486,6 +486,7 @@ def portfolio_offers(request):
         )
         qs = PortfolioOffer.objects.filter(status="published")
     starts = ends = None
+    requirement = None
     if request.query_params.get("request_id"):
         requirement = request_for(request.user, request.query_params["request_id"])
         if str(requirement.company.id) != request.query_params.get("company_id"):
@@ -494,6 +495,14 @@ def portfolio_offers(request):
         from .services.company.viewing_handoff import filter_offers
 
         qs = filter_offers(qs, requirement)
+    if requirement is not None:
+        from .services.company.discovery import results
+
+        response = page(
+            request, results(qs, requirement, request.query_params), lambda row: row
+        )
+        response["Cache-Control"] = "private, no-store"
+        return response
     return page(
         request,
         qs.order_by("-created_at", "id"),

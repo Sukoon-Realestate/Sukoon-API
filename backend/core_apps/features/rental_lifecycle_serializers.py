@@ -123,6 +123,8 @@ class CaseActionBody(CommandBody):
             "link_remedy",
             "prepare_company_change",
             "withdraw_company_request",
+            "recommend_offers",
+            "withdraw_sourcing",
         ]
     )
     reason = s.CharField(max_length=4000)
@@ -134,6 +136,10 @@ class CaseActionBody(CommandBody):
     next_action = s.CharField(max_length=500, required=False)
     tenancy_revision = s.IntegerField(min_value=1, required=False)
     company_proposal = s.DictField(required=False)
+    housing_request_revision = s.IntegerField(min_value=1, required=False)
+    recommended_offer_ids = s.ListField(
+        child=s.UUIDField(), min_length=1, max_length=3, required=False
+    )
 
 
 class ClaimBody(CommandBody):

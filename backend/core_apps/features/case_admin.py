@@ -6,6 +6,7 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from rest_framework.exceptions import APIException
 from .models import RentalOperationalCase
+from .company_models import PortfolioOffer
 from .rental_lifecycle_serializers import CaseActionBody
 from .services.rental_lifecycle.cases import (
     ROLES,
@@ -30,6 +31,7 @@ class CaseCommandForm(forms.ModelForm, company_service_form.CompanyServiceFormFi
                 "resolve",
                 "reopen",
                 "prepare_company_change",
+                "recommend_offers",
             ]
         ],
         required=False,
@@ -45,6 +47,7 @@ class CaseCommandForm(forms.ModelForm, company_service_form.CompanyServiceFormFi
             (v, v)
             for v in [
                 "triaged",
+                "waiting_for_company",
                 "waiting_for_tenant",
                 "waiting_for_owner",
                 "waiting_for_provider",
@@ -66,10 +69,20 @@ class CaseCommandForm(forms.ModelForm, company_service_form.CompanyServiceFormFi
                 "refund_executed",
                 "payout_executed",
                 "no_action_required",
+                "recommendations_delivered",
+                "no_suitable_offer",
             ]
         ],
     )
     next_step = forms.CharField(required=False, max_length=500)
+    housing_request_revision = forms.IntegerField(
+        required=False, widget=forms.HiddenInput
+    )
+    recommended_offers = forms.ModelMultipleChoiceField(
+        queryset=PortfolioOffer.objects.none(),
+        required=False,
+        help_text="Recommend at most three current offers; this does not reserve or approve them.",
+    )
     expected_revision = forms.IntegerField(widget=forms.HiddenInput)
     request_key = forms.UUIDField(widget=forms.HiddenInput, initial=uuid.uuid4)
 
@@ -81,6 +94,19 @@ class CaseCommandForm(forms.ModelForm, company_service_form.CompanyServiceFormFi
         super().__init__(*args, **kwargs)
         self.fields["expected_revision"].initial = self.instance.revision
         company_service_form.configure(self)
+        if self.instance.housing_request_id:
+            from .company_models import PortfolioOffer
+            from .services.company.viewing_handoff import filter_offers
+
+            self.fields["housing_request_revision"].initial = (
+                self.instance.housing_request.revision
+            )
+            self.fields["recommended_offers"].queryset = filter_offers(
+                PortfolioOffer.objects.filter(status="published"),
+                self.instance.housing_request,
+            )
+        else:
+            self.fields["recommended_offers"].widget = forms.HiddenInput()
 
     def clean(self):
         data = super().clean()
@@ -114,6 +140,9 @@ class RentalCaseAdmin(admin.ModelAdmin):
         "status",
         "revision",
         "lease",
+        "housing_request",
+        "reason",
+        "sourcing_requirements",
         "payment_attempt",
         "assigned_to",
         "due_at",
@@ -125,6 +154,19 @@ class RentalCaseAdmin(admin.ModelAdmin):
         "payout",
         "resolution",
     )
+
+    @admin.display(description="Current company housing requirements")
+    def sourcing_requirements(self, obj):
+        if not obj.housing_request_id:
+            return "—"
+        from django.utils.html import format_html
+        from .services.company.sourcing import projection
+        import json
+
+        return format_html(
+            "<pre>{}</pre>", json.dumps(projection(obj), indent=2, ensure_ascii=False)
+        )
+
     fields = (
         *readonly_fields,
         "command_action",
@@ -137,6 +179,8 @@ class RentalCaseAdmin(admin.ModelAdmin):
         "next_step",
         "expected_revision",
         "request_key",
+        "housing_request_revision",
+        "recommended_offers",
         *company_service_form.FIELDS,
     )
     actions = None
@@ -190,6 +234,15 @@ class RentalCaseAdmin(admin.ModelAdmin):
                 if form.cleaned_data.get(source)
             }
         )
+        if action == "recommend_offers":
+            data.update(
+                housing_request_revision=form.cleaned_data.get(
+                    "housing_request_revision"
+                ),
+                recommended_offer_ids=[
+                    str(v.id) for v in form.cleaned_data["recommended_offers"]
+                ],
+            )
         if action == "prepare_company_change":
             data.update(
                 tenancy_revision=form.cleaned_data["tenancy_revision"],

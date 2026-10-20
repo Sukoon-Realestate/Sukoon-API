@@ -37,6 +37,10 @@ REQUEST_FIELDS = (
     "purpose",
     "cost_center",
     "location",
+    "project_code",
+    "worksite_latitude",
+    "worksite_longitude",
+    "requirements",
     "starts_on",
     "ends_on_exclusive",
     "headcount",
@@ -635,7 +639,42 @@ def request_payload(request, viewer=None):
         "id": str(request.id),
         "company_id": str(request.company.id),
         "source_viewing": request.source_viewing_snapshot,
+        "assistance_cases": (
+            [
+                {
+                    "id": str(case.id),
+                    "status": case.status,
+                    "next_action": case.next_action,
+                    "outcome": case.resolution_code,
+                    "due_at": case.due_at.isoformat(),
+                    "recommendations_current": case.baseline.get(
+                        "recommendation_revision"
+                    )
+                    == request.revision,
+                    "offer_ids": (
+                        case.baseline.get("recommended_offer_ids", [])
+                        if case.baseline.get("recommendation_revision")
+                        == request.revision
+                        else []
+                    ),
+                }
+                for case in request.assistance_cases.order_by("-created_at")[:10]
+            ]
+            if viewer and viewer.pk == request.coordinator_id
+            else []
+        ),
         "revision": request.revision,
+        "can_coordinate": bool(
+            viewer
+            and viewer.is_active
+            and request.coordinator_id == viewer.pk
+            and CompanyMembership.objects.filter(
+                company=request.company,
+                user=viewer,
+                is_active=True,
+                is_coordinator=True,
+            ).exists()
+        ),
         "can_edit": bool(
             viewer
             and viewer.is_active
@@ -653,6 +692,18 @@ def request_payload(request, viewer=None):
         "purpose": request.purpose,
         "cost_center": request.cost_center,
         "location": request.location,
+        "project_code": request.project_code,
+        "worksite_latitude": (
+            str(request.worksite_latitude)
+            if request.worksite_latitude is not None
+            else None
+        ),
+        "worksite_longitude": (
+            str(request.worksite_longitude)
+            if request.worksite_longitude is not None
+            else None
+        ),
+        "requirements": request.requirements,
         "starts_on": str(request.starts_on),
         "ends_on_exclusive": str(request.ends_on_exclusive),
         "headcount": request.headcount,

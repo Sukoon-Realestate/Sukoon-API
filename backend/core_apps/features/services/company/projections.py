@@ -24,6 +24,22 @@ def membership_payload(member):
 
 def company_payload(company, user):
     member = member_for(user, company)
+    from ...models import CompanyTenancy
+    from django.db.models import Q
+
+    cost_access = (
+        member.is_admin
+        or member.is_coordinator
+        or member.is_approver
+        or CompanyTenancy.objects.filter(
+            lease__renter_company=company,
+        )
+        .filter(
+            Q(signer_mandate__membership=member) | Q(payer_mandate__membership=member)
+        )
+        .exclude(lease__private_access_revocations__user=user)
+        .exists()
+    )
     result = {
         "id": str(company.id),
         "revision": company.revision,
@@ -31,6 +47,7 @@ def company_payload(company, user):
         "review_status": company.review_status,
         "membership": membership_payload(member),
         "permissions": {
+            "view_costs": cost_access,
             "manage_people": member.is_admin,
             "manage_budget": member.is_admin,
             "coordinate": member.is_coordinator,
