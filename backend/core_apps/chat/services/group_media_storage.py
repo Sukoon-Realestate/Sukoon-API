@@ -1,6 +1,7 @@
 """Dedicated private filesystem. No MEDIA_URL or user-selected storage keys."""
 
 import hashlib
+import logging
 import os
 import tempfile
 import uuid
@@ -14,6 +15,7 @@ from core_apps.chat.models import ChatAttachment
 from .group_access import authorize
 from .group_limits import ChatConflict, ChatUnavailable, limits
 from .group_media_validation import inspect_image, inspect_voice
+from . import group_media_remote
 
 
 def private_root():
@@ -33,6 +35,10 @@ def private_path(key):
     if Path(key).name != key or key.startswith("."):
         raise ChatUnavailable()
     return private_root() / key
+
+
+def read_private_path(key):
+    return group_media_remote.materialize(key, private_path(key))
 
 
 def upload_attachment(
@@ -99,6 +105,8 @@ def upload_attachment(
                 with open(private_path(name), "xb") as target:
                     os.chmod(target.name, 0o600)
                     target.write(body)
+                # A ready attachment must survive replacement of the API container.
+                group_media_remote.persist(name, private_path(name))
         with transaction.atomic():
             conversation, participant, _ = authorize(
                 conversation, user, action="upload_attachment", lock=True
@@ -167,6 +175,11 @@ def cleanup_orphans():
             and path.stat().st_mtime < cutoff.timestamp()
         ):
             path.unlink(missing_ok=True)
+    active = ChatAttachment.objects.filter(state__in=["ready", "attached"])
+    retained = set(active.values_list("storage_key", flat=True)) | set(
+        active.values_list("thumbnail_key", flat=True)
+    )
+    group_media_remote.sweep(retained, cutoff.timestamp())
     return count
 
 
@@ -174,3 +187,10 @@ def remove_files(attachment):
     for key in (attachment.storage_key, attachment.thumbnail_key):
         if key:
             private_path(key).unlink(missing_ok=True)
+            try:
+                group_media_remote.remove(key)
+            except ChatUnavailable:
+                # Revoked rows remain unavailable; the retention job retries removal.
+                logging.getLogger(__name__).warning(
+                    "Private chat media removal deferred"
+                )

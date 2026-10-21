@@ -47,7 +47,16 @@ def run_processor(stop):
                     if time.monotonic() >= next_cleanup:
                         # A provider cleanup failure must not block subsequent jobs.
                         next_cleanup = time.monotonic() + 3600
-                        cleanup_tours.run()
+                        from core_apps.chat.tasks import clean_chat_media
+
+                        for cleanup in (cleanup_tours, clean_chat_media):
+                            try:
+                                cleanup.run()
+                            except Exception as exc:
+                                logger.error(
+                                    "private_media_cleanup_retry error_type=%s",
+                                    type(exc).__name__,
+                                )
                 except Exception as exc:
                     logger.error(
                         "tour_processor_retry error_type=%s", type(exc).__name__

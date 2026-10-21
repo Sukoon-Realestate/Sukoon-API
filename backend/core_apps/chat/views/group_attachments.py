@@ -10,7 +10,10 @@ from rest_framework.views import APIView
 from core_apps.chat.models import ChatAttachment, Conversation
 from core_apps.chat.services.group_access import authorize
 from core_apps.chat.services.group_limits import limits
-from core_apps.chat.services.group_media_storage import private_path, upload_attachment
+from core_apps.chat.services.group_media_storage import (
+    read_private_path,
+    upload_attachment,
+)
 from core_apps.chat.services.group_projection import attachment_payload
 from core_apps.chat.services.group_rate_limit import enforce_rate
 
@@ -111,7 +114,7 @@ class GroupAttachmentDetailAPIView(APIView):
         if not key:
             raise NotFound()
         try:
-            source = private_path(key).open("rb")
+            source = read_private_path(key).open("rb")
         except FileNotFoundError:
             raise NotFound("Attachment is unavailable.")
         response = FileResponse(

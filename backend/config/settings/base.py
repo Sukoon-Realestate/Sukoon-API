@@ -225,6 +225,12 @@ VIRTUAL_TOUR_STORAGE_PROVIDER = getenv("VIRTUAL_TOUR_STORAGE_PROVIDER", "s3")
 VIRTUAL_TOUR_CLOUDINARY_PREFIX = getenv(
     "VIRTUAL_TOUR_CLOUDINARY_PREFIX", "sokoun-virtual-tours"
 )
+# Reuse the explicitly configured private provider; local development stays local.
+CHAT_PRIVATE_STORAGE_PROVIDER = getenv(
+    "CHAT_PRIVATE_STORAGE_PROVIDER",
+    "cloudinary" if VIRTUAL_TOUR_STORAGE_PROVIDER == "cloudinary" else "local",
+)
+CHAT_CLOUDINARY_PREFIX = getenv("CHAT_CLOUDINARY_PREFIX", "sokoun-chat-media")
 VIRTUAL_TOUR_VIEWER_URL = getenv("VIRTUAL_TOUR_VIEWER_URL", "")
 VIRTUAL_TOUR_VIEWER_ROOT = getenv(
     "VIRTUAL_TOUR_VIEWER_ROOT", str(BASE_DIR / "tour_viewer")
