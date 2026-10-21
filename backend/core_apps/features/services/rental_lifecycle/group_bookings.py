@@ -108,6 +108,9 @@ def create_booking(application, actor, data):
         raise ValidationError(
             {"participants": "At most 20 participants are supported."}
         )
+    from core_apps.chat.moderation.policy import require_business_participants
+
+    require_business_participants(actor, *(roster[identity] for identity in proposed))
     expire_property_holds(application.property)
     used, rows, periods = set(), [], set()
     for value in data["participants"]:
@@ -276,6 +279,15 @@ def booking_action(proposal, actor, data, action):
         raise RentalConflict(
             "Review the current roster and proposal.", code="stale_revision"
         )
+    from core_apps.chat.moderation.policy import require_business_participants
+
+    if action == "submit_group_booking":
+        require_business_participants(
+            proposal.owner,
+            *(row.tenant for row in proposal.participants.select_related("tenant")),
+        )
+    elif action != "withdraw_group_booking" and data.get("decision") == "accept":
+        require_business_participants(proposal.owner, actor)
     if action == "submit_group_booking":
         lifecycle_policy("independent_group_booking")
         assert_owner_ready(actor, proposal.property)

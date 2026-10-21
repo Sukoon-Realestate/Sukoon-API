@@ -56,6 +56,10 @@ def terms_proposal_respond(request, proposal_id):
         }:
             raise RentalConflict("This proposal is already closed.")
         decision = data["decision"]
+        if decision == "accept":
+            from core_apps.chat.moderation.policy import require_business_participants
+
+            require_business_participants(proposal.owner, proposal.interest.tenant)
         actor_id = str(request.user.id)
         from ..services.rental_lifecycle.consents import record_consent
 
@@ -110,6 +114,9 @@ def create_interest_invitation(request):
     with transaction.atomic():
         interest = _participant_interest(request, data["interest_id"], lock=True)
         proposal = _participant_proposal(request, data["terms_proposal_id"], lock=True)
+        from core_apps.chat.moderation.policy import require_business_participants
+
+        require_business_participants(request.user, interest.tenant)
         if proposal.interest_id != interest.pk:
             raise ValidationError(
                 {"terms_proposal_id": "Proposal does not belong to interest."}

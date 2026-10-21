@@ -61,6 +61,23 @@ def require_new_business(user, *, lock=False):
         )
 
 
+@transaction.atomic
+def require_business_participants(*users):
+    """Serialize new commitments with account review decisions, in user order."""
+    from core_apps.users.models import User
+
+    ids = {user.pk for user in users}
+    list(User.objects.select_for_update().filter(pk__in=ids).order_by("pk"))
+    if AccountRestriction.objects.filter(
+        user_id__in=ids, state__in=ACTIVE_RESTRICTIONS
+    ).exists():
+        raise PolicyDenied(
+            "account_restricted",
+            "التعامل الجديد متوقف لحين مراجعة أحد الحسابات. تظل الالتزامات القائمة وطلبات الإلغاء متاحة.",
+            "A participant's account is under review. Existing obligations and cancellations remain available.",
+        )
+
+
 def visible_properties(qs):
     return qs.exclude(
         owner_id__in=AccountRestriction.objects.filter(

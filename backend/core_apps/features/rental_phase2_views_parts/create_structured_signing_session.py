@@ -59,6 +59,9 @@ def lease_submit_for_signature(request, lease_id):
                 "Only a reviewed draft can be submitted for signature.",
                 code="invalid_state",
             )
+        from core_apps.chat.moderation.policy import require_business_participants
+
+        require_business_participants(lease.owner, lease.tenant)
         if data["decision"] != "submit_for_signature":
             raise ValidationError({"decision": "Must be submit_for_signature."})
         if data["expected_revision"] != lease.revision:
