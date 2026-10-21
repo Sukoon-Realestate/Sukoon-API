@@ -119,13 +119,7 @@ def summary(conversation, user):
 
     conversation, participant, member = authorize(conversation, user)
     latest = visible_messages(conversation, participant).order_by("-sequence").first()
-    preview = None
-    if latest:
-        preview = {
-            "kind": latest.kind,
-            "is_deleted": bool(latest.deleted_at),
-            "content": latest.content[:160] if not latest.deleted_at else "",
-        }
+    preview = conversation_preview(latest, user)
     company = conversation.kind == "company_request"
     direct = conversation.kind == "direct"
     request = conversation.company_request if company else None
@@ -168,6 +162,42 @@ def summary(conversation, user):
         "event_cursor": encode_cursor(
             conversation, participant, "events", conversation.last_event_sequence
         ),
+    }
+
+
+def conversation_preview(message, viewer):
+    """Minimal inbox preview; receipts use the same eligible roster as history.
+
+    Incoming unread counts remain independent of the recipient's read receipt
+    for an outgoing message. No message bodies/media survive a tombstone.
+    """
+    if message is None:
+        return None
+    read_count = eligible_count = None
+    if (
+        message.sender_id == viewer.pk
+        and not message.deleted_at
+        and message.kind != "system"
+    ):
+        readers = eligible_participants(message.conversation).exclude(user_id=viewer.pk)
+        if message.sequence is not None:
+            readers = readers.filter(visible_from_sequence__lte=message.sequence)
+            read_count = readers.filter(
+                last_read_sequence__gte=message.sequence
+            ).count()
+        else:
+            # Legacy direct messages have not yet acquired sequence numbers.
+            read_count = readers.filter(last_read_at__gte=message.created_at).count()
+        eligible_count = readers.count()
+    return {
+        "id": str(message.id),
+        "sequence": message.sequence,
+        "sender_id": str(message.sender_id),
+        "kind": message.kind,
+        "is_deleted": bool(message.deleted_at),
+        "content": message.content[:160] if not message.deleted_at else "",
+        "read_by_count": read_count,
+        "eligible_reader_count": eligible_count,
     }
 
 

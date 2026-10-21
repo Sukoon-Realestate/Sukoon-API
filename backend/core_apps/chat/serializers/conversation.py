@@ -42,6 +42,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     other_participant = serializers.SerializerMethodField()
     unread_count = serializers.SerializerMethodField()
     can_send = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField()
 
     def to_representation(self, instance):
         if instance.kind in {"housing_group", "company_request"}:
@@ -56,12 +57,22 @@ class ConversationSerializer(serializers.ModelSerializer):
             "id",
             "other_participant",
             "last_message_preview",
+            "last_message",
             "last_message_at",
             "unread_count",
             "can_send",
             "updated_at",
         )
         read_only_fields = fields
+
+    def get_last_message(self, obj):
+        from core_apps.chat.services.group_projection import conversation_preview
+
+        request = self.context.get("request")
+        if not request or not request.user:
+            return None
+        latest = obj.messages.order_by("-created_at", "-pk").first()
+        return conversation_preview(latest, request.user)
 
     def get_other_participant(self, obj):
         request = self.context.get("request")
