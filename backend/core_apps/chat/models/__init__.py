@@ -8,3 +8,5 @@ __all__ = [
 ]
 from .attachment import ChatAttachment
 from .event import ChatEvent, ChatNotificationDelivery
+
+from .workspace import ConversationWorkspace

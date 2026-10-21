@@ -71,11 +71,18 @@ def format_arabic_time(dt) -> str:
     return f"{hour}:{minute} {period}"
 
 
-class NotificationListSerializer(serializers.ModelSerializer):
+class _PresentationContextMixin:
+    def get_data(self, obj):
+        from core_apps.notifications.services.push_privacy import presentation_context
+        return presentation_context(obj.data)
+
+
+class NotificationListSerializer(_PresentationContextMixin, serializers.ModelSerializer):
     """
     Serializer for T-NOTIF-01 (Notification List Screen).
     """
 
+    data = serializers.SerializerMethodField()
     time_ago = serializers.SerializerMethodField()
 
     class Meta:
@@ -98,7 +105,8 @@ class NotificationListSerializer(serializers.ModelSerializer):
         return format_arabic_time_ago(obj.created_at)
 
 
-class NotificationDetailSerializer(serializers.ModelSerializer):
+class NotificationDetailSerializer(_PresentationContextMixin, serializers.ModelSerializer):
+    data = serializers.SerializerMethodField()
     """
     Serializer for T-NOTIF-02 (Notification Details Screen).
     """

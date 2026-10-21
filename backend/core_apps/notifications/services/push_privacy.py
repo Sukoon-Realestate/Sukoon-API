@@ -7,6 +7,7 @@ ROUTING_FIELDS = frozenset(
         "action_type",
         "target_id",
         "workspace",
+        "presentation_workspace",
         "schema_version",
         "event_id",
         "notification_id",
@@ -39,9 +40,23 @@ ROUTING_FIELDS = frozenset(
 )
 
 
+def presentation_context(data):
+    data = dict(data or {})
+    action = str(data.get('action_type', ''))
+    if action.startswith('open_company_'):
+        data['presentation_workspace'] = 'company'
+    elif data.get('workspace') == 'owner':
+        data['presentation_workspace'] = 'owner'
+    elif data.get('academic_plan_id') or data.get('student_plan_id'):
+        data['presentation_workspace'] = 'student'
+    elif data.get('workspace') == 'tenant':
+        data['presentation_workspace'] = 'individual'
+    return data
+
+
 def routing_data(data):
     return {
         key: value
-        for key, value in (data or {}).items()
+        for key, value in presentation_context(data).items()
         if key in ROUTING_FIELDS and isinstance(value, (str, int, bool))
     }

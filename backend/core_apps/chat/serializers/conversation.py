@@ -123,3 +123,4 @@ class ConversationCreateSerializer(serializers.Serializer):
     """
 
     user_id = serializers.UUIDField()
+    workspace = serializers.ChoiceField(choices=['individual', 'owner', 'student'], required=False)

@@ -10,6 +10,7 @@ def account_contexts(user):
             "context_id": f"personal:{user.id}",
             "type": "user",
             "available_workspaces": ["tenant", "owner"],
+            "presentation_workspaces": ["individual", "owner", "student", "company"],
             "allowed_actions": [],
         }
     ]

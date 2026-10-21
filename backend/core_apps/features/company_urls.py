@@ -9,7 +9,15 @@ from . import portfolio_views as p
 from . import company_contract_views as contracts
 from . import company_tenancy_views as tenancies
 
+from . import company_saved_views as saved
+from . import workspace_views
+
 urlpatterns = [
+    path("workspace-summary/", workspace_views.summary),
+    path("companies/<uuid:company_id>/saved-lists/", saved.collection),
+    path("company-saved-lists/<uuid:list_id>/", saved.detail),
+    path("company-saved-lists/<uuid:list_id>/items/", saved.items),
+    *[path("company-saved-lists/<uuid:list_id>/" + action + "/", saved.action, {"action": action}) for action in ("rename", "archive", "add", "remove")],
     path("companies/<uuid:company_id>/rental-summary/", value.rental_summary),
     path("companies/<uuid:company_id>/housing-report/", value.housing_report),
     path("company-requirements/", value.catalog),

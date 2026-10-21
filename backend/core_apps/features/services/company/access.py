@@ -64,6 +64,12 @@ def company_subject(user, identifier):
 
     from .tenancy_access import visible
 
+    from ...company_saved_models import CompanySavedList
+    saved = CompanySavedList.objects.filter(id=identifier).first()
+    if saved:
+        from .saved_lists import authorize
+        authorize(user, saved.company.id)
+        return saved
     tenancy = visible(user).filter(id=identifier).first()
     if tenancy:
         return tenancy
@@ -291,6 +297,8 @@ def actions(user, capability, identifier=""):
     if member is None:
         return []
     result = ["read"]
+    if member.is_admin or member.is_coordinator:
+        result += ["saved_lists"]
     if member.is_admin:
         result += [
             "mandate_propose",

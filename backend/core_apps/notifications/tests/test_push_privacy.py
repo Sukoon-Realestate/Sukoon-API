@@ -28,5 +28,6 @@ def test_native_payload_excludes_private_copy_and_arbitrary_metadata():
         "action_type": "open_support_ticket",
         "target_id": "ticket-id",
         "workspace": "tenant",
+        "presentation_workspace": "individual",
     }
     assert "Private" not in str(payload) and "secret" not in str(payload)

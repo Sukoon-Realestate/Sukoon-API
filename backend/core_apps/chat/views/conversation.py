@@ -38,6 +38,9 @@ class ConversationListAPIView(ListAPIView):
     pagination_class = _ConversationPagination
 
     def get_queryset(self):
+        if 'workspace' in self.request.query_params:
+            from core_apps.chat.services.workspace_inbox import scoped
+            return scoped(self.request.user, self.request.query_params['workspace'], self.request.query_params.get('company_id', '')).prefetch_related('participants__profile', 'participant_set').order_by('-last_message_at', '-id')
         queryset = (
             Conversation.objects.filter(participant_set__user=self.request.user)
             .prefetch_related("participants__profile", "participant_set")
@@ -91,6 +94,10 @@ class ConversationCreateAPIView(APIView):
         conversation = get_or_create_direct_conversation(
             user=request.user, other_user=other
         )
+        workspace = serializer.validated_data.get('workspace')
+        if workspace:
+            from core_apps.chat.models import ConversationWorkspace
+            ConversationWorkspace.objects.get_or_create(conversation=conversation, user=request.user, workspace=workspace)
         return Response(
             ConversationSerializer(conversation, context={"request": request}).data,
             status=status.HTTP_200_OK,

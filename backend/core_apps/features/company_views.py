@@ -485,6 +485,12 @@ def portfolio_offers(request):
             request.user, request.query_params.get("company_id"), "coordinate"
         )
         qs = PortfolioOffer.objects.filter(status="published")
+    if request.query_params.get('saved_list_id'):
+        from .services.company.saved_lists import get_list
+        saved = get_list(request.user, request.query_params['saved_list_id'])
+        if str(saved.company.id) != request.query_params.get('company_id') or saved.archived:
+            raise PermissionDenied('Choose an active list from this company.')
+        qs = qs.filter(id__in=saved.items.values('portfolio_offer__id'))
     starts = ends = None
     requirement = None
     if request.query_params.get("request_id"):
