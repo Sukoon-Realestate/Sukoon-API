@@ -77,6 +77,55 @@ Object storage does not require browser CORS here because only Django/worker pro
 
 ## 3. Schema and viewer build
 
+### Existing-service deployment (no additional subscription)
+
+An existing Cloudinary account can also be the private backing store:
+
+```dotenv
+VIRTUAL_TOUR_STORAGE_PROVIDER=cloudinary
+VIRTUAL_TOUR_CLOUDINARY_PREFIX=sokoun-virtual-tours
+VIRTUAL_TOUR_PROCESSOR_MODE=inline
+VIRTUAL_TOUR_PROCESSING_WIDTH=4096
+VIRTUAL_TOUR_VIEWER_URL=https://your-existing-api.example/tours/
+```
+
+Reuse the service's existing Cloudinary SDK credentials; do not create a public
+upload preset. Raw assets use `type=authenticated`. Large sources are split into
+8 MiB objects with a size/SHA-256 manifest committed last, preserving the 30 MiB
+panorama contract on a plan with a 10 MB raw-object limit. Tiles are private raw
+objects. Provider URLs stay server-side; cache misses use 60-second signed API
+downloads, bounded reads and atomic private files. Retention only sweeps the
+dedicated prefix and excludes referenced source/variant/upload keys.
+
+`inline` starts one daemon thread through ASGI lifespan, sharing the API process's
+Django imports. A container file lock prevents simultaneous processors across
+API workers, while database claims protect each job during rolling deployments.
+It uses the same durable queued state and interrupted-job recovery as Celery.
+This is a low-throughput option for an existing service: monitor API latency,
+memory and backlog. It does not run unrelated scheduled tasks. Shutdown stops
+polling; a forcibly interrupted job is reclaimed after 20 minutes. `polling` with
+`python manage.py run_virtual_tour_worker` remains available for an existing
+dedicated runtime. Defaults remain `celery` and S3/local storage.
+
+4096 processing width reduces decoded memory while preserving the original
+private source. Validate real memory under the deployed service's load before
+increasing processing concurrency or width. It does not change accepted image
+dimensions or the delivery schema. Monitor the existing provider's quota; this
+configuration does not provision or upgrade any paid resource.
+
+The API serves the checked-in viewer bundle from `backend/tour_viewer` at
+`/tours/`, with a restricted CSP and same-origin admin embedding. Rebuild from
+the Flutter repository with:
+
+```sh
+make -C apps/sokoun_app tourViewerApiBundle TOUR_API_OUTPUT=/path/to/Sukoon-API/backend/tour_viewer
+```
+
+Commit the generated bundle and its SHA-256 build manifest together. Before
+restarting an ephemeral API container, preserve any *other* features' private
+local files using their approved backup/restore procedure. Tour durability does
+not make unrelated local storage durable.
+
 Export contracts without touching deployment data:
 
 ```sh

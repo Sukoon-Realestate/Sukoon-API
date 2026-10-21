@@ -10,6 +10,8 @@ from .errors import require
 
 
 def configured():
+    if settings.VIRTUAL_TOUR_STORAGE_PROVIDER == "cloudinary":
+        return True
     return bool(settings.VIRTUAL_TOUR_S3_BUCKET)
 
 
@@ -54,6 +56,10 @@ def object_key(key, child=None):
 
 
 def persist(key, source, child=None):
+    if settings.VIRTUAL_TOUR_STORAGE_PROVIDER == "cloudinary":
+        from . import cloudinary_storage
+
+        return cloudinary_storage.persist(key, source, child)
     if not configured():
         return
     # All keys are allocated by the server as fresh UUIDs; clients can only write
@@ -70,7 +76,11 @@ def persist(key, source, child=None):
 
 
 def materialize(key, target, child=None):
-    if not target.is_file() and configured():
+    if settings.VIRTUAL_TOUR_STORAGE_PROVIDER == "cloudinary":
+        from . import cloudinary_storage
+
+        cloudinary_storage.materialize(key, target, child)
+    elif not target.is_file() and configured():
         from botocore.exceptions import ClientError
 
         temporary = target.with_name(target.name + "." + uuid.uuid4().hex + ".pending")
@@ -116,6 +126,10 @@ def materialize(key, target, child=None):
 
 
 def sweep(referenced, threshold):
+    if settings.VIRTUAL_TOUR_STORAGE_PROVIDER == "cloudinary":
+        from . import cloudinary_storage
+
+        return cloudinary_storage.sweep(referenced, threshold)
     if not configured():
         return 0
     removed = 0

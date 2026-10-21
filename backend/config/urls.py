@@ -11,6 +11,7 @@ from core_apps.properties.views import PropertyListAPIView
 from core_apps.common.runtime_views import health
 from core_apps.common import paymob_views
 from core_apps.common.paymob_checkout import test_checkout
+from core_apps.virtual_tours.viewer_views import viewer as tour_viewer
 from core_apps.common.app_associations import (
     android_asset_links,
     apple_app_site_association,
@@ -31,6 +32,8 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path("tours/", tour_viewer, name="virtual-tour-viewer-shell"),
+    path("tours/assets/<str:filename>", tour_viewer, name="virtual-tour-viewer-asset"),
     path(
         "api/v1/payments/paymob/test-checkout/",
         test_checkout,

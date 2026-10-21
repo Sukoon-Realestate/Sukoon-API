@@ -2,6 +2,7 @@ import logging
 import shutil
 from datetime import timedelta
 from celery import shared_task
+from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 from .models import (
@@ -20,6 +21,9 @@ logger = logging.getLogger(__name__)
 
 
 def dispatch_revision(revision_id, source_hash):
+    if settings.VIRTUAL_TOUR_PROCESSOR_MODE in {"polling", "inline"}:
+        # The dedicated tour worker consumes the existing durable DB outbox.
+        return
     try:
         process_tour.delay(revision_id, source_hash)
     except Exception:
@@ -32,8 +36,7 @@ def process_tour(revision_id, source_hash):
     process_revision(revision_id, source_hash)
 
 
-@shared_task
-def dispatch_pending_tours():
+def recover_interrupted_tours():
     # Reclaim an interrupted worker, with a bounded number of attempts.
     stale = TourRevision.objects.filter(
         processing_state="processing",
@@ -49,6 +52,11 @@ def dispatch_pending_tours():
             processing_state="queued" if attempts <= 3 else "failed",
             report={"worker_recoveries": attempts, "code": "worker_interrupted"},
         )
+
+
+@shared_task
+def dispatch_pending_tours():
+    recover_interrupted_tours()
     for identity, source_hash in TourRevision.objects.filter(
         processing_state="queued"
     ).values_list("id", "source_hash")[:50]:
