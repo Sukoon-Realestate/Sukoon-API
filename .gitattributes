@@ -1,0 +1,3 @@
+
+# Preserve bundled shader strings exactly as emitted by Vite.
+backend/tour_viewer/assets/*.js -whitespace

@@ -5,6 +5,7 @@ import os
 import uuid
 import numpy as np
 from PIL import Image, ImageOps, UnidentifiedImageError
+from django.conf import settings
 from .errors import TourError, require
 from .storage import path, read_path, persist_tiles
 
@@ -63,13 +64,25 @@ def process_panorama(asset):
                 "invalid_panorama",
                 "Animated panoramas are not supported.",
             )
-            image = ImageOps.exif_transpose(original).convert("RGB")
             require(
-                image.size == (width, height),
+                original.getexif().get(274, 1) not in (5, 6, 7, 8),
                 "invalid_panorama_orientation",
                 "Normalize rotated panorama orientation before uploading.",
             )
+            # JPEG draft decodes at the selected size; PNG is reduced before
+            # creating RGB/NumPy copies. Small shared servers can select 4096.
+            processing_width = max(
+                4096, min(settings.VIRTUAL_TOUR_PROCESSING_WIDTH, 8192)
+            )
+            original.draft("RGB", (processing_width, processing_width // 2))
+            original.thumbnail(
+                (processing_width, processing_width // 2), Image.Resampling.LANCZOS
+            )
+            ImageOps.exif_transpose(original, in_place=True)
+            image = original.convert("RGB")
             pixels = np.asarray(image)
+            original.close()
+            image.close()
             key = uuid.uuid4().hex
             directory = path(key)
             directory.mkdir(mode=0o700)

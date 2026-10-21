@@ -1,0 +1,11 @@
+{
+  "source_commit": "857004db957c79b9d1ce8c09c9a357a1acee5a1b",
+  "source_path": "apps/virtual_tour_viewer",
+  "files": {
+    "assets/index-8YcB0r8Q.js": "771a4df3539dd20276f9ad1f8c90c326f59612bb4d7283235d28a88e09a588f9",
+    "assets/index-DCzEIEoR.css": "40956b40da88967c513e4454475efd2c295298a102ef02f61122fa5e760839e8",
+    "assets/model-BHXYvfRS.js": "57d34c749f7c44b21791718f617263c1ecaf50c221573e1ec9d3a25d83881467",
+    "assets/panorama-w9Ybd1nw.js": "703e6efc0e883ad759e6568f6a0f3acb137a080dec1bbdfc4413186007f9ecd8",
+    "index.html": "003d804f54a4befb5cff4811b936300d1fc0f1439a5b0035d1a11e9189c7670c"
+  }
+}

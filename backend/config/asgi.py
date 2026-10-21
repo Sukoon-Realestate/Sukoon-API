@@ -25,6 +25,7 @@ from core_apps.common.routing import (
 )  # noqa: E402
 from core_apps.chat.routing import websocket_urlpatterns as chat_ws_urls  # noqa: E402
 from core_apps.common.ws_auth import JWTCookieAuthMiddleware  # noqa: E402
+from core_apps.virtual_tours.runtime import lifespan as tour_lifespan  # noqa: E402
 
 all_ws_urlpatterns = common_ws_urls + chat_ws_urls
 
@@ -39,5 +40,6 @@ application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
         "websocket": _ws_app,
+        "lifespan": tour_lifespan,
     }
 )

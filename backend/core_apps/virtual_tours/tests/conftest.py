@@ -12,6 +12,7 @@ from core_apps.properties.models import (
 def tour_settings(settings, tmp_path):
     settings.VIRTUAL_TOUR_PRIVATE_ROOT = str(tmp_path / "tours")
     settings.VIRTUAL_TOUR_S3_BUCKET = ""
+    settings.VIRTUAL_TOUR_STORAGE_PROVIDER = "s3"
     settings.VIRTUAL_TOUR_VIEWER_URL = "https://viewer.sokoun.test/tours/"
     settings.VIRTUAL_TOUR_KINDS = {
         k: {"read": True, "write": True} for k in ("panorama_360", "model_3d")
