@@ -499,7 +499,7 @@ DJOSER = {
     "SERIALIZERS": {
         "user_create": "core_apps.users.serializers.CreateUserSerializer",
         "user_create_password_retype": "core_apps.users.serializers.CreateUserSerializer",
-        "current_user": "core_apps.users.serializers.CustomUserSerializer",
+        "current_user": "core_apps.users.serializers.CurrentUserSerializer",
     },
 }
 

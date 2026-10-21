@@ -14,6 +14,7 @@ from .serializers_parts.create_user_serializer import (
     User,
     CreateUserSerializer,
     CustomUserSerializer,
+    CurrentUserSerializer,
     CompleteRegisterSerializer,
     GoogleAuthSerializer,
     AppleAuthSerializer,

@@ -73,8 +73,10 @@ class TestTenantVisitRequestScreens:
             "post_visit_decision",
             "post_visit_actions",
             "rental_continuation",
+            "stay_preferences",
             "viewing_context",
         }
+        assert card["stay_preferences"] is None
         assert set(card["property"]) == {"id", "title", "location", "price"}
         assert card["id"] == str(visit.id)
         assert card["property"]["title"] == "Furnished Apartment"

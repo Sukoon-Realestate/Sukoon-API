@@ -848,12 +848,14 @@ class TestPropertyVisitViews:
             "post_visit_actions",
             "viewing_context",
             "rental_continuation",
+            "stay_preferences",
             "tenant",
             "visit_date",
             "visit_time",
             "time",
             "status",
         }
+        assert result["stay_preferences"] is None
         assert set(result["tenant"].keys()) == {
             "id",
             "name",
@@ -958,12 +960,14 @@ class TestPropertyVisitViews:
             "post_visit_actions",
             "viewing_context",
             "rental_continuation",
+            "stay_preferences",
             "tenant",
             "visit_date",
             "visit_time",
             "time",
             "status",
         }
+        assert results[0]["stay_preferences"] is None
         assert results[0]["status"] == PropertyVisit.Status.CONFIRMED
 
     def test_retrieve_visit_detail_returns_trimmed_payload(
@@ -995,12 +999,14 @@ class TestPropertyVisitViews:
             "post_visit_actions",
             "viewing_context",
             "rental_continuation",
+            "stay_preferences",
             "tenant",
             "visit_date",
             "visit_time",
             "time",
             "status",
         }
+        assert visit_data["stay_preferences"] is None
         tenant_data = visit_data["tenant"]
         assert set(tenant_data.keys()) == {
             "id",

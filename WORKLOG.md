@@ -880,6 +880,23 @@
 - **Scope:** Permission projection only; no model/migration, financial rule, original consent rewrite, provider command, worker provisioning or live company activation. Existing direct enforcement remains unchanged.
 - **Files:** `backend/core_apps/features/services/company/contract_projection.py`, `tests/test_company_preparation_requote.py`, `backend/docs/company_housing_api.md`; sibling Android quote-expiry test and English findings/evidence.
 
+### Verify the case-discovery and preparation-quote fixes on the live deployment
+
+- **What:** Verified active DigitalOcean deployment `60521a9c-bc2b-4483-b5ab-622cbd68e533`, commit `62e8f123884a4a65ae93085153509dbd4fcb6a89`, after the user restored console access. The deployment is Success / Live Deployment and the app is Healthy; all 81 reviewed source-file hashes match the running web-service container.
+- **Why:** The earlier public-route responses did not establish which source revision was deployed. The locked-browser boundary had left the exact hosted evidence for GAP-077/GAP-078 incomplete.
+- **Details:** The actual console probe used `SET TRANSACTION READ ONLY` and rollback. Ten leases, two invoices and the empty payment-attempt, payable and company-tenancy sets retain their previous canonical hashes. Original private case list/detail and explicit checkout-recovery routes are present; recovery-aware administration and the unsaved-object epoch-hash check pass. D02 remains revision 2/version `2026-10-19.initial-release.1`; the unrelated identity migration remains unapplied.
+- **Validation:** Ten anonymous GET checks across `api.sukoon.rent` and the App Platform domain returned expected health/public-capability/login-form results and private-route authentication denials. Health runs database `SELECT 1` and Redis `PING`; it does not establish running workers or beat. These checks do not rerun or inflate the 309 retained Android checkpoints.
+- **Scope:** Documentation and retained verification only in this follow-up. No application-code, migration, policy, production-account, resource, feature-activation, queue-processing or provider/financial change. Hosted new company intake and paid worker provisioning remain deferred. Residual device/failure variations and external-provider completion remain separately documented.
+- **Files:** This worklog and sibling `docs/sokoun-business-flows/verification-2026-10-19/COMPANY_REQUOTE_CASES_DEPLOYMENT.json`, `COMPANY_CURRENT_PUBLIC_READS.json`, canonical guide, current coverage/findings/scenario ledgers and recheck reports.
+
+### Verify company authority changes during an open native decision
+
+- **What:** Seven new actual Android checkpoints exercise approval-role loss and reassignment while the original decision preview stays open, retained input after known rejection, account-private drafts, current-reviewer discovery/decision, withdrawal-preview cancellation, explicit withdrawal and fresh-login rediscovery.
+- **Why:** These ordered authority-change branches were still distinct from the earlier happy-path decisions and current-role projections.
+- **Details:** The native target is fresh isolated pending work on frozen API source `20261020T002320`. Guarded local domain commands model the second administrator; they are not reported as native administration controls. Two direct decision attempts independently return permission denial. No application correction was necessary.
+- **Validation:** Scoped Flutter analysis and one seven-checkpoint native integration test pass with no app/API source drift. Read-only PostgreSQL verification preserves the original commercial snapshot/digest and inventory, with one legitimate reviewer decision, exactly two successful target receipts and none for the former reviewer. No reserved budget, hold, lease, signing session or payment remains/was created by the target flow. Current retained native count is 316; it is not exhaustive branch coverage.
+- **Scope and files:** Test support and English evidence only; no API application-code, migration, hosted configuration or provider change. Sibling `native_company_authority_interruption_test.dart`, guarded `run_native_company_authority_change.py`, native runner allowlist, `COMPANY_AUTHORITY_INTERRUPTION_RECHECK_NATIVE.json` and SC-178 retain the exact commands and boundaries. Earlier unrelated identity test/migration edits remain untouched.
+
 
 ## 2026-10-21
 
@@ -899,8 +916,23 @@
 - **Validation:** Nineteen focused media/runtime/direct cases passed. Actual Android evidence and final live codec/source verification are retained in the sibling English CHAT_SOCKET_AND_MEDIA_IMPLEMENTATION.md report.
 - **Files:** backend/Aptfile; backend/core_apps/chat/services/group_media_process.py; group_media_validation.py; backend/core_apps/chat/tests/test_media_runtime.py; sibling shared chat recorder, image sanitizer, native test and English evidence.
 
+### Verify the deployed chat codec correction
+
+- **What:** Confirmed commit `5f737444f50bac093e37d53c3e7bdccf5a26bba7` is Success / Live Deployment `3f23a086-bae3-4f91-b080-42455e519514` and health returns HTTP 200 / ready.
+- **Why:** Installed binary names and successful build output did not prove their shared libraries and AAC decoding worked.
+- **Details:** Seven live chat/codec source hashes match local files. The actual deployed codec generated a synthetic 1.25-second AAC and canonical `inspect_voice` accepted it as audio/mp4 with duration 1250 ms. The temporary file was removed. No customer record, provider operation, schema or paid resource was changed. Private hosted attachment durability and real FCM delivery remain separate boundaries.
+- **Files:** Sibling `CHAT_SOCKET_AND_MEDIA_IMPLEMENTATION.md`, `verification-2026-10-21/CHAT_NATIVE_MEDIA.json`, and `CHAT_DEPLOYMENT.json`; this local worklog note. No further application deployment is required for this verification-only entry.
+
 ### Socket message edits, deletion and revision protection
 - **What:** Added socket commands for editing text/image captions and deleting messages in the shared direct/group/company chat transport.
 - **Why:** The app must send message changes through the live socket and show canonical edited/deleted state to participants.
 - **Details:** Added message revision and edit timestamps, independent server authorization, membership-period fencing, serialized same-operation retries, current tombstone projection, and legacy inbox-preview updates. Local PostgreSQL validation passed 38 focused cases, including two-socket delivery and concurrent edits; Django checks, migration consistency and scoped lint passed. Migration `chat.0010_message_edit_revision` is additive. Existing live attachment files require preservation before replacing the App Platform container.
 - **Files:** `backend/core_apps/chat/{group_consumer.py,models/message.py,services/{message_mutations,group_operations,group_projection}.py,migrations/0010_message_edit_revision.py,tests/test_message_mutations.py}`.
+
+### Verify the socket message-change deployment and retained media
+
+- **What:** Commit `4f66c0c0488a8224959a7c31fb2370d7b83fd590` is live in deployment `7e8836db-0022-44b0-b1c2-917b4009f110`. Running mutation/consumer/model hashes match the committed source; health returns HTTP 200 with `ready: true`.
+- **Migration:** Automatic deployment did not apply `chat.0010_message_edit_revision`. The inspected pending plan contained only that additive migration. It was applied with a 5-second database lock timeout and a 30-second statement timeout; its recorder entry, actual columns and a revision query then passed. No unrelated migration was applied.
+- **Preservation:** The three existing private files belonging to two attachment records were copied into an encrypted local archive before deployment, then restored to the new container only for still-active records. Archive and individual file hashes matched. This does not establish permanent private-media durability across later container replacement.
+- **Validation:** The sibling Flutter revision passed 110 distinct focused tests across successful runs, and all 13 physical Android checkpoints for direct/group text, mutation, cancellation, recording lock, image picker, waveform playback, completion and replay. Native tests used isolated local PostgreSQL/ASGI and an authenticated WebSocket peer; the live observations above are a separate verification scope.
+- **Evidence:** Sibling `docs/sokoun-business-flows/CHAT_SOCKET_UI_REWORK.md`, `verification-2026-10-21/CHAT_REWORK_NATIVE.json` and `CHAT_REWORK_DEPLOYMENT.json`. This verification-only local worklog update requires no additional application deployment.

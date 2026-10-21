@@ -82,3 +82,38 @@ def test_email_delivery_failure_is_not_acknowledged_and_retry_is_bounded(user):
         resend_verification_otp(user.email)
     user.refresh_from_db()
     assert not user.is_email_verified and not user.is_verified
+
+
+def test_identity_migration_requeues_only_unversioned_complete_evidence(
+    user, superuser
+):
+    import importlib
+    from types import SimpleNamespace
+    from django.apps import apps
+    from django.db import connection
+    from core_apps.users.models import User
+
+    legacy = User.objects.create_user(
+        email="legacy-review@example.test", password="test", is_verified=True
+    )
+    legacy.profile.national_id = "29001011234567"
+    legacy.profile.id_face = "image/upload/v1/legacy-front.jpg"
+    legacy.profile.id_back = "image/upload/v1/legacy-back.jpg"
+    legacy.profile.save()
+    old = KYCSubmission.objects.create(profile=legacy.profile, status="approved")
+    current = submit_identity(user, documents())
+    approve_kyc_submission(current["submission_id"], superuser)
+    migrate = importlib.import_module(
+        "core_apps.admin_api.migrations.0006_reconcile_legacy_identity"
+    )
+    migrate.reconcile(apps, SimpleNamespace(connection=connection))
+    legacy.refresh_from_db()
+    user.refresh_from_db()
+    old.refresh_from_db()
+    assert not legacy.is_verified and not legacy.is_email_verified
+    assert old.status == "approved" and old.superseded_at
+    assert (
+        legacy.profile.kyc_submissions.order_by("-created_at").first().status
+        == "pending"
+    )
+    assert user.is_verified

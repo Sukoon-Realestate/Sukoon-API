@@ -105,6 +105,15 @@ class CustomUserSerializer(PrivateJourneySerializerMixin, UserSerializer):
         return "user"
 
 
+class CurrentUserSerializer(CustomUserSerializer):
+    """The authenticated account endpoint includes its own contact details."""
+
+    phone_number = PhoneNumberField(source="profile.phone_number", read_only=True)
+
+    class Meta(CustomUserSerializer.Meta):
+        fields = [*CustomUserSerializer.Meta.fields, "phone_number"]
+
+
 class CompleteRegisterSerializer(serializers.Serializer):
     """
     Serializer for uploading missing KYC documents and national ID.
