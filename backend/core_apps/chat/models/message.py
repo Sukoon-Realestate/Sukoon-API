@@ -25,6 +25,8 @@ class Message(TimeStampedModel):
     payload_fingerprint = models.CharField(max_length=64, blank=True, default="")
     reply_to = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
     deleted_at = models.DateTimeField(null=True, blank=True)
+    edited_at = models.DateTimeField(null=True, blank=True)
+    revision = models.PositiveIntegerField(default=1)
     deleted_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True,
         on_delete=models.SET_NULL, related_name="deleted_chat_messages",

@@ -898,3 +898,9 @@
 - **Details:** Declare the build-stack codec dependencies explicitly and provide their existing relocated paths only to ffmpeg/ffprobe subprocesses. Preserve inherited library paths without changing the web process environment. A loader exit 127 is service unavailability, not an invalid user recording. No database/migration, provider activation, paid resource or customer-data change.
 - **Validation:** Nineteen focused media/runtime/direct cases passed. Actual Android evidence and final live codec/source verification are retained in the sibling English CHAT_SOCKET_AND_MEDIA_IMPLEMENTATION.md report.
 - **Files:** backend/Aptfile; backend/core_apps/chat/services/group_media_process.py; group_media_validation.py; backend/core_apps/chat/tests/test_media_runtime.py; sibling shared chat recorder, image sanitizer, native test and English evidence.
+
+### Socket message edits, deletion and revision protection
+- **What:** Added socket commands for editing text/image captions and deleting messages in the shared direct/group/company chat transport.
+- **Why:** The app must send message changes through the live socket and show canonical edited/deleted state to participants.
+- **Details:** Added message revision and edit timestamps, independent server authorization, membership-period fencing, serialized same-operation retries, current tombstone projection, and legacy inbox-preview updates. Local PostgreSQL validation passed 38 focused cases, including two-socket delivery and concurrent edits; Django checks, migration consistency and scoped lint passed. Migration `chat.0010_message_edit_revision` is additive. Existing live attachment files require preservation before replacing the App Platform container.
+- **Files:** `backend/core_apps/chat/{group_consumer.py,models/message.py,services/{message_mutations,group_operations,group_projection}.py,migrations/0010_message_edit_revision.py,tests/test_message_mutations.py}`.

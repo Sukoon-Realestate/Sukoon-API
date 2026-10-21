@@ -60,6 +60,13 @@ def message_payload(message, participant, membership):
         and (message.sender_id == participant.user_id or membership.role == "admin")
     ):
         permitted.append("delete_message")
+    if (
+        not deleted
+        and message.kind in {"text", "image"}
+        and message.sender_id == participant.user_id
+        and "send_message" in actions(membership)
+    ):
+        permitted.append("edit_message")
     reply = None
     if message.reply_to_id and not deleted:
         original = message.reply_to
@@ -86,6 +93,10 @@ def message_payload(message, participant, membership):
         "sender": sender_payload(message.sender),
         "created_at": message.created_at.isoformat(),
         "is_deleted": deleted,
+        "revision": message.revision,
+        "edited_at": (
+            message.edited_at.isoformat() if message.edited_at and not deleted else None
+        ),
         "reply_to": reply,
         "attachments": (
             []

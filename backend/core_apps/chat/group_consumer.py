@@ -16,6 +16,7 @@ class GroupChatConsumerMixin:
                     "payload": {
                         "conversation_id": str(content.get("conversation_id", "")),
                         "client_message_id": content.get("client_message_id"),
+                        "operation_id": content.get("operation_id"),
                         "operation": content.get("type"),
                         "code": (
                             exc.get_codes()
@@ -64,6 +65,15 @@ class GroupChatConsumerMixin:
                 raise NotFound()
             return None
         kind = content.get("type")
+        if kind in {"message.edit", "message.delete"}:
+            from .services.message_mutations import mutate_message
+
+            enforce_rate(self.user, "send")
+            payload = mutate_message(conversation, self.user, content)
+            return {
+                "type": "message.mutation_ack",
+                "payload": {**payload, "operation_id": content["operation_id"]},
+            }
         if kind == "message.send":
             from .services.group_send import send_group_message
 

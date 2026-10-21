@@ -49,7 +49,7 @@ def mark_group_read(conversation, user, sequence):
 
 
 @transaction.atomic
-def delete_group_message(conversation, user, identity):
+def delete_group_message(conversation, user, identity, *, event_data=None):
     conversation, participant, member = authorize(conversation, user, lock=True)
     message = visible_messages(conversation, participant).filter(id=identity).first()
     if not message:
@@ -59,6 +59,7 @@ def delete_group_message(conversation, user, identity):
     ):
         raise PermissionDenied()
     if not message.deleted_at:
+        message.revision += 1
         message.deleted_at, message.deleted_by = timezone.now(), user
         message.content, message.reply_to = "", None
         message.save(
@@ -68,6 +69,7 @@ def delete_group_message(conversation, user, identity):
                 "content",
                 "reply_to",
                 "updated_at",
+                "revision",
             ]
         )
         message.attachments.update(state="revoked")
@@ -82,7 +84,13 @@ def delete_group_message(conversation, user, identity):
                 recipient.save(update_fields=["unread_count"])
         # Authorization is revoked in this transaction. Physical derivatives are
         # removed by the periodic cleanup worker, which can safely retry I/O.
-        record_event(conversation, "message.deleted", message=message, actor=user)
+        record_event(
+            conversation,
+            "message.deleted",
+            message=message,
+            actor=user,
+            data=event_data,
+        )
         record_event(conversation, "conversation.updated", actor=user)
     return message_payload(message, participant, member)
 
