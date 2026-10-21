@@ -13,7 +13,13 @@ from ...serializers import PropertyListSerializer, PropertyNewListSerializer
 from .property_filter_options_apiview import PropertyPagination
 
 
-class PropertyListAPIView(generics.ListAPIView):
+class VisiblePropertyListMixin:
+    def get_queryset(self):
+        from core_apps.chat.moderation.policy import visible_properties
+        return visible_properties(super().get_queryset())
+
+
+class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     """
     API view to list properties.
 
@@ -110,7 +116,7 @@ class PropertyListAPIView(generics.ListAPIView):
         )
 
 
-class PropertyNewListAPIView(generics.ListAPIView):
+class PropertyNewListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     """
     API view to list the newest property listings in card format.
 

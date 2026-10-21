@@ -471,7 +471,10 @@ def hold_item(user, item_id, data):
         raise ValidationError(
             {"ends_on_exclusive": "Choose a supported future rental interval."}
         )
+    from core_apps.chat.moderation.policy import require_new_business
+    require_new_business(user)
     for prop in props:
+        require_new_business(prop.owner)
         assert_owner_ready(prop.owner, prop)
         if not confirmation_current(prop, rules):
             raise RentalConflict(

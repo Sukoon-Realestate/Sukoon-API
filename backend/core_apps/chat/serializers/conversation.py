@@ -43,6 +43,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     unread_count = serializers.SerializerMethodField()
     can_send = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField()
+    policy = serializers.SerializerMethodField()
 
     def to_representation(self, instance):
         if instance.kind in {"housing_group", "company_request"}:
@@ -61,6 +62,7 @@ class ConversationSerializer(serializers.ModelSerializer):
             "last_message_at",
             "unread_count",
             "can_send",
+            "policy",
             "updated_at",
         )
         read_only_fields = fields
@@ -100,10 +102,16 @@ class ConversationSerializer(serializers.ModelSerializer):
         )
         return participant.unread_count if participant else 0
 
+    def get_policy(self, obj):
+        from core_apps.chat.moderation.policy import projection
+        return projection(obj, self.context['request'].user)
+
     def get_can_send(self, obj) -> bool:
         request = self.context.get("request")
+        from core_apps.chat.moderation.policy import restricted
         return bool(
             request
+            and not restricted(request.user)
             and request.user.is_active
             and obj.participants.filter(pk=request.user.pk).exists()
             and obj.participants.filter(is_active=True).count() == 2
@@ -124,3 +132,5 @@ class ConversationCreateSerializer(serializers.Serializer):
 
     user_id = serializers.UUIDField()
     workspace = serializers.ChoiceField(choices=['individual', 'owner', 'student'], required=False)
+
+    rental_context = serializers.JSONField(required=False)

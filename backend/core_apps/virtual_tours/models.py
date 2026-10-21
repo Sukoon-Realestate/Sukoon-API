@@ -190,3 +190,9 @@ class TourReviewEvent(TimeStampedModel):
     decision = models.CharField(max_length=20)
     source_hash = models.CharField(max_length=64)
     reason = models.TextField(blank=True)
+
+
+from .capture_models import (  # noqa: E402,F401
+    PropertyCaptureSession, CaptureRoom, CaptureAsset, CaptureManifestRevision,
+    CaptureProcessingJob, CaptureCoachSession,
+)

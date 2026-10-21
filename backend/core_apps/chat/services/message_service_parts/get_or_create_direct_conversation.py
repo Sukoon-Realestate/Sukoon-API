@@ -103,6 +103,9 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
         existing.save(update_fields=["direct_pair_key"])
         return existing
 
+    from core_apps.chat.moderation.policy import require_new_business
+    for person in people:
+        require_new_business(person)
     conversation = Conversation.objects.create(direct_pair_key=pair_key)
     ConversationParticipant.objects.bulk_create(
         [

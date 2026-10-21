@@ -95,6 +95,12 @@ def authorize(conversation, user, *, action="read_chat", lock=False):
         and others[0].is_active
         and not direct_message_blocked(fresh, others[0], lock=lock)
     )
+    from core_apps.chat.moderation.policy import attach_context, require_send, restricted, mode
+    if mode() != 'off':
+        attach_context(conversation, fresh)
+    if action in {'send_message', 'upload_attachment', 'reply'}:
+        require_send(conversation, fresh)
+    can_send = can_send and not restricted(fresh)
     grant = DirectConversationGrant(participant.id, can_send=can_send)
     if action not in actions(grant):
         raise PermissionDenied("Messaging consent is not active for this conversation.")

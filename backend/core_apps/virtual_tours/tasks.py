@@ -83,6 +83,28 @@ def cleanup_tours():
         if revision.tour.active_revision_id != revision.pk:
             revision.delete()
     referenced = set(TourAsset.objects.values_list("blob", flat=True))
+    from .capture_models import (
+        PropertyCaptureSession,
+        CaptureAsset,
+        CaptureProcessingJob,
+    )
+
+    PropertyCaptureSession.objects.filter(
+        deleted_at=None,
+        updated_at__lt=now - timedelta(days=settings.CAPTURE_RETENTION_DAYS),
+    ).update(deleted_at=now, state="cancelled")
+    CaptureProcessingJob.objects.filter(
+        manifest__session__deleted_at__isnull=False
+    ).update(cancel_requested=True)
+    for capture in CaptureAsset.objects.filter(session__deleted_at=None):
+        if capture.blob:
+            referenced.add(capture.blob)
+        referenced.update(p["blob"] for p in capture.parts.values())
+    for outputs in CaptureProcessingJob.objects.filter(
+        manifest__session__deleted_at=None
+    ).values_list("outputs", flat=True):
+        for station in outputs.get("panorama360", {}).get("stations", []):
+            referenced.update(r["blob"] for r in station.get("resources", {}).values())
     for resources in TourVariant.objects.values_list("resources", flat=True):
         referenced.update(r["blob"] for r in resources.values())
     for parts in TourUploadSession.objects.filter(

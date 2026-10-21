@@ -115,6 +115,7 @@ def message_payload(message, participant, membership):
 
 
 def summary(conversation, user):
+    from core_apps.chat.moderation.policy import projection as policy_projection
     from .group_cursors import encode_cursor
 
     conversation, participant, member = authorize(conversation, user)
@@ -154,6 +155,7 @@ def summary(conversation, user):
         "allowed_actions": actions(member),
         "limits": limits(),
         "can_send": "send_message" in actions(member),
+        "policy": policy_projection(conversation, user),
         # Exact sender/client identity and payload are serialized by group_send.
         # A retry may additionally fence its original membership period.
         "idempotent_message_retry": True,

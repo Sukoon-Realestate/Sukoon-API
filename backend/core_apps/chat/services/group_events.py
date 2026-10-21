@@ -22,6 +22,9 @@ def record_event(conversation, kind, *, message=None, actor=None, data=None):
         actor=actor,
         data=data or {},
     )
+    if message is not None and kind in {'message.new', 'message.edit'}:
+        from core_apps.chat.moderation.queue import enqueue
+        enqueue(message)
     transaction.on_commit(
         lambda: _publish_committed_event(
             event.pk, immediate_push=conversation.kind == "direct"

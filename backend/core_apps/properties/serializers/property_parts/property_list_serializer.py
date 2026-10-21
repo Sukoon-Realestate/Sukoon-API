@@ -1,3 +1,4 @@
+from core_apps.chat.moderation.property_projection import PropertyPolicyProjection
 """Property: property list serializer."""
 
 from typing import Optional
@@ -137,7 +138,7 @@ def build_rental_summary(obj: Property, offer_ids=None):
     }
 
 
-class PropertyListSerializer(serializers.ModelSerializer):
+class PropertyListSerializer(PropertyPolicyProjection, serializers.ModelSerializer):
     main_image = CloudinarySerializerField(read_only=True)
     images_count = serializers.IntegerField(read_only=True)
     rate = serializers.SerializerMethodField()

@@ -1,3 +1,4 @@
+from core_apps.chat.moderation.property_projection import PropertyPolicyProjection
 """Property: property detail serializer."""
 
 import json
@@ -16,7 +17,7 @@ from .property_detail_serializer_operations.property_detail_media import (
 )
 
 
-class PropertyDetailSerializer(PropertyDetailMediaMixin, serializers.ModelSerializer):
+class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixin, serializers.ModelSerializer):
     """Public service dispatch with domain-specific responsibilities."""
 
     images = serializers.SerializerMethodField()

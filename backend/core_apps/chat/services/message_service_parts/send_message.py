@@ -70,6 +70,9 @@ def send_message(
             ):
                 raise ChatMessageConflict()
             return existing
+    from core_apps.chat.moderation.policy import attach_context, require_send
+    attach_context(conversation, sender)
+    require_send(conversation, sender)
     try:
         # The savepoint keeps the surrounding transaction usable when REST and
         # WebSocket race on the same database uniqueness constraint.

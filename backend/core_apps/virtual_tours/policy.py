@@ -125,6 +125,13 @@ def match_version(revision, etag):
 
 
 def public_property(prop):
+    from core_apps.chat.models import AccountRestriction
+
+    owner_id = prop.owner_id if isinstance(prop, Property) else prop.manager_id
+    if AccountRestriction.objects.filter(
+        user_id=owner_id, state__in=["pending_review", "permanent"]
+    ).exists():
+        return False
     if not isinstance(prop, Property):
         return (
             not prop.archived

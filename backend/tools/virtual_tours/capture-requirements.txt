@@ -1,0 +1,3 @@
+# Separate CPU worker dependency; no OpenCV inside an HTTP request.
+opencv-python-headless==4.11.0.86
+numpy==1.26.4

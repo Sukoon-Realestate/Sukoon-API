@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sokoun:property-capture:rgb-tracking-v1",
+  "title": "Private phone capture inputs",
+  "description": "Structural schema. Django additionally verifies scoped ownership, immutable file hashes, rigid right-handed poses, principal point dimensions, maximum pixel count, timestamps, station ownership and confirmed rooms.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/frame"
+    },
+    {
+      "$ref": "#/$defs/manifest"
+    }
+  ],
+  "$defs": {
+    "frame": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "frameId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f-]{36}$"
+        },
+        "roomId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f-]{36}$"
+        },
+        "trackingSegmentId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f-]{36}$"
+        },
+        "coordinateFrameId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f-]{36}$"
+        },
+        "captureMode": {
+          "enum": [
+            "walkthrough3d",
+            "panorama360"
+          ]
+        },
+        "timestampMonotonicNs": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,19}$"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "width": {
+              "type": "integer",
+              "minimum": 240,
+              "maximum": 8192
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 240,
+              "maximum": 8192
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "orientationApplied": {
+              "const": "sensor_native"
+            }
+          },
+          "required": [
+            "width",
+            "height",
+            "sha256",
+            "orientationApplied"
+          ],
+          "additionalProperties": false
+        },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "calibrationId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "model": {
+              "const": "pinhole"
+            },
+            "fx": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "fy": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "cx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "cy": {
+              "type": "number",
+              "minimum": 0
+            },
+            "physicalLensId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "distortionHandling": {
+              "enum": [
+                "sdk_rectified",
+                "sdk_intrinsics_unverified"
+              ]
+            }
+          },
+          "required": [
+            "calibrationId",
+            "model",
+            "fx",
+            "fy",
+            "cx",
+            "cy",
+            "physicalLensId",
+            "distortionHandling"
+          ],
+          "additionalProperties": false
+        },
+        "pose": {
+          "type": "object",
+          "properties": {
+            "convention": {
+              "const": "T_world_camera_optical_row_major"
+            },
+            "matrix": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 16,
+              "maxItems": 16
+            },
+            "trackingState": {
+              "const": "tracking"
+            },
+            "source": {
+              "enum": [
+                "arkit",
+                "arcore"
+              ]
+            },
+            "mapRevision": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "convention",
+            "matrix",
+            "trackingState",
+            "source",
+            "mapRevision"
+          ],
+          "additionalProperties": false
+        },
+        "quality": {
+          "type": "object",
+          "properties": {
+            "accepted": {
+              "const": true
+            },
+            "policyVersion": {
+              "const": "rgb-tracking-v1"
+            },
+            "syncOffsetMs": {
+              "type": "number",
+              "minimum": -5,
+              "maximum": 5
+            },
+            "sharpness": {
+              "type": "number",
+              "minimum": 35
+            },
+            "darkFraction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.65
+            },
+            "clippedFraction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.65
+            },
+            "featureIds": {
+              "type": "array",
+              "maxItems": 256,
+              "items": {
+                "type": "string",
+                "pattern": "^[0-9]{1,20}$"
+              }
+            }
+          },
+          "required": [
+            "accepted",
+            "policyVersion",
+            "syncOffsetMs",
+            "sharpness",
+            "darkFraction",
+            "clippedFraction",
+            "featureIds"
+          ],
+          "additionalProperties": false
+        },
+        "depth": {
+          "type": "null"
+        },
+        "stationId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f-]{36}$"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "frameId",
+        "roomId",
+        "trackingSegmentId",
+        "coordinateFrameId",
+        "captureMode",
+        "timestampMonotonicNs",
+        "image",
+        "camera",
+        "pose",
+        "quality",
+        "depth"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "captureMode": {
+                "const": "panorama360"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "stationId"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "stationId"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "manifest": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "sessionId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f-]{36}$"
+        },
+        "propertyId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f-]{36}$"
+        },
+        "requestedOutputs": {
+          "const": [
+            "walkthrough3d",
+            "panorama360"
+          ]
+        },
+        "capturePolicyVersion": {
+          "const": "rgb-tracking-v1"
+        },
+        "coordinateConvention": {
+          "const": "rhs-y-up-optical-camera-v1"
+        },
+        "roomIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 1,
+          "maxItems": 40,
+          "items": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f-]{36}$"
+          }
+        },
+        "frameIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 1,
+          "maxItems": 5000,
+          "items": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f-]{36}$"
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "sessionId",
+        "propertyId",
+        "requestedOutputs",
+        "capturePolicyVersion",
+        "coordinateConvention",
+        "roomIds",
+        "frameIds"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

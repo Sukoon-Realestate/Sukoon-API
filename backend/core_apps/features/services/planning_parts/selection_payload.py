@@ -140,12 +140,13 @@ def civil_date(value, field="date", *, future=False):
 
 
 def public_properties():
-    return Property.objects.filter(
+    from core_apps.chat.moderation.policy import visible_properties
+    return visible_properties(Property.objects.filter(
         status="verified",
         is_verified=True,
         owner__is_active=True,
         owner__is_verified=True,
-    )
+    ))
 
 
 def eligible_owner(user):

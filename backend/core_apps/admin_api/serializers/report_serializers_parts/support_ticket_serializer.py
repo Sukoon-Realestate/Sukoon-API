@@ -12,6 +12,7 @@ class UserReportListSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     automationLevelDisplay = serializers.SerializerMethodField()
     statusDisplay = serializers.SerializerMethodField()
+    chatPolicyCaseId = serializers.SerializerMethodField()
 
     class Meta:
         model = UserReport
@@ -30,8 +31,13 @@ class UserReportListSerializer(serializers.ModelSerializer):
             "statusDisplay",
             "notes",
             "created_at",
+            "chatPolicyCaseId",
         ]
         read_only_fields = fields
+
+    def get_chatPolicyCaseId(self, obj):
+        case = getattr(obj, "chat_case", None)
+        return str(case.id) if case else None
 
     def get_reportedUser(self, obj):
         return obj.reported_user.get_full_name or obj.reported_user.email

@@ -46,6 +46,13 @@ def write_blob(chunks, maximum):
                 )
                 checksum.update(chunk)
                 output.write(chunk)
+            output.flush()
+            os.fsync(output.fileno())
+        directory = os.open(root(), os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
         remote_storage.persist(key, destination)
         return key, size, checksum.hexdigest()
     except BaseException:

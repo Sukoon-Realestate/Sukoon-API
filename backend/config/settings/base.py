@@ -236,6 +236,15 @@ VIRTUAL_TOUR_VIEWER_ROOT = getenv(
     "VIRTUAL_TOUR_VIEWER_ROOT", str(BASE_DIR / "tour_viewer")
 )
 VIRTUAL_TOUR_PROCESSOR_MODE = getenv("VIRTUAL_TOUR_PROCESSOR_MODE", "celery")
+PROPERTY_CAPTURE_ENABLED = getenv("PROPERTY_CAPTURE_ENABLED", "false").lower() == "true"
+CAPTURE_RECONSTRUCTION_ENABLED = getenv("CAPTURE_RECONSTRUCTION_ENABLED", "false").lower() == "true"
+CAPTURE_RECONSTRUCTION_PYTHON = getenv("CAPTURE_RECONSTRUCTION_PYTHON", "").strip()
+CAPTURE_RECONSTRUCTION_COLMAP = getenv("CAPTURE_RECONSTRUCTION_COLMAP", "").strip()
+GEMINI_API_KEY = getenv("GEMINI_API_KEY", "").strip()
+GEMINI_COACH_MODEL = getenv("GEMINI_COACH_MODEL", "gemini-3.8-live").strip()
+COACH_DAILY_SESSION_LIMIT = int(getenv("COACH_DAILY_SESSION_LIMIT", "10"))
+CAPTURE_MAX_SESSION_BYTES = int(getenv("CAPTURE_MAX_SESSION_BYTES", str(512 * 1024**2)))
+CAPTURE_RETENTION_DAYS = int(getenv("CAPTURE_RETENTION_DAYS", "30"))
 VIRTUAL_TOUR_PROCESSING_WIDTH = int(getenv("VIRTUAL_TOUR_PROCESSING_WIDTH", "8192"))
 VIRTUAL_TOUR_KINDS = {
     kind: {
@@ -593,3 +602,13 @@ CELERY_BEAT_SCHEDULE["reconcile-reviews"] = {
 
 # Independent disaster recovery is deferred. Account-sensitive action assurance remains separate.
 SECURITY_ASSURANCE_PROVIDER = getenv("SECURITY_ASSURANCE_PROVIDER", "")
+
+# Rental chat protection is opt-in until the existing Gemini project terms and
+# synthetic evaluation have been verified. No billing/subscription changes.
+CHAT_MODERATION_MODE = getenv("CHAT_MODERATION_MODE", "off")
+CHAT_MODERATION_MODEL = getenv("CHAT_MODERATION_MODEL", "gemini-3.8-flash")
+CHAT_MODERATION_PRIVATE_INPUTS_APPROVED = getenv("CHAT_MODERATION_PRIVATE_INPUTS_APPROVED", "false").lower() == "true"
+CHAT_MODERATION_DAILY_REQUESTS = int(getenv("CHAT_MODERATION_DAILY_REQUESTS", "100"))
+CAPTURE_COACH_ENABLED = getenv("CAPTURE_COACH_ENABLED", "true").lower() == "true"
+
+CAPTURE_COACH_PRIVATE_INPUTS_APPROVED = getenv("CAPTURE_COACH_PRIVATE_INPUTS_APPROVED", "false").lower() == "true"

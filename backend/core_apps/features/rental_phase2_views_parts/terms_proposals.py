@@ -67,6 +67,9 @@ def terms_proposals(request):
         _, snapshot = resolve_offer_snapshot(
             interest.property, data["offer_id"], data["offer_revision"], request
         )
+        from core_apps.chat.moderation.policy import require_new_business
+        require_new_business(request.user)
+        require_new_business(interest.tenant)
         _validate_terms_offer(data["terms"], snapshot)
         if data["terms"]["occupants"] != interest.occupants:
             raise ValidationError({"terms": "Occupants must match the interest."})
@@ -142,6 +145,9 @@ def terms_proposal_detail(request, proposal_id):
             data["offer_revision"],
             request,
         )
+        from core_apps.chat.moderation.policy import require_new_business
+        require_new_business(request.user)
+        require_new_business(interest.tenant)
         _validate_terms_offer(data["terms"], snapshot)
         proposal.previous_terms = [
             *proposal.previous_terms,

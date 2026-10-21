@@ -42,6 +42,8 @@ class PropertyCreationMixin:
         """
         from rest_framework.exceptions import ValidationError
 
+        from core_apps.chat.moderation.policy import require_new_business
+        require_new_business(owner, lock=True)
         data = validated_data.copy()
         cls._apply_rental_projection(data)
         main_image_file = data.pop("main_image", None)

@@ -10,3 +10,8 @@ from .attachment import ChatAttachment
 from .event import ChatEvent, ChatNotificationDelivery
 
 from .workspace import ConversationWorkspace
+from .moderation import (
+    RentalChatContext, ChatPolicyConsent, ChatModerationInput, ChatModerationBatch,
+    ChatMediaAnalysis, ChatModerationCase, ChatPolicyNotice, AccountRestriction,
+    ChatModerationAppeal, ChatModerationAction, GeminiUsageReservation,
+)

@@ -49,6 +49,9 @@ def confirm_availability(prop, actor, data):
 
 
 def create_hold(prop, actor, data, *, external=False):
+    from core_apps.chat.moderation.policy import require_new_business
+    require_new_business(actor)
+    require_new_business(prop.owner)
     policy, rules = lifecycle_policy("reservations")
     if not prop.is_verified or prop.status != "verified" or not prop.owner.is_active:
         raise RentalConflict(

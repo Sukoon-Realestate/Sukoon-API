@@ -154,6 +154,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
       active: pathname.startsWith('/support'),
     },
     {
+      title: 'مراجعة محادثات التأجير',
+      href: '/reports/chat-policy',
+      icon: ShieldAlert,
+      active: pathname === '/reports/chat-policy',
+    },
+    {
       title: 'التقارير والتذاكر',
       href: '/reports/overview',
       icon: FileText,

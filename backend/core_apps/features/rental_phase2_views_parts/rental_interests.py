@@ -77,6 +77,9 @@ def rental_interests(request):
         )
         if replay:
             return replay
+        from core_apps.chat.moderation.policy import require_new_business
+        require_new_business(request.user)
+        require_new_business(property_obj.owner)
         blocker = interest_creation_blocker(request.user, property_obj)
         if blocker:
             raise PermissionDenied(blocker)

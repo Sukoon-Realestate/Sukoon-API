@@ -9,6 +9,9 @@ from core_apps.chat.models import Conversation, ConversationParticipant
 
 
 def authorize(conversation, user, *, action="read_chat", lock=False):
+    if conversation.kind != 'direct' and action in {'send_message', 'upload_attachment', 'reply'}:
+        from core_apps.chat.moderation.policy import require_new_business
+        require_new_business(user)
     if conversation.kind == "direct":
         from .direct_access import authorize as direct_authorize
 

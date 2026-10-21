@@ -1,5 +1,6 @@
 from django.urls import path
 from .group_urls import urlpatterns as group_urls
+from .moderation.urls import urlpatterns as moderation_urls
 
 from core_apps.chat.views.conversation import (
     ConversationCreateAPIView,
@@ -12,7 +13,7 @@ from core_apps.chat.views.message import (
     MessageListAPIView,
 )
 
-urlpatterns = group_urls + [
+urlpatterns = group_urls + moderation_urls + [
     path("conversations/", ConversationListAPIView.as_view(), name="conversation-list"),
     path(
         "conversations/create/",

@@ -28,6 +28,8 @@ def take_report_action(report_id, action, reviewer, notes=""):
     except (UserReport.DoesNotExist, ValueError):
         raise NotFound(f"User Report with ID {report_id} was not found.")
 
+    if hasattr(report, 'chat_case'):
+        raise ValidationError('Rental chat cases require the versioned policy review endpoint.')
     if action == "suspend_user":
         report.status = UserReport.Status.SUSPENDED
         suspend_user(report.reported_user.id, reviewer, reason=report.reason)

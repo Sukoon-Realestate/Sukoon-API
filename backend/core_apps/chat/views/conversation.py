@@ -94,6 +94,8 @@ class ConversationCreateAPIView(APIView):
         conversation = get_or_create_direct_conversation(
             user=request.user, other_user=other
         )
+        from core_apps.chat.moderation.policy import attach_context
+        attach_context(conversation, request.user, serializer.validated_data.get('rental_context'))
         workspace = serializer.validated_data.get('workspace')
         if workspace:
             from core_apps.chat.models import ConversationWorkspace

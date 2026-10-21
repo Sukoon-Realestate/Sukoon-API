@@ -1,3 +1,4 @@
+from core_apps.chat.moderation.property_projection import PropertyPolicyProjection
 """Property: property new list serializer."""
 
 from rest_framework import serializers
@@ -6,7 +7,7 @@ from ...models import Property
 from .property_list_serializer import build_rental_summary
 
 
-class PropertyNewListSerializer(serializers.ModelSerializer):
+class PropertyNewListSerializer(PropertyPolicyProjection, serializers.ModelSerializer):
     """
     Card-style serializer for the new properties feed.
 
@@ -96,7 +97,7 @@ class PropertyNewListSerializer(serializers.ModelSerializer):
         return build_rental_summary(obj, matches.get(obj.pk))
 
 
-class MyPropertyListSerializer(serializers.ModelSerializer):
+class MyPropertyListSerializer(PropertyPolicyProjection, serializers.ModelSerializer):
     """
     Read-only per-property stats for the owner dashboard.
     Requires `views_count` and `visits_count` annotations on the queryset.

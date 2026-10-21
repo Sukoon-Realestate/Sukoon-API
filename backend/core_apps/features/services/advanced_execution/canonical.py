@@ -83,6 +83,10 @@ def prepare_leg(plan, leg, actor):
     tenant = get_object_or_404(
         User, id=spec["tenant_id"], is_active=True, is_verified=True
     )
+    from core_apps.chat.moderation.policy import require_new_business
+    require_new_business(owner)
+    require_new_business(tenant)
+    require_new_business(actor)
     assert_owner_ready(owner, prop)
     if (
         prop.status != "verified"

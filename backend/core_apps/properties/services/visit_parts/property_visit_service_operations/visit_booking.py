@@ -16,6 +16,11 @@ class VisitBookingMixin:
         """
         Creates a property visit request.
         """
+        from core_apps.chat.moderation.policy import require_new_business
+        from core_apps.users.models import User
+        list(User.objects.select_for_update().filter(pk__in=[tenant.pk, property_obj.owner_id]).order_by('pk'))
+        require_new_business(tenant)
+        require_new_business(property_obj.owner)
         from ....models import Property
         from ...viewing_access import prepare_context
 

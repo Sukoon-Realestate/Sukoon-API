@@ -45,6 +45,9 @@ def localized(request, english, arabic):
 
 
 def validate_accounts(owner, tenant, request=None):
+    from core_apps.chat.moderation.policy import require_new_business
+    require_new_business(owner)
+    require_new_business(tenant)
     if not owner.is_active or not owner.is_verified:
         raise PermissionDenied(
             localized(
