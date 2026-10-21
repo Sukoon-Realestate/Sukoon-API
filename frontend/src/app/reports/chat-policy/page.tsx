@@ -15,6 +15,8 @@ export default function ChatPolicyPage() {
   const [selected, setSelected] = useState<PolicyCase | null>(null);
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(false);
+  const [listLoading, setListLoading] = useState(true);
+  const [refresh, setRefresh] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [notes, setNotes] = useState('');
@@ -24,13 +26,14 @@ export default function ChatPolicyPage() {
   const generation = useRef(0);
   useEffect(() => {
     const current = ++generation.current;
-    fetchPolicyCases(page).then(value => { if (current === generation.current) { setItems(value.results); setMore(Boolean(value.next)); } }).catch(() => { if (current === generation.current) setError('تعذر تحميل المراجعات. تحقق من الاتصال وصلاحية المراجع.'); });
+    setListLoading(true); setError('');
+    fetchPolicyCases(page).then(value => { if (current === generation.current) { setItems(value.results); setMore(Boolean(value.next)); } }).catch(() => { if (current === generation.current) setError('تعذر تحميل المراجعات. تحقق من الاتصال وصلاحية المراجع.'); }).finally(() => { if (current === generation.current) setListLoading(false); });
     return () => { generation.current++; };
-  }, [page]);
+  }, [page, refresh]);
   async function open(id: string) {
-    if (busy) return;
+    if (busy || (pending && selected?.id !== id)) return;
     setBusy(true); setError('');
-    try { setSelected(await fetchPolicyCase(id)); setNotes(''); setConfirmed(false); setPending(null); }
+    try { setSelected(await fetchPolicyCase(id)); if (!pending) { setNotes(''); setConfirmed(false); } }
     catch { setError('تعذر تحميل تفاصيل الحالة.'); }
     finally { setBusy(false); }
   }
@@ -43,7 +46,8 @@ export default function ChatPolicyPage() {
       setSelected(result); setItems(old => old.map(item => item.id === result.id ? result : item));
       setPending(null); setConfirmed(false); setNotes('');
     } catch (failure) {
-      if (failure instanceof ApiError && failure.status === 409) {
+      if (failure instanceof ApiError && [400, 403, 404, 409, 422].includes(failure.status)) {
+        setPending(null); setSelected(null); setConfirmed(false);
         setError('تغيّرت الحالة. حدّثها وراجع القرار قبل إعادة الإرسال.');
       } else setError('النتيجة غير مؤكدة. حدّث الحالة أو أعد نفس العملية؛ لا تصدر قرارًا جديدًا قبل التحقق.');
     } finally { setBusy(false); }
@@ -54,14 +58,16 @@ export default function ChatPolicyPage() {
     <main className="p-4 md:p-8 grid gap-6 lg:grid-cols-2">
       {error && <p role="alert" className="lg:col-span-2 text-red-600">{error}</p>}
       <section aria-label="قائمة المراجعات" className="space-y-3">
-        {items.length === 0 && <p>لا توجد حالات لعرضها.</p>}
-        {items.map(item => <button disabled={busy} key={item.id} onClick={() => void open(item.id)} className="w-full border rounded-xl p-4 text-start min-h-12">
+        {listLoading && <p role="status">جارٍ تحميل المراجعات…</p>}
+        {!listLoading && !error && items.length === 0 && <p>لا توجد حالات لعرضها.</p>}
+        <button className="min-h-12 underline" disabled={busy || listLoading} onClick={() => setRefresh(value => value + 1)}>تحديث قائمة المراجعات</button>
+        {items.map(item => <button disabled={busy || listLoading || (Boolean(pending) && selected?.id !== item.id)} key={item.id} onClick={() => void open(item.id)} className="w-full border rounded-xl p-4 text-start min-h-12">
           <strong>{labels[item.state] ?? item.state}</strong>
           <p>{new Date(item.created_at).toLocaleString('ar-EG')}</p>
           {item.appeal_submitted && <p>يوجد اعتراض</p>}
           {item.review_overdue && <p className="text-red-600">تجاوزت ٤٨ ساعة — أولوية للمراجعة</p>}
         </button>)}
-        <div className="flex gap-4"><button className="min-h-12" disabled={busy || page === 1} onClick={() => setPage(page - 1)}>السابق</button><button className="min-h-12" disabled={busy || !more} onClick={() => setPage(page + 1)}>التالي</button></div>
+        <div className="flex gap-4"><button className="min-h-12" disabled={busy || listLoading || Boolean(pending) || page === 1} onClick={() => setPage(page - 1)}>السابق</button><button className="min-h-12" disabled={busy || listLoading || Boolean(pending) || !more} onClick={() => setPage(page + 1)}>التالي</button></div>
       </section>
       {selected && <section aria-label="الأدلة والقرار" className="space-y-4 border rounded-xl p-4 break-words">
         <h2 className="font-bold">{labels[selected.state] ?? selected.state}</h2>

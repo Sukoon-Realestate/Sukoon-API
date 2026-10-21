@@ -9,6 +9,7 @@ for (const [input, expected] of [
   ['/users/user-123', '/admin/users/user-123'],
   ['/properties/review?id=prop-123#photos', '/admin/properties/review?id=prop-123#photos'],
   ['/reports/overview', '/admin/reports/overview'],
+  ['/reports/chat-policy', '/admin/reports/chat-policy'],
   ['/admin', '/admin'],
   ['/admin/users', '/admin/users'],
   ['/admin?tab=overview', '/admin?tab=overview'],

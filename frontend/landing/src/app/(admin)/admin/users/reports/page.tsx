@@ -191,19 +191,19 @@ export default function ReportsQueuePage() {
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-center gap-2">
                           <Link
-                            href={`/users/${report.reportedUserId || 'sara-ahmed'}`}
+                            href={report.chatPolicyCaseId ? '/reports/chat-policy' : `/users/${report.reportedUserId}`}
                             className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             <span>مراجعة</span>
                           </Link>
-                          <button
+                          {!report.chatPolicyCaseId && <button
                             onClick={() => handleSuspendUser(report)}
                             className="inline-flex items-center gap-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                           >
                             <UserX className="w-3.5 h-3.5" />
                             <span>إيقاف</span>
-                          </button>
+                          </button>}
                         </div>
                       </td>
                     </tr>

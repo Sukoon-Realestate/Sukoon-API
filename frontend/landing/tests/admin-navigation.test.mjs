@@ -12,7 +12,7 @@ test('every grouped navigation destination has an existing page', () => {
   }
 });
 test('all existing main sections appear exactly once', () => {
-  const expected = ['/', '/executive', '/analytics', '/properties', '/properties/review', '/users', '/kyc', '/users/suspended', '/moderation', '/users/reports', '/support', '/reports/overview', '/financials', '/financials/transactions', '/notifications', '/roles', '/system/logs', '/system/health', '/settings'];
+  const expected = ['/', '/executive', '/analytics', '/properties', '/properties/review', '/users', '/kyc', '/users/suspended', '/moderation', '/users/reports', '/support', '/reports/overview', '/reports/chat-policy', '/financials', '/financials/transactions', '/notifications', '/roles', '/system/logs', '/system/health', '/settings'];
   assert.deepEqual(items.map((item) => item.href).sort(), expected.sort());
   assert.equal(new Set(items.map((item) => item.href)).size, expected.length);
   assert.equal(adminNavigation.length, 6);
@@ -33,6 +33,7 @@ test('unknown and login routes do not masquerade as overview', () => {
 });
 test('cross-cutting reports live with safety and support', () => {
   assert.equal(findAdminSection('/users/reports')?.id, 'trust');
+  assert.equal(findAdminSection('/reports/chat-policy')?.id, 'trust');
   assert.equal(findAdminSection('/users/suspended')?.id, 'community');
 });
 test('Arabic search matches normalized spelling and descriptions', () => {

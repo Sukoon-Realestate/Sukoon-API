@@ -38,6 +38,7 @@ export const adminNavigation: AdminNavGroup[] = [
     { title: 'بلاغات المستخدمين', href: '/users/reports', icon: Flag, description: 'البلاغات والمخالفات' },
     { title: 'دعم العملاء', href: '/support', icon: Headphones, description: 'التذاكر والمحادثات المفتوحة', count: 'support' },
     { title: 'متابعة البلاغات', href: '/reports/overview', icon: Files, description: 'حالات البلاغات وتسويتها' },
+    { title: 'مراجعة محادثات التأجير', href: '/reports/chat-policy', icon: ShieldAlert, description: 'الأدلة والاعتراضات ومراجعة قيود الحساب' },
   ] },
   { id: 'business', title: 'المالية والتواصل', items: [
     { title: 'الإيرادات', href: '/financials', icon: Wallet, description: 'الإيرادات والرسوم وأداء الأعمال' },

@@ -128,6 +128,7 @@ export interface KycDetail {
 
 export interface ReportItem {
   id: string;
+  chatPolicyCaseId?: string | null;
   reportedUser: string;
   reportedUserId: string;
   userType: 'مالك' | 'مستأجر';
