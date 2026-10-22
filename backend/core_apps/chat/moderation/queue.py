@@ -2,8 +2,11 @@
 
 import hashlib
 import json
+import math
 import uuid
 from datetime import timedelta
+from zoneinfo import ZoneInfo
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
@@ -69,6 +72,17 @@ def enqueue(message):
 @transaction.atomic
 def claim():
     now = timezone.now()
+    # A provider quota applies to the model/project, not one conversation.
+    # Persist its cooldown in the batch so another worker (or a restart) cannot
+    # immediately spend the same exhausted quota on the next dirty chat.
+    if ChatModerationBatch.objects.filter(
+        next_attempt_at__gt=now,
+        diagnostics__provider_backoff=True,
+        diagnostics__provider_model=getattr(
+            settings, "CHAT_MODERATION_MODEL", "gemini-3.8-flash"
+        ),
+    ).exists():
+        return None
     # A retry retains exactly the same inputs. Expired workers cannot commit.
     retry = (
         ChatModerationBatch.objects.select_for_update(skip_locked=True)
@@ -262,6 +276,51 @@ def validated_verdicts(raw, messages):
     return output
 
 
+def retry_schedule(error, attempts, now):
+    deadline = now + timedelta(seconds=min(3600, 30 * 2**attempts))
+    code = str(error) if isinstance(error, ProviderUnavailable) else ""
+    shared = code in {
+        "daily_budget",
+        "provider_http_429",
+        "provider_http_500",
+        "provider_http_502",
+        "provider_http_503",
+        "provider_http_504",
+        "provider_timeout",
+        "provider_transport",
+    }
+    if isinstance(error, ProviderUnavailable):
+        delay = error.retry_after_seconds
+        if (
+            isinstance(delay, (int, float))
+            and not isinstance(delay, bool)
+            and math.isfinite(delay)
+            and delay >= 0
+        ):
+            # Inputs expire after seven days. A malformed unbounded provider
+            # delay must neither overflow datetime nor retain evidence forever.
+            deadline = max(deadline, now + timedelta(seconds=min(delay, 7 * 86400)))
+        if any(
+            isinstance(quota, dict) and quota.get("period") == "day"
+            for quota in error.quota_limits
+        ):
+            pacific = now.astimezone(ZoneInfo("America/Los_Angeles"))
+            reset = (pacific + timedelta(days=1)).replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
+            deadline = max(deadline, reset)
+            shared = True
+    if code == "daily_budget":
+        local = timezone.localtime(now)
+        deadline = max(
+            deadline,
+            (local + timedelta(days=1)).replace(
+                hour=0, minute=0, second=0, microsecond=0
+            ),
+        )
+    return deadline, shared
+
+
 def process_one(reviewer_factory=GeminiReviewer):
     if mode() == "off":
         return False
@@ -303,10 +362,17 @@ def process_one(reviewer_factory=GeminiReviewer):
                     if row.attempts >= 6 or code in {"input_limit", "media_limit"}
                     else "retry"
                 )
-                row.next_attempt_at = timezone.now() + timedelta(
-                    seconds=min(3600, 30 * 2**row.attempts)
+                row.next_attempt_at, shared = retry_schedule(
+                    exc, row.attempts, timezone.now()
                 )
                 row.diagnostics = {"code": code}
+                if shared:
+                    row.diagnostics.update(
+                        provider_backoff=True,
+                        provider_model=getattr(
+                            settings, "CHAT_MODERATION_MODEL", "gemini-3.8-flash"
+                        ),
+                    )
                 row.lease_until = None
                 row.save()
                 if row.state == "failed":
