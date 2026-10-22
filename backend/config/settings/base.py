@@ -89,6 +89,7 @@ THIRD_PARTY_APPS = [
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS + ["channels"]
 
 MIDDLEWARE = [
+    "core_apps.common.runtime_metrics.RuntimeMetricsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -422,6 +423,16 @@ MEDIA_ROOT = str(BASE_DIR / "media")
 SUPPORT_PRIVATE_MEDIA_ROOT = getenv(
     "SUPPORT_PRIVATE_MEDIA_ROOT", str(BASE_DIR / "private_support_media")
 )
+SUPPORT_PRIVATE_STORAGE_PROVIDER = getenv(
+    "SUPPORT_PRIVATE_STORAGE_PROVIDER",
+    "cloudinary" if VIRTUAL_TOUR_STORAGE_PROVIDER == "cloudinary" else "local",
+)
+SUPPORT_CLOUDINARY_PREFIX = getenv("SUPPORT_CLOUDINARY_PREFIX", "sokoun-support-private")
+EVIDENCE_STORAGE_PROVIDER = getenv("EVIDENCE_STORAGE_PROVIDER", "disabled")
+EVIDENCE_PRIVATE_ROOT = getenv("EVIDENCE_PRIVATE_ROOT", str(BASE_DIR / "private_evidence"))
+EVIDENCE_CLOUDINARY_PREFIX = getenv("EVIDENCE_CLOUDINARY_PREFIX", "sokoun-evidence-private")
+EVIDENCE_SCANNER_BACKEND = getenv("EVIDENCE_SCANNER_BACKEND", "disabled")
+EVIDENCE_CLAMSCAN_PATH = getenv("EVIDENCE_CLAMSCAN_PATH", "clamscan")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -612,3 +623,9 @@ CHAT_MODERATION_DAILY_REQUESTS = int(getenv("CHAT_MODERATION_DAILY_REQUESTS", "1
 CAPTURE_COACH_ENABLED = getenv("CAPTURE_COACH_ENABLED", "true").lower() == "true"
 
 CAPTURE_COACH_PRIVATE_INPUTS_APPROVED = getenv("CAPTURE_COACH_PRIVATE_INPUTS_APPROVED", "false").lower() == "true"
+
+ADMIN_CAMPAIGNS_ENABLED = getenv("ADMIN_CAMPAIGNS_ENABLED", "false").lower() == "true"
+
+# Finalize after every domain has registered its schedule.
+from config.background import configure as configure_background
+configure_background(globals())

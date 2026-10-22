@@ -15,7 +15,10 @@ from .models import RentalChange
 
 from .rental_lifecycle_views import habitability
 
+from .views_parts.listing_suggestions import owner_analytics_export
+
 urlpatterns = [
+    path("owner-analytics/<uuid:property_id>/export/", owner_analytics_export, name="owner-analytics-export"),
     path("operator/chargebacks/<uuid:chargeback_id>/", chargeback_detail, name="operator-chargeback-detail"),
     path(
         "business-policies/",
@@ -242,6 +245,11 @@ urlpatterns = [
         "rental-attachments/<uuid:evidence_id>/",
         views_phase4.rental_evidence_detail,
         name="rental-evidence-detail",
+    ),
+    path(
+        "rental-attachments/<uuid:evidence_id>/content/",
+        views_phase4.rental_evidence_content,
+        name="rental-evidence-content",
     ),
     path(
         "rental-attachments/<uuid:evidence_id>/download/",

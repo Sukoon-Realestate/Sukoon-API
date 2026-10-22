@@ -1,4 +1,6 @@
 import io
+import hashlib
+from core_apps.common.private_storage import PrivateStorageUnavailable
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -36,7 +38,10 @@ class TicketAttachmentAPIView(APIView):
             raise NotFound()
         try:
             with field.open("rb") as stream:
-                content = clean_image(stream)
+                original = stream.read(5 * 1024 * 1024 + 1)
+                if len(original) > 5 * 1024 * 1024 or (attachment.content_sha256 and hashlib.sha256(original).hexdigest() != attachment.content_sha256):
+                    raise PrivateStorageUnavailable("Private attachment integrity check failed.")
+                content = clean_image(io.BytesIO(original))
         except OSError as error:
             raise NotFound() from error
         if operator and not owner:

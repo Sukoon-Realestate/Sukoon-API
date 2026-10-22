@@ -4,6 +4,8 @@ import hashlib
 import uuid
 from datetime import timedelta
 from django.db import transaction
+from django.core import signing
+from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
@@ -18,7 +20,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import RentalEvidence
-from ..providers import get_rental_provider
+from ..services import evidence_storage
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .handover_payload import (
@@ -31,14 +33,26 @@ from .handover_payload import (
 
 def _lease(request, identity, *, lock=False):
     from ..models import Lease
+    from django.contrib.auth import get_user_model
 
+    from ..providers import require_verified_rental_account
+    users = get_user_model().objects
+    if lock:
+        users = users.select_for_update()
+    actor = get_object_or_404(users, pk=request.user.pk)
+    require_verified_rental_account(actor)
     lease = get_object_or_404(Lease, id=identity)
+    evidence_storage.require_available()
     if not lease.renter_company_id:
-        return _personal_lease(request, identity, lock=lock)
-    from ..providers import require_rental_provider
+        if lock:
+            lease = Lease.objects.select_for_update().get(pk=lease.pk)
+        if request.user.pk not in {lease.owner_id, lease.tenant_id}:
+            raise NotFound()
+        if lease.legacy_read_only:
+            raise RentalConflict("Historical evidence requires an explicit review.")
+        return lease
     from ..services.company.tenancy_access import get, require_role
 
-    require_rental_provider(request.user)
     item = get(request.user, lease.company_tenancy.id, lock=lock)
     require_role(item, request.user, {"owner", "coordinator", "payer"})
     return item.lease
@@ -81,19 +95,10 @@ def rental_evidence_upload(request):
         )
         if record:
             return Response(record[0], status=record[1])
-    lease = _lease(request, lease_id)
     content = upload.read(MAX_EVIDENCE_BYTES + 1)
-    if len(content) > MAX_EVIDENCE_BYTES:
-        raise ValidationError({"file": "PNG files must be at most 5 MiB."})
-    if (
-        claimed_type != "image/png"
-        or upload.content_type != "image/png"
-        or not content.startswith(PNG_MAGIC)
-    ):
+    if upload.content_type != "image/png":
         raise ValidationError({"file": "Only actual PNG images are accepted."})
-    digest = hashlib.sha256(content).hexdigest()
-    if digest != claimed_digest:
-        raise ValidationError({"sha256": "Digest does not match the uploaded bytes."})
+    digest = evidence_storage.validate_png(content, claimed_digest, claimed_type)
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
         record = replay_operation(
@@ -112,12 +117,10 @@ def rental_evidence_upload(request):
             content_type="image/png",
             size_bytes=len(content),
             sha256=digest,
-            storage_provider="fake",
+            storage_provider="pending",
             private_content=content,
         )
-        evidence.storage_key = get_rental_provider().store_private_evidence(
-            lease.id, evidence.id, content
-        )
+        evidence.storage_key = f"evidence-pending/{evidence.id}"
         evidence.save()
         resource = evidence_payload(evidence)
         output = remember_mutation(
@@ -145,6 +148,8 @@ def _evidence(request, evidence_id):
 
     if not commercial_read(item.lease, request.user):
         raise NotFound()
+    if not request.user.is_active:
+        raise NotFound()
     return item
 
 
@@ -168,7 +173,28 @@ def rental_evidence_download(request, evidence_id):
         {
             "id": str(item.id),
             "subject_id": str(item.lease.id),
-            "url": get_rental_provider().create_private_download(item.id, expires),
+            "url": request.build_absolute_uri(reverse("rental-evidence-content", kwargs={"evidence_id": item.id})) + "?grant=" + signing.dumps({"id": str(item.id), "user": str(request.user.pk), "revision": item.revision}, salt="evidence-read"),
+            "requires_auth": True,
             "expires_at": expires.isoformat(),
         }
     )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def rental_evidence_content(request, evidence_id):
+    from django.core import signing
+    from django.http import HttpResponse
+
+    item = _evidence(request, evidence_id)
+    try:
+        grant = signing.loads(request.query_params.get("grant", ""), salt="evidence-read", max_age=300)
+    except signing.BadSignature as error:
+        raise NotFound() from error
+    if grant != {"id": str(item.id), "user": str(request.user.pk), "revision": item.revision} or item.malware_status != "safe":
+        raise NotFound()
+    response = HttpResponse(evidence_storage.read(item), content_type="image/png")
+    response["Cache-Control"] = "private, no-store"
+    response["X-Content-Type-Options"] = "nosniff"
+    response["Content-Disposition"] = 'inline; filename="rental-evidence.png"'
+    return response

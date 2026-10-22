@@ -103,7 +103,7 @@ def capabilities(request):
                 }
                 for kind in KINDS
             },
-            "supported_manifest_versions": [1],
+            "supported_manifest_versions": [1, 2],
             "limits": LIMITS,
         }
     )

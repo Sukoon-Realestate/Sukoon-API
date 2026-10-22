@@ -77,7 +77,13 @@ def phase4_lease(db):
     return owner, tenant, lease
 
 
-def upload_evidence(user, lease, content=b"\x89PNG\r\n\x1a\nimage-content"):
+def upload_evidence(user, lease, content=None):
+    if content is None:
+        import io
+        from PIL import Image
+        stream = io.BytesIO()
+        Image.new("RGB", (8, 4), color="red").save(stream, "PNG")
+        content = stream.getvalue()
     digest = hashlib.sha256(content).hexdigest()
     response = client_for(user).post(
         "/api/v1/features/v1/rental-attachments/",
@@ -111,7 +117,12 @@ def test_private_evidence_validation_scan_recovery_and_download(phase4_lease):
         f"/api/v1/features/v1/rental-attachments/{evidence.id}/download/"
     )
     assert link.status_code == 200
-    assert "token=" in link.data["url"]
+    assert "grant=" in link.data["url"]
+    assert link.data["requires_auth"] is True
+    private = client_for(tenant).get(link.data["url"])
+    assert private.status_code == 200
+    assert hashlib.sha256(private.content).hexdigest() == evidence.sha256
+    assert client_for(owner).get(link.data["url"]).status_code == 404
 
     wrong = upload_evidence(tenant, lease, b"not-a-png")
     assert wrong.status_code == 400

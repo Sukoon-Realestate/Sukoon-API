@@ -11,7 +11,7 @@ from django.views.decorators.http import require_safe
 CSP = (
     "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; "
     "style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; "
-    "connect-src 'self'; font-src 'self'; worker-src 'self'; "
+    "connect-src 'self'; font-src 'self'; worker-src 'self' blob:; "
     "frame-src 'none'; frame-ancestors 'self'; base-uri 'none'; "
     "form-action 'none'; object-src 'none'"
 )

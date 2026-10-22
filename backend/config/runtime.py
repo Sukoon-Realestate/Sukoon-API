@@ -122,7 +122,7 @@ class LeaseScheduler(Scheduler):
         entry.options = {
             **original,
             "task_id": task_id,
-            "headers": {**original.get("headers", {}), "sokoun_schedule": entry.name},
+            "headers": {**original.get("headers", {}), "sokoun_schedule": entry.name, "sokoun_dispatched_at": marker["dispatched_at"]},
         }
         try:
             return super().apply_async(

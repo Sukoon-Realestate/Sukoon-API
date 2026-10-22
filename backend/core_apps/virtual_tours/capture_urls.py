@@ -17,6 +17,7 @@ urlpatterns = [
     path(base + "manifests/", views.manifests),
     path(base + "processing-jobs/", views.jobs),
     path(base + "processing-jobs/<uuid:job_id>/", views.job),
+    path(base + "processing-jobs/<uuid:job_id>/select-outputs/", views.select_outputs),
     path(
         base
         + "processing-jobs/<uuid:job_id>/stations/<uuid:station_id>/<str:resource>/",

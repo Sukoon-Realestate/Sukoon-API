@@ -22,6 +22,39 @@ from . import capture_services as services, capture_coach, capture_reconstructio
 from . import storage
 
 
+@endpoint(["POST"])
+def select_outputs(request, session_id, job_id):
+    """Selection creates a draft only; no publication or approval is implied."""
+    from .models import PropertyVirtualTour, TourRevision
+    from .services import create_tour, queue_processing, revision_payload
+    from .capture_delivery import validate
+
+    fields(request.data, {"authoring", "expectedManifestHash"})
+    def execute():
+        session = owned(request, session_id, True)
+        job = get_object_or_404(CaptureProcessingJob.objects.select_for_update(), id=job_id, manifest__session=session)
+        require(request.data["expectedManifestHash"] == job.manifest.sha256,
+                "capture_source_changed", "Refresh the immutable input revision.", 409)
+        document = request.data["authoring"]
+        require(isinstance(document, dict) and document.get("kind") in ("model_3d", "panorama_360"), "invalid_kind", "Choose a capture output kind.")
+        tour = PropertyVirtualTour.objects.select_for_update().filter(property=session.property, kind=document["kind"]).first()
+        if not tour:
+            create_tour(session.property, {"kind": document["kind"]})
+            tour = PropertyVirtualTour.objects.get(property=session.property, kind=document["kind"])
+        require(not tour.deleted, "tour_deleted", "Restore authoring access before selecting outputs.", 409)
+        revision = tour.revisions.filter(review_state="not_submitted").order_by("-created_at").first()
+        if revision and revision.authoring:
+            require(revision.capture_job_id == job.pk and revision.authoring == document,
+                    "draft_exists", "Finish or discard the existing tour draft first.", 409)
+            return revision_payload(revision), 200
+        revision = revision or TourRevision(tour=tour)
+        revision.capture_job, revision.authoring = job, document
+        validate(revision, document)
+        revision.save()
+        return queue_processing(revision, f'"draft-{revision.draft_version}"')
+    return mutation(request, "capture.select_outputs", job_id, execute)
+
+
 def owned(request, session_id, lock=False):
     qs = PropertyCaptureSession.objects.select_related("property")
     if lock:

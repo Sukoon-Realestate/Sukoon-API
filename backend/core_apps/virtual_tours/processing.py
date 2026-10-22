@@ -1,17 +1,25 @@
 import copy
+import logging
 import uuid
 from django.db import transaction
+from django.utils import timezone
 from .errors import require
 from .models import TourRevision, TourVariant
 from .panorama import process_panorama
 from .validation import validate_authoring, validate_glb, validate_walk, validate_spawns
 from .contracts import DELIVERY, MOVEMENT
 from .schemas import validate_schema
+from .processing_lease import ProcessingLease, ProcessingSuperseded
 
 PROCESSOR_VERSION = "sokoun-tours-1"
+logger = logging.getLogger(__name__)
 
 
-def build_variants(revision):
+def build_variants(revision, heartbeat=lambda: None):
+    heartbeat()
+    if revision.capture_job_id:
+        from .capture_delivery import build_variants as build_capture_variants
+        return build_capture_variants(revision)
     document = copy.deepcopy(revision.authoring)
     source_hash, scopes = validate_authoring(revision, document)
     require(
@@ -24,6 +32,7 @@ def build_variants(revision):
     outputs = {}
     variants = []
     for spec in document["variants"]:
+        heartbeat()
         resources = {}
         spaces = [s for s in document["spaces"] if s["id"] in spec["space_ids"]]
         manifest = {
@@ -48,7 +57,9 @@ def build_variants(revision):
                     continue
                 asset_id = scene["source_asset_id"]
                 if asset_id not in outputs:
-                    outputs[asset_id] = process_panorama(assets[asset_id])
+                    outputs[asset_id] = process_panorama(
+                        assets[asset_id], heartbeat=heartbeat
+                    )
                 resource_id = uuid.uuid4().hex
                 resources[resource_id] = outputs[asset_id]
                 scenes.append(
@@ -89,6 +100,7 @@ def build_variants(revision):
             )
             total = 0
             for role in ("visual", "collision", "walk"):
+                heartbeat()
                 asset = assets[spec[f"{role}_asset_id"]]
                 total += asset.size
                 if role == "walk":
@@ -144,9 +156,17 @@ def process_revision(revision_id, expected_hash):
             "processing",
             "validating_and_building",
         )
-        revision.save(update_fields=["processing_state", "stage", "updated_at"])
+        revision.processing_token = uuid.uuid4()
+        recoveries = revision.report.get("worker_recoveries", 0)
+        revision.report = {"worker_recoveries": recoveries} if recoveries else {}
+        revision.save(update_fields=[
+            "processing_state", "processing_token", "stage", "report", "updated_at"
+        ])
+    lease = ProcessingLease(revision)
     try:
-        variants = build_variants(revision)
+        variants = build_variants(revision, heartbeat=lease.heartbeat)
+    except ProcessingSuperseded:
+        return
     except Exception as exc:
         from .errors import TourError
 
@@ -158,11 +178,18 @@ def process_revision(revision_id, expected_hash):
             else "Processing failed. Retry processing or contact support."
         )
         TourRevision.objects.filter(
-            id=revision_id, source_hash=expected_hash, processing_state="processing"
+            id=revision_id, source_hash=expected_hash, processing_state="processing",
+            processing_token=lease.token,
         ).update(
             processing_state="failed",
+            processing_token=None,
             stage="failed",
-            report={"code": code, "message": message},
+            report={**revision.report, "code": code, "message": message},
+            updated_at=timezone.now(),
+        )
+        logger.warning(
+            "tour_processing_failed revision=%s error_type=%s code=%s",
+            revision_id, type(exc).__name__, code,
         )
         return
     with transaction.atomic():
@@ -172,6 +199,7 @@ def process_revision(revision_id, expected_hash):
         if (
             current.source_hash != expected_hash
             or current.processing_state != "processing"
+            or current.processing_token != lease.token
         ):
             return
         current.variants.all().delete()
@@ -179,11 +207,13 @@ def process_revision(revision_id, expected_hash):
             [TourVariant(revision=current, **v) for v in variants]
         )
         current.processing_state, current.stage = "ready", "ready_for_preview"
+        current.processing_token = None
         current.processor_version = PROCESSOR_VERSION
         current.report = {"variant_count": len(variants), "source_hash": expected_hash}
         current.save(
             update_fields=[
                 "processing_state",
+                "processing_token",
                 "stage",
                 "processor_version",
                 "report",

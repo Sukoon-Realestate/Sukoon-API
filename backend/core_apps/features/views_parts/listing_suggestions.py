@@ -17,10 +17,7 @@ from ..renderers import FeatureJsonRenderer
 from .rental_operation_lookup import _replay, _remember
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def owner_analytics(request, property_id):
+def analytics_snapshot(request, property_id):
     property_obj = get_object_or_404(Property, id=property_id, owner=request.user)
     language = request.query_params.get("lang") or request.headers.get(
         "Accept-Language", "en"
@@ -44,8 +41,7 @@ def owner_analytics(request, property_id):
     saved = SavedProperty.objects.filter(
         property=property_obj, created_at__gte=since
     ).count()
-    return Response(
-        {
+    return {
             "property_id": str(property_obj.id),
             "period_days": period_days,
             "measured_at": timezone.now().isoformat(),
@@ -93,8 +89,47 @@ def owner_analytics(request, property_id):
                 },
             ],
             "export_url": "",
-        }
-    )
+            "export_available": True,
+    }
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def owner_analytics(request, property_id):
+    response = Response(analytics_snapshot(request, property_id))
+    response["Cache-Control"] = "private, no-store"
+    return response
+
+
+def csv_cell(value):
+    if value is None:
+        return ""
+    text = str(value)
+    if isinstance(value, str) and text.lstrip().startswith(("=", "+", "-", "@")):
+        return "'" + text
+    return text
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def owner_analytics_export(request, property_id):
+    import csv
+    import io
+    from django.http import HttpResponse
+
+    data = analytics_snapshot(request, property_id)
+    output = io.StringIO(newline="")
+    fields = ["property_id", "period_days", "measured_at", "methodology", "metric", "label", "value", "unit", "value_known", "definition"]
+    writer = csv.writer(output)
+    writer.writerow(fields)
+    for metric in data["metrics"]:
+        writer.writerow([csv_cell(value) for value in [data["property_id"], data["period_days"], data["measured_at"], data["methodology"], metric["key"], metric["label"], metric["value"], metric["unit"], metric["value"] is not None, metric["definition"]]])
+    response = HttpResponse(("\ufeff" + output.getvalue()).encode("utf-8"), content_type="text/csv; charset=utf-8")
+    response["Content-Disposition"] = f'attachment; filename="sokoun-analytics-{property_id}-{data["period_days"]}d.csv"'
+    response["Cache-Control"] = "private, no-store"
+    response["X-Content-Type-Options"] = "nosniff"
+    return response
 
 
 @api_view(["POST"])

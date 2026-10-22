@@ -73,10 +73,12 @@ def read_path(key, child=None):
     return remote_storage.materialize(key, target, child)
 
 
-def persist_tiles(key):
+def persist_tiles(key, *, progress=lambda: None):
     if remote_storage.configured():
         for tile in path(key).iterdir():
+            progress()
             remote_storage.persist(key, tile, tile.name)
+            progress()
 
 
 def file_chunks(source):

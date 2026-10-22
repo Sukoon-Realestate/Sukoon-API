@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Header } from '@/components/layout/Header';
 import {
   TrendingUp,
@@ -16,30 +16,38 @@ import { SystemHealth } from '@/lib/api/types';
 export default function SystemHealthPage() {
   const [data, setData] = useState<SystemHealth | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadHealth() {
-      try {
-        const res = await fetchSystemHealth();
-        setData(res);
-      } catch (err) {
-        console.error('Failed to load system health:', err);
-      } finally {
-        setIsLoading(false);
-      }
+  const [error, setError] = useState('');
+  const request = useRef<AbortController | null>(null);
+  const loadHealth = useCallback(async () => {
+    request.current?.abort();
+    const controller = new AbortController();
+    request.current = controller;
+    setIsLoading(true);
+    setError('');
+    try {
+      const res = await fetchSystemHealth(controller.signal);
+      if (!controller.signal.aborted) setData(res);
+    } catch {
+      if (!controller.signal.aborted) setError('تعذّر تحديث القياسات. أي بيانات ظاهرة تخص آخر قراءة ناجحة.');
+    } finally {
+      if (!controller.signal.aborted) setIsLoading(false);
     }
-    loadHealth();
   }, []);
 
+  useEffect(() => {
+    void loadHealth();
+    return () => request.current?.abort();
+  }, [loadHealth]);
+
   const metrics = data?.metrics || {
-    uptime: '99.8%',
-    uptimeSub: 'آخر 30 يوم',
-    responseTime: '142ms',
+    uptime: 'غير متاح',
+    uptimeSub: 'سجل التوفر التاريخي غير متاح',
+    responseTime: 'غير متاح',
     responseSub: 'متوسط API',
-    errorsToday: '0',
+    errorsToday: 'غير متاح',
     errorsSub: 'أخطاء 5xx',
-    dbStatus: 'طبيعي',
-    dbSub: 'اتصال مستقر',
+    dbStatus: 'غير مؤكد',
+    dbSub: 'لم يكتمل الفحص',
   };
 
   const auditLogs = data?.auditLogs || [];
@@ -51,15 +59,27 @@ export default function SystemHealthPage() {
       <Header
         title="صحة النظام وسجل التدقيق"
         subtitle="مراقبة أداء الخوادم، سرعة الاستجابة وسجل عمليات المشرفين"
-        lastUpdated="محدث الآن"
+        lastUpdated={data?.telemetry ? new Date(data.telemetry.measured_at * 1000).toLocaleString('ar') : 'لم تكتمل القراءة'}
       />
 
-      <div className="admin-page-body space-y-6">
+      <div className="admin-page-body min-w-0 space-y-6 [overflow-wrap:anywhere]">
+        <button type="button" className="min-h-12 rounded-xl border border-[var(--card-border)] px-4 py-3 disabled:opacity-50" disabled={isLoading} onClick={() => void loadHealth()}>{isLoading ? 'جارٍ تحديث القياسات…' : 'تحديث القياسات'}</button>
+        {error && <p role="alert">{error}</p>}
+        {data?.telemetry && <section className="rounded-xl border border-[var(--card-border)] p-4 space-y-2">
+          <h2>القياسات المسجلة</h2><p>الحالة: {data.telemetry.state} · نافذة القياس: {data.telemetry.window_seconds} ثانية</p>
+          <p>الطلبات: {data.telemetry.requests ?? 'غير متاح'} · الحد الأعلى لـp95: {data.telemetry.p95_upper_ms ?? 'غير متاح'} ms</p>
+          {data.telemetry.p95_upper_ms == null && data.telemetry.p95_lower_ms != null && <p>زمن p95 يتجاوز {data.telemetry.p95_lower_ms} ms.</p>}
+          <p>ذاكرة الحاوية: {data.telemetry.memory.ratio == null ? 'غير متاح' : `${(data.telemetry.memory.ratio * 100).toFixed(1)}%`}</p>
+          {data.telemetry.queue && <p>المهام المنتظرة: {data.telemetry.queue.pending ?? 'غير متاح'} · عمر أقدم مهمة: {data.telemetry.queue.oldest_seconds == null ? 'غير متاح' : `${Math.round(data.telemetry.queue.oldest_seconds)} ثانية`}</p>}
+          <p className="break-all">إصدار الخدمة: {data.telemetry.release_sha}</p>
+          {data.telemetry.runtime?.failures.map(code => <p role="alert" key={code}>{code}</p>)}
+        </section>}
+        {!!data?.incidents?.length && <section className="rounded-xl border border-[var(--card-border)] p-4"><h2>التنبيهات التشغيلية</h2><ul>{data.incidents.map(item => <li key={item.code}>{item.code}: {item.state === 'open' ? 'مفتوح' : 'تمت الاستعادة'} · {item.occurrences}</li>)}</ul></section>}
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Uptime */}
-          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
-            <div className="space-y-1">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] min-w-0 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1 min-w-0 w-full sm:flex-1">
               <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
                 {isLoading ? '...' : metrics.uptime}
               </span>
@@ -67,7 +87,7 @@ export default function SystemHealthPage() {
                 {metrics.uptimeSub}
               </p>
               <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
-                آخر 30 يوم
+                سجل التوفر التاريخي غير متاح
               </span>
             </div>
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
@@ -76,8 +96,8 @@ export default function SystemHealthPage() {
           </div>
 
           {/* Card 2: Response Time */}
-          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
-            <div className="space-y-1">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] min-w-0 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1 min-w-0 w-full sm:flex-1">
               <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
                 {isLoading ? '...' : metrics.responseTime}
               </span>
@@ -94,8 +114,8 @@ export default function SystemHealthPage() {
           </div>
 
           {/* Card 3: Today's Errors */}
-          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
-            <div className="space-y-1">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] min-w-0 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1 min-w-0 w-full sm:flex-1">
               <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
                 {isLoading ? '...' : metrics.errorsToday}
               </span>
@@ -112,8 +132,8 @@ export default function SystemHealthPage() {
           </div>
 
           {/* Card 4: Database Status */}
-          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
-            <div className="space-y-1">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] min-w-0 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1 min-w-0 w-full sm:flex-1">
               <span className="text-2xl font-black text-emerald-600 tracking-tight block">
                 {isLoading ? '...' : metrics.dbStatus}
               </span>
@@ -121,7 +141,7 @@ export default function SystemHealthPage() {
                 {metrics.dbSub}
               </p>
               <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
-                اتصال مستقر
+                نتيجة فحص الاتصال في وقت القراءة
               </span>
             </div>
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
@@ -134,12 +154,12 @@ export default function SystemHealthPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Audit Log Table (6 cols) */}
           <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--divider)] pb-3">
+            <div className="flex flex-wrap gap-3 items-center justify-between border-b border-[var(--divider)] pb-3">
               <h3 className="font-extrabold text-[var(--foreground)] text-base">
                 سجل التدقيق – Admin Actions
               </h3>
-              <button className="text-xs text-teal-600 font-bold hover:underline flex items-center gap-1 cursor-pointer">
-                <span>تصدير السجل</span>
+              <button disabled className="text-xs text-[var(--text-muted)] font-bold flex items-center gap-1 opacity-60">
+        <span>التصدير غير متاح</span>
                 <Download className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -148,9 +168,9 @@ export default function SystemHealthPage() {
               {auditLogs.slice(0, 6).map((log) => (
                 <div
                   key={log.id}
-                  className="pt-3 first:pt-0 flex items-center justify-between text-xs"
+                  className="pt-3 first:pt-0 flex flex-wrap gap-2 items-center justify-between text-xs"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap min-w-0 items-center gap-3">
                     <span className="font-mono text-[var(--text-subtle)] font-semibold dir-ltr">
                       {log.time}
                     </span>
@@ -212,8 +232,9 @@ export default function SystemHealthPage() {
               </p>
             </div>
 
+            {!apiPerformance.length && <p role="status" className="text-sm text-[var(--text-muted)]">لا تتوفر سلسلة زمنية لهذه الفترة.</p>}
             {/* Bar Chart Visualization */}
-            <div className="h-44 pt-6 flex items-end justify-between gap-1.5 border-b border-[var(--divider)] pb-2">
+            <div className={apiPerformance.length ? "h-44 pt-6 flex items-end justify-between gap-1.5 border-b border-[var(--divider)] pb-2" : "hidden"}>
               {apiPerformance.map((item, idx) => (
                 <div
                   key={idx}

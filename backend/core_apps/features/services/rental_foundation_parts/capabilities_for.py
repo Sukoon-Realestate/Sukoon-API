@@ -36,6 +36,8 @@ def capabilities_for(user, subject, requested_action=""):
     allowed = []
     blocking = []
 
+    from ..evidence_storage import available as evidence_available
+
     phase2_ready = fake_provider_available()
     if isinstance(subject, Lease):
         if subject.renter_company_id:
@@ -49,7 +51,7 @@ def capabilities_for(user, subject, requested_action=""):
                 and corporate_roles & {"owner", "signer"}
             ):
                 corporate_actions.append("sign")
-            if phase2_ready and corporate_roles & {"owner", "coordinator", "payer"}:
+            if evidence_available() and corporate_roles & {"owner", "coordinator", "payer"}:
                 corporate_actions.append("upload_evidence")
             if commercial_read(subject, user):
                 corporate_actions.append("request_statement")
@@ -63,6 +65,7 @@ def capabilities_for(user, subject, requested_action=""):
                     if phase2_ready
                     else []
                 )
+                + (["rental_maintenance"] if evidence_available() else [])
                 + (
                     ["signed_documents"]
                     if "request_statement" in corporate_actions

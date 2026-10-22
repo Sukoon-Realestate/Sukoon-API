@@ -37,12 +37,12 @@ export function Header({ title, subtitle, lastUpdated }: HeaderProps) {
 
   return <>
     <header className="admin-topbar">
-      <div className="flex min-w-0 items-center gap-3">
+      <div className="admin-topbar-context flex min-w-0 items-center gap-3">
         <button type="button" onClick={toggleMobileMenu} className="admin-icon-button admin-mobile-toggle" aria-label="فتح قائمة الأقسام"><Menu size={21} /></button>
         <nav aria-label="مسار القسم" className="admin-topbar-path"><Link href="/">الإدارة</Link><ChevronLeft size={13} aria-hidden /><span>{section?.title || 'سكون'}</span></nav>
       </div>
       <button type="button" onClick={() => setShowSearch(true)} className="admin-search-trigger" aria-label="البحث في أقسام الإدارة"><Search size={17} aria-hidden /><span>ابحث عن قسم…</span><kbd>Ctrl K</kbd></button>
-      <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
+      <div className="admin-topbar-actions flex items-center gap-1.5 sm:gap-3">
         <ThemeToggle />
         <div className="relative"><button onClick={() => { setShowNotifications((value) => !value); setShowProfileMenu(false); }} className="admin-icon-button" aria-label="الإشعارات" aria-expanded={showNotifications}><Bell size={19} /></button><NotificationsModal isOpen={showNotifications} onClose={() => setShowNotifications(false)} /></div>
         <span className="admin-topbar-divider" />

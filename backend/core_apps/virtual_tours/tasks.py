@@ -50,7 +50,10 @@ def recover_interrupted_tours():
             updated_at=revision.updated_at,
         ).update(
             processing_state="queued" if attempts <= 3 else "failed",
+            processing_token=None,
+            stage="queued" if attempts <= 3 else "failed",
             report={"worker_recoveries": attempts, "code": "worker_interrupted"},
+            updated_at=timezone.now(),
         )
 
 
@@ -92,7 +95,7 @@ def cleanup_tours():
     PropertyCaptureSession.objects.filter(
         deleted_at=None,
         updated_at__lt=now - timedelta(days=settings.CAPTURE_RETENTION_DAYS),
-    ).update(deleted_at=now, state="cancelled")
+    ).exclude(manifests__jobs__tour_revisions__isnull=False).update(deleted_at=now, state="cancelled")
     CaptureProcessingJob.objects.filter(
         manifest__session__deleted_at__isnull=False
     ).update(cancel_requested=True)
@@ -105,6 +108,8 @@ def cleanup_tours():
     ).values_list("outputs", flat=True):
         for station in outputs.get("panorama360", {}).get("stations", []):
             referenced.update(r["blob"] for r in station.get("resources", {}).values())
+        for component in outputs.get("walkthrough3d", {}).get("components", []):
+            referenced.update(r["blob"] for r in component.get("resources", {}).values())
     for resources in TourVariant.objects.values_list("resources", flat=True):
         referenced.update(r["blob"] for r in resources.values())
     for parts in TourUploadSession.objects.filter(

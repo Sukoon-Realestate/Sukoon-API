@@ -37,6 +37,11 @@ class RentalEvidence(TimeStampedModel):
     malware_status = models.CharField(
         max_length=20, choices=MalwareStatus.choices, default=MalwareStatus.PENDING
     )
+    scan_token = models.UUIDField(null=True, blank=True, editable=False)
+    scan_until = models.DateTimeField(null=True, blank=True, editable=False)
+    scan_engine = models.CharField(max_length=200, blank=True, editable=False)
+    scan_sha256 = models.CharField(max_length=64, blank=True, editable=False)
+    scan_error_code = models.CharField(max_length=64, blank=True, editable=False)
     revision = models.PositiveIntegerField(default=1)
     retain_until = models.DateField(null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)

@@ -73,9 +73,9 @@ def ready_services(enabled):
         or mock_mode_available()
         or (service == "asset_assisted_analysis" and manual_review_available())
     ]
-    from ...providers import fake_provider_available
+    from ..evidence_storage import available as evidence_available
 
-    if not fake_provider_available() and "student_verification" in result:
+    if not evidence_available() and "student_verification" in result:
         result.remove("student_verification")
     if not mock_discovery():
         if not settings.PLANNING_ROUTES_API_KEY and "commute" in result:

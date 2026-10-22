@@ -20,6 +20,7 @@ from .policy import digest
 
 
 def job_payload(job):
+    from .services import revision_payload
     outputs = copy.deepcopy(job.outputs)
     for station in outputs.get("panorama360", {}).get("stations", []):
         for name, resource in station.get("resources", {}).items():
@@ -36,11 +37,14 @@ def job_payload(job):
     return {
         "id": str(job.id),
         "manifestRevision": job.manifest.revision,
+        "manifestHash": job.manifest.sha256,
+        "capturedAt": job.manifest.created_at.date().isoformat(),
         "state": job.state,
         "stage": job.stage,
         "outputs": outputs,
         "attempt": job.attempt,
         "cancelRequested": job.cancel_requested,
+        "selectedRevisions": [revision_payload(r) for r in job.tour_revisions.order_by("-created_at")[:2]],
     }
 
 

@@ -1,6 +1,7 @@
 """Private, decoded image previews. Never expose a storage URL to the client."""
 
 import io
+import hashlib
 import uuid
 from django.core.files.base import ContentFile
 from PIL import Image, ImageOps, UnidentifiedImageError
@@ -49,5 +50,6 @@ def store_image(message, upload):
     return TicketAttachment.objects.create(
         message=message,
         name=upload.name,
+        content_sha256=hashlib.sha256(content).hexdigest(),
         private_file=ContentFile(content, name=f"{uuid.uuid4().hex}.{extension}"),
     )

@@ -22,7 +22,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--expected-sha", required=True)
         parser.add_argument(
-            "--profile", choices=["staging_mock", "probe"], default="staging_mock"
+            "--profile", choices=["staging_mock", "probe", "general"], default="staging_mock"
         )
         parser.add_argument(
             "--since",
@@ -56,6 +56,7 @@ class Command(BaseCommand):
         report["verification_scope"] = (
             "isolated_transport_only"
             if profile == "probe"
+            else "explicit_general_schedules" if profile == "general"
             else "staging_mock_schedules"
         )
         profile_checks = (
@@ -77,6 +78,19 @@ class Command(BaseCommand):
                 and settings.RENTAL_FAKE_PROVIDER_ALLOWED,
             }
         )
+        if profile == "general":
+            scheduled = settings.CELERY_BEAT_SCHEDULE
+            profile_checks = {
+                "general_enabled": settings.GENERAL_BACKGROUND_ENABLED,
+                "explicit_task_admission": bool(scheduled) and
+                    {entry["task"] for entry in scheduled.values()} ==
+                    set(settings.GENERAL_BACKGROUND_ALLOWED_TASKS),
+                "separate_general_queue": bool(scheduled) and all(
+                    entry.get("options", {}).get("queue") == "sokoun-general"
+                    for entry in scheduled.values()
+                ),
+                "single_task_prefetch": settings.CELERY_WORKER_PREFETCH_MULTIPLIER == 1,
+            }
         for name, passed in {
             "debug_disabled": settings.DEBUG is False,
             **profile_checks,

@@ -64,6 +64,9 @@ def cycle_actions(user, subject):
             Lease.Status.ENDED,
         }:
             actions.append("create_maintenance_request")
+            from .evidence_storage import available as evidence_available
+            if evidence_available():
+                actions.append("upload_evidence")
         return actions
     if isinstance(subject, Lease):
         actions = ["request_statement", "create_rental_dispute"]

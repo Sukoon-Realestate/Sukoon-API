@@ -36,14 +36,18 @@ def process(assets, cancelled):
             return {"status": "cancelled", "code": "PROCESSING_CANCELLED"}
         if len(frames) > 120:
             return {"status": "failed", "code": "PANORAMA_STATION_BUDGET_EXCEEDED"}
+        contexts = {(a.metadata["roomId"], a.metadata["trackingSegmentId"]) for a in frames}
+        if len(contexts) != 1:
+            results.append({"id": station_id, "fullSphere": False, "status": "needsCapture", "code": "PANORAMA_TRACKING_DISCONTINUITY"})
+            continue
         results.append(stitch_station(station_id, frames, cv2, cancelled))
     return {
         "status": (
-            "needsReview" if all(s["fullSphere"] for s in results) else "needsCapture"
+            "needsReview" if all(s["fullSphere"] and s["status"] == "needsReview" for s in results) else "needsCapture"
         ),
         "code": (
             "OWNER_REVIEW_REQUIRED"
-            if all(s["fullSphere"] for s in results)
+            if all(s["fullSphere"] and s["status"] == "needsReview" for s in results)
             else "PANORAMA_INCOMPLETE"
         ),
         "stations": results,
@@ -62,6 +66,9 @@ def stitch_station(station_id, frames, cv2, cancelled, width=2048):
     ).astype(np.float32)
     total = np.zeros((height, width, 3), np.float32)
     weights = np.zeros((height, width), np.float32)
+    squares = np.zeros((height, width, 3), np.float32)
+    observations = np.zeros((height, width), np.uint8)
+    exposure_gains = []
     positions = []
     descriptors = []
     graph = {str(a.client_id): set() for a in frames}
@@ -94,7 +101,13 @@ def stitch_station(station_id, frames, cv2, cancelled, width=2048):
         )
         weight = np.where(valid, np.maximum(z, 0) ** 4, 0).astype(np.float32)
         warped = cv2.remap(rgb, u, v, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
-        total += warped * weight[:, :, None]
+        overlap = valid & (weights > 1e-6)
+        gain = exposure_gain(total, weights, warped, overlap)
+        exposure_gains.append(gain.tolist())
+        corrected = np.clip(warped.astype(np.float32) * gain, 0, 255)
+        total += corrected * weight[:, :, None]
+        squares += corrected * corrected * weight[:, :, None]
+        observations += valid.astype(np.uint8)
         weights += weight
         # Match content, not only frusta. Unmatched frames never establish a
         # connected station. No AI imagery or orientation changes are inserted.
@@ -159,6 +172,7 @@ def stitch_station(station_id, frames, cv2, cancelled, width=2048):
     pixels = np.clip(total / np.maximum(weights[:, :, None], 1e-6), 0, 255).astype(
         np.uint8
     )
+    appearance = global_appearance(total, squares, weights, observations, mask, pixels)
     seen = set()
     pending = [str(frames[0].client_id)]
     while pending:
@@ -182,7 +196,8 @@ def stitch_station(station_id, frames, cv2, cancelled, width=2048):
         "id": station_id,
         "roomId": frames[0].metadata["roomId"],
         "fullSphere": full,
-        "status": "needsReview" if full else "needsCapture",
+        "status": "needsReview" if full and appearance["appearanceValidated"] else "needsCapture",
+        "quality": {**appearance, "exposureGains": exposure_gains, "calibration": "device_acceptance_pending"},
         "observedFraction": float(mask.mean()),
         "verticalBands": bands,
         "stationTranslationMeters": translated,
@@ -197,3 +212,31 @@ def stitch_station(station_id, frames, cv2, cancelled, width=2048):
             "mask": _save(Image.fromarray(mask.astype(np.uint8) * 255)),
         },
     }
+
+
+def exposure_gain(total, weights, warped, overlap):
+    """Bounded per-channel exposure only; no fill, geometry or generated pixels."""
+    sample = overlap[::4, ::4]
+    if np.count_nonzero(sample) < 100:
+        return np.ones(3, np.float32)
+    reference = (total[::4, ::4] / np.maximum(weights[::4, ::4, None], 1e-6))[sample]
+    incoming = warped[::4, ::4][sample].astype(np.float32)
+    gains = []
+    for channel in range(3):
+        valid = (reference[:, channel] > 20) & (reference[:, channel] < 235) & (incoming[:, channel] > 20) & (incoming[:, channel] < 235)
+        ratio = np.median(reference[valid, channel] / incoming[valid, channel]) if np.count_nonzero(valid) >= 100 else 1
+        gains.append(float(np.clip(ratio, .75, 4/3)))
+    return np.array(gains, np.float32)
+
+
+def global_appearance(total, squares, weights, observations, mask, pixels):
+    overlap = observations >= 2
+    mean = total / np.maximum(weights[:, :, None], 1e-6)
+    variance = np.maximum(squares / np.maximum(weights[:, :, None], 1e-6) - mean*mean, 0)
+    residual = float(np.percentile(np.sqrt(variance[overlap]), 90)) if np.any(overlap) else None
+    seam_observed = mask[:, 0] & mask[:, -1]
+    seam = np.abs(pixels[:, 0].astype(np.float32)-pixels[:, -1].astype(np.float32))[seam_observed]
+    seam_p90 = float(np.percentile(seam, 90)) if seam.size else None
+    return {"appearanceValidated": bool(residual is not None and residual <= 25 and seam_p90 is not None and seam_p90 <= 45),
+        "overlapStdP90": residual, "wrapSeamP90": seam_p90, "observedOverlapFraction": float(overlap.mean()),
+        "method": "bounded_exposure_weighted_overlap_and_wrap_seam_v1", "independentReviewRequired": True}

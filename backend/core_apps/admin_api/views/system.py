@@ -87,3 +87,28 @@ class AdminSendPushNotificationAPIView(APIView):
 
         result = send_push_notification(title=title, body=body, audience=audience)
         return Response(result, status=status.HTTP_201_CREATED)
+
+
+class AdminCampaignPreviewAPIView(APIView):
+    permission_classes = [IsSystemOwner]
+
+    def post(self, request):
+        from core_apps.admin_api.services.push_campaigns import preview, payload
+        return Response(payload(preview(request.user, request.data)), status=201)
+
+
+class AdminCampaignDetailAPIView(APIView):
+    permission_classes = [IsSystemOwner]
+
+    def get(self, request, campaign_id):
+        from django.shortcuts import get_object_or_404
+        from core_apps.admin_api.models import PushCampaign
+        from core_apps.admin_api.services.push_campaigns import payload
+        return Response(payload(get_object_or_404(PushCampaign, id=campaign_id)))
+
+    def post(self, request, campaign_id):
+        from core_apps.admin_api.services.push_campaigns import transition, payload
+        from rest_framework.exceptions import ValidationError
+        if request.data.get("action") not in {"confirm", "cancel"}:
+            raise ValidationError({"action": "Choose confirm or cancel."})
+        return Response(payload(transition(request.user, campaign_id, request.data, cancel=request.data["action"] == "cancel")))

@@ -48,6 +48,9 @@ def claim():
 
 def run(job):
     started = time.monotonic()
+    # Projection and reconstruction share a lease, but reconstruction has its
+    # own explicit hour budget. The old fixed 15 min cutoff cancelled it early.
+    budget = 900 + capture_reconstruction.configuration()["seconds"]
     token = job.lease_token
 
     def cancelled():
@@ -64,7 +67,7 @@ def run(job):
                 or current.manifest.session.property.retired_at is not None
                 or current.manifest.session.property.owner_id
                 != current.manifest.session.owner_id
-                or time.monotonic() - started > 900
+                or time.monotonic() - started > budget
             )
             if not stopped:
                 current.lease_until = timezone.now() + timedelta(seconds=90)

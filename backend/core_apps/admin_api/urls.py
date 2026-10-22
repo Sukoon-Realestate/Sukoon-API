@@ -43,7 +43,11 @@ from .views import (
     AdminSendPushNotificationAPIView,
 )
 
+from .views.system import AdminCampaignPreviewAPIView, AdminCampaignDetailAPIView
+
 urlpatterns = [
+    path("system/notifications/preview/", AdminCampaignPreviewAPIView.as_view(), name="admin-campaign-preview"),
+    path("system/notifications/<uuid:campaign_id>/", AdminCampaignDetailAPIView.as_view(), name="admin-campaign-detail"),
     path("session/", AdminSessionAPIView.as_view(), name="admin-session"),
     # Dashboard stats
     path("dashboard/", AdminDashboardStatsView.as_view(), name="admin-dashboard-stats"),

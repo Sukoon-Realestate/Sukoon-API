@@ -7,6 +7,13 @@ from django.core.management import call_command
 
 from core_apps.features.models import Lease
 from .test_rental_phase6 import phase6_lease
+from core_apps.features.management.commands.reconcile_legacy_rentals import Command
+
+
+def apply_reviewed(lease, stdout=None):
+    lease.refresh_from_db()
+    return call_command("reconcile_legacy_rentals", apply=True, lease_id=lease.id,
+        expected_revision=lease.revision, expected_digest=Command.digest(lease), reason="Reviewed synthetic fixture", stdout=stdout or StringIO())
 
 
 @pytest.mark.django_db
@@ -20,7 +27,7 @@ def test_unsigned_structured_draft_is_not_classified_as_unsupported(phase6_lease
     original_revision = lease.revision
 
     output = StringIO()
-    call_command("reconcile_legacy_rentals", apply=True, stdout=output)
+    apply_reviewed(lease, output)
 
     lease.refresh_from_db()
     assert lease.legacy_read_only is False
@@ -43,9 +50,7 @@ def test_historical_classification_is_explicit_scoped_and_idempotent(phase6_leas
     assert lease.legacy_read_only is False
     assert "classified=0 would_classify=1" in output.getvalue()
 
-    call_command(
-        "reconcile_legacy_rentals", lease_id=lease.id, apply=True, stdout=StringIO()
-    )
+    apply_reviewed(lease)
     lease.refresh_from_db()
     assert lease.legacy_read_only is True
     assert (
@@ -54,9 +59,7 @@ def test_historical_classification_is_explicit_scoped_and_idempotent(phase6_leas
         lease.status,
         lease.occupancy_status,
     ) == (original[0] + 1, *original[1:])
-    call_command(
-        "reconcile_legacy_rentals", lease_id=lease.id, apply=True, stdout=StringIO()
-    )
+    apply_reviewed(lease)
     lease.refresh_from_db()
     assert lease.revision == original[0] + 1
 
@@ -66,7 +69,7 @@ def test_malformed_historical_terms_do_not_abort_classification(phase6_lease):
     _, _, lease = phase6_lease
     lease.terms = ["invalid historical shape"]
     lease.save(update_fields=["terms"])
-    call_command("reconcile_legacy_rentals", apply=True, stdout=StringIO())
+    apply_reviewed(lease)
     lease.refresh_from_db()
     assert lease.legacy_read_only is True
     assert lease.terms == ["invalid historical shape"]

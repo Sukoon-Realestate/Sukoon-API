@@ -1,215 +1,170 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Header } from '@/components/layout/Header';
-import { useToast } from '@/components/ui/Toast';
-import { fetchPushCampaigns, sendPushNotification } from '@/lib/api/system';
+import { useAuth } from '@/context/AuthContext';
+import { fetchPushCampaigns, previewCampaign, changeCampaign } from '@/lib/api/system';
+import { isBackendEnabled } from '@/lib/api/config';
 import { PushCampaign } from '@/lib/api/types';
+import { ApiError } from '@/lib/api/client';
+
+type Audience = 'all' | 'tenants' | 'landlords' | 'verified';
+type PreviewIntent = {request_key: string; title: string; body: string; audience: Audience};
+const labels: Record<string, string> = {preview: 'بانتظار المراجعة', queued: 'في طابور الإرسال', complete: 'انتهت المعالجة', cancelled: 'أُلغي المتبقي', sending: 'جارٍ الإرسال', accepted_by_provider: 'قبله مزود الإشعارات', delivery_unknown: 'نتيجة التسليم غير مؤكدة', failed: 'تعذّر الإرسال', skipped: 'لم يعد مؤهلًا'};
 
 export default function PushNotificationsPage() {
-  const [audience, setAudience] = useState<'all' | 'tenants' | 'landlords' | 'verified'>('all');
+  const { user } = useAuth();
+  const [audience, setAudience] = useState<Audience>('all');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [campaigns, setCampaigns] = useState<PushCampaign[]>([]);
-  const [isSending, setIsSending] = useState(false);
-  const { showToast } = useToast();
-
-  useEffect(() => {
-    async function loadCampaigns() {
-      try {
-        const res = await fetchPushCampaigns();
-        setCampaigns(res || []);
-      } catch (err) {
-        console.error('Failed to load campaigns:', err);
-      }
-    }
-    loadCampaigns();
-  }, []);
-
-  const handleSendNow = async () => {
-    if (!title.trim() || !body.trim()) {
-      showToast('الرجاء كتابة عنوان ونص الإشعار قبل الإرسال', 'error');
-      return;
-    }
-
-    setIsSending(true);
-    try {
-      const created = await sendPushNotification({
-        title,
-        body,
-        audience,
-      });
-      setCampaigns((prev) => [created, ...prev]);
-      showToast(`تم إرسال الإشعار بنجاح إلى الفئة المختارة (${audience})`, 'success');
-      setTitle('');
-      setBody('');
-    } catch (err) {
-      console.error('Failed to send push notification:', err);
-      showToast('حدث خطأ أثناء إرسال الإشعار', 'error');
-    } finally {
-      setIsSending(false);
-    }
+  const [selected, setSelected] = useState<PushCampaign | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [unknown, setUnknown] = useState(false);
+  const [journalError, setJournalError] = useState(false);
+  const intent = useRef<string | null>(null);
+  const originalPreview = useRef<PreviewIntent | null>(null);
+  const generation = useRef(0);
+  const owner = user?.id;
+  const replace = (value: PushCampaign) => {
+    setSelected(value);
+    setCampaigns(previous => [value, ...previous.filter(item => item.id !== value.id)]);
   };
 
-  const handleSchedule = () => showToast('Scheduling is unavailable; nothing was queued.', 'error');
+  useEffect(() => {
+    const epoch = ++generation.current;
+    setCampaigns([]); setSelected(null); setTitle(''); setBody('');
+    setAudience('all'); setUnknown(false); setBusy(false); setError(''); setJournalError(false);
+    intent.current = null; originalPreview.current = null;
+    if (!owner) return;
+    const key = `sokoun-campaign-intent:${owner}`;
+    try {
+      const stored = sessionStorage.getItem(key);
+      if (stored) {
+        if (/^[a-f0-9-]{36}$/i.test(stored)) {
+          intent.current = stored; // Recover previews written by the older UI.
+        } else {
+          const value = JSON.parse(stored);
+          if (!value || typeof value.request_key !== 'string' || !/^[a-f0-9-]{36}$/i.test(value.request_key) || typeof value.title !== 'string' || typeof value.body !== 'string' || !['all', 'tenants', 'landlords', 'verified'].includes(value.audience)) throw new Error('invalid journal');
+          originalPreview.current = value as PreviewIntent;
+          intent.current = value.request_key;
+          setTitle(value.title); setBody(value.body); setAudience(value.audience);
+        }
+        setUnknown(true);
+      }
+    } catch { setJournalError(true); setError('تعذّر قراءة سجل العملية المحلي. راجع الحملات المسجلة قبل بدء إرسال جديد.'); }
+    void fetchPushCampaigns().then(items => {
+      if (epoch !== generation.current) return;
+      setCampaigns(items);
+      const original = items.find(item => item.request_key === intent.current);
+      if (original) { setSelected(original); setTitle(original.title); setBody(original.body); setAudience(original.audience ?? 'all'); setUnknown(false); }
+    }).catch(() => { if (epoch === generation.current) setError('تعذّر تحميل الحملات. أعد التحديث.'); });
+    return () => { generation.current++; };
+  }, [owner]);
 
-  return (
-    <div className="flex-1 flex flex-col pb-12">
-      <Header
-        title="إدارة الإشعارات المدفوعة"
-        subtitle="إنشاء حملات الإشعارات، الاستهداف وفحص معدلات الفتح والتفاعل"
-        lastUpdated="محدث الآن"
-      />
+  async function refresh() {
+    const epoch = generation.current;
+    setBusy(true);
+    try {
+      const items = await fetchPushCampaigns();
+      if (epoch !== generation.current) return;
+      setCampaigns(items);
+      const original = items.find(item => item.id === selected?.id || item.request_key === intent.current);
+      if (original) { setSelected(original); setUnknown(false); setError(''); }
+    } catch { if (epoch === generation.current) setError('تعذّر التحديث؛ احتفظ بالعملية الأصلية.'); }
+    finally { if (epoch === generation.current) setBusy(false); }
+  }
 
-      <div className="admin-page-body space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left Column: Create Notification Form (6 cols) */}
-          <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-5">
-            <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
-              إرسال إشعار جديد
-            </h3>
+  async function preview() {
+    if (!owner || busy || journalError || !isBackendEnabled()) return;
+    const epoch = generation.current;
+    intent.current ??= crypto.randomUUID();
+    const original = originalPreview.current ?? {title, body, audience, request_key: intent.current};
+    try { sessionStorage.setItem(`sokoun-campaign-intent:${owner}`, JSON.stringify(original)); }
+    catch { setJournalError(true); setError('تعذّر حفظ العملية قبل الإرسال. لم يتم إرسال الطلب.'); return; }
+    originalPreview.current = original;
+    setBusy(true); setError('');
+    try {
+      const value = await previewCampaign(original);
+      if (epoch === generation.current) { replace(value); setUnknown(false); }
+    } catch (failure) {
+      if (epoch === generation.current) {
+        if (failure instanceof ApiError && [400, 422].includes(failure.status)) {
+          setUnknown(false); setError(failure.message);
+          intent.current = null; originalPreview.current = null;
+          try { sessionStorage.removeItem(`sokoun-campaign-intent:${owner}`); }
+          catch { setJournalError(true); }
+        } else { setUnknown(true); setError('النتيجة غير مؤكدة. حدّث القائمة لاستعادة المعاينة، أو أعد نفس الطلب.'); }
+      }
+    }
+    finally { if (epoch === generation.current) setBusy(false); }
+  }
 
-            <p role="status">Broadcast delivery is unavailable. No recipients are notified and no campaign is scheduled.</p>
-            {/* Target Audience */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-[var(--text-subtle)]">
-                الجمهور المستهدف
-              </label>
-              <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                <button
-                  type="button"
-                  onClick={() => setAudience('all')}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                    audience === 'all'
-                      ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
-                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
-                  }`}
-                >
-                  كل المستخدمين
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAudience('tenants')}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                    audience === 'tenants'
-                      ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
-                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
-                  }`}
-                >
-                  مستأجرون
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAudience('landlords')}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                    audience === 'landlords'
-                      ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
-                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
-                  }`}
-                >
-                  ملاك
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAudience('verified')}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                    audience === 'verified'
-                      ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
-                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
-                  }`}
-                >
-                  موثّقون فقط
-                </button>
-              </div>
-            </div>
+  async function command(action: 'confirm' | 'cancel') {
+    if (!selected || busy || journalError || !isBackendEnabled()) return;
+    const epoch = generation.current;
+    setBusy(true); setError('');
+    try {
+      const result = await changeCampaign(selected, action);
+      if (epoch === generation.current) { replace(result); setUnknown(false); }
+    } catch { if (epoch === generation.current) { setUnknown(true); setError('تعذّر تأكيد نتيجة العملية. حدّث الحملة الأصلية قبل أي إجراء جديد.'); } }
+    finally { if (epoch === generation.current) setBusy(false); }
+  }
 
-            {/* Notification Title Input */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[var(--text-subtle)]">
-                عنوان الإشعار
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="مثال: عروض الصيف على سكون!"
-                className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] placeholder:text-[var(--text-subtle)] text-[var(--foreground)]"
-              />
-            </div>
+  function reset() {
+    if (busy || unknown || journalError) return;
+    try { if (owner) sessionStorage.removeItem(`sokoun-campaign-intent:${owner}`); }
+    catch { setJournalError(true); setError('تعذّر تحديث سجل العملية المحلي. لم تبدأ حملة جديدة.'); return; }
+    intent.current = null; originalPreview.current = null; setSelected(null); setTitle(''); setBody(''); setError('');
+  }
 
-            {/* Notification Body Textarea */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[var(--text-subtle)]">
-                نص الإشعار
-              </label>
-              <textarea
-                rows={4}
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="نص الإشعار..."
-                className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] placeholder:text-[var(--text-subtle)] resize-none text-[var(--foreground)]"
-              ></textarea>
-            </div>
+  function review(campaign: PushCampaign) {
+    if (busy || unknown || !owner) return;
+    const original = {request_key: campaign.request_key!, title: campaign.title, body: campaign.body, audience: campaign.audience ?? 'all'} as PreviewIntent;
+    try { sessionStorage.setItem(`sokoun-campaign-intent:${owner}`, JSON.stringify(original)); }
+    catch { setJournalError(true); setError('تعذّر حفظ الحملة المحددة للاستعادة؛ المراجعة فقط متاحة.'); }
+    intent.current = original.request_key; originalPreview.current = original;
+    setSelected(campaign); setTitle(campaign.title); setBody(campaign.body); setAudience(original.audience);
+  }
 
-            {/* Form Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              <button
-                type="button"
-                disabled title="Broadcast delivery is unavailable until a durable dispatcher is connected."
-                onClick={handleSendNow}
-                className="py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                <span>{isSending ? 'جاري الإرسال...' : 'إرسال الآن'}</span>
-              </button>
-
-              <button
-                type="button"
-                disabled title="Scheduling is unavailable." onClick={handleSchedule}
-                className="py-3.5 bg-[var(--card-hover)] hover:bg-[var(--badge-bg-muted)] text-[var(--foreground)] font-extrabold text-sm rounded-xl border border-[var(--card-border)] transition-colors flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>جدولة</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Right Column: Sent Notifications History (6 cols) */}
-          <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-5">
-            <h3 className="font-black text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
-              سجل الإشعارات المرسلة
-            </h3>
-
-            <div className="divide-y divide-[var(--divider)] space-y-4">
-              {campaigns.length === 0 ? (
-                <div className="text-xs text-[var(--text-subtle)] py-4 text-center">
-                  لا توجد حملات إشعارات سابقة
-                </div>
-              ) : (
-                campaigns.map((camp) => (
-                  <div key={camp.id} className="pt-4 first:pt-0 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-extrabold text-[var(--foreground)] text-sm">
-                        {camp.title}
-                      </h4>
-                      <span className="text-[11px] text-[var(--text-subtle)] font-medium">
-                        {camp.timeAgo}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-[var(--text-subtle)] font-medium leading-relaxed">
-                      {camp.body}
-                    </p>
-
-                    <div className="flex items-center gap-3 text-xs font-bold pt-1">
-                      <span className="text-emerald-500">{camp.openRate}</span>
-                      <span className="text-[var(--text-subtle)] font-normal">{camp.recipientCount}</span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
+  const button = 'min-h-12 rounded-xl border border-[var(--card-border)] px-4 py-3 disabled:opacity-50';
+  const field = 'w-full p-3 rounded-xl border border-[var(--card-border)] bg-[var(--input-bg)] text-[var(--foreground)]';
+  return <div className="flex-1 flex flex-col pb-12">
+    <Header title="حملات الإشعارات" subtitle="راجع الجمهور والنص، ثم أكّد الإرسال وتابع النتيجة" />
+    <div className="admin-page-body space-y-6">
+      {error && <p role="alert">{error}</p>}
+      {!isBackendEnabled() && <p role="status">المعاينة التجريبية لا ترسل إشعارات.</p>}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <section aria-label="إنشاء ومراجعة حملة" className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-6 space-y-4">
+          <fieldset disabled={busy || !!selected || unknown || journalError} className="space-y-4">
+            <label className="block">الجمهور<select className={field} value={audience} onChange={event => setAudience(event.target.value as Audience)}>
+              <option value="all">كل الموافقين على العروض</option><option value="tenants">المستأجرون</option><option value="landlords">الملاك</option><option value="verified">الحسابات الموثقة</option>
+            </select></label>
+            <label className="block">عنوان الإشعار<input className={field} maxLength={180} value={title} onChange={event => setTitle(event.target.value)} /></label>
+            <label className="block">نص الإشعار<textarea className={field} maxLength={2000} rows={5} value={body} onChange={event => setBody(event.target.value)} /></label>
+          </fieldset>
+          {!selected && <button className={button} disabled={busy || journalError || !title.trim() || !body.trim() || !isBackendEnabled()} onClick={preview}>{busy ? 'جارٍ التحميل…' : unknown ? 'إعادة طلب المعاينة الأصلية' : 'معاينة الجمهور'}</button>}
+          {selected && <div className="space-y-3" aria-live="polite">
+            <p>{labels[selected.state ?? ''] ?? 'الحالة غير متاحة'} · {selected.recipientCount} مستلم</p>
+            <p>تُراجع الموافقة وصلاحية الجهاز مرة أخرى وقت الإرسال. قد يقل العدد الفعلي. قبول المزود لا يثبت القراءة.</p>
+            {selected.state === 'preview' && <button className={button} disabled={busy || unknown || journalError || !selected.can_confirm} onClick={() => command('confirm')}>تأكيد وإضافة للطابور</button>}
+            {selected.state === 'preview' && !selected.can_confirm && <p>الإرسال غير مفعّل في هذه البيئة.</p>}
+            {['preview', 'queued'].includes(selected.state ?? '') && <button className={button} disabled={busy || unknown || journalError} onClick={() => command('cancel')}>إلغاء ما لم يبدأ إرساله</button>}
+          </div>}
+          <div className="flex flex-wrap gap-2"><button className={button} disabled={busy} onClick={refresh}>تحديث واستعادة الحالة</button><button className={button} disabled={busy || unknown || journalError} onClick={reset}>حملة جديدة</button></div>
+        </section>
+        <section aria-label="سجل الحملات" className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-6 space-y-4">
+          <h2>سجل الحملات</h2>
+          {!campaigns.length && <p>لا توجد حملات مسجلة.</p>}
+          {campaigns.map(campaign => <article key={campaign.id} className="border-b border-[var(--divider)] pb-4 space-y-2">
+            <h3>{campaign.title}</h3><p className="whitespace-pre-wrap break-words">{campaign.body}</p>
+            <p>{labels[campaign.state ?? ''] ?? 'غير متاح'} · {campaign.recipientCount} مستلم</p>
+            <ul>{Object.entries(campaign.deliveryCounts ?? {}).map(([state, count]) => <li key={state}>{labels[state] ?? state}: {count}</li>)}</ul>
+            <button className={button} disabled={busy || unknown} onClick={() => review(campaign)}>مراجعة الحملة</button>
+          </article>)}
+        </section>
       </div>
     </div>
-  );
+  </div>;
 }

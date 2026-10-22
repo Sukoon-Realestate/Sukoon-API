@@ -3,6 +3,7 @@ from pathlib import Path
 from django.core.management.base import BaseCommand
 from core_apps.virtual_tours.schemas import AUTHORING
 from core_apps.virtual_tours.contracts import DELIVERY, BRIDGE_COMMAND, WALK_DELIVERY
+from core_apps.virtual_tours.capture_contracts import CAPTURE_AUTHORING, CAPTURE_DELIVERY
 from core_apps.virtual_tours.openapi import document
 
 
@@ -19,6 +20,8 @@ class Command(BaseCommand):
             ("authoring-v1", AUTHORING),
             ("walk-regions-v1", WALK_DELIVERY),
             ("delivery-v1", DELIVERY),
+            ("capture-authoring-v2", CAPTURE_AUTHORING),
+            ("delivery-v2", CAPTURE_DELIVERY),
             ("bridge-command-v1", BRIDGE_COMMAND),
         ):
             (target / f"{name}.schema.json").write_text(

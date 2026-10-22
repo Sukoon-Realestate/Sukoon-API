@@ -323,7 +323,10 @@ def test_legacy_reconciliation_preserves_identifiers_and_financial_facts(phase6_
     original_id = lease.id
     original_rent = lease.rent_amount_minor
 
-    call_command("reconcile_legacy_rentals", "--apply")
+    from core_apps.features.management.commands.reconcile_legacy_rentals import Command
+    for candidate in Lease.objects.filter(legacy_read_only=False):
+        call_command("reconcile_legacy_rentals", apply=True, lease_id=candidate.id,
+            expected_revision=candidate.revision, expected_digest=Command.digest(candidate), reason="Reviewed synthetic fixture")
 
     lease.refresh_from_db()
     assert lease.id == original_id

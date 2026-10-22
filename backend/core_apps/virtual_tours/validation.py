@@ -14,6 +14,9 @@ from .storage import read_path as path
 
 
 def validate_authoring(revision, document):
+    if revision.capture_job_id:
+        from .capture_delivery import validate
+        return validate(revision, document)
     validate_schema(document)
     require(
         document["kind"] == revision.tour.kind,

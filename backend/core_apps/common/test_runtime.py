@@ -242,7 +242,10 @@ def test_beat_marks_published_id_without_overwriting_schedule_options(runtime_se
         scheduler.apply_async(entry)
     assert entry.options is original
     assert published[0]["task_id"]
-    assert published[0]["headers"] == {"retained": True, "sokoun_schedule": "scan"}
+    headers = published[0]["headers"]
+    assert set(headers) == {"retained", "sokoun_schedule", "sokoun_dispatched_at"}
+    assert headers["retained"] is True and headers["sokoun_schedule"] == "scan"
+    assert isinstance(headers["sokoun_dispatched_at"], float) and headers["sokoun_dispatched_at"] > 0
     dispatch_json = json.loads(client.set.call_args.args[1])
     assert dispatch_json["task_id"] == published[0]["task_id"]
 

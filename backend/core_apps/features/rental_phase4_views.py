@@ -54,6 +54,7 @@ from .rental_phase4_views_parts.rental_evidence_upload import (
     _evidence,
     rental_evidence_detail,
     rental_evidence_download,
+    rental_evidence_content,
 )
 from .rental_phase4_views_parts.lease_handovers import (
     lease_handovers,

@@ -15,6 +15,9 @@ def token_hash(token):
 def available_variant(variant, preview=False, user=None):
     revision = variant.revision
     tour, prop = revision.tour, revision.tour.target
+    if revision.capture_job_id:
+        from .capture_delivery import source
+        source(revision)
     require(
         enabled(tour.kind, preview) and not tour.deleted,
         "tour_disabled",
@@ -58,7 +61,7 @@ def available_variant(variant, preview=False, user=None):
         409,
     )
     require(
-        variant.manifest.get("schema_version") == 1,
+        variant.manifest.get("schema_version") in (1, 2),
         "unsupported_manifest",
         "Update the viewer to open this tour.",
         409,
@@ -120,7 +123,7 @@ def available(prop, context="overview"):
 
 def create_session(tour, user, body):
     require(
-        set(body).issubset({"offer_id", "preview", "revision_id", "context"}),
+        set(body).issubset({"offer_id", "preview", "revision_id", "context", "supported_manifest_versions"}),
         "invalid_session",
         "Unsupported viewer session field.",
     )
@@ -164,6 +167,11 @@ def create_session(tour, user, body):
         404,
     )
     available_variant(variant, preview, user)
+    versions = body.get("supported_manifest_versions", [1])
+    require(isinstance(versions, list) and 1 <= len(versions) <= 4
+            and all(type(v) is int and v in (1, 2) for v in versions)
+            and variant.manifest["schema_version"] in versions,
+            "unsupported_manifest", "Update the app to open this capture tour.", 409)
     token = secrets.token_urlsafe(32)
     now = timezone.now()
     session = TourViewerSession.objects.create(
@@ -180,6 +188,7 @@ def create_session(tour, user, body):
         "bootstrap_expires_at": session.bootstrap_expires_at.isoformat(),
         "viewer_url": settings.VIRTUAL_TOUR_VIEWER_URL,
         "protocol_version": 1,
+        "manifest_version": variant.manifest["schema_version"],
     }
 
 

@@ -92,10 +92,15 @@ class TourRevision(TimeStampedModel):
     tour = models.ForeignKey(
         PropertyVirtualTour, on_delete=models.CASCADE, related_name="revisions"
     )
+    capture_job = models.ForeignKey(
+        "CaptureProcessingJob", null=True, blank=True,
+        on_delete=models.PROTECT, related_name="tour_revisions",
+    )
     draft_version = models.PositiveIntegerField(default=1)
     authoring = models.JSONField(default=dict)
     source_hash = models.CharField(max_length=64, blank=True)
     processing_state = models.CharField(max_length=20, default="draft")
+    processing_token = models.UUIDField(null=True, editable=False)
     review_state = models.CharField(max_length=20, default="not_submitted")
     stage = models.CharField(max_length=40, blank=True)
     report = models.JSONField(default=dict)

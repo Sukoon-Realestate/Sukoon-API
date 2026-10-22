@@ -8,6 +8,12 @@ import time
 
 
 def main():
+    # The same release owns its schema. Complete it before starting API/workers,
+    # while the previous deployment still serves traffic. The command holds a
+    # PostgreSQL session lock across migrations and rejects an incomplete plan.
+    schema = subprocess.run([sys.executable, "manage.py", "migrate_release"])
+    if schema.returncode:
+        return schema.returncode
     processes = []
     stopping = False
 
@@ -36,11 +42,13 @@ def main():
             ]
         )
     )
-    # In off mode this process only maintains retention, already-created notices
-    # and the existing event outbox. It makes no Gemini calls.
-    processes.append(
-        subprocess.Popen([sys.executable, "manage.py", "run_chat_policy_worker"])
-    )
+    if os.environ.get("SOKOUN_GENERAL_BACKGROUND_ENABLED", "false").lower() == "true":
+        # Share one Django process between the solo worker and a beat thread.
+        # Its admitted maintenance tasks replace the separate chat process.
+        processes.append(subprocess.Popen([sys.executable, "manage.py", "run_general_worker"]))
+    else:
+        # In off mode this only maintains retention, notices and the outbox.
+        processes.append(subprocess.Popen([sys.executable, "manage.py", "run_chat_policy_worker"]))
     code = 0
     try:
         while not stopping:

@@ -27,7 +27,7 @@ from .models import (
     StudentProfile,
     RentalOperationalCase,
 )
-from .providers import get_rental_provider
+from .services import evidence_storage
 from .renderers import FeatureJsonRenderer
 from .services.planning import require_planning, planning_api, mutate, page
 from .services.rental_phase2 import RentalConflict, replay_operation, remember_mutation
@@ -80,17 +80,8 @@ def student_evidence_upload(request):
     if not upload:
         raise ValidationError({"file": "Supply enrollment or admission evidence."})
     content = upload.read(MAX_EVIDENCE_BYTES + 1)
-    if len(content) > MAX_EVIDENCE_BYTES or not content.startswith(PNG_MAGIC):
-        raise ValidationError({"file": "Use a PNG image up to 5 MiB."})
-    try:
-        with Image.open(io.BytesIO(content)) as img:
-            img.verify()
-    except (ValueError, OSError, UnidentifiedImageError):
-        raise ValidationError({"file": "The PNG image cannot be decoded."})
-    digest = hashlib.sha256(content).hexdigest()
-    if request.data.get("sha256") != digest:
-        raise ValidationError({"sha256": "Digest must match the evidence."})
-    provider = get_rental_provider()
+    digest = evidence_storage.validate_png(content, request.data.get("sha256"), upload.content_type)
+    evidence_storage.require_available()
     # Commit a durable identity before provider I/O. Retry uses the same evidence.
     with transaction.atomic():
         User.objects.select_for_update(no_key=True).get(pk=request.user.pk)
@@ -109,7 +100,7 @@ def student_evidence_upload(request):
                 "size_bytes": len(content),
                 "private_content": content,
                 "storage_key": f"student-evidence-pending/{request.user.id}/{key}",
-                "storage_provider": provider.name,
+                "storage_provider": "pending",
                 "retain_until": timezone.localdate() + timedelta(days=400),
             },
         )
@@ -182,10 +173,9 @@ def student_evidence(request, evidence_id=None):
         raise RentalConflict(
             "Evidence is awaiting its private security scan.", code="evidence_not_ready"
         )
-    # Only the explicitly configured non-production adapter currently supports bytes.
     require_planning(request.user, "student_verification")
     response = HttpResponse(
-        bytes(item.private_content or b""), content_type="image/png"
+        evidence_storage.read(item), content_type="image/png"
     )
     response["Content-Disposition"] = 'inline; filename="student-evidence.png"'
     response["Cache-Control"] = "private, no-store"

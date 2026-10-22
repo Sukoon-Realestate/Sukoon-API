@@ -26,10 +26,22 @@ def cube_direction(face, u, v):
 
 
 def tile_pixels(pixels, face, size, tile_x, tile_y):
+    # Bilinear interpolation creates several floating-point intermediates.
+    # Bound those to 64 rows while preserving the exact projection and output.
+    result = np.empty((512, 512, 3), dtype=np.uint8)
+    for start in range(0, 512, 64):
+        result[start : start + 64] = _tile_rows(
+            pixels, face, size, tile_x, tile_y, start
+        )
+    return result
+
+
+def _tile_rows(pixels, face, size, tile_x, tile_y, start):
     height, width, _ = pixels.shape
     u, v = np.meshgrid(
         (np.arange(512, dtype=np.float32) + tile_x * 512 + 0.5) / size * 2 - 1,
-        (np.arange(512, dtype=np.float32) + tile_y * 512 + 0.5) / size * 2 - 1,
+        (np.arange(start, start + 64, dtype=np.float32) + tile_y * 512 + 0.5)
+        / size * 2 - 1,
     )
     x, y, z = cube_direction(face, u, v)
     sx = (np.arctan2(x, -z) / (2 * math.pi) + 0.5) * width - 0.5
@@ -47,8 +59,9 @@ def tile_pixels(pixels, face, size, tile_x, tile_y):
     )
 
 
-def process_panorama(asset):
+def process_panorama(asset, *, heartbeat=lambda: None):
     try:
+        heartbeat()
         with Image.open(read_path(asset.blob)) as original:
             width, height = original.size
             require(
@@ -90,12 +103,14 @@ def process_panorama(asset):
                 for face in FACES:
                     for tile_y in range(size // 512):
                         for tile_x in range(size // 512):
+                            heartbeat()
                             target = directory / f"{face}_{level}_{tile_x}_{tile_y}.jpg"
                             Image.fromarray(
                                 tile_pixels(pixels, face, size, tile_x, tile_y)
                             ).save(target, "JPEG", quality=85)
                             os.chmod(target, 0o600)
-            persist_tiles(key)
+            del pixels
+            persist_tiles(key, progress=heartbeat)
             return {
                 "blob": key,
                 "type": "tiles",

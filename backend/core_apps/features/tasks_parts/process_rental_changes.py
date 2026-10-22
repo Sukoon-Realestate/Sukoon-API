@@ -24,39 +24,64 @@ from ..services.rental_phase2 import RentalConflict
     acks_late=True,
 )
 def scan_rental_evidence(self):
-    safe = unsafe = 0
-    for item in RentalEvidence.objects.filter(
-        malware_status=RentalEvidence.MalwareStatus.PENDING, deleted_at__isnull=True
-    )[:100]:
-        # Provider work uses a durable evidence identity and runs outside DB locks.
-        provider = get_rental_provider()
-        if item.purpose == "student" and item.storage_key.startswith(
-            "student-evidence-pending/"
-        ):
-            storage_key = provider.store_private_evidence(
-                item.uploader.id, item.id, bytes(item.private_content or b"")
-            )
-            RentalEvidence.objects.filter(pk=item.pk, deleted_at__isnull=True).update(
-                storage_key=storage_key
-            )
-        is_safe = provider.scan_evidence(bytes(item.private_content or b""))
+    from uuid import uuid4
+    from django.db.models import Q
+    from ..services import evidence_storage
+
+    if not evidence_storage.available():
+        return {"safe": 0, "unsafe": 0, "unavailable": 1}
+    safe = unsafe = failed = 0
+    now = timezone.now()
+    ids = list(RentalEvidence.objects.filter(
+        malware_status="pending", deleted_at__isnull=True
+    ).filter(Q(scan_until__isnull=True) | Q(scan_until__lte=now)).order_by("created_at").values_list("pk", flat=True)[:100])
+    for identity in ids:
+        token = uuid4()
         with transaction.atomic():
-            item = RentalEvidence.objects.select_for_update().get(pk=item.pk)
-            if (
-                item.malware_status != RentalEvidence.MalwareStatus.PENDING
-                or item.deleted_at
-            ):
+            item = RentalEvidence.objects.select_for_update().get(pk=identity)
+            if item.deleted_at or item.malware_status != "pending" or (item.scan_until and item.scan_until > timezone.now()):
                 continue
-            item.malware_status = (
-                RentalEvidence.MalwareStatus.SAFE
-                if is_safe
-                else RentalEvidence.MalwareStatus.UNSAFE
+            item.scan_token, item.scan_until = token, timezone.now() + timedelta(minutes=5)
+            item.save(update_fields=["scan_token", "scan_until"])
+        import hashlib
+        original = bytes(item.private_content or b"")
+        if len(original) != item.size_bytes or hashlib.sha256(original).hexdigest() != item.sha256:
+            # Permanent corruption needs operator review. Scheduling it every
+            # minute cannot repair it and must never reinterpret it as safe.
+            RentalEvidence.objects.filter(pk=identity, scan_token=token, deleted_at__isnull=True).update(
+                malware_status="failed", scan_token=None, scan_until=None, scan_error_code="integrity_mismatch"
             )
-            item.revision += 1
-            item.save(update_fields=["malware_status", "revision", "updated_at"])
-            safe += int(is_safe)
-            unsafe += int(not is_safe)
-    return {"safe": safe, "unsafe": unsafe}
+            failed += 1
+            continue
+        try:
+            provider, storage_key = evidence_storage.persist(item)
+            result = evidence_storage.scan(bytes(item.private_content or b""))
+            if result.sha256 != item.sha256:
+                raise ValueError("Evidence changed during inspection")
+        except Exception:
+            # Retain original bytes and a durable retry time. No error strings or
+            # document content enter logs, and an outage never produces SAFE.
+            RentalEvidence.objects.filter(pk=identity, scan_token=token, deleted_at__isnull=True).update(
+                scan_token=None, scan_until=timezone.now() + timedelta(minutes=1), scan_error_code="inspection_unavailable"
+            )
+            failed += 1
+            continue
+        with transaction.atomic():
+            current = RentalEvidence.objects.select_for_update().get(pk=identity)
+            if current.scan_token != token or current.deleted_at or current.malware_status != "pending" or current.sha256 != result.sha256:
+                continue
+            current.storage_provider, current.storage_key = provider, storage_key
+            current.malware_status = "safe" if result.safe else "unsafe"
+            current.scan_engine, current.scan_sha256 = result.engine, result.sha256
+            current.scan_token = current.scan_until = None
+            current.scan_error_code = ""
+            current.revision += 1
+            # Keep originals until a separately reviewed retention/backfill run;
+            # writing remote data never silently destroys the durable DB copy.
+            current.save()
+            safe += int(result.safe)
+            unsafe += int(not result.safe)
+    return {"safe": safe, "unsafe": unsafe, "failed": failed}
 
 
 @shared_task(

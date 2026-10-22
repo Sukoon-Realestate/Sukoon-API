@@ -399,6 +399,8 @@ export interface AuditLogItem {
 }
 
 export interface SystemHealth {
+  telemetry?: { state: string; measured_at: number; window_seconds: number; requests: number | null; server_errors: number | null; error_rate: number | null; average_ms: number | null; p95_upper_ms: number | null; p95_lower_ms?: number | null; release_sha: string; routes: Array<{route: string; requests: number; errors: number; duration_ms: number}>; memory: {ratio: number | null; used_bytes: number | null; limit_bytes: number | null; scope: string}; runtime: {failures: string[]} | null; queue?: {state: string; pending: number | null; oldest_seconds: number | null} };
+  incidents?: Array<{code: string; state: string; occurrences: number; opened_at: string | null; resolved_at: string | null}>;
   metrics: {
     uptime: string;
     uptimeSub: string;
@@ -423,7 +425,14 @@ export interface PushCampaign {
   title: string;
   timeAgo: string;
   body: string;
-  openRate: string;
-  recipientCount: string;
+  openRate: string | null;
+  recipientCount: string | number;
+  audience?: 'all' | 'tenants' | 'landlords' | 'verified';
+  state?: string;
+  revision?: number;
+  preview_digest?: string;
+  request_key?: string;
+  deliveryCounts?: Record<string, number>;
+  can_confirm?: boolean;
 }
 
