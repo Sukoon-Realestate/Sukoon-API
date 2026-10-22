@@ -183,6 +183,14 @@ class GeminiReviewer:
             raise ProviderUnavailable("provider_invalid_response") from None
 
     def extract(self, attachment):
+        # Opaque files and videos beyond the existing provider budget are
+        # uninspected evidence, never a clean/compliant extraction. Keep their
+        # surrounding text reviewable without submitting arbitrary file formats
+        # or exhausting the provider's inline media budget.
+        if attachment.kind == "file" or (
+            attachment.kind == "video" and attachment.byte_size > 10 * 1024 * 1024
+        ):
+            return {"text": "", "uncertain": True}
         version = f"{self.model}:extract-v1"
         cached = ChatMediaAnalysis.objects.filter(
             attachment=attachment, fingerprint=attachment.fingerprint, version=version

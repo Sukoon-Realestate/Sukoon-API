@@ -67,6 +67,37 @@ def test_chunked_attachment_roundtrip_and_manifest_last(chat_group, durable):
     assert read_private_path(key).read_bytes() == data
 
 
+@pytest.mark.parametrize("extension", ["bin", "mp4"])
+def test_rich_file_above_legacy_limit_survives_service_replacement(
+    chat_group, durable, extension
+):
+    key = uuid.uuid4().hex + "." + extension
+    source = private_path(key)
+    data = b"x" * (12 * 1024 * 1024)
+    source.write_bytes(data)
+    remote.persist(key, source)
+    remote.verify_backup(key, source)
+    source.unlink()
+    assert read_private_path(key).read_bytes() == data
+
+
+@pytest.mark.parametrize(
+    "extension,limit", [("bin", "file_max_bytes"), ("mp4", "video_max_bytes")]
+)
+def test_rich_remote_restore_enforces_its_own_kind_budget(
+    chat_group, durable, settings, extension, limit
+):
+    settings.CHAT_MEDIA_LIMITS = {limit: 16}
+    key = uuid.uuid4().hex + "." + extension
+    source = private_path(key)
+    source.write_bytes(b"x" * 17)
+    remote.persist(key, source)
+    source.unlink()
+    with pytest.raises(ChatUnavailable):
+        read_private_path(key)
+    assert not source.exists()
+
+
 def test_cloud_failure_never_acknowledges_local_only_upload(chat_group, durable):
     _, conversation, owner, _ = chat_group
     with patch.object(

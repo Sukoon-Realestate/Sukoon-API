@@ -1,6 +1,7 @@
 """Dedicated private filesystem. No MEDIA_URL or user-selected storage keys."""
 
 import hashlib
+import json
 import logging
 import os
 import tempfile
@@ -15,6 +16,13 @@ from core_apps.chat.models import ChatAttachment
 from .group_access import authorize
 from .group_limits import ChatConflict, ChatUnavailable, limits
 from .group_media_validation import inspect_image, inspect_voice
+from .rich_media import (
+    inspect_file,
+    inspect_video,
+    original_name,
+    validate_waveform,
+    voice_waveform,
+)
 from . import group_media_remote
 
 
@@ -42,14 +50,27 @@ def read_private_path(key):
 
 
 def upload_attachment(
-    conversation, user, upload, client_upload_id, kind, supplied_hash=None
+    conversation,
+    user,
+    upload,
+    client_upload_id,
+    kind,
+    supplied_hash=None,
+    waveform=None,
 ):
     try:
         upload_id = uuid.UUID(str(client_upload_id))
     except (TypeError, ValueError):
         raise ValidationError({"client_upload_id": "Supply a UUID."})
-    if kind not in {"image", "voice"}:
-        raise ValidationError({"kind": "Choose image or voice."})
+    if (
+        kind not in {"image", "voice", "file", "video"}
+        or kind not in limits()["message_kinds"]
+    ):
+        raise ValidationError({"kind": "Unsupported attachment kind."})
+    samples = validate_waveform(waveform) if waveform is not None else []
+    if samples and kind != "voice":
+        raise ValidationError({"waveform": "Waveforms belong to voice messages."})
+    filename = original_name(upload.name)
     _, initial, _ = authorize(conversation, user, action="upload_attachment")
     cap = limits()[f"{kind}_max_bytes"]
     keys, persisted = [], False
@@ -71,9 +92,12 @@ def upload_attachment(
                 raise ValidationError(
                     {"file": "Attachment is empty or its checksum does not match."}
                 )
-            fingerprint = hashlib.sha256(
-                f"{kind}:{digest.hexdigest()}".encode()
-            ).hexdigest()
+            identity = f"{kind}:{digest.hexdigest()}"
+            if kind in {"file", "video"}:
+                identity += ":" + filename
+            if samples:
+                identity += ":" + json.dumps(samples, separators=(",", ":"))
+            fingerprint = hashlib.sha256(identity.encode()).hexdigest()
             # Look up first: a retry does not repeat expensive media processing.
             existing = ChatAttachment.objects.filter(
                 conversation=conversation, uploader=user, client_upload_id=upload_id
@@ -90,14 +114,25 @@ def upload_attachment(
                         "This attachment is no longer available. Select the media again."
                     )
                 return existing
-            content, thumbnail, metadata = (
-                inspect_image if kind == "image" else inspect_voice
-            )(temp.name)
+            inspect = {
+                "image": inspect_image,
+                "voice": inspect_voice,
+                "file": inspect_file,
+                "video": inspect_video,
+            }[kind]
+            content, thumbnail, metadata = inspect(temp.name)
+            metadata["original_name"] = filename
+            metadata["waveform"] = (
+                (samples or voice_waveform(temp.name)) if kind == "voice" else []
+            )
         if len(content) > cap:
             raise ValidationError(
                 {"file": "Processed attachment exceeds the byte limit."}
             )
-        key = f"{uuid.uuid4().hex}.{'jpg' if kind == 'image' else 'm4a'}"
+        extension = {"image": "jpg", "voice": "m4a", "file": "bin", "video": "mp4"}[
+            kind
+        ]
+        key = f"{uuid.uuid4().hex}.{extension}"
         thumb_key = f"{uuid.uuid4().hex}.jpg" if thumbnail else ""
         for name, body in [(key, content), (thumb_key, thumbnail)]:
             if name:

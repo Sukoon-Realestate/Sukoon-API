@@ -1,4 +1,6 @@
+import json
 from django.core.files.uploadhandler import TemporaryFileUploadHandler
+from django.utils.http import content_disposition_header
 from django.db import transaction
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
@@ -32,7 +34,10 @@ class BoundedChatUploadHandler(TemporaryFileUploadHandler):
 
     def receive_data_chunk(self, raw_data, start):
         self.total += len(raw_data)
-        if self.total > max(limits()["image_max_bytes"], limits()["voice_max_bytes"]):
+        if self.total > max(
+            limits()[f"{kind}_max_bytes"]
+            for kind in ("image", "voice", "file", "video")
+        ):
             self.file.close()
             raise ValidationError({"file": "Attachment exceeds the byte limit."})
         return super().receive_data_chunk(raw_data, start)
@@ -49,7 +54,7 @@ def accessible_attachment(conversation, user, *, identity=None, client_id=None):
             {"id": identity}
             if identity
             else {"uploader": user, "client_upload_id": client_id}
-        )
+        ),
     )
     if item.message_id:
         if (
@@ -79,11 +84,25 @@ class GroupAttachmentUploadAPIView(APIView):
         enforce_rate(request.user, "upload", maximum=20)
         conversation = get_object_or_404(Conversation, id=id)
         authorize(conversation, request.user, action="upload_attachment")
-        if set(request.data) - {"file", "client_upload_id", "kind", "sha256"}:
+        if set(request.data) - {
+            "file",
+            "client_upload_id",
+            "kind",
+            "sha256",
+            "waveform",
+        }:
             raise ValidationError("Unsupported attachment fields.")
         upload = request.FILES.get("file")
         if not upload:
             raise ValidationError({"file": "Supply an attachment."})
+        try:
+            waveform = (
+                json.loads(request.data["waveform"])
+                if "waveform" in request.data
+                else None
+            )
+        except (ValueError, TypeError):
+            raise ValidationError({"waveform": "Supply a numeric waveform."})
         item = upload_attachment(
             conversation,
             request.user,
@@ -91,6 +110,7 @@ class GroupAttachmentUploadAPIView(APIView):
             request.data.get("client_upload_id"),
             request.data.get("kind"),
             request.data.get("sha256"),
+            waveform=waveform,
         )
         return Response(attachment_payload(item), status=201)
 
@@ -123,5 +143,8 @@ class GroupAttachmentDetailAPIView(APIView):
         )
         response["Cache-Control"] = "private, no-store"
         response["X-Content-Type-Options"] = "nosniff"
-        response["Content-Disposition"] = 'inline; filename="attachment"'
+        response["Content-Disposition"] = content_disposition_header(
+            item.kind == "file" and content == "content",
+            item.original_name or "attachment",
+        )
         return response

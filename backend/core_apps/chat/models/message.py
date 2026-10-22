@@ -32,6 +32,7 @@ class Message(TimeStampedModel):
         on_delete=models.SET_NULL, related_name="deleted_chat_messages",
     )
     system_data = models.JSONField(default=dict, blank=True)
+    location = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Message")

@@ -7,6 +7,7 @@ from core_apps.chat.models import ChatAttachment, Message, ConversationParticipa
 from django.db.models import F
 from .group_access import authorize, visible_messages
 from .group_limits import ChatConflict, limits
+from .rich_media import validate_location
 
 
 def normalize_request(data):
@@ -17,6 +18,7 @@ def normalize_request(data):
         "attachment_ids",
         "reply_to_message_id",
         "membership_period",
+        "location",
     }
     if not isinstance(data, dict) or set(data) - permitted:
         raise ValidationError("Unsupported message fields.")
@@ -38,6 +40,13 @@ def normalize_request(data):
         raise ValidationError({"content": "Supply text."})
     content = content.replace("\r\n", "\n").replace("\r", "\n")
     policy = limits()
+    if kind not in policy["message_kinds"]:
+        raise ValidationError({"kind": "Unsupported message kind."})
+    location = validate_location(data.get("location")) if kind == "location" else None
+    if kind != "location" and data.get("location") is not None:
+        raise ValidationError(
+            {"location": "Only location messages may carry coordinates."}
+        )
     if len(content) > policy["text_max_code_points"] or "\x00" in content:
         raise ValidationError(
             {
@@ -50,6 +59,8 @@ def normalize_request(data):
             kind == "image" and 1 <= len(attachment_ids) <= policy["images_per_message"]
         )
         or (kind == "voice" and len(attachment_ids) == 1 and content == "")
+        or (kind in {"file", "video"} and len(attachment_ids) == 1)
+        or (kind == "location" and location is not None and not attachment_ids)
     )
     if not valid or len(set(attachment_ids)) != len(attachment_ids):
         raise ValidationError("Invalid message kind or attachment bundle.")
@@ -59,6 +70,8 @@ def normalize_request(data):
         "attachment_ids": attachment_ids,
         "reply_to_message_id": reply_id,
     }
+    if kind == "location":
+        canonical["location"] = location
     fingerprint = hashlib.sha256(
         json.dumps(canonical, sort_keys=True, ensure_ascii=False).encode()
     ).hexdigest()
@@ -140,6 +153,7 @@ def send_group_message(conversation, sender, data):
         reply_to=reply,
         sequence=conversation.last_sequence,
         payload_fingerprint=fingerprint,
+        location=payload.get("location"),
     )
     for position, attachment in enumerate(attachments):
         attachment.message, attachment.state, attachment.position = (
@@ -151,7 +165,16 @@ def send_group_message(conversation, sender, data):
     conversation.last_message_at = message.created_at
     # Group previews are always computed against the viewer's current boundary.
     conversation.last_message_preview = (
-        (message.content or {"image": "📷", "voice": "🎙️"}.get(message.kind, ""))[:200]
+        (
+            message.content
+            or {
+                "image": "📷",
+                "voice": "🎙️",
+                "file": "📎",
+                "video": "🎬",
+                "location": "📍",
+            }.get(message.kind, "")
+        )[:200]
         if conversation.kind == "direct"
         else ""
     )

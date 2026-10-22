@@ -18,6 +18,8 @@ class ChatAttachment(TimeStampedModel):
     width = models.PositiveIntegerField(null=True)
     height = models.PositiveIntegerField(null=True)
     duration_ms = models.PositiveIntegerField(null=True)
+    original_name = models.CharField(max_length=255, blank=True, default="")
+    waveform = models.JSONField(default=list, blank=True)
     message = models.ForeignKey(
         "chat.Message",
         null=True,

@@ -18,7 +18,7 @@ def configured():
 
 
 def identity(key):
-    if not re.fullmatch(r"[a-f0-9]{32}\.(jpg|m4a)", key):
+    if not re.fullmatch(r"[a-f0-9]{32}\.(jpg|m4a|bin|mp4)", key):
         raise ChatUnavailable("Invalid private attachment identity.")
     prefix = settings.CHAT_CLOUDINARY_PREFIX
     if prefix == settings.VIRTUAL_TOUR_CLOUDINARY_PREFIX:
@@ -48,11 +48,14 @@ def materialize(key, target):
         raise FileNotFoundError()
     try:
         token, prefix = identity(key)
+        kind = {"jpg": "image", "m4a": "voice", "bin": "file", "mp4": "video"}[
+            key.rsplit(".", 1)[1]
+        ]
         return cloud.materialize(
             token,
             target,
             prefix=prefix,
-            maximum=max(limits()["image_max_bytes"], limits()["voice_max_bytes"]),
+            maximum=limits()[f"{kind}_max_bytes"],
         )
     except Exception as exc:
         raise ChatUnavailable(

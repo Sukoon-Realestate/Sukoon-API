@@ -35,6 +35,8 @@ def attachment_payload(attachment):
         "width": attachment.width,
         "height": attachment.height,
         "duration_ms": attachment.duration_ms,
+        "original_name": attachment.original_name,
+        "waveform": attachment.waveform,
         "content_path": f"{base}/content/",
         "thumbnail_path": f"{base}/thumbnail/" if attachment.thumbnail_key else None,
     }
@@ -90,6 +92,7 @@ def message_payload(message, participant, membership):
         "kind": message.kind,
         "status": "sent",
         "content": "" if deleted else message.content,
+        "location": None if deleted else message.location,
         "sender": sender_payload(message.sender),
         "created_at": message.created_at.isoformat(),
         "is_deleted": deleted,
