@@ -956,3 +956,11 @@
 - Validation: 58 PostgreSQL provider/evaluator/moderation tests and four rollback safety tests pass. Real provider returned HTTP429 with20requests/day; real calls stopped. Text5/300 and media4/8 completed, insufficient for representative accuracy. Production remains off with both private-input gates false.
 
 - Deployment follow-up: floating Python3.11 resolved to3.11.17, whose DigitalOcean runtime archive returned404. Pin3.11.15, the latest3.11patch in the official supported-runtime list; its Ubuntu22archive returned200. No environment, database, or billing change.
+
+### Synchronize the backend checkout with main
+
+- **What:** Fast-forwarded local `main` from `4abd08b` to `c65d6b3`, incorporating all eight commits already on `origin/main`.
+- **Why:** The user requested pulling the current backend source from `main` before pushing again.
+- **Details:** Saved the original HEAD and backed up 70 untracked source files that collided with incoming tracked files. Every file matched the remote version exactly; their hashes remained unchanged after the pull. Preserved the local PostgreSQL directory and development settings outside the commit. No additional application-code change or conflict resolution was necessary.
+- **Validation:** `make check-owner-tenant CYCLE_SETTINGS=config.settings.test` passed: Django reported no system issues and no migration changes. `git diff --check` passed, and backend/frontend tracked source matched the fetched revision.
+- **Files:** `WORKLOG.md`; all application-source updates came from the existing remote commits.
