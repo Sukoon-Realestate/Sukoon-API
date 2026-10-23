@@ -1,5 +1,6 @@
-import Image from "next/image";
 import { ArrowDown, Check } from "lucide-react";
+import type { Locale } from "@/i18n/config";
+import { FeaturePhoneScreen } from "@/components/phone/FeaturePhoneScreen";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -11,9 +12,7 @@ import { FeatureCarousel } from "./FeatureCarousel";
 // Staggers the slide-entrance animation (see .feature-slide in globals.css).
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
 
-const screens = ["discovery", "shortlist", "viewings", "owners", "conversations", "notifications", "reviews", "support"];
-
-export function ProductFeatures({ dict }: { dict: Dictionary }) {
+export function ProductFeatures({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const content = dict.features;
   return (
     <section id={SECTION_IDS.features} aria-labelledby="features-title" data-animate className="relative isolate scroll-mt-20 overflow-hidden bg-paper py-24 sm:py-32">
@@ -23,6 +22,7 @@ export function ProductFeatures({ dict }: { dict: Dictionary }) {
           <SectionHeading eyebrow={content.eyebrow} titleLines={content.titleLines} subtitle={content.subtitle} />
         </div>
         <FeatureCarousel
+          key={lang}
           tabs={content.items.map((item) => item.audience)}
           labels={content.carousel}
           slides={content.items.map((item, index) => (
@@ -53,8 +53,7 @@ export function ProductFeatures({ dict }: { dict: Dictionary }) {
                 <SignatureMark draw className="min-[1700px]:hidden inset-x-0 top-[42%] w-full -translate-y-1/2 text-brand-deep/25 [--sig-fill:0.14] dark:text-brand/30 dark:[--sig-fill:0]" />
                 <div className="slide-phone relative">
                   <IPhoneFrame>
-                    <Image unoptimized src={`/images/app/${screens[index]}-light.webp`} alt={item.imageAlt} width={390} height={844} className="block h-auto w-full dark:hidden" />
-                    <Image unoptimized src={`/images/app/${screens[index]}-dark.webp`} alt="" aria-hidden width={390} height={844} className="hidden h-auto w-full dark:block" />
+                    <FeaturePhoneScreen index={index} lang={lang} />
                   </IPhoneFrame>
                 </div>
                 <figcaption className="relative mx-auto max-w-sm py-5 text-xs leading-5 text-muted">{content.caption}</figcaption>
