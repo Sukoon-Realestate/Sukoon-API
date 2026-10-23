@@ -1,1 +1,4 @@
-{ "framework": "nextjs" }
+{
+  "framework": "nextjs",
+  "buildCommand": "node scripts/vercel-build.mjs"
+}

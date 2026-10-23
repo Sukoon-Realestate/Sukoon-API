@@ -13,6 +13,15 @@ The older standalone dashboard in `frontend/src/app` still builds separately wit
 
 Live API mode is the default. Demo mode requires explicit `NEXT_PUBLIC_ENABLE_BACKEND=false` or `NEXT_PUBLIC_USE_MOCK_DATA=true`, and displays a demo banner. Live failures never fall back to demo records.
 
+The existing Vercel production project builds through `scripts/vercel-build.mjs`.
+It pins production to live, same-origin API requests and uses
+`SOKOUN_API_PROXY_URL` (defaulting to the existing DigitalOcean API). Preview and
+local builds keep their explicit isolated/demo configuration. This does not
+enable campaign delivery or private Gemini: those remain server-authorized
+capabilities. A new build is required because public Next.js values are compiled
+into the browser bundle. Run `node --test scripts/vercel-build.test.mjs` to check
+the deployment environment boundary.
+
 Public footer destinations use `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL`, and `NEXT_PUBLIC_CONTACT_URL`. Only approved HTTPS URLs should be configured; absent destinations are visibly unavailable. No legal text or contact address is inferred.
 
 ## Structure
