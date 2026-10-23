@@ -1,6 +1,6 @@
 import type { Dictionary } from "@/i18n/dictionaries";
 import { SECTION_IDS } from "@/lib/sections";
-import { SOCIAL_LINKS } from "@/lib/site";
+import { BUSINESS, SOCIAL_LINKS } from "@/lib/site";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { SignatureMark } from "@/components/ui/Decor";
@@ -21,7 +21,7 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
   const links = [
     { label: dict.footer.privacy, href: destination(process.env.NEXT_PUBLIC_PRIVACY_URL) },
     { label: dict.footer.terms, href: destination(process.env.NEXT_PUBLIC_TERMS_URL) },
-    { label: dict.footer.contact, href: destination(process.env.NEXT_PUBLIC_CONTACT_URL) },
+    { label: dict.footer.contact, href: `mailto:${BUSINESS.email}` },
   ];
 
   return (
@@ -82,12 +82,12 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
           </ul>
         </nav>
 
-        <div className="flex flex-col items-center gap-4 border-t border-line pt-6 text-center sm:flex-row sm:justify-between sm:text-start">
+        <div className="flex flex-col items-center gap-4 rounded-2xl border-t border-line px-4 py-6 text-center transition-[background-color,box-shadow,border-color] duration-300 hover:border-brand/40 hover:bg-brand/5 hover:shadow-[0_0_32px_rgba(4,164,23,0.15)] focus-within:border-brand/40 focus-within:bg-brand/5 focus-within:shadow-[0_0_32px_rgba(4,164,23,0.15)] sm:flex-row sm:justify-between sm:text-start">
           <nav aria-label={dict.footer.linksLabel}>
             <ul className="flex gap-6 text-sm text-fg/70">
               {links.map((link) => (
                 <li key={link.label}>
-                  {link.href ? <a href={link.href} className="transition-colors hover:text-fg">{link.label}</a>
+                  {link.href ? <a href={link.href} className="rounded-lg px-2 py-2 transition-[color,background-color,box-shadow] duration-300 hover:bg-brand/10 hover:text-accent hover:shadow-[0_0_20px_rgba(4,164,23,0.3)] focus-visible:bg-brand/10 focus-visible:text-accent focus-visible:shadow-[0_0_20px_rgba(4,164,23,0.3)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand">{link.label}</a>
                     : <span aria-disabled="true" title={dict.footer.unavailableHelp}>{link.label} — {dict.footer.unavailable}</span>}
                 </li>
               ))}

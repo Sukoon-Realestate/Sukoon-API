@@ -21,8 +21,6 @@ export function FinalCta({ dict }: { dict: Dictionary }) {
           <h2 className="mx-auto mt-8 max-w-2xl font-display text-4xl font-semibold leading-tight tracking-tight text-white sm:text-6xl">
             {dict.finalCta.title}
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-base leading-7 text-white/65 sm:text-lg">{dict.finalCta.subtitle}</p>
-
           <StoreButtons dict={dict} tone="light" className="mt-10 justify-center" />
         </div>
       </Container>

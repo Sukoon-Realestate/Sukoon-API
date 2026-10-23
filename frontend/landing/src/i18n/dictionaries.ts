@@ -6,7 +6,7 @@ const ar = {
   meta: {
     title: "سكون – سكنك القادم من المالك مباشرة",
     description:
-      "سكون يجمع المالك والمستأجر مباشرة. مراجعة الهوية مستقلة عن مراجعة العقار. عمولة التأجير على المالك 10% من إيجار الفترة الأولى، وعمولة التجديد 0%، ورسوم خدمة المستأجر صفر.",
+      "سكون يجمع المالك والمستأجر مباشرة، بدون عمولات على التأجير أو التجديد لأي من الطرفين. تصفّح العقارات وتواصل مع المالك واحجز معاينة من داخل التطبيق.",
     ogAlt: "سكون: سكنك القادم من المالك مباشرة، تواصل مباشر وسياسة رسوم واضحة.",
   },
   loading: "جارٍ التحميل…",
@@ -26,16 +26,15 @@ const ar = {
     download: "حمّل التطبيق",
   },
   store: {
-    comingSoon: "قريبًا على",
     appStore: "App Store",
     googlePlay: "Google Play",
   },
   hero: {
-    badge: "قريبًا على App Store و Google Play",
+    badge: "متاح على App Store و Google Play",
     titleLead: "سكنك القادم،",
     titleHighlight: "من المالك مباشرة.",
     subtitle:
-      "سكون يجمع المالك والمستأجر مباشرة. مراجعة الهوية مستقلة عن مراجعة العقار. عمولة التأجير على المالك 10% من إيجار الفترة الأولى، وعمولة التجديد 0%، ورسوم خدمة المستأجر صفر.",
+      "سكون يجمع المالك والمستأجر في مكان واحد لتجربة إيجار أسهل وأوضح. تصفّح العقارات، وتعرّف على تفاصيلها وحالة مراجعتها، وتواصل مع المالك مباشرة واحجز موعد المعاينة من داخل التطبيق. وإذا كنت مالكًا، اعرض عقارك بتفاصيله وصوره، وتابع رسائل المستأجرين وطلبات المعاينة بكل سهولة.",
     tenantPrompt: "تبحث عن سكن؟",
     tenantLink: "كيف تستأجر",
     ownerPrompt: "لديك عقار للإيجار؟",
@@ -77,7 +76,7 @@ const ar = {
         { title: "أنشئ حسابك ووثّقه", body: "سجّل ببياناتك الشخصية مرة واحدة." },
         { title: "تصفّح العقارات وحالة مراجعتها", body: "ظهور العقار في البحث لا يعني اعتماده؛ راجع حالة المراجعة والتفاصيل قبل المتابعة." },
         { title: "تكلّم مع المالك واحجز معاينة", body: "اسأل عن أي تفصيلة في الشات، واختر الموعد المناسب لك." },
-        { title: "اتفق مع المالك مباشرة", body: "اتفاق مباشر وفق شروط الرسوم المعروضة." },
+        { title: "اتفق مع المالك مباشرة", body: "اتفاق مباشر مع المالك، بدون عمولة لسكون." },
       ],
     },
     owner: {
@@ -97,16 +96,15 @@ const ar = {
     subtitle:
       "اسمنا يعني الهدوء وراحة البال، وكل ميزة في التطبيق موجودة لتجعل الإيجار أوضح وأسهل للطرفين.",
     commission: {
-      // Display the supported rental policy rather than an unimplemented launch promise.
-      badge: "سياسة التأجير",
-      titleLines: ["بدون سمسار،", "رسوم واضحة"],
-      body: "عمولة التأجير على المالك 10% من إيجار الفترة الأولى، وعمولة التجديد 0%. لا توجد رسوم خدمة على المستأجر.",
-      stat: "10%",
-      statLabel: "عمولة المالك على إيجار الفترة الأولى",
+      badge: "بدون عمولات",
+      titleLines: ["بدون سمسار،", "بدون عمولات"],
+      body: "سكون لا يأخذ أي عمولة من المالك أو المستأجر، سواء عند التأجير أو التجديد. تواصل واتفق مباشرة، بدون وسيط.",
+      stat: "0%",
+      statLabel: "عمولة على المالك والمستأجر",
     },
     verified: {
-      initial: "م",
-      name: "محمد عادل",
+      initial: "و",
+      name: "وليد الوهيدي",
       role: "مالك عقار",
       badge: "موثّق",
       title: "حسابات موثّقة",
@@ -137,15 +135,15 @@ const ar = {
     title: "لديك سؤال؟",
     subtitle: "إجابات سريعة عن أكثر ما يسأل عنه الناس.",
     items: [
-      { question: "هل يأخذ سكون عمولة؟", answer: "نعم، في مسار التأجير المدعوم يدفع المالك 10% من إيجار الفترة الأولى. عمولة التجديد 0% ورسوم خدمة المستأجر صفر. راجع الشروط قبل الموافقة." },
+      { question: "هل يأخذ سكون عمولة؟", answer: "لا، سكون لا يأخذ أي عمولة من المالك أو المستأجر، سواء عند التأجير أو تجديد الإيجار. تتواصل وتتفق مع الطرف الآخر مباشرة من خلال التطبيق، بدون وسيط." },
       { question: "كيف تتأكدون من العقارات؟", answer: "تخضع بيانات العقار للمراجعة، لكن ظهور الإعلان في البحث لا يعني اعتماده. راجع حالة المراجعة وتحقق من التفاصيل قبل الاتفاق." },
       { question: "لماذا أوثّق حسابي؟", answer: "حتى يعرف كل طرف مع من يتعامل. يتم التوثيق بمعلوماتك الشخصية." },
-      { question: "متى ينزل التطبيق؟", answer: "قريبًا على App Store و Google Play." },
+      { question: "أين يمكنني تحميل التطبيق؟", answer: "متاح على App Store و Google Play." },
     ],
   },
   finalCta: {
     title: "الإيجار، بكل سكون.",
-    subtitle: "التطبيق قادم قريبًا على App Store و Google Play",
+    subtitle: "App Store و Google Play",
   },
   footer: {
     unavailable: "غير متاح",
@@ -171,7 +169,7 @@ const en: Dictionary = {
   meta: {
     title: "Sukoon – Your next home, straight from the owner",
     description:
-      "Sukoon connects owners and tenants directly. Identity and listing review are separate. Owners pay 10% of first-period base rent, with 0% renewal commission and no tenant service fee.",
+      "Sukoon connects owners and tenants directly, with no rental or renewal commissions for either side. Browse properties, chat with owners, and book viewings in the app.",
     ogAlt: "Sukoon: your next home, straight from the owner, with direct communication and clear rental fees.",
   },
   loading: "Loading…",
@@ -191,16 +189,15 @@ const en: Dictionary = {
     download: "Get the app",
   },
   store: {
-    comingSoon: "Coming soon on",
     appStore: "App Store",
     googlePlay: "Google Play",
   },
   hero: {
-    badge: "Coming soon to the App Store and Google Play",
+    badge: "Available on the App Store and Google Play",
     titleLead: "Your next home,",
     titleHighlight: "straight from the owner.",
     subtitle:
-      "Sukoon connects owners and tenants directly. Identity and listing review are separate. Owners pay 10% of first-period base rent, with 0% renewal commission and no tenant service fee.",
+      "Sukoon brings owners and tenants together for a simpler, clearer rental experience. Browse properties, explore their details and review status, chat directly with owners, and book viewings in the app. If you’re an owner, list your property with photos and details, then manage tenant messages and viewing requests in one place.",
     tenantPrompt: "Looking for a place?",
     tenantLink: "How renting works",
     ownerPrompt: "Have a property to rent?",
@@ -242,7 +239,7 @@ const en: Dictionary = {
         { title: "Create and verify your account", body: "Sign up once with your personal details." },
         { title: "Browse listings and their review status", body: "Appearing in search does not establish approval. Check the review status and property details before continuing." },
         { title: "Chat and book a viewing", body: "Ask the owner anything, then pick a time that suits you." },
-        { title: "Agree with the owner directly", body: "Agree directly under the displayed fee policy." },
+        { title: "Agree with the owner directly", body: "Agree directly with the owner, with no commission to Sukoon." },
       ],
     },
     owner: {
@@ -262,15 +259,15 @@ const en: Dictionary = {
     subtitle:
       "Sukoon means calm in Arabic, and every feature in the app is there to make renting clearer and easier for both sides.",
     commission: {
-      badge: "Rental fee policy",
-      titleLines: ["No broker.", "Clear fees."],
-      body: "The owner pays 10% of first-period base rent. Renewal commission is 0%; the tenant service fee is zero.",
-      stat: "10%",
-      statLabel: "owner commission on first-period rent",
+      badge: "No commissions",
+      titleLines: ["No broker.", "No commissions."],
+      body: "Sukoon takes no commission from owners or tenants, whether renting or renewing. Connect and agree directly, without a middleman.",
+      stat: "0%",
+      statLabel: "commission for owners and tenants",
     },
     verified: {
-      initial: "M",
-      name: "Mohamed Adel",
+      initial: "W",
+      name: "Walid Al-Wahaidi",
       role: "Property owner",
       badge: "Verified",
       title: "Verified accounts",
@@ -303,7 +300,7 @@ const en: Dictionary = {
     items: [
       {
         question: "Does Sukoon take a commission?",
-        answer: "For the supported rental flow, the owner pays 10% of first-period base rent. Renewal commission is 0% and the tenant service fee is zero. Review the agreement before accepting.",
+        answer: "No. Sukoon takes no commission from owners or tenants, whether renting or renewing a lease. Connect and agree directly through the app, without a middleman.",
       },
       {
         question: "How do you check properties?",
@@ -313,12 +310,12 @@ const en: Dictionary = {
         question: "Why do I need to verify my account?",
         answer: "So both sides know who they’re dealing with. You verify with your personal details.",
       },
-      { question: "When is the app coming out?", answer: "Soon, on the App Store and Google Play." },
+      { question: "Where can I download the app?", answer: "The app is available on the App Store and Google Play." },
     ],
   },
   finalCta: {
     title: "Renting, made calm.",
-    subtitle: "The app is coming soon to the App Store and Google Play.",
+    subtitle: "App Store and Google Play",
   },
   footer: {
     unavailable: "Unavailable",

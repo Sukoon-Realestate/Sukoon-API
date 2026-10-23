@@ -8,7 +8,7 @@ export const SITE_NAME_AR = "سكون";
 
 // Organization-level blurb for structured data; the per-locale page description lives in i18n/dictionaries.
 export const SITE_DESCRIPTION =
-  "Sukoon connects owners and tenants directly. Identity review and listing review are separate steps. Supported rental terms charge the owner 10% of first-period base rent, with 0% renewal commission and no tenant service fee.";
+  "Sukoon connects owners and tenants directly, with no rental or renewal commissions for either side. Browse properties, chat with owners, and book viewings in the app.";
 
 export const THEME_COLOR = "#f6f2e9";
 
@@ -30,8 +30,7 @@ export const BUSINESS = {
   legalName: "",
   // TODO: public phone in international format, e.g. "+20 2 1234 5678".
   telephone: "",
-  // TODO: public contact email (also wire it into the footer "Contact us" link).
-  email: "",
+  email: "info@sukoon.rent",
   address: {
     // TODO: street and building.
     streetAddress: "",

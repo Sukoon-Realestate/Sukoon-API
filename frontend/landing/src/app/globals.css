@@ -21,7 +21,7 @@
   --color-pine-raised: #123520;
   --color-moss: #1d4a2c;
 
-  /* Theme-aware roles for the landing surfaces (the phone screen keeps its fixed colours). */
+  /* Theme-aware roles shared by landing surfaces and the hero phone screen. */
   --color-fg: #0c2a18;
   --color-muted: #4b5650;
   --color-accent: #0a5c18;
@@ -460,6 +460,33 @@ details[open] > .faq-answer {
   animation:
     logo-fill 2.6s cubic-bezier(0.45, 0, 0.25, 1) infinite,
     logo-breathe 2.6s ease-in-out infinite;
+}
+
+/* A short app launch inside the hero phone, after the page splash lifts. */
+@keyframes hero-phone-loader-out {
+  from { opacity: 1; visibility: visible; }
+  to { opacity: 0; visibility: hidden; }
+}
+
+@keyframes hero-phone-details-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-phone-loader {
+  animation: hero-phone-loader-out 0.3s ease 0.9s both;
+}
+
+.hero-phone-loader .logo-loader {
+  animation-duration: 1.4s, 1.4s;
+}
+
+.hero-phone-details {
+  animation: hero-phone-details-in 0.4s ease 1.05s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-phone-loader { display: none; }
 }
 
 /* Splash: only while html[data-loading] is set (lib/loading.ts). */

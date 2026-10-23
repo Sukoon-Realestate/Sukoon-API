@@ -2,6 +2,7 @@ import { CalendarCheck, Check, Heart, House, MapPin, MessageCircle, Search, Shie
 import Image from "next/image";
 import clsx from "clsx";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { LogoLoader } from "@/components/ui/LogoLoader";
 
 // Listing photo on a mock card; decorative, since the whole mockup is aria-hidden.
 function ListingPhoto({ src }: { src: string }) {
@@ -19,7 +20,7 @@ function ListingPhoto({ src }: { src: string }) {
 
 function ReviewedTag({ label }: { label: string }) {
   return (
-    <span className="absolute start-2 top-2 inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[0.55rem] font-semibold text-brand-deep shadow-sm">
+    <span className="absolute start-2 top-2 inline-flex items-center gap-1 rounded-full bg-white dark:bg-paper px-2 py-0.5 text-[0.55rem] font-semibold text-accent shadow-sm">
       <Check className="size-2.5" strokeWidth={3} aria-hidden />
       {label}
     </span>
@@ -78,21 +79,21 @@ function ListingCard({
   return (
     <div
       style={{ animationDelay: `${delay}ms` }}
-      className="shrink-0 animate-fade-up overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_-4px_rgba(12,42,24,0.25)]"
+      className="shrink-0 animate-fade-up overflow-hidden rounded-2xl bg-white dark:bg-paper shadow-[0_2px_10px_-4px_rgba(12,42,24,0.25)]"
     >
       <div className={clsx("relative", imageClassName)}>
         {art}
         <ReviewedTag label={reviewed} />
-        <span className="absolute end-2 top-2 grid size-5 place-items-center rounded-full bg-white">
-          <Heart className="size-2.5 text-heading" aria-hidden />
+        <span className="absolute end-2 top-2 grid size-5 place-items-center rounded-full bg-white dark:bg-paper">
+          <Heart className="size-2.5 text-fg" aria-hidden />
         </span>
       </div>
       <div className="px-2.5 py-2">
         <div className="flex items-center justify-between gap-2 text-[0.65rem] font-bold">
-          <span className="truncate text-heading">{listing.title}</span>
-          <span className="shrink-0 text-brand-deep">{listing.price}</span>
+          <span className="truncate text-fg">{listing.title}</span>
+          <span className="shrink-0 text-accent">{listing.price}</span>
         </div>
-        <div className="mt-0.5 flex items-center justify-between gap-2 text-[0.5rem] text-body">
+        <div className="mt-0.5 flex items-center justify-between gap-2 text-[0.5rem] text-muted">
           <span className="flex min-w-0 items-center gap-0.5">
             <MapPin className="size-2.5 shrink-0" aria-hidden />
             <span className="truncate">{listing.location}</span>
@@ -143,12 +144,23 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
       {/* titanium band → black bezel → screen */}
       <div className="size-full rounded-[2.9rem] bg-linear-to-b from-[#3a443d] via-[#1c231e] to-[#2c352f] p-[3px] shadow-[0_40px_80px_-24px_rgba(12,42,24,0.75)]">
         <div className="size-full rounded-[2.75rem] bg-black p-[7px]">
-          <div className="relative flex size-full flex-col overflow-hidden rounded-[2.3rem] bg-[#f6f8f6]">
+          <div className="relative flex size-full flex-col overflow-hidden rounded-[2.3rem] bg-[#f6f8f6] dark:bg-ink-raised">
             {/* Dynamic Island */}
-            <span className="absolute left-1/2 top-2 z-10 h-[1.35rem] w-[34%] -translate-x-1/2 rounded-full bg-black" />
+            <span className="absolute left-1/2 top-2 z-30 h-[1.35rem] w-[34%] -translate-x-1/2 rounded-full bg-black" />
+
+            {/* Uses the page's brand loader; its timeline pauses with the page splash. */}
+            <div className="hero-phone-loader pointer-events-none absolute inset-0 z-20 grid place-items-center bg-[#f6f8f6] dark:bg-ink-raised">
+              <div className="absolute size-56 rounded-full bg-[radial-gradient(closest-side,rgba(4,164,23,0.09),transparent)]" />
+              <LogoLoader
+                size="md"
+                label={dict.loading}
+                className="relative text-accent"
+              />
+              <span className="absolute bottom-1.5 left-1/2 h-1 w-[36%] -translate-x-1/2 rounded-full bg-heading/85 dark:bg-fg/85" />
+            </div>
 
             {/* status bar */}
-            <div className="flex h-10 shrink-0 items-center justify-between px-6 pt-1 text-heading">
+            <div className="relative z-30 flex h-10 shrink-0 items-center justify-between px-6 pt-1 text-fg">
               <span dir="ltr" className="font-[family-name:var(--font-latin)] text-[0.62rem] font-semibold">
                 9:41
               </span>
@@ -159,8 +171,8 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
               {/* top bar */}
               <div className="flex shrink-0 items-start justify-between">
                 <div>
-                  <p className="text-[0.55rem] text-body">{phone.locationLabel}</p>
-                  <p className="mt-0.5 flex items-center gap-1 text-[0.7rem] font-semibold text-heading">
+                  <p className="text-[0.55rem] text-muted">{phone.locationLabel}</p>
+                  <p className="mt-0.5 flex items-center gap-1 text-[0.7rem] font-semibold text-fg">
                     <MapPin className="size-3 text-brand" aria-hidden />
                     {phone.location}
                   </p>
@@ -170,9 +182,9 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
                 </span>
               </div>
 
-              <p className="mt-3 shrink-0 text-base font-bold text-heading">{phone.title}</p>
+              <p className="mt-3 shrink-0 text-base font-bold text-fg">{phone.title}</p>
 
-              <div className="mt-2 flex shrink-0 items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-[0.6rem] text-body">
+              <div className="mt-2 flex shrink-0 items-center gap-1.5 rounded-full border border-black/10 dark:border-line bg-white dark:bg-paper px-3 py-1.5 text-[0.6rem] text-muted">
                 <Search className="size-3" aria-hidden />
                 {phone.search}
               </div>
@@ -183,7 +195,7 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
                     key={filter}
                     className={clsx(
                       "rounded-full px-2.5 py-1 text-[0.55rem] font-medium",
-                      index === 0 ? "bg-heading text-white" : "border border-black/10 bg-white text-heading",
+                      index === 0 ? "bg-heading text-white dark:bg-brand-deep" : "border border-black/10 dark:border-line bg-white dark:bg-paper text-fg",
                     )}
                   >
                     {filter}
@@ -211,7 +223,7 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
             </div>
 
             {/* tab bar + home indicator */}
-            <div className="relative shrink-0 border-t border-black/5 bg-white/95 px-2 pb-5 pt-2 backdrop-blur">
+            <div className="relative shrink-0 border-t border-black/5 dark:border-line bg-white/95 dark:bg-paper/95 px-2 pb-5 pt-2 backdrop-blur">
               <div className="grid grid-cols-4">
                 {phone.tabs.map((tab, index) => {
                   const Icon = tabIcons[index];
@@ -220,7 +232,7 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
                       key={tab}
                       className={clsx(
                         "flex flex-col items-center gap-0.5 text-[0.5rem]",
-                        index === 0 ? "font-semibold text-brand-deep" : "text-body",
+                        index === 0 ? "font-semibold text-accent" : "text-muted",
                       )}
                     >
                       <Icon className="size-3.5" aria-hidden />
@@ -229,27 +241,29 @@ export function PhoneMockup({ dict }: { dict: Dictionary }) {
                   );
                 })}
               </div>
-              <span className="absolute bottom-1.5 left-1/2 h-1 w-[36%] -translate-x-1/2 rounded-full bg-heading/85" />
+              <span className="absolute bottom-1.5 left-1/2 h-1 w-[36%] -translate-x-1/2 rounded-full bg-heading/85 dark:bg-fg/85" />
             </div>
           </div>
         </div>
       </div>
 
-      <FloatingCard
-        variant="brand"
-        icon={<ShieldCheck className="size-4" aria-hidden />}
-        title={phone.verifiedOwner.title}
-        subtitle={phone.verifiedOwner.subtitle}
-        className="-end-3 top-[41%] animate-float min-[400px]:-end-14 sm:-end-28 lg:-end-12 xl:-end-28"
-      />
-      {/* both cards sit over listing photos so they never hide a title or price */}
-      <FloatingCard
-        variant="light"
-        icon={<CalendarCheck className="size-4" aria-hidden />}
-        title={phone.viewingBooked.title}
-        subtitle={phone.viewingBooked.subtitle}
-        className="-start-3 top-[72%] animate-float-delayed min-[400px]:-start-14 sm:-start-24 lg:-start-10 xl:-start-24"
-      />
+      <div className="hero-phone-details pointer-events-none absolute inset-0">
+        <FloatingCard
+          variant="brand"
+          icon={<ShieldCheck className="size-4" aria-hidden />}
+          title={phone.verifiedOwner.title}
+          subtitle={phone.verifiedOwner.subtitle}
+          className="-end-3 top-[41%] animate-float min-[400px]:-end-14 sm:-end-28 lg:-end-12 xl:-end-28"
+        />
+        {/* both cards sit over listing photos so they never hide a title or price */}
+        <FloatingCard
+          variant="light"
+          icon={<CalendarCheck className="size-4" aria-hidden />}
+          title={phone.viewingBooked.title}
+          subtitle={phone.viewingBooked.subtitle}
+          className="-start-3 top-[72%] animate-float-delayed min-[400px]:-start-14 sm:-start-24 lg:-start-10 xl:-start-24"
+        />
+      </div>
     </div>
   );
 }
