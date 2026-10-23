@@ -39,7 +39,7 @@ def summary(request):
                 cid = str(conversation.company_request.company.id)
                 company_counts[cid] = company_counts.get(cid, 0) + count
             else:
-                spaces = {"individual", "student"}
+                spaces = {"student"}
         counts["all"] += count
         for space in spaces:
             counts[space] += count

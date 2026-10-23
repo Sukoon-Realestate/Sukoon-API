@@ -28,6 +28,7 @@ from .models import (
     RentalOperationalCase,
 )
 from .services import evidence_storage
+from core_apps.common.private_media_policy import inspect, maximum, MIME_EXTENSIONS
 from .renderers import FeatureJsonRenderer
 from .services.planning import require_planning, planning_api, mutate, page
 from .services.rental_phase2 import RentalConflict, replay_operation, remember_mutation
@@ -51,12 +52,13 @@ def evidence_payload(item):
         "revision": item.revision,
         "purpose": "student",
         "subject_id": str(item.uploader.id),
-        "name": "student-evidence.png",
+        "name": item.original_name,
         "status": {"safe": "ready", "unsafe": "unsafe", "pending": "pending"}.get(
             item.malware_status, "failed"
         ),
         "mime_type": item.content_type,
         "size_bytes": item.size_bytes,
+        "media_metadata": item.media_metadata or {},
         "sha256": item.sha256,
     }
 
@@ -79,8 +81,15 @@ def student_evidence_upload(request):
     upload = request.FILES.get("file")
     if not upload:
         raise ValidationError({"file": "Supply enrollment or admission evidence."})
-    content = upload.read(MAX_EVIDENCE_BYTES + 1)
-    digest = evidence_storage.validate_png(content, request.data.get("sha256"), upload.content_type)
+    content = upload.read(maximum(upload.content_type) + 1)
+    metadata = inspect(
+        content,
+        upload.content_type,
+        student=True,
+        digest=request.data.get("sha256"),
+        deep=False,
+    )
+    digest = metadata["sha256"]
     evidence_storage.require_available()
     # Commit a durable identity before provider I/O. Retry uses the same evidence.
     with transaction.atomic():
@@ -94,8 +103,9 @@ def student_evidence_upload(request):
             purpose="student",
             request_key=key,
             defaults={
-                "original_name": "student-evidence.png",
-                "content_type": "image/png",
+                "original_name": f"student-evidence.{MIME_EXTENSIONS[upload.content_type]}",
+                "content_type": upload.content_type,
+                "media_metadata": metadata,
                 "sha256": digest,
                 "size_bytes": len(content),
                 "private_content": content,
@@ -174,10 +184,10 @@ def student_evidence(request, evidence_id=None):
             "Evidence is awaiting its private security scan.", code="evidence_not_ready"
         )
     require_planning(request.user, "student_verification")
-    response = HttpResponse(
-        evidence_storage.read(item), content_type="image/png"
+    response = HttpResponse(evidence_storage.read(item), content_type=item.content_type)
+    response["Content-Disposition"] = (
+        f'attachment; filename="student-evidence.{MIME_EXTENSIONS.get(item.content_type, "bin")}"'
     )
-    response["Content-Disposition"] = 'inline; filename="student-evidence.png"'
     response["Cache-Control"] = "private, no-store"
     response["X-Content-Type-Options"] = "nosniff"
     return response

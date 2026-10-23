@@ -51,6 +51,8 @@ def create_ticket(
     description: str,
     attachments: Optional[List[Any]] = None,
     rental_context: Optional[dict] = None,
+    attachment_ids=None,
+    creation_request_key=None,
 ) -> Ticket:
     """
     Creates a new support ticket with initial user message and attachments.
@@ -147,7 +149,8 @@ def create_ticket(
 
     # Validate attachments
     attachments = attachments or []
-    if len(attachments) > MAX_ATTACHMENTS_COUNT:
+    attachment_ids = attachment_ids or []
+    if len(attachments) + len(attachment_ids) > MAX_ATTACHMENTS_COUNT:
         raise ValidationError(
             {"attachments": f"الحد الأقصى للمرفقات هو {MAX_ATTACHMENTS_COUNT} صور."}
         )
@@ -190,6 +193,10 @@ def create_ticket(
         sender_user=user,
         body=description,
     )
+
+    from core_apps.support.services.staged_attachments import bind
+
+    bind(initial_message, attachment_ids, user=user, creation_key=creation_request_key)
 
     stored = []
     try:

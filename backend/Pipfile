@@ -18,6 +18,7 @@ djoser = "==2.2.2"
 drf-yasg = "==1.21.15"
 psycopg2-binary = "==2.9.9"
 pillow = "==10.2.0"
+pypdf = "==6.21.2"
 google-auth = "*"
 pyjwt = {version = "*", extras = ["crypto"]}
 python-dotenv = "==1.0.1"

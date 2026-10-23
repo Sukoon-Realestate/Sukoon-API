@@ -14,6 +14,7 @@ from core_apps.support.services import (
 
 
 @pytest.mark.django_db
+@pytest.mark.usefixtures("published_help")
 class TestHelpCenterService:
     def test_tenant_arabic_help_center(self):
         data = get_help_center_content(workspace="tenant", lang="ar")

@@ -39,6 +39,7 @@ def evidence_payload(item):
         "name": item.original_name,
         "mime_type": item.content_type,
         "size_bytes": item.size_bytes,
+        "media_metadata": item.media_metadata or {},
         "status": (
             "ready"
             if item.malware_status == RentalEvidence.MalwareStatus.SAFE

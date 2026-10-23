@@ -8,7 +8,7 @@ class TicketAttachmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TicketAttachment
-        fields = ["id", "name", "url"]
+        fields = ["id", "name", "url", "status", "media_metadata"]
         read_only_fields = fields
 
     def get_url(self, obj) -> str:
@@ -75,6 +75,9 @@ class TicketDetailSerializer(serializers.ModelSerializer):
 
 
 class TicketCreateSerializer(serializers.Serializer):
+    attachment_ids = serializers.ListField(
+        child=serializers.UUIDField(), max_length=3, required=False
+    )
     rental_context = serializers.JSONField(required=False, default=dict)
     workspace = serializers.ChoiceField(
         choices=["tenant", "owner"],
@@ -104,8 +107,18 @@ class TicketCreateSerializer(serializers.Serializer):
 
 
 class TicketReplySerializer(serializers.Serializer):
+    attachment_ids = serializers.ListField(
+        child=serializers.UUIDField(), max_length=3, required=False
+    )
     body = serializers.CharField(
-        min_length=1,
+        allow_blank=True,
         max_length=4000,
         trim_whitespace=True,
     )
+
+    def validate(self, attrs):
+        if not attrs["body"] and not attrs.get("attachment_ids"):
+            raise serializers.ValidationError(
+                {"body": "Supply a reply or an attachment."}
+            )
+        return attrs

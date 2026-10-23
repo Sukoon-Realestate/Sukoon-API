@@ -42,7 +42,11 @@ def get_ticket_detail(
 
 @transaction.atomic
 def add_ticket_reply(
-    user: Any, ticket_id: str, body: str, workspace: Optional[str] = None
+    user: Any,
+    ticket_id: str,
+    body: str,
+    workspace: Optional[str] = None,
+    attachment_ids=None,
 ) -> Ticket:
     """
     Adds a reply to an active ticket and returns the complete updated ticket.
@@ -55,15 +59,18 @@ def add_ticket_reply(
         raise TicketClosedConflict("لا يمكن الرد على تذكرة دعم تم حلها أو إغلاقها.")
 
     clean_body = body.strip()
-    if len(clean_body) < 1 or len(clean_body) > 4000:
+    if (not clean_body and not attachment_ids) or len(clean_body) > 4000:
         raise ValidationError({"body": "يجب أن يتراوح طول نص الرد بين 1 و4000 حرف."})
 
-    TicketMessage.objects.create(
+    message = TicketMessage.objects.create(
         ticket=ticket,
         sender=TicketMessage.SenderType.USER,
         sender_user=user,
         body=clean_body,
     )
+    from core_apps.support.services.staged_attachments import bind
+
+    bind(message, attachment_ids or [], user=user)
 
     ticket.updated_at = timezone.now()
     ticket.revision += 1

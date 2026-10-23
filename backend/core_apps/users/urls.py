@@ -22,6 +22,7 @@ urlpatterns = [
     path("security/challenges/", security_views.challenges),
     path("security/challenges/<uuid:identity>/verify/", security_views.verify),
     path("security/sessions/", security_views.sessions),
+    path("security/sessions/current/", security_views.session_metadata),
     re_path(
         r"^o/(?P<provider>\S+)/$",
         CustomProviderAuthView.as_view(),

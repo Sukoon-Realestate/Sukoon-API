@@ -26,36 +26,80 @@ def canonical_task(name):
 
 
 def configure(scope):
-    catalog = {name: {**value, "task": canonical_task(value["task"])} for name, value in scope["CELERY_BEAT_SCHEDULE"].items()}
+    catalog = {
+        name: {**value, "task": canonical_task(value["task"])}
+        for name, value in scope["CELERY_BEAT_SCHEDULE"].items()
+    }
+    catalog["maintain-support-uploads"] = {
+        "task": "core_apps.support.tasks.maintain_support_uploads",
+        "schedule": 10.0,
+    }
     original = dict(catalog)
-    catalog["background-probe"] = {"task": "core_apps.common.tasks.background_probe", "schedule": 30.0}
-    catalog["dispatch-admin-campaigns"] = {"task": "core_apps.admin_api.tasks.dispatch_campaigns", "schedule": 15.0}
-    catalog["monitor-runtime"] = {"task": "core_apps.common.tasks.monitor_runtime", "schedule": 60.0}
+    catalog["background-probe"] = {
+        "task": "core_apps.common.tasks.background_probe",
+        "schedule": 30.0,
+    }
+    catalog["dispatch-admin-campaigns"] = {
+        "task": "core_apps.admin_api.tasks.dispatch_campaigns",
+        "schedule": 15.0,
+    }
+    catalog["monitor-runtime"] = {
+        "task": "core_apps.common.tasks.monitor_runtime",
+        "schedule": 60.0,
+    }
     # These replace the existing policy-maintenance process in the combined
     # worker. They retain its mode/privacy gates and do not enable new business.
     maintenance = {
-        "maintain-chat": {"task": "core_apps.common.tasks.maintain_chat", "schedule": 60.0 if scope.get("CHAT_MODERATION_MODE", "off") == "off" else 5.0},
-        "purge-chat-policy": {"task": "core_apps.common.tasks.purge_chat_policy", "schedule": 600.0},
+        "maintain-support-uploads": catalog["maintain-support-uploads"],
+        "maintain-chat": {
+            "task": "core_apps.common.tasks.maintain_chat",
+            "schedule": (
+                60.0 if scope.get("CHAT_MODERATION_MODE", "off") == "off" else 5.0
+            ),
+        },
+        "purge-chat-policy": {
+            "task": "core_apps.common.tasks.purge_chat_policy",
+            "schedule": 600.0,
+        },
     }
     catalog.update(maintenance)
     scope["BACKGROUND_SCHEDULE_CATALOG"] = catalog
-    scope["GENERAL_BACKGROUND_ENABLED"] = os.getenv("SOKOUN_GENERAL_BACKGROUND_ENABLED", "false").lower() == "true"
-    selected = [part.strip() for part in os.getenv("SOKOUN_BACKGROUND_SCHEDULES", "background-probe,monitor-runtime").split(",") if part.strip()]
+    scope["GENERAL_BACKGROUND_ENABLED"] = (
+        os.getenv("SOKOUN_GENERAL_BACKGROUND_ENABLED", "false").lower() == "true"
+    )
+    selected = [
+        part.strip()
+        for part in os.getenv(
+            "SOKOUN_BACKGROUND_SCHEDULES", "background-probe,monitor-runtime"
+        ).split(",")
+        if part.strip()
+    ]
     unknown = set(selected) - set(catalog)
     if unknown:
-        raise ImproperlyConfigured("Unknown background schedule names: " + ", ".join(sorted(unknown)))
+        raise ImproperlyConfigured(
+            "Unknown background schedule names: " + ", ".join(sorted(unknown))
+        )
     if scope["GENERAL_BACKGROUND_ENABLED"]:
         selected = list(dict.fromkeys([*selected, *maintenance]))
-    scope["GENERAL_BACKGROUND_ALLOWED_TASKS"] = tuple(catalog[name]["task"] for name in selected)
+    scope["GENERAL_BACKGROUND_ALLOWED_TASKS"] = tuple(
+        catalog[name]["task"] for name in selected
+    )
     # Preserve existing standalone deployments unless explicitly moving to this
     # bounded profile. Its separate queue never consumes old financial backlog.
-    scope["CELERY_BEAT_SCHEDULE"] = original if not scope["GENERAL_BACKGROUND_ENABLED"] else {
-        name: {**catalog[name], "options": {"queue": "sokoun-general"}} for name in selected
-    }
+    scope["CELERY_BEAT_SCHEDULE"] = (
+        original
+        if not scope["GENERAL_BACKGROUND_ENABLED"]
+        else {
+            name: {**catalog[name], "options": {"queue": "sokoun-general"}}
+            for name in selected
+        }
+    )
     if scope["GENERAL_BACKGROUND_ENABLED"]:
         scope["RUNTIME_EVIDENCE_ENABLED"] = True
         scope["CELERY_WORKER_PREFETCH_MULTIPLIER"] = 1
-    scope["RUNTIME_METRICS_ENABLED"] = os.getenv("SOKOUN_RUNTIME_METRICS_ENABLED", "false").lower() == "true"
+    scope["RUNTIME_METRICS_ENABLED"] = (
+        os.getenv("SOKOUN_RUNTIME_METRICS_ENABLED", "false").lower() == "true"
+    )
 
 
 class AllowedTask(Task):

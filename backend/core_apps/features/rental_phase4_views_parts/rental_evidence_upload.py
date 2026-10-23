@@ -21,6 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import RentalEvidence
 from ..services import evidence_storage
+from core_apps.common.private_media_policy import inspect, maximum, MIME_EXTENSIONS
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .handover_payload import (
@@ -36,6 +37,7 @@ def _lease(request, identity, *, lock=False):
     from django.contrib.auth import get_user_model
 
     from ..providers import require_verified_rental_account
+
     users = get_user_model().objects
     if lock:
         users = users.select_for_update()
@@ -95,10 +97,11 @@ def rental_evidence_upload(request):
         )
         if record:
             return Response(record[0], status=record[1])
-    content = upload.read(MAX_EVIDENCE_BYTES + 1)
-    if upload.content_type != "image/png":
-        raise ValidationError({"file": "Only actual PNG images are accepted."})
-    digest = evidence_storage.validate_png(content, claimed_digest, claimed_type)
+    if upload.content_type != claimed_type:
+        raise ValidationError({"mime_type": "The declared file types must match."})
+    content = upload.read(maximum(claimed_type) + 1)
+    metadata = inspect(content, claimed_type, digest=claimed_digest, deep=False)
+    digest = metadata["sha256"]
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
         record = replay_operation(
@@ -114,7 +117,8 @@ def rental_evidence_upload(request):
             uploader=request.user,
             request_key=request_key,
             original_name=upload.name,
-            content_type="image/png",
+            content_type=claimed_type,
+            media_metadata=metadata,
             size_bytes=len(content),
             sha256=digest,
             storage_provider="pending",
@@ -173,7 +177,18 @@ def rental_evidence_download(request, evidence_id):
         {
             "id": str(item.id),
             "subject_id": str(item.lease.id),
-            "url": request.build_absolute_uri(reverse("rental-evidence-content", kwargs={"evidence_id": item.id})) + "?grant=" + signing.dumps({"id": str(item.id), "user": str(request.user.pk), "revision": item.revision}, salt="evidence-read"),
+            "url": request.build_absolute_uri(
+                reverse("rental-evidence-content", kwargs={"evidence_id": item.id})
+            )
+            + "?grant="
+            + signing.dumps(
+                {
+                    "id": str(item.id),
+                    "user": str(request.user.pk),
+                    "revision": item.revision,
+                },
+                salt="evidence-read",
+            ),
             "requires_auth": True,
             "expires_at": expires.isoformat(),
         }
@@ -188,13 +203,21 @@ def rental_evidence_content(request, evidence_id):
 
     item = _evidence(request, evidence_id)
     try:
-        grant = signing.loads(request.query_params.get("grant", ""), salt="evidence-read", max_age=300)
+        grant = signing.loads(
+            request.query_params.get("grant", ""), salt="evidence-read", max_age=300
+        )
     except signing.BadSignature as error:
         raise NotFound() from error
-    if grant != {"id": str(item.id), "user": str(request.user.pk), "revision": item.revision} or item.malware_status != "safe":
+    if (
+        grant
+        != {"id": str(item.id), "user": str(request.user.pk), "revision": item.revision}
+        or item.malware_status != "safe"
+    ):
         raise NotFound()
-    response = HttpResponse(evidence_storage.read(item), content_type="image/png")
+    response = HttpResponse(evidence_storage.read(item), content_type=item.content_type)
     response["Cache-Control"] = "private, no-store"
     response["X-Content-Type-Options"] = "nosniff"
-    response["Content-Disposition"] = 'inline; filename="rental-evidence.png"'
+    response["Content-Disposition"] = (
+        f'attachment; filename="rental-evidence.{MIME_EXTENSIONS.get(item.content_type, "bin")}"'
+    )
     return response

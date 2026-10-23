@@ -38,9 +38,28 @@ class ConversationListAPIView(ListAPIView):
     pagination_class = _ConversationPagination
 
     def get_queryset(self):
-        if 'workspace' in self.request.query_params:
+        queryset = self._base_queryset()
+        if "q" in self.request.query_params:
+            from core_apps.chat.services.search import filter_conversations, query_text
+
+            queryset = filter_conversations(
+                queryset, query_text(self.request.query_params), self.request.user
+            )
+        return queryset
+
+    def _base_queryset(self):
+        if "workspace" in self.request.query_params:
             from core_apps.chat.services.workspace_inbox import scoped
-            return scoped(self.request.user, self.request.query_params['workspace'], self.request.query_params.get('company_id', '')).prefetch_related('participants__profile', 'participant_set').order_by('-last_message_at', '-id')
+
+            return (
+                scoped(
+                    self.request.user,
+                    self.request.query_params["workspace"],
+                    self.request.query_params.get("company_id", ""),
+                )
+                .prefetch_related("participants__profile", "participant_set")
+                .order_by("-last_message_at", "-id")
+            )
         queryset = (
             Conversation.objects.filter(participant_set__user=self.request.user)
             .prefetch_related("participants__profile", "participant_set")
@@ -95,11 +114,17 @@ class ConversationCreateAPIView(APIView):
             user=request.user, other_user=other
         )
         from core_apps.chat.moderation.policy import attach_context
-        attach_context(conversation, request.user, serializer.validated_data.get('rental_context'))
-        workspace = serializer.validated_data.get('workspace')
+
+        attach_context(
+            conversation, request.user, serializer.validated_data.get("rental_context")
+        )
+        workspace = serializer.validated_data.get("workspace")
         if workspace:
             from core_apps.chat.models import ConversationWorkspace
-            ConversationWorkspace.objects.get_or_create(conversation=conversation, user=request.user, workspace=workspace)
+
+            ConversationWorkspace.objects.get_or_create(
+                conversation=conversation, user=request.user, workspace=workspace
+            )
         return Response(
             ConversationSerializer(conversation, context={"request": request}).data,
             status=status.HTTP_200_OK,

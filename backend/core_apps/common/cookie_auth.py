@@ -25,6 +25,9 @@ class CookieAuthentication(JWTAuthentication):
                 from core_apps.users.services.sessions import validate_session
 
                 user = validate_session(self.get_user(validated_token), validated_token)
+                from core_apps.users.services.session_management import touch_session
+
+                touch_session(user, validated_token)
                 return user, validated_token
 
             except TokenError as e:

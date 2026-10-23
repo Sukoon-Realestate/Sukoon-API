@@ -1,5 +1,8 @@
 import io
 import hashlib
+from rest_framework.authentication import SessionAuthentication
+from core_apps.common.cookie_auth import CookieAuthentication
+from core_apps.common.private_media_policy import maximum, MIME_EXTENSIONS
 from core_apps.common.private_storage import PrivateStorageUnavailable
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
@@ -14,6 +17,7 @@ from core_apps.support.services.private_attachments import clean_image
 
 class TicketAttachmentAPIView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [CookieAuthentication, SessionAuthentication]
     renderer_classes = [GenericJsonRenderer]
 
     def get(self, request, id):
@@ -21,8 +25,13 @@ class TicketAttachmentAPIView(APIView):
         if not request.user.is_active:
             raise PermissionDenied()
         attachment = get_object_or_404(
-            TicketAttachment.objects.select_related("message__ticket"), id=id
+            TicketAttachment.objects.select_related("message__ticket").filter(
+                message__isnull=False
+            ),
+            id=id,
         )
+        if attachment.status not in {None, "attached"}:
+            raise NotFound()
         ticket = attachment.message.ticket
         owner = (
             ticket.user_id == request.user.pk
@@ -38,10 +47,30 @@ class TicketAttachmentAPIView(APIView):
             raise NotFound()
         try:
             with field.open("rb") as stream:
-                original = stream.read(5 * 1024 * 1024 + 1)
-                if len(original) > 5 * 1024 * 1024 or (attachment.content_sha256 and hashlib.sha256(original).hexdigest() != attachment.content_sha256):
-                    raise PrivateStorageUnavailable("Private attachment integrity check failed.")
-                content = clean_image(io.BytesIO(original))
+                mime = (attachment.media_metadata or {}).get("mime_type", "image/jpeg")
+                original = stream.read(maximum(mime) + 1)
+                if len(original) > maximum(mime) or (
+                    attachment.content_sha256
+                    and hashlib.sha256(original).hexdigest()
+                    != attachment.content_sha256
+                ):
+                    raise PrivateStorageUnavailable(
+                        "Private attachment integrity check failed."
+                    )
+                if attachment.status == "attached":
+                    metadata = attachment.media_metadata or {}
+                    if (
+                        mime not in MIME_EXTENSIONS
+                        or metadata.get("sha256") != attachment.content_sha256
+                        or metadata.get("size_bytes") != len(original)
+                    ):
+                        raise PrivateStorageUnavailable(
+                            "Private attachment inspection metadata is unavailable."
+                        )
+                    content = original
+                else:
+                    content = clean_image(io.BytesIO(original))
+                    mime = "image/jpeg"
         except OSError as error:
             raise NotFound() from error
         if operator and not owner:
@@ -55,8 +84,11 @@ class TicketAttachmentAPIView(APIView):
                 action="support.attachment_read",
                 reason="Support ticket evidence review",
             )
-        response = FileResponse(io.BytesIO(content), content_type="image/jpeg")
+        response = FileResponse(io.BytesIO(content), content_type=mime)
         response["Cache-Control"] = "private, no-store"
         response["X-Content-Type-Options"] = "nosniff"
-        response["Content-Disposition"] = 'inline; filename="support-attachment.jpg"'
+        disposition = "inline" if mime.startswith("image/") else "attachment"
+        response["Content-Disposition"] = (
+            f'{disposition}; filename="support-attachment.{MIME_EXTENSIONS[mime]}"'
+        )
         return response

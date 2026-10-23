@@ -35,6 +35,10 @@ class ChatConsumer(GroupChatConsumerMixin, AsyncJsonWebsocketConsumer):
         self.group_name = f"chat_user_{user.id}"
 
         await self.channel_layer.group_add(self.group_name, self.channel_name)
+        sid = (self.scope.get("auth_claims") or {}).get("session_id")
+        if sid:
+            self.session_group = f"chat_session_{UUID(str(sid))}"
+            await self.channel_layer.group_add(self.session_group, self.channel_name)
         await self.accept()
 
         from core_apps.chat.services.message_service import set_user_online_status
@@ -42,11 +46,18 @@ class ChatConsumer(GroupChatConsumerMixin, AsyncJsonWebsocketConsumer):
         await sync_to_async(set_user_online_status)(str(user.id), True)
 
     async def disconnect(self, close_code):
+        if hasattr(self, "session_group"):
+            await self.channel_layer.group_discard(
+                self.session_group, self.channel_name
+            )
         if hasattr(self, "group_name"):
             await self.channel_layer.group_discard(self.group_name, self.channel_name)
             from core_apps.chat.services.message_service import set_user_online_status
 
             await sync_to_async(set_user_online_status)(str(self.user.id), False)
+
+    async def session_revoked(self, event):
+        await self.close(code=4401)
 
     async def receive_json(self, content, **kwargs):
         if not isinstance(content, dict):

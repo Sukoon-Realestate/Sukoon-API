@@ -34,7 +34,9 @@ class DurablePrivateStorage(FileSystemStorage):
 
     @property
     def base_location(self):
-        return getattr(settings, self.root_setting, str(settings.BASE_DIR / self.default_root))
+        return getattr(
+            settings, self.root_setting, str(settings.BASE_DIR / self.default_root)
+        )
 
     @property
     def location(self):
@@ -67,7 +69,10 @@ class DurablePrivateStorage(FileSystemStorage):
             raise FileNotFoundError(name)
         try:
             return remote.materialize(
-                self.identity(name), target, prefix=self.prefix, maximum=self.maximum_bytes
+                self.identity(name),
+                target,
+                prefix=self.prefix,
+                maximum=self.maximum_bytes,
             )
         except TourError as error:
             if error.status_code == 404:
@@ -114,7 +119,9 @@ class DurablePrivateStorage(FileSystemStorage):
         from core_apps.virtual_tours import cloudinary_storage as remote
 
         if not self.remote:
-            raise PrivateStorageUnavailable("A durable private store is not configured.")
+            raise PrivateStorageUnavailable(
+                "A durable private store is not configured."
+            )
         source = Path(self.path(name))
         if not source.is_file():
             self._materialize(name)
@@ -130,12 +137,51 @@ class DurablePrivateStorage(FileSystemStorage):
                     remote.persist(self.identity(name), source, prefix=self.prefix)
                     self._materialize(name, target)
                 if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
-                    raise PrivateStorageUnavailable("Private backup integrity check failed.")
+                    raise PrivateStorageUnavailable(
+                        "Private backup integrity check failed."
+                    )
         except PrivateStorageUnavailable:
             raise
         except Exception as error:
             raise PrivateStorageUnavailable() from error
         return digest
+
+    def save_immutable(self, name, content, digest):
+        """Reconcile one stable object after a lost response, without renaming it."""
+        if (
+            not 0 < len(content) <= self.maximum_bytes
+            or hashlib.sha256(content).hexdigest() != digest
+        ):
+            raise PrivateStorageUnavailable("Private file integrity check failed.")
+        target = Path(self.path(name))
+        target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if not target.exists():
+            temporary = None
+            try:
+                with tempfile.NamedTemporaryFile(
+                    dir=target.parent, delete=False
+                ) as stream:
+                    temporary = Path(stream.name)
+                    stream.write(content)
+                # Publish only a complete file; concurrent writers reconcile the
+                # same digest and never replace an existing object's bytes.
+                try:
+                    os.link(temporary, target)
+                except FileExistsError:
+                    pass
+            finally:
+                if temporary is not None:
+                    temporary.unlink(missing_ok=True)
+        if (
+            target.stat().st_size != len(content)
+            or hashlib.sha256(target.read_bytes()).hexdigest() != digest
+        ):
+            raise PrivateStorageUnavailable(
+                "Private file identity contains different bytes."
+            )
+        if self.remote and self.ensure_remote(name) != digest:
+            raise PrivateStorageUnavailable("Private backup integrity check failed.")
+        return name
 
     def delete(self, name):
         if self.remote:

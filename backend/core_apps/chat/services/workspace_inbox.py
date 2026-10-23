@@ -71,8 +71,12 @@ def scoped(user, scope, company_id=""):
     classified = Q(workspace_contexts__user=user)
     if scope == "general":
         return qs.filter(kind="direct").exclude(classified)
-    query = Q(workspace_contexts__user=user, workspace_contexts__workspace=scope)
-    if scope in {"individual", "student"}:
-        # General housing groups are useful in both personal rental spaces.
+    query = Q(
+        kind="direct",
+        workspace_contexts__user=user,
+        workspace_contexts__workspace=scope,
+    )
+    if scope == "student":
+        # Group membership grants access; a stale workspace hint cannot move it.
         query |= Q(kind="housing_group")
     return qs.filter(query).distinct()

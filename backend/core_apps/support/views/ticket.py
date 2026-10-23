@@ -76,6 +76,8 @@ class TicketListCreateAPIView(generics.ListCreateAPIView):
                 description=serializer.validated_data["description"],
                 attachments=attachments,
                 rental_context=serializer.validated_data.get("rental_context", {}),
+                attachment_ids=serializer.validated_data.get("attachment_ids", []),
+                creation_request_key=request_key,
             )
             detail = TicketDetailSerializer(ticket, context={"request": request}).data
             return detail, status.HTTP_201_CREATED, ticket.id
@@ -156,6 +158,7 @@ class TicketReplyAPIView(APIView):
                     ticket_id=id,
                     body=serializer.validated_data["body"],
                     workspace=workspace,
+                    attachment_ids=serializer.validated_data.get("attachment_ids", []),
                 )
             except TicketClosedConflict as exc:
                 # The row may have changed after the pre-check.

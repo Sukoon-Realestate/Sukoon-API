@@ -92,6 +92,11 @@ class AuthSession(TimeStampedModel):
     security_epoch = models.PositiveIntegerField()
     expires_at = models.DateTimeField()
     revoked_at = models.DateTimeField(null=True, blank=True)
+    client_platform = models.CharField(max_length=16, blank=True, null=True)
+    device_model = models.CharField(max_length=100, blank=True, null=True)
+    os_version = models.CharField(max_length=40, blank=True, null=True)
+    app_version = models.CharField(max_length=40, blank=True, null=True)
+    last_seen_at = models.DateTimeField(null=True, blank=True)
 
 
 class SecurityEvent(TimeStampedModel):

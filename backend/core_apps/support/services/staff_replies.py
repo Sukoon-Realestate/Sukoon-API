@@ -33,6 +33,7 @@ def reply_as_staff(
     request_key,
     resolve_inquiry=False,
     acknowledge_resolution=False,
+    attachment_ids=None,
 ):
     from core_apps.users.models import User
     from core_apps.admin_api.models import StaffProfile
@@ -47,7 +48,12 @@ def reply_as_staff(
     if ticket.user_id == user.pk:
         raise PermissionDenied("An independent operator must service this inquiry.")
     clean = body.strip()
-    if not 1 <= len(clean) <= 4000 or not request_key or len(request_key) > 100:
+    if (
+        (not clean and not attachment_ids)
+        or len(clean) > 4000
+        or not request_key
+        or len(request_key) > 100
+    ):
         raise ValidationError("Supply the reply and its original operation key.")
     if resolve_inquiry and acknowledge_resolution is not True:
         raise ValidationError("Acknowledge that only the general inquiry is resolved.")
@@ -70,6 +76,9 @@ def reply_as_staff(
             sender_user=user,
             body=clean,
         )
+        from core_apps.support.services.staged_attachments import bind
+
+        bind(message, attachment_ids or [], user=user)
         ticket.revision += 1
         ticket.status = (
             Ticket.Status.RESOLVED if resolve_inquiry else Ticket.Status.IN_PROGRESS
@@ -112,6 +121,8 @@ def reply_as_staff(
         )
 
     payload = {"body": clean, "expected_revision": expected_revision}
+    if attachment_ids:
+        payload["attachment_ids"] = [str(identity) for identity in attachment_ids]
     if resolve_inquiry:
         payload["acknowledge_resolution"] = acknowledge_resolution
     return execute_idempotent(

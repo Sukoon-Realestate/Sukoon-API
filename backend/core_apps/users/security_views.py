@@ -44,6 +44,12 @@ def verify(request, identity):
 def sessions(request):
     if request.method == "POST":
         action = request.data.get("action")
+        if action in {"revoke_session", "revoke_others"}:
+            from .services.session_management import revoke_selected
+            from core_apps.common.idempotency import response_headers
+
+            data, code, replayed = revoke_selected(request)
+            return Response(data, status=code, headers=response_headers(replayed))
         if action not in {"revoke_all", "report_compromise"}:
             raise serializers.ValidationError(
                 {"action": "Use revoke_all or report_compromise."}
@@ -103,6 +109,13 @@ def sessions(request):
                     "created_at": item.created_at.isoformat(),
                     "expires_at": item.expires_at.isoformat(),
                     "current": str(item.id) == (request.auth or {}).get("session_id"),
+                    "client_platform": item.client_platform or "",
+                    "device_model": item.device_model or "",
+                    "os_version": item.os_version or "",
+                    "app_version": item.app_version or "",
+                    "last_seen_at": (
+                        item.last_seen_at.isoformat() if item.last_seen_at else ""
+                    ),
                 }
                 for item in AuthSession.objects.filter(
                     user=request.user,
@@ -110,5 +123,17 @@ def sessions(request):
                     expires_at__gt=timezone.now(),
                 )
             ],
-        }
+        },
+        headers={"Cache-Control": "private, no-store"},
+    )
+
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([GenericJsonRenderer])
+def session_metadata(request):
+    from .services.session_management import update_metadata
+
+    return Response(
+        update_metadata(request), headers={"Cache-Control": "private, no-store"}
     )

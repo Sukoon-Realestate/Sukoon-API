@@ -191,7 +191,12 @@ def response_headers(replayed):
 
 def recoverable_operation(operation):
     return operation == "property.create" or operation.startswith(
-        ("property.update:", "property.image.upload:", "support.ticket.create:")
+        (
+            "property.update:",
+            "property.image.upload:",
+            "support.ticket.create:",
+            "support.ticket.reply:",
+        )
     )
 
 

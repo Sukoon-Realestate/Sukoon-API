@@ -12,6 +12,7 @@ from .services.payment_reports import readable_tickets, can_read_ticket
 
 
 class TicketReplyForm(forms.ModelForm):
+    attachment_ids = forms.CharField(required=False, widget=forms.HiddenInput)
     service_action = forms.ChoiceField(
         choices=(("reply", "Reply"), ("resolve", "Resolve general inquiry")),
         initial="reply",
@@ -35,9 +36,28 @@ class TicketReplyForm(forms.ModelForm):
         model = Ticket
         fields = ()
 
+    class Media:
+        js = ("support/ticket_attachments.js",)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["expected_revision"].initial = self.instance.revision
+        self.fields["attachment_ids"].widget.attrs[
+            "data-workspace"
+        ] = self.instance.workspace
+
+    def clean_attachment_ids(self):
+        try:
+            ids = [
+                uuid.UUID(value.strip())
+                for value in self.cleaned_data.get("attachment_ids", "").split(",")
+                if value.strip()
+            ]
+        except ValueError as error:
+            raise forms.ValidationError("Choose valid attachments.") from error
+        if len(ids) > 3 or len(set(ids)) != len(ids):
+            raise forms.ValidationError("Choose up to three different attachments.")
+        return ids
 
     def clean(self):
         data = super().clean()
@@ -71,6 +91,7 @@ class TicketAdmin(admin.ModelAdmin):
         *readonly_fields,
         "service_action",
         "reply",
+        "attachment_ids",
         "acknowledge_resolution",
         "expected_revision",
         "request_key",
@@ -134,7 +155,9 @@ class TicketAdmin(admin.ModelAdmin):
         )
 
     def save_model(self, request, obj, form, change):
-        if not form.cleaned_data.get("reply"):
+        if not form.cleaned_data.get("reply") and not form.cleaned_data.get(
+            "attachment_ids"
+        ):
             return
         # Validate at the command boundary again; the posted read-only ticket
         # fields never become authority for status or financial changes.
@@ -149,6 +172,7 @@ class TicketAdmin(admin.ModelAdmin):
                 acknowledge_resolution=form.cleaned_data.get(
                     "acknowledge_resolution", False
                 ),
+                attachment_ids=form.cleaned_data.get("attachment_ids", []),
             )
         except APIException as error:
             request.support_reply_failed = True

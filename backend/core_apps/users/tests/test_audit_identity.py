@@ -84,13 +84,13 @@ def test_email_delivery_failure_is_not_acknowledged_and_retry_is_bounded(user):
     assert not user.is_email_verified and not user.is_verified
 
 
-def test_identity_migration_requeues_only_unversioned_complete_evidence(
+def test_identity_migration_preserves_assurance_until_explicit_legacy_review(
     user, superuser
 ):
     import importlib
-    from types import SimpleNamespace
     from django.apps import apps
     from django.db import connection
+    from django.db.migrations.state import ProjectState
     from core_apps.users.models import User
 
     legacy = User.objects.create_user(
@@ -106,14 +106,16 @@ def test_identity_migration_requeues_only_unversioned_complete_evidence(
     migrate = importlib.import_module(
         "core_apps.admin_api.migrations.0006_reconcile_legacy_identity"
     )
-    migrate.reconcile(apps, SimpleNamespace(connection=connection))
+    # Schema rollout must not silently revoke or re-review legacy identities.
+    # The explicit review_legacy_identity command owns that separate decision.
+    with connection.schema_editor() as editor:
+        migrate.Migration("0006_reconcile_legacy_identity", "admin_api").apply(
+            ProjectState.from_apps(apps), editor
+        )
     legacy.refresh_from_db()
     user.refresh_from_db()
     old.refresh_from_db()
-    assert not legacy.is_verified and not legacy.is_email_verified
-    assert old.status == "approved" and old.superseded_at
-    assert (
-        legacy.profile.kyc_submissions.order_by("-created_at").first().status
-        == "pending"
-    )
+    assert legacy.is_verified and not legacy.is_email_verified
+    assert old.status == "approved" and old.superseded_at is None
+    assert legacy.profile.kyc_submissions.count() == 1
     assert user.is_verified

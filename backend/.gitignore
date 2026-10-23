@@ -32,3 +32,6 @@ private_virtual_tours/
 
 # Authenticated support evidence is never public media.
 private_support_media/
+
+# Local capture workbench database; contains runtime data, not source.
+.capture-dev-postgres/

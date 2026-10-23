@@ -12,6 +12,7 @@ TICKETS_URL = reverse("support-ticket-list-create")
 
 
 @pytest.mark.django_db
+@pytest.mark.usefixtures("published_help")
 class TestHelpCenterView:
     def test_help_center_tenant_arabic(self, api_client):
         res = api_client.get(f"{HELP_CENTER_URL}?workspace=tenant&lang=ar")
@@ -92,9 +93,12 @@ class TestTicketListCreateAPIView:
     def test_create_ticket_with_multipart_attachment(self, auth_client, user):
         import io
         from PIL import Image
+
         body = io.BytesIO()
         Image.new("RGB", (3, 3)).save(body, "PNG")
-        image = SimpleUploadedFile("screenshot.png", body.getvalue(), content_type="image/png")
+        image = SimpleUploadedFile(
+            "screenshot.png", body.getvalue(), content_type="image/png"
+        )
         payload = {
             "workspace": "tenant",
             "category": "visit",

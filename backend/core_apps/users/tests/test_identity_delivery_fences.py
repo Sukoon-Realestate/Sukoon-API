@@ -71,12 +71,19 @@ def test_expired_or_wrong_account_push_sessions_are_not_delivery_targets(
         send.assert_not_called()
 
 
-def test_restore_quarantine_closes_company_lists_even_after_fresh_login(recovery, user):
+def test_deferred_global_restore_gate_does_not_replace_company_session_authority(
+    recovery, user
+):
     path, state = recovery
     path.write_text(json.dumps({**state, "mode": "quarantined"}))
     fresh = issue_refresh(user)
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION=f"Bearer {fresh.access_token}")
     response = client.get("/api/v1/features/v1/companies/")
-    assert response.status_code == 503
-    assert "results" not in response.data
+    assert response.status_code == 200
+    assert response.data["results"] == []
+    # The deployed account session fence remains authoritative even while the
+    # separate global restore-control integration is deferred.
+    user.security_epoch += 1
+    user.save(update_fields=["security_epoch"])
+    assert client.get("/api/v1/features/v1/companies/").status_code == 401
