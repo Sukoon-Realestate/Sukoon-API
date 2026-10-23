@@ -6,6 +6,82 @@ from core_apps.properties.models import Property
 
 
 @pytest.mark.django_db
+def test_property_requests_admin_lists_filters_and_opens_submissions(
+    client, superuser, user, apartment_type, cairo_city, cairo_governorate, settings
+):
+    settings.STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    pending = Property.objects.create(
+        owner=user,
+        title="Pending submission",
+        property_type=apartment_type,
+        city=cairo_city,
+        governorate=cairo_governorate,
+        district="Nasr City",
+    )
+    verified = Property.objects.create(
+        owner=user,
+        title="Approved submission",
+        property_type=apartment_type,
+        city=cairo_city,
+        governorate=cairo_governorate,
+        district="Nasr City",
+        status=Property.Status.VERIFIED,
+        is_verified=True,
+    )
+    client.force_login(superuser)
+    url = reverse("admin:properties_propertyrequest_changelist")
+    index = client.get(reverse("admin:index"))
+    assert url in index.content.decode()
+
+    response = client.get(url)
+    assert response.status_code == 200
+    assert {obj.pk for obj in response.context["cl"].queryset} == {
+        pending.pk,
+        verified.pk,
+    }
+    assert "status" in response.context["cl"].list_display
+    assert "is_verified" in response.context["cl"].list_display
+
+    response = client.get(
+        url, {"status__exact": "under_review", "is_verified__exact": "0"}
+    )
+    assert response.status_code == 200
+    assert [obj.pk for obj in response.context["cl"].queryset] == [pending.pk]
+
+    response = client.get(
+        reverse("admin:properties_propertyrequest_change", args=[pending.pk])
+    )
+    assert response.status_code == 200
+    assert "status" in response.context["adminform"].readonly_fields
+    assert "is_verified" in response.context["adminform"].readonly_fields
+
+
+@pytest.mark.django_db
+def test_property_requests_admin_reuses_property_permissions(client, user, settings):
+    from django.contrib.auth.models import Permission
+
+    settings.STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    user.is_staff = True
+    user.save(update_fields=["is_staff"])
+    client.force_login(user)
+    url = reverse("admin:properties_propertyrequest_changelist")
+    assert client.get(url).status_code == 403
+
+    user.user_permissions.add(
+        Permission.objects.get(
+            content_type__app_label="properties", codename="view_property"
+        )
+    )
+    response = client.get(url)
+    assert response.status_code == 200
+    assert not response.context["has_add_permission"]
+    assert "delete_selected" not in response.context["cl"].model_admin.get_actions(
+        response.wsgi_request
+    )
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("admin_model", ["property", "propertyrequest"])
 @pytest.mark.parametrize(
     (
         "action",
@@ -53,6 +129,7 @@ def test_property_admin_moderation_actions_are_audited(
     apartment_type,
     cairo_city,
     cairo_governorate,
+    admin_model,
     action,
     initial_status,
     initial_verified,
@@ -74,7 +151,7 @@ def test_property_admin_moderation_actions_are_audited(
     client.force_login(superuser)
 
     response = client.post(
-        reverse("admin:properties_property_changelist"),
+        reverse(f"admin:properties_{admin_model}_changelist"),
         {
             "action": action,
             "_selected_action": str(property_obj.pk),

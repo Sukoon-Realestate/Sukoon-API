@@ -19,6 +19,7 @@ from .models import (
     PropertyFavorite,
     PropertyImage,
     PropertyRating,
+    PropertyRequest,
     PropertyType,
     PropertyVisit,
     PropertyVisitReview,
@@ -214,6 +215,31 @@ class PropertyAdmin(admin.ModelAdmin):
         "owner__last_name",
     ]
     inlines = [PropertyImageInline]
+
+
+@admin.register(PropertyRequest)
+class PropertyRequestAdmin(PropertyAdmin):
+    list_display = ["title", "owner", "status", "is_verified", "created_at"]
+    list_filter = ["status", "is_verified"]
+    list_select_related = ["owner"]
+    ordering = ["-created_at", "-pk"]
+
+    # Share the existing property permissions instead of granting new authority
+    # through a separate proxy model.
+    def has_view_permission(self, request, obj=None):
+        return (
+            request.user.has_perm("properties.view_property")
+            or self.has_change_permission(request, obj)
+        )
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.has_perm("properties.change_property")
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(OwnerAvailabilitySlot)

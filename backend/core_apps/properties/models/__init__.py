@@ -1,4 +1,4 @@
-from .property import Property, PropertyImage
+from .property import Property, PropertyImage, PropertyRequest
 from .portfolio import (
     ResidentialBuilding,
     ResidentialComplex,

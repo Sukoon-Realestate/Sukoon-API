@@ -233,6 +233,16 @@ class Property(TimeStampedModel):
         return self.title
 
 
+class PropertyRequest(Property):
+    """Admin moderation view of existing property submissions."""
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Property request")
+        verbose_name_plural = _("Property requests")
+        default_permissions = ()
+
+
 class PropertyImage(TimeStampedModel):
     property = models.ForeignKey(
         Property,
