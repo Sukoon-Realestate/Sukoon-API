@@ -1,5 +1,13 @@
 # Worklog
 
+## 2026-10-23
+
+### Add property moderation cycle to Django admin
+- **What:** Added built-in admin actions to approve, request revisions for, or reject property listings.
+- **Why:** Give authorized property reviewers an audited approval workflow directly in Django admin.
+- **Details:** Actions reuse the existing moderation services and role checks; rejection and revision requests require a reason. Status and verification are read-only in ordinary edits, and requesting revisions clears stale verification.
+- **Files:** `backend/core_apps/properties/admin.py`, `backend/core_apps/admin_api/services/property_service_parts/get_admin_property_detail.py`, `backend/core_apps/properties/tests/test_property_admin_moderation.py`, `WORKLOG.md`
+
 ## 2026-10-15
 
 ### Verify virtual-tour deployment after user-reported release

@@ -169,7 +169,8 @@ def request_admin_property_revision(property_id, reason=None, *, reviewer):
         raise PermissionDenied("A listing requires independent moderation.")
     before = prop.status
     prop.status = Property.Status.NEEDS_REVISION
-    prop.save(update_fields=["status", "updated_at"])
+    prop.is_verified = False
+    prop.save(update_fields=["status", "is_verified", "updated_at"])
     RentalAuditEvent.objects.create(
         actor=reviewer,
         subject_kind="property",

@@ -1,4 +1,15 @@
-from django.contrib import admin
+from django import forms
+from django.contrib import admin, messages
+from django.contrib.admin.helpers import ActionForm
+from django.db import transaction
+from rest_framework.exceptions import PermissionDenied
+
+from core_apps.admin_api.permissions import require_staff_actor
+from core_apps.admin_api.services import (
+    approve_admin_property,
+    reject_admin_property,
+    request_admin_property_revision,
+)
 
 from .models import (
     City,
@@ -18,6 +29,15 @@ from .models import (
 class PropertyImageInline(admin.TabularInline):
     model = PropertyImage
     extra = 1
+
+
+class PropertyModerationActionForm(ActionForm):
+    reason = forms.CharField(
+        label="Review reason",
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 2}),
+        help_text="Required when rejecting a listing or requesting revisions.",
+    )
 
 
 @admin.register(PropertyType)
@@ -47,6 +67,13 @@ class CityAdmin(admin.ModelAdmin):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
+    action_form = PropertyModerationActionForm
+    actions = [
+        "approve_selected_properties",
+        "request_property_revisions",
+        "reject_selected_properties",
+    ]
+
     # Physical topology uses the versioned property/portfolio services. Generic
     # admin edits must not bypass aggregate holds or rewrite historical scope.
     readonly_fields = [
@@ -58,7 +85,85 @@ class PropertyAdmin(admin.ModelAdmin):
         "portfolio_inheritance",
         "retired_at",
         "replaces",
+        "status",
+        "is_verified",
     ]
+
+    def has_can_moderate_properties_permission(self, request):
+        try:
+            require_staff_actor(
+                request.user,
+                {"system_owner", "main_admin", "property_reviewer"},
+            )
+        except PermissionDenied:
+            return False
+        return True
+
+    def _apply_moderation_decision(self, request, queryset, decision, reason=""):
+        reason = reason.strip()
+        if decision != "approve" and not reason:
+            self.message_user(
+                request,
+                "Enter a review reason before rejecting a listing or requesting revisions.",
+                level=messages.ERROR,
+            )
+            return
+
+        transitions = {
+            "approve": approve_admin_property,
+            "request_revision": request_admin_property_revision,
+            "reject": reject_admin_property,
+        }
+        transition = transitions[decision]
+        updated_count = 0
+        try:
+            with transaction.atomic():
+                for property_obj in queryset:
+                    transition(
+                        property_obj.id,
+                        reviewer=request.user,
+                        **({"reason": reason} if decision != "approve" else {}),
+                    )
+                    updated_count += 1
+        except PermissionDenied as error:
+            self.message_user(request, str(error.detail), level=messages.ERROR)
+            return
+
+        decision_labels = {
+            "approve": "approved",
+            "request_revision": "marked for revision",
+            "reject": "rejected",
+        }
+        self.message_user(
+            request,
+            f"{updated_count} property listing(s) {decision_labels[decision]}.",
+            level=messages.SUCCESS,
+        )
+
+    @admin.action(
+        description="Approve selected property listings",
+        permissions=["can_moderate_properties"],
+    )
+    def approve_selected_properties(self, request, queryset):
+        self._apply_moderation_decision(request, queryset, "approve")
+
+    @admin.action(
+        description="Request revisions for selected property listings",
+        permissions=["can_moderate_properties"],
+    )
+    def request_property_revisions(self, request, queryset):
+        self._apply_moderation_decision(
+            request, queryset, "request_revision", request.POST.get("reason", "")
+        )
+
+    @admin.action(
+        description="Reject selected property listings",
+        permissions=["can_moderate_properties"],
+    )
+    def reject_selected_properties(self, request, queryset):
+        self._apply_moderation_decision(
+            request, queryset, "reject", request.POST.get("reason", "")
+        )
 
     def has_delete_permission(self, request, obj=None):
         if obj and (obj.building_id or obj.complex_id or obj.portfolio_offers.exists()):
