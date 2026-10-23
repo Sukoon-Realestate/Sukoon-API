@@ -1,0 +1,49 @@
+{% extends "admin/base_site.html" %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+  <a href="{% url 'admin:admin_api_kycsubmission_changelist' %}">طلبات التوثيق</a> &rsaquo;
+  {{ title }}
+</div>
+{% endblock %}
+{% block content %}
+<div dir="rtl">
+  <div class="module">
+    <h2>{{ submission.userName }} — {{ submission.statusDisplay }}</h2>
+    <p>البريد الإلكتروني: {{ submission.userEmail }}</p>
+    <p>الرقم القومي: {{ submission.nationalId }}</p>
+    <p>تاريخ الميلاد: {{ submission.birthDate }}</p>
+    <p>تاريخ التقديم: {{ submission.submittedAt }}</p>
+    {% if submission.reviewedBy %}<p>المراجع: {{ submission.reviewedBy }} — {{ submission.reviewedAt }}</p>{% endif %}
+    {% if submission.rejectionReason %}<p>سبب الرفض: {{ submission.rejectionReason }}</p>{% endif %}
+  </div>
+  <div class="module">
+    <h2>المستندات المقدمة في هذا الطلب</h2>
+    {% if submission.idFaceUrl %}
+    <h3>وش البطاقة</h3>
+    <a href="{{ submission.idFaceUrl }}" target="_blank" rel="noopener noreferrer"><img src="{{ submission.idFaceUrl }}" alt="وش البطاقة" style="max-width:100%;max-height:360px"></a>
+    {% endif %}
+    {% if submission.idBackUrl %}
+    <h3>ضهر البطاقة</h3>
+    <a href="{{ submission.idBackUrl }}" target="_blank" rel="noopener noreferrer"><img src="{{ submission.idBackUrl }}" alt="ضهر البطاقة" style="max-width:100%;max-height:360px"></a>
+    {% endif %}
+    {% if submission.selfieUrl %}
+    <h3>الصورة الشخصية</h3>
+    <a href="{{ submission.selfieUrl }}" target="_blank" rel="noopener noreferrer"><img src="{{ submission.selfieUrl }}" alt="الصورة الشخصية" style="max-width:100%;max-height:360px"></a>
+    {% endif %}
+  </div>
+  {% if can_review %}
+  <form method="post">
+    {% csrf_token %}
+    <p><label for="reason">سبب الرفض (مطلوب عند الرفض)</label></p>
+    <textarea id="reason" name="reason" rows="3" cols="60" style="max-width:100%">{{ reason }}</textarea>
+    <div class="submit-row">
+      <button type="submit" name="decision" value="approve">الموافقة على التوثيق</button>
+      <button type="submit" name="decision" value="reject">رفض الطلب</button>
+    </div>
+  </form>
+  {% else %}
+  <p>هذا الطلب غير متاح للمراجعة. يلزم طلب حالي معلّق بمستندات مكتملة ومراجع مختلف عن صاحب الطلب.</p>
+  {% endif %}
+</div>
+{% endblock %}
