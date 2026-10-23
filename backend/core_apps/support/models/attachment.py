@@ -17,7 +17,9 @@ class TicketAttachment(TimeStampedModel):
     file = models.FileField(_("File"), upload_to="support/attachments/", blank=True)
     private_file = models.FileField(upload_to="attachments/", blank=True, storage=SupportPrivateStorage())
 
-    content_sha256 = models.CharField(max_length=64, blank=True, editable=False)
+    # A rolling deployment may still have a writer from before digest binding.
+    # NULL means no digest was recorded; it never represents verified bytes.
+    content_sha256 = models.CharField(max_length=64, blank=True, null=True, editable=False)
 
     class Meta:
         verbose_name = _("Ticket Attachment")
