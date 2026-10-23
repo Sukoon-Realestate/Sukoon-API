@@ -2,7 +2,7 @@ import pytest
 from django.urls import reverse
 
 from core_apps.features.models import RentalAuditEvent
-from core_apps.properties.models import Property
+from core_apps.properties.models import Property, PropertyImage
 
 
 @pytest.mark.django_db
@@ -52,8 +52,56 @@ def test_property_requests_admin_lists_filters_and_opens_submissions(
         reverse("admin:properties_propertyrequest_change", args=[pending.pk])
     )
     assert response.status_code == 200
-    assert "status" in response.context["adminform"].readonly_fields
-    assert "is_verified" in response.context["adminform"].readonly_fields
+    assert set(response.context["adminform"].form.fields) == {"status", "is_verified"}
+
+
+@pytest.mark.django_db
+def test_property_request_edit_only_changes_status_and_verification(
+    client, superuser, user, apartment_type, cairo_city, cairo_governorate, settings
+):
+    settings.STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    property_obj = Property.objects.create(
+        owner=user,
+        title="Original title",
+        property_type=apartment_type,
+        city=cairo_city,
+        governorate=cairo_governorate,
+        district="Nasr City",
+    )
+    image = PropertyImage.objects.create(
+        property=property_obj, image="properties/original.jpg", name="Original image"
+    )
+    client.force_login(superuser)
+    url = reverse("admin:properties_propertyrequest_change", args=[property_obj.pk])
+    response = client.get(url)
+    inline = response.context["inline_admin_formsets"][0]
+    assert not inline.has_add_permission
+    assert not inline.has_change_permission
+    assert not inline.has_delete_permission
+    payload = {
+        "status": Property.Status.VERIFIED,
+        "is_verified": "on",
+        "title": "Tampered title",
+        "price": "999999",
+        "_save": "Save",
+    }
+    for field in inline.formset.management_form:
+        payload[field.html_name] = field.value()
+    for form in inline.formset.forms:
+        for field in form.hidden_fields():
+            payload[field.html_name] = field.value()
+        payload[f"{form.prefix}-name"] = "Tampered image"
+        payload[f"{form.prefix}-DELETE"] = "on"
+
+    response = client.post(url, payload)
+    assert response.status_code == 302
+    property_obj.refresh_from_db()
+    image.refresh_from_db()
+    assert property_obj.status == Property.Status.VERIFIED
+    assert property_obj.is_verified
+    assert property_obj.title == "Original title"
+    assert property_obj.price == 0
+    assert image.name == "Original image"
 
 
 @pytest.mark.django_db

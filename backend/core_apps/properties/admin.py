@@ -32,6 +32,20 @@ class PropertyImageInline(admin.TabularInline):
     extra = 1
 
 
+class PropertyRequestImageInline(PropertyImageInline):
+    extra = 0
+    readonly_fields = ["image", "name", "description"]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 class PropertyModerationActionForm(ActionForm):
     reason = forms.CharField(
         label="Review reason",
@@ -223,6 +237,14 @@ class PropertyRequestAdmin(PropertyAdmin):
     list_filter = ["status", "is_verified"]
     list_select_related = ["owner"]
     ordering = ["-created_at", "-pk"]
+    inlines = [PropertyRequestImageInline]
+
+    def get_readonly_fields(self, request, obj=None):
+        return [
+            field.name
+            for field in self.model._meta.fields + self.model._meta.many_to_many
+            if field.name not in {"status", "is_verified"}
+        ]
 
     # Share the existing property permissions instead of granting new authority
     # through a separate proxy model.
