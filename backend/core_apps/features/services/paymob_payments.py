@@ -37,7 +37,10 @@ def lock_invoice(user, identity):
 
 
 def navigation(attempt):
-    origins = [client.HOST, *getattr(settings, "PAYMOB_CHECKOUT_EXTRA_ORIGINS", [])]
+    origins = [
+        *client.CHECKOUT_ORIGINS,
+        *getattr(settings, "PAYMOB_CHECKOUT_EXTRA_ORIGINS", []),
+    ]
     from urllib.parse import urlparse
 
     for origin in origins:
@@ -45,6 +48,7 @@ def navigation(attempt):
         if (
             parts.scheme != "https"
             or not parts.hostname
+            or "*" in parts.netloc
             or parts.username
             or parts.path not in {"", "/"}
             or parts.query
@@ -312,6 +316,20 @@ def bind_intention(payment, response):
 
 def session_payload(attempt):
     session = attempt.checkout_session
+    # Old pending sessions must follow the provider's canonical redirect too.
+    # Project only pinned provider origins; preserve their original return state,
+    # URL, expiry and identity without creating another intention or rewriting DB.
+    nav = {
+        **session.navigation,
+        "allowed_origins": list(
+            dict.fromkeys(
+                [
+                    *session.navigation.get("allowed_origins", []),
+                    *client.CHECKOUT_ORIGINS,
+                ]
+            )
+        ),
+    }
     return {
         "session_id": str(session.id),
         "payment_attempt_id": str(attempt.id),
@@ -329,7 +347,7 @@ def session_payload(attempt):
         "expires_at": session.expires_at.isoformat(),
         "provider_mode": "hosted",
         "provider_environment": "sandbox",
-        "navigation": session.navigation,
+        "navigation": nav,
     }
 
 

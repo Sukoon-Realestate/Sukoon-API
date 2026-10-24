@@ -10,6 +10,8 @@ from django.conf import settings
 from rest_framework.exceptions import APIException, ValidationError
 
 HOST = "https://accept.paymob.com"
+# Egypt's legacy unified-checkout URL redirects to this exact HTTPS origin.
+CHECKOUT_ORIGINS = (HOST, "https://eg.checkout.paymob.com")
 
 
 class PaymobUnavailable(APIException):

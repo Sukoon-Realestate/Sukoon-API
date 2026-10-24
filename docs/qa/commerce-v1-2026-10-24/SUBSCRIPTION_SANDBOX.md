@@ -45,10 +45,20 @@ Only server-to-server Paymob inquiry with matching test environment, order/refer
 
 The existing `6/min` reconciliation throttle now uses a dedicated `payment_reconcile` cache scope. Previously it shared the general user's request bucket, so ordinary invoice/catalog requests could cause HTTP 429 before the first inquiry. The rate itself is unchanged.
 
+### Egypt hosted checkout navigation
+
+Paymob's `https://accept.paymob.com/unifiedcheckout/` redirects to the exact HTTPS origin `https://eg.checkout.paymob.com`. Both origins are pinned in the backend navigation contract; wildcard domains and HTTP are not accepted. The Egypt checkout URL is also shown in Paymob's [official checkout example](https://developers.paymob.com/paymob-docs/developers/checkout-experiences/affordability-widget).
+
+Existing personal-subscription Paymob sessions receive these same pinned origins when projected through attempt GET, original-request lookup or checkout replay. Their saved URL, expiry, attempt, invoice, quote, request key and bound return state remain unchanged, and projection performs no database rewrite or provider submission. New runtime-configured extra origins are not silently added to an already issued session.
+
+This fixes the redirect block while the original hosted session remains usable. A local session expiry is not proof that its provider order has closed: pending, declined, unavailable or unmatched inquiry responses still require reconciliation. This change does not expire an unresolved attempt, extend a checkout lifetime or authorize a replacement intention.
+
 ## Verification
 
 `make test-subscription-sandbox CYCLE_PYTHON=/path/to/venv/bin/python` runs the new endpoint suite alongside existing Paymob, native-store and legacy billing regressions. The new tests mock only provider transport; they validate real Django HTTP/service/database behavior but do not prove a real test-card capture, WebView, 3DS, webhook delivery or a deployed environment.
 
 Local verification on an isolated PostgreSQL 17 database passed all **67 tests**, including concurrent checkout/refund and subscription recovery. A separate catalog check also passed after adding explicit version/product-type assertions. Django system and migration-drift checks, focused Flake8/Black, and `git diff --check` passed. No schema migration is introduced. The application's development and hosted databases were not used for this local suite.
+
+The October 25 canonical-origin correction passed **71 tests** on fresh isolated PostgreSQL, including original-session GET/lookup/replay with sale admission disabled, unchanged provider submission count and rejection of HTTP/wildcard origins. Focused Flake8/Black and whitespace checks passed.
 
 Device acceptance must establish: allowed account gets the explicit route; another account remains denied; quote/checkout opens the sandbox hosted page; a test-card payment becomes captured with fulfilled subscription; returning/restarting/reconciling never creates a duplicate; disabling the sale flag still lets the original attempt recover.

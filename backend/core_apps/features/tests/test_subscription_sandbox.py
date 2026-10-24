@@ -21,7 +21,7 @@ from core_apps.features.models import (
 from core_apps.features.services import paymob_client
 from core_apps.features.services.entitlements import decision
 from core_apps.features.services.purchase_routing import routing_v1
-from core_apps.features.services.paymob_payments import reconcile
+from core_apps.features.services.paymob_payments import navigation, reconcile
 from core_apps.features.tests import test_billing_subscriptions as billing_tests
 from core_apps.features.tests import test_paymob_invoice_payments as paymob_tests
 from core_apps.features.tests import test_rental_phase3 as rental_tests
@@ -299,6 +299,60 @@ def test_unknown_submission_recovers_without_new_intention(
     ):
         assert reconcile_http(client, attempt)["fulfillment_status"] == "fulfilled"
     assert AccountSubscription.objects.count() == 1
+
+
+@pytest.mark.parametrize(
+    "origin",
+    [
+        "http://eg.checkout.paymob.com",
+        "https://*.paymob.com",
+        "https://eg.checkout.paymob.com/untrusted/path",
+    ],
+)
+def test_checkout_navigation_rejects_insecure_or_wildcard_origins(paymob, origin):
+    paymob.PAYMOB_CHECKOUT_EXTRA_ORIGINS = [origin]
+    with pytest.raises(paymob_client.PaymobUnavailable):
+        navigation(None)
+
+
+def test_existing_checkout_recovers_canonical_redirect_without_new_intention(
+    client, plan, sandbox
+):
+    review, quote, command, base = review_and_quote(client, plan)
+    origins = ["https://accept.paymob.com", "https://eg.checkout.paymob.com"]
+    with patch(
+        "core_apps.features.services.paymob_client.create_intention",
+        side_effect=intention,
+    ) as create:
+        original = body(client.post(base + "checkout/", command, format="json"))
+        expected = original["checkout_session"]
+        assert expected["navigation"]["allowed_origins"] == origins
+        payment = PaymobPayment.objects.get()
+        session = payment.attempt.checkout_session
+        # Simulate a durable session issued before the canonical redirect fix.
+        session.navigation["allowed_origins"] = ["https://accept.paymob.com"]
+        session.save(update_fields=["navigation"])
+        sandbox.COMMERCE_SUBSCRIPTION_SANDBOX_ENABLED = False
+        sandbox.COMMERCE_SUBSCRIPTION_SANDBOX_USER_IDS = []
+        # Newly configured extras must not silently extend an old session.
+        sandbox.PAYMOB_CHECKOUT_EXTRA_ORIGINS = ["https://unrelated.example.test"]
+        fresh = body(client.get(ROOT + f"payment-attempts/{original['id']}/"))
+        lookup = body(
+            client.get(
+                ROOT + "payment-attempts/",
+                {"invoice_id": review["id"], "request_key": command["request_key"]},
+            )
+        )["results"][0]
+        replay = body(client.post(base + "checkout/", command, format="json"))
+        for recovered in (fresh, lookup, replay):
+            assert recovered["id"] == original["id"]
+            assert recovered["checkout_session"] == expected
+        assert create.call_count == 1
+    session.refresh_from_db()
+    assert session.navigation["allowed_origins"] == ["https://accept.paymob.com"]
+    assert PaymentAttempt.objects.count() == PaymobPayment.objects.count() == 1
+    assert not PaymentReceipt.objects.exists()
+    assert not AccountSubscription.objects.exists()
 
 
 def test_subscription_becoming_active_before_checkout_prevents_charge(
