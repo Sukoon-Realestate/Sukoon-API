@@ -1,5 +1,7 @@
 """Views: listing suggestions."""
 
+from core_apps.common.locale_middleware import resolve_request_language
+
 from datetime import timedelta
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
@@ -21,9 +23,7 @@ def analytics_snapshot(request, property_id):
     property_obj = get_object_or_404(Property, id=property_id, owner=request.user)
     from ..services.entitlements import enforce
     enforce(request.user, "advanced_analytics", "owner")
-    language = request.query_params.get("lang") or request.headers.get(
-        "Accept-Language", "en"
-    )
+    language = resolve_request_language(request)
     is_arabic = language.lower().startswith("ar")
     try:
         period_days = int(request.query_params.get("period_days", 30))

@@ -59,55 +59,9 @@ ERROR_MESSAGES_AR = {
 
 
 def language(request):
-    if not request:
-        return "en"
-    if hasattr(request, "query_params"):
-        lang_param = request.query_params.get("lang") or request.query_params.get(
-            "language"
-        )
-    else:
-        lang_param = request.GET.get("lang") if hasattr(request, "GET") else None
-    if lang_param:
-        clean = str(lang_param).strip().lower()
-        if clean.startswith("ar"):
-            return "ar"
-        if clean.startswith("en"):
-            return "en"
+    from core_apps.common.locale_middleware import resolve_request_language
 
-    accept_lang = None
-    headers = getattr(request, "headers", None)
-    if headers and hasattr(headers, "get"):
-        accept_lang = headers.get("Accept-Language") or headers.get("accept-language")
-    if not accept_lang and hasattr(request, "META"):
-        accept_lang = request.META.get("HTTP_ACCEPT_LANGUAGE")
-    raw_req = getattr(request, "_request", None)
-    if not accept_lang and raw_req:
-        raw_headers = getattr(raw_req, "headers", None)
-        if raw_headers and hasattr(raw_headers, "get"):
-            accept_lang = raw_headers.get("Accept-Language") or raw_headers.get(
-                "accept-language"
-            )
-        if not accept_lang and hasattr(raw_req, "META"):
-            accept_lang = raw_req.META.get("HTTP_ACCEPT_LANGUAGE")
-
-    if accept_lang:
-        for part in str(accept_lang).split(","):
-            token = part.split(";")[0].strip().lower()
-            if token.startswith("ar"):
-                return "ar"
-            if token.startswith("en"):
-                return "en"
-
-    current = getattr(request, "LANGUAGE_CODE", None)
-    if not current and raw_req:
-        current = getattr(raw_req, "LANGUAGE_CODE", None)
-    if not current:
-        from django.utils import translation
-
-        current = translation.get_language()
-    if current and str(current).lower().startswith("ar"):
-        return "ar"
-    return "en"
+    return resolve_request_language(request)
 
 
 def message(request, key):

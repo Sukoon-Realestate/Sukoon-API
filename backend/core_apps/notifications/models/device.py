@@ -34,6 +34,7 @@ class DeviceToken(TimeStampedModel):
         blank=True,
         related_name="notification_devices",
     )
+    language = models.CharField(max_length=2, choices=[("ar", "Arabic"), ("en", "English")], default="ar")
     is_active = models.BooleanField(_("Is Active"), default=True)
 
     class Meta:

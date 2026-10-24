@@ -1,3 +1,4 @@
+from core_apps.properties.search import PropertySearchFilter
 import logging
 
 from django.db.models import Avg, FloatField, Max, Prefetch, Value
@@ -14,6 +15,7 @@ from ..filters import PropertyFilter
 from ..models import Property, SavedProperty
 from ..serializers import SavedPropertyCardSerializer, SavedPropertySerializer
 from ..services import SavedPropertyService
+from ..services.public_access import public_properties
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +50,7 @@ class SavedPropertyListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [
         DjangoFilterBackend,
-        filters.SearchFilter,
+        PropertySearchFilter,
         filters.OrderingFilter,
     ]
     filterset_class = PropertyFilter
@@ -64,7 +66,7 @@ class SavedPropertyListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return (
-            Property.objects.filter(saves__user=self.request.user)
+            public_properties().filter(saves__user=self.request.user)
             .select_related("property_type", "governorate", "city")
             .annotate(
                 saved_at=Max("saves__created_at"),

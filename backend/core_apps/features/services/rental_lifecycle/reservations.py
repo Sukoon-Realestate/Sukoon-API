@@ -98,6 +98,8 @@ def create_hold(prop, actor, data, *, external=False):
         )
         if not proposal:
             raise NotFound()
+        from ..shared_housing.access import guard_individual
+        guard_individual(proposal.interest)
         require_revision(proposal, data.get("proposal_revision"))
         if (
             proposal.offer_snapshot != snapshot

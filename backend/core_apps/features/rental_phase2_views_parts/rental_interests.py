@@ -46,6 +46,9 @@ def rental_interests(request):
             queryset = RentalInterest.objects.filter(property__owner=request.user)
         else:
             raise ValidationError({"workspace": "Must be owner or tenant."})
+        # Pair decisions live in the shared plan until independent invitations exist.
+        from django.db.models import Q
+        queryset = queryset.filter(Q(shared_allocation__isnull=True) | Q(shared_allocation__proposal__plan__status="handed_off"))
         return _paginate(
             request,
             queryset.select_related("property__owner", "tenant"),
@@ -132,7 +135,9 @@ def rental_interests(request):
             if data.get("application_share_id")
             else None
         )
-        interest = RentalInterest.objects.create(
+        from ..services.rental_application_records import create_interest
+
+        interest = create_interest(
             **academic,
             application_grant=grant,
             response_due_at=timezone.now() + timedelta(hours=48),

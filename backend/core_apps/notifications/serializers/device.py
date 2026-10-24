@@ -10,7 +10,7 @@ class DeviceTokenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceToken
-        fields = ["id", "token", "device_type", "device_name", "is_active", "created_at"]
+        fields = ["id", "token", "device_type", "device_name", "language", "is_active", "created_at"]
         read_only_fields = ["id", "is_active", "created_at"]
 
 

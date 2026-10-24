@@ -1,7 +1,8 @@
 import pytest
 from core_apps.chat.models import ConversationWorkspace
 from core_apps.chat.services.message_service import get_or_create_direct_conversation
-from core_apps.chat.services.workspace_inbox import scoped
+from core_apps.chat.services.workspace_inbox import scoped, visible
+from rest_framework.exceptions import ValidationError
 from core_apps.features.tests.test_company_housing import company_setup, proposed
 from core_apps.features.tests.test_rental_phase2 import (
     rental_participants,
@@ -14,22 +15,18 @@ from core_apps.features.company_models import CompanyMembership
 pytestmark = pytest.mark.django_db
 
 
-def test_viewer_context_keeps_one_canonical_direct_pair(user, another_user):
-    first = get_or_create_direct_conversation(user=user, other_user=another_user)
-    ConversationWorkspace.objects.create(
-        conversation=first, user=user, workspace="student"
-    )
-    again = get_or_create_direct_conversation(user=user, other_user=another_user)
-    ConversationWorkspace.objects.create(
-        conversation=again, user=user, workspace="owner"
-    )
-    assert first.id == again.id
+def test_viewer_context_keeps_independent_direct_workspaces(user, another_user):
+    first = get_or_create_direct_conversation(user=user, other_user=another_user, workspace="student")
+    again = get_or_create_direct_conversation(user=user, other_user=another_user, workspace="owner")
+    assert first.id != again.id
     assert list(scoped(user, "student")) == [first]
-    assert list(scoped(user, "owner")) == [first]
-    assert list(scoped(user, "all")) == [first]
-    assert not scoped(user, "general").exists()
-    assert list(scoped(another_user, "general")) == [first]
-    assert not scoped(another_user, "student").exists()
+    assert list(scoped(user, "owner")) == [again]
+    with pytest.raises(ValidationError):
+        scoped(user, "all")
+    with pytest.raises(ValidationError):
+        scoped(user, "general")
+    assert list(scoped(another_user, "student")) == [first]
+    assert list(scoped(another_user, "owner")) == [again]
 
 
 def test_filter_is_applied_before_pagination(user, another_user):
@@ -38,12 +35,13 @@ def test_filter_is_applied_before_pagination(user, another_user):
     user.save()
     client = authenticated(user)
     url = "/api/v1/chat/conversations/"
-    general = client.get(url, {"workspace": "general", "page_size": 1})
-    assert general.status_code == 200, general.data
-    assert general.data["count"] == 1
+    individual = client.get(url, {"workspace": "individual", "page_size": 1})
+    assert individual.status_code == 200, individual.data
+    assert individual.data["count"] == 1
+    assert client.get(url, {"workspace": "general"}).status_code == 400
     assert client.get(url, {"workspace": "student"}).data["count"] == 0
     assert client.get(url, {"workspace": "unknown"}).status_code == 400
-    assert client.get(url).data["count"] == 1  # Old contract remains direct-only.
+    assert client.get(url).data["count"] == 1  # Omitted scope uses individuals.
 
 
 def test_company_inbox_revokes_stale_membership_and_cross_company(company_setup):
@@ -52,8 +50,8 @@ def test_company_inbox_revokes_stale_membership_and_cross_company(company_setup)
     )
     conversation = provision(request, coordinator)
     assert list(scoped(coordinator, "company", str(company.id))) == [conversation]
-    assert conversation in scoped(coordinator, "all")
-    assert not scoped(owner, "all").filter(pk=conversation.pk).exists()
+    assert conversation in visible(coordinator)
+    assert not visible(owner).filter(pk=conversation.pk).exists()
     CompanyMembership.objects.filter(company=company, user=coordinator).update(
         revision=99
     )
@@ -61,21 +59,18 @@ def test_company_inbox_revokes_stale_membership_and_cross_company(company_setup)
     CompanyMembership.objects.filter(company=company, user=coordinator).update(
         is_active=False
     )
-    assert not scoped(coordinator, "all").filter(pk=conversation.pk).exists()
+    assert not visible(coordinator).filter(pk=conversation.pk).exists()
 
 
 def test_summary_counts_distinct_conversations_and_context(user, another_user):
     user.is_verified = True
     user.save()
-    conversation = get_or_create_direct_conversation(user=user, other_user=another_user)
-    conversation.participant_set.filter(user=user).update(unread_count=3)
     for workspace in ["owner", "student"]:
-        ConversationWorkspace.objects.create(
-            conversation=conversation, user=user, workspace=workspace
-        )
+        conversation = get_or_create_direct_conversation(user=user, other_user=another_user, workspace=workspace)
+        conversation.participant_set.filter(user=user).update(unread_count=3)
     result = authenticated(user).get("/api/v1/features/v1/workspace-summary/")
     assert result.status_code == 200, result.data
-    assert result.data["workspace_chat_counts"]["all"] == 3
+    assert result.data["workspace_chat_counts"]["all"] == 6
     assert result.data["workspace_chat_counts"]["owner"] == 3
     assert result.data["workspace_chat_counts"]["student"] == 3
     assert result.data["workspace_chat_counts"]["individual"] == 0

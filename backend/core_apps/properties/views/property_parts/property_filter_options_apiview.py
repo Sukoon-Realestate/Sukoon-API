@@ -72,17 +72,10 @@ class PropertyFilterOptionsAPIView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
-        accept_lang = request.headers.get("Accept-Language", "").lower()
-        lang_param = (request.GET.get("lang") or "").lower()
-        lang = (
-            "en"
-            if (
-                lang_param.startswith("en")
-                or (accept_lang.startswith("en") and "ar" not in accept_lang)
-            )
-            else "ar"
+        from core_apps.common.locale_middleware import resolve_request_language
+        return Response(
+            PropertyService.get_filter_options(resolve_request_language(request))
         )
-        return Response(PropertyService.get_filter_options(lang))
 
 
 class AvailablePlacesAPIView(generics.GenericAPIView):

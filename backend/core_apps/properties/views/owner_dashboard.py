@@ -1,3 +1,4 @@
+from core_apps.common.locale_middleware import resolve_request_language
 import logging
 
 from rest_framework import generics, permissions
@@ -50,9 +51,7 @@ class OwnerRevenuesAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        language = request.query_params.get("lang") or request.headers.get(
-            "Accept-Language", "ar"
-        )
+        language = resolve_request_language(request)
         revenue_data = OwnerDashboardService.get_revenues(
             owner=request.user, language=language
         )

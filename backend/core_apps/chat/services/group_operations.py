@@ -59,6 +59,9 @@ def delete_group_message(conversation, user, identity, *, event_data=None):
     ):
         raise PermissionDenied()
     if not message.deleted_at:
+        from datetime import timedelta
+        if timezone.now() > message.created_at + timedelta(hours=1):
+            raise PermissionDenied("Messages can only be deleted within one hour of sending.", code="message_delete_expired")
         message.revision += 1
         message.deleted_at, message.deleted_by = timezone.now(), user
         message.content, message.reply_to = "", None

@@ -6,6 +6,11 @@ from core_apps.common.models import TimeStampedModel
 
 
 class Conversation(TimeStampedModel):
+    consent_revision = models.PositiveIntegerField(default=0)
+    # Compatibility only while the previous API process drains during rollout.
+    # Inbox access and API responses no longer use this retired flag.
+    workspace_archived = models.BooleanField(default=False)
+    direct_context_key = models.CharField(max_length=128, null=True, blank=True, unique=True, editable=False)
     direct_pair_key = models.CharField(
         max_length=73, null=True, blank=True, unique=True, editable=False
     )
@@ -100,6 +105,8 @@ class ConversationParticipant(TimeStampedModel):
     visible_from_sequence = models.PositiveBigIntegerField(default=1)
     last_read_sequence = models.PositiveBigIntegerField(default=0)
     is_muted = models.BooleanField(default=False)
+    is_favorite = models.BooleanField(default=False)
+    hidden_through_sequence = models.PositiveBigIntegerField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Conversation Participant")

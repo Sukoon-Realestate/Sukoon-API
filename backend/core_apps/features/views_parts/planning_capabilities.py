@@ -63,14 +63,14 @@ def planning_capabilities(request):
     privacy_actions = []
     if (
         verified
-        and capability == "shared_living_lab"
-        and requested_action == "withdraw"
+        and ((capability == "shared_living_lab" and requested_action == "withdraw") or
+             (capability == "shared_housing_plans" and requested_action in {"withdraw", "decline_invite", "unpublish"}))
         and subject_id
     ):
         # Turning off creation never prevents an entitled participant from
         # withdrawing their own private requirements. Scope stays exact.
-        if "withdraw" in planning_actions(user, capability, subject_id):
-            privacy_actions = ["withdraw"]
+        if requested_action in planning_actions(user, capability, subject_id):
+            privacy_actions = [requested_action]
     allowed = (
         planning_actions(user, capability, subject_id)
         if capability in ready

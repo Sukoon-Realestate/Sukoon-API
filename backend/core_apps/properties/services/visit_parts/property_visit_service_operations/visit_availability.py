@@ -75,9 +75,9 @@ class VisitAvailabilityMixin:
         }
 
     @classmethod
-    def get_owner_availability(cls, property_obj, start_date):
+    def get_owner_availability(cls, property_obj, start_date, day_count=7):
         """Return one property's seven-day availability grid and booked slots."""
-        end_date = start_date + timedelta(days=6)
+        end_date = start_date + timedelta(days=day_count - 1)
         slots = OwnerAvailabilitySlot.objects.filter(
             property=property_obj,
             date__range=(start_date, end_date),
@@ -109,14 +109,14 @@ class VisitAvailabilityMixin:
 
         available_slots_by_date = {
             day: sorted(
-                (slot for slot in day_slots if slot["state"] == "available"),
+                day_slots,
                 key=lambda item: item["time"],
             )
             for day, day_slots in slots_by_date.items()
         }
         days_with_available_slots = [
             day
-            for day in (start_date + timedelta(days=offset) for offset in range(7))
+            for day in (start_date + timedelta(days=offset) for offset in range(day_count))
             if available_slots_by_date.get(day)
         ]
 
@@ -161,10 +161,17 @@ class VisitAvailabilityMixin:
                 raise ValidationError(_("Booked visit slots cannot be disabled."))
 
         existing_by_time = {slot.time: slot for slot in existing_slots}
+        now = timezone.localtime()
+        for slot_time, enabled in requested_slots.items():
+            if datetime.combine(availability_date, slot_time, now.tzinfo) <= now:
+                previous = existing_by_time.get(slot_time)
+                unchanged = previous is not None and previous.is_enabled == enabled
+                if not unchanged and not (slot_time in booked_keys and enabled):
+                    raise ValidationError(_("Availability slots must be in the future."))
         for slot_time, slot in existing_by_time.items():
             requested_enabled = requested_slots.pop(slot_time, None)
             if requested_enabled is None:
-                if slot_time in booked_keys:
+                if slot_time in booked_keys or datetime.combine(availability_date, slot_time, now.tzinfo) <= now:
                     continue
                 slot.delete()
             elif slot.is_enabled != requested_enabled:

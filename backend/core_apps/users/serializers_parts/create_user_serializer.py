@@ -28,6 +28,12 @@ class CreateUserSerializer(UserCreatePasswordRetypeSerializer):
             "phone_number",
         ]
 
+    def validate_email(self, value: str) -> str:
+        value = value.strip().casefold()
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("This email is unavailable.")
+        return value
+
     def validate_first_name(self, value: str) -> str:
         value = value.strip()
         if not value:

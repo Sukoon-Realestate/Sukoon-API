@@ -27,6 +27,7 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
     main_image_description = serializers.SerializerMethodField()
     video = CloudinaryMediaField(read_only=True)
     video_duration = serializers.IntegerField(read_only=True)
+    video_thumbnail_url = serializers.SerializerMethodField()
     property_link = serializers.SerializerMethodField(read_only=True)
     owner = serializers.SerializerMethodField()
     owner_is_verified = serializers.BooleanField(
@@ -67,6 +68,14 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
         ("has_water_meter", "water_meter"),
     )
 
+    def get_video_thumbnail_url(self, obj):
+        if not obj.video:
+            return None
+        try:
+            return obj.video.build_url(resource_type="video", format="jpg", start_offset="0", secure=True, width=960, crop="limit", quality="auto")
+        except (AttributeError, ValueError):
+            return None
+
     class Meta:
         model = Property
         fields = [
@@ -76,10 +85,12 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
             "is_ownership_verified",
             "main_image",
             "main_image_id",
+            "media_revision",
             "main_image_name",
             "main_image_description",
             "video",
             "video_duration",
+            "video_thumbnail_url",
             "property_link",
             "title",
             "description",

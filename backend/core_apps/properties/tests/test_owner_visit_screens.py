@@ -64,6 +64,10 @@ class TestOwnerVisitRequestListScreen:
             status=PropertyVisit.Status.CONFIRMED,
         )
 
+        PropertyVisit.objects.create(
+            property=prop, tenant=another_user, visit_date=today,
+            visit_time=time(18), status=PropertyVisit.Status.CANCELED,
+        )
         url = reverse("owner-visit-request-list")
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
@@ -72,10 +76,11 @@ class TestOwnerVisitRequestListScreen:
         assert "tabs" in data
         assert data["tabs"]["new"] == 1
         assert data["tabs"]["confirmed"] == 1
-        assert data["tabs"]["all"] == 2
+        assert data["tabs"]["all"] == 3
+        assert data["tabs"]["canceled"] == 1
 
         results = data["results"]
-        assert len(results) == 2
+        assert len(results) == 3
 
         card = next(c for c in results if c["id"] == str(v1.id))
         assert card["property"]["title"] == "شقة مدينة نصر"
@@ -247,9 +252,9 @@ class TestOwnerVisitRequestDetailScreen:
         assert data["tenant"]["name"] == another_user.get_full_name
         assert data["tenant"]["is_verified"] is True
         assert data["tenant"]["phone_number"] == ""
-        assert data["tenant"]["masked_phone_number"] == "010****432"
+        assert data["tenant"]["masked_phone_number"] == ""
         assert data["tenant"]["is_phone_revealed"] is False
-        assert "after the owner accepts" in data["tenant"]["phone_notice"]
+        assert data["tenant"]["phone_notice"] == ""
         assert data["property"]["title"] == "شقة مفروشة"
         assert data["property"]["display_name"] == "شقة مفروشة – مدينة نصر"
         assert "يونيو 2025" in data["day_label"]
@@ -285,8 +290,8 @@ class TestOwnerVisitRequestDetailScreen:
         assert response.status_code == status.HTTP_200_OK
 
         data = response.json()["data"]
-        assert data["tenant"]["phone_number"] == "+201012345432"
-        assert data["tenant"]["is_phone_revealed"] is True
+        assert data["tenant"]["phone_number"] == ""
+        assert data["tenant"]["is_phone_revealed"] is False
         assert data["actions"]["can_accept"] is False
         assert data["actions"]["can_reject"] is False
         assert data["actions"]["can_chat"] is True
@@ -379,7 +384,7 @@ class TestOwnerVisitRequestAcceptAction:
 
         v.refresh_from_db()
         assert v.status == PropertyVisit.Status.CONFIRMED
-        assert response.json()["data"]["tenant"]["phone_number"] == "+201012345432"
+        assert response.json()["data"]["tenant"]["phone_number"] == ""
 
     def test_cannot_accept_already_confirmed_visit(
         self,
@@ -517,3 +522,44 @@ class TestOwnerVisitCalendarScreen:
         )
         assert response_empty_day.status_code == status.HTTP_200_OK
         assert response_empty_day.json()["data"]["selected_date"] is None
+
+
+@pytest.mark.django_db
+def test_eight_day_owner_window_keeps_last_day_bookings(user, another_user, apartment_type, cairo_city, cairo_governorate):
+    from core_apps.properties.models import OwnerAvailabilitySlot
+    from core_apps.properties.services.visit import PropertyVisitService
+    prop = create_property(user, apartment_type, cairo_city, cairo_governorate)
+    today = timezone.localdate()
+    last = today + timedelta(days=7)
+    outside = today + timedelta(days=8)
+    for day in (today, last, outside):
+        OwnerAvailabilitySlot.objects.create(owner=user, property=prop, date=day, time=time(12))
+    PropertyVisit.objects.create(property=prop, tenant=another_user, visit_date=last,
+        visit_time=time(12), status=PropertyVisit.Status.CONFIRMED)
+    result = PropertyVisitService.get_owner_availability(prop, today, day_count=8)
+    assert result["week_start"] == today.isoformat()
+    assert result["week_end"] == last.isoformat()
+    assert [d["date"] for d in result["days"]] == [today.isoformat(), last.isoformat()]
+    assert result["days"][-1]["slots"][0]["state"] == "booked"
+
+
+@pytest.mark.django_db
+def test_today_save_preserves_elapsed_bookings_but_rejects_new_past_slots(auth_client, user, another_user, apartment_type, cairo_city, cairo_governorate):
+    from datetime import datetime
+    from unittest.mock import patch
+    from core_apps.properties.models import OwnerAvailabilitySlot
+    prop = create_property(user, apartment_type, cairo_city, cairo_governorate)
+    today = timezone.localdate()
+    OwnerAvailabilitySlot.objects.create(owner=user, property=prop, date=today, time=time(8))
+    PropertyVisit.objects.create(property=prop, tenant=another_user, visit_date=today,
+        visit_time=time(8), status=PropertyVisit.Status.CONFIRMED)
+    url = reverse("owner-availability-week", kwargs={"property_id": prop.id})
+    now = timezone.make_aware(datetime.combine(today, time(12)))
+    with patch("django.utils.timezone.localtime", return_value=now):
+        good = auth_client.put(url, {"availability_date": today.isoformat(),
+            "slots": [{"time": "08:00:00"}, {"time": "13:00:00"}]}, format="json")
+        assert good.status_code == 200, good.data
+        bad = auth_client.put(url, {"availability_date": today.isoformat(),
+            "slots": [{"time": "09:00:00"}]}, format="json")
+        assert bad.status_code == 400
+    assert OwnerAvailabilitySlot.objects.filter(property=prop, date=today, time=time(8)).exists()

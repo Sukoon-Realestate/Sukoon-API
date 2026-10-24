@@ -48,6 +48,10 @@ def is_user_online(user_id: str) -> bool:
 
 def direct_message_blocked(first_user, second_user, *, lock=False):
     from core_apps.features.planning_models import RoommateConnection
+    from core_apps.chat.models import ChatBlock
+    from django.db.models import Q
+    if ChatBlock.objects.filter(Q(user=first_user, blocked_user=second_user) | Q(user=second_user, blocked_user=first_user)).exists():
+        return True
 
     first, second = sorted([first_user.pk, second_user.pk])
     query = RoommateConnection.objects.filter(first_id=first, second_id=second)
@@ -58,7 +62,7 @@ def direct_message_blocked(first_user, second_user, *, lock=False):
 
 
 @transaction.atomic
-def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
+def get_or_create_direct_conversation(*, user, other_user, workspace=None, rental_context=None) -> Conversation:
     """
     Return the canonical 1:1 conversation between two users, creating it if absent.
 
@@ -70,7 +74,6 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
         )
 
     from django.contrib.auth import get_user_model
-    from django.db.models import Count
 
     people = list(
         get_user_model()
@@ -80,40 +83,22 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
     )
     if len(people) != 2 or not all(person.is_active for person in people):
         raise PermissionDenied("Both conversation participants must be active.")
-    pair_key = ":".join(sorted([str(user.id), str(other_user.id)]))
+    from core_apps.chat.services.conversation_preferences import contextual_conversation
 
-    if direct_message_blocked(user, other_user, lock=True):
-        raise PermissionDenied("Messaging consent is not active for this connection.")
-
-    canonical = Conversation.objects.filter(direct_pair_key=pair_key).first()
-    if canonical:
-        return canonical
-
-    # Find an existing conversation shared by both users
-    existing = (
-        Conversation.objects.annotate(member_count=Count("participants", distinct=True))
-        .filter(kind="direct", member_count=2, participant_set__user=user)
-        .filter(participant_set__user=other_user)
-        .distinct()
-        .order_by("created_at", "pk")
-        .first()
-    )
-    if existing:
-        existing.direct_pair_key = pair_key
-        existing.save(update_fields=["direct_pair_key"])
-        return existing
-
-    from core_apps.chat.moderation.policy import require_new_business
-    for person in people:
-        require_new_business(person)
-    conversation = Conversation.objects.create(direct_pair_key=pair_key)
-    ConversationParticipant.objects.bulk_create(
-        [
-            ConversationParticipant(conversation=conversation, user=user),
-            ConversationParticipant(conversation=conversation, user=other_user),
-        ]
-    )
-    return conversation
+    if workspace is None:
+        # Calls without an explicit workspace are ordinary individual chats.
+        # The app always supplies its current workspace; rental context still
+        # identifies the owner when an internal caller only supplies a property.
+        workspace = "individual"
+        if isinstance(rental_context, dict) and rental_context.get("property_id"):
+            from core_apps.properties.models import Property
+            from django.core.exceptions import ValidationError as DjangoValidationError
+            try:
+                if Property.objects.filter(id=rental_context["property_id"], owner=user).exists():
+                    workspace = "owner"
+            except (ValueError, TypeError, DjangoValidationError):
+                raise ValidationError({"rental_context": "Invalid property identity."})
+    return contextual_conversation(user, other_user, workspace, rental_context)
 
 
 def _notify_recipients(
@@ -125,7 +110,10 @@ def _notify_recipients(
         .exclude(user=sender)
         .select_related("user")
     )
+    from core_apps.chat.services.conversation_preferences import viewer_workspace
     for participant in recipients:
+        if participant.is_muted:
+            continue
         try:
             from core_apps.notifications.models import Notification
             from core_apps.notifications.services.notification_service import (
@@ -143,6 +131,7 @@ def _notify_recipients(
                     "conversation_id": str(conversation.id),
                     "message_id": str(message.id),
                     "sender_id": str(sender.id),
+                    "workspace": viewer_workspace(conversation, participant.user),
                 },
                 send_push=True,
             )

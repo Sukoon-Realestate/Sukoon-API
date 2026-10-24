@@ -16,7 +16,7 @@ class ConversationWorkspace(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["conversation", "user", "workspace"],
+                fields=["conversation", "user"],
                 name="chat_unique_viewer_workspace",
             )
         ]

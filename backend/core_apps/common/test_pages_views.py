@@ -11,7 +11,7 @@ class TestStaticPagesAPI:
         assert res.status_code == status.HTTP_200_OK
         data = res.json()["data"]
         assert data["slug"] == "about-us"
-        assert data["title"] == "About Us"
+        assert data["title"] == "About Sokoun"
         assert data["language"] == "en"
         assert data["content_format"] == "plain_text"
         assert "Sokoun" in data["content"]
@@ -30,7 +30,7 @@ class TestStaticPagesAPI:
         assert res.status_code == status.HTTP_200_OK
         data = res.json()["data"]
         assert data["slug"] == "privacy-policy"
-        assert data["title"] == "Privacy Policy"
+        assert data["title"] == "Privacy at Sokoun"
 
     def test_terms_page(self, api_client):
         url = reverse("page-terms")
@@ -38,7 +38,7 @@ class TestStaticPagesAPI:
         assert res.status_code == status.HTTP_200_OK
         data = res.json()["data"]
         assert data["slug"] == "terms"
-        assert data["title"] == "Terms and Conditions"
+        assert data["title"] == "Sokoun Terms of Use"
 
     def test_nonexistent_page_returns_404(self, api_client):
         url = reverse("page-dynamic", kwargs={"slug": "nonexistent-page"})

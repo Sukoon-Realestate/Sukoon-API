@@ -47,8 +47,10 @@ class MessageListAPIView(ListAPIView):
 
     def get_queryset(self):
         conversation = self.get_object()
+        from core_apps.chat.services.group_access import authorize, visible_messages
+        _, participant, _ = authorize(conversation, self.request.user)
         return (
-            Message.objects.filter(conversation=conversation)
+            visible_messages(conversation, participant)
             .select_related("sender", "sender__profile")
             .order_by("created_at")
         )

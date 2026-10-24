@@ -1,91 +1,13 @@
-from django.db import models
-from django.db.models import Q
+"""Registration contact data is never disclosed to another application user.
 
-from core_apps.profiles.services.profile_service import mask_phone_number
-
-from .models import PropertyVisit
-
-
-def _qualifying_visits(viewer, counterpart, property_obj=None):
-    if not viewer or not counterpart or not viewer.is_authenticated:
-        return PropertyVisit.objects.none()
-    if viewer.pk == counterpart.pk or not viewer.is_active or not counterpart.is_active:
-        return PropertyVisit.objects.none()
-    pair = Q(property__owner=viewer, tenant=counterpart) | Q(
-        property__owner=counterpart, tenant=viewer
-    )
-    queryset = PropertyVisit.objects.filter(pair).filter(
-        Q(accepted_at__isnull=False) | Q(status=PropertyVisit.Status.CONFIRMED)
-    )
-    if property_obj is not None:
-        queryset = queryset.filter(property=property_obj)
-    # A revoked company representative does not retain a historical phone grant.
-    queryset = queryset.filter(
-        Q(company__isnull=True)
-        | Q(
-            company__memberships__user_id=models.F("tenant_id"),
-            company__memberships__is_active=True,
-        )
-    ).distinct()
-    return queryset
+Empty compatibility fields keep older clients safe during the mobile rollout.
+No visit or rental state grants phone disclosure.
+"""
 
 
 def is_phone_disclosed(viewer, counterpart, property_obj=None, visit=None):
-    if not viewer or not counterpart or not getattr(viewer, "is_authenticated", False):
-        return False
-    if viewer.pk == counterpart.pk or not viewer.is_active or not counterpart.is_active:
-        return False
-    if visit is not None:
-        if visit.company_id:
-            from .services.viewing_access import participant
-
-            attendee = viewer if viewer.pk != visit.property.owner_id else counterpart
-            if not participant(visit, attendee):
-                return False
-        participants_match = (
-            visit.property.owner_id == viewer.pk and visit.tenant_id == counterpart.pk
-        ) or (
-            visit.property.owner_id == counterpart.pk and visit.tenant_id == viewer.pk
-        )
-        if not participants_match:
-            return False
-        if visit.accepted_at or visit.status == PropertyVisit.Status.CONFIRMED:
-            return True
-        return _qualifying_visits(viewer, counterpart).exists()
-    return _qualifying_visits(viewer, counterpart, property_obj).exists()
+    return False
 
 
-def _notice(request, english, arabic):
-    language = getattr(request, "LANGUAGE_CODE", "ar") if request else "ar"
-    return arabic if str(language).lower().startswith("ar") else english
-
-
-def counterpart_phone_payload(
-    *, viewer, counterpart, request=None, property_obj=None, visit=None
-):
-    profile = getattr(counterpart, "profile", None)
-    raw_phone = (
-        str(profile.phone_number)
-        if profile and getattr(profile, "phone_number", None)
-        else ""
-    )
-    disclosed = is_phone_disclosed(
-        viewer, counterpart, property_obj=property_obj, visit=visit
-    )
-    if disclosed:
-        return {
-            "phone_number": raw_phone or None,
-            "masked_phone_number": "",
-            "is_phone_revealed": True,
-            "phone_notice": "",
-        }
-    return {
-        "phone_number": "",
-        "masked_phone_number": mask_phone_number(raw_phone),
-        "is_phone_revealed": False,
-        "phone_notice": _notice(
-            request,
-            "Phone numbers appear after the owner accepts the visit.",
-            "تظهر أرقام الهاتف بعد قبول المالك للزيارة.",
-        ),
-    }
+def counterpart_phone_payload(*, viewer, counterpart, request=None, property_obj=None, visit=None):
+    return {"phone_number": "", "masked_phone_number": "", "is_phone_revealed": False, "phone_notice": ""}

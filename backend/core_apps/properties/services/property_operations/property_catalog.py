@@ -3,6 +3,7 @@
 from typing import Optional
 from django.db.models import Q
 from ...models import Property, PropertyType
+from ...catalog_labels import property_type_label
 
 
 class PropertyCatalogMixin:
@@ -18,17 +19,12 @@ class PropertyCatalogMixin:
                 {
                     "id": str(property_type.id),
                     "value": property_type.slug,
-                    "label": (
-                        property_type.name
-                        if is_en
-                        else cls.PROPERTY_TYPE_LABELS.get(
-                            property_type.slug, property_type.name
-                        )
-                    ),
+                    "label": property_type_label(property_type, "en" if is_en else "ar"),
                 }
                 for property_type in property_types
             ],
             "ordering": [
+                {"value": "relevance", "label": "Most relevant" if is_en else "الأكثر صلة"},
                 {"value": "-created_at", "label": "Newest" if is_en else "الأحدث"},
                 {"value": "created_at", "label": "Oldest" if is_en else "الأقدم"},
                 {"value": "price", "label": "Lowest Price" if is_en else "السعر الأقل"},
@@ -142,7 +138,7 @@ class PropertyCatalogMixin:
                 property_type=property_type,
                 retired_at=None,
             )
-            .filter(Q(status=Property.Status.VERIFIED) | Q(is_verified=True))
+            .filter(status=Property.Status.VERIFIED)
             .values("governorate__name", "city__name", "district")
             .distinct()
             .order_by("governorate__name", "city__name", "district")

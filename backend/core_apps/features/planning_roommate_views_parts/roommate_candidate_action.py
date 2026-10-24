@@ -26,6 +26,13 @@ from .profile_values import (
 def connection_payload(item, user):
     from ..services.student_housing.profiles import roommate_disclosures
 
+    from ..shared_housing_models import SharedHousingPlan
+    from django.utils import timezone
+    from django.db.models import Q
+    shared_plan = SharedHousingPlan.objects.filter(connection=item).exclude(status="closed").filter(
+        Q(status="handed_off") |
+        Q(expires_at__gt=timezone.now())
+    ).order_by("-created_at").first()
     other = item.second if item.first_id == user.pk else item.first
     profile = LifestyleProfile.objects.filter(user=other).first()
     grant = item.disclosure_grants.get(str(other.id), {})
@@ -38,6 +45,7 @@ def connection_payload(item, user):
     )
     return {
         "id": str(item.id),
+        "shared_housing_plan_id": str(shared_plan.id) if shared_plan else "",
         "user_id": str(other.id),
         "display_name": display_name(other),
         "status": item.status,

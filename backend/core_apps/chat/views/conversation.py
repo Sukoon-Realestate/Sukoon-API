@@ -1,4 +1,5 @@
 import logging
+from django.db import transaction
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
@@ -45,7 +46,13 @@ class ConversationListAPIView(ListAPIView):
             queryset = filter_conversations(
                 queryset, query_text(self.request.query_params), self.request.user
             )
-        return queryset
+        if self.request.query_params.get("favorite") == "true":
+            queryset = queryset.filter(participant_set__user=self.request.user, participant_set__is_favorite=True)
+        if self.request.query_params.get("list_id"):
+            from rest_framework.serializers import UUIDField
+            list_id = UUIDField().run_validation(self.request.query_params["list_id"])
+            queryset = queryset.filter(private_lists__user=self.request.user, private_lists__id=list_id)
+        return queryset.distinct()
 
     def _base_queryset(self):
         if "workspace" in self.request.query_params:
@@ -60,33 +67,12 @@ class ConversationListAPIView(ListAPIView):
                 .prefetch_related("participants__profile", "participant_set")
                 .order_by("-last_message_at", "-id")
             )
-        queryset = (
-            Conversation.objects.filter(participant_set__user=self.request.user)
+        from core_apps.chat.services.workspace_inbox import scoped
+        return (
+            scoped(self.request.user, "individual")
             .prefetch_related("participants__profile", "participant_set")
-            .order_by("-last_message_at")
+            .order_by("-last_message_at", "-id")
         )
-        if self.request.query_params.get("include_groups") != "true":
-            return queryset.filter(kind="direct")
-        from django.db.models import Q, F
-        from rest_framework.exceptions import APIException
-        from core_apps.features.services.planning import require_planning
-
-        try:
-            require_planning(self.request.user, "housing_groups")
-        except APIException:
-            return queryset.filter(kind="direct")
-        return queryset.filter(
-            Q(kind="direct")
-            | Q(
-                kind="housing_group",
-                housing_group__status="active",
-                participant_set__user=self.request.user,
-                participant_set__membership__status="active",
-                participant_set__membership_revision=F(
-                    "participant_set__membership__joined_revision"
-                ),
-            )
-        ).distinct()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -104,6 +90,7 @@ class ConversationCreateAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    @transaction.atomic
     def post(self, request):
         serializer = ConversationCreateSerializer(data=request.data)
         if not serializer.is_valid():
@@ -111,20 +98,15 @@ class ConversationCreateAPIView(APIView):
 
         other = get_object_or_404(User, id=serializer.validated_data["user_id"])
         conversation = get_or_create_direct_conversation(
-            user=request.user, other_user=other
+            user=request.user, other_user=other,
+            workspace=serializer.validated_data.get("workspace"),
+            rental_context=serializer.validated_data.get("rental_context"),
         )
         from core_apps.chat.moderation.policy import attach_context
 
         attach_context(
             conversation, request.user, serializer.validated_data.get("rental_context")
         )
-        workspace = serializer.validated_data.get("workspace")
-        if workspace:
-            from core_apps.chat.models import ConversationWorkspace
-
-            ConversationWorkspace.objects.get_or_create(
-                conversation=conversation, user=request.user, workspace=workspace
-            )
         return Response(
             ConversationSerializer(conversation, context={"request": request}).data,
             status=status.HTTP_200_OK,

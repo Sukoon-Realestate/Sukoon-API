@@ -200,6 +200,9 @@ def deliver_planning_events(*, event_kinds=None):
                         raise NotFound()
                 else:
                     planning_subject(event.recipient, event.destination["target_id"])
+                    if event.destination.get("action_type") == "open_shared_housing_plan":
+                        copy = {"title": "تحديث خطة السكن المشترك / Shared housing update",
+                                "body": "افتح خطة السكن لمتابعة الخطوة التالية / Open your housing plan for the next step."}
             except (NotFound, Http404, PermissionDenied):
                 event.delivered_at = timezone.now()
                 event.delivery_status = "stale_or_unauthorized"

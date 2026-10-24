@@ -16,6 +16,7 @@ class NotificationDevicesMixin:
         device_type: str = DeviceToken.DeviceType.ANDROID,
         device_name: str = "",
         auth_session=None,
+        language="ar",
     ) -> DeviceToken:
         """
         Registers or updates an FCM device token for the user.
@@ -49,6 +50,7 @@ class NotificationDevicesMixin:
                 "auth_session": auth_session,
                 "device_type": device_type,
                 "device_name": device_name.strip(),
+                "language": language if language in {"ar", "en"} else "ar",
                 "is_active": True,
             },
         )

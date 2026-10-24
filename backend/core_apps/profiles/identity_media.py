@@ -30,9 +30,14 @@ class IdentityImageField(serializers.ImageField):
                 "image/png": "png",
                 "image/webp": "webp",
                 "image/gif": "gif",
+                "image/heic": "heic",
+                "image/heif": "heif",
+                "image/avif": "avif",
+                "image/bmp": "bmp",
+                "image/tiff": "tiff",
             }.get(header[5:])
             if extension is None:
-                raise serializers.ValidationError("Use a JPEG, PNG, WebP or GIF image.")
+                raise serializers.ValidationError("Upload a valid supported image.")
             if len(encoded) > (MAX_IDENTITY_BYTES * 4 // 3 + 4):
                 raise serializers.ValidationError(
                     "Identity images must not exceed 10 MiB."
@@ -46,17 +51,61 @@ class IdentityImageField(serializers.ImageField):
                 content,
                 content_type=header[5:],
             )
-        image = super().to_internal_value(data)
-        if image.content_type not in {
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/gif",
-        }:
-            raise serializers.ValidationError("Use a JPEG, PNG, WebP or GIF image.")
-        if image.size > MAX_IDENTITY_BYTES:
+        return normalize_identity_image(data)
+
+
+def normalize_identity_image(data):
+    from io import BytesIO
+    import warnings
+    from PIL import Image, ImageOps, UnidentifiedImageError
+    from pillow_heif import register_heif_opener
+    from django.core.files.uploadedfile import SimpleUploadedFile
+
+    register_heif_opener(thumbnails=False)
+    if not hasattr(data, "read") or not getattr(data, "size", 0):
+        raise serializers.ValidationError("Upload the identity image itself.")
+    if data.size > MAX_IDENTITY_BYTES:
+        raise serializers.ValidationError("Identity images must not exceed 10 MiB.")
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", Image.DecompressionBombWarning)
+            data.seek(0)
+            with Image.open(data) as source:
+                if source.format not in {
+                    "JPEG",
+                    "PNG",
+                    "WEBP",
+                    "GIF",
+                    "HEIF",
+                    "AVIF",
+                    "BMP",
+                    "TIFF",
+                }:
+                    raise ValueError("Unsupported image")
+                source.seek(0)
+                source.load()
+                frame = ImageOps.exif_transpose(source).convert("RGB")
+                # Use a fresh image so EXIF/GPS/XMP never reach private storage.
+                clean = Image.new("RGB", frame.size)
+                clean.paste(frame)
+                output = BytesIO()
+                clean.save(output, format="JPEG", quality=95, optimize=True)
+        content = output.getvalue()
+        if len(content) > MAX_IDENTITY_BYTES:
             raise serializers.ValidationError("Identity images must not exceed 10 MiB.")
-        return image
+        return SimpleUploadedFile(
+            hashlib.sha256(content).hexdigest() + ".jpg",
+            content,
+            content_type="image/jpeg",
+        )
+    except (
+        OSError,
+        ValueError,
+        UnidentifiedImageError,
+        Image.DecompressionBombError,
+        Image.DecompressionBombWarning,
+    ):
+        raise serializers.ValidationError("Upload a valid supported image.")
 
 
 def reference(value):

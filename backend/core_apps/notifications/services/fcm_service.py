@@ -167,6 +167,7 @@ class FCMService:
         data: Optional[Dict[str, Any]] = None,
         project_id: Optional[str] = None,
         credentials: Optional[service_account.Credentials] = None,
+        language: str = "ar",
     ) -> bool:
         """
         Sends a single push notification to a device token using FCM v1 HTTP API.
@@ -206,9 +207,15 @@ class FCMService:
         message_payload: Dict[str, Any] = {
             "message": {
                 "token": token,
+                "android": {"priority": "HIGH", "notification": {
+                    "channel_id": "high_importance_channel", "sound": "default",
+                    "notification_priority": "PRIORITY_HIGH",
+                    **({"tag": str(data.get('notification_id') or data.get('event_id'))} if data and (data.get('notification_id') or data.get('event_id')) else {}),
+                }},
+                "apns": {"headers": {"apns-priority": "10", "apns-push-type": "alert"}, "payload": {"aps": {"sound": "default"}}},
                 "notification": {
-                    "title": PUSH_TITLE,
-                    "body": PUSH_BODY,
+                    "title": "سكون" if language == "ar" else "Sokoun",
+                    "body": "لديك تحديث جديد. افتح التطبيق لعرضه." if language == "ar" else "Open Sokoun to view your update.",
                 },
             }
         }
@@ -227,8 +234,6 @@ class FCMService:
                 resp_text = response.text
                 if (
                     "UNREGISTERED" in resp_text
-                    or "NOT_FOUND" in resp_text
-                    or "INVALID_ARGUMENT" in resp_text
                 ):
                     DeviceToken.objects.filter(token=token).update(is_active=False)
                     logger.warning("Deactivated invalid FCM device registration.")
@@ -259,7 +264,7 @@ class FCMService:
         active_tokens = list(
             DeviceToken.objects.filter(user=user, is_active=True)
             .filter(
-                Q(auth_session__isnull=True, user__security_epoch=0)
+                Q(auth_session__isnull=True, user__security_epoch=0, user__requires_bound_session=False)
                 | Q(
                     auth_session__revoked_at__isnull=True,
                     auth_session__expires_at__gt=timezone.now(),
@@ -267,7 +272,7 @@ class FCMService:
                     auth_session__user_id=F("user_id"),
                 )
             )
-            .values_list("token", flat=True)
+            .values_list("token", "language")
         )
         if not active_tokens:
             return 0
@@ -276,7 +281,7 @@ class FCMService:
         proj_id = cls.get_project_id()
 
         sent_count = 0
-        for token in active_tokens:
+        for token, language in active_tokens:
             success = cls.send_push_to_device(
                 token=token,
                 title=title,
@@ -284,6 +289,7 @@ class FCMService:
                 data=data,
                 project_id=proj_id,
                 credentials=creds,
+                language=language,
             )
             if success:
                 sent_count += 1

@@ -86,7 +86,7 @@ THIRD_PARTY_APPS = [
     "cloudinary",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS + ["channels"]
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS + ["channels", "django.contrib.postgres"]
 
 MIDDLEWARE = [
     "core_apps.common.runtime_metrics.RuntimeMetricsMiddleware",
@@ -187,6 +187,8 @@ RENTAL_PROVIDER_BACKEND = getenv("RENTAL_PROVIDER_BACKEND", "disabled")
 RENTAL_RUNTIME_ENVIRONMENT = "production"
 RENTAL_FAKE_PROVIDER_ALLOWED = False
 OWNER_TENANT_QA_ENABLED = False
+SHARED_HOUSING_ENABLED = getenv("SHARED_HOUSING_ENABLED", "false").lower() == "true"
+
 PLANNING_ENABLED_SERVICES = enabled_services_from_env(
     getenv("PLANNING_ENABLED_SERVICES")
 )

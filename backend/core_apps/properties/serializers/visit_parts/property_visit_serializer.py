@@ -93,40 +93,15 @@ _ENGLISH_REQUEST_STATUS = {
 
 
 def get_visit_language(request_or_context):
-    """Resolve language ('en' or 'ar') for visit labels, defaulting to 'ar'."""
+    """Use the same negotiated locale as the response headers."""
+    from core_apps.common.locale_middleware import resolve_request_language
+
     request = (
         request_or_context.get("request")
         if isinstance(request_or_context, dict)
         else request_or_context
     )
-    if request:
-        lang_param = getattr(request, "GET", {}).get("lang") or getattr(
-            request, "GET", {}
-        ).get("language")
-        if lang_param:
-            clean = lang_param.strip().lower()
-            if clean.startswith("en"):
-                return "en"
-            if clean.startswith("ar"):
-                return "ar"
-        accept_lang = getattr(request, "headers", {}).get("Accept-Language") or getattr(
-            request, "META", {}
-        ).get("HTTP_ACCEPT_LANGUAGE", "")
-        if accept_lang:
-            parts = [
-                p.strip().split(";")[0].lower()
-                for p in accept_lang.split(",")
-                if p.strip()
-            ]
-            for part in parts:
-                if part.startswith("en"):
-                    return "en"
-                if part.startswith("ar"):
-                    return "ar"
-        lang_code = getattr(request, "LANGUAGE_CODE", None)
-        if lang_code and lang_code.startswith("en") and accept_lang:
-            return "en"
-    return "ar"
+    return resolve_request_language(request)
 
 
 User = get_user_model()

@@ -10,7 +10,7 @@ def is_mobile_request(request: HttpRequest) -> bool:
     Determines whether the incoming request targets a mobile API endpoint.
     All /api/v1/* endpoints EXCEPT /api/v1/admin/ and Django admin are mobile APIs.
     """
-    path = request.path_info or request.path
+    path = getattr(request, "path_info", "") or getattr(request, "path", "")
 
     # * Exclude Django Admin
     admin_url = getattr(settings, "ADMIN_URL", "admin/")
@@ -34,7 +34,8 @@ def resolve_request_language(request: HttpRequest) -> str:
     Defaults to 'en' if not provided or unspecified.
     """
     # ? Query param override for flexibility and testing
-    lang_param = request.GET.get("lang") or request.GET.get("language")
+    params = getattr(request, "query_params", None) or getattr(request, "GET", {})
+    lang_param = params.get("lang") or params.get("language")
     if lang_param:
         clean = lang_param.strip().lower()
         if clean.startswith("ar"):
@@ -65,7 +66,8 @@ def resolve_request_language(request: HttpRequest) -> str:
                         q = float(param[2:])
                     except ValueError:
                         pass
-            weighted.append((q, lang_tag))
+            if 0 < q <= 1:
+                weighted.append((q, lang_tag))
 
         weighted.sort(key=lambda x: x[0], reverse=True)
         for _, tag in weighted:

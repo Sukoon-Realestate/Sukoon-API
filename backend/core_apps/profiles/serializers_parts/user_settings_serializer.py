@@ -145,6 +145,9 @@ class OwnerUnreadCountsSerializer(serializers.Serializer):
     - unread_notifications_count
     """
 
+    request_counts = serializers.DictField(
+        child=serializers.IntegerField(min_value=0), read_only=True
+    )
     visit_requests_count = serializers.IntegerField(read_only=True)
     unread_chat_messages_count = serializers.IntegerField(read_only=True)
     unread_notifications_count = serializers.IntegerField(read_only=True)
@@ -159,6 +162,12 @@ class TenantUnreadCountsSerializer(serializers.Serializer):
     - visit_requests_count
     """
 
+    request_counts = serializers.DictField(
+        child=serializers.IntegerField(min_value=0), read_only=True
+    )
+    company_approval_counts = serializers.DictField(
+        child=serializers.IntegerField(min_value=0), read_only=True
+    )
     favorites_count = serializers.IntegerField(read_only=True)
     group_join_requests_count = serializers.IntegerField(read_only=True)
     unread_chat_messages_count = serializers.IntegerField(read_only=True)

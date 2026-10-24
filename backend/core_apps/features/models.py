@@ -246,3 +246,6 @@ from .commerce_models import (
 
 from .paymob_models import PaymobPayment
 from .paymob_models import PaymobRefund
+from .shared_housing_models import (
+    SharedHousingPlan, SharedHousingProposal, SharedHousingAllocation, SharedHousingConsent,
+)

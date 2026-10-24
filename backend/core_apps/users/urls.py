@@ -16,9 +16,12 @@ from .views import (
 )
 
 
-from . import security_views
+from . import security_views, email_change_views
 
 urlpatterns = [
+    path("email-change/start/", email_change_views.start),
+    path("email-change/<uuid:identity>/", email_change_views.change),
+    path("email-change/<uuid:identity>/<str:action>/", email_change_views.change),
     path("security/challenges/", security_views.challenges),
     path("security/challenges/<uuid:identity>/verify/", security_views.verify),
     path("security/sessions/", security_views.sessions),

@@ -137,38 +137,11 @@ def create_interest_invitation(request):
         _, snapshot = resolve_offer_snapshot(
             interest.property, data["offer_id"], data["offer_revision"], request
         )
-        if TenancyInvitation.objects.filter(
-            owner=request.user,
-            property=interest.property,
-            tenant=interest.tenant,
-            offer_id=interest.offer_id,
-            status__in=[
-                TenancyInvitation.Status.PENDING,
-                TenancyInvitation.Status.ACCEPTED,
-            ],
-            lease__isnull=True,
-        ).exists():
-            raise RentalConflict("A live invitation already exists for this offer.")
-        invitation = TenancyInvitation.objects.create(
-            property=interest.property,
-            owner=request.user,
-            tenant=interest.tenant,
-            offer_id=interest.offer_id,
-            offer_snapshot=snapshot,
-            expires_at=timezone.now() + timedelta(days=7),
-            initiated_by=request.user,
-            interest=interest,
-            terms_proposal=proposal,
-            provenance_version="independent_interest_v1",
-            eligibility_snapshot={
-                "interest_revision": interest.revision,
-                "proposal_revision": proposal.revision,
-                "offer_revision": data["offer_revision"],
-            },
+        from ..services.rental_application_records import create_invitation
+
+        invitation = create_invitation(
+            interest=interest, proposal=proposal, owner=request.user, snapshot=snapshot,
         )
-        interest.status = RentalInterest.Status.INVITED
-        interest.revision += 1
-        interest.save(update_fields=["status", "revision", "updated_at"])
         resource = TenancyInvitationSerializer(
             invitation, context={"request": request}
         ).data

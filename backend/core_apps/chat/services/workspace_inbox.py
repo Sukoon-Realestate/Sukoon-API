@@ -9,7 +9,10 @@ from core_apps.features.services.company.access import company_for
 
 
 def visible(user):
-    base = Conversation.objects.filter(participant_set__user=user)
+    participant = ConversationParticipant.objects.filter(conversation_id=OuterRef("pk"), user=user).filter(
+        Q(hidden_through_sequence__isnull=True) | Q(hidden_through_sequence__lt=F("conversation__last_sequence"))
+    )
+    base = Conversation.objects.annotate(viewer_visible=Exists(participant)).filter(viewer_visible=True)
     allowed = Q(kind="direct")
     try:
         require_planning(user, "housing_groups")
@@ -54,11 +57,11 @@ def visible(user):
 
 
 def scoped(user, scope, company_id=""):
-    if scope not in {"all", "general", "individual", "student", "owner", "company"}:
+    if scope not in {"all", "individual", "student", "owner", "company"}:
         raise ValidationError({"workspace": "Unknown message workspace."})
     qs = visible(user)
     if scope == "all":
-        return qs
+        raise ValidationError({"workspace": "Choose one workspace to view messages."})
     if scope == "company":
         try:
             UUID(str(company_id))
@@ -68,9 +71,6 @@ def scoped(user, scope, company_id=""):
         return qs.filter(
             kind="company_request", company_request__company__id=company_id
         )
-    classified = Q(workspace_contexts__user=user)
-    if scope == "general":
-        return qs.filter(kind="direct").exclude(classified)
     query = Q(
         kind="direct",
         workspace_contexts__user=user,

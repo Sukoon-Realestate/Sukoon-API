@@ -23,7 +23,7 @@ def test_native_payload_excludes_private_copy_and_arbitrary_metadata():
             project_id="synthetic-project",
         )
     payload = post.call_args.kwargs["json"]["message"]
-    assert payload["notification"] == {"title": PUSH_TITLE, "body": PUSH_BODY}
+    assert payload["notification"] == {"title": "سكون", "body": "لديك تحديث جديد. افتح التطبيق لعرضه."}
     assert payload["data"] == {
         "action_type": "open_support_ticket",
         "target_id": "ticket-id",

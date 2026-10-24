@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from ..models import City, Governorate
+from ..catalog_labels import catalog_language, location_label
 
 
 class PublicUUIDRelatedField(serializers.SlugRelatedField):
@@ -14,6 +15,11 @@ class PublicUUIDRelatedField(serializers.SlugRelatedField):
 
 
 class GovernorateSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        result["name"] = location_label(instance.name, catalog_language(self.context))
+        return result
+
     class Meta:
         model = Governorate
         fields = ["id", "name", "slug", "created_at", "updated_at"]
@@ -23,6 +29,13 @@ class GovernorateSerializer(serializers.ModelSerializer):
 class CitySerializer(serializers.ModelSerializer):
     governorate = PublicUUIDRelatedField(queryset=Governorate.objects.all())
     governorate_name = serializers.CharField(source="governorate.name", read_only=True)
+
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        language = catalog_language(self.context)
+        result["name"] = location_label(instance.name, language)
+        result["governorate_name"] = location_label(instance.governorate.name, language)
+        return result
 
     class Meta:
         model = City

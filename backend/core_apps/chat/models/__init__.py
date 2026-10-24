@@ -11,6 +11,7 @@ from .event import ChatEvent, ChatNotificationDelivery
 
 from .workspace import ConversationWorkspace
 from .search import ChatSearchDocument
+from .preferences import ChatBlock, ChatList, MessageEdit
 from .moderation import (
     RentalChatContext,
     ChatPolicyConsent,

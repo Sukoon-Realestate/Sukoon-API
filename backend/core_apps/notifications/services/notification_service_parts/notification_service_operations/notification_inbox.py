@@ -1,6 +1,7 @@
 """NotificationInbox operations owned by NotificationService."""
 
 from typing import Any, Dict, Optional
+from django.db import transaction
 from django.db.models import QuerySet
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, ValidationError
@@ -11,6 +12,7 @@ from ..logger import logger
 
 class NotificationInboxMixin:
     @classmethod
+    @transaction.atomic
     def create_notification(
         cls,
         user: Any,
@@ -39,20 +41,8 @@ class NotificationInboxMixin:
         )
 
         if send_push:
-            try:
-                FCMService.send_push_to_user(
-                    user=user,
-                    title=title,
-                    body=body,
-                    data=data,
-                    notification_type=notification_type,
-                )
-            except Exception as exc:
-                logger.error(
-                    "Failed to trigger FCM push for notification %s: %s",
-                    notification.id,
-                    exc,
-                )
+            from core_apps.notifications.services.push_delivery import queue_notification
+            queue_notification(notification)
 
         return notification
 

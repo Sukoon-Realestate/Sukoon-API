@@ -34,6 +34,7 @@ def configure(scope):
         "task": "core_apps.support.tasks.maintain_support_uploads",
         "schedule": 10.0,
     }
+    catalog["deliver-notification-push"] = {"task": "core_apps.notifications.tasks.deliver_push", "schedule": 5.0}
     original = dict(catalog)
     catalog["background-probe"] = {
         "task": "core_apps.common.tasks.background_probe",
@@ -50,6 +51,7 @@ def configure(scope):
     # These replace the existing policy-maintenance process in the combined
     # worker. They retain its mode/privacy gates and do not enable new business.
     maintenance = {
+        "deliver-notification-push": catalog["deliver-notification-push"],
         "maintain-support-uploads": catalog["maintain-support-uploads"],
         "maintain-chat": {
             "task": "core_apps.common.tasks.maintain_chat",

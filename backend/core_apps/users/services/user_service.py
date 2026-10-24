@@ -1,6 +1,7 @@
 import logging
 from typing import Any
-from django.db import transaction
+from django.db import transaction, IntegrityError
+from rest_framework.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,14 @@ def register_user(validated_data: dict) -> Any:
     password = data.pop("password")
     data.pop("re_password", None)
 
-    user = User.objects.create_user(password=password, **data)
+    data["email"] = data["email"].strip().casefold()
+    try:
+        with transaction.atomic():
+            user = User.objects.create_user(password=password, **data)
+    except IntegrityError:
+        if User.objects.filter(email__iexact=data["email"]).exists():
+            raise ValidationError({"email": "This email is unavailable."})
+        raise
 
     update_fields = []
     if hasattr(user, "profile"):

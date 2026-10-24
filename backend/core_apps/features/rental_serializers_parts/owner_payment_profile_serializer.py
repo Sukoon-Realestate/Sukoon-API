@@ -106,19 +106,9 @@ class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
         return fields
 
     def _is_arabic(self):
-        request = self.context.get("request")
-        if not request:
-            return False
-        lang = getattr(request, "LANGUAGE_CODE", "")
-        if not lang:
-            headers = getattr(request, "headers", {})
-            accept_lang = (
-                headers.get("Accept-Language") if hasattr(headers, "get") else ""
-            )
-            if not accept_lang and hasattr(request, "META"):
-                accept_lang = request.META.get("HTTP_ACCEPT_LANGUAGE", "")
-            return "ar" in str(accept_lang).lower()
-        return str(lang).lower().startswith("ar")
+        from core_apps.common.locale_middleware import resolve_request_language
+
+        return resolve_request_language(self.context.get("request")) == "ar"
 
     def get_policy_summary(self, obj):
         if self._is_arabic():

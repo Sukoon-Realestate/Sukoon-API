@@ -91,6 +91,8 @@ def mutate_message(conversation, user, data):
         raise ValidationError(
             {"content": "Supply valid message text within the limit."}
         )
+    from core_apps.chat.models import MessageEdit
+    MessageEdit.objects.create(message=message, revision=message.revision + 1, before=message.content, after=content)
     message.content = content
     message.edited_at = timezone.now()
     message.revision += 1

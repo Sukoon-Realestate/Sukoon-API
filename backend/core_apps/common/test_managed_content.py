@@ -26,13 +26,14 @@ def test_admin_content_edit_is_localized_and_visible_without_restart(
     assert not entry.has_change_permission(request)
     request.user = superuser
     page = PublicContentPage.objects.get(pk="about-us")
+    revision = page.revision
     page.title_ar = "عنوان محدث"
     page.content_ar = "محتوى محدث من لوحة الإدارة"
     entry.save_model(request, page, None, True)
     response = api_client.get(reverse("page-about-us"), {"lang": "ar"})
     value = api_json(response)["data"]
     assert value["title"] == page.title_ar and value["content"] == page.content_ar
-    assert value["revision"] == 2 and value["content_format"] == "plain_text"
+    assert value["revision"] == revision + 1 and value["content_format"] == "plain_text"
     assert response["Content-Language"] == "ar"
     assert (
         api_json(api_client.get(reverse("page-about-us"), {"lang": "en"}))["data"][

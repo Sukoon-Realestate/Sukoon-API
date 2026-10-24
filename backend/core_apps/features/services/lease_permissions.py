@@ -107,6 +107,9 @@ def interest_creation_blocker(user, property_obj):
 
 
 def interest_actions(user, item):
+    from .shared_housing.access import individual_actions
+    if not individual_actions(item):
+        return []
     from ..providers import fake_provider_available
 
     if not user or not user.is_active or not user.is_verified:
@@ -135,6 +138,9 @@ def interest_actions(user, item):
 
 
 def proposal_actions(user, item):
+    from .shared_housing.access import individual_actions
+    if not individual_actions(item.interest):
+        return []
     if (
         not user
         or not user.is_active

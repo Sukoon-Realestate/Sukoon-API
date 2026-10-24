@@ -22,26 +22,9 @@ LIVE_LEASE_STATUSES = {
 
 
 def localized(request, english, arabic):
-    if request:
-        lang_param = (
-            request.query_params.get("lang", "")
-            if hasattr(request, "query_params")
-            else ""
-        )
-        if lang_param:
-            return arabic if str(lang_param).lower().startswith("ar") else english
-        accept_lang = getattr(request, "headers", {}).get("Accept-Language") or getattr(
-            request, "META", {}
-        ).get("HTTP_ACCEPT_LANGUAGE", "")
-        if accept_lang:
-            for part in accept_lang.split(","):
-                token = part.split(";")[0].strip().lower()
-                if token.startswith("ar"):
-                    return arabic
-                if token.startswith("en"):
-                    return english
-    language = getattr(request, "LANGUAGE_CODE", "en") or "en"
-    return arabic if str(language).lower().startswith("ar") else english
+    from core_apps.common.locale_middleware import resolve_request_language
+
+    return arabic if resolve_request_language(request) == "ar" else english
 
 
 def validate_accounts(owner, tenant, request=None):

@@ -17,7 +17,7 @@ from .test_rental_phase2 import authenticated, rental_participants
 API = "/api/v1/features/v1/"
 ALWAYS_READ_SERVICES = ["company_housing", "residential_portfolios"]
 CORE_SERVICES = [
-    name for name in SERVICES if name not in {"commute", "tenant_assistant"}
+    name for name in SERVICES if name not in {"commute", "tenant_assistant", "shared_housing_plans"}
 ]
 
 
@@ -36,7 +36,7 @@ names = (
     "PLANNING_ENABLED_SERVICES", "PLANNING_MOCK_DISCOVERY",
     "RENTAL_PROVIDER_BACKEND", "RENTAL_FAKE_PROVIDER_ALLOWED",
     "RENTAL_RUNTIME_ENVIRONMENT",
-    "STUDENT_ENABLED_SERVICES", "COMPANY_HOUSING_ENABLED",
+    "STUDENT_ENABLED_SERVICES", "COMPANY_HOUSING_ENABLED", "SHARED_HOUSING_ENABLED",
 )
 print(json.dumps({
     **{name: getattr(settings, name) for name in names},
@@ -66,6 +66,7 @@ def test_normal_deployment_enables_planning_by_default(module, value):
     configured = deployment_settings(module, **environment)
     assert configured["PLANNING_ENABLED_SERVICES"] == list(SERVICES)
     assert configured["PLANNING_MOCK_DISCOVERY"] is False
+    assert configured["SHARED_HOUSING_ENABLED"] is False
     assert configured["RENTAL_PROVIDER_BACKEND"] == "disabled"
     assert configured["RENTAL_FAKE_PROVIDER_ALLOWED"] is False
     assert configured["planning_schedule"] == {
@@ -287,3 +288,7 @@ def test_provider_capabilities_become_available_independently(
         grant = client.get(API + "planning-capabilities/", {"capability": capability})
         assert grant.data["verified_services"] == ALWAYS_READ_SERVICES + CORE_SERVICES + ready
         assert (action in grant.data["allowed_actions"]) == (capability in ready)
+
+
+def test_shared_housing_rollout_requires_explicit_flag():
+    assert deployment_settings(SHARED_HOUSING_ENABLED="true")["SHARED_HOUSING_ENABLED"] is True

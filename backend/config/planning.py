@@ -4,6 +4,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 
 SERVICES = (
+    "shared_housing_plans",
     "lifestyle",
     "roommates",
     "housing_groups",

@@ -31,6 +31,9 @@ def roommate_connection_action(request, connection_id, action):
             item.disclosure_grants = {}
         item.revision += 1
         item.save()
+        if action != "accept":
+            from ..services.shared_housing.commands import connection_closed
+            connection_closed(item, request.user)
         return item
 
     return mutate(

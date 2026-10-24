@@ -3,7 +3,8 @@ from .views.group_attachments import (
     GroupAttachmentDetailAPIView,
     GroupAttachmentUploadAPIView,
 )
-from .views.group_commands import GroupMessageDeleteAPIView, GroupPreferencesAPIView
+from .views.group_commands import GroupMessageDeleteAPIView
+from .views.preferences import ConversationPreferencesAPIView
 from .views.group_history import (
     DirectChatSummaryAPIView,
     GroupEventsAPIView,
@@ -25,7 +26,7 @@ urlpatterns = [
         "conversations/<uuid:id>/messages/<uuid:message_id>/",
         GroupMessageDeleteAPIView.as_view(),
     ),
-    path("conversations/<uuid:id>/preferences/", GroupPreferencesAPIView.as_view()),
+    path("conversations/<uuid:id>/preferences/", ConversationPreferencesAPIView.as_view()),
     path("conversations/<uuid:id>/events/", GroupEventsAPIView.as_view()),
     path(
         "conversations/<uuid:id>/attachments/", GroupAttachmentUploadAPIView.as_view()

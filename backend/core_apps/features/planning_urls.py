@@ -106,3 +106,14 @@ urlpatterns = [
     path("commute-searches/<uuid:search_id>/results/", discovery.commute_results),
     path("tenant-assistant/turns/", discovery.tenant_assistant_turns),
 ]
+
+from . import shared_housing_views as shared_housing
+urlpatterns += [
+    path("shared-housing-plans/", shared_housing.plans),
+    path("shared-housing-plans/<uuid:plan_id>/", shared_housing.detail),
+    path("shared-housing-plans/<uuid:plan_id>/proposals/", shared_housing.proposals),
+    path("shared-housing-plans/<uuid:plan_id>/proposals/<uuid:proposal_id>/<slug:action>/", shared_housing.proposal_action),
+    path("shared-housing-plans/<uuid:plan_id>/<slug:action>/", shared_housing.action),
+    path("shared-housing-demand/", shared_housing.demand),
+    path("owner-shared-housing-applications/", shared_housing.applications),
+]

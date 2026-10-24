@@ -1,5 +1,7 @@
 """Authenticated student endpoints using existing envelopes, pagination and receipts."""
 
+from core_apps.common.locale_middleware import resolve_request_language
+
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
@@ -65,7 +67,7 @@ def campuses(request):
         request,
         qs.order_by("university__name_en", "name_en", "id"),
         lambda c: profiles.campus_payload(
-            c, request.headers.get("Accept-Language", "en")
+            c, resolve_request_language(request)
         ),
     )
 

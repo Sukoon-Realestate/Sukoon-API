@@ -1,6 +1,23 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "This email is unavailable.": "البريد الإلكتروني غير متاح.",
+    "Upload the identity image itself.": "ارفع صورة مستند الهوية نفسها.",
+    "Upload a valid supported image.": "ارفع صورة سليمة بإحدى الصيغ المدعومة.",
+    "Identity images must not exceed 10 MiB.": "يجب ألا يتجاوز حجم صورة الهوية 10 ميجابايت.",
+    "Invalid base64 image data.": "بيانات الصورة غير صالحة.",
+    "Protected identity evidence is unavailable.": "مستند الهوية المحمي غير متاح.",
+    "Upload confirmation is pending. Check the original upload before retrying.": "لم يصل تأكيد الرفع بعد. تحقق من حالة الرفع قبل إعادة المحاولة.",
+    "Only the current owner can upload listing media.": "يمكن للمالك الحالي فقط رفع صور الإعلان.",
+    "Upload authority changed. Review the property.": "تغيرت صلاحية الرفع. راجع العقار.",
+    "Identity verification is required for recoverable image uploads.": "وثق هويتك لرفع الصور مع إمكانية استعادة حالة الرفع.",
+    "A property cannot have more than 25 images.": "لا يمكن إضافة أكثر من 25 صورة للعقار.",
+    "Image uploaded successfully.": "تم رفع الصورة بنجاح.",
+    "Supply every current image exactly once.": "حدد جميع الصور الحالية مرة واحدة لكل صورة.",
+    "The first image must be the cover.": "يجب أن تكون الصورة الأولى هي صورة الغلاف.",
+    "Property photos changed. Reload before reordering.": "تغيرت صور العقار. أعد تحميلها قبل تغيير الترتيب.",
+    "Search text must not exceed 250 characters.": "يجب ألا يزيد نص البحث عن 250 حرفًا.",
+
     # * Generic response messages
     "Created successfully.": "تم الإنشاء بنجاح.",
     "Updated successfully.": "تم التحديث بنجاح.",
@@ -99,6 +116,9 @@ from .billing_translations import MESSAGES as BILLING_MESSAGES
 from .company_translations import MESSAGES as COMPANY_MESSAGES
 from .company_translations import FIELD_LABELS as COMPANY_FIELD_LABELS
 
+from .shared_housing_translations import MESSAGES as SHARED_HOUSING_MESSAGES
+
+EN_TO_AR_MESSAGES.update(SHARED_HOUSING_MESSAGES)
 EN_TO_AR_MESSAGES.update(ADVANCED_MESSAGES)
 EN_TO_AR_MESSAGES.update(BILLING_MESSAGES)
 EN_TO_AR_MESSAGES.update(COMPANY_MESSAGES)

@@ -50,6 +50,7 @@ class PropertyVisit(TimeStampedModel):
         blank=True,
         related_name="viewings",
     )
+    renter_workspace = models.CharField(max_length=16, choices=[("individual", "individual"), ("student", "student")], default="individual")
     context_kind = models.CharField(max_length=24, default="personal")
     visit_date = models.DateField(_("Visit Date"))
     visit_time = models.TimeField(_("Visit Time"))

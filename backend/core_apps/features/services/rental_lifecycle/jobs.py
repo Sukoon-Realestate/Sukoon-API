@@ -1,6 +1,7 @@
 """Idempotent local deadlines; no automatic financial or legal decisions."""
 
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 from ...models import RentalOperationalCase, RentalInterest, ReservationHold
 from .common import audit
@@ -38,6 +39,7 @@ def reconcile_lifecycle_deadlines():
     for item in (
         RentalInterest.objects.exclude(status__in=["withdrawn", "rejected", "invited"])
         .filter(response_due_at__lte=now)
+        .filter(Q(shared_allocation__isnull=True) | Q(shared_allocation__proposal__plan__status="handed_off"))
         .select_related("tenant", "property__owner")[:100]
     ):
         actor = item.tenant if item.waiting_for == "tenant" else item.property.owner

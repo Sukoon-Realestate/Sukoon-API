@@ -255,3 +255,19 @@ class TestFilterOptionsLocalizationAPI:
 
         families = next(s for s in data["suitable_for"] if s["value"] == "families")
         assert families["label"] == "عائلات"
+
+def test_zero_weight_language_is_not_selected():
+    request = RequestFactory().get('/api/v1/pages/about-us/', HTTP_ACCEPT_LANGUAGE='ar;q=0,en;q=0.8')
+    assert resolve_request_language(request) == 'en'
+
+
+@pytest.mark.django_db
+def test_public_content_language_switch_and_headers(api_client):
+    url = reverse('page-about-us')
+    arabic = api_client.get(url, HTTP_ACCEPT_LANGUAGE='ar-EG, en;q=.5')
+    english = api_client.get(url, HTTP_ACCEPT_LANGUAGE='en-US, ar;q=.5')
+    assert arabic['Content-Language'] == 'ar'
+    assert english['Content-Language'] == 'en'
+    assert 'Accept-Language' in arabic['Vary']
+    assert arabic.json()['data']['content'] != english.json()['data']['content']
+    assert arabic.json()['data']['slug'] == english.json()['data']['slug']

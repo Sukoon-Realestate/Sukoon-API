@@ -19,6 +19,10 @@ def record_event(item, actor, operation):
         TenancyTransition,
     )
 
+    from ...shared_housing_models import SharedHousingPlan
+    if isinstance(item, SharedHousingPlan):
+        from ..shared_housing.projections import record_event as shared_event
+        return shared_event(item, actor, operation)
     recipients, action, target, workspace = [], "", item.id, "tenant"
     if isinstance(item, RoommateConnection):
         recipients, action = [item.first, item.second], "open_roommate_connections"
