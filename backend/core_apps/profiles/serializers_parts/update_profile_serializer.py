@@ -102,6 +102,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UpdateProfileSerializer(serializers.ModelSerializer):
+    gender = serializers.CharField(read_only=True)
+    birth_date = serializers.DateField(read_only=True)
     first_name = serializers.CharField(source="user.first_name")
     last_name = serializers.CharField(source="user.last_name")
     phone_number = PhoneNumberField(required=False, allow_blank=True)

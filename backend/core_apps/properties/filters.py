@@ -122,6 +122,8 @@ class PropertyOrderingFilter(OrderingFilter):
     """Student budgets and ordering use the same matched-offer price basis."""
 
     def get_ordering(self, request, queryset, view):
+        if request.query_params.get('search') and request.query_params.get('ordering', 'relevance') == 'relevance':
+            return ['-search_rank', '-created_at', 'pk']
         ordering = super().get_ordering(request, queryset, view)
         if (
             request.query_params.get("student_search") == "true"

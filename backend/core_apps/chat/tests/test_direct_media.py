@@ -43,6 +43,8 @@ def test_direct_history_upgrade_read_only_consent_and_unrelated_actor(
     direct_chat, superuser
 ):
     conversation, user, other = direct_chat
+    # Reproduce pre-workspace history, before rich chat prepared participants.
+    conversation.participant_set.update(membership_period=None)
     old = Message.objects.create(
         conversation=conversation, sender=user, content="Original text"
     )

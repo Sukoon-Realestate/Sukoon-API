@@ -3,14 +3,15 @@ from unittest.mock import patch
 import pytest
 from rest_framework.exceptions import NotFound, ValidationError
 
-from core_apps.notifications.models import DeviceToken, Notification
+from core_apps.notifications.models import DeviceToken, Notification, PushDelivery
 from core_apps.notifications.services import NotificationService
 
 
 @pytest.mark.django_db
 class TestNotificationService:
     @patch("core_apps.notifications.services.fcm_service.FCMService.send_push_to_user")
-    def test_create_notification_triggers_push(self, mock_send_push, user):
+    def test_create_notification_queues_push(self, mock_send_push, user):
+        device = DeviceToken.objects.create(user=user, token="synthetic-registration")
         notif = NotificationService.create_notification(
             user=user,
             title="طلب جديد",
@@ -20,7 +21,8 @@ class TestNotificationService:
         )
         assert notif.id is not None
         assert notif.title == "طلب جديد"
-        mock_send_push.assert_called_once()
+        mock_send_push.assert_not_called()
+        assert PushDelivery.objects.filter(notification=notif, device=device).count() == 1
 
     def test_create_notification_missing_title_raises_validation_error(self, user):
         with pytest.raises(ValidationError):

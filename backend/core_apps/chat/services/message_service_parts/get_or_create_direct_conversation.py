@@ -74,7 +74,6 @@ def get_or_create_direct_conversation(*, user, other_user, workspace=None, renta
         )
 
     from django.contrib.auth import get_user_model
-    from django.db.models import Count
 
     people = list(
         get_user_model()
@@ -84,44 +83,22 @@ def get_or_create_direct_conversation(*, user, other_user, workspace=None, renta
     )
     if len(people) != 2 or not all(person.is_active for person in people):
         raise PermissionDenied("Both conversation participants must be active.")
-    pair_key = ":".join(sorted([str(user.id), str(other_user.id)]))
+    from core_apps.chat.services.conversation_preferences import contextual_conversation
 
-    if workspace:
-        from core_apps.chat.services.conversation_preferences import contextual_conversation
-        return contextual_conversation(user, other_user, workspace, rental_context)
-
-    if direct_message_blocked(user, other_user, lock=True):
-        raise PermissionDenied("Messaging consent is not active for this connection.")
-
-    canonical = Conversation.objects.filter(direct_pair_key=pair_key).first()
-    if canonical:
-        return canonical
-
-    # Find an existing conversation shared by both users
-    existing = (
-        Conversation.objects.annotate(member_count=Count("participants", distinct=True))
-        .filter(kind="direct", direct_context_key__isnull=True, member_count=2, participant_set__user=user)
-        .filter(participant_set__user=other_user)
-        .distinct()
-        .order_by("created_at", "pk")
-        .first()
-    )
-    if existing:
-        existing.direct_pair_key = pair_key
-        existing.save(update_fields=["direct_pair_key"])
-        return existing
-
-    from core_apps.chat.moderation.policy import require_new_business
-    for person in people:
-        require_new_business(person)
-    conversation = Conversation.objects.create(direct_pair_key=pair_key)
-    ConversationParticipant.objects.bulk_create(
-        [
-            ConversationParticipant(conversation=conversation, user=user),
-            ConversationParticipant(conversation=conversation, user=other_user),
-        ]
-    )
-    return conversation
+    if workspace is None:
+        # Calls without an explicit workspace are ordinary individual chats.
+        # The app always supplies its current workspace; rental context still
+        # identifies the owner when an internal caller only supplies a property.
+        workspace = "individual"
+        if isinstance(rental_context, dict) and rental_context.get("property_id"):
+            from core_apps.properties.models import Property
+            from django.core.exceptions import ValidationError as DjangoValidationError
+            try:
+                if Property.objects.filter(id=rental_context["property_id"], owner=user).exists():
+                    workspace = "owner"
+            except (ValueError, TypeError, DjangoValidationError):
+                raise ValidationError({"rental_context": "Invalid property identity."})
+    return contextual_conversation(user, other_user, workspace, rental_context)
 
 
 def _notify_recipients(

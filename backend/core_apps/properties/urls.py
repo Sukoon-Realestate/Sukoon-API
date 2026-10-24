@@ -48,7 +48,10 @@ from .views import (
     confirm_property_availability,
 )
 
+from .views.image_order import order_images
+
 urlpatterns = [
+    path("<uuid:property_id>/images/order/", order_images),
     path(
         "operation-recovery/",
         PropertyOperationRecovery.as_view(),

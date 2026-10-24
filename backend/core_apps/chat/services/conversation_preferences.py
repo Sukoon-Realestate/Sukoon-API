@@ -91,14 +91,12 @@ def preferences_payload(conversation, user, participant=None):
         "workspace": viewer_workspace(conversation, user),
         "company_id": str(conversation.company_request.company.id) if conversation.kind == "company_request" else "",
         "can_block": conversation.kind == "direct",
-        "is_archived": conversation.workspace_archived,
         "consent_revision": conversation.consent_revision,
         "delete_through_sequence": conversation.last_sequence,
         "is_favorite": participant.is_favorite,
         "is_muted": participant.is_muted,
         "blocked_by_me": own,
         "is_blocked": blocked,
-        "is_legacy": conversation.kind == "direct" and not conversation.direct_context_key,
         "list_ids": [str(x) for x in conversation.private_lists.filter(user=user).values_list("id", flat=True)],
     }
 
@@ -112,36 +110,18 @@ def update_preferences(conversation, user, data):
     # Pair locks have the same order as conversation creation. Acquiring them
     # before thread locks avoids reciprocal block/classification deadlocks.
     authorize(conversation, user)
-    if "blocked" in data or "workspace" in data:
+    if "blocked" in data:
         from django.contrib.auth import get_user_model
         list(get_user_model().objects.select_for_update().filter(
             pk__in=conversation.participants.values_list("pk", flat=True)
         ).order_by("pk"))
     conversation, participant, _ = authorize(conversation, user, lock=True)
-    allowed = {"is_favorite", "is_muted", "blocked", "delete_for_me", "workspace", "list_ids", "delete_through_sequence"}
+    allowed = {"is_favorite", "is_muted", "blocked", "delete_for_me", "list_ids", "delete_through_sequence"}
     if set(data) - allowed:
         raise ValidationError("Unsupported conversation preference.")
     for field in ("is_favorite", "is_muted", "blocked", "delete_for_me"):
         if field in data and type(data[field]) is not bool:
             raise ValidationError({field: "Supply a boolean."})
-    if "workspace" in data:
-        scope = data["workspace"]
-        if not isinstance(scope, str) or scope not in WORKSPACES or conversation.kind != "direct" or conversation.direct_context_key:
-            raise ValidationError({"workspace": "Only unassigned historical conversations can be classified."})
-        if conversation.workspace_contexts.filter(user=user).exists():
-            raise ValidationError({"workspace": "This conversation is already classified."})
-        ConversationWorkspace.objects.create(conversation=conversation, user=user, workspace=scope)
-        contexts = list(conversation.workspace_contexts.select_related("user"))
-        conversation.workspace_archived = True
-        conversation.save(update_fields=["workspace_archived"])
-        if len(contexts) == 2:
-            identities = sorted([(str(item.user.id), item.workspace) for item in contexts])
-            key = hashlib.sha256(repr(identities).encode()).hexdigest()
-            conflict = Conversation.objects.filter(direct_context_key=key).exclude(pk=conversation.pk).exists()
-            conversation.workspace_archived = conflict
-            if not conflict:
-                conversation.direct_context_key = key
-            conversation.save(update_fields=["workspace_archived", "direct_context_key"])
     for field in ("is_favorite", "is_muted"):
         if field in data:
             setattr(participant, field, data[field])

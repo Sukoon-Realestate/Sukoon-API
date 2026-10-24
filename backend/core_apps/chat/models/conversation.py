@@ -7,6 +7,8 @@ from core_apps.common.models import TimeStampedModel
 
 class Conversation(TimeStampedModel):
     consent_revision = models.PositiveIntegerField(default=0)
+    # Compatibility only while the previous API process drains during rollout.
+    # Inbox access and API responses no longer use this retired flag.
     workspace_archived = models.BooleanField(default=False)
     direct_context_key = models.CharField(max_length=128, null=True, blank=True, unique=True, editable=False)
     direct_pair_key = models.CharField(

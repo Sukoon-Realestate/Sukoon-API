@@ -16,8 +16,6 @@ class ProfileAccountMixin:
         - Full Name: 15%
         - Email: 15%
         - Phone number: 15%
-        - Birth date: 15%
-        - Gender: 10%
         - Identity verified (or national ID): 10%
         - Avatar: 20%
         """
@@ -36,10 +34,6 @@ class ProfileAccountMixin:
         if profile:
             if profile.phone_number:
                 score += 15
-            if profile.birth_date:
-                score += 15
-            if profile.gender:
-                score += 10
             if profile.avatar:
                 score += 20
             if user.is_verified or profile.national_id or profile.id_face:
@@ -47,7 +41,7 @@ class ProfileAccountMixin:
         elif user.is_verified:
             score += 10
 
-        return min(score, 100)
+        return min(round(score * 100 / 75), 100)
 
     @classmethod
     def get_my_account_data(cls, user: Any) -> Dict[str, Any]:

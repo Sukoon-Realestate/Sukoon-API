@@ -50,34 +50,12 @@ class PropertyImageUploadAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        @transaction.atomic
-        def upload_image():
-            current = Property.objects.select_for_update().get(pk=property_obj.pk)
-            if current.owner_id != request.user.pk:
-                raise permissions.exceptions.PermissionDenied(
-                    "Only the current owner can upload listing media."
-                )
-            img_obj = PropertyService.upload_property_image(
-                property_obj=property_obj,
-                image=serializer.validated_data["image"],
-                name=serializer.validated_data.get("name", ""),
-                description=serializer.validated_data.get("description", ""),
-            )
-            data = PropertyImageSerializer(img_obj, context={"request": request}).data
-            return (
-                {"message": "Image uploaded successfully.", **data},
-                status.HTTP_201_CREATED,
-                img_obj.id,
-            )
-
-        data, response_status, replayed = execute_idempotent(
-            user=request.user,
-            auth_claims=request.auth,
-            operation=f"property.image.upload:{property_obj.id}",
-            key=request_key,
-            payload=serializer.validated_data,
-            action=upload_image,
-            request_subject_id=property_obj.id,
+        from ...services.image_uploads import upload
+        import uuid
+        data, response_status, replayed = upload(
+            user=request.user, claims=request.auth, property_obj=property_obj,
+            key=request_key or str(uuid.uuid4()), data=serializer.validated_data,
+            require_verified=bool(request_key),
         )
         return Response(
             data,
@@ -107,6 +85,16 @@ class PropertyImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
             return PropertyImageUpdateSerializer
         return PropertyImageSerializer
 
+    def get_queryset(self):
+        from ...services.public_access import public_properties
+        from django.db.models import Q
+        if self.request.user.is_staff:
+            return super().get_queryset()
+        allowed = Q(property__in=public_properties())
+        if self.request.user.is_authenticated:
+            allowed |= Q(property__owner=self.request.user)
+        return super().get_queryset().filter(allowed)
+
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
         if (
@@ -117,6 +105,26 @@ class PropertyImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
                 "You are not the owner of the related property listing."
             )
         return obj
+
+
+    def _lock_write(self):
+        from core_apps.users.models import User
+        from ...services.image_uploads import _authority
+
+        current = User.objects.select_for_update().get(pk=self.request.user.pk)
+        image = get_object_or_404(PropertyImage, id=self.kwargs["id"])
+        prop = Property.objects.select_for_update().get(pk=image.property_id)
+        _authority(current, prop, self.request.auth)
+
+    @transaction.atomic
+    def update(self, request, *args, **kwargs):
+        self._lock_write()
+        return super().update(request, *args, **kwargs)
+
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+        self._lock_write()
+        return super().destroy(request, *args, **kwargs)
 
 
 class PropertyStatisticsAPIView(generics.RetrieveAPIView):

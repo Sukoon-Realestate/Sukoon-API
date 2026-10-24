@@ -57,7 +57,7 @@ def visible(user):
 
 
 def scoped(user, scope, company_id=""):
-    if scope not in {"all", "general", "individual", "student", "owner", "company"}:
+    if scope not in {"all", "individual", "student", "owner", "company"}:
         raise ValidationError({"workspace": "Unknown message workspace."})
     qs = visible(user)
     if scope == "all":
@@ -71,9 +71,6 @@ def scoped(user, scope, company_id=""):
         return qs.filter(
             kind="company_request", company_request__company__id=company_id
         )
-    classified = Q(workspace_contexts__user=user)
-    if scope == "general":
-        return qs.filter(kind="direct").exclude(classified)
     query = Q(
         kind="direct",
         workspace_contexts__user=user,

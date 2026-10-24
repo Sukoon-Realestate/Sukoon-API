@@ -23,7 +23,8 @@ def test_viewer_context_keeps_independent_direct_workspaces(user, another_user):
     assert list(scoped(user, "owner")) == [again]
     with pytest.raises(ValidationError):
         scoped(user, "all")
-    assert not scoped(user, "general").exists()
+    with pytest.raises(ValidationError):
+        scoped(user, "general")
     assert list(scoped(another_user, "student")) == [first]
     assert list(scoped(another_user, "owner")) == [again]
 
@@ -34,12 +35,13 @@ def test_filter_is_applied_before_pagination(user, another_user):
     user.save()
     client = authenticated(user)
     url = "/api/v1/chat/conversations/"
-    general = client.get(url, {"workspace": "general", "page_size": 1})
-    assert general.status_code == 200, general.data
-    assert general.data["count"] == 1
+    individual = client.get(url, {"workspace": "individual", "page_size": 1})
+    assert individual.status_code == 200, individual.data
+    assert individual.data["count"] == 1
+    assert client.get(url, {"workspace": "general"}).status_code == 400
     assert client.get(url, {"workspace": "student"}).data["count"] == 0
     assert client.get(url, {"workspace": "unknown"}).status_code == 400
-    assert client.get(url).data["count"] == 1  # Old contract remains direct-only.
+    assert client.get(url).data["count"] == 1  # Omitted scope uses individuals.
 
 
 def test_company_inbox_revokes_stale_membership_and_cross_company(company_setup):

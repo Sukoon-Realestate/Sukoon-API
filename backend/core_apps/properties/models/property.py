@@ -8,6 +8,8 @@ User = get_user_model()
 
 
 class Property(TimeStampedModel):
+    media_revision = models.PositiveIntegerField(default=0)
+    search_document = models.TextField(blank=True, default="", editable=False)
     # A direct complex parent is only for standalone units. Building membership
     # derives its complex through the building, so contradictory parents cannot exist.
     building = models.ForeignKey(
@@ -244,6 +246,7 @@ class PropertyRequest(Property):
 
 
 class PropertyImage(TimeStampedModel):
+    position = models.PositiveIntegerField(default=0)
     property = models.ForeignKey(
         Property,
         on_delete=models.CASCADE,

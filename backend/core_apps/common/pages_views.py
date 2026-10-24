@@ -29,15 +29,8 @@ class StaticPageAPIView(APIView):
         return self.slug or self.kwargs.get("slug", "")
 
     def get_language(self, request: Request) -> str:
-        lang = request.query_params.get("lang") or request.query_params.get("language")
-        if lang and lang.lower().startswith("ar"):
-            return "ar"
-        if lang and lang.lower().startswith("en"):
-            return "en"
-        accept_lang = request.headers.get("Accept-Language", "")
-        if "ar" in accept_lang.lower():
-            return "ar"
-        return "en"
+        from .locale_middleware import resolve_request_language
+        return resolve_request_language(request)
 
     def get(self, request: Request, *args, **kwargs) -> Response:
         slug = self.get_slug()

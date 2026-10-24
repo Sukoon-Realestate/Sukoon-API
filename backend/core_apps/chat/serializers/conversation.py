@@ -121,7 +121,6 @@ class ConversationSerializer(serializers.ModelSerializer):
         from core_apps.chat.moderation.policy import restricted
         return bool(
             request
-            and not obj.workspace_archived
             and not restricted(request.user)
             and request.user.is_active
             and obj.participants.filter(pk=request.user.pk).exists()

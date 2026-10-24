@@ -106,18 +106,14 @@ def test_delete_after_one_hour_rejected_and_edits_visible_to_both(direct_chat):
     assert "delete_message" not in message_payload(message, participant, grant)["allowed_actions"]
 
 
-def test_legacy_assignment_once_and_conflicting_history_archived(direct_chat):
-    legacy, user, peer = direct_chat
-    current = contextual(user, peer, "individual")
-    update_preferences(legacy, user, {"workspace": "individual"})
-    update_preferences(legacy, peer, {"workspace": "individual"})
-    legacy.refresh_from_db()
-    assert legacy.workspace_archived
-    assert contextual(user, peer, "individual") == current
+def test_workspace_is_assigned_automatically_and_not_a_user_preference(direct_chat):
+    chat, user, peer = direct_chat
+    assert contextual(user, peer, "individual") == chat
+    assert preferences_payload(chat, user)["workspace"] == "individual"
+    assert preferences_payload(chat, peer)["workspace"] == "individual"
     with pytest.raises(ValidationError):
-        update_preferences(legacy, user, {"workspace": "owner"})
-    with pytest.raises(PermissionDenied):
-        send_group_message(legacy, user, message_request())
+        update_preferences(chat, user, {"workspace": "owner"})
+    assert send_group_message(chat, user, message_request()).id
 
 
 def test_private_preferences_endpoints_reject_foreign_viewers_and_bad_ids(direct_chat, superuser):

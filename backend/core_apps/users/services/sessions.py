@@ -29,7 +29,7 @@ def validate_session(user, claims):
             "Session revoked. Sign in again.", code="session_revoked"
         )
     # Existing access tokens are compatible only before the first revocation.
-    if not sid and user.security_epoch:
+    if not sid and (user.security_epoch or user.requires_bound_session):
         raise AuthenticationFailed("Sign in again.", code="session_revoked")
     return user
 

@@ -990,3 +990,15 @@
 - **Native evidence:** The sibling iOS Simulator app completed unpublished QA house, penthouse, studio and villa cycles with two-scene tour previews. Native CSV sharing passed Arabic/BOM/content checks and temporary-file cleanup after dismissal/logout against an isolated local API. These do not establish actual camera/AR capture or an external sharing destination.
 - **Preservation and audit:** Five current server files (58051 bytes) were copied to the existing authenticated Cloudinary account and verified by downloading the archive and checking every file. The historical missing support attachment was absent from the searched server/local locations; its record was retained. Aggregate-only live inspection identified 14 verified profiles without a KYC submission, three unsupported unclassified leases, three unmigrated visit reviews, and an empty student catalog. No verification flag, historical contract, review, provider or paid resource was changed by this audit.
 - **Files:** `backend/scripts/run_api.py`, `config/background.py`, `core_apps/common/{tasks,test_background_scope,test_release_schema}.py`, management commands `migrate_release` and `run_general_worker`; sibling native QA entries and sanitized evidence. Source publication and hosted acceptance remain separate checkpoints.
+
+
+## 2026-10-24
+
+### Prepare the authorized identity, media, discovery and chat release
+
+- **What:** Package the requested backend bug fixes for publication to `main` and the existing DigitalOcean application.
+- **Why:** Ship the connected mobile email-change, KYC image-format, media ordering/upload, search, favorites, publication, notification, localization and workspace-chat changes.
+- **Details:** The retired chat archive flag remains an internal compatibility column during rolling deployment; it is no longer exposed or consulted by current inbox behavior. New PostgreSQL columns retain defaults so the previous release can continue writing while the replacement starts. Repair already-applied unpublished local column-removal variants without deleting conversation history. Register independent migration-test connections for PostgreSQL type handlers.
+- **Validation:** 178 focused PostgreSQL cases passed, including old-version ORM writes, media/history preservation, migration locking, email-change sessions, publication/search, uploads and push delivery. Django checks and migration-drift checks passed; Pipfile.lock verified. The local development database is excluded from publication.
+- **Runtime preparation:** Confirmed the existing app runs the current `main` revision with PostgreSQL and its supervised background worker. No duplicate normalized email addresses were found. Downloaded and integrity-verified all 16 active private chat objects from authenticated storage. Archived and restored the five local media files with matching hashes. Enabled `pg_trgm` on the existing database. Deployment SHA, health, search indexes and worker execution are checked separately after publication.
+- **Files:** Backend users/profiles/properties/chat/common/notifications source, migrations and tests; dependency lock; this work log.

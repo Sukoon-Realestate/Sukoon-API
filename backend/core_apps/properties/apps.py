@@ -6,3 +6,6 @@ class PropertiesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "core_apps.properties"
     verbose_name = _("Properties")
+
+    def ready(self):
+        from . import media_signals  # noqa: F401

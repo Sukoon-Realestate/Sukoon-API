@@ -19,6 +19,7 @@ class User(AbstractUser):
     )
 
     security_epoch = models.PositiveIntegerField(default=0)
+    requires_bound_session = models.BooleanField(default=False)
     sensitive_actions_frozen = models.BooleanField(default=False)
 
     username = None
@@ -33,11 +34,11 @@ class User(AbstractUser):
         # Preserve untouched legacy browser sessions. Once account-wide
         # revocation occurs, browser authentication must share the same epoch
         # boundary as JWT sessions, including SECRET_KEY fallback support.
-        if self.security_epoch == 0:
+        if self.security_epoch == 0 and not self.requires_bound_session:
             return super()._get_session_auth_hash(secret=secret)
         return salted_hmac(
             "sokoun.auth.browser_session",
-            f"{self.password}:{self.security_epoch}",
+            f"{self.password}:{self.security_epoch}" + (":bound" if self.requires_bound_session else ""),
             secret=secret,
             algorithm="sha256",
         ).hexdigest()
@@ -46,6 +47,7 @@ class User(AbstractUser):
         verbose_name = _("User")
         verbose_name_plural = _("Users")
         ordering = ["-date_joined"]
+        constraints = [models.UniqueConstraint(models.functions.Lower("email"), name="user_email_casefold_unique")]
 
     @property
     def get_full_name(self):
@@ -130,3 +132,20 @@ class SensitiveAuthorization(TimeStampedModel):
     verified_at = models.DateTimeField(null=True, blank=True)
     consumed_at = models.DateTimeField(null=True, blank=True)
     assurance = models.CharField(max_length=80, blank=True, default="")
+
+
+class EmailChange(models.Model):
+    """Single-use proof of both mailboxes, bound to one authenticated session."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="email_changes")
+    session_id = models.UUIDField(null=True)
+    security_epoch = models.PositiveIntegerField()
+    old_email = models.EmailField()
+    new_email = models.EmailField(blank=True)
+    stage = models.CharField(max_length=20, default="verify_old")
+    code_hash = models.CharField(max_length=128, blank=True)
+    attempts = models.PositiveSmallIntegerField(default=0)
+    expires_at = models.DateTimeField()
+    resend_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

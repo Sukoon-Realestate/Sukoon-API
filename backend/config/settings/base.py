@@ -86,7 +86,7 @@ THIRD_PARTY_APPS = [
     "cloudinary",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS + ["channels"]
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS + ["channels", "django.contrib.postgres"]
 
 MIDDLEWARE = [
     "core_apps.common.runtime_metrics.RuntimeMetricsMiddleware",

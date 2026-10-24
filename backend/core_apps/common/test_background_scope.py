@@ -24,6 +24,7 @@ def test_bounded_profile_only_consumes_explicit_schedules(settings, monkeypatch)
         "maintain-chat",
         "purge-chat-policy",
         "maintain-support-uploads",
+        "deliver-notification-push",
     }
     assert (
         scope["CELERY_BEAT_SCHEDULE"]["background-probe"]["options"]["queue"]

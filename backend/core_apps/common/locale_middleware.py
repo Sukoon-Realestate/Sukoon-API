@@ -65,7 +65,8 @@ def resolve_request_language(request: HttpRequest) -> str:
                         q = float(param[2:])
                     except ValueError:
                         pass
-            weighted.append((q, lang_tag))
+            if 0 < q <= 1:
+                weighted.append((q, lang_tag))
 
         weighted.sort(key=lambda x: x[0], reverse=True)
         for _, tag in weighted:

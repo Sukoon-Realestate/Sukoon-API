@@ -77,7 +77,8 @@ class TestProfileUpdateView:
         assert user.first_name == "Updated"
         assert user.last_name == "Name"
 
-    def test_update_gender(self, auth_client, user):
+    def test_legacy_update_preserves_gender(self, auth_client, user):
+        original = user.profile.gender
         res = auth_client.patch(
             PROFILE_UPDATE_URL,
             {"gender": "female"},
@@ -85,7 +86,7 @@ class TestProfileUpdateView:
         )
         assert res.status_code == status.HTTP_200_OK
         user.profile.refresh_from_db()
-        assert user.profile.gender == "female"
+        assert user.profile.gender == original
 
     def test_contact_change_requires_reverification(self, auth_client, user):
         original = str(user.profile.phone_number)

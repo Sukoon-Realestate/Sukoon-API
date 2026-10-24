@@ -1,3 +1,4 @@
+from core_apps.properties.search import PropertySearchFilter
 """Property: property list apiview."""
 
 from django.db.models import Count, Exists, OuterRef
@@ -15,8 +16,8 @@ from .property_filter_options_apiview import PropertyPagination
 
 class VisiblePropertyListMixin:
     def get_queryset(self):
-        from core_apps.chat.moderation.policy import visible_properties
-        return visible_properties(super().get_queryset())
+        from ...services.public_access import public_properties
+        return public_properties(super().get_queryset())
 
 
 class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
@@ -28,7 +29,7 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.exclude(status=Property.Status.HIDDEN)
+        Property.objects.filter(status=Property.Status.VERIFIED, retired_at__isnull=True)
         .select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .annotate(
@@ -49,7 +50,7 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     filter_backends = [
         DjangoFilterBackend,
-        filters.SearchFilter,
+        PropertySearchFilter,
         PropertyOrderingFilter,
     ]
     filterset_class = PropertyFilter
@@ -142,7 +143,7 @@ class PropertyNewListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.exclude(status=Property.Status.HIDDEN)
+        Property.objects.filter(status=Property.Status.VERIFIED, retired_at__isnull=True)
         .select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .annotate(
@@ -163,7 +164,7 @@ class PropertyNewListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     filter_backends = [
         DjangoFilterBackend,
-        filters.SearchFilter,
+        PropertySearchFilter,
         PropertyOrderingFilter,
     ]
     filterset_class = PropertyFilter

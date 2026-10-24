@@ -149,7 +149,7 @@ class TestAccountSummaryScreenAPI:
         assert data["user"]["full_name"] == "محمد أحمد"
         assert data["user"]["initial"] == "م"
         assert data["user"]["role_label"] == "مستأجر"
-        assert data["user"]["profile_completion_percentage"] == 80
+        assert data["user"]["profile_completion_percentage"] == 73
         assert data["user"]["profile_completion_label"] == "اكتمال الملف"
 
         assert data["identity_verification"]["is_verified"] is True
@@ -199,7 +199,9 @@ class TestProfileEditScreenAPI:
         assert data["gender"] == "male"
         assert data["gender_label"] == "ذكر"
 
-    def test_patch_updates_profile_and_full_name(self, auth_client, user):
+    def test_patch_updates_name_but_preserves_retired_identity_fields(self, auth_client, user):
+        original_birth_date = user.profile.birth_date
+        original_gender = user.profile.gender
         user.profile.phone_number = "+201098765432"
         user.profile.save()
         payload = {
@@ -216,12 +218,13 @@ class TestProfileEditScreenAPI:
         assert user.first_name == "علي"
         assert user.last_name == "محمود"
         assert str(user.profile.phone_number) == "+201098765432"
-        assert user.profile.birth_date == date(1992, 6, 20)
+        assert user.profile.birth_date == original_birth_date
+        assert user.profile.gender == original_gender
 
         data = res.json()["data"]
         assert data["full_name"] == "علي محمود"
         assert data["masked_phone_number"] == "010****432"
-        assert data["birth_date_label"] == "20 يونيو 1992"
+        assert data["birth_date"] == (original_birth_date.isoformat() if original_birth_date else None)
 
     def test_patch_invalid_phone_number_returns_400(self, auth_client):
         res = auth_client.patch(
@@ -229,11 +232,14 @@ class TestProfileEditScreenAPI:
         )
         assert res.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_patch_invalid_gender_returns_400(self, auth_client):
+    def test_patch_cannot_change_retired_gender(self, auth_client, user):
+        original = user.profile.gender
         res = auth_client.patch(
             PROFILE_EDIT_URL, {"gender": "unknown_gender"}, format="json"
         )
-        assert res.status_code == status.HTTP_400_BAD_REQUEST
+        assert res.status_code == status.HTTP_200_OK
+        user.profile.refresh_from_db()
+        assert user.profile.gender == original
 
     def test_patch_updates_avatar_with_multipart_file(self, auth_client, user):
         from unittest.mock import patch

@@ -67,34 +67,12 @@ class ConversationListAPIView(ListAPIView):
                 .prefetch_related("participants__profile", "participant_set")
                 .order_by("-last_message_at", "-id")
             )
-        from core_apps.chat.services.workspace_inbox import visible
-        queryset = (
-            visible(self.request.user).filter(direct_context_key__isnull=True)
+        from core_apps.chat.services.workspace_inbox import scoped
+        return (
+            scoped(self.request.user, "individual")
             .prefetch_related("participants__profile", "participant_set")
-            .order_by("-last_message_at")
+            .order_by("-last_message_at", "-id")
         )
-        if self.request.query_params.get("include_groups") != "true":
-            return queryset.filter(kind="direct")
-        from django.db.models import Q, F
-        from rest_framework.exceptions import APIException
-        from core_apps.features.services.planning import require_planning
-
-        try:
-            require_planning(self.request.user, "housing_groups")
-        except APIException:
-            return queryset.filter(kind="direct")
-        return queryset.filter(
-            Q(kind="direct")
-            | Q(
-                kind="housing_group",
-                housing_group__status="active",
-                participant_set__user=self.request.user,
-                participant_set__membership__status="active",
-                participant_set__membership_revision=F(
-                    "participant_set__membership__joined_revision"
-                ),
-            )
-        ).distinct()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

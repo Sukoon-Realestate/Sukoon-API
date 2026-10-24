@@ -17,8 +17,15 @@ class PropertyOperationRecovery(APIView):
     permission_classes = [IsAuthenticated]
     renderer_classes = [GenericJsonRenderer]
 
-    @transaction.atomic
     def post(self, request):
+        if request.data.get('kind') == 'image.upload':
+            from ..services.image_uploads import reconcile
+            identity = UUIDField().run_validation(request.data.get('property_id'))
+            reconcile(user=request.user, claims=request.auth, property_id=identity, key=request_key(request))
+        return self._resolve(request)
+
+    @transaction.atomic
+    def _resolve(self, request):
         User.objects.select_for_update().get(pk=request.user.pk)
         kind, identity = request.data.get("kind"), request.data.get("property_id")
         if kind not in {"create", "update", "image.upload"}:

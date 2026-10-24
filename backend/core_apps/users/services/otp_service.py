@@ -53,6 +53,13 @@ def send_otp_email(email: str, otp: str, user_name: str = "") -> bool:
         f"The {site_name} Team"
     )
 
+    from django.utils.translation import get_language
+    if (get_language() or '').startswith('ar'):
+        subject = f"[{site_name}] رمز التحقق من البريد الإلكتروني"
+        message = (f"رمز التحقق الخاص بك: {otp}\n\n"
+                   f"تنتهي صلاحيته خلال {OTP_EXPIRATION_SECONDS // 60} دقائق.\n"
+                   "إذا لم تطلب هذا الرمز، تجاهل الرسالة.")
+
     from_email = getattr(settings, "DEFAULT_FROM_EMAIL", None)
 
     try:

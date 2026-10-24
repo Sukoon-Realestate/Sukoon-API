@@ -41,9 +41,9 @@ class TestProfileServiceHelpers:
 @pytest.mark.django_db
 class TestProfileService:
     def test_calculate_profile_completion_initial_user(self, user):
-        # User only has first_name, last_name, email, default male gender
+        # User only has name and email.
         score = ProfileService.calculate_profile_completion(user)
-        # first_name + last_name = 15, email = 15, gender (default male) = 10 -> 40
+        # Name and email contribute 30 of the 75 available points.
         assert score >= 30
 
     def test_calculate_profile_completion_full_except_avatar(self, user):
@@ -55,8 +55,8 @@ class TestProfileService:
         user.profile.save()
 
         score = ProfileService.calculate_profile_completion(user)
-        # 15 (name) + 15 (email) + 15 (phone) + 15 (birth_date) + 10 (gender) + 10 (verified) = 80
-        assert score == 80
+        # Name, email, phone and verification contribute 55 of 75 points.
+        assert score == 73
 
     def test_get_my_account_data(self, user):
         data = ProfileService.get_my_account_data(user)
@@ -76,6 +76,8 @@ class TestProfileService:
         assert data["user"]["initial"] == user.first_name[0]
 
     def test_update_user_profile_atomic(self, user):
+        original_birth_date = user.profile.birth_date
+        original_gender = user.profile.gender
         user.profile.phone_number = "+201012345432"
         user.profile.save()
         update_data = {
@@ -89,4 +91,5 @@ class TestProfileService:
         assert user.first_name == "محمد"
         assert user.last_name == "أحمد"
         assert str(profile.phone_number) == "+201012345432"
-        assert profile.birth_date == date(1995, 3, 15)
+        assert profile.birth_date == original_birth_date
+        assert profile.gender == original_gender

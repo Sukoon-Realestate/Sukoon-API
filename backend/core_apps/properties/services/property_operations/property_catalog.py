@@ -29,6 +29,7 @@ class PropertyCatalogMixin:
                 for property_type in property_types
             ],
             "ordering": [
+                {"value": "relevance", "label": "Most relevant" if is_en else "الأكثر صلة"},
                 {"value": "-created_at", "label": "Newest" if is_en else "الأحدث"},
                 {"value": "created_at", "label": "Oldest" if is_en else "الأقدم"},
                 {"value": "price", "label": "Lowest Price" if is_en else "السعر الأقل"},
@@ -142,7 +143,7 @@ class PropertyCatalogMixin:
                 property_type=property_type,
                 retired_at=None,
             )
-            .filter(Q(status=Property.Status.VERIFIED) | Q(is_verified=True))
+            .filter(status=Property.Status.VERIFIED)
             .values("governorate__name", "city__name", "district")
             .distinct()
             .order_by("governorate__name", "city__name", "district")

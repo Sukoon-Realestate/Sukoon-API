@@ -13,6 +13,8 @@ class ProfileEditMixin:
         Updates user and profile fields atomically for Screen 3: 'تعديل الملف'.
         """
         profile, _ = Profile.objects.get_or_create(user=user)
+        validated_data.pop("gender", None)
+        validated_data.pop("birth_date", None)
 
         from rest_framework.exceptions import PermissionDenied
 

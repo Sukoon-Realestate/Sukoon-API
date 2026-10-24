@@ -53,7 +53,14 @@ class PropertyDetailMediaMixin:
         return None
 
     def _get_cover_and_images(self, obj: Property):
-        all_images = list(obj.images.all())
+        cache = getattr(self, '_ordered_media_cache', None)
+        if cache is None:
+            cache = self._ordered_media_cache = {}
+        if obj.pk in cache:
+            return cache[obj.pk]
+        all_images = sorted(obj.images.all(), key=lambda image: (
+            image.position, image.created_at, image.pkid,
+        ))
         main_img_url = ""
         if obj.main_image:
             main_img_url = getattr(obj.main_image, "url", str(obj.main_image))
@@ -78,7 +85,8 @@ class PropertyDetailMediaMixin:
         else:
             ordered_images = all_images
 
-        return cover_img, ordered_images
+        cache[obj.pk] = (cover_img, ordered_images)
+        return cache[obj.pk]
 
     def get_main_image_id(self, obj: Property) -> Optional[str]:
         cover_img, _ = self._get_cover_and_images(obj)

@@ -79,7 +79,7 @@ class TestFCMService:
         args, kwargs = mock_post.call_args
         assert "sokoun-99c7b" in args[0]
         from core_apps.notifications.services.push_privacy import PUSH_TITLE
-        assert kwargs["json"]["message"]["notification"]["title"] == PUSH_TITLE
+        assert kwargs["json"]["message"]["notification"]["title"] == "سكون"
 
     @patch("requests.post")
     def test_send_push_to_device_deactivates_unregistered_token(self, mock_post, user):
@@ -90,7 +90,7 @@ class TestFCMService:
 
         mock_response = MagicMock()
         mock_response.status_code = 404
-        mock_response.text = '{"error": {"status": "NOT_FOUND", "message": "Requested entity was not found."}}'
+        mock_response.text = '{"error": {"status": "NOT_FOUND", "details": [{"errorCode": "UNREGISTERED"}]}}'
         mock_post.return_value = mock_response
 
         mock_creds = MagicMock()

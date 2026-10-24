@@ -137,7 +137,8 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
         # Split/merge predecessors remain historical identities, never public
         # offers. Contract participants retain their canonical lease documents.
         if not getattr(request_user, "is_staff", False):
-            visible = Q(retired_at__isnull=True)
+            from ...services.public_access import public_properties
+            visible = Q(pk__in=public_properties().values('pk'))
             if request_user.is_authenticated:
                 visible |= Q(owner=request_user)
             queryset = queryset.filter(visible)
