@@ -19,6 +19,13 @@ class CloudinaryMediaField(serializers.FileField):
 
 
 class PropertyTypeSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        from ...catalog_labels import catalog_language, property_type_label
+
+        result = super().to_representation(instance)
+        result["name"] = property_type_label(instance, catalog_language(self.context))
+        return result
+
     class Meta:
         model = PropertyType
         fields = ["id", "name", "slug", "description"]

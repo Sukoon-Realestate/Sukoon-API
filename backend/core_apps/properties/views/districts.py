@@ -10,6 +10,13 @@ from ..models import City, District
 class DistrictSerializer(serializers.ModelSerializer):
     city_id = serializers.UUIDField(source="city.id", read_only=True)
 
+    def to_representation(self, instance):
+        from ..catalog_labels import catalog_language, location_label
+
+        result = super().to_representation(instance)
+        result["name"] = location_label(instance.name, catalog_language(self.context))
+        return result
+
     class Meta:
         model = District
         fields = ["id", "city_id", "name", "is_active"]

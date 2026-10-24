@@ -3,6 +3,7 @@
 from typing import Optional
 from django.db.models import Q
 from ...models import Property, PropertyType
+from ...catalog_labels import property_type_label
 
 
 class PropertyCatalogMixin:
@@ -18,13 +19,7 @@ class PropertyCatalogMixin:
                 {
                     "id": str(property_type.id),
                     "value": property_type.slug,
-                    "label": (
-                        property_type.name
-                        if is_en
-                        else cls.PROPERTY_TYPE_LABELS.get(
-                            property_type.slug, property_type.name
-                        )
-                    ),
+                    "label": property_type_label(property_type, "en" if is_en else "ar"),
                 }
                 for property_type in property_types
             ],

@@ -1,5 +1,7 @@
 """Rental phase6 views: rental center."""
 
+from core_apps.common.locale_middleware import resolve_request_language
+
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -38,7 +40,7 @@ def rental_center(request, lease_id):
         {
             "id": str(item.id),
             "label": response_note_label(
-                item, request.headers.get("Accept-Language", "en")
+                item, resolve_request_language(request)
             ),
             "description": item.description,
             "occurred_at": item.occurred_at.isoformat(),

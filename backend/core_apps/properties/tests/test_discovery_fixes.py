@@ -163,3 +163,36 @@ def test_media_serializer_preserves_order_and_reuses_prefetched_images(
         assert len(serializer.get_images(listing)) == 3
         serializer.get_main_image_name(listing)
         serializer.get_main_image_description(listing)
+
+
+def test_new_under_review_listing_finalizes_ten_photos_and_can_replay(
+    listing, auth_client
+):
+    listing.status = "under_review"
+    listing.save(update_fields=["status"])
+    images = [
+        PropertyImage.objects.create(
+            property=listing, image=f"new-photo-{i}", position=i
+        )
+        for i in range(10)
+    ]
+    detail = auth_client.get(f"/api/v1/properties/{listing.id}/")
+    assert detail.status_code == 200
+    payload = detail.json()["data"]
+    assert type(payload["media_revision"]) is int
+    order = [str(image.id) for image in reversed(images)]
+    body = {
+        "image_ids": order,
+        "main_image_id": order[0],
+        "expected_revision": payload["media_revision"],
+    }
+    for _ in range(2):
+        response = auth_client.patch(
+            f"/api/v1/properties/{listing.id}/images/order/", body, format="json"
+        )
+        assert response.status_code == 200, response.data
+        data = response.json()["data"]
+        assert [image["id"] for image in data["images"]] == order
+        assert data["main_image_id"] == order[0]
+    assert listing.images.count() == 10
+    assert Property.objects.filter(id=listing.id, status="under_review").count() == 1

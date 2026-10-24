@@ -25,9 +25,9 @@ def reject_external_claim(request, invoice):
         ).exists()
     ):
         raise NotFound()
-    arabic = getattr(request, "LANGUAGE_CODE", "").startswith(
-        "ar"
-    ) or request.headers.get("Accept-Language", "").startswith("ar")
+    from core_apps.common.locale_middleware import resolve_request_language
+
+    arabic = resolve_request_language(request) == "ar"
     return Response(
         {
             "code": "external_payment_not_supported",
