@@ -123,6 +123,7 @@ def attach_context(conversation, actor, data=None):
         )
     if not isinstance(data, dict) or set(data) - {
         "property_id",
+        "visit_id",
         "owner_id",
         "offer_id",
         "offer_revision",

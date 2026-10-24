@@ -228,3 +228,6 @@ from .model_parts.chargebacks import (
 )
 
 from .company_saved_models import CompanySavedList, CompanySavedItem
+from .shared_housing_models import (
+    SharedHousingPlan, SharedHousingProposal, SharedHousingAllocation, SharedHousingConsent,
+)

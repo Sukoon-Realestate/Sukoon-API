@@ -75,12 +75,14 @@ def _notify(event, user):
     company = conversation.kind == "company_request"
     direct = conversation.kind == "direct"
     group_id = "" if company or direct else str(conversation.housing_group.id)
+    from .conversation_preferences import viewer_workspace
     destination = (
         {
             "type": "new_message",
             "conversation_id": str(conversation.id),
             "message_id": str(event.message.id),
             "sender_id": str(event.actor.id),
+            "workspace": viewer_workspace(conversation, user),
         }
         if direct
         else (

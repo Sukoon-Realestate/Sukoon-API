@@ -1,5 +1,8 @@
 """Per-viewer projections: hidden history and tombstones never expose media."""
 
+from datetime import timedelta
+from django.utils import timezone
+
 from .group_access import (
     actions,
     authorize,
@@ -61,7 +64,8 @@ def message_payload(message, participant, membership):
         and message.kind != "system"
         and (message.sender_id == participant.user_id or membership.role == "admin")
     ):
-        permitted.append("delete_message")
+        if timezone.now() <= message.created_at + timedelta(hours=1):
+            permitted.append("delete_message")
     if (
         not deleted
         and message.kind in {"text", "image"}
@@ -81,6 +85,9 @@ def message_payload(message, participant, membership):
                 "kind": original.kind,
                 "sender_name": sender_payload(original.sender)["name"],
                 "content_preview": original.content[:160],
+                "attachment_name": next((a.original_name for a in original.attachments.all()), ""),
+                "attachments": [attachment_payload(a) for a in original.attachments.all()],
+
             }
     return {
         "id": str(message.id),
@@ -100,6 +107,11 @@ def message_payload(message, participant, membership):
         "edited_at": (
             message.edited_at.isoformat() if message.edited_at and not deleted else None
         ),
+        "edit_history": [] if deleted else [
+            {"revision": edit.revision, "before": edit.before, "after": edit.after, "edited_at": edit.created_at.isoformat()}
+            for edit in message.edits.all()
+        ],
+        "delete_before": (message.created_at + timedelta(hours=1)).isoformat(),
         "reply_to": reply,
         "attachments": (
             []
@@ -121,6 +133,7 @@ def summary(conversation, user):
     from core_apps.chat.moderation.policy import projection as policy_projection
     from .group_cursors import encode_cursor
 
+    from .conversation_preferences import preferences_payload
     conversation, participant, member = authorize(conversation, user)
     latest = visible_messages(conversation, participant).order_by("-sequence").first()
     preview = conversation_preview(latest, user)
@@ -155,6 +168,7 @@ def summary(conversation, user):
         "last_sequence": conversation.last_sequence,
         "unread_count": unread_count(conversation, participant),
         "is_muted": participant.is_muted,
+        **preferences_payload(conversation, user, participant),
         "allowed_actions": actions(member),
         "limits": limits(),
         "can_send": "send_message" in actions(member),

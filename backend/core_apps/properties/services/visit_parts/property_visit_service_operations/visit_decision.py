@@ -134,7 +134,7 @@ class VisitDecisionMixin:
         from core_apps.notifications.services.fcm_service import FCMService
 
         conversation = (
-            Conversation.objects.filter(participant_set__user=user)
+            Conversation.objects.filter(participant_set__user=user, kind="direct", direct_context_key__isnull=False, workspace_contexts__user=visit.tenant, workspace_contexts__workspace=("student" if visit.academic_plan_id or visit.context_kind == "group" else visit.renter_workspace))
             .filter(participant_set__user=visit.tenant)
             .first()
         )
@@ -155,7 +155,7 @@ class VisitDecisionMixin:
         if conversation:
             notification_data["conversation_id"] = str(conversation.id)
         title = "تم قبول طلب زيارتك"
-        body = f"وافق المالك {owner_name} على موعد الزيارة. يمكنك الآن رؤية رقم هاتف المالك."
+        body = f"وافق المالك {owner_name} على موعد الزيارة. تواصل مع المالك داخل محادثة سكون للحفاظ على خصوصيتك وتوثيق اتفاقك."
         notification = NotificationService.create_notification(
             user=visit.tenant,
             notification_type=Notification.NotificationType.VISIT_ACCEPTED,

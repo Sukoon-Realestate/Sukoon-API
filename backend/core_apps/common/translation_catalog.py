@@ -99,6 +99,9 @@ from .billing_translations import MESSAGES as BILLING_MESSAGES
 from .company_translations import MESSAGES as COMPANY_MESSAGES
 from .company_translations import FIELD_LABELS as COMPANY_FIELD_LABELS
 
+from .shared_housing_translations import MESSAGES as SHARED_HOUSING_MESSAGES
+
+EN_TO_AR_MESSAGES.update(SHARED_HOUSING_MESSAGES)
 EN_TO_AR_MESSAGES.update(ADVANCED_MESSAGES)
 EN_TO_AR_MESSAGES.update(BILLING_MESSAGES)
 EN_TO_AR_MESSAGES.update(COMPANY_MESSAGES)

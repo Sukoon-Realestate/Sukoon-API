@@ -73,19 +73,12 @@ def terms_proposals(request):
         _validate_terms_offer(data["terms"], snapshot)
         if data["terms"]["occupants"] != interest.occupants:
             raise ValidationError({"terms": "Occupants must match the interest."})
-        proposal = TermsProposal.objects.create(
-            interest=interest,
-            owner=request.user,
-            terms=_json_safe(data["terms"]),
-            offer_snapshot=snapshot,
-            accepted_by=[str(request.user.id)],
-        )
-        from ..services.rental_lifecycle.consents import record_consent
+        from ..services.rental_application_records import create_terms
 
-        record_consent(proposal, request.user, "propose")
-        interest.status = RentalInterest.Status.PROPOSED
-        interest.revision += 1
-        interest.save(update_fields=["status", "revision", "updated_at"])
+        proposal = create_terms(
+            interest=interest, owner=request.user, terms=_json_safe(data["terms"]),
+            snapshot=snapshot,
+        )
         resource = TermsProposalSerializer(proposal, context={"request": request}).data
         output = remember_mutation(
             user=request.user,

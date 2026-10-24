@@ -37,6 +37,10 @@ def planning_subject(user, identifier):
     corporate = company_subject(user, identifier)
     if corporate:
         return corporate
+    from ..shared_housing_models import SharedHousingPlan
+    if SharedHousingPlan.objects.filter(id=identifier).exists():
+        from .shared_housing.access import get_plan
+        return get_plan(user, identifier)
     from .student_housing.access import student_subject
 
     academic = student_subject(user, identifier)
@@ -116,6 +120,14 @@ def planning_actions(user, capability, subject_id=""):
         from .student_housing.access import actions
 
         return actions(user, capability, subject_id)
+    if capability == "shared_housing_plans":
+        from .shared_housing.access import get_plan, actions
+        if not subject_id:
+            return ["read", "create"]
+        try:
+            return ["read", *actions(get_plan(user, subject_id), user)]
+        except (NotFound, ValueError, DjangoValidationError):
+            return []
     general = {
         "lifestyle": ["read", "save"],
         "roommates": ["read", "request", "block"],

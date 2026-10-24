@@ -50,7 +50,15 @@ class ConversationSerializer(serializers.ModelSerializer):
             from core_apps.chat.services.group_projection import summary
 
             return summary(instance, self.context["request"].user)
-        return {"conversation_type": "direct", **super().to_representation(instance)}
+        from core_apps.chat.services.group_access import authorize, visible_messages
+        from core_apps.chat.services.conversation_preferences import preferences_payload
+        _, participant, _ = authorize(instance, self.context["request"].user)
+        value = {"conversation_type": "direct", **super().to_representation(instance)}
+        value.update(preferences_payload(instance, self.context["request"].user, participant))
+        latest = visible_messages(instance, participant).order_by("-sequence").first()
+        value["last_message_preview"] = latest.content[:160] if latest and not latest.deleted_at else ""
+        value["last_message_at"] = latest.created_at.isoformat() if latest else None
+        return value
 
     class Meta:
         model = Conversation
@@ -73,7 +81,9 @@ class ConversationSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if not request or not request.user:
             return None
-        latest = obj.messages.order_by("-created_at", "-pk").first()
+        from core_apps.chat.services.group_access import authorize, visible_messages
+        _, participant, _ = authorize(obj, request.user)
+        latest = visible_messages(obj, participant).order_by("-sequence").first()
         return conversation_preview(latest, request.user)
 
     def get_other_participant(self, obj):
@@ -111,6 +121,7 @@ class ConversationSerializer(serializers.ModelSerializer):
         from core_apps.chat.moderation.policy import restricted
         return bool(
             request
+            and not obj.workspace_archived
             and not restricted(request.user)
             and request.user.is_active
             and obj.participants.filter(pk=request.user.pk).exists()

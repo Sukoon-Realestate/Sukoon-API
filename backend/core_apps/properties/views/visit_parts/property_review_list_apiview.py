@@ -90,6 +90,9 @@ class OwnerVisitRequestPagination(PropertyVisitPagination):
                 rejected=models.Count(
                     "id", filter=models.Q(status=PropertyVisit.Status.REJECTED)
                 ),
+                canceled=models.Count(
+                    "id", filter=models.Q(status=PropertyVisit.Status.CANCELED)
+                ),
                 all=models.Count("id"),
             )
             response.data["tabs"] = counts

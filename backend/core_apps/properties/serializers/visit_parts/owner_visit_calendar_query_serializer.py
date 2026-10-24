@@ -59,6 +59,7 @@ class StayPreferencesSerializer(serializers.Serializer):
 
 
 class PropertyVisitCreateSerializer(serializers.ModelSerializer):
+    renter_workspace = serializers.ChoiceField(choices=["individual", "student"], required=False, default="individual")
     stay_preferences = StayPreferencesSerializer(required=False, allow_null=True)
     viewing_context = ViewingContextSerializer(required=False, write_only=True)
     expected_offer_revision = serializers.IntegerField(
@@ -68,6 +69,7 @@ class PropertyVisitCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyVisit
         fields = [
+            "renter_workspace",
             "id",
             "visit_date",
             "visit_time",
@@ -117,6 +119,7 @@ class AvailableDatesQuerySerializer(serializers.Serializer):
 class OwnerAvailabilityWeekQuerySerializer(serializers.Serializer):
     start_date = serializers.DateField(required=False)
     week_start = serializers.DateField(required=False)
+    day_count = serializers.IntegerField(required=False, default=7, min_value=7, max_value=8)
 
     def validate(self, attrs):
         if "week_start" in attrs and "start_date" not in attrs:
@@ -137,16 +140,14 @@ class OwnerAvailabilityDayUpdateSerializer(serializers.Serializer):
         availability_date = attrs["availability_date"]
         now = timezone.localtime()
         slot_times = set()
+        if availability_date < now.date():
+            raise serializers.ValidationError(_("Availability slots must be in the future."))
 
         for slot in attrs["slots"]:
             slot_time = slot["time"]
             if slot_time in slot_times:
                 raise serializers.ValidationError(
                     _("Each time can be submitted only once.")
-                )
-            if datetime.combine(availability_date, slot_time, now.tzinfo) <= now:
-                raise serializers.ValidationError(
-                    _("Availability slots must be in the future.")
                 )
             slot_times.add(slot_time)
         return attrs

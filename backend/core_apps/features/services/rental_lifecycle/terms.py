@@ -53,6 +53,8 @@ def release_proposal_holds(proposal):
 
 
 def propose_answer(item, actor, data):
+    from ..shared_housing.access import guard_individual
+    guard_individual(item.interest)
     require_revision(item, data["expected_revision"])
     if item.invitations.filter(lease__isnull=False).exists() or item.status in {
         "rejected",

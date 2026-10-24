@@ -14,7 +14,7 @@ from core_apps.chat.serializers.conversation import ConversationSerializer
 from .group_access import authorize
 from .group_projection import message_payload
 from .search_index import normalize
-from .workspace_inbox import scoped
+from .workspace_inbox import scoped, visible
 
 
 def query_text(query):
@@ -79,8 +79,9 @@ def discover(request, conversation_id=None):
     if conversation_id and kind not in {"media", "file", "voice", "link"}:
         raise ValidationError({"kind": "Choose media, file, voice or link."})
     text = query_text(query) if kind == "search" else ""
-    scope, company = query.get("workspace", "all"), query.get("company_id", "")
-    conversations = scoped(request.user, scope, company)
+    scope, company = query.get("workspace", "individual"), query.get("company_id", "")
+    # An explicit thread reauthorizes its own membership, including company context.
+    conversations = visible(request.user) if conversation_id else scoped(request.user, scope, company)
     selected = conversation_id or query.get("conversation_id")
     if selected:
         selected = UUIDField().run_validation(selected)

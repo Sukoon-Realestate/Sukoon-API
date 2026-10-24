@@ -91,7 +91,8 @@ def authorize(conversation, user, *, action="read_chat", lock=False):
         )
     others = list(conversation.participants.exclude(pk=fresh.pk))
     can_send = (
-        len(others) == 1
+        not conversation.workspace_archived
+        and len(others) == 1
         and others[0].is_active
         and not direct_message_blocked(fresh, others[0], lock=lock)
     )

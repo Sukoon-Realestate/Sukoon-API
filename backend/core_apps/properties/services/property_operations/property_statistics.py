@@ -137,13 +137,8 @@ class PropertyStatisticsMixin:
                 }
             )
 
-        # 5. Top search criteria breakdown ("أكثر ما يبحث عنه الزوار")
-        top_search_criteria = [
-            {"key": "area", "label": "المساحة", "percentage": 78},
-            {"key": "price", "label": "السعر", "percentage": 65},
-            {"key": "location", "label": "الموقع", "percentage": 55},
-            {"key": "amenities", "label": "المرافق", "percentage": 42},
-        ]
+        # No measured visitor-criteria data is available.
+        top_search_criteria = []
 
         # Additional summary metrics
         seven_days_ago = timezone.now() - timezone.timedelta(days=7)

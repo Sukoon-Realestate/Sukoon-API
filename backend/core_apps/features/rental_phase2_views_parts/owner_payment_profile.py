@@ -98,6 +98,9 @@ def _participant_interest(request, interest_id, lock=False, *, provider_required
     interest = get_object_or_404(queryset, id=interest_id)
     if request.user not in (interest.tenant, interest.property.owner):
         raise NotFound()
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        from ..services.shared_housing.access import guard_individual
+        guard_individual(interest)
     return interest
 
 
@@ -118,6 +121,9 @@ def _participant_proposal(request, proposal_id, lock=False):
     proposal = get_object_or_404(queryset, id=proposal_id)
     if request.user not in (proposal.owner, proposal.interest.tenant):
         raise NotFound()
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        from ..services.shared_housing.access import guard_individual
+        guard_individual(proposal.interest)
     return proposal
 
 

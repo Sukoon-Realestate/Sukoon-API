@@ -159,7 +159,7 @@ class OwnerAvailabilityWeekAPIView(generics.GenericAPIView):
             today = timezone.localdate()
             start_date = today - timedelta(days=today.weekday())
         return Response(
-            PropertyVisitService.get_owner_availability(self.get_property(), start_date)
+            PropertyVisitService.get_owner_availability(self.get_property(), start_date, serializer.validated_data["day_count"])
         )
 
     def put(self, request, *args, **kwargs):

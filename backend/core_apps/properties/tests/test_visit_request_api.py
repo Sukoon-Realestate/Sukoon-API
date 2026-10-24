@@ -118,9 +118,9 @@ class TestTenantVisitRequestScreens:
         visit.status = PropertyVisit.Status.CONFIRMED
         visit.save(update_fields=["status"])
         confirmed = auth_client.get(url).json()["data"]
-        assert confirmed["owner"]["phone_number"] == "+201012345432"
+        assert confirmed["owner"]["phone_number"] == ""
         assert confirmed["owner"]["masked_phone_number"] == ""
-        assert confirmed["owner"]["is_phone_revealed"] is True
+        assert confirmed["owner"]["is_phone_revealed"] is False
         assert confirmed["owner"]["phone_notice"] == ""
 
     def test_other_tenant_cannot_read_or_cancel_visit(
@@ -347,7 +347,8 @@ class TestOwnerAvailabilityAndCalendarAPI:
         before = auth_client.get(url, {"start_date": start_date.isoformat()})
         assert before.status_code == status.HTTP_200_OK
         slots = before.json()["data"]["days"][0]["slots"]
-        assert [slot["time"] for slot in slots] == ["09:00:00", "12:00:00"]
+        assert [slot["time"] for slot in slots] == ["09:00:00", "10:00:00", "12:00:00"]
+        assert slots[1]["state"] == "booked"
 
         response = auth_client.put(
             url,
@@ -366,7 +367,9 @@ class TestOwnerAvailabilityAndCalendarAPI:
 
         assert response.status_code == status.HTTP_200_OK
         saved_slots = response.json()["data"]["days"][0]["slots"]
-        assert [slot["time"] for slot in saved_slots] == ["09:00:00"]
+        assert [slot["time"] for slot in saved_slots] == ["09:00:00", "10:00:00", "11:00:00"]
+        assert saved_slots[1]["state"] == "booked"
+        assert saved_slots[2]["is_enabled"] is False
         assert OwnerAvailabilitySlot.objects.filter(
             owner=user, property=property_obj, date=start_date, time=time(10)
         ).exists()
@@ -421,7 +424,7 @@ class TestOwnerAvailabilityAndCalendarAPI:
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "Booked visit slots cannot be disabled" in response.json()["message"]
 
-    def test_availability_list_omits_days_without_bookable_slots(
+    def test_owner_availability_retains_disabled_and_booked_days(
         self,
         auth_client,
         user,
@@ -463,8 +466,11 @@ class TestOwnerAvailabilityAndCalendarAPI:
 
         assert response.status_code == status.HTTP_200_OK
         assert [day["date"] for day in response.json()["data"]["days"]] == [
-            start_date.isoformat()
+            start_date.isoformat(), disabled_date.isoformat(), booked_date.isoformat()
         ]
+        days = response.json()["data"]["days"]
+        assert days[1]["slots"][0]["is_enabled"] is False
+        assert days[2]["slots"][0]["state"] == "booked"
 
     def test_calendar_returns_month_indicators_and_selected_day_visits(
         self,

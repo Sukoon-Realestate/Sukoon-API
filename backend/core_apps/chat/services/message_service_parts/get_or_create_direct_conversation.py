@@ -48,6 +48,10 @@ def is_user_online(user_id: str) -> bool:
 
 def direct_message_blocked(first_user, second_user, *, lock=False):
     from core_apps.features.planning_models import RoommateConnection
+    from core_apps.chat.models import ChatBlock
+    from django.db.models import Q
+    if ChatBlock.objects.filter(Q(user=first_user, blocked_user=second_user) | Q(user=second_user, blocked_user=first_user)).exists():
+        return True
 
     first, second = sorted([first_user.pk, second_user.pk])
     query = RoommateConnection.objects.filter(first_id=first, second_id=second)
@@ -58,7 +62,7 @@ def direct_message_blocked(first_user, second_user, *, lock=False):
 
 
 @transaction.atomic
-def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
+def get_or_create_direct_conversation(*, user, other_user, workspace=None, rental_context=None) -> Conversation:
     """
     Return the canonical 1:1 conversation between two users, creating it if absent.
 
@@ -82,6 +86,10 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
         raise PermissionDenied("Both conversation participants must be active.")
     pair_key = ":".join(sorted([str(user.id), str(other_user.id)]))
 
+    if workspace:
+        from core_apps.chat.services.conversation_preferences import contextual_conversation
+        return contextual_conversation(user, other_user, workspace, rental_context)
+
     if direct_message_blocked(user, other_user, lock=True):
         raise PermissionDenied("Messaging consent is not active for this connection.")
 
@@ -92,7 +100,7 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
     # Find an existing conversation shared by both users
     existing = (
         Conversation.objects.annotate(member_count=Count("participants", distinct=True))
-        .filter(kind="direct", member_count=2, participant_set__user=user)
+        .filter(kind="direct", direct_context_key__isnull=True, member_count=2, participant_set__user=user)
         .filter(participant_set__user=other_user)
         .distinct()
         .order_by("created_at", "pk")
@@ -125,7 +133,10 @@ def _notify_recipients(
         .exclude(user=sender)
         .select_related("user")
     )
+    from core_apps.chat.services.conversation_preferences import viewer_workspace
     for participant in recipients:
+        if participant.is_muted:
+            continue
         try:
             from core_apps.notifications.models import Notification
             from core_apps.notifications.services.notification_service import (
@@ -143,6 +154,7 @@ def _notify_recipients(
                     "conversation_id": str(conversation.id),
                     "message_id": str(message.id),
                     "sender_id": str(sender.id),
+                    "workspace": viewer_workspace(conversation, participant.user),
                 },
                 send_push=True,
             )

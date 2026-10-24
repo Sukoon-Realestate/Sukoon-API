@@ -73,6 +73,8 @@ def ready_services(enabled):
         or mock_mode_available()
         or (service == "asset_assisted_analysis" and manual_review_available())
     ]
+    if not getattr(settings, "SHARED_HOUSING_ENABLED", False):
+        result = [name for name in result if name != "shared_housing_plans"]
     from ..evidence_storage import available as evidence_available
 
     if not evidence_available() and "student_verification" in result:
