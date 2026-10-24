@@ -28,4 +28,12 @@ def purchase_route(request):
     plan = product.plan if product else None
     if plan and (plan.audience == "organization") != bool(organization):
         plan = None
-    return Response(routing_v1(purpose, platform, plan=plan))
+    return Response(
+        routing_v1(
+            purpose,
+            platform,
+            plan=plan,
+            user=request.user,
+            organization=bool(organization),
+        )
+    )

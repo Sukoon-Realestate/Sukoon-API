@@ -44,14 +44,22 @@ def plan_snapshot(plan):
     }
 
 
-def plan_payload(plan, language):
+def plan_payload(plan, language, *, user=None):
     snapshot = plan_snapshot(plan)
+    routes = {
+        platform: routing("subscription", platform, plan=plan, user=user)
+        for platform in ("ios", "android", "web")
+    }
     return {
         **snapshot,
         "name": snapshot[f"name_{language}"],
         "description": snapshot[f"description_{language}"],
         "active": plan.active,
-        "renewal_mode": "auto_renew",
+        "renewal_mode": (
+            "manual"
+            if any(route.get("sandbox_only") for route in routes.values())
+            else "auto_renew"
+        ),
         "benefits": [
             {
                 **{k: v for k, v in b.items() if not k.endswith(("_ar", "_en"))},
@@ -62,10 +70,7 @@ def plan_payload(plan, language):
             }
             for b in snapshot["benefits"]
         ],
-        "purchase_routes": {
-            platform: routing("subscription", platform, plan=plan)
-            for platform in ("ios", "android", "web")
-        },
+        "purchase_routes": routes,
         "sort_order": plan.sort_order,
     }
 

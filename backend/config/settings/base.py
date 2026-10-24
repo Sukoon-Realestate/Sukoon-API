@@ -639,6 +639,17 @@ COMMERCE_ENTITLEMENTS_ENABLED = False
 COMMERCE_STORE_ENVIRONMENT = "sandbox"
 COMMERCE_STORE_ADAPTERS = {}
 
+# Temporary, account-scoped subscription testing. This never enables live keys
+# or company purchases and does not alter native-store rollout.
+COMMERCE_SUBSCRIPTION_SANDBOX_ENABLED = getenv(
+    "COMMERCE_SUBSCRIPTION_SANDBOX_ENABLED", "false"
+).lower() in {"true", "1", "yes"}
+COMMERCE_SUBSCRIPTION_SANDBOX_USER_IDS = [
+    value.strip()
+    for value in getenv("COMMERCE_SUBSCRIPTION_SANDBOX_USER_IDS", "").split(",")
+    if value.strip()
+]
+
 # Invoice-linked Paymob collection is separate from the public landing test.
 PAYMOB_INVOICE_CHECKOUT_ENABLED = getenv("PAYMOB_INVOICE_CHECKOUT_ENABLED", "false").lower() in {"true", "1", "yes"}
 PAYMOB_CHECKOUT_EXTRA_ORIGINS = []

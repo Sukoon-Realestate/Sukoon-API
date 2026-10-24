@@ -1,4 +1,4 @@
-"""Conservative store routing. An unreviewed digital SKU cannot use a rental PSP."""
+"""Native-store routing with an explicit, account-scoped subscription sandbox."""
 
 from django.conf import settings
 from ..providers import fake_provider_available
@@ -8,7 +8,33 @@ DIGITAL_PURPOSES = {"subscription", "advertising", "promotion"}
 PHYSICAL_PURPOSES = {"rent", "deposit", "maintenance", "settlement", "adjustment"}
 
 
-def routing(purpose, platform="unknown", *, product_id="", plan=None):
+def subscription_sandbox_ready(user, plan):
+    from .paymob_client import sandbox_ready
+
+    return bool(
+        getattr(settings, "COMMERCE_SUBSCRIPTION_SANDBOX_ENABLED", False)
+        and user is not None
+        and user.is_authenticated
+        and user.is_active
+        and str(user.id)
+        in getattr(settings, "COMMERCE_SUBSCRIPTION_SANDBOX_USER_IDS", [])
+        and plan is not None
+        and plan.active
+        and plan.audience == "personal"
+        and plan.period_months in {1, 12}
+        and sandbox_ready()
+    )
+
+
+def routing(
+    purpose,
+    platform="unknown",
+    *,
+    product_id="",
+    plan=None,
+    user=None,
+    organization=False,
+):
     category = (
         "digital_purchase"
         if purpose in DIGITAL_PURPOSES
@@ -34,6 +60,23 @@ def routing(purpose, platform="unknown", *, product_id="", plan=None):
             "enabled": False,
             "reason": "unknown_product_or_platform",
             "product_id": product_id,
+        }
+    if (
+        purpose == "subscription"
+        and not organization
+        and subscription_sandbox_ready(user, plan)
+    ):
+        return {
+            "category": category,
+            "route": "hosted_checkout",
+            "enabled": True,
+            "provider": "paymob",
+            "provider_mode": "hosted",
+            "provider_environment": "sandbox",
+            "sandbox_only": True,
+            "external_checkout_allowed": True,
+            "product_id": "",
+            "reason": "",
         }
     if purpose == "subscription" and plan is not None and route:
         from .store_payments import product_route
@@ -68,6 +111,13 @@ def routing(purpose, platform="unknown", *, product_id="", plan=None):
 def require_legacy_checkout(purpose):
     # Explicit isolated simulation remains labelled mock. Platform claims never
     # turn an unreviewed digital purchase into an approved web exception.
+    if purpose == "subscription" and getattr(
+        settings, "COMMERCE_SUBSCRIPTION_SANDBOX_ENABLED", False
+    ):
+        raise RentalConflict(
+            "An enabled subscription sandbox route is required.",
+            code="purchase_route_unavailable",
+        )
     if fake_provider_available():
         return
     if purpose in DIGITAL_PURPOSES or purpose not in PHYSICAL_PURPOSES:
@@ -77,8 +127,10 @@ def require_legacy_checkout(purpose):
         )
 
 
-def routing_v1(purpose, platform="unknown", *, plan=None):
-    value = routing(purpose, platform, plan=plan)
+def routing_v1(
+    purpose, platform="unknown", *, plan=None, user=None, organization=False
+):
+    value = routing(purpose, platform, plan=plan, user=user, organization=organization)
     return {
         **value,
         "contract_version": 1,

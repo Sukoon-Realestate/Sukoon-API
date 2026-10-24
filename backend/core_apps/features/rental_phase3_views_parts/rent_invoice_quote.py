@@ -26,6 +26,9 @@ from ..services.rental_lifecycle.locks import lock_financial_lease as _lock_leas
 
 
 class PaymentReconcileThrottle(UserRateThrottle):
+    # Inquiry has its own allowance; catalog/invoice GETs use the general user
+    # bucket and must not exhaust the first payment verification request.
+    scope = "payment_reconcile"
     rate = "6/min"
 
 

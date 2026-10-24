@@ -1,4 +1,4 @@
-"""Durable physical checkout, server inquiry and canonical financial allocation."""
+"""Durable invoice checkout, server inquiry and canonical financial allocation."""
 
 import re
 import secrets
@@ -63,6 +63,11 @@ def navigation(attempt):
 @transaction.atomic
 def prepare(user, invoice_id, body, *, rental):
     invoice = lock_invoice(user, invoice_id)
+    if rental and invoice.purpose == "subscription":
+        raise RentalConflict(
+            "Use the subscription invoice checkout for this purchase.",
+            code="purchase_route_unavailable",
+        )
     existing = (
         PaymentAttempt.objects.filter(
             invoice=invoice, payer=user, request_key=body["request_key"]
@@ -93,7 +98,7 @@ def prepare(user, invoice_id, body, *, rental):
                 "This request key has different inputs.", code="idempotency_conflict"
             )
         return existing.paymob_payment, False
-    if not client.checkout_ready():
+    if invoice.purpose != "subscription" and not client.checkout_ready():
         raise RentalConflict(
             "Paymob checkout is unavailable.", code="purchase_route_unavailable"
         )
@@ -110,13 +115,39 @@ def prepare(user, invoice_id, body, *, rental):
     else:
         from .billing_payments import validate_payable
 
+        route = {"route": "hosted_checkout", "enabled": True}
+        if invoice.purpose == "subscription":
+            from ..models import SubscriptionPlan
+            from .purchase_routing import routing_v1
+
+            plan = SubscriptionPlan.objects.filter(
+                id=invoice.purchase_snapshot.get("id")
+            ).first()
+            route = routing_v1(
+                "subscription",
+                "android",
+                plan=plan,
+                user=user,
+                organization=bool(invoice.organization_id),
+            )
+            if not route.get("sandbox_only") or not route["enabled"]:
+                raise RentalConflict(
+                    "Subscription sandbox checkout is unavailable.",
+                    code="purchase_route_unavailable",
+                )
+            if (invoice.amount_minor, invoice.currency, invoice.exponent) != (
+                plan.amount_minor,
+                plan.currency,
+                plan.exponent,
+            ):
+                raise RentalConflict("The plan price changed.", code="invoice_changed")
         validate_payable(
             invoice,
             user,
             body["expected_revision"],
-            {"route": "hosted_checkout", "enabled": True},
+            route,
         )
-    if invoice.purpose not in {"rent", "maintenance"}:
+    if invoice.purpose not in {"rent", "maintenance", "subscription"}:
         raise RentalConflict(
             "This product cannot use Paymob checkout.",
             code="purchase_route_unavailable",
@@ -126,6 +157,11 @@ def prepare(user, invoice_id, body, *, rental):
     quote = get_object_or_404(
         PaymentQuote.objects.select_for_update(), id=body["quote_id"], invoice=invoice
     )
+    if invoice.purpose == "subscription" and (rental or quote.purchase_route != route):
+        raise RentalConflict(
+            "The subscription sandbox route changed. Review the invoice again.",
+            code="purchase_route_unavailable",
+        )
     if quote.expires_at <= timezone.now():
         raise RentalConflict("The quote expired.", code="quote_expired")
     if rental:
@@ -144,7 +180,7 @@ def prepare(user, invoice_id, body, *, rental):
             "The quote no longer matches the invoice.", code="invoice_changed"
         )
     # Validate billing before recording a new external operation. Nothing is stored.
-    client.billing_for(user)
+    client.billing_for_invoice(user, invoice, quote)
     attempt = PaymentAttempt.objects.create(
         invoice=invoice,
         payer=user,
@@ -211,7 +247,11 @@ def checkout(user, invoice_id, body, *, rental=False):
         )
         try:
             response = client.create_intention(
-                payment, client.billing_for(user), redirect
+                payment,
+                client.billing_for_invoice(
+                    user, payment.attempt.invoice, payment.attempt.quote
+                ),
+                redirect,
             )
             bind_intention(payment, response)
         except Exception:
@@ -443,7 +483,15 @@ def apply_snapshot(payment, snapshot):
                 from .rental_phase3_parts.capture_attempt import _capture_attempt
 
                 _capture_attempt(attempt)
-            elif invoice.purpose == "maintenance":
+            elif invoice.purpose == "maintenance" or (
+                invoice.purpose == "subscription"
+                and not invoice.organization_id
+                and payment.environment == "sandbox"
+                and attempt.quote.purchase_route.get("sandbox_only") is True
+                and attempt.quote.purchase_route.get("provider_environment")
+                == "sandbox"
+                and attempt.quote.purchase_route.get("route") == "hosted_checkout"
+            ):
                 from .billing_settlement import settle_purchase
 
                 if (

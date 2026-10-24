@@ -140,3 +140,7 @@ test-commerce-test-catalog:
 .PHONY: test-paymob-payments
 test-paymob-payments:
 	$(PIPENV) run pytest core_apps/features/tests/test_paymob_invoice_payments.py core_apps/common/test_paymob_callbacks.py core_apps/common/test_paymob_checkout.py core_apps/features/tests/test_rental_phase3.py core_apps/features/tests/test_rental_phase6.py core_apps/features/tests/test_funded_settlement.py --ds=$(COMMERCE_TEST_SETTINGS) --create-db
+
+.PHONY: test-subscription-sandbox
+test-subscription-sandbox: ## Account-scoped subscription sandbox and existing Paymob boundaries
+	$(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_subscription_sandbox.py core_apps/features/tests/test_paymob_invoice_payments.py core_apps/features/tests/test_commerce_v1.py core_apps/features/tests/test_billing_subscriptions.py --ds=$(COMMERCE_TEST_SETTINGS) --create-db

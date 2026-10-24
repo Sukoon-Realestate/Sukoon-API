@@ -1,3 +1,4 @@
+from django.conf import settings
 from ..providers import checkout_available, fake_provider_available
 
 
@@ -26,7 +27,13 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
         plan = SubscriptionPlan.objects.filter(
             id=invoice.purchase_snapshot.get("id")
         ).first()
-    route = routing_v1(invoice.purpose, platform, plan=plan)
+    route = routing_v1(
+        invoice.purpose,
+        platform,
+        plan=plan,
+        user=user,
+        organization=bool(invoice.organization_id),
+    )
     if plan and (invoice.amount_minor, invoice.currency, invoice.exponent) != (
         plan.amount_minor,
         plan.currency,
@@ -62,7 +69,17 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
             in {"subscription", "advertising", "promotion", "maintenance"}
             and not unresolved
             and (
-                route["enabled"] or (checkout_available() and fake_provider_available())
+                route["enabled"]
+                or (
+                    checkout_available()
+                    and fake_provider_available()
+                    and not (
+                        invoice.purpose == "subscription"
+                        and getattr(
+                            settings, "COMMERCE_SUBSCRIPTION_SANDBOX_ENABLED", False
+                        )
+                    )
+                )
             )
         )
         cancellable = bool(
@@ -224,4 +241,9 @@ def purchase_quote_payload(quote):
             else quote.purchase_route.get("route", "mock")
         ),
         "purchase_route": quote.purchase_route,
+        **(
+            {"provider_environment": "sandbox"}
+            if quote.purchase_route.get("sandbox_only") is True
+            else {}
+        ),
     }

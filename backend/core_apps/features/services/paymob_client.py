@@ -43,12 +43,17 @@ def credentials_ready():
     )
 
 
-def checkout_ready():
+def sandbox_ready():
     return bool(
-        getattr(settings, "PAYMOB_INVOICE_CHECKOUT_ENABLED", False)
-        and getattr(settings, "RENTAL_RUNTIME_ENVIRONMENT", "production")
+        getattr(settings, "RENTAL_RUNTIME_ENVIRONMENT", "production")
         in {"development", "test", "staging"}
         and credentials_ready()
+    )
+
+
+def checkout_ready():
+    return bool(
+        getattr(settings, "PAYMOB_INVOICE_CHECKOUT_ENABLED", False) and sandbox_ready()
     )
 
 
@@ -107,6 +112,46 @@ def billing_for(user):
     }
 
 
+def billing_for_invoice(user, invoice, quote):
+    """Contact selection only; checkout authority is checked before this call.
+
+    Only an admitted, persisted subscription sandbox quote uses synthetic
+    gateway data. Never modify the account or send its personal contact there.
+    """
+    route = quote.purchase_route
+    if (
+        invoice.purpose == "subscription"
+        and invoice.payer_id == user.pk
+        and not invoice.organization_id
+        and quote.invoice_id == invoice.pk
+        and route.get("route") == "hosted_checkout"
+        and route.get("enabled") is True
+        and route.get("sandbox_only") is True
+        and route.get("provider_environment") == "sandbox"
+        and route.get("external_checkout_allowed") is True
+    ):
+        return {
+            "first_name": "Test",
+            "last_name": "Sandbox",
+            "email": "sokoun-payment@example.test",
+            "phone_number": "+201010101010",
+            "country": "EG",
+            **{
+                key: "NA"
+                for key in (
+                    "apartment",
+                    "floor",
+                    "street",
+                    "building",
+                    "city",
+                    "state",
+                    "postal_code",
+                )
+            },
+        }
+    return billing_for(user)
+
+
 def create_intention(payment, billing, return_url):
     attempt = payment.attempt
     return transport(
@@ -117,7 +162,11 @@ def create_intention(payment, billing, return_url):
             "payment_methods": [int(payment.integration_id)],
             "items": [
                 {
-                    "name": "Sukoon physical service payment",
+                    "name": (
+                        "Sukoon subscription sandbox payment"
+                        if attempt.invoice.purpose == "subscription"
+                        else "Sukoon physical service payment"
+                    ),
                     "amount": attempt.amount_minor,
                     "quantity": 1,
                 }

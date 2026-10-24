@@ -63,6 +63,32 @@ def validate_payable(invoice, user, revision, route=None):
         raise RentalConflict(
             "The selected plan is unavailable.", code="plan_unavailable"
         )
+    if invoice.purpose == "subscription" and route and route.get("sandbox_only"):
+        from django.db.models import Q
+        from ..models import AccountSubscription
+
+        scopes = (
+            ("tenant", "owner", "both")
+            if invoice.purchase_snapshot["workspace"] == "both"
+            else (invoice.workspace, "both")
+        )
+        if (
+            AccountSubscription.objects.filter(
+                user=user,
+                organization__isnull=True,
+                workspace__in=scopes,
+                store_status__in=["", "active", "grace"],
+            )
+            .filter(
+                Q(ends_at__gt=timezone.now())
+                | Q(store_status="grace", grace_ends_at__gt=timezone.now())
+            )
+            .exists()
+        ):
+            raise RentalConflict(
+                "A subscription is already active for this workspace.",
+                code="subscription_active",
+            )
     if invoice.payment_attempts.filter(
         payment_status__in=["created", "pending", "authorized"]
     ).exists():
@@ -98,7 +124,13 @@ def quote_purchase(user, invoice_id, body, *, platform="unknown"):
         if invoice.purpose == "subscription"
         else None
     )
-    route = routing_v1(invoice.purpose, platform, plan=plan)
+    route = routing_v1(
+        invoice.purpose,
+        platform,
+        plan=plan,
+        user=user,
+        organization=bool(invoice.organization_id),
+    )
     if (
         route["enabled"]
         and plan is not None
@@ -185,7 +217,13 @@ def _checkout_purchase(user, invoice_id, body):
 
         platform = "ios" if route["route"] == "storekit" else "android"
         plan = SubscriptionPlan.objects.get(id=invoice.purchase_snapshot["id"])
-        current_route = routing_v1(invoice.purpose, platform, plan=plan)
+        current_route = routing_v1(
+            invoice.purpose,
+            platform,
+            plan=plan,
+            user=user,
+            organization=bool(invoice.organization_id),
+        )
         if (
             not current_route["enabled"]
             or current_route["product_id"] != route["product_id"]

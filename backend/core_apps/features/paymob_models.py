@@ -1,4 +1,4 @@
-"""Durable identity for one physical-obligation Paymob checkout."""
+"""Durable identity for one invoice-linked Paymob checkout."""
 
 from django.db import models
 from core_apps.common.models import TimeStampedModel

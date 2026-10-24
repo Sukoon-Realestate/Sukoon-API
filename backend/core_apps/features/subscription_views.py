@@ -28,7 +28,7 @@ def plans(request):
     plans = SubscriptionPlan.objects.filter(
         active=True, audience="organization" if organization else "personal"
     ).filter(Q(workspace=workspace) | Q(workspace="both"))
-    values = [plan_payload(plan, language) for plan in plans]
+    values = [plan_payload(plan, language, user=request.user) for plan in plans]
     if request.query_params.get("projection") == "mobile_v1" or organization:
         return Response(catalog(request, workspace, organization, values))
     return Response(values)
@@ -49,7 +49,7 @@ def current(request):
             "ar" if getattr(request, "LANGUAGE_CODE", "en").startswith("ar") else "en"
         )
         values = [
-            plan_payload(p, language)
+            plan_payload(p, language, user=request.user)
             for p in SubscriptionPlan.objects.filter(
                 active=True,
                 workspace__in=[workspace, "both"],
@@ -72,6 +72,7 @@ def current(request):
                         if getattr(request, "LANGUAGE_CODE", "en").startswith("ar")
                         else "en"
                     ),
+                    user=request.user,
                 )
                 for plan in SubscriptionPlan.objects.filter(
                     active=True, audience="personal", workspace__in=[workspace, "both"]
