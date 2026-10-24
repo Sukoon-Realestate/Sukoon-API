@@ -35,6 +35,30 @@ def prepare_instruction(*, kind, subject, request_key, payload):
 
 def execute_local_instruction(*, kind, subject, request_key, payload):
     """Only the pure mock can run synchronously; this is never live money proof."""
+    from ...models import PaymobPayment
+
+    paymob_source = (
+        kind == "refund"
+        and PaymobPayment.objects.filter(attempt_id=subject.payment_attempt_id).exists()
+    )
+    if kind == "payout":
+        from ..chargebacks.projection import payable_funding_sources
+
+        source_ids = {
+            attempt.pk
+            for payable in subject.payables.all()
+            for attempt in payable_funding_sources(payable)
+        }
+        paymob_source = PaymobPayment.objects.filter(attempt_id__in=source_ids).exists()
+    if paymob_source and kind == "refund":
+        from ..paymob_refunds import confirmed_reference
+
+        return confirmed_reference(subject, payload)
+    if paymob_source:
+        raise RentalConflict(
+            "Paymob funds require confirmed provider execution; mock execution is forbidden.",
+            code="provider_execution_required",
+        )
     if not fake_provider_available():
         raise RentalConflict(
             "A production provider and reconciliation adapter are not configured.",

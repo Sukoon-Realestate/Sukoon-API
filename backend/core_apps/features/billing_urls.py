@@ -2,9 +2,21 @@ from django.urls import path
 from . import billing_views as billing
 from . import subscription_views as subscriptions
 
+from . import commerce_views as commerce
+
 from .purchase_routing_views import purchase_route
 
 urlpatterns = [
+    path(
+        "billing/store/notifications/<str:platform>/",
+        commerce.store_notification,
+        name="billing-store-notification",
+    ),
+    path(
+        "billing/store/context/", commerce.store_context, name="billing-store-context"
+    ),
+    path("billing/store/verify/", commerce.store_verify, name="billing-store-verify"),
+    path("billing/entitlements/", commerce.entitlements, name="billing-entitlements"),
     path("billing/purchase-routing/", purchase_route),
     path("subscription-plans/", subscriptions.plans, name="subscription-plans"),
     path("subscriptions/current/", subscriptions.current, name="current-subscription"),

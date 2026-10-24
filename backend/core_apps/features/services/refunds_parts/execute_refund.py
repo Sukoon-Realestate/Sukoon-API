@@ -25,7 +25,14 @@ def execute_refund(refund):
 
     lease = lock_financial_lease(Lease.objects.get(pk=refund.lease_id))
     refund = RefundRequest.objects.select_for_update().get(pk=refund.pk)
-    if refund.status != RefundRequest.Status.APPROVED:
+    from ...models import PaymobRefund, PaymobPayment
+
+    confirmed_paymob = PaymobRefund.objects.filter(
+        refund=refund, status="confirmed"
+    ).exists()
+    if refund.status != RefundRequest.Status.APPROVED and not (
+        refund.status == "processing" and confirmed_paymob
+    ):
         return refund
     attempt = PaymentAttempt.objects.select_for_update().get(
         pk=refund.payment_attempt_id
@@ -102,6 +109,11 @@ def execute_refund(refund):
     distributed = bool(payable and payable.payout_status == "succeeded")
     from ..rental_lifecycle.provider_instructions import execute_local_instruction
 
+    if PaymobPayment.objects.filter(attempt=attempt).exists() and not confirmed_paymob:
+        from ..paymob_refunds import stage
+
+        stage(refund, attempt, split)
+        return refund
     refund.provider_refund_id = execute_local_instruction(
         kind="refund",
         subject=refund,

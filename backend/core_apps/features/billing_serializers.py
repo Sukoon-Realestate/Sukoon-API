@@ -12,6 +12,7 @@ class StrictBillingSerializer(serializers.Serializer):
 
 
 class IssueInvoiceSerializer(StrictBillingSerializer):
+    organization_id = serializers.UUIDField(required=False)
     purpose = serializers.ChoiceField(choices=["subscription", "advertising"])
     workspace = serializers.ChoiceField(choices=["tenant", "owner"])
     plan_id = serializers.UUIDField(required=False)
@@ -55,3 +56,23 @@ class InvoiceActionSerializer(StrictBillingSerializer):
 
 class PurchaseCheckoutSerializer(InvoiceActionSerializer):
     quote_id = serializers.UUIDField()
+
+
+class StoreVerifySerializer(StrictBillingSerializer):
+    contract_version = serializers.ChoiceField(choices=[1])
+    platform = serializers.ChoiceField(choices=["ios", "android"])
+    product_id = serializers.CharField(max_length=200)
+    transaction_id = serializers.CharField(
+        max_length=200, required=False, allow_blank=True
+    )
+    verification_source = serializers.ChoiceField(choices=["app_store", "google_play"])
+    verification_data = serializers.CharField(max_length=262144, trim_whitespace=False)
+    proof_digest = serializers.RegexField(r"^[a-f0-9]{64}$")
+
+    def validate(self, attrs):
+        expected = "app_store" if attrs["platform"] == "ios" else "google_play"
+        if attrs["verification_source"] != expected:
+            raise serializers.ValidationError(
+                {"verification_source": "The source does not match the platform."}
+            )
+        return attrs

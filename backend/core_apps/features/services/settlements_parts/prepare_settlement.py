@@ -124,6 +124,40 @@ def prepare_settlement(lease, lines):
                     code="credit_exceeds_balance",
                 )
         elif kind in CHARGE_TYPES:
+            if kind == "maintenance":
+                from ...models import MaintenanceRequest, BillingSourceLink
+
+                try:
+                    identity = uuid.UUID(str(line.get("maintenance_request_id", "")))
+                except ValueError:
+                    raise ValidationError(
+                        {
+                            "maintenance_request_id": "Identify the approved maintenance cost."
+                        }
+                    )
+                source = MaintenanceRequest.objects.filter(
+                    lease=lease, id=identity
+                ).first()
+                if (
+                    not source
+                    or source.cost_version != line.get("cost_version")
+                    or source.approved_cost_version != source.cost_version
+                    or source.proposed_cost_minor != amount
+                    or source.cost_payer not in {"tenant", "company"}
+                ):
+                    raise RentalConflict(
+                        "The maintenance cost changed or has another payer.",
+                        code="invoice_changed",
+                    )
+                if BillingSourceLink.objects.filter(
+                    source_kind="maintenance",
+                    source_id=source.id,
+                    source_version=source.cost_version,
+                ).exists():
+                    raise RentalConflict(
+                        "This maintenance cost already has an original invoice.",
+                        code="invoice_exists",
+                    )
             if amount:
                 charges.append(line)
         else:

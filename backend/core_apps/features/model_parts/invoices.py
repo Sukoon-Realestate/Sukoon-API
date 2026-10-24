@@ -70,6 +70,11 @@ class RentInvoice(TimeStampedModel):
             ("rent", "Rent"),
             ("subscription", "Subscription"),
             ("advertising", "Advertising"),
+            ("maintenance", "Maintenance"),
+            ("promotion", "Promotion"),
+            ("settlement", "Settlement"),
+            ("adjustment", "Adjustment"),
+            ("deposit", "Deposit"),
         ],
     )
     payer = models.ForeignKey(
@@ -80,6 +85,7 @@ class RentInvoice(TimeStampedModel):
         related_name="purchase_invoices",
     )
     workspace = models.CharField(max_length=10, default="tenant")
+    organization = models.ForeignKey("features.Company", on_delete=models.PROTECT, null=True, blank=True)
     business_reference = models.CharField(max_length=100, blank=True, default="")
     purchase_snapshot = models.JSONField(default=dict, blank=True)
     reference = models.CharField(max_length=50, unique=True)
@@ -130,7 +136,7 @@ class RentInvoice(TimeStampedModel):
                     Q(purpose="rent", lease__isnull=False)
                     | (
                         Q(
-                            purpose__in=["subscription", "advertising"],
+                            purpose__in=["subscription", "advertising", "maintenance", "promotion", "settlement", "adjustment", "deposit"],
                             lease__isnull=True,
                             payer__isnull=False,
                         )
@@ -169,6 +175,7 @@ class PaymentQuote(TimeStampedModel):
     tenant_service_fee_minor = models.PositiveBigIntegerField(default=0)
     currency = models.CharField(max_length=3, default="EGP")
     exponent = models.PositiveSmallIntegerField(default=2)
+    purchase_route = models.JSONField(default=dict, blank=True)
     policy_version = models.CharField(max_length=40)
     fingerprint = models.CharField(max_length=64)
     expires_at = models.DateTimeField()

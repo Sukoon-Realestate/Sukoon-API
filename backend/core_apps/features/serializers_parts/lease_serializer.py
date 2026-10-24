@@ -6,6 +6,12 @@ from ..models import BoostCampaign, Lease, SearchAlert
 
 
 class BoostCampaignSerializer(serializers.ModelSerializer):
+    billing_invoices = serializers.SerializerMethodField()
+
+    def get_billing_invoices(self, obj):
+        from ..services.billing_sources import source_invoices
+        return source_invoices("promotion", obj.id)
+
     property_id = serializers.UUIDField(source="property.id", read_only=True)
     property_title = serializers.CharField(source="property.title", read_only=True)
 
@@ -20,6 +26,7 @@ class BoostCampaignSerializer(serializers.ModelSerializer):
             "starts_at",
             "ends_at",
             "impressions",
+            "billing_invoices",
         ]
 
 

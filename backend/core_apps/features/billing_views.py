@@ -24,6 +24,23 @@ from .services.billing_projection import (
     purchase_attempt_payload,
 )
 from .models import IdempotencyRecord
+from .services.commerce_access import organization_for
+
+
+def check_context(request, invoice):
+    identity = request.query_params.get("organization_id")
+    if identity:
+        company = organization_for(request.user, identity)
+        if invoice.organization_id != company.pk:
+            from rest_framework.exceptions import NotFound
+
+            raise NotFound()
+    workspace = request.query_params.get("workspace")
+    if workspace and invoice.workspace != workspace_for(workspace):
+        from rest_framework.exceptions import NotFound
+
+        raise NotFound()
+    return invoice
 
 
 def validated(serializer, request):
@@ -47,20 +64,39 @@ def language(request):
 @renderer_classes([FeatureJsonRenderer])
 def invoices(request):
     if request.method == "POST":
-        invoice, created = issue_purchase(
-            request.user, validated(IssueInvoiceSerializer, request)
-        )
+        command = validated(IssueInvoiceSerializer, request)
+        if request.query_params.get("organization_id"):
+            organization = organization_for(
+                request.user, request.query_params["organization_id"]
+            )
+            if str(command.get("organization_id", "")) != str(organization.id):
+                raise ValidationError(
+                    {"organization_id": "The request and query contexts must match."}
+                )
+        if request.query_params.get("workspace") and command[
+            "workspace"
+        ] != workspace_for(request.query_params["workspace"]):
+            raise ValidationError(
+                {"workspace": "The request and query contexts must match."}
+            )
+        invoice, created = issue_purchase(request.user, command)
         return Response(
             invoice_payload(
                 invoice,
                 request.user,
                 language(request),
                 mobile=mobile_projection(request),
+                platform=request.query_params.get("platform", "unknown"),
             ),
             status=201 if created else 200,
         )
     workspace = workspace_for(request.query_params.get("workspace", "tenant"))
-    query = invoice_queryset(request.user, workspace).prefetch_related("lines")
+    organization = organization_for(
+        request.user, request.query_params.get("organization_id")
+    )
+    query = invoice_queryset(request.user, workspace, organization).prefetch_related(
+        "lines"
+    )
     if request.query_params.get("status"):
         status = request.query_params["status"]
         if status not in {choice[0] for choice in query.model.Status.choices}:
@@ -68,7 +104,16 @@ def invoices(request):
         query = query.filter(status=status)
     if request.query_params.get("purpose"):
         purpose = request.query_params["purpose"]
-        if purpose not in {"rent", "subscription", "advertising"}:
+        if purpose not in {
+            "rent",
+            "subscription",
+            "advertising",
+            "maintenance",
+            "promotion",
+            "settlement",
+            "adjustment",
+            "deposit",
+        }:
             raise ValidationError({"purpose": "Unknown invoice purpose."})
         query = query.filter(purpose=purpose)
     for key, lookup in (
@@ -88,7 +133,11 @@ def invoices(request):
     return pager.get_paginated_response(
         [
             invoice_payload(
-                x, request.user, language(request), mobile=mobile_projection(request)
+                x,
+                request.user,
+                language(request),
+                mobile=mobile_projection(request),
+                platform=request.query_params.get("platform", "unknown"),
             )
             for x in page
         ]
@@ -99,10 +148,14 @@ def invoices(request):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def invoice_detail(request, invoice_id):
-    invoice = authorized_invoice(request.user, invoice_id)
+    invoice = check_context(request, authorized_invoice(request.user, invoice_id))
     return Response(
         invoice_payload(
-            invoice, request.user, language(request), mobile=mobile_projection(request)
+            invoice,
+            request.user,
+            language(request),
+            mobile=mobile_projection(request),
+            platform=request.query_params.get("platform", "unknown"),
         )
     )
 
@@ -111,12 +164,15 @@ def invoice_detail(request, invoice_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def invoice_operation(request, request_key):
+    organization_for(request.user, request.query_params.get("organization_id"))
     record = IdempotencyRecord.objects.filter(
         user=request.user, operation="billing.issue", request_key=request_key
     ).first()
     invoice = (
         authorized_invoice(request.user, record.result_subject_id) if record else None
     )
+    if invoice:
+        check_context(request, invoice)
     return Response(
         {
             "invoice": (
@@ -125,11 +181,12 @@ def invoice_operation(request, request_key):
                     request.user,
                     language(request),
                     mobile=mobile_projection(request),
+                    platform=request.query_params.get("platform", "unknown"),
                 )
                 if invoice
                 else None
             ),
-            "absence_confirmed": record is None,
+            "absence_confirmed": False,
         }
     )
 
@@ -138,8 +195,12 @@ def invoice_operation(request, request_key):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def invoice_quote(request, invoice_id):
+    check_context(request, authorized_invoice(request.user, invoice_id))
     quote = quote_purchase(
-        request.user, invoice_id, validated(InvoiceActionSerializer, request)
+        request.user,
+        invoice_id,
+        validated(InvoiceActionSerializer, request),
+        platform=request.query_params.get("platform", "unknown"),
     )
     return Response(purchase_quote_payload(quote), status=201)
 
@@ -148,6 +209,7 @@ def invoice_quote(request, invoice_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def invoice_checkout(request, invoice_id):
+    check_context(request, authorized_invoice(request.user, invoice_id))
     attempt = checkout_purchase(
         request.user, invoice_id, validated(PurchaseCheckoutSerializer, request)
     )
@@ -158,10 +220,15 @@ def invoice_checkout(request, invoice_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def invoice_cancel(request, invoice_id):
+    check_context(request, authorized_invoice(request.user, invoice_id))
     body = validated(InvoiceActionSerializer, request)
     invoice = cancel_invoice(request.user, invoice_id, body)
     return Response(
         invoice_payload(
-            invoice, request.user, language(request), mobile=mobile_projection(request)
+            invoice,
+            request.user,
+            language(request),
+            mobile=mobile_projection(request),
+            platform=request.query_params.get("platform", "unknown"),
         )
     )

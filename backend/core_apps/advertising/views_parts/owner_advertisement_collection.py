@@ -65,6 +65,8 @@ def advertisement_payload(request, advertisement, *, public=False, now=None):
         "ends_at": iso8601(advertisement.ends_at),
     }
     if not public:
+        from core_apps.features.services.billing_sources import source_invoices
+        data["billing_invoices"] = source_invoices("advertising", advertisement.id)
         data.update(
             {
                 "operation_id": advertisement.operation.operation_id,

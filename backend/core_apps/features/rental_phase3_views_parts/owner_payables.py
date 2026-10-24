@@ -143,6 +143,23 @@ def payment_attempt_detail(request, attempt_id):
 @renderer_classes([FeatureJsonRenderer])
 @throttle_classes([PaymentReconcileThrottle])
 def payment_attempt_reconcile(request, attempt_id):
+    candidate = _attempt(request, attempt_id)
+    if hasattr(candidate, "paymob_payment"):
+        if request.user.pk != candidate.payer_id:
+            raise PermissionDenied(
+                "Only the original payer can reconcile this attempt."
+            )
+        if (
+            request.data.get("action") or request.data.get("decision")
+        ) != "reconcile" or request.data.get("expected_revision") != candidate.revision:
+            raise RentalConflict(
+                "Payment attempt revision or action is invalid.", code="stale_revision"
+            )
+        from ..services.paymob_payments import reconcile
+
+        return Response(
+            payment_attempt_payload(reconcile(candidate.paymob_payment), request.user)
+        )
     with transaction.atomic():
         attempt = _attempt(request, attempt_id, lock=True)
         if request.user != attempt.payer:
@@ -198,6 +215,10 @@ def apply_fake_payment_event(payload):
         attempt = PaymentAttempt.objects.get(id=payload.get("payment_attempt_id"))
     except (PaymentAttempt.DoesNotExist, ValueError):
         raise NotFound()
+    if hasattr(attempt, "paymob_payment"):
+        raise RentalConflict(
+            "Mock events cannot confirm Paymob payments.", code="invalid_payment_domain"
+        )
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     event, created = ProviderWebhookEvent.objects.get_or_create(
         provider="fake",

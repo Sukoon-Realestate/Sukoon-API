@@ -22,6 +22,12 @@ class SubscriptionPlan(TimeStampedModel):
     revision = models.PositiveIntegerField(default=1, editable=False)
     active = models.BooleanField(default=True)
     sort_order = models.PositiveSmallIntegerField(default=0)
+    tier = models.SlugField(blank=True)
+    audience = models.CharField(
+        max_length=12,
+        default="personal",
+        choices=[("personal", "Personal"), ("organization", "Organization")],
+    )
 
     class Meta:
         ordering = ["sort_order", "id"]
@@ -61,6 +67,13 @@ class AccountSubscription(TimeStampedModel):
         "features.RentInvoice", on_delete=models.PROTECT, related_name="subscription"
     )
     workspace = models.CharField(max_length=10)
+    organization = models.ForeignKey(
+        "features.Company", on_delete=models.PROTECT, null=True, blank=True
+    )
+    store_platform = models.CharField(max_length=10, blank=True)
+    store_status = models.CharField(max_length=20, blank=True)
+    auto_renew = models.BooleanField(default=False)
+    grace_ends_at = models.DateTimeField(null=True, blank=True)
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
     cancelled_at = models.DateTimeField(null=True, blank=True)

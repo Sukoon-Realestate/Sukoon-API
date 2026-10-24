@@ -19,6 +19,8 @@ from .rental_operation_lookup import _replay, _remember
 
 def analytics_snapshot(request, property_id):
     property_obj = get_object_or_404(Property, id=property_id, owner=request.user)
+    from ..services.entitlements import enforce
+    enforce(request.user, "advanced_analytics", "owner")
     language = request.query_params.get("lang") or request.headers.get(
         "Accept-Language", "en"
     )

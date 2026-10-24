@@ -56,7 +56,22 @@ def execute_settlement(item):
             charges_minor=total,
             status="due",
         )
+        from ...models import BillingSourceLink
+
+        BillingSourceLink.objects.create(
+            invoice=adjustment,
+            source_kind="settlement",
+            source_id=item.id,
+            source_version=item.revision,
+        )
         for line in plan["charges"]:
+            if line["type"] == "maintenance":
+                BillingSourceLink.objects.create(
+                    invoice=adjustment,
+                    source_kind="maintenance",
+                    source_id=line["maintenance_request_id"],
+                    source_version=line["cost_version"],
+                )
             InvoiceLine.objects.create(
                 invoice=adjustment,
                 line_type=line["type"],

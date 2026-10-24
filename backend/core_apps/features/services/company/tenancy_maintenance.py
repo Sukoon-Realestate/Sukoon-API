@@ -172,6 +172,8 @@ def act(item, user, data):
             return access.changed(item, user, "company_maintenance_access_reviewed")
         request.access_approved_version = request.appointment_version
     elif action == "propose_cost":
+        from ..billing_sources import invalidate_maintenance_cost
+        invalidate_maintenance_cost(request)
         if data.get("cost_minor", 0) <= 0 or data.get("cost_payer") not in {
             "owner",
             "company",
@@ -283,8 +285,14 @@ def act(item, user, data):
         raise ValidationError("Unsupported company maintenance action.")
     if action in MAINTENANCE_TRANSITIONS:
         request.status = MAINTENANCE_TRANSITIONS[action][1]
+    if action in {"cancel", "reject_cost"}:
+        from ..billing_sources import invalidate_maintenance_cost
+        invalidate_maintenance_cost(request)
     request.revision += 1
     request.save()
+    if action == "approve_cost":
+        from ..billing_sources import maintenance_invoice
+        maintenance_invoice(request, user)
     scope.save()
     MaintenanceEvent.objects.create(
         maintenance_request=request, actor=user, action=action, note=data["reason"]

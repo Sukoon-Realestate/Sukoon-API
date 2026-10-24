@@ -48,7 +48,7 @@ def webhook(request):
         return error
     # Acknowledge only after durable storage. DB failures propagate as 5xx so
     # Paymob can retry; a repeated signed event is safe to acknowledge again.
-    _, created = PaymobCallbackEvent.objects.get_or_create(
+    event, created = PaymobCallbackEvent.objects.get_or_create(
         signature=request.GET["hmac"].lower(),
         defaults={
             "transaction_id": values["id"],
@@ -60,6 +60,13 @@ def webhook(request):
             "flags": {key: values[key] == "true" for key in BOOLEAN_FIELDS},
         },
     )
+    from core_apps.features.services.paymob_payments import process_callback
+    from rest_framework.exceptions import APIException
+
+    try:
+        process_callback(event)
+    except APIException:
+        return JsonResponse({"error": "payment_reconciliation_pending"}, status=503)
     return JsonResponse({"received": True, "duplicate": not created})
 
 
@@ -72,6 +79,31 @@ def payment_return(request):
     values, error = verified_values(request, request.GET.dict(), redirect=True)
     if error is not None:
         return error
+    if request.GET.get("state") or request.GET.get("payment_attempt_id"):
+        import hmac
+        import uuid
+        from core_apps.features.models import CheckoutSession
+
+        try:
+            identity = uuid.UUID(request.GET.get("payment_attempt_id", ""))
+        except ValueError:
+            return HttpResponse("Invalid payment return parameters.", status=400)
+        session = (
+            CheckoutSession.objects.select_related("attempt__paymob_payment")
+            .filter(attempt__id=identity)
+            .first()
+        )
+        if not session or not hmac.compare_digest(
+            session.return_state, request.GET.get("state", "")
+        ):
+            return HttpResponse("Invalid payment return state.", status=403)
+        payment = getattr(session.attempt, "paymob_payment", None)
+        if (
+            not payment
+            or payment.order_id != values["order"]
+            or session.attempt.amount_minor != int(values["amount_cents"])
+        ):
+            return HttpResponse("Invalid payment return identity.", status=403)
     # This browser return is display-only. It never creates a callback event
     # or changes an invoice, subscription, booking or payment state.
     response = render(

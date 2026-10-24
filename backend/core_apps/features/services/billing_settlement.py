@@ -11,7 +11,9 @@ from .rental_phase2 import RentalConflict, add_months
 from .rental_phase3 import post_ledger_transaction
 
 
-def settle_purchase(invoice, attempt, provider_reference):
+def settle_purchase(
+    invoice, attempt, provider_reference, *, provider_mode="mock", verified=None
+):
     """Called under the actor and invoice locks in one database transaction."""
     now = timezone.now()
     if invoice.purpose == "subscription":
@@ -20,12 +22,19 @@ def settle_purchase(invoice, attempt, provider_reference):
         scopes = (
             ("tenant", "owner", "both") if workspace == "both" else (workspace, "both")
         )
-        if AccountSubscription.objects.filter(
-            user=attempt.payer,
-            workspace__in=scopes,
-            cancelled_at__isnull=True,
-            ends_at__gt=now,
-        ).exists():
+        if (
+            AccountSubscription.objects.filter(
+                **(
+                    {"organization": invoice.organization}
+                    if invoice.organization_id
+                    else {"user": attempt.payer, "organization__isnull": True}
+                ),
+                workspace__in=scopes,
+                store_status__in=["", "active", "grace"],
+            )
+            .filter(Q(ends_at__gt=now) | Q(store_status="grace", grace_ends_at__gt=now))
+            .exists()
+        ):
             raise RentalConflict(
                 "A subscription is already active.", code="subscription_active"
             )
@@ -36,18 +45,30 @@ def settle_purchase(invoice, attempt, provider_reference):
             plan=SubscriptionPlan.objects.get(id=snapshot["id"]),
             invoice=invoice,
             workspace=workspace,
-            starts_at=now,
-            ends_at=ends,
+            organization=invoice.organization,
+            store_platform=(
+                "ios"
+                if provider_mode == "storekit"
+                else "android" if provider_mode == "play_billing" else ""
+            ),
+            store_status="active" if verified else "",
+            auto_renew=verified.auto_renew if verified else False,
+            starts_at=verified.purchased_at if verified else now,
+            ends_at=verified.expires_at if verified else ends,
             plan_snapshot=snapshot,
         )
-    else:
+    elif invoice.purpose == "promotion":
+        from .billing_sources import activate_promotion
+
+        activate_promotion(invoice)
+    elif invoice.purpose == "advertising":
         from .billing_advertising import activate_advertising_invoice
 
         activate_advertising_invoice(invoice, attempt)
     attempt.payment_status = "captured"
     attempt.provider_attempt_id = provider_reference
     attempt.confirmed_at = now
-    attempt.settlement_status = "mock"
+    attempt.settlement_status = "mock" if provider_mode == "mock" else "pending"
     attempt.payout_status = "not_applicable"
     attempt.save()
     receipt = PaymentReceipt.objects.create(
@@ -76,16 +97,40 @@ def settle_purchase(invoice, attempt, provider_reference):
     )
     post_ledger_transaction(
         reference=f"purchase:{attempt.id}",
-        kind="mock_purchase_capture",
+        kind=(
+            "mock_purchase_capture"
+            if provider_mode == "mock"
+            else (
+                "hosted_purchase_capture"
+                if provider_mode == "hosted"
+                else "store_purchase_capture"
+            )
+        ),
         invoice=invoice,
         attempt=attempt,
         entries=[
             (
-                "mock_provider_clearing",
+                (
+                    "mock_provider_clearing"
+                    if provider_mode == "mock"
+                    else (
+                        "psp_clearing"
+                        if provider_mode == "hosted"
+                        else "store_provider_clearing"
+                    )
+                ),
                 LedgerEntry.Direction.DEBIT,
                 attempt.amount_minor,
             ),
-            ("purchase_revenue", LedgerEntry.Direction.CREDIT, attempt.amount_minor),
+            (
+                (
+                    "service_funds_liability"
+                    if invoice.purpose == "maintenance"
+                    else "purchase_revenue"
+                ),
+                LedgerEntry.Direction.CREDIT,
+                attempt.amount_minor,
+            ),
         ],
-        metadata={"mode": "mock", "purpose": invoice.purpose},
+        metadata={"mode": provider_mode, "purpose": invoice.purpose},
     )

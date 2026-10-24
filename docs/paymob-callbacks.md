@@ -1,7 +1,8 @@
 # Paymob callbacks
 
-The callback receiver is separate from checkout creation and business fulfilment.
-It does not mark rent, advertising or subscription invoices paid.
+The receiver stores verified callback facts. For an invoice-linked physical Paymob checkout, it then queries Paymob server-to-server and applies confirmed capture to the original invoice, allocation, receipt and ledger. The standalone landing-page test remains separate and grants no subscription benefits.
+
+See [invoice-linked Paymob implementation and verification](qa/commerce-v1-2026-10-24/PAYMOB_IMPLEMENTATION.md) for the durable checkout/refund flows and operating commands.
 
 ## Server configuration
 
@@ -44,8 +45,7 @@ the environment does not update the Paymob dashboard automatically.
 
 No full callback, billing data or card data is stored. Stored flags and amounts
 are signed provider facts, not proof that a particular Sukoon invoice was paid.
-Invoice matching, amount validation against a server-created checkout, and
-fulfilment must be implemented before enabling purchases in the app.
+Invoice-linked physical payments match the provider order to a durable original attempt and independently query the provider. Amount, currency, integration, environment and original reference must all match before allocation. Unmatched landing-page callbacks remain stored facts and never mark an invoice paid. Digital subscriptions, advertisements and promotions cannot use this Paymob route.
 
 The callback receiver requires the HMAC secret and integration ID; otherwise it
 returns 503. Other bad requests return 400, 403 or 415 as appropriate. The

@@ -1,8 +1,7 @@
-from django.utils import timezone
-from ..providers import checkout_available
+from ..providers import checkout_available, fake_provider_available
 
 
-def invoice_payload(invoice, user, language="en", *, mobile=False):
+def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unknown"):
     is_rent = invoice.purpose == "rent"
     # Rental settlement credits reduce the obligation without rewriting its
     # original amount or treating the credit as a cash payment.
@@ -12,28 +11,73 @@ def invoice_payload(invoice, user, language="en", *, mobile=False):
         from .rental_phase3 import invoice_payment_allowed
 
         payable = invoice_payment_allowed(user, invoice)
-    else:
-        payable = (
-            payable
-            and invoice.payer_id == user.pk
-            and user.is_active
-            and checkout_available()
-        )
-    cancellable = (
-        not is_rent
-        and invoice.status == "due"
-        and invoice.payer_id == user.pk
-        and user.is_active
-    )
+    cancellable = False
     receipt = (
         invoice.payment_attempts.filter(payment_status="captured")
         .select_related("receipt")
         .first()
     )
-    from .purchase_routing import routing
+    from .purchase_routing import routing, routing_v1
 
+    plan = None
+    if invoice.purpose == "subscription":
+        from ..models import SubscriptionPlan
+
+        plan = SubscriptionPlan.objects.filter(
+            id=invoice.purchase_snapshot.get("id")
+        ).first()
+    route = routing_v1(invoice.purpose, platform, plan=plan)
+    if plan and (invoice.amount_minor, invoice.currency, invoice.exponent) != (
+        plan.amount_minor,
+        plan.currency,
+        plan.exponent,
+    ):
+        route.update(
+            enabled=False,
+            route="disabled",
+            reason="store_price_mismatch",
+            message="The invoice price no longer matches the store catalog.",
+        )
+
+    if not is_rent:
+        authority = invoice.payer_id == user.pk and user.is_active
+        if invoice.organization_id:
+            from rest_framework.exceptions import PermissionDenied, ValidationError
+            from .commerce_access import organization_for
+
+            try:
+                organization_for(
+                    user, invoice.organization.id, pay=True, amount=invoice.amount_minor
+                )
+                authority = True
+            except (PermissionDenied, ValidationError):
+                authority = False
+        unresolved = invoice.payment_attempts.filter(
+            payment_status__in=["created", "pending", "authorized"]
+        ).exists()
+        payable = bool(
+            authority
+            and invoice.status == "due"
+            and invoice.purpose
+            in {"subscription", "advertising", "promotion", "maintenance"}
+            and not unresolved
+            and (
+                route["enabled"] or (checkout_available() and fake_provider_available())
+            )
+        )
+        cancellable = bool(
+            authority
+            and invoice.purpose in {"subscription", "advertising", "promotion"}
+            and invoice.status == "due"
+            and not unresolved
+        )
     payload = {
         "purchase_routing": routing(invoice.purpose),
+        "purchase_route": route,
+        "organization_id": (
+            str(invoice.organization.id) if invoice.organization_id else ""
+        ),
+        "fulfillment_status": fulfillment_status(invoice),
         "id": str(invoice.id),
         "reference": invoice.reference,
         "purpose": invoice.purpose,
@@ -56,9 +100,17 @@ def invoice_payload(invoice, user, language="en", *, mobile=False):
             str(receipt.receipt.id) if receipt and hasattr(receipt, "receipt") else None
         ),
         "provider_mode": (
-            "mock"
-            if receipt and receipt.provider_attempt_id.startswith("mock-")
-            else None
+            "hosted"
+            if receipt and hasattr(receipt, "paymob_payment")
+            else (
+                getattr(receipt, "store_intent", None).route_snapshot["route"]
+                if receipt and hasattr(receipt, "store_intent")
+                else (
+                    "mock"
+                    if receipt and receipt.provider_attempt_id.startswith("mock-")
+                    else None
+                )
+            )
         ),
         "allowed_actions": (["pay"] if payable else [])
         + (["cancel"] if cancellable else []),
@@ -97,9 +149,27 @@ def invoice_payload(invoice, user, language="en", *, mobile=False):
     return payload
 
 
-def purchase_attempt_payload(attempt):
+def fulfillment_status(invoice):
+    if invoice.purpose in {
+        "rent",
+        "maintenance",
+        "deposit",
+        "settlement",
+        "adjustment",
+    }:
+        return "not_applicable"
+    if invoice.purpose == "subscription":
+        return "fulfilled" if hasattr(invoice, "subscription") else "pending"
+    return "fulfilled" if invoice.status == "paid" and invoice.receipt_id else "pending"
+
+
+def purchase_attempt_payload(attempt, *, include_checkout=True):
     receipt = getattr(attempt, "receipt", None)
-    return {
+    intent = getattr(attempt, "store_intent", None)
+    paymob = getattr(attempt, "paymob_payment", None)
+    payload = {
+        "fulfillment_status": fulfillment_status(attempt.invoice),
+        "retry_allowed": False,
         "id": str(attempt.id),
         "invoice_id": str(attempt.invoice.id),
         "request_key": str(attempt.request_key),
@@ -107,7 +177,9 @@ def purchase_attempt_payload(attempt):
         "revision": attempt.revision,
         "status": attempt.payment_status,
         "payment_status": attempt.payment_status,
-        "provider_mode": "mock",
+        "provider_mode": (
+            "hosted" if paymob else intent.route_snapshot["route"] if intent else "mock"
+        ),
         "provider_reference": attempt.provider_attempt_id,
         "amount_minor": attempt.amount_minor,
         "currency": attempt.currency,
@@ -117,6 +189,24 @@ def purchase_attempt_payload(attempt):
             attempt.confirmed_at.isoformat() if attempt.confirmed_at else None
         ),
     }
+
+    if paymob:
+        from .paymob_payments import session_payload
+
+        if include_checkout:
+            payload["checkout_session"] = session_payload(attempt)
+        payload["provider_environment"] = paymob.environment
+        payload["failure_code"] = paymob.failure_code
+    if intent:
+        payload["store_session"] = {
+            "session_id": str(intent.id),
+            "invoice_id": str(attempt.invoice.id),
+            "payment_attempt_id": str(attempt.id),
+            "app_account_token": str(intent.account.app_account_token),
+            "expires_at": intent.expires_at.isoformat(),
+            "purchase_route": intent.route_snapshot,
+        }
+    return payload
 
 
 def purchase_quote_payload(quote):
@@ -128,5 +218,10 @@ def purchase_quote_payload(quote):
         "currency": quote.currency,
         "exponent": quote.exponent,
         "expires_at": quote.expires_at.isoformat(),
-        "provider_mode": "mock",
+        "provider_mode": (
+            "hosted"
+            if quote.purchase_route.get("route") == "hosted_checkout"
+            else quote.purchase_route.get("route", "mock")
+        ),
+        "purchase_route": quote.purchase_route,
     }

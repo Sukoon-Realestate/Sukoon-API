@@ -28,6 +28,10 @@ def configuration(request):
                 "title": value.title_ar if lang == "ar" else value.title_en,
                 "duration_days": value.duration_days,
                 "revision": value.revision,
+                "amount_minor": value.amount_minor,
+                "currency": value.currency,
+                "exponent": value.exponent,
+                "is_free": value.amount_minor == 0,
             }
             for value in PromotionOption.objects.filter(active=True)
         ]

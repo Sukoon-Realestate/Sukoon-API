@@ -82,7 +82,25 @@ def payment_attempt_payload(attempt, user=None):
     if attempt.invoice.purpose != "rent":
         from ..billing_projection import purchase_attempt_payload
 
-        return purchase_attempt_payload(attempt)
+        include_checkout = True
+        if (
+            user is not None
+            and attempt.invoice.organization_id
+            and hasattr(attempt, "paymob_payment")
+        ):
+            from rest_framework.exceptions import PermissionDenied, ValidationError
+            from ..commerce_access import organization_for
+
+            try:
+                organization_for(
+                    user,
+                    attempt.invoice.organization.id,
+                    pay=True,
+                    amount=attempt.amount_minor,
+                )
+            except (PermissionDenied, ValidationError):
+                include_checkout = False
+        return purchase_attempt_payload(attempt, include_checkout=include_checkout)
     from ...providers import mock_completion_metadata
     from ..refunds import remaining_components
     from ..chargebacks.funding import can_refund
@@ -98,7 +116,17 @@ def payment_attempt_payload(attempt, user=None):
             if hasattr(attempt, "chargeback")
             else None
         ),
-        **mock_completion_metadata("payment-attempts", attempt.id, attempt.revision),
+        **(
+            {
+                "provider_mode": "hosted",
+                "provider_environment": "sandbox",
+                "retry_allowed": False,
+            }
+            if hasattr(attempt, "paymob_payment")
+            else mock_completion_metadata(
+                "payment-attempts", attempt.id, attempt.revision
+            )
+        ),
         "refundable_balance": {
             "amount_minor": refundable,
             "currency": attempt.currency,

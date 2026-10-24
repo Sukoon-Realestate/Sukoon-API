@@ -48,8 +48,11 @@ def settlement_payload(item, user=None):
         settlement_precondition_error,
     )
 
+    from ..services.billing_sources import source_invoices
+
     error = settlement_precondition_error(item.lease)
     return {
+        "billing_invoices": source_invoices("settlement", item.id),
         "allowed_actions": cycle_actions(user, item),
         "blocking_reasons": [error[1]] if error else [],
         "id": str(item.id),
@@ -138,6 +141,14 @@ def final_settlement_propose(request, lease_id):
                 or raw["type"],
                 "amount": _money(amount),
                 "evidence_ids": list(evidence_ids),
+                **(
+                    {
+                        "maintenance_request_id": raw.get("maintenance_request_id"),
+                        "cost_version": raw.get("cost_version"),
+                    }
+                    if raw["type"] == "maintenance"
+                    else {}
+                ),
                 **(
                     {"invoice_id": str(raw["invoice_id"])}
                     if raw.get("invoice_id")

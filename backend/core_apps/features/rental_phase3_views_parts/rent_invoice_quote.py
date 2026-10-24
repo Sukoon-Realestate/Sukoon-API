@@ -61,8 +61,8 @@ def _attempt(request, attempt_id, lock=False):
         queryset = queryset.select_for_update(of=("self",))
     attempt = get_object_or_404(queryset, id=attempt_id)
     if attempt.invoice.lease_id is None:
-        if request.user.pk != attempt.payer_id:
-            raise NotFound()
+        from ..services.billing_invoices import authorized_invoice
+        authorized_invoice(request.user, attempt.invoice.id)
         return attempt
     if attempt.invoice.beneficiary_id != request.user.pk and not commercial_read(
         attempt.invoice.lease, request.user
@@ -75,6 +75,7 @@ def _active_session(attempt):
     session = getattr(attempt, "checkout_session", None)
     if (
         not session
+        or not session.hosted_url
         or session.expires_at <= timezone.now()
         or session.status not in {"created", "pending"}
         or attempt.payment_status not in {"created", "pending"}

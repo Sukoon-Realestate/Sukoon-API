@@ -77,7 +77,9 @@ def _safe_evidence(lease, ids):
 
 
 def maintenance_payload(item, user=None):
+    from ..services.billing_sources import source_invoices
     return {
+        "billing_invoices": source_invoices("maintenance", item.id),
         "allowed_actions": cycle_actions(user, item),
         "blocking_reasons": [],
         "id": str(item.id),

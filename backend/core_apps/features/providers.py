@@ -116,9 +116,10 @@ def get_rental_provider():
 
 
 def checkout_available():
-    return fake_provider_available() and bool(
+    from .services.paymob_client import checkout_ready
+    return checkout_ready() or (fake_provider_available() and bool(
         getattr(settings, "RENTAL_CHECKOUT_ENABLED", False)
-    )
+    ))
 
 
 def require_verified_rental_account(user):

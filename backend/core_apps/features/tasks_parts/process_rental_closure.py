@@ -29,13 +29,35 @@ def process_rental_closure(self):
         :100
     ]:
         try:
-            execute_refund(refund)
-            refunded += 1
+            result = execute_refund(refund)
+            refunded += int(result.status == "succeeded")
         except RentalConflict as exc:
             # One held refund must not starve unrelated refunds or closure work.
             RefundRequest.objects.filter(pk=refund.pk, status="approved").update(
                 failure_code=str(exc.get_codes()), updated_at=timezone.now()
             )
+    # Paymob submissions happen only after the canonical refund reservation
+    # transaction commits. Turning off new sales does not stop reconciliation.
+    from ..models import PaymobPayment, PaymobRefund
+    from ..services.paymob_payments import reconcile as reconcile_paymob
+    from ..services.paymob_refunds import process as process_paymob_refund
+    from rest_framework.exceptions import APIException
+
+    for payment in PaymobPayment.objects.exclude(status="captured").select_related(
+        "attempt__invoice"
+    )[:100]:
+        try:
+            reconcile_paymob(payment)
+        except APIException:
+            pass  # The original attempt/case remains durable for the next run.
+    for item in PaymobRefund.objects.exclude(refund__status="succeeded").select_related(
+        "payment__attempt", "refund__lease"
+    )[:100]:
+        try:
+            result = process_paymob_refund(item)
+            refunded += int(result.status == "succeeded")
+        except APIException:
+            pass  # Never resubmit an instruction whose outcome is unknown.
     for candidate in RentalDocument.objects.filter(
         status=RentalDocument.Status.QUEUED
     ).select_related("lease")[:100]:

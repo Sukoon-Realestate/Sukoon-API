@@ -1,0 +1,20 @@
+{
+  "environment": "sandbox",
+  "real_network_calls": true,
+  "authentication_succeeded": true,
+  "checkout_api_http_status": 200,
+  "invoice_id": "b59c72032aa14ace83e9541ecd5cf377",
+  "attempt_id": "4e61346a3b4d4236aa36d6994b671b6f",
+  "amount_minor": 1000,
+  "currency": "EGP",
+  "intention_persisted": true,
+  "provider_order_bound": true,
+  "payment_status": "pending",
+  "receipt_created": false,
+  "hosted_url_http_status": 200,
+  "automated_chrome_http_status": 403,
+  "card_submitted": false,
+  "actual_capture_verified": false,
+  "actual_refund_verified": false,
+  "production_changed": false
+}

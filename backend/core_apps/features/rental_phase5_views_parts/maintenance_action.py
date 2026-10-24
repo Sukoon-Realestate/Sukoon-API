@@ -110,6 +110,8 @@ def maintenance_action(request, request_id):
             if item.status == MaintenanceRequest.Status.CANCELLED:
                 raise RentalConflict("Cancelled requests cannot receive replies.")
         elif action == "propose_cost":
+            from ..services.billing_sources import invalidate_maintenance_cost
+            invalidate_maintenance_cost(item)
             cost = request.data.get("cost", {})
             amount = money_minor(cost)
             payer = request.data.get("cost_payer")
@@ -154,8 +156,14 @@ def maintenance_action(request, request_id):
             item.access_approved_version = item.appointment_version
         elif action == "report_missed":
             item.access_approved_version = None
+        if action in {"cancel", "reject_cost"}:
+            from ..services.billing_sources import invalidate_maintenance_cost
+            invalidate_maintenance_cost(item)
         item.revision += 1
         item.save()
+        if action == "approve_cost":
+            from ..services.billing_sources import maintenance_invoice
+            maintenance_invoice(item, request.user)
         from ..services.rental_lifecycle.common import audit
 
         audit(

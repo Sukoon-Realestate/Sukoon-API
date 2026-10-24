@@ -5,6 +5,7 @@ from ..rental_phase3 import invoice_balance_minor
 
 
 CHARGE_TYPES = {
+    "maintenance",
     "rent",
     "utility",
     "claim",
@@ -29,7 +30,19 @@ def financial_snapshot(lease):
             payment_attempt__invoice__lease=lease
         ).order_by("pkid")
     ]
+    from ...models import BillingSourceLink
+
+    source_billing = [
+        {"id": str(link.invoice.id), "revision": link.invoice.revision}
+        for link in BillingSourceLink.objects.filter(
+            source_kind="maintenance",
+            source_id__in=lease.maintenance_requests.values("id"),
+        )
+        .select_related("invoice")
+        .order_by("pkid")
+    ]
     return {
+        **({"source_billing_invoices": source_billing} if source_billing else {}),
         **({"chargebacks": chargebacks} if chargebacks else {}),
         "invoices": [
             {

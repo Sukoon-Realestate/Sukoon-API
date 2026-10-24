@@ -4,18 +4,22 @@ from django.conf import settings
 from ..providers import fake_provider_available
 from .rental_phase2 import RentalConflict
 
-DIGITAL_PURPOSES = {"subscription", "advertising"}
-PHYSICAL_PURPOSES = {"rent", "deposit", "maintenance"}
+DIGITAL_PURPOSES = {"subscription", "advertising", "promotion"}
+PHYSICAL_PURPOSES = {"rent", "deposit", "maintenance", "settlement", "adjustment"}
 
 
-def routing(purpose, platform="unknown", *, product_id=""):
+def routing(purpose, platform="unknown", *, product_id="", plan=None):
     category = (
         "digital_purchase"
         if purpose in DIGITAL_PURPOSES
         else (
             "rental_obligation"
             if purpose in {"rent", "deposit"}
-            else "service_payment" if purpose == "maintenance" else "unknown"
+            else (
+                "service_payment"
+                if purpose in {"maintenance", "settlement", "adjustment"}
+                else "unknown"
+            )
         )
     )
     route = (
@@ -31,6 +35,10 @@ def routing(purpose, platform="unknown", *, product_id=""):
             "reason": "unknown_product_or_platform",
             "product_id": product_id,
         }
+    if purpose == "subscription" and plan is not None and route:
+        from .store_payments import product_route
+
+        return product_route(plan, platform)
     if purpose in DIGITAL_PURPOSES:
         return {
             "category": category,
@@ -42,11 +50,17 @@ def routing(purpose, platform="unknown", *, product_id=""):
             "external_checkout_allowed": False,
             "policy_reviewed_on": "2026-10-18",
         }
+    from .paymob_client import checkout_ready
+
+    enabled = purpose in {"rent", "maintenance"} and checkout_ready()
     return {
         "category": category,
         "route": "egyptian_psp",
-        "enabled": False,
-        "reason": "live_provider_not_configured",
+        "enabled": enabled,
+        "provider_mode": "hosted",
+        "provider_environment": "sandbox",
+        "provider": "paymob",
+        "reason": "" if enabled else "live_provider_not_configured",
         "external_checkout_allowed": True,
     }
 
@@ -61,3 +75,24 @@ def require_legacy_checkout(purpose):
             "This product requires an approved purchase route and server receipt verification.",
             code="purchase_route_unavailable",
         )
+
+
+def routing_v1(purpose, platform="unknown", *, plan=None):
+    value = routing(purpose, platform, plan=plan)
+    return {
+        **value,
+        "contract_version": 1,
+        "route": (
+            "hosted_checkout" if value["route"] == "egyptian_psp" else value["route"]
+        ),
+        "product_type": (
+            "subscription"
+            if purpose == "subscription"
+            else "consumable" if purpose in DIGITAL_PURPOSES else ""
+        ),
+        "message": (
+            value.get("message", "")
+            if value["enabled"]
+            else "Purchases are unavailable until the payment route is configured."
+        ),
+    }

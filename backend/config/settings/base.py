@@ -629,3 +629,16 @@ ADMIN_CAMPAIGNS_ENABLED = getenv("ADMIN_CAMPAIGNS_ENABLED", "false").lower() == 
 # Finalize after every domain has registered its schedule.
 from config.background import configure as configure_background
 configure_background(globals())
+
+# Commerce v1 rollout. Configured adapters must verify server-to-server; no mock
+# fallback is permitted in live environments. Reads/recovery ignore sale flags.
+COMMERCE_STORE_PURCHASES_ENABLED = False
+COMMERCE_ENTITLEMENTS_ENABLED = False
+COMMERCE_STORE_ENVIRONMENT = "sandbox"
+COMMERCE_STORE_ADAPTERS = {}
+
+# Invoice-linked Paymob collection is separate from the public landing test.
+PAYMOB_INVOICE_CHECKOUT_ENABLED = getenv("PAYMOB_INVOICE_CHECKOUT_ENABLED", "false").lower() in {"true", "1", "yes"}
+PAYMOB_CHECKOUT_EXTRA_ORIGINS = []
+
+PAYMOB_REFUNDS_ENABLED = getenv("PAYMOB_REFUNDS_ENABLED", "false").lower() in {"true", "1", "yes"}

@@ -2,6 +2,7 @@
 PYTHON ?= python
 CYCLE_PYTHON ?= .venv/bin/python
 CYCLE_SETTINGS ?= config.settings.postgres_test
+COMMERCE_TEST_SETTINGS ?= config.settings.test
 CYCLE_EVIDENCE ?= ../docs/qa/owner-tenant-source-verification
 PIPENV ?= pipenv
 ROOT_ENV_FILE ?= ../.env
@@ -119,3 +120,23 @@ test-runtime: ## Verify App Platform spec preservation and scheduled execution e
 
 runtime-readiness: ## Read deployed runtime evidence; pass RUNTIME_SHA and optional RUNTIME_SINCE
 	$(CYCLE_PYTHON) manage.py runtime_readiness --expected-sha "$(RUNTIME_SHA)" $(if $(RUNTIME_SINCE),--since "$(RUNTIME_SINCE)")
+
+.PHONY: test-commerce check-commerce
+test-commerce: ## Commerce contracts and adjacent rental/advertising regressions
+	$(PIPENV) run pytest core_apps/features/tests/test_commerce_v1.py core_apps/features/tests/test_billing_subscriptions.py core_apps/features/tests/test_billing_contract_guards.py core_apps/features/tests/test_billing_rental_projection.py core_apps/features/tests/test_billing_migrations.py core_apps/features/tests/test_rental_phase5.py core_apps/features/tests/test_rental_phase6.py core_apps/features/tests/test_field_audit_maintenance.py core_apps/features/tests/test_addendum_provider_boundaries.py core_apps/advertising/tests --ds=$(COMMERCE_TEST_SETTINGS) --create-db
+
+check-commerce:
+	$(PIPENV) run python manage.py check --settings=config.settings.test
+	$(PIPENV) run python manage.py makemigrations --check --dry-run --settings=config.settings.test
+
+.PHONY: seed-commerce-test-catalog test-commerce-test-catalog
+seed-commerce-test-catalog: ## Create an isolated local catalog database with sample prices
+	$(PIPENV) run python manage.py migrate --settings=config.settings.commerce_sandbox --noinput
+	$(PIPENV) run python manage.py seed_commerce_test_catalog --settings=config.settings.commerce_sandbox
+
+test-commerce-test-catalog:
+	$(PIPENV) run pytest core_apps/features/tests/test_commerce_test_catalog.py --ds=config.settings.test --create-db
+
+.PHONY: test-paymob-payments
+test-paymob-payments:
+	$(PIPENV) run pytest core_apps/features/tests/test_paymob_invoice_payments.py core_apps/common/test_paymob_callbacks.py core_apps/common/test_paymob_checkout.py core_apps/features/tests/test_rental_phase3.py core_apps/features/tests/test_rental_phase6.py core_apps/features/tests/test_funded_settlement.py --ds=$(COMMERCE_TEST_SETTINGS) --create-db

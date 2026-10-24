@@ -40,6 +40,33 @@ def rent_invoice_checkout(request, invoice_id):
         quote_id = uuid.UUID(str(request.data["quote_id"]))
     except ValueError:
         raise ValidationError("quote_id and request_key must be UUIDs.")
+    from ..services.paymob_client import checkout_ready
+    from ..models import PaymobPayment
+
+    if (
+        checkout_ready()
+        or PaymobPayment.objects.filter(
+            attempt__invoice__id=invoice_id,
+            attempt__payer=request.user,
+            attempt__request_key=request_key,
+        ).exists()
+    ):
+        from ..services.paymob_payments import checkout, rental_response
+
+        try:
+            expected = int(request.data["expected_revision"])
+        except (ValueError, TypeError):
+            raise ValidationError(
+                {"expected_revision": "An integer revision is required."}
+            )
+        command = {
+            **request.data,
+            "request_key": request_key,
+            "quote_id": quote_id,
+            "expected_revision": expected,
+        }
+        attempt = checkout(request.user, invoice_id, command, rental=True)
+        return Response(rental_response(attempt), status=status.HTTP_201_CREATED)
     operation = f"invoice.checkout.{invoice_id}"
     with transaction.atomic():
         invoice = _invoice(request, invoice_id, lock=True)

@@ -10,6 +10,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from ..models import (
     AccountSubscription,
     IdempotencyRecord,
+    BillingSourceLink,
     InvoiceLine,
     RentInvoice,
     SubscriptionPlan,
@@ -23,14 +24,32 @@ def require_actor(user):
         raise PermissionDenied("An active account is required.")
 
 
-def invoice_queryset(user, workspace):
+def invoice_queryset(user, workspace, organization=None):
     require_actor(user)
-    purchases = Q(payer=user, purpose__in=["subscription", "advertising"]) & (
-        Q(workspace=workspace) | Q(purchase_snapshot__workspace="both")
-    )
+    if organization:
+        return (
+            RentInvoice.objects.filter(organization=organization, workspace=workspace)
+            .select_related("lease", "payer")
+            .order_by("-created_at", "-id")
+        )
+    purchases = Q(
+        payer=user,
+        organization__isnull=True,
+        purpose__in=[
+            "subscription",
+            "advertising",
+            "maintenance",
+            "promotion",
+            "settlement",
+            "adjustment",
+            "deposit",
+        ],
+    ) & (Q(workspace=workspace) | Q(purchase_snapshot__workspace="both"))
     # Rent receivables remain in owner financial screens, not own purchases.
     if workspace == "tenant":
-        purchases |= Q(lease__tenant=user, purpose="rent")
+        purchases |= Q(
+            lease__tenant=user, lease__renter_company__isnull=True, purpose="rent"
+        )
     return (
         RentInvoice.objects.filter(purchases)
         .select_related("lease", "payer")
@@ -43,6 +62,12 @@ def authorized_invoice(user, invoice_id, lock=False):
     if lock:
         query = query.select_for_update(of=("self",))
     invoice = get_object_or_404(query, id=invoice_id)
+    require_actor(user)
+    if invoice.organization_id:
+        from .commerce_access import organization_for
+
+        organization_for(user, invoice.organization.id)
+        return invoice
     if invoice.lease_id and invoice.lease.renter_company_id:
         from .company.tenancy_access import commercial_read
         from rest_framework.exceptions import NotFound
@@ -65,6 +90,11 @@ def issue_purchase(user, body):
     require_actor(user)
     get_user_model().objects.select_for_update().get(pk=user.pk)
     key, workspace = body["request_key"], workspace_for(body["workspace"])
+    from .commerce_access import organization_for
+
+    organization = organization_for(
+        user, body.get("organization_id"), lock=True, pay=True
+    )
     fingerprint = _fingerprint(body)
     record = IdempotencyRecord.objects.filter(
         user=user, operation="billing.issue", request_key=key
@@ -80,6 +110,12 @@ def issue_purchase(user, body):
         plan = get_object_or_404(
             SubscriptionPlan.objects.select_for_update(), id=body.get("plan_id")
         )
+        if (plan.audience == "organization") != bool(organization):
+            raise ValidationError(
+                {"organization_id": "The plan audience does not match this context."}
+            )
+        if organization:
+            organization_for(user, organization.id, pay=True, amount=plan.amount_minor)
         if not plan.active or plan.workspace not in (workspace, "both"):
             raise ValidationError("The selected plan is unavailable.")
         if plan.revision != body.get("plan_revision"):
@@ -91,19 +127,35 @@ def issue_purchase(user, body):
             if plan.workspace == "both"
             else (workspace, "both")
         )
-        if AccountSubscription.objects.filter(
-            user=user,
-            workspace__in=scopes,
-            cancelled_at__isnull=True,
-            ends_at__gt=timezone.now(),
-        ).exists():
+        if (
+            AccountSubscription.objects.filter(
+                **(
+                    {"organization": organization}
+                    if organization
+                    else {"user": user, "organization__isnull": True}
+                ),
+                workspace__in=scopes,
+                store_status__in=["", "active", "grace"],
+            )
+            .filter(
+                Q(ends_at__gt=timezone.now())
+                | Q(store_status="grace", grace_ends_at__gt=timezone.now())
+            )
+            .exists()
+        ):
             raise RentalConflict(
                 "A subscription is already active for this workspace.",
                 code="subscription_active",
             )
         if (
             RentInvoice.objects.filter(
-                payer=user, purpose="subscription", status__in=["due", "partially_paid"]
+                **(
+                    {"organization": organization}
+                    if organization
+                    else {"payer": user, "organization__isnull": True}
+                ),
+                purpose="subscription",
+                status__in=["due", "partially_paid"],
             )
             .filter(Q(workspace__in=scopes) | Q(purchase_snapshot__workspace="both"))
             .exists()
@@ -115,11 +167,20 @@ def issue_purchase(user, body):
         snapshot = plan_snapshot(plan)
         reference = f"subscription:{user.id}:{key}"
     elif body["purpose"] == "advertising":
+        if organization:
+            raise ValidationError(
+                {"organization_id": "Organization advertising is not configured."}
+            )
         reference = f"advertising:{body.get('advertisement_id')}"
         existing = RentInvoice.objects.filter(
             purpose="advertising", business_reference=reference, payer=user
         ).first()
         if existing:
+            if existing.workspace != workspace:
+                raise RentalConflict(
+                    "The existing advertisement invoice belongs to another workspace.",
+                    code="idempotency_conflict",
+                )
             IdempotencyRecord.objects.create(
                 user=user,
                 operation="billing.issue",
@@ -139,6 +200,7 @@ def issue_purchase(user, body):
     invoice = RentInvoice.objects.create(
         purpose=body["purpose"],
         payer=user,
+        organization=organization,
         workspace=workspace,
         reference=f"INV-{uuid.uuid4().hex[:20].upper()}",
         business_reference=reference,
@@ -149,6 +211,12 @@ def issue_purchase(user, body):
         due_date=timezone.localdate(),
         purchase_snapshot=snapshot,
     )
+    if body["purpose"] == "advertising":
+        BillingSourceLink.objects.create(
+            invoice=invoice,
+            source_kind="advertising",
+            source_id=body["advertisement_id"],
+        )
     InvoiceLine.objects.create(
         invoice=invoice,
         line_type=body["purpose"],
@@ -173,7 +241,17 @@ def issue_purchase(user, body):
 
 @transaction.atomic
 def cancel_invoice(user, invoice_id, body):
-    invoice = authorized_invoice(user, invoice_id, lock=True)
+    invoice = lock_purchase_invoice(user, invoice_id)
+    if invoice.organization_id:
+        from .commerce_access import organization_for
+
+        organization_for(
+            user,
+            invoice.organization.id,
+            lock=True,
+            pay=True,
+            amount=invoice.amount_minor,
+        )
     operation = f"billing.cancel.{invoice.id}"
     fingerprint = _fingerprint(body)
     record = IdempotencyRecord.objects.filter(
@@ -186,8 +264,18 @@ def cancel_invoice(user, invoice_id, body):
                 code="idempotency_conflict",
             )
         return invoice
-    if invoice.purpose == "rent":
-        raise RentalConflict("Rental obligations cannot be cancelled here.")
+    if invoice.purpose not in {"subscription", "advertising", "promotion"}:
+        raise RentalConflict(
+            "Correct this obligation through its original workflow.",
+            code="source_action_required",
+        )
+    if invoice.payment_attempts.filter(
+        payment_status__in=["created", "pending", "authorized", "captured"]
+    ).exists():
+        raise RentalConflict(
+            "Resolve the original payment before cancelling.",
+            code="payment_in_progress",
+        )
     if invoice.status != "cancelled":
         if invoice.revision != body["expected_revision"] or invoice.status != "due":
             raise RentalConflict(
@@ -196,6 +284,12 @@ def cancel_invoice(user, invoice_id, body):
         invoice.status = "cancelled"
         invoice.revision += 1
         invoice.save(update_fields=["status", "revision", "updated_at"])
+        if invoice.purpose == "promotion":
+            from ..models import BoostCampaign
+
+            BoostCampaign.objects.filter(
+                id=invoice.purchase_snapshot["subject_id"], status="pending"
+            ).update(status="cancelled")
     IdempotencyRecord.objects.create(
         user=user,
         operation=operation,
@@ -207,3 +301,34 @@ def cancel_invoice(user, invoice_id, body):
         result_revision=invoice.revision,
     )
     return invoice
+
+
+def lock_purchase_invoice(user, invoice_id):
+    # Every commerce writer takes actor -> company -> invoice locks.
+    get_user_model().objects.select_for_update().get(pk=user.pk)
+    candidate = get_object_or_404(RentInvoice, id=invoice_id)
+    if candidate.organization_id:
+        from .commerce_access import organization_for
+
+        organization_for(user, candidate.organization.id, lock=True)
+    if candidate.purpose == "promotion":
+        from ..models import BoostCampaign
+        from core_apps.properties.models import Property
+
+        campaign = BoostCampaign.objects.filter(
+            id=candidate.purchase_snapshot.get("subject_id")
+        ).first()
+        if campaign:
+            Property.objects.select_for_update().get(pk=campaign.property_id)
+    if candidate.purpose == "maintenance":
+        from ..models import MaintenanceRequest
+        from .rental_lifecycle.locks import lock_financial_lease
+
+        source = (
+            MaintenanceRequest.objects.select_related("lease")
+            .filter(id=candidate.purchase_snapshot.get("subject_id"))
+            .first()
+        )
+        if source:
+            lock_financial_lease(source.lease)
+    return authorized_invoice(user, invoice_id, lock=True)
