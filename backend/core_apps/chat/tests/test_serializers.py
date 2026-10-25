@@ -33,6 +33,9 @@ class TestChatSerializers:
         ConversationParticipant.objects.create(
             conversation=conversation, user=another_user, unread_count=0
         )
+        Message.objects.create(
+            conversation=conversation, sender=another_user, content="Hello there"
+        )
 
         factory = APIRequestFactory()
         request = factory.get("/")

@@ -72,7 +72,7 @@ def test_library_and_conversation_query_respect_participation(direct_chat, super
     assert denied.status_code == 404
     response = api.get(
         "/api/v1/chat/conversations/",
-        {"q": sender.first_name or "nothing", "workspace": "all"},
+        {"q": sender.first_name or "nothing", "workspace": "individual"},
     )
     assert response.status_code == 200, response.content
 

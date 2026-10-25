@@ -35,7 +35,7 @@ def history_response(conversation, user, query):
                 sequence__lte=snapshot,
             )
             .select_related("sender", "reply_to__sender")
-            .prefetch_related("attachments")
+            .prefetch_related("attachments", "edits", "reactions")
             .order_by("-sequence")[: count + 1]
         )
         more = len(rows) > count
@@ -127,7 +127,7 @@ class GroupMessageContextAPIView(APIView):
             get_object_or_404(Conversation, id=id), request.user, lock=True
         )
         count = page_limit(request.query_params)
-        visible = visible_messages(conversation, participant)
+        visible = visible_messages(conversation, participant).select_related("sender", "reply_to__sender").prefetch_related("attachments", "edits", "reactions")
         target = get_object_or_404(visible, id=message_id)
         older = list(
             visible.filter(sequence__lt=target.sequence).order_by("-sequence")[

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import serializers
 
 from core_apps.chat.models import Conversation
@@ -50,12 +51,12 @@ class ConversationSerializer(serializers.ModelSerializer):
             from core_apps.chat.services.group_projection import summary
 
             return summary(instance, self.context["request"].user)
-        from core_apps.chat.services.group_access import authorize, visible_messages
+        from core_apps.chat.services.group_access import authorize
         from core_apps.chat.services.conversation_preferences import preferences_payload
         _, participant, _ = authorize(instance, self.context["request"].user)
         value = {"conversation_type": "direct", **super().to_representation(instance)}
         value.update(preferences_payload(instance, self.context["request"].user, participant))
-        latest = visible_messages(instance, participant).order_by("-sequence").first()
+        latest = self._latest_visible_message(instance, participant)
         value["last_message_preview"] = latest.content[:160] if latest and not latest.deleted_at else ""
         value["last_message_at"] = latest.created_at.isoformat() if latest else None
         return value
@@ -81,10 +82,19 @@ class ConversationSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if not request or not request.user:
             return None
-        from core_apps.chat.services.group_access import authorize, visible_messages
+        from core_apps.chat.services.group_access import authorize
         _, participant, _ = authorize(obj, request.user)
-        latest = visible_messages(obj, participant).order_by("-sequence").first()
+        latest = self._latest_visible_message(obj, participant)
         return conversation_preview(latest, request.user)
+
+    @staticmethod
+    def _latest_visible_message(conversation, participant):
+        visible = Q(sequence__gte=participant.visible_from_sequence)
+        # Older clients can still send unsequenced text. Include it only when
+        # this participant has not cleared their history.
+        if participant.visible_from_sequence <= 1:
+            visible |= Q(sequence__isnull=True)
+        return conversation.messages.filter(visible).order_by("-created_at", "-pk").first()
 
     def get_other_participant(self, obj):
         request = self.context.get("request")

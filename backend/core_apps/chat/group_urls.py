@@ -1,4 +1,5 @@
 from django.urls import path
+from .views.interactions import MessageReactionAPIView, ConversationMembersAPIView
 from .views.group_attachments import (
     GroupAttachmentDetailAPIView,
     GroupAttachmentUploadAPIView,
@@ -13,6 +14,8 @@ from .views.group_history import (
 )
 
 urlpatterns = [
+    path("conversations/<uuid:id>/members/", ConversationMembersAPIView.as_view()),
+    path("conversations/<uuid:id>/messages/<uuid:message_id>/reaction/", MessageReactionAPIView.as_view()),
     path("conversations/<uuid:id>/chat/", DirectChatSummaryAPIView.as_view()),
     path(
         "conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",

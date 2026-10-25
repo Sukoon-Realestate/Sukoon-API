@@ -7,6 +7,7 @@ from core_apps.chat.models import ChatAttachment, Message, ConversationParticipa
 from django.db.models import F
 from .group_access import authorize, visible_messages
 from .group_limits import ChatConflict, limits
+from .mentions import normalize_mentions, resolve_mentions
 from .rich_media import validate_location
 from .property_sharing import normalize_reference, require_shareable
 
@@ -21,6 +22,7 @@ def normalize_request(data):
         "membership_period",
         "location",
         "property",
+        "mentions",
     }
     if not isinstance(data, dict) or set(data) - permitted:
         raise ValidationError("Unsupported message fields.")
@@ -80,6 +82,9 @@ def normalize_request(data):
         canonical["location"] = location
     if kind == "property":
         canonical["property"] = reference
+    mentions = normalize_mentions(content, data.get("mentions", []))
+    if mentions:
+        canonical["mentions"] = mentions
     fingerprint = hashlib.sha256(
         json.dumps(canonical, sort_keys=True, ensure_ascii=False).encode()
     ).hexdigest()
@@ -120,6 +125,7 @@ def send_group_message(conversation, sender, data):
                 "This operation belongs to an earlier membership period."
             )
         return existing
+    mentions = resolve_mentions(conversation, payload["content"], payload.get("mentions", []))
     if payload["kind"] == "property":
         require_shareable(payload["property"])
     reply = None
@@ -162,6 +168,7 @@ def send_group_message(conversation, sender, data):
         client_message_id=client_id,
         kind=payload["kind"],
         content=payload["content"],
+        mentions=mentions,
         reply_to=reply,
         sequence=conversation.last_sequence,
         payload_fingerprint=fingerprint,

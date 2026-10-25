@@ -27,6 +27,8 @@ class Message(TimeStampedModel):
     deleted_at = models.DateTimeField(null=True, blank=True)
     edited_at = models.DateTimeField(null=True, blank=True)
     revision = models.PositiveIntegerField(default=1)
+    reactions_revision = models.PositiveIntegerField(default=0)
+    mentions = models.JSONField(default=list, blank=True)
     deleted_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True,
         on_delete=models.SET_NULL, related_name="deleted_chat_messages",

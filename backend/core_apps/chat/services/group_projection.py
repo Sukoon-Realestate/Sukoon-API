@@ -47,6 +47,8 @@ def attachment_payload(attachment):
 
 def message_payload(message, participant, membership, *, properties=None):
     from .property_sharing import property_card
+    from .reactions import reaction_payload
+    from .mentions import mentions_payload
     deleted = message.deleted_at is not None
     readers = (
         eligible_participants(message.conversation)
@@ -74,6 +76,8 @@ def message_payload(message, participant, membership, *, properties=None):
         and "send_message" in actions(membership)
     ):
         permitted.append("edit_message")
+    if not deleted and message.kind != "system" and "send_message" in actions(membership):
+        permitted.append("react")
     reply = None
     if message.reply_to_id and not deleted:
         original = message.reply_to
@@ -106,6 +110,9 @@ def message_payload(message, participant, membership, *, properties=None):
         "created_at": message.created_at.isoformat(),
         "is_deleted": deleted,
         "revision": message.revision,
+        "reactions_revision": message.reactions_revision,
+        "reactions": reaction_payload(message, participant),
+        "mentions": mentions_payload(message),
         "edited_at": (
             message.edited_at.isoformat() if message.edited_at and not deleted else None
         ),
@@ -178,6 +185,7 @@ def summary(conversation, user):
         # Exact sender/client identity and payload are serialized by group_send.
         # A retry may additionally fence its original membership period.
         "idempotent_message_retry": True,
+        "supports_mentions": not direct,
         "last_message": preview,
         "last_message_at": latest.created_at.isoformat() if latest else None,
         "event_cursor": encode_cursor(

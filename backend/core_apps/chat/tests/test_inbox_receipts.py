@@ -50,6 +50,15 @@ def test_legacy_card_uses_existing_read_timestamp_without_upgrading(direct_chat)
     assert message.sequence is None
 
 
+def test_legacy_preview_cannot_restore_cleared_history(direct_chat):
+    conversation, sender, reader = direct_chat
+    Message.objects.create(conversation=conversation, sender=sender, content="Hidden")
+    conversation.participant_set.filter(user=reader).update(visible_from_sequence=2)
+    hidden = card(conversation, reader)
+    assert hidden["last_message"] is None
+    assert hidden["last_message_preview"] == ""
+
+
 def test_group_inbox_matches_history_and_membership_visibility(chat_group):
     group, conversation, sender, reader = chat_group
     message = send_group_message(conversation, sender, message_request("Group receipt"))

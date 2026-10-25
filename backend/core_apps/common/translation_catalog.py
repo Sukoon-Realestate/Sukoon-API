@@ -1,6 +1,12 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "Choose a member from the mention list.": "اختر العضو من قائمة المنشن.",
+    "A message can mention up to 20 members.": "يمكنك الإشارة إلى 20 عضوًا بحد أقصى في الرسالة.",
+    "Mentions are available in group conversations only.": "المنشن متاح داخل محادثات الجروبات فقط.",
+    "A mentioned member is no longer in this conversation.": "أحد الأعضاء المشار إليهم لم يعد في المحادثة. حدّث قائمة الأعضاء واختر من جديد.",
+    "A mentioned member changed. Choose them again from the list.": "تغيّر اسم أحد الأعضاء المشار إليهم. اختره مجددًا من القائمة.",
+    "Choose a single emoji.": "اختر إيموجي واحدًا للتفاعل مع الرسالة.",
     'The property type does not match the request.': 'نوع العقار لا يطابق المطلوب. راجع نوع العقار في تفاصيل طلب السكن، بالإضافة إلى نوع الوحدة المختارة.',
     'The furnishing requirement is not met.': 'حالة تأثيث العقار لا تطابق طلب السكن.',
     'The requested amenities are not available.': 'العقار لا يوفر كل المميزات المطلوبة في طلب السكن.',
