@@ -4,15 +4,15 @@ const {pathToFileURL}=require('url');
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.CHROME_EXECUTABLE||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
  const context=await browser.newContext({viewport:{width:1680,height:1100},colorScheme:'light',reducedMotion:'reduce'});const page=await context.newPage();
- const report={screens:60,sections:[],widths:[],checks:[],errors:[],externalRequests:[]};
+ const report={screens:160,sections:[],widths:[],checks:[],errors:[],externalRequests:[]};
  page.on('pageerror',e=>report.errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))report.externalRequests.push(r.url())});
  const base=pathToFileURL(path.join(__dirname,'index.html')).href;
  await page.goto(base);await page.waitForFunction(()=>document.documentElement.dataset.galleryReady==='true');
  const frames=()=>page.frames().filter(f=>f.parentFrame());
- assert.equal(frames().length,3);
+ assert.equal(frames().length,8);
  for(const frame of frames()){const key=await frame.evaluate(()=>window.galleryCollection);const count=await frame.locator('.screen').count();assert.equal(count,20);report.sections.push({key,screens:count});}
- assert.equal(await page.locator('.collection-heading h2').count(),3);assert.equal(await page.locator('.collection:visible').count(),3);
- report.checks.push('All 60 screens visible by default in three titled sections');
+ assert.equal(await page.locator('.collection-heading h2').count(),8);assert.equal(await page.locator('.collection:visible').count(),8);
+ report.checks.push('All 160 screens visible by default in eight titled sections');
  const first=()=>frames().find(f=>f.evaluate?f===frames()[0]:false);
  const original=frames()[0],sprint1=frames()[1],sprint2=frames()[2];
  await sprint2.locator('#S44 [name=subject]').fill('مسودة في الصفحة المجمّعة');
@@ -24,7 +24,7 @@ const {pathToFileURL}=require('url');
  await page.locator('[data-gallery-mode=system]').click();await page.emulateMedia({colorScheme:'dark'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='dark'&&[...document.querySelectorAll('iframe')].every(f=>f.contentDocument.documentElement.dataset.theme==='dark'));
  await page.emulateMedia({colorScheme:'light'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='light');
  report.checks.push('Global appearance syncs all batches and S20; System follows OS; draft preserved');
- await page.locator('#collection-filter').selectOption('sprint-02');assert.equal(await page.locator('.collection:visible').count(),1);await page.locator('#collection-filter').selectOption('all');assert.equal(await page.locator('.collection:visible').count(),3);report.checks.push('Section filter and restore-all');
+ await page.locator('#collection-filter').selectOption('sprint-02');assert.equal(await page.locator('.collection:visible').count(),1);await page.locator('#collection-filter').selectOption('all');assert.equal(await page.locator('.collection:visible').count(),8);report.checks.push('Section filter and restore-all');
  await sprint2.locator('[data-focus=S44]').click();
  await page.waitForFunction(()=>document.body.style.overflow==='hidden');
  const modal=await sprint2.locator('.focus-dialog').evaluate(el=>({open:el.open,top:el.getBoundingClientRect().top,height:el.getBoundingClientRect().height,frameTop:window.frameElement.getBoundingClientRect().top}));
@@ -33,6 +33,20 @@ const {pathToFileURL}=require('url');
  // Cross-batch routes stay inside the combined gallery instead of replacing a frame.
  await original.locator('#S02 [data-action=forgot]').click();await sprint1.locator('.focus-dialog').waitFor({state:'visible'});assert((await sprint1.locator('[data-focus-title]').textContent()).includes('استعادة'));
  await sprint1.locator('[data-close]').click();assert.equal(await sprint2.locator('.screen').count(),20);report.checks.push('Cross-section action opens the existing destination without losing a section');
+ const sprint3=frames()[3],sprint7=frames()[7];
+ // Newly represented destinations open in their existing section too.
+ await sprint2.locator('#S60 [data-action=media-next]').evaluate(el=>el.disabled=false);
+ await sprint2.locator('#S60 [data-action=media-next]').click();
+ await sprint3.locator('.focus-dialog').waitFor({state:'visible'});
+ assert((await sprint3.locator('[data-focus-title]').textContent()).includes('التسعير'));
+ await sprint3.locator('[data-close]').click();
+ await sprint7.locator('#S144 [data-go=S139]').click();
+ await frames()[6].locator('.focus-dialog').waitFor({state:'visible'});
+ assert((await frames()[6].locator('[data-focus-title]').textContent()).includes('الفواتير'));
+ await frames()[6].locator('[data-close]').click();
+ assert.equal(frames().length,8);
+ for(const f of frames())assert.equal(await f.locator('.screen').count(),20);
+ report.checks.push('Sprint 2 media-to-pricing and Sprint 7-to-6 billing routes retain all 160 screens');
  for(const width of [360,390,768,1680]){
   await page.setViewportSize({width,height:1000});
   await page.waitForFunction(()=>[...document.querySelectorAll('iframe')].every(f=>Math.abs(parseFloat(f.style.height)-f.contentDocument.querySelector('.atlas').getBoundingClientRect().height)<3));

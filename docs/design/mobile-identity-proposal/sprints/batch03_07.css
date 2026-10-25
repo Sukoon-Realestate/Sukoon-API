@@ -1,0 +1,29 @@
+/* Screen-specific compositions; the original foundation owns shared controls. */
+.phone .batch-card-title{margin:12px 0 7px;font-size:15px}
+.phone .batch-blocked{border:0;padding:0;margin:0;min-width:0;opacity:.65}
+.phone .batch-thread{margin:15px 0}.phone .batch-thread small{display:block;font-size:10px;color:var(--muted);margin-top:8px}
+.phone .mini-bars{display:flex;gap:9px;align-items:end;height:170px;padding:15px 0 0;direction:rtl}
+.phone .mini-bars>span{flex:1;height:100%;display:flex;align-items:center;justify-content:end;flex-direction:column;gap:8px;min-width:0}
+.phone .mini-bars i{display:block;width:100%;height:var(--bar);background:var(--accent);border-radius:5px 5px 0 0;opacity:.8}
+.phone .mini-bars small{font-size:9px;color:var(--muted);white-space:nowrap}
+.phone .batch-media{height:250px;position:relative;overflow:hidden;border-radius:14px;background:var(--hero);margin:10px 0 20px}
+.phone .batch-media>img{height:100%;width:100%;object-fit:cover}
+.phone .media-caption{position:absolute;bottom:10px;right:10px;left:10px;background:#0c2a18dd;color:#fcfbf7;border-radius:8px;padding:8px 10px;font-size:11px}
+.phone .capture-reticle{position:absolute;inset:35px 45px;border:2px solid #fcfbf7;border-radius:12px;box-shadow:0 0 0 100px #0c2a1822}
+.phone .capture-reticle:before,.phone .capture-reticle:after{content:'';position:absolute;top:50%;left:50%;background:#fcfbf7;transform:translate(-50%,-50%)}
+.phone .capture-reticle:before{width:30px;height:1px}.phone .capture-reticle:after{width:1px;height:30px}
+.phone .coverage-meter{height:6px;border-radius:6px;background:var(--line);margin:15px 0;overflow:hidden}.phone .coverage-meter span{display:block;height:100%;background:var(--accent)}
+.phone .comparison-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.phone .comparison-cards .panel{padding:12px 10px}
+.phone .comparison-cards .summary-row{flex-direction:column;gap:4px;font-size:12px}.phone .comparison-cards .summary-row>b{max-width:100%;text-align:right}
+.phone .comparison-cards .batch-card-title{font-size:13px}
+.phone .event-timeline{padding-right:21px;margin-top:22px;border-right:1px solid var(--line);list-style:none}.phone .event-timeline li{position:relative;padding-bottom:28px;font-size:13px}
+.phone .event-timeline li:before{content:'';position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent);right:-26px;top:6px}.phone .event-timeline p{font-size:12px;margin-top:7px}
+.phone .batch-form-feedback{font-size:12px;line-height:1.8;margin-top:12px;color:var(--accent)}
+.phone .batch-form-feedback.error{color:var(--error)}
+.phone form[data-form=batch-form]>.primary{margin-top:16px}.phone form[data-form=batch-form]>.secondary{margin-top:12px}
+.phone form[data-form=batch-form] .field textarea{font-size:13px;font-weight:500}
+.phone.chrome-viewer .notice{--info-bg:#1b2c3a;--info:#a9cceb;--chip:#173a24;--accent:#7fe08d}
+.phone.chrome-viewer main>p,.phone.chrome-viewer .intro p{color:#a1b0a6}
+.phone .panel .notice{margin-bottom:0}
+/* Immersive media retains readable controls in both global themes. */
+.phone.chrome-viewer{--canvas:#101713;--surface:#0e1912;--raised:#16241b;--text:#ecf2ea;--muted:#a1b0a6;--line:#294632;--accent:#7fe08d;--chip:#173a24;--action:#7fe08d;--on-action:#0c2a18}

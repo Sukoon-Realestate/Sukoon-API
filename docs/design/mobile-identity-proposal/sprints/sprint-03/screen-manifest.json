@@ -1,0 +1,2083 @@
+[
+  {
+    "id": "S61",
+    "name": "إضافة العقار · التسعير",
+    "english": "Property pricing and final review",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_pricing_page.dart",
+    "sha256": "39b55de8b56bb9b73d3711b317a200df7ad4c4a9b92e9f2acd4864a0e215d2cb",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_add_property_content.dart",
+        "sha256": "a54d3148f387c35eed90b2921b2703f08bfae706cd38477f3bc97b7782a576a8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/owner_pricing_options_data.dart",
+        "sha256": "597a5d72c54643a71b1f62fe45d30969ec4e2190eca1a2592ed9cea91d2dc104",
+        "localeKeys": [
+          "ownerAddPropertyFurnished"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_pricing_page_content.dart",
+        "sha256": "748e03cdbb331436c4938260e0de06ea3d7a5a9522aa9337da1b47387e4dc829",
+        "localeKeys": [
+          "ownerAddPropertyPricingProgress",
+          "ownerAddPropertyPricingReady",
+          "ownerAddPropertyPricingRequired",
+          "ownerAddPropertySubmitting",
+          "ownerPropertyReviewAction",
+          "rentalInvalidInventory",
+          "rentalLocalOnly",
+          "rentalOfferTerms"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_property_inventory_selection.dart",
+        "sha256": "c302d7a4d6ba80b3cffd5630ace2b75031f279883242afcf658c0460f056f83b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_property_form_validation.dart",
+        "sha256": "fe767c324a4c45102735b99ee66627b8adab63ea4c222ccbde44e37205389675",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_property_form_labels.dart",
+        "sha256": "4a2995807a82f5058222c2bc44da314678dd96f3f71cfe360f5fb3773ab8869a",
+        "localeKeys": [
+          "ownerAddPropertyAreaSummary",
+          "ownerAddPropertyPhotoCountSummary",
+          "ownerAddPropertyPhotoNumber",
+          "ownerAddPropertyPhotosSummary",
+          "ownerAddPropertyPrice",
+          "ownerAddPropertyPriceSummary",
+          "ownerAddPropertySubmittedAtSummary",
+          "ownerAddPropertyType",
+          "ownerPropertyVideoRequired",
+          "ownerPropertyVideoSelected",
+          "ownerPropertyVideoTitle",
+          "rentalUnknownScope"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_property_form_copy.dart",
+        "sha256": "b873e0683766d8c7d385a7bd964ae92a39d0ad7367b19c02374589f7b0080ed0",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_property_form_encoding.dart",
+        "sha256": "bd4671cf863d72e08e860a3f27e30840051da2cbf40142fdb8220f0a658601d2",
+        "localeKeys": [
+          "ownerAddPropertyAirConditioning",
+          "ownerAddPropertyBalcony",
+          "ownerAddPropertyElevator",
+          "ownerAddPropertyFurnished",
+          "ownerAddPropertyGarage",
+          "ownerAddPropertyNaturalGas",
+          "ownerAddPropertyNearMetro",
+          "ownerAddPropertySecurity",
+          "ownerAddPropertyWifi"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_property_form_api_values.dart",
+        "sha256": "816d2ea7f32b65f007127be9bed8d383a02f24e92f8575488ee9669924d472bc",
+        "localeKeys": [
+          "ownerAddPropertyAirConditioning",
+          "ownerAddPropertyBalcony",
+          "ownerAddPropertyElectricityMeter",
+          "ownerAddPropertyElevator",
+          "ownerAddPropertyFurnished",
+          "ownerAddPropertyGarage",
+          "ownerAddPropertyNaturalGas",
+          "ownerAddPropertyNearMetro",
+          "ownerAddPropertySecurity",
+          "ownerAddPropertyWaterMeter",
+          "ownerAddPropertyWifi"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/property_location.dart",
+        "sha256": "d49ca62fb1df7a052b61f487afb687092aa301d6e29c8706177606a304ecf3af",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_add_property_content_owner_property_photo_draft.dart",
+        "sha256": "0b8b3f2614165e4d17227273695979d488ca4c952c2a40c1614ebb4c1f83bac4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_step_shell.dart",
+        "sha256": "cc52e2e58bd6f307e6b2834ced84a5eb16b9b2f31edd917054673f2e26377087",
+        "localeKeys": [
+          "propertyRequiredFieldsHint"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/property_selection_field.dart",
+        "sha256": "c69a322c8e3fbb02d73a8a8f77bb33dc7e07c48cc1c5c0f61c14c6737a06f5af",
+        "localeKeys": [
+          "fillField"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/rental_offer_terms_editor.dart",
+        "sha256": "b47be07b379a044217ed468473c31008f4208c3daab89e4d49967a990643a113",
+        "localeKeys": [
+          "rentalDefaults",
+          "rentalUnknownScope",
+          "rentalUnspecified"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_info_banner.dart",
+        "sha256": "4cf3e18c89d001f9af281ae0a10c54b7eef97d509be003474ce05a14164dc84c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_pricing_page_price_section.dart",
+        "sha256": "eec0651342fef106b1d1115890fe24a76a2834fc35353856e7b5f8aaa83d2ef1",
+        "localeKeys": [
+          "ownerAddPropertyPrice"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/property_pricing_catalog.dart",
+        "sha256": "4386a2badfde9f0c0065fa585324db45a7e5164a0197e99fa3d541e2d196cf6d",
+        "localeKeys": [
+          "ownerAddPropertyAmenities",
+          "ownerAddPropertyFurnished",
+          "ownerAddPropertySuitableFor"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_pricing_page_description_section.dart",
+        "sha256": "2d02e6d2dfeb00391347af191bdec07318ee74838414f05d19fa6d4485bce2c2",
+        "localeKeys": [
+          "ownerAddPropertyDescription",
+          "ownerAddPropertyDescriptionHint",
+          "ownerAddPropertyDescriptionLabel"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_additional_details.dart",
+        "sha256": "4903549848ef0f5d5f3e46abe254e7819072d4503d3896d9c96ef90d03f7f5b0",
+        "localeKeys": [
+          "exceptionError",
+          "ownerAddPropertyAdditionalDetails",
+          "ownerAddPropertyAreaDescription",
+          "tenantPropertyDetailsBuildingYear"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S60",
+    "behavior": "Third step: positive price/duration, catalog-backed amenities/suitability, description and additional details. Partial offerings use RentalOfferTermsEditor and supported inventory; unsupported/local-only data must not be submitted. Review precedes server submission, not immediate publish.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "partial-offering",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S62",
+    "name": "تم إرسال العقار",
+    "english": "Property submitted for review",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_submitted_page.dart",
+    "sha256": "b35f0d74402661ef3edc4ad8bd5bbfaf3fa8dbe6912f223af48a2df8297d1ee8",
+    "localeKeys": [
+      "ownerOpenPropertyDetails",
+      "ownerPropertySubmittedAddAnother",
+      "ownerPropertySubmittedDescription",
+      "ownerPropertySubmittedStatus",
+      "ownerPropertySubmittedViewProperties",
+      "virtualTourAddAfterSave"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/data/models/owner_add_property_content_add_property_summary_content.dart",
+        "sha256": "0d3e82633c81925cbc0fa19cd829c8c7eed453aaa7fc7bc3ba833a76c35f04dc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_primary_button.dart",
+        "sha256": "950f2413916a938dbaf90e08d7da3f58068f5681aad6849db255579fd25398b5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_listings_screen.dart",
+        "sha256": "53fa582c49d8f6b800fd42edffa031a9bdc69d40e060ab0edbffbbe6f079e8e2",
+        "localeKeys": []
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S16",
+    "behavior": "Submitted status is pending review. Display server message and summary; property detail only with ID, tour manager only when callback available. Add-another resets the flow; do not claim publication.",
+    "kind": "status",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S11",
+      "S19"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S63",
+    "name": "إحصائيات العقار",
+    "english": "Property analytics",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_property_analytics_screen.dart",
+    "sha256": "940f22a1502e26a5e90d222bd290763119c0c62d288f2ba6bd34d66d4e1f1acb",
+    "localeKeys": [
+      "ownerAnalyticsNinetyDays",
+      "ownerAnalyticsPeriod",
+      "ownerAnalyticsSevenDays",
+      "ownerAnalyticsThirtyDays",
+      "ownerAnalyticsTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/data/models/owner_property_content.dart",
+        "sha256": "e15992e7640dc966099a7c6af408e150cfea4bf3e0801206e2bcf3f79a3f1a01",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/data/models/owner_property_analytics_content.dart",
+        "sha256": "568916f87b3771ce1dcc3d6737d7fc0fe70cda754b7f9601a36dc741ed5cfef7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/cubits/owner_property_analytics_cubit.dart",
+        "sha256": "909247b5a2c47e119757a455396bc387870df3ec9d452c00a69db1a0f7a3f9e3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/analytics/owner_analytics_content.dart",
+        "sha256": "e4da5386e8ded15772299c49a0a09a9740203c53c57b9a7cc79c59d9cad9cce6",
+        "localeKeys": [
+          "ownerAnalyticsAcceptanceRate",
+          "ownerAnalyticsSaved",
+          "ownerAnalyticsViews",
+          "ownerAnalyticsVisitRequests"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/analytics/owner_analytics_unavailable_details.dart",
+        "sha256": "7a359e582e895394dacee14d28f0b60af4e3ef97ef3a7542e411a0458b3b6e83",
+        "localeKeys": [
+          "ownerAnalyticsUnavailableDescription",
+          "ownerAnalyticsViews"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/analytics/owner_analytics_metric_card.dart",
+        "sha256": "ffa6bbbced7f5864abf6a1d41046415db79d4c36d1faca7bba29f50b11cbf4c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/analytics/owner_analytics_bar_chart.dart",
+        "sha256": "7e474e4763ab60933b96d24aaf58d3cd797cdb2d558e7ac4dab16c4d1efe1ea1",
+        "localeKeys": [
+          "ownerAnalyticsViews"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/analytics/owner_analytics_empty_state.dart",
+        "sha256": "2f5e3a6e39ef3550016e0516ea19da27c1b49502e03bcb06c7f1d34c48b4871c",
+        "localeKeys": [
+          "ownerAnalyticsEmptyTitle"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S16",
+    "behavior": "Server analytics periods 7_days/30_days/90_days; supplied snapshot omits period selector. Preserve missing analytics/history empty state; no invented acceptance or revenue values.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S15",
+      "S19"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S64",
+    "name": "مراجعة رفض العقار",
+    "english": "Rejected property and correction",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_property_rejection_screen.dart",
+    "sha256": "7fcdbc2bb1b67aa4d121ab0763c3238679e8ef6024f972476c3998eccaaf928d",
+    "localeKeys": [
+      "ownerPropertyEditAndResubmit",
+      "ownerPropertyRejectedHeadline",
+      "ownerPropertyRejectionDetailsUnavailable",
+      "ownerPropertyRejectionTitle",
+      "ownerPropertyRejectionWarning"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/data/models/owner_property_content.dart",
+        "sha256": "e15992e7640dc966099a7c6af408e150cfea4bf3e0801206e2bcf3f79a3f1a01",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/list/owner_property_status_badge.dart",
+        "sha256": "818638e5bbe3ab68e23ee0fd9c9df8c13048c3907195b358a2fd44310c134fc5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/data/enums/owner_property_status.dart",
+        "sha256": "f025a2d664ea5d43065617c64375ebaa013762e72e81c15367949b31ff8f203e",
+        "localeKeys": []
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S16",
+    "behavior": "Read rejection reason, use unavailable-reason fallback. Load current full details before opening edit flow; if details load fails do not construct an empty edit draft. Return updated property after successful edit.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S04",
+      "S19"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S65",
+    "name": "إيراداتك",
+    "english": "Owner revenue overview",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_revenue_screen.dart",
+    "sha256": "6b462c91ada7325777c5278c589678562439acc2509fcc0cbc1c70118efe9b7b",
+    "localeKeys": [
+      "ownerRevenueTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/cubits/owner_revenue_cubit.dart",
+        "sha256": "916e2a0da32ce82d77a741b630d080a3fef8733d9b423c51cea96ec1703e9e54",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/data/models/owner_revenue_content.dart",
+        "sha256": "984175f6436b58dbf05662dc3a19613393b3502422ec8a2489c01a2c28dc7a0f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/revenue/owner_revenue_content_view.dart",
+        "sha256": "a6364252de873c1cb3366ad068f3bf9f830e495aa8d3a3e6295f0e56abcb4765",
+        "localeKeys": [
+          "ownerRevenueLatestTransactions",
+          "ownerRevenueProperties",
+          "ownerRevenueThisMonth"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/data/models/owner_revenue_content_owner_revenue_property_content.dart",
+        "sha256": "926aa1209573bc4981d7791c39710703d1ddde1e52f4ef0c979bd537aaa523d0",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/data/models/owner_revenue_content_owner_transaction_content.dart",
+        "sha256": "c9e58e853fff58ef0541bc4f1346b4ad14d148057b4f4ef9f0527e3a3a9c6a44",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/revenue/owner_revenue_empty_state.dart",
+        "sha256": "a8d75bc1d375d0480cf93b639295fdf390310c57465763f2c34f8cd50a17987d",
+        "localeKeys": [
+          "ownerRevenueEmptyDescription",
+          "ownerRevenueEmptyTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/revenue/owner_revenue_property_card.dart",
+        "sha256": "1a0fa97cd4a2ecda2db48d976b3f97ff53990923a4dbad6767656967d080e829",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/widgets/revenue/owner_transaction_row.dart",
+        "sha256": "478ac9431eb4ec09f2c211be2b7e9f68bc4eb9da4a78185b90fa4748445e2337",
+        "localeKeys": []
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S41",
+    "behavior": "OwnerRevenueContent properties/transactions and optional comparison text; empty collections are valid. Retain rental selection on transaction details and direction/credit sign; displayed sums are illustrative, not settled payout guarantees.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S15",
+      "S19"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S66",
+    "name": "مواعيد المعاينة",
+    "english": "Owner availability editor",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/screens/owner_availability_screen.dart",
+    "sha256": "340d61185c3c7d3df901611f9aec3ef608151bb51c5398151fe3cabf735cc69e",
+    "localeKeys": [
+      "ownerAvailabilityTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/cubits/owner_availability_cubit.dart",
+        "sha256": "a7b78f0b3397165f9c21b9ba13cefb36e0e77fa5293a3771b8f033bc5d7500b6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_availability_content_owner_availability_slot_content.dart",
+        "sha256": "90745a6813c425cc98530d2806062df572ef05f8227560bd704230bbac905a1a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/presentation/widgets/text_draft_binding.dart",
+        "sha256": "0b33c1036dc5d5f2a740d3d86014a106796f6b10d62f67473c2bd4ce9b1816e7",
+        "localeKeys": [
+          "formDraftRecovery",
+          "freeLocalSaveFailed",
+          "professionalUnknownOutcome"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_availability_content_owner_availability_day_content.dart",
+        "sha256": "54ad82ac11312a75ba0ffb9fd2065b1ebce57124d69f9b28afcafe1d759eb7de",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/owner_availability_draft_data.dart",
+        "sha256": "eaf8be99a4d14084471bcf45fad4d943547d1f7c684e806c63cf60d095b4ae5c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_visit_calendar_content.dart",
+        "sha256": "3cd968fb1008b61e0170617e4f5a506d6b40b6f620b6d93610e3c925f68be1db",
+        "localeKeys": [
+          "ownerCalendarDayFridayShort",
+          "ownerCalendarDayMondayShort",
+          "ownerCalendarDaySaturdayShort",
+          "ownerCalendarDaySundayShort",
+          "ownerCalendarDayThursdayShort",
+          "ownerCalendarDayTuesdayShort",
+          "ownerCalendarDayWednesdayShort"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/widgets/owner_availability_screen_content.dart",
+        "sha256": "f7f8a9969fdaa2ff14f30765855b140d417c405791c5352a1f5c6ef9fb61ed1a",
+        "localeKeys": [
+          "ownerAvailabilityTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_availability_content.dart",
+        "sha256": "21f1af3d45c5a397d71f949f96e6182dd69dffc020209a977dce0daa96ffbe78",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_availability_content_owner_availability_save_body.dart",
+        "sha256": "f8b9f4e600356250e53a145ac38c97d84ed2eb82b2aa05b486788c049c303831",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_visit_calendar_content_owner_calendar_day_content.dart",
+        "sha256": "84e58f5456edc9d6828a32a4532275ac6d7a2afa6a4e8cd3ce2d25752dfab0bb",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_visit_calendar_content_owner_calendar_visit_content.dart",
+        "sha256": "dbff30b18d19d7f65e07a7517a76a2a309616f1a9b75e2a68cd075e46f9505c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/widgets/owner_availability/owner_availability_empty_state.dart",
+        "sha256": "16730ea35bcf5ab32d8e11a946ad4ad5ef59ccaefa0249cad1cea009c34c4163",
+        "localeKeys": [
+          "ownerAvailabilityEmptyDescription",
+          "ownerAvailabilityEmptyTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/widgets/owner_availability/owner_availability_content.dart",
+        "sha256": "63c78e037b8a919432084b5126615206fd1c8c741664b7db01f6ef125bbe17a5",
+        "localeKeys": [
+          "ownerAvailabilityAddTime",
+          "ownerAvailabilityCairoTime",
+          "ownerAvailabilityDescription",
+          "ownerAvailabilityNextWeek",
+          "ownerAvailabilityPreviousWeek",
+          "ownerAvailabilitySave"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_availability_content_owner_availability_slot_body.dart",
+        "sha256": "9b4867ca78134f5200a474cc05a6ea2b532f5a3b151c7d3c98a8d65528e5ba2c",
+        "localeKeys": []
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S67",
+    "behavior": "Per-property/date slot drafts, Cairo time, booked/locked slots immutable. Preserve local draft, unsaved guard and uncertain-save recovery; respect availability start/date range and authoritative save result.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S10",
+      "S17"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S67",
+    "name": "تقويم المعاينات",
+    "english": "Owner viewing calendar",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/screens/owner_requests_calendar_screen.dart",
+    "sha256": "0946edf75be1299a071e6db440214ec39b0a0beb52510f8972e9fd17d2167e3d",
+    "localeKeys": [
+      "ownerCalendarTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/cubits/owner_calendar_cubit.dart",
+        "sha256": "f81d4ec41e0fa770442ae0e3c4445350df00bae00a6f2662bdc2e92a00588e88",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/screens/owner_availability_screen.dart",
+        "sha256": "340d61185c3c7d3df901611f9aec3ef608151bb51c5398151fe3cabf735cc69e",
+        "localeKeys": [
+          "ownerAvailabilityTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_visit_calendar_content.dart",
+        "sha256": "3cd968fb1008b61e0170617e4f5a506d6b40b6f620b6d93610e3c925f68be1db",
+        "localeKeys": [
+          "ownerCalendarDayFridayShort",
+          "ownerCalendarDayMondayShort",
+          "ownerCalendarDaySaturdayShort",
+          "ownerCalendarDaySundayShort",
+          "ownerCalendarDayThursdayShort",
+          "ownerCalendarDayTuesdayShort",
+          "ownerCalendarDayWednesdayShort"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/widgets/owner_calendar/owner_calendar_content.dart",
+        "sha256": "a1bbab2f68e128351399305f67596a756abf093d32032d0465f8cc60049da39c",
+        "localeKeys": [
+          "ownerCalendarManageAvailability",
+          "ownerCalendarVisitsOnDay"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_availability_content_owner_availability_slot_content.dart",
+        "sha256": "90745a6813c425cc98530d2806062df572ef05f8227560bd704230bbac905a1a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_availability_content_owner_availability_day_content.dart",
+        "sha256": "54ad82ac11312a75ba0ffb9fd2065b1ebce57124d69f9b28afcafe1d759eb7de",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/widgets/owner_availability_screen_content.dart",
+        "sha256": "f7f8a9969fdaa2ff14f30765855b140d417c405791c5352a1f5c6ef9fb61ed1a",
+        "localeKeys": [
+          "ownerAvailabilityTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_visit_calendar_content_owner_calendar_day_content.dart",
+        "sha256": "84e58f5456edc9d6828a32a4532275ac6d7a2afa6a4e8cd3ce2d25752dfab0bb",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/data/models/owner_visit_calendar_content_owner_calendar_visit_content.dart",
+        "sha256": "dbff30b18d19d7f65e07a7517a76a2a309616f1a9b75e2a68cd075e46f9505c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/widgets/owner_calendar/owner_calendar_day.dart",
+        "sha256": "1ce70db3268cabbef19b25d8e40e6ae81bf31269b8cf068afe83bf0e2eabf1f7",
+        "localeKeys": [
+          "ownerCalendarDayVisitCount"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/widgets/owner_calendar/owner_calendar_visit_card.dart",
+        "sha256": "392093c4bb66ddb407b0f56cc75956d12095fb06d63cedfa8ff1bea9558c9dff",
+        "localeKeys": [
+          "ownerCalendarConfirmed"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S58",
+    "behavior": "Select date and show server visit count/details. Manage availability requires an identified property or property picker; refresh when availability returns changed. Do not fabricate appointments from availability slots.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S10",
+      "S18"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S68",
+    "name": "اختيار مخرجات الالتقاط",
+    "english": "Capture output selection",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/screens/capture_selection_screen.dart",
+    "sha256": "df6f101c9be81f14e84ef6cbdca67314e29f9066b9eef99a9423d3e383818e71",
+    "localeKeys": [
+      "captureChooseOutputs",
+      "captureNoSelectableOutputs",
+      "captureResumeTourDraft",
+      "virtualTourRefresh"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/data/capture_api.dart",
+        "sha256": "f4a8ed06497ad5fa8b2fc337c9284562545a484b585eca0bd8dbc92474db6f70",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/cubits/capture_selection_cubit.dart",
+        "sha256": "79ee20af2872c0cf6aacafcc560052b3398787cdf77e57ada7fdb4d9c76dab36",
+        "localeKeys": [
+          "captureUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/data/capture_selection_data.dart",
+        "sha256": "1082083c06a95b1fc3983af338eae389cafa3b4544ccd7612e372ae3a60e0a79",
+        "localeKeys": [
+          "captureScopeRequired",
+          "captureSelectionRequired"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/widgets/capture_selection_form.dart",
+        "sha256": "9fe617908551171915f354b4fc729443e117593492a4cd7751eee36b6d06c796",
+        "localeKeys": [
+          "captureCreateTourDraft",
+          "capturePanoramaPreview",
+          "captureReconstructionPreview",
+          "captureScopeRequired",
+          "captureSelectionHint",
+          "virtualTourNameArabic",
+          "virtualTourNameEnglish",
+          "virtualTourOverview",
+          "virtualTourRequired",
+          "virtualTourScope",
+          "virtualTourSharedSpace"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/cubits/capture_selection_state.dart",
+        "sha256": "abd7baa7084c90a4af21b26e1fabbbb392ebe9201bc98c8f9cb9b7e823d5dba3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/data/models/capture_models.dart",
+        "sha256": "d27b7f8e0c1d00f134969f47ac10417337e6a0828784fb6f69f8d0b1a40158e2",
+        "localeKeys": []
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S69",
+    "behavior": "Catalog verified/selectable outputs only; require selected outputs, scope and names. Existing revision resumes draft. Preview panorama/reconstruction separately; do not treat raw uploaded captures as published tours.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "no-selectable-output"
+    ],
+    "visualReference": [
+      "S04",
+      "S17"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "no-selectable-output"
+    ]
+  },
+  {
+    "id": "S69",
+    "name": "التقاط العقار",
+    "english": "Property capture session",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/screens/property_capture_screen.dart",
+    "sha256": "32e063bef62a12ec72cc90224e3ecd932e76f247756bd160e6f13461832dfbd7",
+    "localeKeys": [
+      "captureDevelopment",
+      "captureTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/cubits/property_capture_cubit.dart",
+        "sha256": "6cce0343d387b521c230fc4df868cbd98947581b23fcc80c9e7d27cfe3a8d851",
+        "localeKeys": [
+          "captureCoachOffline",
+          "capturePermission",
+          "captureUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/data/capture_api.dart",
+        "sha256": "f4a8ed06497ad5fa8b2fc337c9284562545a484b585eca0bd8dbc92474db6f70",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/data/models/capture_models.dart",
+        "sha256": "d27b7f8e0c1d00f134969f47ac10417337e6a0828784fb6f69f8d0b1a40158e2",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/widgets/capture_live_panel.dart",
+        "sha256": "7a667847767b036e9c5ffdca2012d58266448b5f31490583089d17059122b0b0",
+        "localeKeys": [
+          "captureAngularLimit",
+          "captureAngularSamples",
+          "captureAngularTarget",
+          "captureCoachConnected",
+          "captureCoachConnecting",
+          "captureCoachExhausted",
+          "captureCoachReconnecting",
+          "captureCoachUnavailable",
+          "captureGuidanceGemini",
+          "captureGuidanceLocal",
+          "capturePause",
+          "captureStation",
+          "captureVoice"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/widgets/capture_preparation.dart",
+        "sha256": "1dc9073a452ea3a56673574ba9538171828324fa07e16edec761e65963b03abc",
+        "localeKeys": [
+          "captureAddRoom",
+          "captureChecklist",
+          "captureCoachOffline",
+          "captureCoachOptIn",
+          "captureConsent",
+          "captureDisclosure",
+          "capturePreparation",
+          "captureRoomName",
+          "captureStart",
+          "captureUnavailable",
+          "captureUnsupported"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/widgets/capture_review_panel.dart",
+        "sha256": "75828d1495b8b02a5ea061bf1f39f43db72c5e0a5b39d6653140a4dc218b7b92",
+        "localeKeys": [
+          "captureChooseOutputs",
+          "captureCoverageHint",
+          "captureNoPublish",
+          "capturePanoramaPreview",
+          "captureReconstructionPreview",
+          "captureRecovered",
+          "captureRefresh",
+          "captureSaved",
+          "captureUpload",
+          "captureVerified",
+          "captureVerifyHint"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/screens/capture_selection_screen.dart",
+        "sha256": "df6f101c9be81f14e84ef6cbdca67314e29f9066b9eef99a9423d3e383818e71",
+        "localeKeys": [
+          "captureChooseOutputs",
+          "captureNoSelectableOutputs",
+          "captureResumeTourDraft",
+          "virtualTourRefresh"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/widgets/capture_target_overlay.dart",
+        "sha256": "107090f8fb85fe1277e8fdbb427e3e69b6fa8e0cc34acd779f60fa178eea49e7",
+        "localeKeys": [
+          "captureAngularGuide"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/widgets/capture_selection_form.dart",
+        "sha256": "9fe617908551171915f354b4fc729443e117593492a4cd7751eee36b6d06c796",
+        "localeKeys": [
+          "captureCreateTourDraft",
+          "capturePanoramaPreview",
+          "captureReconstructionPreview",
+          "captureScopeRequired",
+          "captureSelectionHint",
+          "virtualTourNameArabic",
+          "virtualTourNameEnglish",
+          "virtualTourOverview",
+          "virtualTourRequired",
+          "virtualTourScope",
+          "virtualTourSharedSpace"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S71",
+    "behavior": "Capability/device readiness, camera permission and explicit consent before starting. Pause on lifecycle changes; coach opt-in/voice and offline/local guidance distinct. Angular coverage/stations, verified uploads and recovery do not grant publishing authority.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "permission-denied",
+      "unsupported",
+      "processing"
+    ],
+    "visualReference": [
+      "S04",
+      "S08"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "permission-denied",
+      "unsupported",
+      "processing"
+    ]
+  },
+  {
+    "id": "S70",
+    "name": "تحرير الجولة",
+    "english": "Tour revision editor",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/owner_tour_editor_screen.dart",
+    "sha256": "8360aa03dcde32ce5673cf1d16e493764302feabfd73b0bfce5b85324110e509",
+    "localeKeys": [
+      "virtualTourOverview",
+      "virtualTourPreview",
+      "virtualTourRefresh",
+      "virtualTourScope",
+      "virtualTourUnavailable",
+      "virtualTourWrongSourceScene"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/tour_data.dart",
+        "sha256": "dbe8c7a572dc27bbdaab718e98074b40fa9e13112296c89c3f90a5fb7270bb0d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/models/tour_models.dart",
+        "sha256": "b8cbf3db4e8d2aa7ef44f77260991ca3a5d590d50abed50257f81f9be734981e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/cubits/tour_editor_cubit.dart",
+        "sha256": "03571c5003232c96b1ff2a176ee11ff0e8be52f8eb1ff2b8509da5db1c10be91",
+        "localeKeys": [
+          "freeLocalSaveFailed",
+          "virtualTourDraftConflict"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/widgets/tour_form_dialog.dart",
+        "sha256": "0512f21ff1612012ab771d55daae2e153803b0c7f628684b111f42d7c6b9b9e9",
+        "localeKeys": [
+          "virtualTourCancel",
+          "virtualTourRequired",
+          "virtualTourSave"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/tour_viewer_screen.dart",
+        "sha256": "1f8746d94c8095821d66ba24571474f110b98daa57ca6eea1019ac0b158d6bd4",
+        "localeKeys": [
+          "virtualTourClose",
+          "virtualTourLoading",
+          "virtualTourTitle",
+          "virtualTourUnavailable",
+          "virtualTourUseDirection"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/tour_authoring.dart",
+        "sha256": "80a3644cca39c8222ca3efe348c76a346633c3fd70e617670812f10e5533b9ee",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/tour_labels.dart",
+        "sha256": "07b44a7b8a06eb6210a6e456f48be18b750b5eae5020c8e12e054b25caad4118",
+        "localeKeys": [
+          "virtualTourApproved",
+          "virtualTourDraft",
+          "virtualTourFailed",
+          "virtualTourModel",
+          "virtualTourPanorama",
+          "virtualTourPending",
+          "virtualTourProcessing",
+          "virtualTourQueued",
+          "virtualTourReady",
+          "virtualTourRejected",
+          "virtualTourUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/cubits/tour_editor_state.dart",
+        "sha256": "71bc0d22d10843807b0b6fc88c7d454f8f3ef2b6b0ad2aa2d7abd17332e69c27",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/widgets/owner_tour_editor_content.dart",
+        "sha256": "87f70bf83b6ff23de40d47d74cddc02b9ddffea0adfcae7af1f6cb8f5bf62a35",
+        "localeKeys": [
+          "captureSelectedDraft",
+          "virtualTourAddConnection",
+          "virtualTourAddPackage",
+          "virtualTourAddScene",
+          "virtualTourClearFiles",
+          "virtualTourConnections",
+          "virtualTourDiscardLocal",
+          "virtualTourMetadata",
+          "virtualTourPackages",
+          "virtualTourPanoramaHint",
+          "virtualTourPlaceHotspot",
+          "virtualTourPreparedModelHint",
+          "virtualTourPreview",
+          "virtualTourPrivacyHint",
+          "virtualTourProcess",
+          "virtualTourRefresh",
+          "virtualTourRemovePackage",
+          "virtualTourRemoveScene",
+          "virtualTourResumeUploads",
+          "virtualTourSave",
+          "virtualTourScope",
+          "virtualTourSubmit"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S71",
+    "behavior": "Edit revision/context/hotspots with draft signatures and source-scene checks. Fresh revision ready/contexts gate preview and direction capture. Handle save conflicts/recovery; saving does not imply active publication.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "conflict",
+      "processing"
+    ],
+    "visualReference": [
+      "S08",
+      "S17"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "conflict",
+      "processing"
+    ]
+  },
+  {
+    "id": "S71",
+    "name": "الجولات الافتراضية",
+    "english": "Owner tour manager",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/owner_tour_manager_screen.dart",
+    "sha256": "32571f4b580f2fe2425d610ca07cf789aeee38f4bbd8d1632388e7f999fafe43",
+    "localeKeys": [
+      "captureEntry",
+      "portfolioCommonAreaTours",
+      "professionalCheckDelivery",
+      "virtualTourCancel",
+      "virtualTourCheckAvailability",
+      "virtualTourConfirm",
+      "virtualTourCreate",
+      "virtualTourCreationUnavailable",
+      "virtualTourDelete",
+      "virtualTourDisableHint",
+      "virtualTourDisabledHint",
+      "virtualTourEdit",
+      "virtualTourManage",
+      "virtualTourNewRevision",
+      "virtualTourOwnerHint",
+      "virtualTourPanoramaHint",
+      "virtualTourPreparationSteps",
+      "virtualTourPreparedModelHint",
+      "virtualTourPublishedHint",
+      "virtualTourRefresh",
+      "virtualTourUnavailable",
+      "virtualTourUnpublish",
+      "virtualTourViewStatus"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/tour_data.dart",
+        "sha256": "dbe8c7a572dc27bbdaab718e98074b40fa9e13112296c89c3f90a5fb7270bb0d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/cubits/tour_cubit.dart",
+        "sha256": "e16fa73d2166701298f1fc9014b588616fc9d403d25da808bb92e9026ffccb3b",
+        "localeKeys": [
+          "virtualTourUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/models/tour_models.dart",
+        "sha256": "b8cbf3db4e8d2aa7ef44f77260991ca3a5d590d50abed50257f81f9be734981e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/owner_tour_editor_screen.dart",
+        "sha256": "8360aa03dcde32ce5673cf1d16e493764302feabfd73b0bfce5b85324110e509",
+        "localeKeys": [
+          "virtualTourOverview",
+          "virtualTourPreview",
+          "virtualTourRefresh",
+          "virtualTourScope",
+          "virtualTourUnavailable",
+          "virtualTourWrongSourceScene"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/screens/property_capture_screen.dart",
+        "sha256": "32e063bef62a12ec72cc90224e3ecd932e76f247756bd160e6f13461832dfbd7",
+        "localeKeys": [
+          "captureDevelopment",
+          "captureTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/tour_labels.dart",
+        "sha256": "07b44a7b8a06eb6210a6e456f48be18b750b5eae5020c8e12e054b25caad4118",
+        "localeKeys": [
+          "virtualTourApproved",
+          "virtualTourDraft",
+          "virtualTourFailed",
+          "virtualTourModel",
+          "virtualTourPanorama",
+          "virtualTourPending",
+          "virtualTourProcessing",
+          "virtualTourQueued",
+          "virtualTourReady",
+          "virtualTourRejected",
+          "virtualTourUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/widgets/tour_form_dialog.dart",
+        "sha256": "0512f21ff1612012ab771d55daae2e153803b0c7f628684b111f42d7c6b9b9e9",
+        "localeKeys": [
+          "virtualTourCancel",
+          "virtualTourRequired",
+          "virtualTourSave"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/widgets/owner_tour_editor_content.dart",
+        "sha256": "87f70bf83b6ff23de40d47d74cddc02b9ddffea0adfcae7af1f6cb8f5bf62a35",
+        "localeKeys": [
+          "captureSelectedDraft",
+          "virtualTourAddConnection",
+          "virtualTourAddPackage",
+          "virtualTourAddScene",
+          "virtualTourClearFiles",
+          "virtualTourConnections",
+          "virtualTourDiscardLocal",
+          "virtualTourMetadata",
+          "virtualTourPackages",
+          "virtualTourPanoramaHint",
+          "virtualTourPlaceHotspot",
+          "virtualTourPreparedModelHint",
+          "virtualTourPreview",
+          "virtualTourPrivacyHint",
+          "virtualTourProcess",
+          "virtualTourRefresh",
+          "virtualTourRemovePackage",
+          "virtualTourRemoveScene",
+          "virtualTourResumeUploads",
+          "virtualTourSave",
+          "virtualTourScope",
+          "virtualTourSubmit"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S16",
+    "behavior": "Capabilities decide writable kinds/create/clone/preview/publish-disable-delete availability. Processing/review/active revisions differ. Confirm disable/unpublish/delete and apply only after successful commands. Property/common-area source scope preserved.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "processing"
+    ],
+    "visualReference": [
+      "S18",
+      "S08"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "processing"
+    ]
+  },
+  {
+    "id": "S72",
+    "name": "معاينة الجولة",
+    "english": "Immersive tour viewer",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/tour_viewer_screen.dart",
+    "sha256": "1f8746d94c8095821d66ba24571474f110b98daa57ca6eea1019ac0b158d6bd4",
+    "localeKeys": [
+      "virtualTourClose",
+      "virtualTourLoading",
+      "virtualTourTitle",
+      "virtualTourUnavailable",
+      "virtualTourUseDirection"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/tour_data.dart",
+        "sha256": "dbe8c7a572dc27bbdaab718e98074b40fa9e13112296c89c3f90a5fb7270bb0d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/models/tour_models.dart",
+        "sha256": "b8cbf3db4e8d2aa7ef44f77260991ca3a5d590d50abed50257f81f9be734981e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/data/tour_viewer_bridge.dart",
+        "sha256": "6b3652066c61e22b823dd3694fff9846e44604315239e881a8859dd4386c67cd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/recovery_scope.dart",
+        "sha256": "ad54915c371839699a55b3da1559983c294fa5038596a11c0026dce92ea06825",
+        "localeKeys": []
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S71",
+    "behavior": "Trusted session origin /tours/ path, navigation/bridge instance checks and session cleanup. Model requires WebGL2/WASM readiness; handle timeout/unavailable. Direction-selection return only when captureDirection and source scene match.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "unsupported",
+      "session-ended"
+    ],
+    "visualReference": [
+      "S08"
+    ],
+    "sprint": 3,
+    "chrome": "viewer",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "unsupported",
+      "session-ended"
+    ]
+  },
+  {
+    "id": "S73",
+    "name": "نتائج وقت الوصول",
+    "english": "Commute results",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/screens/commute_results_screen.dart",
+    "sha256": "8f49ce03d93843741652de1b0a372bf559eaa7a5aae4b6fd9dfdd4eaa7459930",
+    "localeKeys": [
+      "commuteCancelled",
+      "commuteFailed",
+      "commuteProcessing",
+      "commuteResults",
+      "rentalCancel",
+      "searchRetry"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/cubits/commute_cubit.dart",
+        "sha256": "db75572ad663dc64a5c1a8e59b2cd905ce14bbfcd76810204d790fa3fbb98fcb",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/cubits/commute_state.dart",
+        "sha256": "edd23424f2c7ae19a4a19a3cfef2a716f5a3c9ee6ab3584ab1068e7d60be0d66",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/widgets/commute_results_list.dart",
+        "sha256": "41d205ece71a59ea712ea50c83cf4c73925bb7cc06b91fb26be62cda26d0c900",
+        "localeKeys": [
+          "commuteEstimatesHelp",
+          "commuteFullCatalog",
+          "commuteLoadedOnly",
+          "commuteMinutes",
+          "commutePartialCoverage",
+          "commuteUnknown",
+          "commuteUnknownCount",
+          "housingReviewVisit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/data/models/commute_plan.dart",
+        "sha256": "947009d07c4eceea887404ee375b435f00bc0d5faa7ce0c2277eb5b24acf598f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/data/models/commute_search.dart",
+        "sha256": "b208f7a93385bcdaae4654599a5afb7bc90d03a380b14e202fcf542365ec8f17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/widgets/commute_results_empty_state.dart",
+        "sha256": "d2e386be6af67c4b3557e02b228547afb9e24a3596a2b4b582a4a4d333cf9307",
+        "localeKeys": [
+          "commuteEmpty",
+          "commuteEmptyHelp"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S74",
+    "behavior": "Asynchronous job polling pauses offscreen and reloads on resume. Pending progress/cancel, failed/cancelled/complete states; known estimates, unknown and partial coverage distinguished. Loaded-only/full-catalog scope labels retained.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "processing",
+      "cancelled"
+    ],
+    "visualReference": [
+      "S06",
+      "S19"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "processing",
+      "cancelled"
+    ]
+  },
+  {
+    "id": "S74",
+    "name": "خطة التنقل",
+    "english": "Commute preferences",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/screens/commute_screen.dart",
+    "sha256": "8d895e2a215f0f8f4590bbbb4ee2f3699b5168199b887f1a679341c5ac0e52af",
+    "localeKeys": [
+      "commuteTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/data/models/commute_plan.dart",
+        "sha256": "947009d07c4eceea887404ee375b435f00bc0d5faa7ce0c2277eb5b24acf598f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/widgets/commute_editor.dart",
+        "sha256": "51c82983d1e1aa5489efc9be2179f5f5c876b051d09ac3c771c388229a7b0590",
+        "localeKeys": [
+          "commuteAddDestination",
+          "commuteBalance",
+          "commuteBalanceHelp",
+          "commuteCairoTime",
+          "commuteIntro",
+          "commuteInvalid",
+          "commuteMinutes",
+          "commutePrivacy",
+          "commuteRemoveDestination",
+          "commuteSearch",
+          "commuteTitle",
+          "commuteWhen",
+          "housingChooseFilters",
+          "searchRetry"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/data/models/commute_destination.dart",
+        "sha256": "c3ead4c91e0116be0347ea20241f2a59b3938e560b8b82b287505e68025341cc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/widgets/commute_destination_editor.dart",
+        "sha256": "50c050f4c1ed9c58d9fd382cd1328786be07936a195d5765e0396bdbbbdd41ac",
+        "localeKeys": [
+          "commuteArrive",
+          "commuteChooseLocation",
+          "commuteCycling",
+          "commuteDepart",
+          "commuteDestination",
+          "commuteDestinationTime",
+          "commuteDriving",
+          "commuteLimit",
+          "commuteLocationChosen",
+          "commuteMode",
+          "commutePrivateLabel",
+          "commuteTransit",
+          "commuteWalking",
+          "commuteWhen"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S75",
+    "behavior": "CommuteEditor destination location, modes, arrive/depart supported modes, Cairo local time and duration/balance preferences. Preserve filters and privacy; validate location/limits before starting a server search.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S07",
+      "S10"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S75",
+    "name": "أدوات القرار",
+    "english": "Private decision notebook",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/screens/decision_tools_screen.dart",
+    "sha256": "39972f5fcba08671c0c44342c554dda20a7cf6d745ba23cb90e498beebbee036",
+    "localeKeys": [
+      "freeDecisionTools",
+      "freeLocalSaveFailed"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/cubits/decision_tools_cubit.dart",
+        "sha256": "2be0979edc6059ff442f0f73b9705ec4d1a8b6170214d3916b2a691a56105b04",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/data/models/decision_notebook.dart",
+        "sha256": "19b6dcb9c4386388411c0d6c36ccc59256e77a2af1d2d85b85824eb2bf1f0d7f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/widgets/decision_notebook_view.dart",
+        "sha256": "2d2ed17e7b42edd30530f6beb912bd432100fe1167798aeeaaa7422d41d67fff",
+        "localeKeys": [
+          "decisionPropertyScope",
+          "freeDecisionEmpty",
+          "freeDecisionTools",
+          "freeLocalSaveFailed",
+          "freeOpenListing",
+          "freePrivateDeviceNotes",
+          "freePrivateNotes",
+          "freeRemove",
+          "freeSavedSearchManual",
+          "freeSavedSearches",
+          "freeUnfiled",
+          "professionalRenameSearch",
+          "rentalOfferedAccommodation"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/data/models/decision_target.dart",
+        "sha256": "2a01703522ea05e60fd3070a9cce3b72216ab7203eafdf824519feffb277919f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/widgets/notebook_delete_dialog.dart",
+        "sha256": "7ed4b576e5301c26c2ba158538809e2acfc8a37197ee3c362c88cce19282d677",
+        "localeKeys": [
+          "freeRemove",
+          "notebookDeleteHelp",
+          "notebookDeleteTitle",
+          "workspaceStay"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/widgets/decision_tools_empty.dart",
+        "sha256": "360ebf8e3c9976eba2653a93d96ba33947e86314f2b69d18a60970a73a69ba7e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/widgets/decision_editor.dart",
+        "sha256": "842eff91aa156df874395a45d61c9b647e93e8477587cb502fae67589b3f0e3d",
+        "localeKeys": [
+          "decisionHistoricalSnapshot",
+          "decisionPropertyScope",
+          "freeCheckCosts",
+          "freeCheckInternet",
+          "freeCheckLight",
+          "freeCheckMaintenance",
+          "freeCheckNoise",
+          "freeCheckSafety",
+          "freeCheckWater",
+          "freeDecisionList",
+          "freeDecisionListExample",
+          "freeLocalSaveFailed",
+          "freePrivateDeviceNotes",
+          "freePrivateNotes",
+          "freeSaveNotes",
+          "freeViewingChecklist",
+          "rentalInvalidInput",
+          "rentalOfferedAccommodation"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/widgets/rename_saved_search_dialog.dart",
+        "sha256": "2bfd7d4fa4fb42420c900be7de3de5c9d3488d446122260f9b3b85b17b61911c",
+        "localeKeys": [
+          "fillField",
+          "freeLocalSaveFailed",
+          "freeSavedSearches",
+          "professionalRenameSearch",
+          "workspaceStay"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S05",
+    "behavior": "Account/environment scoped local notebook, historical snapshots, saved searches and private viewing checklist. Local persistence failures preserve edits. Compare two to three exact property/offer targets; do not mix offer identity or imply notes are public.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S09",
+      "S20"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S76",
+    "name": "مقارنة العقارات",
+    "english": "Property comparison",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/screens/property_comparison_screen.dart",
+    "sha256": "d44130718f57c02b21109f2b6cc9f6a5b1b13f56b381e9ae8f204c10dbbc5f60",
+    "localeKeys": [
+      "assistantTitle",
+      "freeCompare",
+      "freeComparisonExplanation",
+      "freeLocalSaveFailed"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/data/models/decision_target.dart",
+        "sha256": "2a01703522ea05e60fd3070a9cce3b72216ab7203eafdf824519feffb277919f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/cubits/property_comparison_cubit.dart",
+        "sha256": "7bf0426c8016be5e409411bd80aa49373ee6eb8c262c5f1967cd7b536433db7c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/cubits/decision_tools_cubit.dart",
+        "sha256": "2be0979edc6059ff442f0f73b9705ec4d1a8b6170214d3916b2a691a56105b04",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/data/models/comparison_property.dart",
+        "sha256": "6f3f8aa46e7de1dd69808d2fae7cc12da3870b11bd6769bb9c59fd8efd86f26d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/widgets/decision_tools_empty.dart",
+        "sha256": "360ebf8e3c9976eba2653a93d96ba33947e86314f2b69d18a60970a73a69ba7e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/widgets/comparison_table.dart",
+        "sha256": "02f201417b9dcd10c8b616d62ec94ea92f6f1310d22d746f3f364e4d2aba7372",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/data/models/decision_notebook.dart",
+        "sha256": "19b6dcb9c4386388411c0d6c36ccc59256e77a2af1d2d85b85824eb2bf1f0d7f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/widgets/comparison_table_body.dart",
+        "sha256": "5c4f6bbd0dc838c18574401190a0d6ac3b6856668fe1178bb0204157830a21ab",
+        "localeKeys": [
+          "decisionOfferUnavailable",
+          "freeCachedListing",
+          "freeComparisonExplanation",
+          "freeComparisonScroll",
+          "freeKnownCosts",
+          "freeListingUnavailable",
+          "freeOpenListing",
+          "freeRemove",
+          "rentalOfferedAccommodation"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S75",
+    "behavior": "Only notebook-selected exact targets; retain unavailable/read-error entries and retry per property. Assistant enabled only if all offer IDs empty and at least two available properties, max three. Remove updates persisted comparison, not favorites.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "partial-error"
+    ],
+    "visualReference": [
+      "S08",
+      "S07"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "partial-error"
+    ]
+  },
+  {
+    "id": "S77",
+    "name": "مساعد سكون",
+    "english": "Tenant assistant",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/presentation/screens/tenant_assistant_screen.dart",
+    "sha256": "0222ed465e0c6fe7a95aa053aa1cfa9e5a980b06fa5a3a5e42f04ac96f12df05",
+    "localeKeys": [
+      "assistantDictation",
+      "assistantStartDictation",
+      "assistantVoicePrivacy",
+      "assistantVoiceUnavailable",
+      "fillField",
+      "rentalInvalidInput"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/presentation/cubits/tenant_assistant_cubit.dart",
+        "sha256": "ae89d8d6f26c6a51c10bf82d2a1ad95e395fd89ceadcc11e8c7e5a70bf337818",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/data/system_dictation.dart",
+        "sha256": "071414374b048eb8c476d8b86c7790bea834a0b96808cdaa13ad8dbbdb0bf05e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/premium_confirm_sheet.dart",
+        "sha256": "bbdb47556bafe23217f85050843cd5271dd80851a1944835a9230c16055c0838",
+        "localeKeys": [
+          "cancel"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/presentation/widgets/tenant_assistant_screen_content.dart",
+        "sha256": "5416b24784ed72edce3f01c6ceddfd2ac59e6232506f373b8d4975e313f640ee",
+        "localeKeys": [
+          "assistantClear",
+          "assistantDictation",
+          "assistantPrompt",
+          "assistantPromptExample",
+          "assistantSend",
+          "assistantStopDictation",
+          "assistantTitle",
+          "assistantTranscriptReview"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/data/models/tenant_assistant_reply.dart",
+        "sha256": "a6d8f7782e7f762427981093a27f16fee762d2e79c2955b18df968658c5b0702",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/data/models/tenant_assistant_body.dart",
+        "sha256": "72e8069d6310612b04fc6e8617ce82805fbd7b5a34397da789974b9ae99e8f9c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/presentation/widgets/tenant_assistant_body.dart",
+        "sha256": "90110408e56f0c8c027bffc1004a3cb4e6b9ab39675e0aa346c6a58faa208ca5",
+        "localeKeys": [
+          "assistantCostsHelp",
+          "assistantDeposit",
+          "assistantIntro",
+          "assistantOneTime",
+          "assistantPrivacy",
+          "assistantQuestions",
+          "assistantRecurring",
+          "assistantResponse",
+          "assistantTitle",
+          "assistantUnresolved",
+          "planningUnavailable"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S76",
+    "behavior": "Nonblank prompt max4000, filters/property/offer/selected-property context preserved. Clear sent text only if unchanged after response. Dictation consent, language, lifecycle/session cancellation; unresolved costs not fabricated.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "permission-denied",
+      "unavailable"
+    ],
+    "visualReference": [
+      "S14",
+      "S20"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "permission-denied",
+      "unavailable"
+    ]
+  },
+  {
+    "id": "S78",
+    "name": "مساعد وصف العقار",
+    "english": "Listing description assistant",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/ai_assistant/presentation/screens/listing_ai_screen.dart",
+    "sha256": "bb62c2443511dc6ea26e3e3e06962619dc9dec70a2f9f17ba88efacb9fbeabef",
+    "localeKeys": [
+      "paidAiAssistant"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/ai_assistant/data/models/listing_ai_facts.dart",
+        "sha256": "fecf5fbf44fe14f5fb9f25f4866b24875489cba381818b88b58a3a5ed9430b2d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/feature_workspace_guard.dart",
+        "sha256": "cd7a41fb4cd68d6feae158e34bbd211b21c7e427bb537083dc9aaa640e062821",
+        "localeKeys": [
+          "workspaceFeatureOwnerOnly",
+          "workspaceFeatureTenantOnly",
+          "workspaceFeatureUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/ai_assistant/presentation/widgets/listing_ai_content.dart",
+        "sha256": "c76da90a3692ae597a642f3a983c66bb9a35dba174e42065d874f457796d6d30",
+        "localeKeys": [
+          "fillField",
+          "paidAiConsent",
+          "paidAiExplanation",
+          "paidAiGenerate",
+          "paidSelectProperty"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/ai_assistant/data/models/listing_suggestion.dart",
+        "sha256": "e6ca34f92aba23ad83d8b128c679a8f67a45199d35bd6a51c9e24729eaea4c7d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/ai_assistant/data/models/listing_ai_body.dart",
+        "sha256": "a890a6c8a2f140194e5357046370a67cb1bd1be8cd31a13da1d7410016028121",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/ai_assistant/presentation/widgets/listing_ai_facts_view.dart",
+        "sha256": "f702cbe89d6974383080f6276d4a0d1d0ef82cbe11aa1ec3de6c6058d3d532dc",
+        "localeKeys": [
+          "freeDeposit",
+          "freeRent",
+          "ownerAddPropertyBathrooms",
+          "ownerAddPropertyBedrooms",
+          "ownerAddPropertySpace",
+          "ownerAddPropertyType"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/ai_assistant/presentation/widgets/listing_ai_review.dart",
+        "sha256": "c81a5f5a6880a91a7b252a008ea29a770cf6e8ceb7c373e67941ba177d6e3ac7",
+        "localeKeys": [
+          "fillField",
+          "paidAiApply",
+          "paidAiCopied",
+          "paidAiCopy",
+          "paidAiDescription",
+          "paidAiEditNotice",
+          "paidAiReview",
+          "paidAiTitle"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S61",
+    "behavior": "Owner feature guard, selected property/facts and explicit consent before generation. Suggestion editable, copy and canApply are separate; manual review before applying. Request key and unavailable feature states preserved.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S17",
+      "S14"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S79",
+    "name": "تفاصيل تنبيه البحث",
+    "english": "Priority alert detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/screens/premium_alert_detail_screen.dart",
+    "sha256": "14f4da5757f55ef037f6abeece5ee3a7ebbeb119ce0b3e54010824e05d8ed3dd",
+    "localeKeys": [
+      "paidPriorityAlerts"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/widgets/premium_alert_detail_content.dart",
+        "sha256": "98fb32abbd549660ef03dd5fee333ca41db28a1367fe8aaacdcff457b73bf6b5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/data/models/premium_search_alert.dart",
+        "sha256": "1eaad151a995d152961fe5956ab1f0d911a8fbfefdf891e34af93813ee9f0954",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/widgets/premium_alerts_empty_state.dart",
+        "sha256": "633a59487113e9f7791da6acc08784eb93078daaa9426d6404882a6e7a393e0f",
+        "localeKeys": [
+          "paidAlertsEmpty",
+          "paidAlertsEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/widgets/premium_alert_details_view.dart",
+        "sha256": "3b1e94b73083ae95f3cdc554c8f039376e43bcf70479f969510bb792008de117",
+        "localeKeys": [
+          "featureAlertDeliveryUnavailable",
+          "featureAlertLastMatch",
+          "housingDistrictUnavailable",
+          "paidAlertCadence",
+          "paidAlertDaily",
+          "paidAlertInstant",
+          "paidAlertOpenResults"
+        ]
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S80",
+    "behavior": "Alert cadence/last match/district criteria and criteria_need_review preserved; delivery capability can be unavailable even when matches exist. Open results with saved filters; no guaranteed instant delivery.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "criteria-review",
+      "delivery-unavailable"
+    ],
+    "visualReference": [
+      "S06",
+      "S19"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "criteria-review",
+      "delivery-unavailable"
+    ]
+  },
+  {
+    "id": "S80",
+    "name": "تنبيهات البحث",
+    "english": "Saved search alerts",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/screens/premium_alerts_screen.dart",
+    "sha256": "e7124e92523aa09905de408b689c1490a4a2ca27bc87ed3eb6e605e634d92e04",
+    "localeKeys": [
+      "paidPriorityAlerts"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/feature_workspace_guard.dart",
+        "sha256": "cd7a41fb4cd68d6feae158e34bbd211b21c7e427bb537083dc9aaa640e062821",
+        "localeKeys": [
+          "workspaceFeatureOwnerOnly",
+          "workspaceFeatureTenantOnly",
+          "workspaceFeatureUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/widgets/premium_alerts_content.dart",
+        "sha256": "d69674f69554ee93e241cb321e03d79860f15b3518fd7d1c0df718a1de571814",
+        "localeKeys": [
+          "featureAlertDeliveryUnavailable",
+          "freeRemove",
+          "paidAlertsExplanation",
+          "paidCachedNotice",
+          "paidRemoveAlert"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/data/models/premium_search_alert.dart",
+        "sha256": "1eaad151a995d152961fe5956ab1f0d911a8fbfefdf891e34af93813ee9f0954",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/widgets/premium_alert_composer.dart",
+        "sha256": "758e7bd818c7cd666f66a6cf5bd8d2edaca3140f4d1595876741e02ef7780945",
+        "localeKeys": [
+          "fillField",
+          "paidAlertCadence",
+          "paidAlertDaily",
+          "paidAlertDeliveryHelp",
+          "paidAlertInstant",
+          "paidAlertName",
+          "paidCreateAlert"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/widgets/premium_alerts_empty_state.dart",
+        "sha256": "633a59487113e9f7791da6acc08784eb93078daaa9426d6404882a6e7a393e0f",
+        "localeKeys": [
+          "paidAlertsEmpty",
+          "paidAlertsEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/widgets/premium_alert_card.dart",
+        "sha256": "9921bcc473879f50aa6043922255263c117eb219fba55f8b37e4d7f1e772d8d1",
+        "localeKeys": [
+          "featureAlertDetails",
+          "freeRemove",
+          "paidAlertOpenResults",
+          "paidAlertPause",
+          "paidAlertResume"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/data/models/premium_alert_toggle_body.dart",
+        "sha256": "f885253feac3fe6a15fbfba5c6e8d3c4b5e1984e2ba2450f3b1fc385718b14bc",
+        "localeKeys": []
+      }
+    ],
+    "group": "العقار وأدوات القرار",
+    "back": "S06",
+    "behavior": "Tenant workspace/feature guard; create only with supplied filters. Fresh revision and canManage gate pause/resume/remove, confirm removal; cached read is labelled and not writable. Delivery availability separate from alert persistence.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "delivery-unavailable"
+    ],
+    "visualReference": [
+      "S09",
+      "S20"
+    ],
+    "sprint": 3,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "delivery-unavailable"
+    ]
+  }
+]

@@ -22,7 +22,7 @@
     send({type:'modal',open:!!document.querySelector('dialog[open]')});
   }
   document.querySelectorAll('dialog').forEach(dialog=>new MutationObserver(positionDialogs).observe(dialog,{attributes:true,attributeFilter:['open']}));
-  const routes={'register':'S21','forgot':'S22','upload':'S23','account-summary':'S42','support-new':'S44','support-tickets':'S46','legal':'S47','business-policies':'S48','guide-settings':'S49','feedback':'S44'};
+  const routes={"media-next":"S61","visit-chat":"S99","subscriptions":"S88","invoices":"S86","chat-policy":"S92","owner-revenue":"S65","my-housing":"S137",'register':'S21','forgot':'S22','upload':'S23','account-summary':'S42','support-new':'S44','support-tickets':'S46','legal':'S47','business-policies':'S48','guide-settings':'S49','feedback':'S44'};
   document.addEventListener('click',event=>{
     const button=event.target.closest('button');
     if(button?.dataset.mode&&!applying)send({type:'theme',mode:button.dataset.mode});

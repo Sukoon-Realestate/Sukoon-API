@@ -1,8 +1,8 @@
 # Remaining mobile proposal — sprint plan
 
-Audited 2026-10-25 against `sokoun/apps/sokoun_app/lib`. 304 screen/page source files: 20 existing proposals, 7 reconciled hosts/components, **277 remaining destinations across 14 sprints**. Each sprint contains 20; the final sprint contains the remainder.
+Audited 2026-10-25 against `sokoun/apps/sokoun_app/lib`. 304 screen/page source files: 20 existing proposals, 9 reconciled hosts/components, **275 remaining destinations across 14 sprints**. Each sprint contains 20; the final sprint contains the remainder.
 
-The existing S01–S20 stay intact. Sprint 1 starts at S21. Sprint 1 was approved to continue. Sprints 3–7 form the current authorized review batch; Sprint 8 onward requires confirmation. No production Flutter implementation is authorized.
+The existing S01–S20 stay intact. Sprint 1 starts at S21. Sprint 1 was approved to continue. Sprints 1–7 were approved to continue. Sprints 8–10 form the current authorized review batch; stop before Sprint 11. No production Flutter implementation is authorized.
 
 ## Counting and audit scope
 
@@ -66,7 +66,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 3 — owner/home, owner/properties, owner/visits, shared/property_capture, shared/virtual_tours, tenant/commute, tenant/decision_tools, tenant/ai_assistant, owner/ai_assistant, tenant/premium_alerts
 
-**In progress.**
+**Approved to continue.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -93,7 +93,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 4 — owner/banner_ads, owner/premium, shared/billing, shared/premium, shared/chat, shared/housing_requests
 
-**In progress.**
+**Approved to continue.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -120,7 +120,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 5 — shared/housing_requests, tenant/housing_requests, owner/housing_demand, shared/rental_interests, tenant/rental_interests, owner/rental_interests, shared/tenancy_invitations, owner/tenancy_invitations, shared/rental_lifecycle
 
-**In progress.**
+**Approved to continue.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -147,7 +147,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 6 — shared/rental_lifecycle, owner/digital_leases, shared/digital_leases, shared/rental_center
 
-**In progress.**
+**Approved to continue.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -174,7 +174,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 7 — shared/rental_center, shared/rent_management, tenant/rent_management, shared/rental_deposits, shared/rental_handovers, shared/asset_passport, shared/rental_maintenance
 
-**In progress.**
+**Approved to continue.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -201,7 +201,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 8 — shared/rental_maintenance, shared/rental_disputes, shared/rental_changes, tenant/rental_changes, shared/rental_settlement, owner/rental_payouts
 
-**Planned only. Await confirmation of the preceding sprint.**
+**In progress.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -222,63 +222,63 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 | S175 | RentalDocumentsScreen | `sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_documents_screen.dart` |
 | S176 | RentalRefundDetailScreen | `sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_refund_detail_screen.dart` |
 | S177 | RentalRefundsScreen | `sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_refund_list_screen.dart` |
-| S178 | RentalReviewsScreen | `sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_reviews_screen.dart` |
-| S179 | SettlementProposalScreen | `sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/settlement_proposal_screen.dart` |
-| S180 | OwnerOnboardingScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_onboarding_screen.dart` |
+| S178 | SettlementProposalScreen | `sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/settlement_proposal_screen.dart` |
+| S179 | OwnerOnboardingScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_onboarding_screen.dart` |
+| S180 | OwnerPayablesScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_payables_screen.dart` |
 
-## Sprint 9 — owner/rental_payouts, owner/advanced_analytics, shared/reviews, tenant/reviews
+## Sprint 9 — owner/rental_payouts, owner/advanced_analytics, shared/reviews, tenant/housing_groups
 
-**Planned only. Await confirmation of the preceding sprint.**
+**In progress.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
-| S181 | OwnerPayablesScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_payables_screen.dart` |
-| S182 | OwnerPaymentReadinessScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_payment_readiness_screen.dart` |
-| S183 | RentalPayoutDetailScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/rental_payout_detail_screen.dart` |
-| S184 | RentalPayoutsScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/rental_payout_list_screen.dart` |
-| S185 | AdvancedAnalyticsScreen | `sokoun/apps/sokoun_app/lib/features/owner/advanced_analytics/presentation/screens/advanced_analytics_screen.dart` |
-| S186 | CompanyReviewAuthoritiesScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/company_review_authorities_screen.dart` |
-| S187 | ExperienceChoiceScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/experience_choice_screen.dart` |
-| S188 | PortfolioReputationScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/portfolio_reputation_screen.dart` |
-| S189 | PropertyReviewsScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/property_reviews_screen.dart` |
-| S190 | ReputationDetailScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_detail_screen.dart` |
-| S191 | ReputationGrantSummaryScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_grant_summary_screen.dart` |
-| S192 | ReputationGrantsScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_grants_screen.dart` |
-| S193 | ReputationRecipientScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_recipient_screen.dart` |
-| S194 | ReviewCaseScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_case_screen.dart` |
-| S195 | ReviewCasesScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_cases_screen.dart` |
-| S196 | ReviewExperienceScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_experience_screen.dart` |
-| S197 | ReviewExperiencesScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_experiences_screen.dart` |
-| S198 | ReviewOpportunityScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_opportunity_screen.dart` |
-| S199 | ReviewsHubScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reviews_hub_screen.dart` |
-| S200 | MyReviewsScreen | `sokoun/apps/sokoun_app/lib/features/tenant/reviews/presentation/screens/my_reviews_screen.dart` |
+| S181 | OwnerPaymentReadinessScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_payment_readiness_screen.dart` |
+| S182 | RentalPayoutDetailScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/rental_payout_detail_screen.dart` |
+| S183 | RentalPayoutsScreen | `sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/rental_payout_list_screen.dart` |
+| S184 | AdvancedAnalyticsScreen | `sokoun/apps/sokoun_app/lib/features/owner/advanced_analytics/presentation/screens/advanced_analytics_screen.dart` |
+| S185 | CompanyReviewAuthoritiesScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/company_review_authorities_screen.dart` |
+| S186 | ExperienceChoiceScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/experience_choice_screen.dart` |
+| S187 | PortfolioReputationScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/portfolio_reputation_screen.dart` |
+| S188 | PropertyReviewsScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/property_reviews_screen.dart` |
+| S189 | ReputationDetailScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_detail_screen.dart` |
+| S190 | ReputationGrantSummaryScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_grant_summary_screen.dart` |
+| S191 | ReputationGrantsScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_grants_screen.dart` |
+| S192 | ReputationRecipientScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_recipient_screen.dart` |
+| S193 | ReviewCaseScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_case_screen.dart` |
+| S194 | ReviewCasesScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_cases_screen.dart` |
+| S195 | ReviewExperienceScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_experience_screen.dart` |
+| S196 | ReviewExperiencesScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_experiences_screen.dart` |
+| S197 | ReviewOpportunityScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_opportunity_screen.dart` |
+| S198 | ReviewsHubScreen | `sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reviews_hub_screen.dart` |
+| S199 | GroupActionScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_action_screen.dart` |
+| S200 | GroupInviteCreateScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invite_create_screen.dart` |
 
 ## Sprint 10 — tenant/housing_groups, owner/housing_groups, shared/student_housing
 
-**Planned only. Await confirmation of the preceding sprint.**
+**In progress.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
-| S201 | GroupActionScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_action_screen.dart` |
-| S202 | GroupInviteCreateScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invite_create_screen.dart` |
-| S203 | GroupInviteScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invite_screen.dart` |
-| S204 | GroupInvitesScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invites_screen.dart` |
-| S205 | GroupJoinDetailScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_detail_screen.dart` |
-| S206 | GroupJoinReviewScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_review_screen.dart` |
-| S207 | GroupJoinScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_screen.dart` |
-| S208 | HousingGroupCreateScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_create_screen.dart` |
-| S209 | HousingGroupScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_screen.dart` |
-| S210 | HousingGroupsScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_groups_screen.dart` |
-| S211 | OpenGroupsScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/open_groups_screen.dart` |
-| S212 | GroupApplicationDetailScreen | `sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_detail_screen.dart` |
-| S213 | GroupApplicationReviewScreen | `sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_review_screen.dart` |
-| S214 | RentalSummariesScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summaries_screen.dart` |
-| S215 | RentalSummaryGrantScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summary_grant_screen.dart` |
-| S216 | StudentArrangementEditScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangement_edit_screen.dart` |
-| S217 | StudentArrangementsScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangements_screen.dart` |
-| S218 | StudentCheckInScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_check_in_screen.dart` |
-| S219 | StudentConsentScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_consent_screen.dart` |
-| S220 | StudentHistoryScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_history_screen.dart` |
+| S201 | GroupInviteScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invite_screen.dart` |
+| S202 | GroupInvitesScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invites_screen.dart` |
+| S203 | GroupJoinDetailScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_detail_screen.dart` |
+| S204 | GroupJoinReviewScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_review_screen.dart` |
+| S205 | GroupJoinScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_screen.dart` |
+| S206 | HousingGroupCreateScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_create_screen.dart` |
+| S207 | HousingGroupScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_screen.dart` |
+| S208 | HousingGroupsScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_groups_screen.dart` |
+| S209 | OpenGroupsScreen | `sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/open_groups_screen.dart` |
+| S210 | GroupApplicationDetailScreen | `sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_detail_screen.dart` |
+| S211 | GroupApplicationReviewScreen | `sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_review_screen.dart` |
+| S212 | RentalSummariesScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summaries_screen.dart` |
+| S213 | RentalSummaryGrantScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summary_grant_screen.dart` |
+| S214 | StudentArrangementEditScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangement_edit_screen.dart` |
+| S215 | StudentArrangementsScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangements_screen.dart` |
+| S216 | StudentCheckInScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_check_in_screen.dart` |
+| S217 | StudentConsentScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_consent_screen.dart` |
+| S218 | StudentHistoryScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_history_screen.dart` |
+| S219 | StudentHomeScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_home_screen.dart` |
+| S220 | StudentHubScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_hub_screen.dart` |
 
 ## Sprint 11 — shared/student_housing, shared/company_housing
 
@@ -286,26 +286,26 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
-| S221 | StudentHomeScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_home_screen.dart` |
-| S222 | StudentHubScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_hub_screen.dart` |
-| S223 | StudentOfferPoliciesScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_offer_policies_screen.dart` |
-| S224 | StudentPlanEditScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_edit_screen.dart` |
-| S225 | StudentPlanLifecycleScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_lifecycle_screen.dart` |
-| S226 | StudentPlanScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_screen.dart` |
-| S227 | StudentProfileScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_profile_screen.dart` |
-| S228 | StudentPublicationScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_publication_screen.dart` |
-| S229 | StudentRequirementsScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_requirements_screen.dart` |
-| S230 | StudentSearchScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_search_screen.dart` |
-| S231 | StudentVerificationScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_verification_screen.dart` |
-| S232 | AccountContextsScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/account_contexts_screen.dart` |
-| S233 | CompanyActivationScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_activation_screen.dart` |
-| S234 | CompanyContactProofScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_contact_proof_screen.dart` |
-| S235 | CompanyContractScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_contract_screen.dart` |
-| S236 | CompanyCostsScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_costs_screen.dart` |
-| S237 | CompanyCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_create_screen.dart` |
-| S238 | CompanyHubScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_hub_screen.dart` |
-| S239 | CompanyInvitationScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_invitation_screen.dart` |
-| S240 | CompanyMembersScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_members_screen.dart` |
+| S221 | StudentOfferPoliciesScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_offer_policies_screen.dart` |
+| S222 | StudentPlanEditScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_edit_screen.dart` |
+| S223 | StudentPlanLifecycleScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_lifecycle_screen.dart` |
+| S224 | StudentPlanScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_screen.dart` |
+| S225 | StudentProfileScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_profile_screen.dart` |
+| S226 | StudentPublicationScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_publication_screen.dart` |
+| S227 | StudentRequirementsScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_requirements_screen.dart` |
+| S228 | StudentSearchScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_search_screen.dart` |
+| S229 | StudentVerificationScreen | `sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_verification_screen.dart` |
+| S230 | AccountContextsScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/account_contexts_screen.dart` |
+| S231 | CompanyActivationScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_activation_screen.dart` |
+| S232 | CompanyContactProofScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_contact_proof_screen.dart` |
+| S233 | CompanyContractScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_contract_screen.dart` |
+| S234 | CompanyCostsScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_costs_screen.dart` |
+| S235 | CompanyCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_create_screen.dart` |
+| S236 | CompanyHubScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_hub_screen.dart` |
+| S237 | CompanyInvitationScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_invitation_screen.dart` |
+| S238 | CompanyMembersScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_members_screen.dart` |
+| S239 | CompanyRentalSummaryScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_rental_summary_screen.dart` |
+| S240 | CompanyRequestEntryScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_requests_screen.dart` |
 
 ## Sprint 12 — shared/company_housing, shared/housing_tenders
 
@@ -313,53 +313,53 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
-| S241 | CompanyRentalSummaryScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_rental_summary_screen.dart` |
-| S242 | CompanyRequestEntryScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_requests_screen.dart` |
-| S243 | CompanySaveOfferScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_save_offer_screen.dart` |
-| S244 | CompanySavedActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_action_screen.dart` |
-| S245 | CompanySavedDetailScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_detail_screen.dart` |
-| S246 | CompanyStaffBatchScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_batch_screen.dart` |
-| S247 | CompanyStaffImportScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_import_screen.dart` |
-| S248 | CompanyStaffScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_screen.dart` |
-| S249 | CompanyTenancyScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_tenancy_screen.dart` |
-| S250 | CompanyViewingRequestScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_viewing_request_screen.dart` |
-| S251 | CompanyWorkspaceScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_workspace_screen.dart` |
-| S252 | OwnerCreationScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/owner_creation_screen.dart` |
-| S253 | PortfolioChangeCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/portfolio_change_screen.dart` |
-| S254 | PortfolioMediaScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/portfolio_media_screen.dart` |
-| S255 | ResidentialAssetsScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/residential_assets_screen.dart` |
-| S256 | UnitBatchScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/unit_batch_screen.dart` |
-| S257 | HousingTenderScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/housing_tender_screen.dart` |
-| S258 | HousingTendersScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/housing_tenders_screen.dart` |
-| S259 | TenderActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_action_screen.dart` |
-| S260 | TenderBidEditScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bid_edit_screen.dart` |
+| S241 | CompanySaveOfferScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_save_offer_screen.dart` |
+| S242 | CompanySavedActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_action_screen.dart` |
+| S243 | CompanySavedDetailScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_detail_screen.dart` |
+| S244 | CompanyStaffBatchScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_batch_screen.dart` |
+| S245 | CompanyStaffImportScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_import_screen.dart` |
+| S246 | CompanyStaffScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_screen.dart` |
+| S247 | CompanyTenancyScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_tenancy_screen.dart` |
+| S248 | CompanyViewingRequestScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_viewing_request_screen.dart` |
+| S249 | CompanyWorkspaceScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_workspace_screen.dart` |
+| S250 | OwnerCreationScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/owner_creation_screen.dart` |
+| S251 | PortfolioChangeCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/portfolio_change_screen.dart` |
+| S252 | PortfolioMediaScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/portfolio_media_screen.dart` |
+| S253 | ResidentialAssetsScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/residential_assets_screen.dart` |
+| S254 | UnitBatchScreen | `sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/unit_batch_screen.dart` |
+| S255 | HousingTenderScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/housing_tender_screen.dart` |
+| S256 | HousingTendersScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/housing_tenders_screen.dart` |
+| S257 | TenderActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_action_screen.dart` |
+| S258 | TenderBidEditScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bid_edit_screen.dart` |
+| S259 | TenderBidWithdrawScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bid_withdraw_screen.dart` |
+| S260 | TenderBidsScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bids_screen.dart` |
 
-## Sprint 13 — shared/housing_tenders, shared/living_lab
+## Sprint 13 — shared/housing_tenders, shared/living_lab, shared/housing_simulator
 
 **Planned only. Await confirmation of the preceding sprint.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
-| S261 | TenderBidWithdrawScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bid_withdraw_screen.dart` |
-| S262 | TenderBidsScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bids_screen.dart` |
-| S263 | TenderClarificationEditScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_clarification_edit_screen.dart` |
-| S264 | TenderClarificationsScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_clarifications_screen.dart` |
-| S265 | TenderConsentScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_consent_screen.dart` |
-| S266 | TenderConstructionScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_construction_screen.dart` |
-| S267 | TenderConstructionStartScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_construction_start_screen.dart` |
-| S268 | TenderCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_create_screen.dart` |
-| S269 | TenderExecutionScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_execution_screen.dart` |
-| S270 | TenderInventoryScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_inventory_screen.dart` |
-| S271 | TenderPackageBuilderScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_package_builder_screen.dart` |
-| S272 | TenderPackageScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_package_screen.dart` |
-| S273 | TenderPackagesScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_packages_screen.dart` |
-| S274 | TenderSourceScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_source_screen.dart` |
-| S275 | LivingLabActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_action_screen.dart` |
-| S276 | LivingLabCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_create_screen.dart` |
-| S277 | LivingLabPlanningScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_planning_screen.dart` |
-| S278 | LivingLabScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_screen.dart` |
-| S279 | LivingLabsScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_labs_screen.dart` |
-| S280 | LivingRequirementsScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_requirements_screen.dart` |
+| S261 | TenderClarificationEditScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_clarification_edit_screen.dart` |
+| S262 | TenderClarificationsScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_clarifications_screen.dart` |
+| S263 | TenderConsentScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_consent_screen.dart` |
+| S264 | TenderConstructionScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_construction_screen.dart` |
+| S265 | TenderConstructionStartScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_construction_start_screen.dart` |
+| S266 | TenderCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_create_screen.dart` |
+| S267 | TenderExecutionScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_execution_screen.dart` |
+| S268 | TenderInventoryScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_inventory_screen.dart` |
+| S269 | TenderPackageBuilderScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_package_builder_screen.dart` |
+| S270 | TenderPackageScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_package_screen.dart` |
+| S271 | TenderPackagesScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_packages_screen.dart` |
+| S272 | TenderSourceScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_source_screen.dart` |
+| S273 | LivingLabActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_action_screen.dart` |
+| S274 | LivingLabCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_create_screen.dart` |
+| S275 | LivingLabPlanningScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_planning_screen.dart` |
+| S276 | LivingLabScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_screen.dart` |
+| S277 | LivingLabsScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_labs_screen.dart` |
+| S278 | LivingRequirementsScreen | `sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_requirements_screen.dart` |
+| S279 | HousingScenarioScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/housing_scenario_screen.dart` |
+| S280 | HousingScenariosScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/housing_scenarios_screen.dart` |
 
 ## Sprint 14 — shared/housing_simulator, shared/transition_network, shared/advanced_execution
 
@@ -367,28 +367,28 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
-| S281 | HousingScenarioScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/housing_scenario_screen.dart` |
-| S282 | HousingScenariosScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/housing_scenarios_screen.dart` |
-| S283 | HousingScenarioDecisionInboxScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/scenario_decision_inbox_screen.dart` |
-| S284 | ScenarioReviewScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/scenario_review_screen.dart` |
-| S285 | MoveActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_action_screen.dart` |
-| S286 | MoveCandidateScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_candidate_screen.dart` |
-| S287 | MoveCandidatesScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_candidates_screen.dart` |
-| S288 | MoveCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_create_screen.dart` |
-| S289 | MoveExecutionScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_execution_screen.dart` |
-| S290 | MoveIntentScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_intent_screen.dart` |
-| S291 | MoveIntentsScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_intents_screen.dart` |
-| S292 | MoveInterestScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_interest_screen.dart` |
-| S293 | MoveRunScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_run_screen.dart` |
-| S294 | MoveRunsScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_runs_screen.dart` |
-| S295 | ExecutionActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_action_screen.dart` |
-| S296 | ExecutionDetailScreen | `sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_detail_screen.dart` |
-| S297 | ExecutionInboxScreen | `sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_inbox_screen.dart` |
+| S281 | HousingScenarioDecisionInboxScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/scenario_decision_inbox_screen.dart` |
+| S282 | ScenarioReviewScreen | `sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/scenario_review_screen.dart` |
+| S283 | MoveActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_action_screen.dart` |
+| S284 | MoveCandidateScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_candidate_screen.dart` |
+| S285 | MoveCandidatesScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_candidates_screen.dart` |
+| S286 | MoveCreateScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_create_screen.dart` |
+| S287 | MoveExecutionScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_execution_screen.dart` |
+| S288 | MoveIntentScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_intent_screen.dart` |
+| S289 | MoveIntentsScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_intents_screen.dart` |
+| S290 | MoveInterestScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_interest_screen.dart` |
+| S291 | MoveRunScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_run_screen.dart` |
+| S292 | MoveRunsScreen | `sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_runs_screen.dart` |
+| S293 | ExecutionActionScreen | `sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_action_screen.dart` |
+| S294 | ExecutionDetailScreen | `sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_detail_screen.dart` |
+| S295 | ExecutionInboxScreen | `sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_inbox_screen.dart` |
 
 ## Reconciled hosts and components
 
 | File | Treatment |
 | --- | --- |
+| `rental_reviews_screen.dart` | Direct lease-scoped ReviewsHubScreen wrapper; covered as a hub context variant in Sprint 9. |
+| `my_reviews_screen.dart` | Direct ReviewsHubScreen wrapper without separate UI; reconciled during Sprints 8–10 audit. |
 | `register_flow_screen.dart` | Flow host switches between registration and the existing OTP surface. |
 | `profile_screen.dart` | Workspace dispatcher; tenant and owner profiles are audited separately. |
 | `add_property_basics_page.dart` | Basic-information step already represented by original S17. |
@@ -399,6 +399,6 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Delivery gate
 
-After each sprint: 20 distinct mockups (or the final remainder), Light/Dark/System, source-linked behavior notes, explicit important states, visual review, and local interaction checks. Stop for user review before creating the next sprint.
+After each sprint: 20 distinct mockups (or the final remainder), Light/Dark/System, source-linked behavior notes, explicit important states, visual review, and local interaction checks. The current authorization covers Sprints 8–10 together. Stop for user review before Sprint 11.
 
 Sprint 2: [Open mockups](sprint-02/index.html) · [Behavior audit](sprint-02/AUDIT.md). Sprint 1: [Open mockups](sprint-01/index.html) · [Behavior audit](sprint-01/AUDIT.md). Existing foundation: [Design Map](../design-map.html).

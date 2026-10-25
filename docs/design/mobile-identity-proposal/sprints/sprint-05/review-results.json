@@ -1,0 +1,1170 @@
+{
+  "sprint": 5,
+  "screens": 20,
+  "sourceHashes": [
+    "S101",
+    "S102",
+    "S103",
+    "S104",
+    "S105",
+    "S106",
+    "S107",
+    "S108",
+    "S109",
+    "S110",
+    "S111",
+    "S112",
+    "S113",
+    "S114",
+    "S115",
+    "S116",
+    "S117",
+    "S118",
+    "S119",
+    "S120"
+  ],
+  "themes": [
+    {
+      "theme": "light",
+      "individuals": 20,
+      "size": [
+        720,
+        1600
+      ]
+    },
+    {
+      "theme": "dark",
+      "individuals": 20,
+      "size": [
+        720,
+        1600
+      ]
+    }
+  ],
+  "widths": [
+    {
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1680,
+      "overflow": false
+    }
+  ],
+  "variants": [
+    {
+      "id": "S101",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S101",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S101",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S101",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S101",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S102",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S102",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S102",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S102",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S102",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S102",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S103",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S103",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S103",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S103",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S103",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S104",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S104",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S104",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S104",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S104",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S105",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S105",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S105",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S105",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S105",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S105",
+      "theme": "light",
+      "state": "inventory-changed"
+    },
+    {
+      "id": "S106",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S106",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S106",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S106",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S106",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S107",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S107",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S107",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S107",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S107",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S107",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S108",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S108",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S108",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S108",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S108",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S109",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S109",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S109",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S109",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S109",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S110",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S110",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S110",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S110",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S110",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S110",
+      "theme": "light",
+      "state": "conflict"
+    },
+    {
+      "id": "S111",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S111",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S111",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S111",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S111",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S112",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S112",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S112",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S112",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S112",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S112",
+      "theme": "light",
+      "state": "expired"
+    },
+    {
+      "id": "S112",
+      "theme": "light",
+      "state": "accepted"
+    },
+    {
+      "id": "S113",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S113",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S113",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S113",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S113",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S113",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S114",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S114",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S114",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S114",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S114",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S115",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S115",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S115",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S115",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S115",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S115",
+      "theme": "light",
+      "state": "inventory-changed"
+    },
+    {
+      "id": "S116",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S116",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S116",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S116",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S116",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S117",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S117",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S117",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S117",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S117",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S118",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S118",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S118",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S118",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S118",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S119",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S119",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S119",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S119",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S119",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S119",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S120",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S120",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S120",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S120",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S120",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S101",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S101",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S101",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S101",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S101",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S102",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S102",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S102",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S102",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S102",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S102",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S103",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S103",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S103",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S103",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S103",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S104",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S104",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S104",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S104",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S104",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S105",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S105",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S105",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S105",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S105",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S105",
+      "theme": "dark",
+      "state": "inventory-changed"
+    },
+    {
+      "id": "S106",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S106",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S106",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S106",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S106",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S107",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S107",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S107",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S107",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S107",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S107",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S108",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S108",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S108",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S108",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S108",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S109",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S109",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S109",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S109",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S109",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S110",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S110",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S110",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S110",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S110",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S110",
+      "theme": "dark",
+      "state": "conflict"
+    },
+    {
+      "id": "S111",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S111",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S111",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S111",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S111",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S112",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S112",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S112",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S112",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S112",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S112",
+      "theme": "dark",
+      "state": "expired"
+    },
+    {
+      "id": "S112",
+      "theme": "dark",
+      "state": "accepted"
+    },
+    {
+      "id": "S113",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S113",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S113",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S113",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S113",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S113",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S114",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S114",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S114",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S114",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S114",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S115",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S115",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S115",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S115",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S115",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S115",
+      "theme": "dark",
+      "state": "inventory-changed"
+    },
+    {
+      "id": "S116",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S116",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S116",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S116",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S116",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S117",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S117",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S117",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S117",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S117",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S118",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S118",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S118",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S118",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S118",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S119",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S119",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S119",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S119",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S119",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S119",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S120",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S120",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S120",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S120",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S120",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    }
+  ],
+  "interactions": [
+    "Multiline/input draft survives error and return",
+    "Theme change preserves form",
+    "Live System theme",
+    "Review confirmation, cancel and local-only result",
+    "Unknown outcome blocks re-submit and checks original attempt",
+    "Focused preview restores original screen",
+    "Sensitive action has explicit confirmation"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "limitations": [
+    "Browser mockups only; no native device/API/provider tests.",
+    "Financial, signature, publication, evidence and AI outcomes are illustrative."
+  ],
+  "result": "pass"
+}

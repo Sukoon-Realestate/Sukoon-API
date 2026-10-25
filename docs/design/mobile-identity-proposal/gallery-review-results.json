@@ -1,5 +1,5 @@
 {
-  "screens": 60,
+  "screens": 160,
   "sections": [
     {
       "key": "original",
@@ -11,6 +11,26 @@
     },
     {
       "key": "sprint-02",
+      "screens": 20
+    },
+    {
+      "key": "sprint-03",
+      "screens": 20
+    },
+    {
+      "key": "sprint-04",
+      "screens": 20
+    },
+    {
+      "key": "sprint-05",
+      "screens": 20
+    },
+    {
+      "key": "sprint-06",
+      "screens": 20
+    },
+    {
+      "key": "sprint-07",
       "screens": 20
     }
   ],
@@ -33,11 +53,12 @@
     }
   ],
   "checks": [
-    "All 60 screens visible by default in three titled sections",
+    "All 160 screens visible by default in eight titled sections",
     "Global appearance syncs all batches and S20; System follows OS; draft preserved",
     "Section filter and restore-all",
     "Enlarged preview stays inside visible parent viewport and closes cleanly",
-    "Cross-section action opens the existing destination without losing a section"
+    "Cross-section action opens the existing destination without losing a section",
+    "Sprint 2 media-to-pricing and Sprint 7-to-6 billing routes retain all 160 screens"
   ],
   "errors": [],
   "externalRequests": [],

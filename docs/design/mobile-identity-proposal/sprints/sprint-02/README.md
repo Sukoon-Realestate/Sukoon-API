@@ -4,4 +4,4 @@
 
 20 new screens in Light/Dark/System, using the original proposal style. All interactions and sample content are local. Splash stays light and media viewer stays dark, matching their source-defined behavior. Maps are schematic illustrations. No Flutter implementation was performed.
 
-Individual PNGs and four-screen sheets are in `exports/`. Long forms/lists scroll in the HTML. Stop for user review before Sprint 3.
+Individual PNGs and four-screen sheets are in `exports/`. Long forms/lists scroll in the HTML. See the sprint plan for the current batch and review gate.

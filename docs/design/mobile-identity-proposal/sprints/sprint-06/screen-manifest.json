@@ -1,0 +1,1514 @@
+[
+  {
+    "id": "S121",
+    "name": "تفاصيل حجز المجموعة",
+    "english": "Group booking detail and own consent",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/group_booking_screen.dart",
+    "sha256": "f2bfb0cc228c35a0cef44426dee3ff56f9fe12f857d008437901e3c05129a4f3",
+    "localeKeys": [
+      "rentalGroupBooking"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/cubits/group_booking_cubit.dart",
+        "sha256": "fbe32968ff0dd4f68b0178de288c1d4e43a8bb4e17e46283ae4bd2fa1ccd3bdc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/group_booking.dart",
+        "sha256": "fc3d61f74c02e9325a76ef065d750223986dd68442c0b27cd5a5c21d570de847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/group_booking_body.dart",
+        "sha256": "23e3851838dd84eb45d90d65c997d87c2f8585dc5c3c5fd131f553df24cb5da9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/group_booking_body.dart",
+        "sha256": "fb3e25c3bdaa7eb046ce78d60614b98a2a373d1b3ab07a69c357069d75774fcf",
+        "localeKeys": [
+          "rentalAcceptOwnAllocation",
+          "rentalCenter",
+          "rentalIndependentBookingHint",
+          "rentalReject",
+          "rentalResponseDue",
+          "rentalSubmit",
+          "rentalWithdrawBooking",
+          "rentalYourAllocation",
+          "tenancyInvitations"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/booking_participant.dart",
+        "sha256": "b018998527031ec71f72a3db123eb4417a9be12b7403f8df9bc1eded61c5a23d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/lifecycle_bodies.dart",
+        "sha256": "79a6a243e7f3680190d5a11710a98247294a5d9a41fcb5dbf92a8810787123ab",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S122",
+    "behavior": "Read fresh group booking, own allocation consent, reject/withdraw allowed per permissions. Participants have independent terms/invitation/lease references; cannot consent for others. Refresh on resume and preserve response deadline.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S19",
+      "S18"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S122",
+    "name": "حجوزات المجموعات",
+    "english": "Group bookings list",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/group_bookings_screen.dart",
+    "sha256": "14d99d1ceff30fd538ea0e4a07f15713d663f0c6437aee87261dddff6dd18e60",
+    "localeKeys": [
+      "rentalGroupBooking"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/group_bookings_list.dart",
+        "sha256": "ff68806241bb5e6884fe46f28a91049a1f7e72daf59aa1c828eee265d4c4402c",
+        "localeKeys": [
+          "rentalGroupBooking",
+          "rentalGroupBookingsEmpty"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/group_booking.dart",
+        "sha256": "fc3d61f74c02e9325a76ef065d750223986dd68442c0b27cd5a5c21d570de847",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S107",
+    "behavior": "Paginated group bookings and successful empty state. Refresh after detail returns, scope to workspace and group identity; not a general list of confirmed tenancies.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S123",
+    "name": "ملخص قرار الإيجار",
+    "english": "Property decision facts and costs",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/property_decision_screen.dart",
+    "sha256": "ebbbd09c55121a5135154dc4e5b9e9625f2e385a99f79ae8c6b36a9a80f89c64",
+    "localeKeys": [
+      "rentalDecisionSummary"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/rental_stay_preferences.dart",
+        "sha256": "9f930751effb61aee695333fe3877b664aafea9efd4b7b8c1d15c9a31f3215e2",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/cubits/property_decision_cubit.dart",
+        "sha256": "75dbd3bc58a5b17c15e51b3991dbf3632fdc7766edc452c66bc74b76d37ac30e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/property_decision.dart",
+        "sha256": "3bc30fb58ffc8507baac4aa524256c70ee1cfd073506367f847b0c041abae6b2",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/property_decision_body.dart",
+        "sha256": "7ed184728f9b0ac20d5119966285c4f2841a4d8b13dcb437031448f882beb0a8",
+        "localeKeys": [
+          "rentalApplicationProfile",
+          "rentalAvailabilityConfirmed",
+          "rentalCostsIncomplete",
+          "rentalDeposit",
+          "rentalEstimated",
+          "rentalFactVerified",
+          "rentalIdentityChecks",
+          "rentalNoCurrentCheck",
+          "rentalOneTimeCost",
+          "rentalOtherServices",
+          "rentalOwnerReported",
+          "rentalPropertyChecks",
+          "rentalRecurringCost",
+          "rentalRefundableDeposit",
+          "rentalRent",
+          "rentalUnknown",
+          "rentalUtilities",
+          "studentPolicy",
+          "studentSuitabilityHelp",
+          "tenantPropertyDetailsDailyPriceUnit",
+          "tenantPropertyDetailsWeeklyPriceUnit",
+          "tenantPropertyDetailsYearlyPriceUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/decision_fact.dart",
+        "sha256": "7dc16cc9379cbd16ac400c55f4bc0d95651c1944cd92caf85aaab9ec3963dd61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/decision_cost_line.dart",
+        "sha256": "01a121beb0ad2dcff8a882c379c0c80f217b7403201e2b8523facaf7e3696aec",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/verification_claim.dart",
+        "sha256": "bbb90e3e0b4a2673eba6836bbc72257655434216b89be237bce3e669bbfb6449",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/owner_decision_actions.dart",
+        "sha256": "154cfc7cc4323680e9ab2e62075dff04e538086a4bf1cfe60f04517e287deea2",
+        "localeKeys": [
+          "rentalConfirmAvailability",
+          "rentalConfirmAvailabilityHint",
+          "rentalEditDecisionFacts",
+          "rentalExternalBooking",
+          "rentalExternalBookingHint",
+          "rentalOwnerReported",
+          "rentalReservation"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S08",
+    "behavior": "Known/unknown, estimated/owner-reported/verified facts, property/identity checks and refundable deposit separate from recurring/one-time costs. Availability must be confirmed with current server context; external booking explicitly distinct, no hidden guarantee.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "availability-unknown"
+    ],
+    "visualReference": [
+      "S08",
+      "S19"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "availability-unknown"
+    ]
+  },
+  {
+    "id": "S124",
+    "name": "ملف المتابعة",
+    "english": "Rental support case",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_case_screen.dart",
+    "sha256": "3093ca1e72aaacf1fc24fdc759e6f2ed1481fab805db48405762d21df4727845",
+    "localeKeys": [
+      "rentalCaseTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/cubits/rental_case_cubit.dart",
+        "sha256": "4f58bcbcefb660ff706c96e99e7f47b20b33fb642921c3362c17bebb25200e1e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/rental_case.dart",
+        "sha256": "bfbbe85f835bffa4f2aacb6cd5e5d94dfc84f21ea92d8a787b4b8cf484c95917",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/rental_case_body.dart",
+        "sha256": "293cf38adb756bf3786c6eef3da36aa3cf1e97a060587ba1f21774a5991ca72a",
+        "localeKeys": [
+          "companyRequests",
+          "companyServiceOpenTenancy",
+          "companyServiceRequestHelp",
+          "companySourcingHelp",
+          "companyWithdrawServiceRequest",
+          "rentalCaseCurrentAssignee",
+          "rentalCaseFinancialBoundary",
+          "rentalCaseNeedsAssignee",
+          "rentalCaseOperationalTarget",
+          "rentalCaseReason",
+          "rentalCaseReply",
+          "rentalCaseRequestReview",
+          "rentalCaseResolution",
+          "rentalFinanceTeam",
+          "rentalInvoiceTimesLocal",
+          "rentalNextAction",
+          "rentalPayouts",
+          "rentalRefunds",
+          "rentalReplies",
+          "rentalResponsibleTeam",
+          "rentalSupportTeam",
+          "rentalUnknown",
+          "rentalVerificationTeam",
+          "uxReference"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/company_sourcing_status.dart",
+        "sha256": "86f294969ea7425756d525a05d0666173734eb0bb13fceed8f7ce457c803f7a7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/company_service_status.dart",
+        "sha256": "4b8241291ce276a64c42fe186de7132f415bfd4b43a43f8f9f1bcbe233e1f706",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/habitability_status.dart",
+        "sha256": "2dbf10c5c88f7b2f7b3d03fdfbcb9c6da56f61774d1ff831fc3a345b2ab63891",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/case_reply.dart",
+        "sha256": "8698cd547e6794a3745095bb6256b1bf7d51e7a1ada056705ff5c7f7273ed5aa",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/case_remedy.dart",
+        "sha256": "1ec21e4d04481a97cb60b4bbb9fc8c4a25a55a6154e7f2559cd5cf3d636dd907",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/lifecycle_bodies.dart",
+        "sha256": "79a6a243e7f3680190d5a11710a98247294a5d9a41fcb5dbf92a8810787123ab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/rental_case_status.dart",
+        "sha256": "efa615899641c588628f943a917b20b2549f52b02ca9bc41f79637df0a4db73a",
+        "localeKeys": [
+          "companyWaitingForCompany",
+          "groupsUnderReview",
+          "rentalCaseActionPending",
+          "rentalCaseClosed",
+          "rentalCaseOpen",
+          "rentalCaseReopened",
+          "rentalCaseTriaged",
+          "rentalCaseWaitingOwner",
+          "rentalCaseWaitingProvider",
+          "rentalCaseWaitingTenant",
+          "rentalResolved",
+          "rentalStatus",
+          "rentalUnknown"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/habitability_status_card.dart",
+        "sha256": "6be9e292811e93d115c887ea507d3750021a5dc30f0a341ddbfc54c59062a0b0",
+        "localeKeys": [
+          "habitabilityFinancialBoundary",
+          "habitabilityNextReview",
+          "habitabilityReopened",
+          "habitabilityReported",
+          "habitabilityRestricted",
+          "habitabilityTitle",
+          "rentalUnknown"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S125",
+    "behavior": "Case state/assignee/team/due time/replies and optional sourcing/company/habitability/chargeback contexts. Permission-gated review/reply/withdraw only; operational resolution is not automatic financial settlement or occupancy change.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S14",
+      "S19"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S125",
+    "name": "ملفات المتابعة",
+    "english": "Rental cases list",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_cases_screen.dart",
+    "sha256": "97a76070fa4ea357220b4b6e3d3cc27d2804b97b67aa78782c695c5934317389",
+    "localeKeys": [
+      "rentalMyCases"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/rental_cases_list.dart",
+        "sha256": "0b3ffaf20f0bd9d0d40875be81f465971a7e662cc64fb73e9b82e7a8b0faad96",
+        "localeKeys": [
+          "rentalCasesEmpty",
+          "rentalMyCases"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/rental_case.dart",
+        "sha256": "bfbbe85f835bffa4f2aacb6cd5e5d94dfc84f21ea92d8a787b4b8cf484c95917",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S140",
+    "behavior": "Paginated account/workspace case list; refresh on returned changes and preserve current assignment/status. Empty is a valid successful collection, not a failed read.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S126",
+    "name": "مساحة الاتفاق",
+    "english": "Rental deal workspace",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_deal_screen.dart",
+    "sha256": "ebe83e30275de57eb95b0c84983dc5afbcec9855316f347714a064228fd7cee9",
+    "localeKeys": [
+      "rentalDealWorkspace"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/cubits/rental_deal_cubit.dart",
+        "sha256": "17d7178158e228d17ffb8d6706f6d87a5587af5a036e4fa1484f482824873b34",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/rental_deal.dart",
+        "sha256": "365cb49d9cf7231690e70e7a87124035c3820a3675bb207b2a6e0b4aacf8c80b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/rental_deal_body.dart",
+        "sha256": "6aa377910da28cf3eee6cdd3170902dd54832ccd2480562dec427053fa952061",
+        "localeKeys": [
+          "habitabilityReport",
+          "rentalCaseEvidenceHint",
+          "rentalCaseTitle",
+          "rentalCenter",
+          "rentalEvidenceScanning",
+          "rentalFinancialClosure",
+          "rentalHoldExplanation",
+          "rentalInformationRequested",
+          "rentalInformationResponse",
+          "rentalMyCases",
+          "rentalOccupancyStatus",
+          "rentalOwner",
+          "rentalReportMismatch",
+          "rentalReservation",
+          "rentalReserveFree",
+          "rentalResponseDue",
+          "rentalTenant",
+          "rentalTerms",
+          "rentalWaitingFor",
+          "tenancyInvitations"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/reservation_hold.dart",
+        "sha256": "d86ce11ac481fb7cebb2066344acddcb170102ab866f3897cf46e4928b216494",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/deal_resource.dart",
+        "sha256": "c06653ea9d3b7b2ccad35c88365190b89046f86120fc8049670c9ef558da926a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/rental_case.dart",
+        "sha256": "bfbbe85f835bffa4f2aacb6cd5e5d94dfc84f21ea92d8a787b4b8cf484c95917",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/lifecycle_bodies.dart",
+        "sha256": "79a6a243e7f3680190d5a11710a98247294a5d9a41fcb5dbf92a8810787123ab",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S106",
+    "behavior": "Deal waiting-for actor, requested information/response, response deadline, agreed terms and hold are separate. Only allowed actor can reserve/respond/create lease; link lease/center by authoritative ID. Hold is not final financial or occupancy closure.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S19"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S127",
+    "name": "الحجز المؤقت",
+    "english": "Reservation hold detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/reservation_screen.dart",
+    "sha256": "b1b5b166af387b84bf01508a0c09819a842abdd35047a15b737d706e1c03e151",
+    "localeKeys": [
+      "rentalReservation"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/cubits/reservation_cubit.dart",
+        "sha256": "c496606bc1a7c421c966b7a3a4ae975619a0d7055d584f92597c22a3c1b0d586",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/reservation_hold.dart",
+        "sha256": "d86ce11ac481fb7cebb2066344acddcb170102ab866f3897cf46e4928b216494",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/reservation_body.dart",
+        "sha256": "05b0738af87bac779fff99459ce361ccc745a57a23453afef4fecf8a0670b87b",
+        "localeKeys": [
+          "rentalDesiredStart",
+          "rentalEndExclusive",
+          "rentalExtendHold",
+          "rentalHoldExplanation",
+          "rentalPaymentUnknownHold",
+          "rentalReleaseHold",
+          "rentalResponseDue"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/lifecycle_bodies.dart",
+        "sha256": "79a6a243e7f3680190d5a11710a98247294a5d9a41fcb5dbf92a8810787123ab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/reservation_countdown.dart",
+        "sha256": "feac63f8d920c870101c87403fc641f5be5a03900a225606244e0ab0224dfd64",
+        "localeKeys": [
+          "rentalHoldRemaining",
+          "rentalRefreshHold"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S128",
+    "behavior": "Countdown anchored to server time/expiry; needsReconciliation and payment uncertainty distinguish deadline from release. Extend/release only permissions, preserve original revision/operation. No timer-only assumption of successful payment or lease.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "expired",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S11",
+      "S19"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "expired"
+    ]
+  },
+  {
+    "id": "S128",
+    "name": "الحجوزات المؤقتة",
+    "english": "Reservation holds list",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/reservations_screen.dart",
+    "sha256": "acd6e9c5d2f5a3038c538ba8dc67ef6b450e634b631827f54f90e85e2d66166c",
+    "localeKeys": [
+      "rentalReservation"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/widgets/reservations_list.dart",
+        "sha256": "8ad20fcf08dd753cd362e771f83c6acde6b20fec9928d962651bb1f33d16d554",
+        "localeKeys": [
+          "rentalHoldExplanation",
+          "rentalReservation"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/data/models/reservation_hold.dart",
+        "sha256": "d86ce11ac481fb7cebb2066344acddcb170102ab866f3897cf46e4928b216494",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S126",
+    "behavior": "Paginated reservation holds and explanation; refresh on detail changes. Listed holds are not confirmed bookings or signed rental agreements.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S12"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S129",
+    "name": "بدء عقد إيجار",
+    "english": "Lease setup entry",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/lease_draft_screen.dart",
+    "sha256": "79f9413783253f6bd7f6af9b81b9f5fbe1538a5b1d53979f1413308da31f157a",
+    "localeKeys": [
+      "paidCreateLease"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/feature_workspace_guard.dart",
+        "sha256": "cd7a41fb4cd68d6feae158e34bbd211b21c7e427bb537083dc9aaa640e062821",
+        "localeKeys": [
+          "workspaceFeatureOwnerOnly",
+          "workspaceFeatureTenantOnly",
+          "workspaceFeatureUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/widgets/lease_draft_content.dart",
+        "sha256": "553c9fa058715815766db91d0931ff4e76974a1c12a4346268ab77b8ecb62a7f",
+        "localeKeys": [
+          "paidUnavailable",
+          "paidUnavailableBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/widgets/lease_draft_form.dart",
+        "sha256": "5b46f479d6108249d98283e715b86f6941a775edd4f086cfd522daeb9ec4fce3",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S134",
+    "behavior": "Owner workspace digital-lease guard. When agreements readiness supported, choose eligible tenancy invitation; legacy fallback LeaseDraftContent may be unavailable. Do not bypass invitation gating by selecting arbitrary tenant/property.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S16",
+      "S18"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S130",
+    "name": "اختيار مستأجر العقد",
+    "english": "Eligible lease tenant picker",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/lease_tenant_picker_screen.dart",
+    "sha256": "c6c5a12358e6594b10244e4e34d6673cd500a70c3ea4f1e692e9417c92763632",
+    "localeKeys": [
+      "paidLeaseTenant"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/widgets/lease_tenant_picker_list.dart",
+        "sha256": "0555a287560469baf8f516b2f43703b1765bb80d0aed5d182fbc6d797dcd3af9",
+        "localeKeys": [
+          "paidLeaseTenantEmpty",
+          "paidLeaseTenantEmptyBody",
+          "tenancyInviteFromRequests"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S129",
+    "behavior": "LeaseTenantPicker shows eligible tenant context; empty directs invitations from requests. Selecting a tenant does not create a contractual relationship or override eligibility.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S131",
+    "name": "مسودة اتفاق الإيجار",
+    "english": "Create rental agreement draft",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/rental_agreement_draft_screen.dart",
+    "sha256": "b94984de8126b5635734016304b6cfd9a7c09a793f07851b587e8d346441e0f5",
+    "localeKeys": [
+      "paidCreateLease"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/widgets/rental_agreement_draft_form.dart",
+        "sha256": "faccf36bcdd186b6a930eeb9dd632f810233a14d2f2daa530ac635480facebcb",
+        "localeKeys": [
+          "paidCreateLease",
+          "rentalChooseTemplate",
+          "rentalCommissionBody",
+          "rentalEdit",
+          "rentalInvalidInput",
+          "rentalPolicyUnsupported"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S129",
+    "behavior": "Fresh supported configuration/template and eligible invitation; requested stay may lock/derive dates. Template-driven answers and commission explanation; cannot create if policy unsupported/stale. Draft creation does not sign or activate tenancy.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "policy-unsupported"
+    ],
+    "visualReference": [
+      "S17",
+      "S19"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "policy-unsupported"
+    ]
+  },
+  {
+    "id": "S132",
+    "name": "تعديل مسودة الاتفاق",
+    "english": "Edit rental agreement",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/rental_agreement_edit_screen.dart",
+    "sha256": "a756694f1889ab24634027a29e360a5880163df1b0e7b828c154ba2dce815637",
+    "localeKeys": [
+      "rentalEdit"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/widgets/rental_agreement_edit_configuration.dart",
+        "sha256": "1de57ab64be9b5e2231f4787c70cba06490b48f9f8b36540940911a87904ac15",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/widgets/rental_agreement_draft_form.dart",
+        "sha256": "faccf36bcdd186b6a930eeb9dd632f810233a14d2f2daa530ac635480facebcb",
+        "localeKeys": [
+          "paidCreateLease",
+          "rentalChooseTemplate",
+          "rentalCommissionBody",
+          "rentalEdit",
+          "rentalInvalidInput",
+          "rentalPolicyUnsupported"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S135",
+    "behavior": "Load agreement by leaseId then configuration fresh state. Preserve source revision, template answers and edit permission; policy/terms changes require rereview. Do not overwrite signed or stale agreement silently.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "conflict"
+    ],
+    "visualReference": [
+      "S17"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "conflict"
+    ]
+  },
+  {
+    "id": "S133",
+    "name": "تفاصيل العقد الرقمي",
+    "english": "Digital lease detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/digital_lease_details_screen.dart",
+    "sha256": "87a4e8450996b762bddd97c92c56febaaba839aea260bd8cba95e700b8ca58d0",
+    "localeKeys": [
+      "paidDigitalLeases"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/feature_workspace_guard.dart",
+        "sha256": "cd7a41fb4cd68d6feae158e34bbd211b21c7e427bb537083dc9aaa640e062821",
+        "localeKeys": [
+          "workspaceFeatureOwnerOnly",
+          "workspaceFeatureTenantOnly",
+          "workspaceFeatureUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/digital_lease_details_content.dart",
+        "sha256": "1fb720f00d2b996b17e92f795dc287030efa09d4d498a2fb10a80222f0631331",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/digital_lease.dart",
+        "sha256": "5cb47a39d1a1b604d93343753420dbb7a20f9cee4fb96c856963beecfd84ed4e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/digital_leases_empty_state.dart",
+        "sha256": "d92f8431b2aed8ea1a1a014d9a71f963d0f74f180a817a141ba01a465118b53c",
+        "localeKeys": [
+          "paidLeasesEmpty",
+          "paidLeasesEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/digital_lease_details_view.dart",
+        "sha256": "92ccc5b1915820495f79ca718672a904bdaccc57a71027484a18540420683c3f",
+        "localeKeys": [
+          "featureSigningUnavailable",
+          "paidLeaseCancel",
+          "paidLeaseConfirmCancel",
+          "paidLeaseDocument",
+          "paidLeaseRefreshNotice",
+          "paidLeaseSign",
+          "paidLeasesExplanation",
+          "paidRefresh"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S134",
+    "behavior": "Workspace guard, current lease/capabilities and revision. Signed document access and signing capability checked separately; owner cancellation requires confirmation. Hosted destination allowlisting and availability remain authoritative; no fabricated signed PDF.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "signed",
+      "signing-unavailable"
+    ],
+    "visualReference": [
+      "S19"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "signed",
+      "signing-unavailable"
+    ]
+  },
+  {
+    "id": "S134",
+    "name": "العقود الرقمية",
+    "english": "Digital lease collection",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/digital_leases_screen.dart",
+    "sha256": "734cc8176e4806a3aadcc02b5233310fd0b5a5caa374834a9bb7b3ce2513891b",
+    "localeKeys": [
+      "paidDigitalLeases"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/feature_workspace_guard.dart",
+        "sha256": "cd7a41fb4cd68d6feae158e34bbd211b21c7e427bb537083dc9aaa640e062821",
+        "localeKeys": [
+          "workspaceFeatureOwnerOnly",
+          "workspaceFeatureTenantOnly",
+          "workspaceFeatureUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/digital_leases_list.dart",
+        "sha256": "86e2c45f316212ebe95a90e18a58e70209b133ca061beff931b4a0a4621299da",
+        "localeKeys": [
+          "paidCreateLease",
+          "paidLeasesExplanation"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/digital_lease.dart",
+        "sha256": "5cb47a39d1a1b604d93343753420dbb7a20f9cee4fb96c856963beecfd84ed4e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/digital_leases_empty_state.dart",
+        "sha256": "d92f8431b2aed8ea1a1a014d9a71f963d0f74f180a817a141ba01a465118b53c",
+        "localeKeys": [
+          "paidLeasesEmpty",
+          "paidLeasesEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/digital_lease_card.dart",
+        "sha256": "c21285bddc71bec29e3b49717e711e04eee10ee3516bc017c6682ca2b2590cbe",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S36",
+    "behavior": "Workspace-specific leases, optional property filter and owner-only create. Preserve rentalSelection and known dates; refresh on changes and genuine empty/unsupported feature states.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S20"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S135",
+    "name": "مراجعة اتفاق الإيجار",
+    "english": "Agreement read and approve",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/rental_agreement_review_screen.dart",
+    "sha256": "5617d6d4a880e13fbd917d1a75012341784c9efc77e35e69c7b51edb080ac55f",
+    "localeKeys": [
+      "rentalReviewContract"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/cubits/rental_agreement_cubit.dart",
+        "sha256": "521384d3b5693a178c6f81b0d84d14122962d0a2e888bd511c33de5f97f1c20e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/digital_lease.dart",
+        "sha256": "5cb47a39d1a1b604d93343753420dbb7a20f9cee4fb96c856963beecfd84ed4e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/rental_agreement_review.dart",
+        "sha256": "dadfb4b6eddcafeec136f2a9ce26c02b3fe83fa0a4f6e45554a7f92465349457",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/digital_lease_encoding.dart",
+        "sha256": "e65383e72d5e1e3df413c360f8bfa0bd0964885f23be55354e8a90d89180e074",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/digital_lease_copy.dart",
+        "sha256": "3827fd2c0ae8492e66358af26275f47ccf7f2fe93e64e15c535015f16a6a1988",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/rental_agreement_terms.dart",
+        "sha256": "d89d91fe2c3be774b20752606cb5ad17bb6752bb64ae44493db4f1cfd536390e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/rental_agreement_review_content.dart",
+        "sha256": "7f3dd5191afe23e872d55da4cea9d20bfb0356ba8df387368fdab76e2b595c5c",
+        "localeKeys": [
+          "paidLeaseCancel",
+          "paidVerifyRent",
+          "rentalApprove",
+          "rentalContractReadAck",
+          "rentalDocuments",
+          "rentalEdit",
+          "rentalHoldExpires",
+          "rentalLegacyReadOnly",
+          "rentalRequestChanges",
+          "rentalSignature",
+          "rentalSubmitSignature",
+          "rentalVersion"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S133",
+    "behavior": "Read/refresh agreement, content-revision ack resets on revision change. Permissions gate approve/request-changes/cancel/submit-signature/documents; legacy readonly stays nonmutating. Financial commission/payment phases not treated as signing.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "revision-changed",
+      "legacy-read-only"
+    ],
+    "visualReference": [
+      "S19",
+      "S20"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "revision-changed",
+      "legacy-read-only"
+    ]
+  },
+  {
+    "id": "S136",
+    "name": "التوقيع على الاتفاق",
+    "english": "Rental signing session",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/rental_signing_screen.dart",
+    "sha256": "2006ad4ae9d30f70fe9b2ceee8b0bedb30d6ac64308ce365547ae64342e58285",
+    "localeKeys": [
+      "rentalSignature"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/digital_lease.dart",
+        "sha256": "5cb47a39d1a1b604d93343753420dbb7a20f9cee4fb96c856963beecfd84ed4e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/widgets/rental_signing_form.dart",
+        "sha256": "c3a0a75b47492034d6693d1ea83c2836bb8a0ac167f7539a3265bbc542b5f982",
+        "localeKeys": [
+          "paidLeaseRefreshNotice",
+          "rentalContractReadAck",
+          "rentalSignature",
+          "rentalVersion"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/digital_lease_encoding.dart",
+        "sha256": "e65383e72d5e1e3df413c360f8bfa0bd0964885f23be55354e8a90d89180e074",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/digital_lease_copy.dart",
+        "sha256": "3827fd2c0ae8492e66358af26275f47ccf7f2fe93e64e15c535015f16a6a1988",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/data/models/rental_agreement_terms.dart",
+        "sha256": "d89d91fe2c3be774b20752606cb5ad17bb6752bb64ae44493db4f1cfd536390e",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S135",
+    "behavior": "Signing session create/resume after explicit contract-read acknowledgement bound to revision. Use trusted provider/session identity and expiry, refresh lease afterward. No freehand local canvas or mocked completion treated as a legal signature.",
+    "kind": "signing",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "expired",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S03",
+      "S19"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "expired",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S137",
+    "name": "مسكني",
+    "english": "Personal housing hub",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/my_housing_screen.dart",
+    "sha256": "bc7133a9e46bd2d46be1d159eed688860975f8382daf817bd5c1e86183aba169",
+    "localeKeys": [
+      "individualHousingCurrent",
+      "individualHousingHistory",
+      "individualMyHousing",
+      "tenancyInvitations",
+      "tenantVisitsTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/my_housing_requests.dart",
+        "sha256": "b1504f61afcf8f6fea1a383a75884bcaa12d0eff06819fa55cf15ddb28d6167d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/my_rentals_list.dart",
+        "sha256": "17b9290fb498321eb2531c15139868e44607d07513d4a11225dbd6c2f0bb57fc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/data/models/my_rentals_filter.dart",
+        "sha256": "8598d20ce8705ee4d34f571abfba917f926e7a7db5d5c8b1da1837f2cfbf1554",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/my_rentals_empty_state.dart",
+        "sha256": "826a5d1c385ee3e7c999a754765f5f2d31aae970df4afa2af4c20a09441cb38d",
+        "localeKeys": [
+          "rentalEmptyBody",
+          "rentalMyRentals"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/my_rental_card.dart",
+        "sha256": "1267ddba3c2890f1d3913ecc4d14ca675537137421091ddf09b487ed08948391",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S05",
+    "behavior": "Current/history housing collection includes rentalSelection and individual workflow; visits/invitations/my-rentals remain separate destinations. Do not assume a future/pending record is current occupancy.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S05",
+      "S18"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S138",
+    "name": "إيجاراتي",
+    "english": "My rental periods",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/my_rentals_screen.dart",
+    "sha256": "5cac9f5c7b0b62ff0ea29fa1bbeb1219e2187cc8d6d30dc10ea407d25f22e07c",
+    "localeKeys": [
+      "rentalMyRentals"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/my_rentals_view.dart",
+        "sha256": "8ac085114c284cc299d0d1137dd6baa1634ce7bfbe610b6f189931670d08c8c8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/data/models/my_rentals_filter.dart",
+        "sha256": "8598d20ce8705ee4d34f571abfba917f926e7a7db5d5c8b1da1837f2cfbf1554",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/my_rentals_filters.dart",
+        "sha256": "fd2cff7fc85827b7e709d72ac49d342a914f7b5b5c5eaba825677906b22e6bec",
+        "localeKeys": [
+          "rentalAll",
+          "rentalCurrent",
+          "rentalEnded",
+          "rentalPendingSettlement",
+          "rentalSearch",
+          "rentalUpcoming"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/my_rentals_list.dart",
+        "sha256": "17b9290fb498321eb2531c15139868e44607d07513d4a11225dbd6c2f0bb57fc",
+        "localeKeys": []
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S137",
+    "behavior": "Role/workspace scoped rentals with search and all/current/upcoming/ended/pending settlement buckets. Rental period/selection identity retained; ending occupancy does not imply financial closure.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S12",
+      "S18"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S139",
+    "name": "جدول الفواتير",
+    "english": "Rental billing schedule",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/rental_billing_schedule_screen.dart",
+    "sha256": "1dd08c92e4e29244471a7bcf6d52c428c39c39603469d00e2e6eae78710ae959",
+    "localeKeys": [
+      "rentalSchedule"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_billing_schedule_list.dart",
+        "sha256": "a4e301efc051b025355955248312a726b0fe7bab855bc077970fa478d0784c2c",
+        "localeKeys": [
+          "rentalSchedule",
+          "rentalScheduleEmpty"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S140",
+    "behavior": "Read-only paginated billing schedule with valid empty state. Planned obligations differ from issued invoices, captured payments and receipts; no pay action from schedule alone.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S19"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S140",
+    "name": "مركز الإيجار",
+    "english": "Rental management center",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/rental_center_screen.dart",
+    "sha256": "1540035e07e049b907550953b1baecb8e3a836cc0df7b0e6499d508f95b7d28d",
+    "localeKeys": [
+      "rentalCenter"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/cubits/rental_center_cubit.dart",
+        "sha256": "2e9abb01a1111defcbf076893226b2a0e7e336110b079ed12a8ca53b39baeb4e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/data/models/rental_center.dart",
+        "sha256": "f7b466a52c096cccb85fb934bcf2590d2d9e2a3dba54d6a703a4db8f0a7144ab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_center_body.dart",
+        "sha256": "dc2c8f8d79838f9861d057f38deef087266394c39ff67ca2bb475fc404586070",
+        "localeKeys": [
+          "individualManageRental",
+          "individualOptionalTools",
+          "ratingStayExperience",
+          "rentalDealWorkspace",
+          "rentalReadOnly",
+          "rentalSchedule",
+          "rentalTerms",
+          "rentalTimeline",
+          "studentNextPlan"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/data/models/rental_journey_summary.dart",
+        "sha256": "78116d14611285b3b24f38a0c2560d1406afb93413a16df08d96f3ee42b7c327",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/data/models/rental_next_action.dart",
+        "sha256": "9465e77ff779abef1a17804647a49b69168063d3d8d03eebea2d381639a47545",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/data/models/rental_timeline_event.dart",
+        "sha256": "60c55daaf9dee7d844fada49941d1577ca18c36a2e906cc7708f728115c0f032",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_center_header.dart",
+        "sha256": "eb43ec5ddb364ebaed9cde79053ca055143ab611a43310ff8383ab29f9e39e02",
+        "localeKeys": [
+          "rentalBalance",
+          "rentalCenterBody",
+          "rentalContract",
+          "rentalFinancialClosure",
+          "rentalLegacyReadOnly",
+          "rentalOccupancy"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_journey_card.dart",
+        "sha256": "d6aedcb8277eb530a22a309ed4ff8489bbfe7c27ebad3065ed04d6ea1ef365fe",
+        "localeKeys": [
+          "individualClosureAgreement",
+          "individualClosureExecution",
+          "individualClosureHelp",
+          "individualClosureInventory",
+          "individualClosureInvoices",
+          "individualClosurePayment",
+          "individualClosurePossession",
+          "individualClosureProcessing",
+          "individualDeadline",
+          "individualNextBoth",
+          "individualNextOperator",
+          "individualNextOwner",
+          "individualNextProvider",
+          "individualNextTenant",
+          "individualNothingDue",
+          "individualRentalComplete",
+          "rentalDeposit",
+          "rentalDisputes",
+          "rentalNextStep",
+          "rentalRefunds",
+          "rentalSettlement",
+          "rentalWaiting"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_next_step_card.dart",
+        "sha256": "a8a02a098bfa7123b436d9a28494de68471d86984240e9ec67c03f40389c922a",
+        "localeKeys": [
+          "individualCheckPaymentHelp",
+          "individualReviewAgreementHelp",
+          "individualReviewClosureHelp",
+          "individualReviewHandoverHelp",
+          "individualReviewInvoiceHelp",
+          "rentalNextStep",
+          "rentalWaiting",
+          "uxRefreshBeforeAction",
+          "uxReviewAgreement",
+          "uxReviewHandover",
+          "uxReviewInvoice",
+          "uxReviewSettlement"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_billing_schedule.dart",
+        "sha256": "4f0773bdc6b15c59a19e10f6cb784121aee0acb5890c6a78a24a62e9af11c754",
+        "localeKeys": [
+          "rentalBillingSchedule",
+          "rentalScheduleEmpty"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_center_operations.dart",
+        "sha256": "9328d28554a22d4478b144845ba0d6b98027b7de47873046f7c0cb0cbf9a72de",
+        "localeKeys": [
+          "conditionTitle",
+          "departureTitle",
+          "paidRentManagement",
+          "rentalAmendment",
+          "rentalContract",
+          "rentalDeposit",
+          "rentalDisputes",
+          "rentalDocuments",
+          "rentalHandovers",
+          "rentalMaintenance",
+          "rentalOwnerPayables",
+          "rentalRefunds",
+          "rentalRenewal",
+          "rentalReview",
+          "rentalSettlement",
+          "rentalTermination"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_chat_entry.dart",
+        "sha256": "3f1dd6c84b9195d9e0c15e54635a2d643d32ac7e552094327d80f07961c54caf",
+        "localeKeys": [
+          "rentalMessages"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/widgets/rental_support_entry.dart",
+        "sha256": "fc9301d37c78f775bf67fa906cdc4b4c9e7cdc3886aa606d60d16635fd3cbff7",
+        "localeKeys": [
+          "rentalOpenSupport"
+        ]
+      }
+    ],
+    "group": "الاتفاق والسكن",
+    "back": "S137",
+    "behavior": "Fresh role-aware next action, actor/deadline, stage, closure items, balance and capability menu. Legacy readonly/cached view disables mutations. Occupancy, possession, agreement, processing, invoices/payment and financial closure are separate dimensions.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S05",
+      "S18"
+    ],
+    "sprint": 6,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  }
+]

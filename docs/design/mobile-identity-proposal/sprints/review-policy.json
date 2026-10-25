@@ -1,0 +1,11 @@
+{
+  "batchSizeSprints": 3,
+  "authorizedSprints": [
+    8,
+    9,
+    10
+  ],
+  "stopAfterSprint": 10,
+  "nextSprint": 11,
+  "requiresUserReview": true
+}

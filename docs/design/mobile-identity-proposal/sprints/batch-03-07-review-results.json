@@ -1,0 +1,36 @@
+{
+  "sprints": [
+    {
+      "sprint": 3,
+      "screens": 20,
+      "variants": 244,
+      "interactions": 8
+    },
+    {
+      "sprint": 4,
+      "screens": 20,
+      "variants": 236,
+      "interactions": 7
+    },
+    {
+      "sprint": 5,
+      "screens": 20,
+      "variants": 218,
+      "interactions": 7
+    },
+    {
+      "sprint": 6,
+      "screens": 20,
+      "variants": 240,
+      "interactions": 5
+    },
+    {
+      "sprint": 7,
+      "screens": 20,
+      "variants": 244,
+      "interactions": 5
+    }
+  ],
+  "screens": 100,
+  "result": "pass"
+}

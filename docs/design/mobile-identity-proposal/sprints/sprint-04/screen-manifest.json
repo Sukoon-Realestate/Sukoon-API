@@ -1,0 +1,2051 @@
+[
+  {
+    "id": "S81",
+    "name": "تفاصيل إعلان البانر",
+    "english": "Banner advertisement detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/banner_ad_detail_screen.dart",
+    "sha256": "c0d6d963b0e76968a3d2b6e766a8239d26805221efb960d24fc29dee6a96ae6c",
+    "localeKeys": [
+      "bannerDetails"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/banner_owner_guard.dart",
+        "sha256": "e8c786c35b1e382174fd76523d557d7963f078457cee646d47d23bf0d187fe63",
+        "localeKeys": [
+          "bannerOwnerOnly"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/cubits/banner_ad_detail_cubit.dart",
+        "sha256": "fcdb0ec359e5f7e9d0d4c450c0930447bdd8da43ca9713fb081528fbad78e8f8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/banner_ad_summary.dart",
+        "sha256": "7d73d7dc6ff40c38cbe4358a09b61399401e2a8e98e371ac0acc6ed6f54f856a",
+        "localeKeys": [
+          "bannerActive",
+          "bannerEndsAt",
+          "bannerExpired",
+          "bannerMockConfirmed",
+          "bannerMockExplanation",
+          "bannerPendingPayment",
+          "bannerStartsAt",
+          "bannerStatus",
+          "bannerStatusUnknown"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/owner_banner_artwork.dart",
+        "sha256": "d737bbc69c3aa885f98a5c9f4b15d9bff793e5fb358232955abbda612801e2e0",
+        "localeKeys": [
+          "bannerImageUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/banner_plan_summary.dart",
+        "sha256": "081e8e6488cbf663dc229151d341ad1f8130e044dd27f5e9021187f1246ea880",
+        "localeKeys": [
+          "bannerNoRenewal",
+          "bannerOneMonth",
+          "bannerOneWeek",
+          "bannerOneYear",
+          "bannerTotal"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S84",
+    "behavior": "Owner-only banner detail, plan duration/total/start/end/status and image failure. Pending payment opens purchase invoice; activation receipt distinguished from mock explanation, no automatic renewal.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S08",
+      "S19"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S82",
+    "name": "عقار الإعلان",
+    "english": "Banner property choice",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/banner_property_picker_screen.dart",
+    "sha256": "e012bd67804e40a56ce92ef58f325f47c43f14345bb87cc2e9e7185c95576785",
+    "localeKeys": [
+      "paidSelectProperty"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/banner_owner_guard.dart",
+        "sha256": "e8c786c35b1e382174fd76523d557d7963f078457cee646d47d23bf0d187fe63",
+        "localeKeys": [
+          "bannerOwnerOnly"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S83",
+    "behavior": "Banner-specific owner access and eligible property picker. Selection returns property context, not an ad purchase or proof of publication.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S16"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S83",
+    "name": "إنشاء إعلان بانر",
+    "english": "Banner ad composer",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/create_banner_ad_screen.dart",
+    "sha256": "10e71758b2cbe6a18191b49479414ec9b0b0259c50357627786ecf515ba035ed",
+    "localeKeys": [
+      "bannerAdvertise"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/banner_owner_guard.dart",
+        "sha256": "e8c786c35b1e382174fd76523d557d7963f078457cee646d47d23bf0d187fe63",
+        "localeKeys": [
+          "bannerOwnerOnly"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/create_banner_ad_screen_banner_ad_composer.dart",
+        "sha256": "c6e7071f92876a90123ddfe931c90c2c683623fc04fefccfa987ef37dd05f1cd",
+        "localeKeys": []
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S84",
+    "behavior": "Owner guard, image/title/description/plan with current revision, restore/discard draft and leave guard. Review confirmation before submit. Plan-changed/unavailable reloads catalog; locked/uncertain intent recovers original command rather than issuing duplicate ads.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "plan-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S08"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S84",
+    "name": "إعلانات البانر",
+    "english": "Owner banner advertisement list",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/owner_banner_ads_screen.dart",
+    "sha256": "dee3e861d90d28ed06fccb919f9b0323c9c67a08b8ed04e6f36541157e4f987a",
+    "localeKeys": [
+      "bannerCreate",
+      "bannerMyAds"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/banner_owner_guard.dart",
+        "sha256": "e8c786c35b1e382174fd76523d557d7963f078457cee646d47d23bf0d187fe63",
+        "localeKeys": [
+          "bannerOwnerOnly"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/owner_banner_ads_list.dart",
+        "sha256": "d6d9ae1bb4f8bce2699940ca6aa4c14eee69228c6b2fe2e84c65f90157a1027b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/create_banner_ad_screen.dart",
+        "sha256": "10e71758b2cbe6a18191b49479414ec9b0b0259c50357627786ecf515ba035ed",
+        "localeKeys": [
+          "bannerAdvertise"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/banner_ads_empty_state.dart",
+        "sha256": "475fdcabc1a435e7859289860ba783aaf8c010116bcba303f7d656f3991046ad",
+        "localeKeys": [
+          "bannerAdsEmpty",
+          "bannerAdsEmptyBody",
+          "bannerPlansEmpty",
+          "bannerPlansEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/owner_banner_artwork.dart",
+        "sha256": "d737bbc69c3aa885f98a5c9f4b15d9bff793e5fb358232955abbda612801e2e0",
+        "localeKeys": [
+          "bannerImageUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/widgets/banner_ad_summary.dart",
+        "sha256": "7d73d7dc6ff40c38cbe4358a09b61399401e2a8e98e371ac0acc6ed6f54f856a",
+        "localeKeys": [
+          "bannerActive",
+          "bannerEndsAt",
+          "bannerExpired",
+          "bannerMockConfirmed",
+          "bannerMockExplanation",
+          "bannerPendingPayment",
+          "bannerStartsAt",
+          "bannerStatus",
+          "bannerStatusUnknown"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S41",
+    "behavior": "Paginated owner advertisements and available plans; refresh after create/detail return and recheck owner access. Pending, active, expired and unknown statuses remain distinct.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S16",
+      "S18"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S85",
+    "name": "اختيار العقار للخدمة",
+    "english": "Service property picker",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/premium/presentation/screens/premium_property_picker_screen.dart",
+    "sha256": "f7a578052b63e85c4d7d13ebdd692c186dfafe4222e07f933027e97c0d2d99bb",
+    "localeKeys": [
+      "paidSelectProperty"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/premium/presentation/widgets/premium_property_picker_list.dart",
+        "sha256": "29d7a86093b0b466370cf43c097550f49ee581d436fba1111b616143cb5e4073",
+        "localeKeys": [
+          "bannerOptionalProperty",
+          "housingMatchingPropertiesEmpty",
+          "housingOfferEligibleProperties",
+          "paidPropertyEmpty",
+          "paidPropertyEmptyBody"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S89",
+    "behavior": "Shared premium property picker supports optional selection, owner eligibility and empty/matching inventory cases. Choosing a property does not purchase a feature or bypass an entitlement gate.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S16"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S86",
+    "name": "فواتيري",
+    "english": "Purchase and billing invoices",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/my_invoices_screen.dart",
+    "sha256": "fe8a7cc5301d3099ec82f7ffdfc3825bfda1e0fcfe467fcddfbf5980a2b06b1d",
+    "localeKeys": [
+      "billingAll",
+      "billingClearDate",
+      "billingDateFilter",
+      "billingMyInvoices",
+      "billingOwnPurchases"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/billing_invoice.dart",
+        "sha256": "1e73fcbb3a7d61e6b17728ea458dbd4f768a0f54164c05d5e73b5b5e9623c610",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/purchase_invoice_screen.dart",
+        "sha256": "3a59b529aca60870a8ab29284e18b09b1b9bcb4544f9b04164509ac8010b844e",
+        "localeKeys": [
+          "billingMockNotice",
+          "billingPay",
+          "billingReviewInvoice",
+          "commerceSandboxNotice",
+          "rentalOperationUnknown"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/billing_read_data.dart",
+        "sha256": "c7045853c2aa2e37a2584374045eafe1f5879bb0dad6e54b6838a9024d5a78d4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/billing_labels.dart",
+        "sha256": "4e6693d786430b6f6c8d8e7d052cdc01281b13be7b4f9929eecf054f690579c6",
+        "localeKeys": [
+          "billingActive",
+          "billingAdvertising",
+          "billingCancelled",
+          "billingDue",
+          "billingExpired",
+          "billingMyInvoices",
+          "billingOverdue",
+          "billingPaid",
+          "billingPartial",
+          "billingRent",
+          "billingSubscription",
+          "billingUnknown",
+          "commerceAdjustment",
+          "commerceBillingRetry",
+          "commerceDeposit",
+          "commerceGrace",
+          "commerceMaintenance",
+          "commerceOnHold",
+          "commercePromotion",
+          "commerceRevoked",
+          "commerceSettlement"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/billing_empty_states.dart",
+        "sha256": "192ad5addf35635e51591145d68eb2bf89ce8da3e83aa2272a178201baad5828",
+        "localeKeys": [
+          "billingIntro",
+          "billingInvoiceEmptyHint",
+          "billingNoInvoices",
+          "billingNoPlans"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/billing_invoice_card.dart",
+        "sha256": "05a74d3f87c38598309c452aa7c0bd7169f27f7f6df78df61118653d03553484",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/purchase_route.dart",
+        "sha256": "e695134aba638cc75dd76201ac6877fe4fccf63cc33206bc2539ae72abf50576",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/hosted_payment_browser.dart",
+        "sha256": "e0de132b5e83294c0bf9cf5c16a936f464b92cf14e95d6849c36b82ac871d2b3",
+        "localeKeys": [
+          "accountVerificationRequired",
+          "rentalCheckoutLoadFailed",
+          "rentalPaymentPending",
+          "rentalUnsafePaymentLink"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/purchase_invoice_footer.dart",
+        "sha256": "5bb7fb8ab38c50f9a881b9c132fc1bd2c8c6e985cccef49a5977bb5d1d8e190c",
+        "localeKeys": [
+          "billingCheck",
+          "billingPay",
+          "billingReviewChanged",
+          "commerceRouteUnavailable",
+          "rentalResumePayment"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/payment_status_card.dart",
+        "sha256": "e45070f04f400dff234cc3ef8a66932cf9368646781e9f7e33d8cd592cd2a8ef",
+        "localeKeys": [
+          "billingPaymentConfirmed",
+          "commerceCheckingPayment",
+          "commerceDoNotPayAgain",
+          "commerceFulfilled",
+          "commerceFulfillmentPending",
+          "commerceReviewExplanation",
+          "commerceReviewTotal"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/payment_failure_notice.dart",
+        "sha256": "9536d636d50d0750c757d02ae8af6e8adef49841ceafdd802b8c305cd070bfaa",
+        "localeKeys": [
+          "billingReviewInvoice",
+          "commerceCompleteContact"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/invoice_details.dart",
+        "sha256": "9d37f1dab1a2f9eca4a29a0425623e0e11bada736014a997a5abdc7943b19155",
+        "localeKeys": [
+          "billingBalance",
+          "billingDueDate",
+          "billingIssued",
+          "billingPaid",
+          "billingPaidAmount",
+          "billingReceipt",
+          "billingTotal"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/subscription_overview.dart",
+        "sha256": "88b29d1e4fa875e0b78119146d03389726f52e659743ec7e83e5a2e4be3ee819",
+        "localeKeys": []
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S28",
+    "behavior": "Workspace/type/date filtered invoices; owner/tenant available categories differ. Show totals/paid/balance/due and correct purchase route. Rent billing and own purchases are not interchangeable; mock/sandbox and unknown status visibly labelled.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S87",
+    "name": "مراجعة فاتورة شراء",
+    "english": "Purchase invoice and payment review",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/purchase_invoice_screen.dart",
+    "sha256": "3a59b529aca60870a8ab29284e18b09b1b9bcb4544f9b04164509ac8010b844e",
+    "localeKeys": [
+      "billingMockNotice",
+      "billingPay",
+      "billingReviewInvoice",
+      "commerceSandboxNotice",
+      "rentalOperationUnknown"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/cubits/billing_read_cubits.dart",
+        "sha256": "c0143b6d646b3c5fe4ab6643dcacd2968d5bc167de9ce59703aa6f1b4e7640e1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/cubits/purchase_payment_cubit.dart",
+        "sha256": "98440d77053acafef84d72954661fe9fdb2991b80d9a3e39a7a231e0338ae0ac",
+        "localeKeys": [
+          "rentalOperationUnknown",
+          "rentalQuoteChanged",
+          "rentalRecoverySaveFailed"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/billing_invoice.dart",
+        "sha256": "1e73fcbb3a7d61e6b17728ea458dbd4f768a0f54164c05d5e73b5b5e9623c610",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/hosted_payment_browser.dart",
+        "sha256": "e0de132b5e83294c0bf9cf5c16a936f464b92cf14e95d6849c36b82ac871d2b3",
+        "localeKeys": [
+          "accountVerificationRequired",
+          "rentalCheckoutLoadFailed",
+          "rentalPaymentPending",
+          "rentalUnsafePaymentLink"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/cubits/purchase_payment_state.dart",
+        "sha256": "276f9580c4e2ff273680518bb4c075525133e11c9b4b6d53e5c3687bf8c133ad",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/purchase_invoice_footer.dart",
+        "sha256": "5bb7fb8ab38c50f9a881b9c132fc1bd2c8c6e985cccef49a5977bb5d1d8e190c",
+        "localeKeys": [
+          "billingCheck",
+          "billingPay",
+          "billingReviewChanged",
+          "commerceRouteUnavailable",
+          "rentalResumePayment"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/payment_status_card.dart",
+        "sha256": "e45070f04f400dff234cc3ef8a66932cf9368646781e9f7e33d8cd592cd2a8ef",
+        "localeKeys": [
+          "billingPaymentConfirmed",
+          "commerceCheckingPayment",
+          "commerceDoNotPayAgain",
+          "commerceFulfilled",
+          "commerceFulfillmentPending",
+          "commerceReviewExplanation",
+          "commerceReviewTotal"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/payment_failure_notice.dart",
+        "sha256": "9536d636d50d0750c757d02ae8af6e8adef49841ceafdd802b8c305cd070bfaa",
+        "localeKeys": [
+          "billingReviewInvoice",
+          "commerceCompleteContact"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/invoice_details.dart",
+        "sha256": "9d37f1dab1a2f9eca4a29a0425623e0e11bada736014a997a5abdc7943b19155",
+        "localeKeys": [
+          "billingBalance",
+          "billingDueDate",
+          "billingIssued",
+          "billingPaid",
+          "billingPaidAmount",
+          "billingReceipt",
+          "billingTotal"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/subscription_overview.dart",
+        "sha256": "88b29d1e4fa875e0b78119146d03389726f52e659743ec7e83e5a2e4be3ee819",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/purchase_attempt.dart",
+        "sha256": "fd97ae96345416ebb37958d1ade6bf6b01dd6c6dff7f600f7707bdaa3e67ad2f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/purchase_route.dart",
+        "sha256": "e695134aba638cc75dd76201ac6877fe4fccf63cc33206bc2539ae72abf50576",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/hosted_payment_browser_content.dart",
+        "sha256": "11bde71d2df7b783ebc88512e812318614b6e22f5ab12a7ffc1356e12fd21b3c",
+        "localeKeys": [
+          "commerceReloadCheckout",
+          "rentalCloseCheckout"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/invoice_cancel_button.dart",
+        "sha256": "5fd5db4c09d064666fae5398ca3b233f95dd0b8dc434423717ac73a2d4c4d62b",
+        "localeKeys": [
+          "billingCancelInvoice",
+          "billingConfirmCancel",
+          "billingContinueLater"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/billing_labels.dart",
+        "sha256": "4e6693d786430b6f6c8d8e7d052cdc01281b13be7b4f9929eecf054f690579c6",
+        "localeKeys": [
+          "billingActive",
+          "billingAdvertising",
+          "billingCancelled",
+          "billingDue",
+          "billingExpired",
+          "billingMyInvoices",
+          "billingOverdue",
+          "billingPaid",
+          "billingPartial",
+          "billingRent",
+          "billingSubscription",
+          "billingUnknown",
+          "commerceAdjustment",
+          "commerceBillingRetry",
+          "commerceDeposit",
+          "commerceGrace",
+          "commerceMaintenance",
+          "commerceOnHold",
+          "commercePromotion",
+          "commerceRevoked",
+          "commerceSettlement"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S86",
+    "behavior": "Fresh invoice/quote, balance and purchase route gate payment/cancel. Poll/reconcile pending attempt on resume, preserve operation identity; never pay again after an uncertain transmitted response. Paid/fulfillment-pending/fulfilled differ; sandbox-only routes labelled.",
+    "kind": "payment",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "quote-changed",
+      "paid",
+      "fulfillment-pending"
+    ],
+    "visualReference": [
+      "S19",
+      "S10"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "quote-changed",
+      "paid",
+      "fulfillment-pending"
+    ]
+  },
+  {
+    "id": "S88",
+    "name": "الاشتراكات",
+    "english": "Subscriptions and plan catalog",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/subscriptions_screen.dart",
+    "sha256": "ed0b9907c4e831375a816a2d69ec854028c9140275e175018055c9a01fcc8e8a",
+    "localeKeys": [
+      "billingEnds",
+      "billingMyInvoices",
+      "billingNoSubscription",
+      "billingOwnerSubscriptions",
+      "billingRetryInvoice",
+      "billingReviewInvoice",
+      "billingStarts",
+      "billingTenantSubscriptions",
+      "commerceCompanyPlans",
+      "commerceGraceEnds",
+      "rentalOperationUnknown"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/cubits/billing_read_cubits.dart",
+        "sha256": "c0143b6d646b3c5fe4ab6643dcacd2968d5bc167de9ce59703aa6f1b4e7640e1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/cubits/invoice_issue_cubit.dart",
+        "sha256": "92a33d1aca951d69566bab1ace674cfebc47fe8f4ecb617aacbd9fb1ee98ec95",
+        "localeKeys": [
+          "rentalOperationUnknown",
+          "rentalRecoverySaveFailed"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/billing_invoice.dart",
+        "sha256": "1e73fcbb3a7d61e6b17728ea458dbd4f768a0f54164c05d5e73b5b5e9623c610",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/purchase_invoice_screen.dart",
+        "sha256": "3a59b529aca60870a8ab29284e18b09b1b9bcb4544f9b04164509ac8010b844e",
+        "localeKeys": [
+          "billingMockNotice",
+          "billingPay",
+          "billingReviewInvoice",
+          "commerceSandboxNotice",
+          "rentalOperationUnknown"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/my_invoices_screen.dart",
+        "sha256": "fe8a7cc5301d3099ec82f7ffdfc3825bfda1e0fcfe467fcddfbf5980a2b06b1d",
+        "localeKeys": [
+          "billingAll",
+          "billingClearDate",
+          "billingDateFilter",
+          "billingMyInvoices",
+          "billingOwnPurchases"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/cubits/invoice_issue_state.dart",
+        "sha256": "4a6a28c07d8a54b70c78b200abd4bad7e7a4b87b7d62bdd3998eda3ef23a42cc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/subscription_overview.dart",
+        "sha256": "88b29d1e4fa875e0b78119146d03389726f52e659743ec7e83e5a2e4be3ee819",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/subscription_intro.dart",
+        "sha256": "1b67934f7eaea66027c1916c3eebcf80e3c7e33e39234d79407d7c8d59f66338",
+        "localeKeys": [
+          "commerceFreeEssentials",
+          "commercePlansSubtitle",
+          "commercePlansTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/billing_labels.dart",
+        "sha256": "4e6693d786430b6f6c8d8e7d052cdc01281b13be7b4f9929eecf054f690579c6",
+        "localeKeys": [
+          "billingActive",
+          "billingAdvertising",
+          "billingCancelled",
+          "billingDue",
+          "billingExpired",
+          "billingMyInvoices",
+          "billingOverdue",
+          "billingPaid",
+          "billingPartial",
+          "billingRent",
+          "billingSubscription",
+          "billingUnknown",
+          "commerceAdjustment",
+          "commerceBillingRetry",
+          "commerceDeposit",
+          "commerceGrace",
+          "commerceMaintenance",
+          "commerceOnHold",
+          "commercePromotion",
+          "commerceRevoked",
+          "commerceSettlement"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/billing_empty_states.dart",
+        "sha256": "192ad5addf35635e51591145d68eb2bf89ce8da3e83aa2272a178201baad5828",
+        "localeKeys": [
+          "billingIntro",
+          "billingInvoiceEmptyHint",
+          "billingNoInvoices",
+          "billingNoPlans"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/subscription_catalog.dart",
+        "sha256": "e1cdce7ad51b50edc0d9a56a47b94cf7056cf802094e079cdafafb10d2bc6142",
+        "localeKeys": [
+          "billingAll",
+          "billingMonths",
+          "commerceMonthly",
+          "commerceYearly"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/invoice_intent.dart",
+        "sha256": "578e101d9b2049753f5937655dfef56d6ab1762295abbb92b0911c58e43664d2",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/subscription_plan.dart",
+        "sha256": "3a2d98b831e7949f2374585c472c2d9edf5349f0d58888b6b89f3541d4598102",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/data/models/purchase_route.dart",
+        "sha256": "e695134aba638cc75dd76201ac6877fe4fccf63cc33206bc2539ae72abf50576",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/hosted_payment_browser.dart",
+        "sha256": "e0de132b5e83294c0bf9cf5c16a936f464b92cf14e95d6849c36b82ac871d2b3",
+        "localeKeys": [
+          "accountVerificationRequired",
+          "rentalCheckoutLoadFailed",
+          "rentalPaymentPending",
+          "rentalUnsafePaymentLink"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/purchase_invoice_footer.dart",
+        "sha256": "5bb7fb8ab38c50f9a881b9c132fc1bd2c8c6e985cccef49a5977bb5d1d8e190c",
+        "localeKeys": [
+          "billingCheck",
+          "billingPay",
+          "billingReviewChanged",
+          "commerceRouteUnavailable",
+          "rentalResumePayment"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/payment_status_card.dart",
+        "sha256": "e45070f04f400dff234cc3ef8a66932cf9368646781e9f7e33d8cd592cd2a8ef",
+        "localeKeys": [
+          "billingPaymentConfirmed",
+          "commerceCheckingPayment",
+          "commerceDoNotPayAgain",
+          "commerceFulfilled",
+          "commerceFulfillmentPending",
+          "commerceReviewExplanation",
+          "commerceReviewTotal"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/payment_failure_notice.dart",
+        "sha256": "9536d636d50d0750c757d02ae8af6e8adef49841ceafdd802b8c305cd070bfaa",
+        "localeKeys": [
+          "billingReviewInvoice",
+          "commerceCompleteContact"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/invoice_details.dart",
+        "sha256": "9d37f1dab1a2f9eca4a29a0425623e0e11bada736014a997a5abdc7943b19155",
+        "localeKeys": [
+          "billingBalance",
+          "billingDueDate",
+          "billingIssued",
+          "billingPaid",
+          "billingPaidAmount",
+          "billingReceipt",
+          "billingTotal"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/billing_invoice_card.dart",
+        "sha256": "05a74d3f87c38598309c452aa7c0bd7169f27f7f6df78df61118653d03553484",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/widgets/subscription_plan_card.dart",
+        "sha256": "3b2dc1b9b920ffbc8bb01a155e724ba7241a68c20c463efc81a31cb7d4cd4f3c",
+        "localeKeys": [
+          "billingBothWorkspaces",
+          "billingMonths",
+          "commerceBuyPlan",
+          "commerceCurrentPlan",
+          "commerceMonthly",
+          "commerceYearly"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S28",
+    "behavior": "Installed workspace/role plans, subscription state/grace/expiry and active plan features are server-owned. Purchase creates/reconciles invoice intent, no instant entitlement grant; company catalog and retry-invoice recovery distinct.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "grace",
+      "fulfillment-pending"
+    ],
+    "visualReference": [
+      "S20",
+      "S18"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "grace",
+      "fulfillment-pending"
+    ]
+  },
+  {
+    "id": "S89",
+    "name": "خدمات وأدوات سكون",
+    "english": "Services and tools hub",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/screens/premium_screen.dart",
+    "sha256": "534ca6382838ded6eeb403250dddfbcf807e54ed3f9652e0db002eb88f0bdf4f",
+    "localeKeys": [
+      "toolsTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/premium_dashboard/premium_dashboard.dart",
+        "sha256": "1f5dee4aeacb6fea60475725a1ead49a8e307e45532191695cfcfe4328564e29",
+        "localeKeys": [
+          "toolsSubtitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/premium_dashboard/premium_feature_tile.dart",
+        "sha256": "42358b412865080eed153a34e91b82f7f1afcb5e416a624bf261c61b0bfe5022",
+        "localeKeys": [
+          "bannerAdvertise"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S28",
+    "behavior": "PremiumScreen is a service/tool discovery hub, not blanket purchase approval. Keep workspace availability and feature/build capabilities on each destination; banner advertisement entry separate from subscription benefits.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S05",
+      "S20"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S90",
+    "name": "مزود تجريبي",
+    "english": "Sandbox provider operation",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/screens/rental_mock_provider_screen.dart",
+    "sha256": "750385aae96c15efbb436294005b87d1efc2c96358a7b8c731e99bf07afaddf8",
+    "localeKeys": [
+      "rentalMockProvider"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/models/rental_mock_intent.dart",
+        "sha256": "3b9ea6b6ddbaf1e3f57451db18aeb515d36424e283d0503788064fdeb9e97fa6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/rental_mock_provider_form.dart",
+        "sha256": "c89035ec2437d654a811d260cd954f41c227c07f550bb33f577507385c4dbd93",
+        "localeKeys": [
+          "rentalMockExplanation",
+          "rentalMockOnboarding",
+          "rentalMockPayment",
+          "rentalMockSigning",
+          "rentalServiceUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/models/rental_provider_context.dart",
+        "sha256": "aef4997147ca67fb708628177af67795831efb4e19c219205878ddb6bb6b1957",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/rental_action_form.dart",
+        "sha256": "1708d43bc069395b55b25a8c8fbd44496469df6eaeb20a285e4ba78cd0bc9714",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/models/rental_mock_body.dart",
+        "sha256": "f2cc85e48128716e61f5e430b17cc98b374fa330f9a8f3a0bfd3da28573335df",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/models/rental_submission_result.dart",
+        "sha256": "cff5fa579ecc3449fbef316a9c47cdd29e95e0cff6b103fd3b4ae30b47a0e289",
+        "localeKeys": []
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S87",
+    "behavior": "Explicit mock provider intent supports payment/onboarding/signing as configured. Session/subject/provider/expiry are authoritative; only mock completion uses sandbox endpoint. Do not treat hosted sessions as mock or claim actual payment/signing.",
+    "kind": "payment",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "expired"
+    ],
+    "visualReference": [
+      "S03",
+      "S19"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "expired"
+    ]
+  },
+  {
+    "id": "S91",
+    "name": "مراجعة إجراء",
+    "english": "Configured rental decision",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/rental_decision_screen.dart",
+    "sha256": "65aedf54208ce0a226671debe48010068c7531046b5c4079fc56fde6fb57bf6e",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/enums/rental_input.dart",
+        "sha256": "17a699ebf9f49f042100775a36cef9fe65a8814f8c771af57d0b463b38d1eebe",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/models/rental_form_values.dart",
+        "sha256": "8ee6f3a42700d69062392612d9b5596357cdc5fe038b053b76007b0254b39977",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/enums/rental_capability.dart",
+        "sha256": "0545d81fc15d45f7bbfdb62d6e9795b00573b1de2a9904befe500e8189431af9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/models/rental_submission_result.dart",
+        "sha256": "cff5fa579ecc3449fbef316a9c47cdd29e95e0cff6b103fd3b4ae30b47a0e289",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/rental_action_form.dart",
+        "sha256": "1708d43bc069395b55b25a8c8fbd44496469df6eaeb20a285e4ba78cd0bc9714",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/data/models/premium_money.dart",
+        "sha256": "697620366de4128e537aba5c51b2f401aa39dfac7b8f29681a0164949c20840d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/rental_action_form_state.dart",
+        "sha256": "2023c70a81e92d69a453a4f795cdf21f33b3fe2d1d7432909a35270aad539225",
+        "localeKeys": [
+          "rentalOperationUnknown",
+          "rentalRecoverySaveFailed"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S126",
+    "behavior": "Generic configured editing route: caller owns resource revision, capability/action, field set/optional fields, submit callback and confirmed ID. Sample note field is illustrative. Preserve unsaved draft and original request key; do not invent a fixed universal rental command.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S19",
+      "S17"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S92",
+    "name": "مراجعات المحادثات",
+    "english": "Chat policy cases and appeal",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_policy_cases_screen.dart",
+    "sha256": "e93e10cf8a84d8b45e720d3a2425503205120afeab9943a1f07925336bd8ce75",
+    "localeKeys": [
+      "chatPolicyReview"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/cubits/chat_policy_cases_cubit.dart",
+        "sha256": "156f2f0659351c7b02c7665c59fcb430197ad53ca14135d0ec7b52531b374fb4",
+        "localeKeys": [
+          "chatPolicyAppealHelp",
+          "chatPolicyAppealUnknown",
+          "chatPolicyRetry"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_policy_cases_body.dart",
+        "sha256": "610f4038c5a101999476320c78a8b60ff4031ce1e985aea84a999e50b77b283f",
+        "localeKeys": [
+          "chatPolicyExistingRights",
+          "chatPolicyRefresh"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_policy.dart",
+        "sha256": "51be53ca3522bfe1c6596c6987daf3fe9c87c7e76bf2e0f92eea0a46672fc514",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_policy_empty_state.dart",
+        "sha256": "49e698f2b2abb4a55d542548ec1065752752be0b0cca7b3111e5d5740f9b4a9a",
+        "localeKeys": [
+          "chatPolicyExistingRights",
+          "chatPolicyNoCases"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_policy_case_card.dart",
+        "sha256": "06b2a8515b60790f53883ed78f27803e1ebdd4ec7f20ce6aec1d503b1ccc9015",
+        "localeKeys": [
+          "chatPolicyAppealHelp",
+          "chatPolicyAppealReceived",
+          "chatPolicyAppealSend",
+          "chatPolicyCaseClosed",
+          "chatPolicyCaseReason",
+          "chatPolicyPending",
+          "chatPolicyPermanent",
+          "chatPolicyRetryAction",
+          "chatPolicyReviewOverdue",
+          "chatPolicyWarning"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S28",
+    "behavior": "Case warning/restriction/permanent/overdue states and existing rights are API-owned. Appeal only canAppeal, 10–3000 chars; received vs unknown outcome distinct, preserve intent and retry/recovery. No policy bypass or automatic unrestriction.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S04",
+      "S19"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S93",
+    "name": "مشاركة مع مجموعة",
+    "english": "Chat property-group picker",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_property_groups_screen.dart",
+    "sha256": "354f9faad82911f4e5360c048cc1d8be6487196a662c02bc9c37e43a3956fad5",
+    "localeKeys": [
+      "chatChooseGroup"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/property_sharing/chat_property_groups_list.dart",
+        "sha256": "932235671ff2a7926d0416c3fae007739a9a09c113870f13d2531cde107b4812",
+        "localeKeys": [
+          "chatGroupSearch",
+          "chatPropertyGroupUnavailable",
+          "chatSearchMinimum"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_group_summary.dart",
+        "sha256": "7e8346fe4cd3201aa4ec2e2755f29d525d1cdca93abf93047838d720ec5f89c8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/property_sharing/chat_property_compose.dart",
+        "sha256": "6e78776da35c6cb47d08d67908784509fe3fce8f42c3303ca549603aa6ffa6b0",
+        "localeKeys": [
+          "cancel",
+          "chatPropertyReplace",
+          "chatPropertyReplaceHelp",
+          "chatPropertyReplaceTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/property_sharing/chat_property_empty_state.dart",
+        "sha256": "22a6534d136df84e0230e77085c5f7b38eb7c0ad67d99f2c3b77522b8506a8c6",
+        "localeKeys": [
+          "chatPropertyClearFilters",
+          "chatPropertyFavoritesEmpty",
+          "chatPropertyFavoritesEmptyHelp",
+          "chatPropertyGroupsEmpty",
+          "chatPropertyGroupsEmptyHelp",
+          "chatPropertyResultsEmpty",
+          "chatPropertyResultsEmptyHelp",
+          "chatSearchEmptyDescription",
+          "chatSearchEmptyTitle"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S94",
+    "behavior": "Student group choices scoped to current session, search and group availability. canSend and replacement/conflicting shared property require confirmation. Recheck session and group state before compose; no unintended share.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S13",
+      "S18"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S94",
+    "name": "اختيار عقار للمحادثة",
+    "english": "Chat property picker",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_property_picker_screen.dart",
+    "sha256": "beb98f72fdba6ef1a3edcd11fb66f23db33951a7639e2b956697d2821e1185d1",
+    "localeKeys": [
+      "chatChooseProperty",
+      "chatPropertyAll",
+      "chatPropertyFavorites"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/property_sharing/chat_property_picker_tab.dart",
+        "sha256": "a43b989fd89ffc5c1c4c2c5650ef3a256f689b34e1f2cb3d34e7117df74cd44c",
+        "localeKeys": [
+          "chatPropertyClearFilters",
+          "chatPropertyFilters",
+          "chatPropertySearch"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_property_choice.dart",
+        "sha256": "75a6abb4d6a7d5e805d2b2fc8737775786cfb1ce2b129bbaa625e1c7cacd8d05",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/property_sharing/chat_property_compose.dart",
+        "sha256": "6e78776da35c6cb47d08d67908784509fe3fce8f42c3303ca549603aa6ffa6b0",
+        "localeKeys": [
+          "cancel",
+          "chatPropertyReplace",
+          "chatPropertyReplaceHelp",
+          "chatPropertyReplaceTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/property_sharing/chat_property_empty_state.dart",
+        "sha256": "22a6534d136df84e0230e77085c5f7b38eb7c0ad67d99f2c3b77522b8506a8c6",
+        "localeKeys": [
+          "chatPropertyClearFilters",
+          "chatPropertyFavoritesEmpty",
+          "chatPropertyFavoritesEmptyHelp",
+          "chatPropertyGroupsEmpty",
+          "chatPropertyGroupsEmptyHelp",
+          "chatPropertyResultsEmpty",
+          "chatPropertyResultsEmptyHelp",
+          "chatSearchEmptyDescription",
+          "chatSearchEmptyTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/property_sharing/chat_property_choice_tile.dart",
+        "sha256": "f6d370dfa9a76078ed0b0297606bfe4b42baf192b3927429020075c8d119be75",
+        "localeKeys": [
+          "chatPropertySelect",
+          "chatPropertyUnavailable",
+          "chatPropertyWhole"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S97",
+    "behavior": "All/favorites/search/filter choices and eligible offer context; whole-property vs offer identity preserved. Student shared-property replacement confirmed and canSend rechecked. Empty favorites/results and unavailable inventory distinct.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S09",
+      "S06"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S95",
+    "name": "محادثة تحتاج توثيق",
+    "english": "Verification-restricted conversation",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_restricted_screen.dart",
+    "sha256": "73f4ff7644474958930510efa7c3179eba234af6f97f8aed11db839e62258c19",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/conversation_content.dart",
+        "sha256": "12b38f5fd977061abf644fdfe861d2fdf7641e7427f126994a5f5e9950d72a6c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat/chat_participant_title.dart",
+        "sha256": "7d721d9860d66a14d4af8a854212f9c015152171e504f1ad1f4bb832cbef96d0",
+        "localeKeys": [
+          "chatActiveNow"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_restricted/chat_restricted_content.dart",
+        "sha256": "6efdb21927428d35401e3fde23d86f4ee0ca8d4cf574d48d7d4e755996338ea3",
+        "localeKeys": [
+          "chatLearnMoreVerification",
+          "chatRestrictedDescription",
+          "chatRestrictedTitle",
+          "chatStartKyc"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_restricted/chat_disabled_composer.dart",
+        "sha256": "0d4e1e978da374c57dc503adbfdd4fc6733e10e783807d7476b8d83de0a37373",
+        "localeKeys": [
+          "chatTypingDisabled"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_participant_content.dart",
+        "sha256": "910593ff666d27894cf54828f0e33276444bff84e24a34eee983bd17271524be",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/shared/chat_participant_avatar.dart",
+        "sha256": "3f54b97e3bdfd287e77b05edf60917056660d369dd784d5fbbf54a5c68bdd2b0",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/shared/chat_verified_badge.dart",
+        "sha256": "1e3728743b740a4ce589fbc87de212251879b7f5faa81f2f298e62e540529ab4",
+        "localeKeys": [
+          "verified"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_restricted/chat_verification_warning.dart",
+        "sha256": "cf2c99a74629b7466e693bd436c2b21e209f15d73e8cd50cd8c8d150a77cdacf",
+        "localeKeys": [
+          "chatVerifiedOnlyBanner",
+          "chatVerifyNow"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_unavailable_indicator.dart",
+        "sha256": "2221044101f462e855e29480030e963aff43b2890b36651733be00bc9fc1f3e9",
+        "localeKeys": []
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S13",
+    "behavior": "Restricted conversation retains context/header and visible history, typing disabled. Verified-only banner and KYC entry; do not generate a send action or infer rights from local verified badge.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S04",
+      "S14"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S96",
+    "name": "البحث في المحادثة",
+    "english": "Chat search and media library",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_search_screen.dart",
+    "sha256": "b4c92c24110bcf414ac9cf7a2418fad29378670e929c0849b770cf6d452d73f6",
+    "localeKeys": [
+      "chatLibrary",
+      "chatLibraryFiles",
+      "chatLibraryLinks",
+      "chatLibraryVoice",
+      "chatSearchMessages",
+      "privatePhotos",
+      "search"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/conversation_content.dart",
+        "sha256": "12b38f5fd977061abf644fdfe861d2fdf7641e7427f126994a5f5e9950d72a6c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_list/chat_search_field.dart",
+        "sha256": "2e371e2d04cfdfa1546500b75fc002bfe99bdb2d9ec4f21a9f8e837b8c922943",
+        "localeKeys": [
+          "chatSearchHint"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_search/chat_discovery_results.dart",
+        "sha256": "fb687b6d211e88c03ec8091dfc2495ddcdbceddebda5854ca3041820c802bf2d",
+        "localeKeys": [
+          "chatLibrary",
+          "chatOpenMessage"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_participant_content.dart",
+        "sha256": "910593ff666d27894cf54828f0e33276444bff84e24a34eee983bd17271524be",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_search/chat_search_empty_state.dart",
+        "sha256": "7d0cb2807926fe46f74f28b2cab0bd113cd045c5d8e39e4820ee898462808e69",
+        "localeKeys": [
+          "chatLibraryEmpty",
+          "chatLibraryEmptyHelp",
+          "chatMessagesEmpty",
+          "chatSearchEmptyDescription",
+          "chatSearchEmptyTitle",
+          "chatSearchMinimum",
+          "chatSearchStart"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_list_tile.dart",
+        "sha256": "d13718a366f3afce41be63cfac7d1e9d408cb3f996dd5fba93095d9541da9d21",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_search/chat_library_preview.dart",
+        "sha256": "0b71dde8a550e4a7d01602d7590703b1f367bd72c4e7f25e0c7137033146320d",
+        "localeKeys": [
+          "chatLibrary",
+          "chatOpenFile",
+          "supportAttachmentUnavailable"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S14",
+    "behavior": "Conversation search vs global search/library modes. Minimum query, paginated messages/media/files/voice/links and validated private attachment routing. Preserve readonly/group/company destination context and unavailable/deleted messages.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S13",
+      "S14"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S97",
+    "name": "محادثة المجموعة",
+    "english": "Group conversation",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/group_chat_screen.dart",
+    "sha256": "1008db2690f31e62baff46e639b284efb24fe81e531b7e5f2802eaee276d3e61",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_shared_property.dart",
+        "sha256": "c203f27152e9a3d16fcfe91d50f8bda290ca784408944414e172747ba4977933",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/cubits/chat_thread_cubit.dart",
+        "sha256": "57d0a1a21e8e319db15535fd71dd6abef94c9fde1363c1a13a9ffb46ecd2fcad",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/chat_audio_interruptions.dart",
+        "sha256": "ff8def510e83f4e8df0c2a3043a0bea8a2fb96e34c1a813e19c96d06680a9186",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/cubits/group_chat_state.dart",
+        "sha256": "67ab831d5638709ee20136b303b9b178b12f067f72229b88c3d63775ac68c885",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/group_chat_focus_bus.dart",
+        "sha256": "1d93f03721decad3ee1046f44b5153f2ed796bcb16e834894cd1fb51128c722e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/cubits/chat_thread_state.dart",
+        "sha256": "85bf880b520ae45898daee9457fea8005bd6a961696c35341608363ab28acdc6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/group_chat/chat_group_view.dart",
+        "sha256": "f9a3bee25e66228f928dc988eef7d8a8e04daf961035e7e65371b993c5354354",
+        "localeKeys": [
+          "chatManageConversation",
+          "companyInternalDiscussion",
+          "companyRequests",
+          "companyReviewApproval",
+          "groupChatGroupDetails",
+          "groupChatMembers",
+          "groupChatTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_participant_content.dart",
+        "sha256": "910593ff666d27894cf54828f0e33276444bff84e24a34eee983bd17271524be",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_socket_message.dart",
+        "sha256": "f42fcc0425a63e15b5bfb3009226e8500f76ad0748f5ca6ab71b52eba7d22dbe",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_message_acknowledgement.dart",
+        "sha256": "0bccb1a65339b4ac635dcdf0dd482b2fcbe4931db51094d743cc4a7842c08dae",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_location.dart",
+        "sha256": "efafd7c1159208955af6f04c03f8634a8a00e2f1ce7bb71288d4b992f3965ef7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_group_summary.dart",
+        "sha256": "7e8346fe4cd3201aa4ec2e2755f29d525d1cdca93abf93047838d720ec5f89c8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_message_intent.dart",
+        "sha256": "2842e58ac147006818566cb0ccd36d83152dd62922cb1deb99972c40c0eaa7fa",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_message_content.dart",
+        "sha256": "547265e2500ac4bc5cbb8cd21034844af873cc1ed4d040b06b574294c73ddba9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_local_state.dart",
+        "sha256": "20e013b806003770c0166128419c672d725d9188540ba6bec6b5a4b26280ec88",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_discovery_actions.dart",
+        "sha256": "100a99422d09c3425086ebe95cf38d331521399287fc27bdefc82189c720e7b4",
+        "localeKeys": [
+          "chatLibrary",
+          "chatSearchMessages",
+          "search"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_preferences_sheet.dart",
+        "sha256": "01f72892318c7a53ce987a3008c55cc91b411af7eb95a6c75a23e57e292fc6ec",
+        "localeKeys": [
+          "chatAddToList",
+          "chatBlockHelp",
+          "chatBlockPerson",
+          "chatCreateList",
+          "chatDeleteForMe",
+          "chatDeleteForMeHelp",
+          "chatFavorite",
+          "chatManageConversation",
+          "chatMute",
+          "chatNewList",
+          "chatUnblock",
+          "freeLocalSaveFailed",
+          "freeReportNotSubmitted",
+          "groupChatCancel",
+          "groupChatRetry"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/group_chat/chat_group_body.dart",
+        "sha256": "557fb861c90c5b27b341ae41f59e99ab73e344a5c066f73d37fd1694d050287f",
+        "localeKeys": [
+          "chatDirectPrivacy",
+          "freeChatUnavailable",
+          "groupChatConnection",
+          "groupChatPrivacy",
+          "groupChatRetry",
+          "groupChatTyping",
+          "professionalUnknownDelivery"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S13",
+    "behavior": "Group membership/canSend/read-only, realtime reconnect, drafts/rich attachments/recording and session cleanup. Company internal discussion/group context not interchangeable. Unknown delivery resolves pending send identity; prototype never messages real participants.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "read-only",
+      "delivery-unknown"
+    ],
+    "visualReference": [
+      "S14"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "read-only",
+      "delivery-unknown"
+    ]
+  },
+  {
+    "id": "S98",
+    "name": "محادثة سابقة",
+    "english": "Read-only prior conversation",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/previous_chat_screen.dart",
+    "sha256": "dd4fbb96ea25afc41bd166e8ec5135b08076e6608af8e75f1c0c814040a7e961",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/conversation_content.dart",
+        "sha256": "12b38f5fd977061abf644fdfe861d2fdf7641e7427f126994a5f5e9950d72a6c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/chat_thread_data.dart",
+        "sha256": "5d367f62629f2441e0f8870d3c9e7e8ea1a3428d4d0e4926007e142e888abdfb",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_message_content.dart",
+        "sha256": "547265e2500ac4bc5cbb8cd21034844af873cc1ed4d040b06b574294c73ddba9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/cubits/chat_thread_cubit.dart",
+        "sha256": "57d0a1a21e8e319db15535fd71dd6abef94c9fde1363c1a13a9ffb46ecd2fcad",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat/chat_participant_title.dart",
+        "sha256": "7d721d9860d66a14d4af8a854212f9c015152171e504f1ad1f4bb832cbef96d0",
+        "localeKeys": [
+          "chatActiveNow"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/cubits/chat_thread_state.dart",
+        "sha256": "85bf880b520ae45898daee9457fea8005bd6a961696c35341608363ab28acdc6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_participant_content.dart",
+        "sha256": "910593ff666d27894cf54828f0e33276444bff84e24a34eee983bd17271524be",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_messages_view.dart",
+        "sha256": "41213059932d6e8807b4fbd133c6a494f9dd8df6b7517b93fa35e02e45fa8ef8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_message_details.dart",
+        "sha256": "4e3557284746158dca02722614b86cabcab4b441dd2e536aa0b9c0101b520b3e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_socket_message.dart",
+        "sha256": "f42fcc0425a63e15b5bfb3009226e8500f76ad0748f5ca6ab71b52eba7d22dbe",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_message_acknowledgement.dart",
+        "sha256": "0bccb1a65339b4ac635dcdf0dd482b2fcbe4931db51094d743cc4a7842c08dae",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/shared/chat_participant_avatar.dart",
+        "sha256": "3f54b97e3bdfd287e77b05edf60917056660d369dd784d5fbbf54a5c68bdd2b0",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/shared/chat_verified_badge.dart",
+        "sha256": "1e3728743b740a4ce589fbc87de212251879b7f5faa81f2f298e62e540529ab4",
+        "localeKeys": [
+          "verified"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_local_state.dart",
+        "sha256": "20e013b806003770c0166128419c672d725d9188540ba6bec6b5a4b26280ec88",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_messages_view_content.dart",
+        "sha256": "c5194e68923bccc69f0ad6fcbf9110bdb1fe99cda05613b9e4e5839f419ed909",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_day_label.dart",
+        "sha256": "cb27a7f50e012e563ceb32245576fb3c1c10b030dd3135b30863d4ab8d049921",
+        "localeKeys": [
+          "chatToday"
+        ]
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S13",
+    "behavior": "PreviousChatScreen retains history/header and immutable readonly context; no writable composer. Message timestamps/online labels come from source models; no fabricated current send permission.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S14"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S99",
+    "name": "بدء التواصل",
+    "english": "Context-aware conversation entry",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/start_conversation_screen.dart",
+    "sha256": "537f8f3eb5d93c183599d24bc4f0e268da583b108706b679a2442d999d3012cb",
+    "localeKeys": [
+      "chatConversationsTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/cubits/create_conversation_cubit.dart",
+        "sha256": "df879cccba90669223746bd8f80ff0b0d522abe51ed6a23c4b0a4025a89b4cc1",
+        "localeKeys": [
+          "workspaceSelfActionBlocked"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_screen.dart",
+        "sha256": "28f83b3999f134d26b807f654510caa6ac7c370a624bcbecaca934d0e3c8c28d",
+        "localeKeys": [
+          "chatManageConversation",
+          "rentalChatContext",
+          "rentalChatContextHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_status_builder.dart",
+        "sha256": "e0d14f7692fd43d3c8f0173802170278d2b02ef85dd25fba1738c252d0a7114b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/conversation_content.dart",
+        "sha256": "12b38f5fd977061abf644fdfe861d2fdf7641e7427f126994a5f5e9950d72a6c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/start_conversation/start_conversation_state_view.dart",
+        "sha256": "b7c03c674738dbd2070694cb3ea502d2bc51ee7df28a60d8244a5d3dac765c7d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat/chat_participant_title.dart",
+        "sha256": "7d721d9860d66a14d4af8a854212f9c015152171e504f1ad1f4bb832cbef96d0",
+        "localeKeys": [
+          "chatActiveNow"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_preferences_sheet.dart",
+        "sha256": "01f72892318c7a53ce987a3008c55cc91b411af7eb95a6c75a23e57e292fc6ec",
+        "localeKeys": [
+          "chatAddToList",
+          "chatBlockHelp",
+          "chatBlockPerson",
+          "chatCreateList",
+          "chatDeleteForMe",
+          "chatDeleteForMeHelp",
+          "chatFavorite",
+          "chatManageConversation",
+          "chatMute",
+          "chatNewList",
+          "chatUnblock",
+          "freeLocalSaveFailed",
+          "freeReportNotSubmitted",
+          "groupChatCancel",
+          "groupChatRetry"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_discovery_actions.dart",
+        "sha256": "100a99422d09c3425086ebe95cf38d331521399287fc27bdefc82189c720e7b4",
+        "localeKeys": [
+          "chatLibrary",
+          "chatSearchMessages",
+          "search"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/report/chat_report_button.dart",
+        "sha256": "71b3225f4eff96332a46f94af3b25c0f07faa1ad4c82651c3688b9b496716314",
+        "localeKeys": [
+          "chatReportProblemTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_policy_banner.dart",
+        "sha256": "0855a397bfbe27f8f28c47b1f972892b830df6b9eacc76e4bcd383275a4c6cd6",
+        "localeKeys": [
+          "chatPolicyAcknowledge",
+          "chatPolicyDisclosure",
+          "chatPolicyOffTopic",
+          "chatPolicyRestricted",
+          "chatPolicyReview",
+          "chatPolicySaving"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_read_notices.dart",
+        "sha256": "2b9519249ed9652b14f8825f7d84398f5d52f8610bd4bfb103e59d9751572ded",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/chat_thread/chat_suggested_draft.dart",
+        "sha256": "eb12d45b762a41ab9ced38f4e30ee1a4995a5fed2b5178c1930c7bdab39a61c4",
+        "localeKeys": [
+          "assistantReviewAction"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/widgets/group_chat/chat_group_body.dart",
+        "sha256": "557fb861c90c5b27b341ae41f59e99ab73e344a5c066f73d37fd1694d050287f",
+        "localeKeys": [
+          "chatDirectPrivacy",
+          "freeChatUnavailable",
+          "groupChatConnection",
+          "groupChatPrivacy",
+          "groupChatRetry",
+          "groupChatTyping",
+          "professionalUnknownDelivery"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/data/models/chat_participant_content.dart",
+        "sha256": "910593ff666d27894cf54828f0e33276444bff84e24a34eee983bd17271524be",
+        "localeKeys": []
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S08",
+    "behavior": "createOrGet validates target nonblank/self-action block and carries property/visit/rental selection/initial draft. Guard workspace, policy restriction and current session; history/live composer shown only after authoritative conversation identity, not arbitrary user ID.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "self-action-blocked",
+      "restricted"
+    ],
+    "visualReference": [
+      "S08",
+      "S14"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "self-action-blocked"
+    ]
+  },
+  {
+    "id": "S100",
+    "name": "قرار عرض السكن",
+    "english": "Housing offer action",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/presentation/screens/housing_offer_action_screen.dart",
+    "sha256": "ff5711e59a01f37490406331c29f502c71d98bcb7c7b1e9f978db2d891fa5c41",
+    "localeKeys": [
+      "housingSelectProceedHelp"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/data/models/housing_offer.dart",
+        "sha256": "88ee99731d7b58ec287b23c64c49f7b2b58aec1a9ee26d92435ccfc1b420ebb9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/data/enums/housing_offer_action.dart",
+        "sha256": "055931fe73f4016ac23c2cb9687345c5e5c9ebbf54ed6484a552e17b4cdb7512",
+        "localeKeys": [
+          "housingSelectProceed",
+          "housingShortlistOffer",
+          "housingWithdrawOffer",
+          "planningDecline"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/data/housing_requests_data.dart",
+        "sha256": "92cd1ac92a1ded891375c81a86775e4a1309a4f461fa6bb12abecb96fb45a14c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/data/models/housing_request.dart",
+        "sha256": "e28b79afe41642aa932a053919be328127c984669453527d8fe1a9969b03c2d5",
+        "localeKeys": []
+      }
+    ],
+    "group": "الخدمات والمحادثات",
+    "back": "S101",
+    "behavior": "Caller-selected offer action (shortlist/select/withdraw/decline), server permissions and request revision decide available form. Selection proceeds to another step and does not create a lease. Preserve request key/recovery and action explanation.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S19"
+    ],
+    "sprint": 4,
+    "chrome": "standard",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome"
+    ]
+  }
+]

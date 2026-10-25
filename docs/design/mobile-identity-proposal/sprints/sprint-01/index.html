@@ -141,7 +141,7 @@ body.export .screen-note{min-height:0}
   function stash(id){const p=phone(id);drafts.set(id+'|'+renderedState[id],{html:p.querySelector('main').innerHTML,values:[...p.querySelectorAll('input,select,textarea')].map(el=>({value:el.value,checked:el.checked})),scroll:p.querySelector('main').scrollTop,footer:p.querySelector('.phone-footer').innerHTML})}
   function state(id,name){
     const previous=renderedState[id];stash(id);const previousDraft=drafts.get(id+'|'+previous);const p=phone(id);renderedState[id]=name;
-    const saved=drafts.get(id+'|'+name);const retained=((['server-error','error'].includes(name)&&previous==='default')||(name==='default'&&['server-error','error'].includes(previous)))?previousDraft:null;
+    const saved=drafts.get(id+'|'+name);const retained=((['server-error','error','unknown-outcome','saving'].includes(name)&&previous==='default')||(name==='default'&&['server-error','error','unknown-outcome','saving'].includes(previous)))?previousDraft:null;
     const variant=data[id].variants[name];const variantBody=typeof variant==='object'?variant.content:variant;
     p.querySelector('main').innerHTML=saved?.html||(name==='default'?data[id].content:variantBody)||data[id].content;
     p.querySelector('.phone-footer').innerHTML=saved?.footer??(typeof variant==='object'?variant.footer??'':(name==='default'||(name==='server-error'&&['S21','S22','S23','S27','S30','S31','S32','S35','S39'].includes(id))?data[id].footer:''));
@@ -150,7 +150,7 @@ body.export .screen-note{min-height:0}
   }
   function restore(){if(focusPhone&&placeholder){placeholder.replaceWith(focusPhone)}focusPhone=null;placeholder=null;focusId=null}
   function show(id){
-    if(!data[id]){const n=Number(id.slice(1));const destination=n>=41&&n<=60?'../sprint-02/index.html':n>=21&&n<=40?'../sprint-01/index.html':'../../index.html';const u=new URL(destination,location.href);u.searchParams.set('theme',mode);u.hash=id;location.href=u.href;return}
+    if(!data[id]){const n=Number(id.slice(1));const destination=n>=21&&n<=160?'../sprint-'+String(Math.floor((n-21)/20)+1).padStart(2,'0')+'/index.html':'../../index.html';const u=new URL(destination,location.href);u.searchParams.set('theme',mode);u.hash=id;location.href=u.href;return}
     if(focusPhone)restore();
     const p=document.querySelector(`#${id} .phone`);placeholder=document.createElement('div');placeholder.style.height=p.offsetHeight+'px';p.replaceWith(placeholder);focusPhone=p;focusId=id;
     document.querySelector('.focus-body').replaceChildren(p);
@@ -161,7 +161,7 @@ body.export .screen-note{min-height:0}
   focus.addEventListener('close',restore);
   function ask(title,copy,fn){document.querySelector('[data-confirm-title]').textContent=title;document.querySelector('[data-confirm-copy]').textContent=copy;confirmAction=fn;confirm.showModal()}
   confirm.addEventListener('close',()=>confirmAction=null);
-  const represented={'account-summary':'S42','support-new':'S44','support-tickets':'S46','legal':'S47','business-policies':'S48','guide-settings':'S49','feedback':'S44'};
+  const represented={"subscriptions":"S88","invoices":"S86","chat-policy":"S92","owner-revenue":"S65","my-housing":"S137",'account-summary':'S42','support-new':'S44','support-tickets':'S46','legal':'S47','business-policies':'S48','guide-settings':'S49','feedback':'S44'};
   const next={
     'my-reviews':'تقييماتي','account-summary':'ملخص حساب المستأجر','subscriptions':'الاشتراكات','invoices':'الفواتير','chat-policy':'مراجعات سياسة المحادثات','legal':'الشروط وسياسة الخصوصية','business-policies':'سياسات الاستخدام','guide-settings':'إرشادات التجربة','contract-document':'مستند العقد','my-housing':'مسكني','support-new':'إنشاء طلب دعم','support-tickets':'طلبات الدعم','feedback':'اقتراح تحسين'
   };
@@ -181,6 +181,23 @@ body.export .screen-note{min-height:0}
     if(!ev.target.matches('[data-form]'))return;ev.preventDefault();const f=ev.target,p=f.closest('.phone'),id=p.dataset.screen;
     if(['register','password'].includes(f.dataset.form)&&!validPassword(f))return;
     switch(f.dataset.form){
+      case 'batch-form':{
+        if(['unknown-outcome','saving'].includes(renderedState[id])){notify('راجع حالة العملية الأصلية قبل إعادة الإرسال.');break}
+        const checks=[...f.querySelectorAll('[data-batch-ack]')];const outputs=checks.filter(c=>['panorama','model'].includes(c.name));
+        if(checks.some(c=>!['panorama','model'].includes(c.name)&&!c.checked)||(outputs.length&&!outputs.some(c=>c.checked))){notify('راجع الاختيارات والإقرار المطلوب قبل المتابعة.');break}
+        const fields=f.elements;
+        if(fields.minBudget&&fields.maxBudget&&Number(fields.minBudget.value)>Number(fields.maxBudget.value)){notify('أقل ميزانية يجب ألا تتجاوز أعلى ميزانية.');break}
+        if(fields.start&&fields.end&&fields.end.value<=fields.start.value){notify('تاريخ النهاية يجب أن يكون بعد البداية.');break}
+        if(['months','duration','occupants','minutes','keys'].some(k=>fields[k]&&!/^[0-9]+$/.test(fields[k].value))){notify('استخدم أعدادًا صحيحة للقيم المطلوبة.');break}
+        const kind=f.dataset.kind;const label=f.querySelector('[type=submit]').dataset.label||'مراجعة الخطوة';
+        ask(label,'معاينة محلية فقط. لا يتم إرسال بيانات أو نشر إعلان أو تنفيذ دفع أو توقيع.',()=>{
+          let feedback=f.querySelector('.batch-form-feedback');if(!feedback){feedback=document.createElement('div');feedback.className='batch-form-feedback';feedback.setAttribute('role','status');f.append(feedback)}
+          feedback.textContent='تمت مراجعة الخطوة محليًا في المعاينة.';
+          if(['chat','assistant','case-reply','maintenance-reply'].includes(kind)){
+            let thread=p.querySelector('.batch-thread');if(!thread){thread=document.createElement('div');thread.className='batch-thread';f.before(thread)}
+            const message=document.createElement('div');message.className='bubble outgoing';message.textContent=fields.message?.value||fields.prompt?.value||fields.reply?.value||'رسالة توضيحية';thread.append(message);
+          }
+        });break}
       case 'ticket':
         if(renderedState[id]==='unknown-outcome'){notify('راجع حالة الإرسال أولًا.');break}
         ask('إرسال طلب الدعم؟','عرض نتيجة توضيحية فقط. لم يتم إرسال طلب أو ملفات.',()=>show('S45'));break;
@@ -216,6 +233,11 @@ body.export .screen-note{min-height:0}
     const action=b.dataset.action,p=b.closest('.phone'),id=p?.dataset.screen;if(!action)return;
     if(represented[action]){show(represented[action]);return}
     if(next[action]){notify('الخطوة التالية في التطبيق: '+next[action]+'. مجدولة في خطة السبرنتات، ولم تُصمّم هنا.');return}
+    if(action==='batch-confirm'){ask(b.dataset.label||b.textContent,'تأكيد محلي للمعاينة فقط. التطبيق يراجع الصلاحية والنسخة ونتيجة الخادم قبل أي تغيير.',()=>notify('تم عرض تأكيد محلي. لم تتغير أي بيانات فعلية.'));return}
+    if(action==='batch-recover'){notify('مراجعة المحاولة الأصلية فقط؛ لا يتم تكرار الدفع أو الإرسال.');return}
+    if(action==='batch-preview'||action==='batch-next'){notify((b.dataset.label||b.textContent)+' · خطوة توضيحية مرتبطة بصلاحيات وسياق التطبيق.');return}
+    if(action==='batch-day'){b.closest('.day-grid').querySelectorAll('button').forEach(el=>el.setAttribute('aria-pressed',String(el===b)));return}
+    if(action==='batch-slot'){b.setAttribute('aria-pressed',String(b.getAttribute('aria-pressed')!=='true'));return}
     if(action==='choice'||['support-topic','search-scope','search-type','map-category'].includes(action)){
       b.closest('.chips').querySelectorAll('button').forEach(el=>el.setAttribute('aria-pressed',String(el===b)));
       if(action==='support-topic')p.querySelector('[data-payment-context]').hidden=b.dataset.value!=='payment';
@@ -242,7 +264,7 @@ body.export .screen-note{min-height:0}
     if(action==='save-photo-preview'){notify('في التطبيق: حفظ الصورة بعد مراجعة الإذن. المعاينة لا تحفظ ملفات.');return}
     if(action==='recent-search'){p.querySelector('[name=query]').value=b.querySelector('b').textContent;p.querySelector('[name=query]').focus();return}
     if(action==='current-area'){notify('لم نطلب موقع جهازك. تقدر تكتب المنطقة يدويًا في المعاينة.');return}
-    if(action==='visit-chat'){notify('الخطوة التالية: بدء محادثة بسياق العقار والمعاينة، مع مراجعة الصلاحيات.');return}
+    if(action==='visit-chat'){show('S99');notify('الخطوة التالية: بدء محادثة بسياق العقار والمعاينة، مع مراجعة الصلاحيات.');return}
     if(action==='cancel-visit'){ask('إلغاء طلب المعاينة؟','النتيجة التالية توضيحية. التطبيق يغيّر الحالة فقط بعد نجاح الإلغاء.',()=>state(id,'cancelled'));return}
     if(action==='reschedule-visit'){notify('الخطوة التالية: تعديل الموعد بهوية المعاينة ومراجعة الإتاحة على الخادم.');return}
     if(action==='visit-calendar'){notify('التطبيق يشارك حدثًا فقط عندما تكون بيانات المعاينة صالحة للتقويم. لا يُصدر ملف هنا.');return}
@@ -259,7 +281,7 @@ body.export .screen-note{min-height:0}
     if(action==='add-property-photo'){const grid=p.querySelector('.photo-editor-grid');if(grid.children.length>=25){notify('الحد الأقصى ٢٥ صورة.');return}const template=new DOMParser().parseFromString(data[id].content,'text/html').querySelector('.editor-photo');const clone=template.cloneNode(true);clone.querySelector('.main-photo').setAttribute('aria-pressed','false');clone.querySelector('.main-photo').textContent='اختيار كرئيسية';grid.append(clone);mediaReady(p);return}
     if(action==='remove-property-video'){p.dataset.videoMissing='true';b.textContent='إضافة عينة فيديو';b.dataset.action='add-property-video';p.querySelector('[data-video-status]').textContent='الفيديو مطلوب قبل المتابعة.';mediaReady(p);return}
     if(action==='add-property-video'){delete p.dataset.videoMissing;b.textContent='إزالة الفيديو';b.dataset.action='remove-property-video';p.querySelector('[data-video-status]').textContent='عينة فيديو جاهزة · ٣٠ ثانية';mediaReady(p);return}
-    if(action==='media-next'){notify('الخطوة التالية في السبرنت القادم: التسعير. المعاينة لم تنشر العقار أو ترفع الملفات.');return}
+    if(action==='media-next'){show('S61');notify('الخطوة التالية: التسعير. المعاينة لم تنشر العقار أو ترفع الملفات.');return}
     if(['reviews-hub','owner-revenue','visit-review','group-application','housing-offer','accommodation-media'].includes(action)){notify('الوجهة التالية موجودة في خطة السبرنتات؛ لم تُبنَ في هذه الدفعة.');return}
     if(action==='password'){const input=b.previousElementSibling;input.type=input.type==='password'?'text':'password';return}
     if(action==='reset-state'){drafts.delete(id+'|default');drafts.delete(id+'|'+renderedState[id]);renderedState[id]='default';p.querySelector('main').innerHTML=data[id].content;p.querySelector('.phone-footer').innerHTML=data[id].footer;document.querySelector(`[data-state="${id}"]`).value='default';return}

@@ -13,7 +13,7 @@ collections=[('original','المقترح الأصلي','البداية والر�
 for directory in sorted((ROOT/'sprints').glob('sprint-*')):
     if not (directory/'index.html').exists():continue
     n=int(directory.name.split('-')[1])
-    subtitle={1:'الحساب والهوية والأمان',2:'الدعم والاكتشاف وإدارة المالك'}.get(n,'استكمال رحلة سكون')
+    subtitle={1:'الحساب والهوية والأمان',2:'الدعم والاكتشاف وإدارة المالك',3:'العقار والجولات وأدوات القرار',4:'الخدمات والفوترة والمحادثات',5:'طلبات السكن والتفاوض والمشاركة',6:'الاتفاقات والعقود ومسكني',7:'إدارة الإيجار والتسليم والصيانة'}.get(n,'استكمال رحلة سكون')
     collections.append((directory.name,f'سبرنت {n}',subtitle,directory/'index.html'))
 sections=[];catalog=[]
 for key,title,subtitle,file in collections:

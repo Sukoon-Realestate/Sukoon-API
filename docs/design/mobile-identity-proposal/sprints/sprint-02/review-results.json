@@ -1140,19 +1140,5 @@
       }
     }
   ],
-  "result": "pass",
-  "visualReview": {
-    "screens": 20,
-    "themes": [
-      "light",
-      "dark"
-    ],
-    "presentationSheets": 10,
-    "reference": "Original S01–S20, per-screen lineage in manifest",
-    "corrections": [
-      "Reconciled the OwnerListings wrapper instead of duplicating S16.",
-      "Retained startup no-back behavior, fixed light splash, dark photo viewer and original component proportions.",
-      "Removed nested continuation-card frames and stabilized presentation-sheet header capture."
-    ]
-  }
+  "result": "pass"
 }
