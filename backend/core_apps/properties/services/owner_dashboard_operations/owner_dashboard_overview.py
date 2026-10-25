@@ -12,12 +12,11 @@ class OwnerDashboardOverviewMixin:
         the list of pending visit requests awaiting the owner's response.
         """
         today = timezone.localdate()
-        week_end = today + timezone.timedelta(days=7)
 
         visits_this_week = PropertyVisit.objects.filter(
             property__owner=owner,
-            visit_date__gte=today,
-            visit_date__lte=week_end,
+            created_at__date__gte=today - timezone.timedelta(days=6),
+            created_at__date__lte=today,
         ).count()
 
         active_properties = Property.objects.filter(
@@ -33,7 +32,7 @@ class OwnerDashboardOverviewMixin:
                 property__owner=owner, status=PropertyVisit.Status.PENDING
             )
             .select_related("property", "tenant", "tenant__profile")
-            .order_by("visit_date", "visit_time")
+            .order_by("-created_at")
         )
 
         return {

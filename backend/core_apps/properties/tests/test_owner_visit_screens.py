@@ -85,12 +85,11 @@ class TestOwnerVisitRequestListScreen:
         card = next(c for c in results if c["id"] == str(v1.id))
         assert card["property"]["title"] == "شقة مدينة نصر"
         assert card["property"]["district"] == "مدينة نصر"
-        assert "النهارده 3م" in card["schedule_label"]
         assert card["status"] == "pending"
         assert card["status_label"] == "جديد"
         assert card["actions"]["can_accept"] is True
         assert card["actions"]["can_reject"] is True
-        assert card["actions"]["can_chat"] is True
+        assert card["actions"]["can_chat"] is False
         assert card["is_verified_tenant"] is True
         assert card["verification_warning"] == ""
 
@@ -257,8 +256,6 @@ class TestOwnerVisitRequestDetailScreen:
         assert data["tenant"]["phone_notice"] == ""
         assert data["property"]["title"] == "شقة مفروشة"
         assert data["property"]["display_name"] == "شقة مفروشة – مدينة نصر"
-        assert "يونيو 2025" in data["day_label"]
-        assert "3:00 م" in data["time_label"]
         assert data["note"] == "مهتمة بالشقة ومحتاجة تاكدي من المساحة وحالة التشطيب."
         assert data["actions"]["can_accept"] is True
         assert data["actions"]["can_reject"] is True
@@ -321,7 +318,7 @@ class TestOwnerVisitRequestRejectModal:
 
         url = reverse("owner-visit-request-reject", kwargs={"id": v.id})
         payload = {
-            "reason": "timing_not_suitable",
+            "reason": "visit_unavailable",
             "custom_reason": "الوقت لا يناسب المالك",
         }
         response = auth_client.post(url, payload, format="json")
@@ -349,7 +346,7 @@ class TestOwnerVisitRequestRejectModal:
         )
 
         url = reverse("owner-visit-request-reject", kwargs={"id": v.id})
-        response = auth_client.post(url, {"reason": "timing_not_suitable"}, format="json")
+        response = auth_client.post(url, {"reason": "visit_unavailable"}, format="json")
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
@@ -407,163 +404,3 @@ class TestOwnerVisitRequestAcceptAction:
         url = reverse("owner-visit-request-accept", kwargs={"id": v.id})
         response = auth_client.post(url, {}, format="json")
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-
-
-@pytest.mark.django_db
-class TestOwnerVisitCalendarScreen:
-    """Tests for Screen 4: تقويم الزيارات (Owner Visit Calendar enhancements)."""
-
-    def test_calendar_returns_arabic_labels_and_tenant_initial(
-        self,
-        auth_client,
-        user,
-        another_user,
-        apartment_type,
-        cairo_city,
-        cairo_governorate,
-    ):
-        another_user.first_name = "محمد"
-        another_user.last_name = "أحمد"
-        another_user.save()
-
-        prop = create_property(user, apartment_type, cairo_city, cairo_governorate)
-        visit_date = date(2025, 1, 15)
-        PropertyVisit.objects.create(
-            property=prop,
-            tenant=another_user,
-            visit_date=visit_date,
-            visit_time=time(15, 0),
-            status=PropertyVisit.Status.CONFIRMED,
-        )
-
-        url = reverse("owner-visit-calendar")
-        response = auth_client.get(
-            url,
-            {"year": 2025, "month": 1, "date": "2025-01-15"},
-            HTTP_ACCEPT_LANGUAGE="ar",
-        )
-        assert response.status_code == status.HTTP_200_OK
-
-        data = response.json()["data"]
-        assert data["month_label"] == "يناير 2025"
-        assert data["selected_date_label"] == "زيارات يوم 15"
-
-        visit_card = data["visits"][0]
-        assert visit_card["tenant"]["name"] == "محمد أحمد"
-        assert visit_card["tenant"]["initial"] == "م"
-        assert visit_card["time_formatted"] == "3:00 م"
-        assert visit_card["status_label"] == "مؤكدة"
-
-    def test_calendar_accepts_date_as_day_number(
-        self,
-        auth_client,
-        user,
-        another_user,
-        apartment_type,
-        cairo_city,
-        cairo_governorate,
-    ):
-        prop = create_property(user, apartment_type, cairo_city, cairo_governorate)
-        visit_date = date(2026, 10, 1)
-        PropertyVisit.objects.create(
-            property=prop,
-            tenant=another_user,
-            visit_date=visit_date,
-            visit_time=time(10, 0),
-            status=PropertyVisit.Status.CONFIRMED,
-        )
-
-        url = reverse("owner-visit-calendar")
-        # Test date=1
-        response = auth_client.get(
-            url,
-            {"year": 2026, "month": 10, "date": 1},
-            HTTP_ACCEPT_LANGUAGE="ar",
-        )
-        assert response.status_code == status.HTTP_200_OK
-        data = response.json()["data"]
-        assert data["selected_date"] == "2026-10-01"
-        assert data["selected_date_label"] == "زيارات يوم 1"
-        assert len(data["visits"]) == 1
-
-    def test_calendar_accepts_day_parameter(
-        self,
-        auth_client,
-        user,
-        another_user,
-        apartment_type,
-        cairo_city,
-        cairo_governorate,
-    ):
-        prop = create_property(user, apartment_type, cairo_city, cairo_governorate)
-        visit_date = date(2026, 10, 1)
-        PropertyVisit.objects.create(
-            property=prop,
-            tenant=another_user,
-            visit_date=visit_date,
-            visit_time=time(10, 0),
-            status=PropertyVisit.Status.CONFIRMED,
-        )
-
-        url = reverse("owner-visit-calendar")
-        # Test day=1
-        response = auth_client.get(
-            url,
-            {"year": 2026, "month": 10, "day": 1},
-            HTTP_ACCEPT_LANGUAGE="ar",
-        )
-        assert response.status_code == status.HTTP_200_OK
-        data = response.json()["data"]
-        assert data["selected_date"] == "2026-10-01"
-        assert data["selected_date_label"] == "زيارات يوم 1"
-        assert len(data["visits"]) == 1
-
-        # Test day with empty value does not crash and returns whole month
-        response_empty_day = auth_client.get(
-            url,
-            {"year": 2026, "month": 10, "day": ""},
-            HTTP_ACCEPT_LANGUAGE="ar",
-        )
-        assert response_empty_day.status_code == status.HTTP_200_OK
-        assert response_empty_day.json()["data"]["selected_date"] is None
-
-
-@pytest.mark.django_db
-def test_eight_day_owner_window_keeps_last_day_bookings(user, another_user, apartment_type, cairo_city, cairo_governorate):
-    from core_apps.properties.models import OwnerAvailabilitySlot
-    from core_apps.properties.services.visit import PropertyVisitService
-    prop = create_property(user, apartment_type, cairo_city, cairo_governorate)
-    today = timezone.localdate()
-    last = today + timedelta(days=7)
-    outside = today + timedelta(days=8)
-    for day in (today, last, outside):
-        OwnerAvailabilitySlot.objects.create(owner=user, property=prop, date=day, time=time(12))
-    PropertyVisit.objects.create(property=prop, tenant=another_user, visit_date=last,
-        visit_time=time(12), status=PropertyVisit.Status.CONFIRMED)
-    result = PropertyVisitService.get_owner_availability(prop, today, day_count=8)
-    assert result["week_start"] == today.isoformat()
-    assert result["week_end"] == last.isoformat()
-    assert [d["date"] for d in result["days"]] == [today.isoformat(), last.isoformat()]
-    assert result["days"][-1]["slots"][0]["state"] == "booked"
-
-
-@pytest.mark.django_db
-def test_today_save_preserves_elapsed_bookings_but_rejects_new_past_slots(auth_client, user, another_user, apartment_type, cairo_city, cairo_governorate):
-    from datetime import datetime
-    from unittest.mock import patch
-    from core_apps.properties.models import OwnerAvailabilitySlot
-    prop = create_property(user, apartment_type, cairo_city, cairo_governorate)
-    today = timezone.localdate()
-    OwnerAvailabilitySlot.objects.create(owner=user, property=prop, date=today, time=time(8))
-    PropertyVisit.objects.create(property=prop, tenant=another_user, visit_date=today,
-        visit_time=time(8), status=PropertyVisit.Status.CONFIRMED)
-    url = reverse("owner-availability-week", kwargs={"property_id": prop.id})
-    now = timezone.make_aware(datetime.combine(today, time(12)))
-    with patch("django.utils.timezone.localtime", return_value=now):
-        good = auth_client.put(url, {"availability_date": today.isoformat(),
-            "slots": [{"time": "08:00:00"}, {"time": "13:00:00"}]}, format="json")
-        assert good.status_code == 200, good.data
-        bad = auth_client.put(url, {"availability_date": today.isoformat(),
-            "slots": [{"time": "09:00:00"}]}, format="json")
-        assert bad.status_code == 400
-    assert OwnerAvailabilitySlot.objects.filter(property=prop, date=today, time=time(8)).exists()

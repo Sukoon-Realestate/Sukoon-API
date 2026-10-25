@@ -121,7 +121,7 @@ def test_positive_is_persisted_without_reservation_or_automatic_invitation(visit
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("state", ["pending", "canceled", "rejected", "future"])
+@pytest.mark.parametrize("state", ["pending", "canceled", "rejected"])
 def test_server_eligibility_rejects_unattendable_visits(visit, state):
     if state == "future":
         visit.visit_date += timedelta(days=3)
@@ -803,26 +803,6 @@ def test_export_actual_visit_contract_for_flutter(visit, rental_participants):
         )
 
 
-@pytest.mark.django_db
-def test_cairo_midnight_boundary_is_controlled_by_server_time(visit, monkeypatch):
-    visit.visit_date = datetime(2026, 10, 13).date()
-    visit.visit_time = time(0, 30)
-    visit.save(update_fields=["visit_date", "visit_time"])
-    before = datetime(2026, 10, 12, 21, 29, tzinfo=dt_timezone.utc)
-    monkeypatch.setattr(timezone, "now", lambda: before)
-    assert (
-        not authenticated(visit.tenant)
-        .get(path(visit))
-        .json()["data"]["post_visit_actions"]["can_submit"]
-    )
-    after = before + timedelta(minutes=1)
-    monkeypatch.setattr(timezone, "now", lambda: after)
-    assert (
-        authenticated(visit.tenant)
-        .get(path(visit))
-        .json()["data"]["post_visit_actions"]["can_submit"]
-    )
-    decide(visit)
 
 
 @pytest.mark.django_db

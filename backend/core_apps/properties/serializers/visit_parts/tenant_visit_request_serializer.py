@@ -30,8 +30,6 @@ class TenantVisitRequestSerializer(PostVisitContextMixin, serializers.ModelSeria
 
     property = VisitPropertySummarySerializer(read_only=True)
     owner = serializers.SerializerMethodField()
-    day_label = serializers.SerializerMethodField()
-    time_label = serializers.SerializerMethodField()
     status_label = serializers.SerializerMethodField()
     actions = serializers.SerializerMethodField()
     alternative_search_filters = serializers.SerializerMethodField()
@@ -42,9 +40,10 @@ class TenantVisitRequestSerializer(PostVisitContextMixin, serializers.ModelSeria
             "id",
             "property",
             "owner",
-            "day_label",
-            "time_label",
+            "status",
             "status_label",
+            "note",
+            "created_at",
             "actions",
             "alternative_search_filters",
         ]
@@ -66,11 +65,7 @@ class TenantVisitRequestSerializer(PostVisitContextMixin, serializers.ModelSeria
     def _lang(self) -> str:
         return get_visit_language(self.context)
 
-    def get_day_label(self, obj):
-        return TenantVisitListSerializer(context=self.context).get_day(obj)
 
-    def get_time_label(self, obj):
-        return TenantVisitListSerializer(context=self.context).get_time(obj)
 
     def get_status_label(self, obj):
         lang = self._lang()
@@ -78,9 +73,6 @@ class TenantVisitRequestSerializer(PostVisitContextMixin, serializers.ModelSeria
         return table.get(obj.status, obj.status)
 
     def get_actions(self, obj):
-        scheduled_at = datetime.combine(
-            obj.visit_date, obj.visit_time, timezone.get_current_timezone()
-        )
         from ...services.viewing_access import participant
 
         current_attendee = participant(obj, self.context["request"].user)
@@ -113,10 +105,6 @@ class TenantVisitRequestDetailSerializer(TenantVisitRequestSerializer):
 
     class Meta(TenantVisitRequestSerializer.Meta):
         fields = TenantVisitRequestSerializer.Meta.fields + [
-            "visit_date",
-            "visit_time",
-            "status",
-            "note",
             "review",
         ]
 

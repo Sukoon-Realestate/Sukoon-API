@@ -66,7 +66,7 @@ def process_payload(item, user):
     if item.visit_id and status in {"submitted", "scheduled"}:
         status = {
             "pending": "submitted",
-            "confirmed": "scheduled",
+            "confirmed": "accepted",
             "rejected": "rejected",
             "canceled": "withdrawn",
         }[item.visit.status]
@@ -85,6 +85,7 @@ def process_payload(item, user):
             "ready",
             "submitted",
             "scheduled",
+            "accepted",
             "under_review",
             "approved_to_proceed",
         }
@@ -108,14 +109,14 @@ def process_payload(item, user):
         "selection": item.selection,
         "participant_ids": item.participant_ids,
         "consented_ids": item.consented_ids,
-        "appointment_at": (
-            item.appointment_at.isoformat() if item.appointment_at else ""
-        ),
         "qualifying_visit_id": str(item.visit.id) if item.visit_id else "",
         "interest_id": str(item.interest.id) if item.interest_id else "",
         "allowed_actions": actions,
         "proposal_snapshot": item.proposal_snapshot,
         "owner_note": item.owner_note,
+        "request_note": (
+            item.proposal_snapshot.get("visit_note", "") if item.kind == "visit" else ""
+        ),
         "joint_contract_supported": False,
         "blocking_reasons": (
             ["Joint contracting is not available; approval does not create a lease."]

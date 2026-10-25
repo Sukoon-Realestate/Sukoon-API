@@ -267,67 +267,8 @@ def test_reassignment_is_audited_and_not_signing_authority(rental_participants, 
     assert result.participant_decisions.count() == 0
 
 
-@pytest.mark.django_db(transaction=True)
-def test_reschedule_race_has_one_winner_and_keeps_owner_confirmation_required(
-    rental_participants, visit
-):
-    owner, actor, other, prop, _ = rental_participants
-    date = timezone.localdate() + timedelta(days=4)
-    for hour in [10, 11]:
-        OwnerAvailabilitySlot.objects.create(
-            property=prop, owner=owner, date=date, time=time(hour)
-        )
-
-    def move(hour):
-        try:
-            command(
-                actor,
-                visit.id,
-                {
-                    "action": "reschedule",
-                    "expected_revision": visit.revision,
-                    "visit_date": date,
-                    "visit_time": time(hour),
-                },
-            )
-            return "changed"
-        except Exception as error:
-            return type(error).__name__
-
-    results = parallel_calls(lambda index: move(10 + index))
-    assert results.count("changed") == 1, results
-    visit.refresh_from_db()
-    assert visit.status == "pending" and visit.accepted_at is None
 
 
-def test_reschedule_receipt_is_read_only_and_role_scoped(rental_participants, visit):
-    owner, actor, other, prop, _ = rental_participants
-    date = timezone.localdate() + timedelta(days=4)
-    OwnerAvailabilitySlot.objects.create(
-        property=prop, owner=owner, date=date, time=time(15)
-    )
-    key = str(uuid.uuid4())
-    uri = API + f"visits/{visit.id}/commands/"
-    response = authenticated(actor).post(
-        uri,
-        {
-            "request_key": key,
-            "expected_revision": visit.revision,
-            "action": "reschedule",
-            "visit_date": str(date),
-            "visit_time": "15:00",
-            "note": "Confirmed new time",
-        },
-        format="json",
-    )
-    assert response.status_code == 200, response.data
-    assert response.data["visit"]["id"] == str(visit.id)
-    receipt = authenticated(actor).get(uri, {"request_key": key})
-    assert receipt.status_code == 200 and receipt.data["status"] == "confirmed"
-    assert authenticated(other).get(uri, {"request_key": key}).status_code == 404
-    visit.refresh_from_db()
-    assert visit.status == "pending" and visit.note == "Confirmed new time"
-    assert PropertyVisit.objects.count() == 1
 
 
 def test_representatives_only_current_coordinator_can_list(rental_participants):

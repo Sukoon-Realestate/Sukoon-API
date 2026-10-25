@@ -92,7 +92,7 @@ class TestMentorPropertyVideoAndDeepLink:
 
 @pytest.mark.django_db
 class TestReceivedVisitsScheduledTime:
-    def test_received_visits_includes_scheduled_time_and_property_id(
+    def test_received_visits_preserves_property_without_schedule(
         self,
         auth_client,
         user,
@@ -124,7 +124,5 @@ class TestReceivedVisitsScheduledTime:
         item = data["results"][0]
         assert item["id"] == str(visit.id)
         assert item["property_id"] == str(prop.id)
-        assert item["visit_date"] == future_date.isoformat()
-        assert item["visit_time"] == "14:30:00"
-        assert item["time"] == "2:30 PM"
         assert item["status"] == "pending"
+        assert not {"visit_date", "visit_time", "time"} & item.keys()

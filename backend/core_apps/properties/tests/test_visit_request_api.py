@@ -54,7 +54,7 @@ class TestTenantVisitRequestScreens:
             status=PropertyVisit.Status.CONFIRMED,
         )
 
-        response = auth_client.get(reverse("tenant-visit-request-list"))
+        response = auth_client.get(reverse("tenant-visit-request-list"), HTTP_ACCEPT_LANGUAGE="ar")
 
         assert response.status_code == status.HTTP_200_OK
         card = api_json(response)["data"]["results"][0]
@@ -62,8 +62,9 @@ class TestTenantVisitRequestScreens:
             "id",
             "property",
             "owner",
-            "day_label",
-            "time_label",
+            "status",
+            "note",
+            "created_at",
             "status_label",
             "actions",
             "alternative_search_filters",
@@ -310,229 +311,6 @@ class TestPropertyVisitReviewAPI:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-@pytest.mark.django_db
-class TestOwnerAvailabilityAndCalendarAPI:
-    def test_owner_can_replace_week_slots_but_booked_slot_is_preserved(
-        self,
-        auth_client,
-        user,
-        another_user,
-        apartment_type,
-        cairo_city,
-        cairo_governorate,
-    ):
-        property_obj = create_property(
-            user, apartment_type, cairo_city, cairo_governorate
-        )
-        start_date = timezone.localdate() + timedelta(days=1)
-        OwnerAvailabilitySlot.objects.create(
-            owner=user, property=property_obj, date=start_date, time=time(9)
-        )
-        OwnerAvailabilitySlot.objects.create(
-            owner=user, property=property_obj, date=start_date, time=time(10)
-        )
-        OwnerAvailabilitySlot.objects.create(
-            owner=user, property=property_obj, date=start_date, time=time(12)
-        )
-        PropertyVisit.objects.create(
-            property=property_obj,
-            tenant=another_user,
-            visit_date=start_date,
-            visit_time=time(10),
-        )
-        url = reverse(
-            "owner-availability-week", kwargs={"property_id": property_obj.id}
-        )
-
-        before = auth_client.get(url, {"start_date": start_date.isoformat()})
-        assert before.status_code == status.HTTP_200_OK
-        slots = before.json()["data"]["days"][0]["slots"]
-        assert [slot["time"] for slot in slots] == ["09:00:00", "10:00:00", "12:00:00"]
-        assert slots[1]["state"] == "booked"
-
-        response = auth_client.put(
-            url,
-            {
-                "availability_date": start_date.isoformat(),
-                "slots": [
-                    {"time": "09:00:00"},
-                    {
-                        "time": "11:00:00",
-                        "is_enabled": False,
-                    },
-                ],
-            },
-            format="json",
-        )
-
-        assert response.status_code == status.HTTP_200_OK
-        saved_slots = response.json()["data"]["days"][0]["slots"]
-        assert [slot["time"] for slot in saved_slots] == ["09:00:00", "10:00:00", "11:00:00"]
-        assert saved_slots[1]["state"] == "booked"
-        assert saved_slots[2]["is_enabled"] is False
-        assert OwnerAvailabilitySlot.objects.filter(
-            owner=user, property=property_obj, date=start_date, time=time(10)
-        ).exists()
-        assert OwnerAvailabilitySlot.objects.filter(
-            owner=user,
-            property=property_obj,
-            date=start_date,
-            time=time(11),
-            is_enabled=False,
-        ).exists()
-        assert not OwnerAvailabilitySlot.objects.filter(
-            owner=user, property=property_obj, date=start_date, time=time(12)
-        ).exists()
-
-    def test_owner_cannot_disable_booked_slot(
-        self,
-        auth_client,
-        user,
-        another_user,
-        apartment_type,
-        cairo_city,
-        cairo_governorate,
-    ):
-        property_obj = create_property(
-            user, apartment_type, cairo_city, cairo_governorate
-        )
-        start_date = timezone.localdate() + timedelta(days=1)
-        OwnerAvailabilitySlot.objects.create(
-            owner=user, property=property_obj, date=start_date, time=time(10)
-        )
-        PropertyVisit.objects.create(
-            property=property_obj,
-            tenant=another_user,
-            visit_date=start_date,
-            visit_time=time(10),
-        )
-
-        response = auth_client.put(
-            reverse("owner-availability-week", kwargs={"property_id": property_obj.id}),
-            {
-                "availability_date": start_date.isoformat(),
-                "slots": [
-                    {
-                        "time": "10:00:00",
-                        "is_enabled": False,
-                    }
-                ],
-            },
-            format="json",
-        )
-
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "Booked visit slots cannot be disabled" in response.json()["message"]
-
-    def test_owner_availability_retains_disabled_and_booked_days(
-        self,
-        auth_client,
-        user,
-        another_user,
-        apartment_type,
-        cairo_city,
-        cairo_governorate,
-    ):
-        property_obj = create_property(
-            user, apartment_type, cairo_city, cairo_governorate
-        )
-        start_date = timezone.localdate() + timedelta(days=1)
-        disabled_date = start_date + timedelta(days=1)
-        booked_date = start_date + timedelta(days=2)
-        OwnerAvailabilitySlot.objects.create(
-            owner=user, property=property_obj, date=start_date, time=time(9)
-        )
-        OwnerAvailabilitySlot.objects.create(
-            owner=user,
-            property=property_obj,
-            date=disabled_date,
-            time=time(9),
-            is_enabled=False,
-        )
-        OwnerAvailabilitySlot.objects.create(
-            owner=user, property=property_obj, date=booked_date, time=time(9)
-        )
-        PropertyVisit.objects.create(
-            property=property_obj,
-            tenant=another_user,
-            visit_date=booked_date,
-            visit_time=time(9),
-        )
-
-        response = auth_client.get(
-            reverse("owner-availability-week", kwargs={"property_id": property_obj.id}),
-            {"start_date": start_date.isoformat()},
-        )
-
-        assert response.status_code == status.HTTP_200_OK
-        assert [day["date"] for day in response.json()["data"]["days"]] == [
-            start_date.isoformat(), disabled_date.isoformat(), booked_date.isoformat()
-        ]
-        days = response.json()["data"]["days"]
-        assert days[1]["slots"][0]["is_enabled"] is False
-        assert days[2]["slots"][0]["state"] == "booked"
-
-    def test_calendar_returns_month_indicators_and_selected_day_visits(
-        self,
-        auth_client,
-        user,
-        another_user,
-        superuser,
-        apartment_type,
-        cairo_city,
-        cairo_governorate,
-    ):
-        property_obj = create_property(
-            user, apartment_type, cairo_city, cairo_governorate
-        )
-        selected_date = timezone.localdate() + timedelta(days=3)
-        PropertyVisit.objects.create(
-            property=property_obj,
-            tenant=another_user,
-            visit_date=selected_date,
-            visit_time=time(15),
-            status=PropertyVisit.Status.CONFIRMED,
-        )
-        PropertyVisit.objects.create(
-            property=property_obj,
-            tenant=superuser,
-            visit_date=selected_date,
-            visit_time=time(17, 30),
-            status=PropertyVisit.Status.PENDING,
-        )
-        response = auth_client.get(
-            reverse("owner-visit-calendar"),
-            {
-                "year": selected_date.year,
-                "month": selected_date.month,
-                "date": selected_date.isoformat(),
-            },
-        )
-
-        assert response.status_code == status.HTTP_200_OK
-        data = response.json()["data"]
-        assert data["selected_date"] == selected_date.isoformat()
-        assert data["days"] == [
-            {
-                "date": selected_date.isoformat(),
-                "day": selected_date.day,
-                "visit_count": 2,
-            }
-        ]
-        assert [visit["tenant"]["name"] for visit in data["visits"]] == [
-            another_user.get_full_name,
-            superuser.get_full_name,
-        ]
-
-    def test_owner_availability_and_calendar_require_authentication(self, api_client):
-        availability = api_client.get(
-            reverse("owner-availability-week", kwargs={"property_id": uuid.uuid4()})
-        )
-        calendar = api_client.get(
-            reverse("owner-visit-calendar"), {"year": 2026, "month": 9}
-        )
-        assert availability.status_code == status.HTTP_401_UNAUTHORIZED
-        assert calendar.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.django_db
@@ -711,7 +489,6 @@ class TestBilingualVisitLabels:
         assert res_en.headers.get("Content-Language") == "en"
         card_en = api_json(res_en)["data"]["results"][0]
         assert card_en["status_label"] == "Accepted"
-        assert "PM" in card_en["time_label"]
         # Free-text detail preservation
         detail_res_en = auth_client.get(
             reverse("tenant-visit-request-detail", kwargs={"id": visit.id}),
@@ -729,53 +506,9 @@ class TestBilingualVisitLabels:
         assert res_ar.headers.get("Content-Language") == "ar"
         card_ar = api_json(res_ar)["data"]["results"][0]
         assert card_ar["status_label"] == "مقبول"
-        assert "م" in card_ar["time_label"]
         detail_res_ar = auth_client.get(
             reverse("tenant-visit-request-detail", kwargs={"id": visit.id}),
             HTTP_ACCEPT_LANGUAGE="ar",
         )
         assert detail_res_ar.status_code == status.HTTP_200_OK
         assert api_json(detail_res_ar)["data"]["note"] == custom_note
-
-    def test_owner_calendar_bilingual_labels(
-        self,
-        auth_client,
-        user,
-        another_user,
-        apartment_type,
-        cairo_city,
-        cairo_governorate,
-    ):
-        property_obj = create_property(
-            user, apartment_type, cairo_city, cairo_governorate
-        )
-        target_date = date(2026, 7, 15)
-        PropertyVisit.objects.create(
-            property=property_obj,
-            tenant=another_user,
-            visit_date=target_date,
-            visit_time=time(10, 0),
-            status=PropertyVisit.Status.CONFIRMED,
-        )
-
-        cal_en = auth_client.get(
-            f"{reverse('owner-visit-calendar')}?year=2026&month=7&date={target_date.isoformat()}",
-            HTTP_ACCEPT_LANGUAGE="en",
-        )
-        assert cal_en.status_code == status.HTTP_200_OK
-        cal_data_en = cal_en.json()["data"]
-        assert cal_data_en["month_label"] == "July 2026"
-        assert cal_data_en["selected_date_label"] == "Visits on day 15"
-        assert cal_data_en["visits"][0]["status_label"] == "Confirmed"
-        assert "AM" in cal_data_en["visits"][0]["time_formatted"]
-
-        cal_ar = auth_client.get(
-            f"{reverse('owner-visit-calendar')}?year=2026&month=7&date={target_date.isoformat()}",
-            HTTP_ACCEPT_LANGUAGE="ar",
-        )
-        assert cal_ar.status_code == status.HTTP_200_OK
-        cal_data_ar = cal_ar.json()["data"]
-        assert cal_data_ar["month_label"] == "يوليو 2026"
-        assert cal_data_ar["selected_date_label"] == "زيارات يوم 15"
-        assert cal_data_ar["visits"][0]["status_label"] == "مؤكدة"
-        assert "ص" in cal_data_ar["visits"][0]["time_formatted"]

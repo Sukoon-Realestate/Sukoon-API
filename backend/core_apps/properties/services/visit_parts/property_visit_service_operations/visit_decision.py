@@ -87,7 +87,7 @@ class VisitDecisionMixin:
                     send_push=False,
                     notification_type=Notification.NotificationType.VISIT_REJECTED,
                     title="تم رفض طلب الزيارة",
-                    body=f"نعتذر، لم يتمكن {owner_name} من قبول موعد الزيارة.",
+                    body=f"نعتذر، لم يتمكن {owner_name} من قبول طلب الزيارة.",
                     category="حجز زيارة",
                     icon_type="cancel",
                     data={
@@ -142,8 +142,6 @@ class VisitDecisionMixin:
         notification_data = {
             "visit_id": str(visit.id),
             "property_id": str(visit.property.id),
-            "appointment_date": str(visit.visit_date),
-            "appointment_time": str(visit.visit_time),
             "address": (
                 f"{getattr(visit.property.city, 'name', str(visit.property.city))}"
                 f" - {visit.property.district or visit.property.title}"
@@ -155,7 +153,7 @@ class VisitDecisionMixin:
         if conversation:
             notification_data["conversation_id"] = str(conversation.id)
         title = "تم قبول طلب زيارتك"
-        body = f"وافق المالك {owner_name} على موعد الزيارة. تواصل مع المالك داخل محادثة سكون للحفاظ على خصوصيتك وتوثيق اتفاقك."
+        body = f"وافق المالك {owner_name} على طلب الزيارة. تواصل مع المالك داخل محادثة سكون للحفاظ على خصوصيتك وتوثيق اتفاقك."
         notification = NotificationService.create_notification(
             user=visit.tenant,
             notification_type=Notification.NotificationType.VISIT_ACCEPTED,

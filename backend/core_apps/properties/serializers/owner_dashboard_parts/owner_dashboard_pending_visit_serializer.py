@@ -80,7 +80,6 @@ class OwnerDashboardPendingVisitSerializer(serializers.ModelSerializer):
     property_district = serializers.CharField(
         source="property.district", read_only=True
     )
-    scheduled_at = serializers.SerializerMethodField()
 
     class Meta:
         model = PropertyVisit
@@ -90,14 +89,9 @@ class OwnerDashboardPendingVisitSerializer(serializers.ModelSerializer):
             "tenant_avatar",
             "property_title",
             "property_district",
-            "scheduled_at",
         ]
         read_only_fields = fields
 
-    def get_scheduled_at(self, obj: PropertyVisit) -> str:
-        date_label = _format_date_label(obj.visit_date)
-        time_label = _format_time_ar(obj.visit_time)
-        return f"{date_label} {time_label}"
 
 
 class OwnerDashboardSerializer(serializers.Serializer):

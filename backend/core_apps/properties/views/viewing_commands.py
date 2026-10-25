@@ -18,21 +18,10 @@ from .post_visit_decision import PostVisitJsonRenderer
 class ViewingCommandBody(serializers.Serializer):
     request_key = serializers.UUIDField()
     expected_revision = serializers.IntegerField(min_value=1)
-    action = serializers.ChoiceField(choices=["reschedule", "reassign"])
-    representative_membership_id = serializers.UUIDField(required=False)
-    visit_date = serializers.DateField(required=False)
-    visit_time = serializers.TimeField(required=False)
+    action = serializers.ChoiceField(choices=["reassign"])
+    representative_membership_id = serializers.UUIDField()
     note = serializers.CharField(required=False, allow_blank=True, max_length=1000)
 
-    def validate(self, attrs):
-        required = (
-            ["representative_membership_id"]
-            if attrs["action"] == "reassign"
-            else ["visit_date", "visit_time"]
-        )
-        if any(key not in attrs for key in required):
-            raise serializers.ValidationError("Supply the required action fields.")
-        return attrs
 
 
 @api_view(["GET", "POST"])

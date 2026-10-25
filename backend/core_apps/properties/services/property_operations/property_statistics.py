@@ -149,7 +149,6 @@ class PropertyStatisticsMixin:
         ).count()
         upcoming_visits_count = property_obj.visits.filter(
             status=PropertyVisit.Status.CONFIRMED,
-            visit_date__gte=today,
         ).count()
         visits_summary = {
             PropertyVisit.Status.PENDING: 0,

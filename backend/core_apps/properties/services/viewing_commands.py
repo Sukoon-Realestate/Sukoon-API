@@ -1,4 +1,4 @@
-"""Revision-aware schedule changes; never allocate rental inventory or money."""
+"""Revision-aware representative changes; never allocate rental inventory or money."""
 
 from datetime import datetime
 from django.db import transaction
@@ -9,7 +9,7 @@ from core_apps.features.company_models import CompanyMembership
 from core_apps.features.models import IdempotencyRecord
 from core_apps.features.services.rental_lifecycle.common import audit, require_revision
 from core_apps.features.services.rental_phase2 import RentalConflict
-from ..models import Property, PropertyVisit, OwnerAvailabilitySlot
+from ..models import Property, PropertyVisit
 from .viewing_access import participant, can_read, group_process
 
 
@@ -54,7 +54,7 @@ def notify(visit, action, existing_notification=None):
 @transaction.atomic
 def command(actor, identity, data):
     found = get_object_or_404(PropertyVisit, id=identity)
-    # Same property/slot locking order as the canonical booking engine.
+    # Same property locking order as the canonical booking engine.
     Property.objects.select_for_update().get(pk=found.property_id)
     visit = (
         PropertyVisit.objects.select_for_update()
@@ -102,94 +102,6 @@ def command(actor, identity, data):
             metadata={
                 "previous_attendee_id": old_attendee,
                 "attendee_id": str(visit.tenant.id),
-            },
-        )
-    elif action == "reschedule":
-        from core_apps.features.services.rental_lifecycle.habitability import (
-            assert_habitable,
-        )
-
-        assert_habitable(visit.property, visit.offer_snapshot)
-        # Scheduling never refreshes the old commercial snapshot silently.
-        current_offer = next(
-            (
-                item
-                for item in (visit.property.rental_inventory or {}).get("offers", [])
-                if str(item.get("id")) == str(visit.offer_id)
-            ),
-            None,
-        )
-        if visit.offer_id and (
-            not current_offer
-            or current_offer.get("archived")
-            or current_offer.get("availability") != "available"
-            or current_offer.get("revision")
-            != visit.offer_snapshot.get(
-                "offer_revision", visit.offer_snapshot.get("revision")
-            )
-        ):
-            raise RentalConflict(
-                "The viewed offer changed. Review the current offer before requesting a new appointment.",
-                code="offer_changed",
-            )
-        if not participant(visit, actor) or group_process(visit):
-            raise PermissionDenied(
-                "Group schedule changes require a fresh group consent process."
-            )
-        date, time = data["visit_date"], data["visit_time"]
-        if (
-            datetime.combine(date, time, timezone.get_current_timezone())
-            <= timezone.now()
-        ):
-            raise ValidationError({"visit_date": "Choose a future appointment."})
-        slot = (
-            OwnerAvailabilitySlot.objects.select_for_update()
-            .filter(
-                property=visit.property,
-                owner=visit.property.owner,
-                date=date,
-                time=time,
-                is_enabled=True,
-            )
-            .first()
-        )
-        if (
-            not slot
-            or PropertyVisit.objects.filter(
-                property=visit.property,
-                visit_date=date,
-                visit_time=time,
-                status__in=["pending", "confirmed"],
-            )
-            .exclude(pk=visit.pk)
-            .exists()
-        ):
-            raise RentalConflict(
-                "The selected slot is unavailable.", code="slot_unavailable"
-            )
-        before = {"date": str(visit.visit_date), "time": str(visit.visit_time)}
-        visit.visit_date, visit.visit_time = date, time
-        visit.status, visit.accepted_at = "pending", None
-        if "note" in data:
-            visit.note = data["note"]
-        visit.save(
-            update_fields=[
-                "visit_date",
-                "visit_time",
-                "status",
-                "accepted_at",
-                "note",
-                "updated_at",
-            ]
-        )
-        audit(
-            visit,
-            actor,
-            "viewing_reschedule_requested",
-            metadata={
-                "previous_schedule": before,
-                "date": str(date),
-                "time": str(time),
             },
         )
     else:

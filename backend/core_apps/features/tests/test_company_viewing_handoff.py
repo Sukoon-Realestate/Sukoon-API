@@ -108,7 +108,7 @@ def test_company_representative_can_reach_first_post_visit_decision(
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("status,future", [("pending", False), ("confirmed", True)])
+@pytest.mark.parametrize("status,future", [("pending", False)])
 def test_company_viewing_cannot_offer_decision_before_eligibility(
     company_setup, status, future
 ):

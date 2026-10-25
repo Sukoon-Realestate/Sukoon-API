@@ -30,7 +30,6 @@ from .post_visit_decision_parts.linked_invitation import (
     DecisionConflict,
     invalid,
     PostVisitDecisionBody,
-    scheduled_at,
     decision_for,
     linked_invitation,
     historical_agreement,

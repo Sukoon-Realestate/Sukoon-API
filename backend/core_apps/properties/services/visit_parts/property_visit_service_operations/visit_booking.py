@@ -1,30 +1,35 @@
 """VisitBooking operations owned by PropertyVisitService."""
 
-from datetime import date, datetime, time
 from django.db import transaction
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError
-from ....models import OwnerAvailabilitySlot, PropertyVisit
+from ....models import PropertyVisit
 from ..logger import logger
 
 
 class VisitBookingMixin:
     @classmethod
     @transaction.atomic
-    def create_visit(cls, tenant, property_obj, validated_data):
+    def create_visit(cls, tenant, property_obj, validated_data, *, group=None):
         """
         Creates a property visit request.
         """
         from core_apps.chat.moderation.policy import require_new_business
         from core_apps.users.models import User
-        list(User.objects.select_for_update().filter(pk__in=[tenant.pk, property_obj.owner_id]).order_by('pk'))
+
+        list(
+            User.objects.select_for_update()
+            .filter(pk__in=[tenant.pk, property_obj.owner_id])
+            .order_by("pk")
+        )
         require_new_business(tenant)
         require_new_business(property_obj.owner)
         from ....models import Property
         from ...viewing_access import prepare_context
 
         context = prepare_context(tenant, validated_data.pop("viewing_context", {}))
+        if group is not None:
+            context["context_kind"] = "group"
         tenant = context.pop("tenant", tenant)
         property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
         validated_data.update(context)
@@ -68,7 +73,7 @@ class VisitBookingMixin:
 
         stay = validated_data.get("stay_preferences")
         if stay:
-            from ....serializers.visit_parts.owner_visit_calendar_query_serializer import (
+            from ....serializers.visit_parts.visit_request_input_serializer import (
                 StayPreferencesSerializer,
             )
 
@@ -86,50 +91,24 @@ class VisitBookingMixin:
         )
 
         assert_habitable(property_obj, validated_data.get("offer_snapshot", {}))
-        visit_date = validated_data.get("visit_date")
-        visit_time = validated_data.get("visit_time")
-        # Every booking must use an enabled owner-configured slot. Hold its
-        # lock through creation to serialize bookings and schedule edits.
-        slot = (
-            OwnerAvailabilitySlot.objects.select_for_update()
-            .filter(
-                owner=property_obj.owner,
-                property=property_obj,
-                date=visit_date,
-                time=visit_time,
-                is_enabled=True,
+        # Scheduling is agreed in chat. Ignore legacy appointment fields.
+        validated_data.pop("visit_date", None)
+        validated_data.pop("visit_time", None)
+        if PropertyVisit.objects.filter(
+            tenant=tenant,
+            property=property_obj,
+            offer_id=offer_id,
+            context_kind=validated_data.get("context_kind", "personal"),
+            company=validated_data.get("company"),
+            groupprocess__group=group,
+            academic_plan=validated_data.get("academic_plan"),
+            renter_workspace=validated_data.get("renter_workspace", "individual"),
+            status__in=cls.BOOKED_STATUSES,
+            participant_decisions__isnull=True,
+        ).exists():
+            raise ValidationError(
+                _("You already have an open visit request for this accommodation.")
             )
-            .first()
-        )
-        if slot is None:
-            raise ValidationError(_("The selected visit slot is not available."))
-
-        now = timezone.localtime()
-        parsed_date = (
-            date.fromisoformat(visit_date)
-            if isinstance(visit_date, str)
-            else visit_date
-        )
-        parsed_time = (
-            time.fromisoformat(visit_time)
-            if isinstance(visit_time, str)
-            else visit_time
-        )
-        slot_datetime = datetime.combine(parsed_date, parsed_time, now.tzinfo)
-        if slot_datetime <= now:
-            raise ValidationError(_("The selected visit slot is in the past."))
-
-        if (
-            PropertyVisit.objects.select_for_update()
-            .filter(
-                property=property_obj,
-                visit_date=visit_date,
-                visit_time=visit_time,
-                status__in=cls.BOOKED_STATUSES,
-            )
-            .exists()
-        ):
-            raise ValidationError(_("The selected visit slot is already booked."))
 
         visit = PropertyVisit.objects.create(
             tenant=tenant, property=property_obj, **validated_data
@@ -150,14 +129,12 @@ class VisitBookingMixin:
                 send_push=False,
                 notification_type=Notification.NotificationType.VISIT_REQUEST,
                 title="طلب زيارة جديد!",
-                body=f"{tenant_name} تطلب زيارة {property_obj.title} - {visit.visit_date} {visit.visit_time}",
+                body=f"{tenant_name} يطلب زيارة {property_obj.title}. راجع الطلب والملاحظات.",
                 category="حجز زيارة",
                 icon_type="calendar",
                 data={
                     "visit_id": str(visit.id),
                     "property_id": str(property_obj.id),
-                    "visit_date": str(visit.visit_date),
-                    "visit_time": str(visit.visit_time),
                     "address": (
                         f"{getattr(property_obj.city, 'name', str(property_obj.city))}"
                         f" - {property_obj.district or property_obj.title}"

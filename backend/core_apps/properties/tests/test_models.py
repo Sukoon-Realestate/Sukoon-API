@@ -136,5 +136,5 @@ class TestPropertyVisitModel:
         assert visit_obj.note == "Note to owner"
         assert (
             str(visit_obj)
-            == f"Visit for {property_obj.title} by {another_user.email} on 2026-07-20 at 14:00:00"
+            == f"Visit request for {property_obj.title} by {another_user.email}"
         )

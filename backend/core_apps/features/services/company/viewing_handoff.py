@@ -163,15 +163,11 @@ def continuation(visit, user, decision, base, actions):
             )
         return result
     if decision is None:
-        from core_apps.properties.services.post_visit_decision_parts.linked_invitation import (
-            scheduled_at,
-        )
-
         # Recording the representative's own attendance/decision precedes the
         # coordinator's company handoff. It creates no company contract consent.
         result.update(base)
         if actions["can_submit"] or (
-            visit.status == "confirmed" and scheduled_at(visit) <= timezone.now()
+            visit.status == "confirmed"
         ):
             result.update(
                 status="awaiting_tenant_decision",

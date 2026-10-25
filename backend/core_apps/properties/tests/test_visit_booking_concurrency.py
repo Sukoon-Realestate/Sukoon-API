@@ -1,4 +1,4 @@
-"""Exercise the shared slot lock using independent PostgreSQL connections."""
+"""Concurrent requests stay distinct by tenant without scheduling slots."""
 
 from concurrent.futures import ThreadPoolExecutor
 from datetime import time, timedelta
@@ -23,14 +23,8 @@ def postgres_only():
 
 
 @pytest.fixture
-def booking_slot(another_user, apartment_type):
-    property_obj = create_property(another_user, apartment_type)
-    return OwnerAvailabilitySlot.objects.create(
-        owner=another_user,
-        property=property_obj,
-        date=timezone.localdate() + timedelta(days=3),
-        time=time(14),
-    )
+def booking_property(another_user, apartment_type):
+    return create_property(another_user, apartment_type)
 
 
 def parallel_requests(first, second):
@@ -50,68 +44,20 @@ def parallel_requests(first, second):
         return [future.result(timeout=20) for future in futures]
 
 
-def book(user, slot):
+def book(user, prop):
     client = APIClient()
     client.force_authenticate(user=user)
-    return client.post(
-        reverse("property-visit-create", kwargs={"property_id": slot.property.id}),
-        {"visit_date": slot.date.isoformat(), "visit_time": slot.time.isoformat()},
-        format="json",
-    )
+    return client.post(reverse("property-visit-create", kwargs={"property_id": prop.id}), {"note": "Arrange in chat"}, format="json")
 
 
-def test_simultaneous_tenants_cannot_book_the_same_slot(user, superuser, booking_slot):
-    responses = parallel_requests(
-        lambda: book(user, booking_slot), lambda: book(superuser, booking_slot)
-    )
-
-    assert sorted(response.status_code for response in responses) == [201, 400]
-    rejected = next(response for response in responses if response.status_code == 400)
-    assert "already booked" in rejected.json()["message"]
-    visit = PropertyVisit.objects.get()
-    assert visit.tenant_id in {user.pk, superuser.pk}
-    assert visit.property_id == booking_slot.property_id
-    assert visit.status == PropertyVisit.Status.PENDING
+def test_different_tenants_can_request_the_same_property(user, superuser, booking_property):
+    responses = parallel_requests(lambda: book(user, booking_property), lambda: book(superuser, booking_property))
+    assert sorted(r.status_code for r in responses) == [201, 201]
+    assert PropertyVisit.objects.count() == 2
+    assert not PropertyVisit.objects.exclude(visit_date=None, visit_time=None).exists()
 
 
-@pytest.mark.parametrize("edit", ["disable", "remove"])
-def test_schedule_edit_cannot_invalidate_concurrent_booking(
-    user, another_user, booking_slot, edit
-):
-    def edit_schedule():
-        owner_client = APIClient()
-        owner_client.force_authenticate(user=another_user)
-        return owner_client.put(
-            reverse(
-                "owner-availability-week",
-                kwargs={"property_id": booking_slot.property.id},
-            ),
-            {
-                "availability_date": booking_slot.date.isoformat(),
-                "slots": (
-                    [{"time": booking_slot.time.isoformat(), "is_enabled": False}]
-                    if edit == "disable"
-                    else []
-                ),
-            },
-            format="json",
-        )
-
-    booking, edited = parallel_requests(lambda: book(user, booking_slot), edit_schedule)
-
-    if booking.status_code == 201:
-        visit = PropertyVisit.objects.get()
-        assert visit.tenant_id == user.pk
-        booking_slot.refresh_from_db()
-        assert booking_slot.is_enabled is True
-        assert edited.status_code == (400 if edit == "disable" else 200)
-        if edit == "disable":
-            assert "Booked visit slots cannot be disabled" in edited.json()["message"]
-    else:
-        assert booking.status_code == 400
-        assert "not available" in booking.json()["message"]
-        assert edited.status_code == 200
-        assert not PropertyVisit.objects.exists()
-        assert not OwnerAvailabilitySlot.objects.filter(
-            pk=booking_slot.pk, is_enabled=True
-        ).exists()
+def test_same_tenant_concurrent_duplicate_creates_one_request(user, booking_property):
+    responses = parallel_requests(lambda: book(user, booking_property), lambda: book(user, booking_property))
+    assert sorted(r.status_code for r in responses) == [201, 400]
+    assert PropertyVisit.objects.count() == 1

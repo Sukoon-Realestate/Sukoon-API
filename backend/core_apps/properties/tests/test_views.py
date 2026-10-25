@@ -193,11 +193,7 @@ class TestPropertyViews:
         assert response.status_code == status.HTTP_200_OK
         json_data = response.json()
         banner = json_data["data"]["banner"]
-        assert banner is not None
-        assert banner["property_title"] == "Apartment in Maadi"
-        assert banner["property_district"] == "Maadi"
-        assert banner["visit_time"] == "15:00"
-        assert banner["is_today"] is True
+        assert banner is None
 
     def test_homepage_properties_does_not_show_pending_visit_banner(
         self, auth_client, user, another_user
@@ -814,7 +810,7 @@ class TestPropertyVisitViews:
         assert len(json_data["data"]["results"]) == 1
 
         result = json_data["data"]["results"][0]
-        assert set(result.keys()) == {"id", "title", "day", "time", "status"}
+        assert set(result.keys()) == {"id", "title", "note", "created_at", "status"}
         assert result["title"] == "Apartment Heliopolis - Nasr City"
         assert result["day"] == "الإثنين 20 يوليو"
         assert result["time"] == "2:00 م"
@@ -850,9 +846,9 @@ class TestPropertyVisitViews:
             "rental_continuation",
             "stay_preferences",
             "tenant",
-            "visit_date",
-            "visit_time",
-            "time",
+
+
+
             "status",
         }
         assert result["stay_preferences"] is None
@@ -962,9 +958,9 @@ class TestPropertyVisitViews:
             "rental_continuation",
             "stay_preferences",
             "tenant",
-            "visit_date",
-            "visit_time",
-            "time",
+
+
+
             "status",
         }
         assert results[0]["stay_preferences"] is None
@@ -1001,9 +997,9 @@ class TestPropertyVisitViews:
             "rental_continuation",
             "stay_preferences",
             "tenant",
-            "visit_date",
-            "visit_time",
-            "time",
+
+
+
             "status",
         }
         assert visit_data["stay_preferences"] is None
@@ -1021,7 +1017,6 @@ class TestPropertyVisitViews:
         assert tenant_data["name"] == another_user.get_full_name
         assert tenant_data["avatar"] is None
         assert tenant_data["is_verified"] is True
-        assert visit_data["visit_date"] == "2099-07-20"
         assert visit_data["status"] == PropertyVisit.Status.PENDING
 
     def test_retrieve_visit_detail_unauthenticated_returns_401(
@@ -1130,16 +1125,14 @@ class TestOwnerDashboard:
 
         assert data["owner"]["name"] == user.get_full_name
         assert data["owner"]["is_verified"] is True
-        assert data["visits_this_week"] == 3
+        assert data["visits_this_week"] == 4
         assert data["active_properties"] == 1
         assert data["overall_rating"] == 0.0
         assert data["pending_requests"] == 3
 
         pending = data["pending_visits"]
         assert len(pending) == 3
-        assert pending[0]["id"] == str(visit_today.id)
-        assert pending[0]["scheduled_at"] == "النهاره 3م"
-        assert pending[1]["scheduled_at"] == "غداً 12م"
+        assert pending[-1]["id"] == str(visit_today.id)
         assert pending[0]["tenant_name"] == another_user.get_full_name
         assert pending[0]["property_title"] == "Verified Apartment"
         assert pending[0]["property_district"] == "Nasr City"

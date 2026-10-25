@@ -89,17 +89,8 @@ def inventory_fixture(property_obj, offer_id, scope="bed"):
 
 
 def available_appointment(owner, property_obj):
-    tomorrow = timezone.localdate() + timedelta(days=1)
-    response = authenticated(owner).put(
-        PROPERTIES + f"owner/properties/{property_obj.id}/availability/",
-        {
-            "availability_date": tomorrow.isoformat(),
-            "slots": [{"time": "14:00:00", "is_enabled": True}],
-        },
-        format="json",
-    )
-    assert response.status_code == 200, response.data
-    return {"visit_date": tomorrow.isoformat(), "visit_time": "14:00:00"}
+    # No availability setup or appointment is required.
+    return {}
 
 
 def changed_inventory(property_obj):
@@ -157,7 +148,7 @@ def test_public_booking_details_decision_and_invitation_share_complete_frozen_sn
     accepted = owner_client.post(owner_path + "accept/", {}, format="json")
     assert accepted.status_code == 200, accepted.data
     visit.refresh_from_db()
-    after_start = timezone.make_aware(datetime.combine(visit.visit_date, time(14, 1)))
+    after_start = timezone.now()
     monkeypatch.setattr(timezone, "now", lambda: after_start)
     decision = tenant_client.post(
         PROPERTIES + f"visits/{visit.id}/post-visit-decision/",

@@ -197,13 +197,6 @@ def context_payload(visit, actor):
         "attendee_id": str(visit.tenant.id),
         "attendees": attendees,
         "can_attest": participant(visit, actor),
-        "can_reschedule": bool(
-            visit.status in {"pending", "confirmed"}
-            and not process
-            and participant(visit, actor)
-            and not visit.participant_decisions.exists()
-            and not visit.rental_invitations.exists()
-        ),
         "can_reassign": bool(
             visit.status in {"pending", "confirmed"}
             and visit.company_id

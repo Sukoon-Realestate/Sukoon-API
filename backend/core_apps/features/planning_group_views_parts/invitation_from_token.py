@@ -6,7 +6,7 @@ import hmac
 import uuid
 from django.conf import settings
 from django.utils import timezone
-from django.utils.dateparse import parse_datetime
+from rest_framework import serializers
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from ..planning_models import GroupInvitation, GroupProcess
 from ..services.planning import require_planning, selection
@@ -56,18 +56,7 @@ def _submit_process(request, group, action):
         raise ValidationError(
             {"selection": "Selected accommodation cannot hold this group."}
         )
-    appointment = None
-    if kind == "visit":
-        appointment = parse_datetime(request.data.get("appointment_at", ""))
-        if (
-            not appointment
-            or timezone.is_naive(appointment)
-            or appointment <= timezone.now()
-        ):
-            raise ValidationError(
-                {"appointment_at": "Use a future timezone-aware ISO timestamp."}
-            )
-    else:
+    if kind != "visit":
         proposals = [
             x
             for x in group.proposals
@@ -88,6 +77,15 @@ def _submit_process(request, group, action):
             )
     if group.processes.filter(
         kind=kind,
+        proposal_snapshot=(
+            {
+                "visit_note": serializers.CharField(
+                    allow_blank=True, max_length=1000
+                ).run_validation(request.data.get("note", ""))
+            }
+            if kind == "visit"
+            else {}
+        ),
         academic_plan=academic,
         status__in=[
             "collecting_consent",
@@ -114,6 +112,15 @@ def _submit_process(request, group, action):
         property=prop,
         initiated_by=request.user,
         kind=kind,
+        proposal_snapshot=(
+            {
+                "visit_note": serializers.CharField(
+                    allow_blank=True, max_length=1000
+                ).run_validation(request.data.get("note", ""))
+            }
+            if kind == "visit"
+            else {}
+        ),
         roster_revision=group.roster_revision,
         selection=snapshot,
         participant_ids=members,
@@ -122,7 +129,6 @@ def _submit_process(request, group, action):
             if request.data.get("consent") is True and str(request.user.id) in members
             else []
         ),
-        appointment_at=appointment,
     )
     if item.consented_ids == members:
         _dispatch_process(request, group, item)

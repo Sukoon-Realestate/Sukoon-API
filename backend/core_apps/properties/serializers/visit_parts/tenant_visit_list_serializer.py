@@ -26,13 +26,11 @@ class TenantVisitListSerializer(serializers.ModelSerializer):
     """
 
     title = serializers.SerializerMethodField()
-    day = serializers.SerializerMethodField()
-    time = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
     class Meta:
         model = PropertyVisit
-        fields = ["id", "title", "day", "time", "status"]
+        fields = ["id", "title", "status", "note", "created_at"]
         read_only_fields = fields
 
     def get_title(self, obj: PropertyVisit) -> str:
@@ -41,28 +39,7 @@ class TenantVisitListSerializer(serializers.ModelSerializer):
     def _lang(self) -> str:
         return get_visit_language(self.context)
 
-    def get_day(self, obj: PropertyVisit) -> str:
-        lang = self._lang()
-        if lang == "en":
-            weekday = _ENGLISH_WEEKDAYS[obj.visit_date.weekday()]
-            month = _ENGLISH_MONTHS[obj.visit_date.month]
-        else:
-            weekday = _ARABIC_WEEKDAYS[obj.visit_date.weekday()]
-            month = _ARABIC_MONTHS[obj.visit_date.month]
-        return f"{weekday} {obj.visit_date.day} {month}"
 
-    def get_time(self, obj: PropertyVisit) -> str:
-        hour = obj.visit_time.hour
-        minute = obj.visit_time.minute
-        lang = self._lang()
-        if lang == "en":
-            period = "AM" if hour < 12 else "PM"
-        else:
-            period = "ص" if hour < 12 else "م"
-        hour_12 = hour % 12
-        if hour_12 == 0:
-            hour_12 = 12
-        return f"{hour_12}:{minute:02d} {period}"
 
     def get_status(self, obj: PropertyVisit) -> str:
         lang = self._lang()
@@ -117,7 +94,6 @@ class VisitTenantSerializer(serializers.ModelSerializer):
 class PropertyVisitDetailSerializer(PostVisitContextMixin, serializers.ModelSerializer):
     tenant = serializers.SerializerMethodField()
     property_id = serializers.UUIDField(source="property.id", read_only=True)
-    time = serializers.SerializerMethodField()
 
     class Meta:
         model = PropertyVisit
@@ -125,23 +101,10 @@ class PropertyVisitDetailSerializer(PostVisitContextMixin, serializers.ModelSeri
             "id",
             "property_id",
             "tenant",
-            "visit_date",
-            "visit_time",
-            "time",
             "status",
         ]
         read_only_fields = fields
 
-    def get_time(self, obj: PropertyVisit) -> str:
-        if not obj.visit_time:
-            return ""
-        hour = obj.visit_time.hour
-        minute = obj.visit_time.minute
-        period = "AM" if hour < 12 else "PM"
-        hour_12 = hour % 12
-        if hour_12 == 0:
-            hour_12 = 12
-        return f"{hour_12}:{minute:02d} {period}"
 
     def get_tenant(self, obj):
         return VisitTenantSerializer(

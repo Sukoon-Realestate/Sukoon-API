@@ -111,17 +111,15 @@ def _dispatch_process(request, group, item):
         )
     prop, snapshot = selection(request, item.selection)
     if item.kind == "visit":
-        local = timezone.localtime(item.appointment_at)
         item.visit = PropertyVisitService.create_visit(
             item.initiated_by,
             prop,
             {
-                "visit_date": local.date(),
-                "visit_time": local.time().replace(tzinfo=None),
                 "offer_id": snapshot["offer_id"],
                 "expected_offer_revision": snapshot["offer_revision"],
-                "note": f"Group viewing: {group.name}; {len(item.participant_ids)} consenting members.",
+                "note": item.proposal_snapshot.get("visit_note", ""),
             },
+            group=group,
         )
     else:
         proposal = next(

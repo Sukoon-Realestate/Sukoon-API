@@ -25,9 +25,6 @@ from .property import (
     confirm_property_availability,
 )
 from .visit import (
-    PropertyAvailableDatesAPIView,
-    OwnerAvailabilityWeekAPIView,
-    OwnerVisitCalendarAPIView,
     PropertyVisitCreateAPIView,
     TenantPropertyVisitListAPIView,
     OwnerPropertyVisitListAPIView,

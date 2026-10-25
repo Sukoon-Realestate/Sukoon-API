@@ -54,7 +54,6 @@ class OwnerVisitRequestCardSerializer(
 
     tenant = serializers.SerializerMethodField()
     property = serializers.SerializerMethodField()
-    schedule_label = serializers.SerializerMethodField()
     subtitle = serializers.SerializerMethodField()
     status_label = serializers.SerializerMethodField()
     actions = serializers.SerializerMethodField()
@@ -69,7 +68,6 @@ class OwnerVisitRequestCardSerializer(
             "id",
             "tenant",
             "property",
-            "schedule_label",
             "subtitle",
             "status",
             "status_label",
@@ -111,14 +109,9 @@ class OwnerVisitRequestCardSerializer(
             **contact,
         }
 
-    def get_schedule_label(self, obj: PropertyVisit) -> str:
-        return _format_owner_schedule_label(
-            obj.visit_date, obj.visit_time, lang=self._lang()
-        )
 
     def get_subtitle(self, obj: PropertyVisit) -> str:
-        schedule = self.get_schedule_label(obj)
-        return f"{obj.property.title} · {schedule}"
+        return obj.property.title
 
     def get_status_label(self, obj: PropertyVisit) -> str:
         lang = self._lang()
@@ -137,7 +130,7 @@ class OwnerVisitRequestCardSerializer(
         return {
             "can_accept": is_pending,
             "can_reject": is_pending,
-            "can_chat": is_pending or is_confirmed,
+            "can_chat": is_confirmed,
         }
 
     def get_verification_warning(self, obj: PropertyVisit) -> str:

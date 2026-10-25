@@ -65,38 +65,7 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
 
     def _get_upcoming_visit_banner(self):
         # ? Promote an approved upcoming visit to the top of the feed.
-        user = self.request.user
-        if not user.is_authenticated:
-            return None
-
-        today = timezone.localdate()
-        visit = (
-            PropertyVisit.objects.filter(
-                tenant=user,
-                company__isnull=True,
-                academic_plan__isnull=True,
-                renter_workspace="individual",
-                context_kind="personal",
-                groupprocess__isnull=True,
-                status=PropertyVisit.Status.CONFIRMED,
-                visit_date__gte=today,
-            )
-            .select_related("property")
-            .order_by("visit_date", "visit_time")
-            .first()
-        )
-        if not visit:
-            return None
-
-        return {
-            "visit_id": str(visit.id),
-            "property_id": str(visit.property.id),
-            "property_title": visit.property.title,
-            "property_district": visit.property.district,
-            "visit_date": visit.visit_date.isoformat(),
-            "visit_time": visit.visit_time.strftime("%H:%M"),
-            "is_today": visit.visit_date == today,
-        }
+        return None
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

@@ -21,10 +21,6 @@ from ..filters import PropertyVisitFilter
 from ..models import Property, PropertyVisit, PropertyVisitReview
 from ..permissions import IsTenantOrPropertyOwner
 from ..serializers import (
-    AvailableDatesQuerySerializer,
-    OwnerAvailabilityWeekQuerySerializer,
-    OwnerAvailabilityDayUpdateSerializer,
-    OwnerVisitCalendarQuerySerializer,
     OwnerVisitRequestCardSerializer,
     OwnerVisitRequestDetailSerializer,
     OwnerVisitRejectSerializer,
@@ -45,9 +41,6 @@ from .visit_parts.property_visit_create_apiview import (
     logger,
     PropertyVisitPagination,
     PropertyVisitCreateAPIView,
-    PropertyAvailableDatesAPIView,
-    OwnerAvailabilityWeekAPIView,
-    OwnerVisitCalendarAPIView,
 )
 from .visit_parts.owner_property_visit_list_apiview import (
     TenantPropertyVisitListAPIView,

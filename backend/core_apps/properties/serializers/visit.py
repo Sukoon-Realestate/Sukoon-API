@@ -33,14 +33,9 @@ from .visit_parts.tenant_visit_list_serializer import (
     VisitTenantSerializer,
     PropertyVisitDetailSerializer,
 )
-from .visit_parts.owner_visit_calendar_query_serializer import (
+from .visit_parts.visit_request_input_serializer import (
     PropertyVisitCreateSerializer,
     PropertyVisitUpdateSerializer,
-    AvailableDatesQuerySerializer,
-    OwnerAvailabilityWeekQuerySerializer,
-    OwnerAvailabilitySlotInputSerializer,
-    OwnerAvailabilityDayUpdateSerializer,
-    OwnerVisitCalendarQuerySerializer,
 )
 from .visit_parts.visit_owner_serializer import (
     VisitPropertySummarySerializer,

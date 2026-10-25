@@ -21,8 +21,6 @@ class OwnerVisitRequestDetailSerializer(
 
     tenant = serializers.SerializerMethodField()
     property = serializers.SerializerMethodField()
-    day_label = serializers.SerializerMethodField()
-    time_label = serializers.SerializerMethodField()
     status_label = serializers.SerializerMethodField()
     actions = serializers.SerializerMethodField()
 
@@ -32,10 +30,6 @@ class OwnerVisitRequestDetailSerializer(
             "id",
             "tenant",
             "property",
-            "visit_date",
-            "visit_time",
-            "day_label",
-            "time_label",
             "note",
             "status",
             "status_label",
@@ -87,11 +81,7 @@ class OwnerVisitRequestDetailSerializer(
             "display_name": f"{obj.property.title} – {obj.property.district}",
         }
 
-    def get_day_label(self, obj: PropertyVisit) -> str:
-        return _format_full_date(obj.visit_date, lang=self._lang())
 
-    def get_time_label(self, obj: PropertyVisit) -> str:
-        return _format_time_clock(obj.visit_time, lang=self._lang())
 
     def get_status_label(self, obj: PropertyVisit) -> str:
         lang = self._lang()
@@ -118,13 +108,13 @@ class OwnerVisitRejectSerializer(serializers.Serializer):
     """
 
     REJECTION_REASONS = [
-        ("timing_not_suitable", _("الموعد غير مناسب")),
+        ("visit_unavailable", _("الزيارة غير متاحة حاليًا")),
         ("property_currently_rented", _("العقار مؤجر حالياً")),
         ("tenant_not_eligible", _("المستأجر لا يستوفي الشروط")),
         ("other", _("سبب آخر")),
     ]
 
     reason = serializers.ChoiceField(
-        choices=REJECTION_REASONS, default="timing_not_suitable"
+        choices=REJECTION_REASONS, default="visit_unavailable"
     )
     custom_reason = serializers.CharField(required=False, allow_blank=True, default="")

@@ -56,13 +56,6 @@ class TestWorkspaceAccountContract:
         assert prof_data["stats"]["properties_count"] == 0
         assert prof_data["recent_reviews"] == []
 
-        res_owner_cal = auth_client.get(
-            f"{reverse('owner-visit-calendar')}?year=2026&month=7"
-        )
-        assert res_owner_cal.status_code == status.HTTP_200_OK
-        cal_data = api_json(res_owner_cal)["data"]
-        assert cal_data["visits"] == []
-
         res_owner_requests = auth_client.get(reverse("owner-visit-request-list"))
         assert res_owner_requests.status_code == status.HTTP_200_OK
         req_data = api_json(res_owner_requests)["data"]

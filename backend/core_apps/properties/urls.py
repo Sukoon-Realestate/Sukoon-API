@@ -40,9 +40,6 @@ from .views import (
     OwnerVisitRequestRejectAPIView,
     OwnerVisitRequestAcceptAPIView,
     AvailablePlacesAPIView,
-    PropertyAvailableDatesAPIView,
-    OwnerAvailabilityWeekAPIView,
-    OwnerVisitCalendarAPIView,
     SavedPropertyCreateAPIView,
     SavedPropertyDeleteAPIView,
     SavedPropertyListAPIView,
@@ -97,16 +94,8 @@ urlpatterns = [
     path("owner/profile/", OwnerProfileAPIView.as_view(), name="owner-profile"),
     path("owner/revenues/", OwnerRevenuesAPIView.as_view(), name="owner-revenues"),
     path("owner/earnings/", OwnerRevenuesAPIView.as_view(), name="owner-earnings"),
-    path(
-        "owner/properties/<uuid:property_id>/availability/",
-        OwnerAvailabilityWeekAPIView.as_view(),
-        name="owner-availability-week",
-    ),
-    path(
-        "owner/calendar/",
-        OwnerVisitCalendarAPIView.as_view(),
-        name="owner-visit-calendar",
-    ),
+
+
     path(
         "owner/visits/requests/",
         OwnerVisitRequestListAPIView.as_view(),
@@ -138,11 +127,7 @@ urlpatterns = [
         SavedPropertyDeleteAPIView.as_view(),
         name="saved-property-delete",
     ),
-    path(
-        "<uuid:property_id>/available_dates/",
-        PropertyAvailableDatesAPIView.as_view(),
-        name="property-available-dates",
-    ),
+
     path(
         "<uuid:property_id>/confirm-availability/",
         confirm_property_availability,

@@ -57,10 +57,6 @@ class PostVisitDecisionBody(serializers.Serializer):
         return attrs
 
 
-def scheduled_at(visit):
-    return datetime.combine(visit.visit_date, visit.visit_time, CAIRO)
-
-
 def decision_for(visit, actor=None):
     return visit.participant_decisions.filter(tenant=actor or visit.tenant).first()
 
@@ -135,11 +131,9 @@ def eligibility(visit, actor, *, decision=None, invitation=None, ambiguous=False
         reason = "continuation_exists"
     elif visit.status != PropertyVisit.Status.CONFIRMED:
         reason = "visit_not_confirmed"
-    elif scheduled_at(visit) > timezone.now():
-        reason = "visit_not_started"
     return {
         "can_submit": reason is None,
-        "eligible_at": scheduled_at(visit).isoformat(),
+        "eligible_at": "",
         "blocked_reason": reason,
     }
 

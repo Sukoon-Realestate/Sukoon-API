@@ -52,8 +52,8 @@ class PropertyVisit(TimeStampedModel):
     )
     renter_workspace = models.CharField(max_length=16, choices=[("individual", "individual"), ("student", "student")], default="individual")
     context_kind = models.CharField(max_length=24, default="personal")
-    visit_date = models.DateField(_("Visit Date"))
-    visit_time = models.TimeField(_("Visit Time"))
+    visit_date = models.DateField(_("Visit Date"), null=True, blank=True)
+    visit_time = models.TimeField(_("Visit Time"), null=True, blank=True)
     status = models.CharField(
         _("Status"),
         max_length=20,
@@ -122,15 +122,10 @@ class PropertyVisit(TimeStampedModel):
         verbose_name = _("Property Visit")
         verbose_name_plural = _("Property Visits")
         ordering = ["-created_at"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["tenant", "property", "visit_date", "visit_time"],
-                name="unique_tenant_property_visit_slot",
-            )
-        ]
+
 
     def __str__(self):
-        return f"Visit for {self.property.title} by {self.tenant.email} on {self.visit_date} at {self.visit_time}"
+        return f"Visit request for {self.property.title} by {self.tenant.email}"
 
 
 class PropertyVisitDecision(TimeStampedModel):
@@ -157,7 +152,7 @@ class PropertyVisitDecision(TimeStampedModel):
     property_id_snapshot = models.UUIDField()
     offer_id = models.CharField(max_length=64, blank=True, default="")
     offer_snapshot = models.JSONField(null=True, blank=True)
-    scheduled_at = models.DateTimeField()
+    scheduled_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         constraints = [

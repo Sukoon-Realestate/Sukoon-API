@@ -7,7 +7,7 @@ from core_apps.features.services.tenancy_invitations import (
     current_invitation_problem,
 )
 from core_apps.properties.models import Property
-from .linked_invitation import DecisionConflict, scheduled_at, accommodation_identity
+from .linked_invitation import DecisionConflict, accommodation_identity
 
 
 def contracting_problem(visit, decision):
@@ -157,7 +157,6 @@ def continuation(
     elif actions["can_submit"] or (
         actor.pk != visit.tenant_id
         and visit.status == "confirmed"
-        and scheduled_at(visit) <= timezone.now()
     ):
         base.update(
             status="awaiting_tenant_decision",

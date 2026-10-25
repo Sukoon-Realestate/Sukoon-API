@@ -1,3 +1,4 @@
+from core_apps.features.planning_models import GroupProcess
 import json
 import os
 import uuid
@@ -262,15 +263,6 @@ def test_group_invitation_cost_consent_visit_application_and_roster_change(
             ),
         ).data["resource"]
     assert set(group["proposals"][0]["approved_by"]) == {str(tenant.id), str(member.id)}
-    appointment = (timezone.localtime() + timedelta(days=1)).replace(
-        hour=14, minute=0, second=0, microsecond=0
-    )
-    OwnerAvailabilitySlot.objects.create(
-        owner=owner,
-        property=prop,
-        date=appointment.date(),
-        time=appointment.time().replace(tzinfo=None),
-    )
     body = command(
         group["revision"],
         action="request_visit",
@@ -278,7 +270,7 @@ def test_group_invitation_cost_consent_visit_application_and_roster_change(
         selection=snapshot,
         participant_ids=[str(tenant.id), str(member.id)],
         consent=True,
-        appointment_at=appointment.isoformat(),
+        note="Please coordinate our group visit in chat",
     )
     group = post(tenant, f"housing-groups/{group['id']}/request_visit/", body).data[
         "resource"
@@ -298,6 +290,14 @@ def test_group_invitation_cost_consent_visit_application_and_roster_change(
         ),
     ).data["resource"]
     assert PropertyVisit.objects.count() == 1
+    visit = PropertyVisit.objects.get()
+    assert visit.visit_date is None and visit.visit_time is None
+    assert visit.note == "Please coordinate our group visit in chat"
+    assert group["visits"][0]["request_note"] == visit.note
+    from core_apps.features.planning_group_views_parts.process_payload import process_payload
+    process_obj = GroupProcess.objects.get(visit=visit)
+    process_obj.visit.status = "confirmed"
+    assert process_payload(process_obj, tenant)["status"] == "accepted"
     assert group["visits"][0]["qualifying_visit_id"] == str(
         PropertyVisit.objects.get().id
     )

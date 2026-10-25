@@ -20,10 +20,6 @@ from .property import (
     PropertyVisibilitySerializer,
 )
 from .visit import (
-    AvailableDatesQuerySerializer,
-    OwnerAvailabilityWeekQuerySerializer,
-    OwnerAvailabilityDayUpdateSerializer,
-    OwnerVisitCalendarQuerySerializer,
     PropertyVisitSerializer,
     PropertyVisitCreateSerializer,
     PropertyVisitDetailSerializer,

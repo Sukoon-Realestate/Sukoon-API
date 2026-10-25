@@ -157,7 +157,7 @@ class TestPropertyVisitService:
                 property_obj=property_obj,
                 validated_data=validated_data,
             )
-        assert "The selected visit slot is already booked." in str(excinfo.value)
+        assert "You already have an open visit request for this accommodation." in str(excinfo.value)
 
     def test_update_visit_status_tenant_cancels(self, user, another_user):
         property_obj = _create_property(owner=user, title="Sample Property")

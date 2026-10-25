@@ -12,7 +12,6 @@ from .linked_invitation import (
     OPERATION,
     DecisionConflict,
     invalid,
-    scheduled_at,
     decision_for,
     linked_invitation,
     historical_agreement,
@@ -103,7 +102,7 @@ def submit_decision(actor, visit_id, data):
             property_id_snapshot=visit.property.id,
             offer_id=visit.offer_id,
             offer_snapshot=deepcopy(visit.offer_snapshot),
-            scheduled_at=scheduled_at(visit),
+            scheduled_at=None,
         )
         # Revision changes on decision commit too, without rewriting the appointment.
         visit.revision += 1

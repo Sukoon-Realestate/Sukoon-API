@@ -16,10 +16,6 @@ from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
 from ...models import Property
 from ...serializers import (
-    AvailableDatesQuerySerializer,
-    OwnerAvailabilityWeekQuerySerializer,
-    OwnerAvailabilityDayUpdateSerializer,
-    OwnerVisitCalendarQuerySerializer,
     PropertyVisitCreateSerializer,
     TenantVisitRequestDetailSerializer,
 )
@@ -100,95 +96,3 @@ class PropertyVisitCreateAPIView(generics.CreateAPIView):
             status=response_status,
             headers=response_headers(replayed),
         )
-
-
-class PropertyAvailableDatesAPIView(generics.GenericAPIView):
-    """Return the property's owner's future visit availability.
-
-    Dates and past-slot checks use the configured Africa/Cairo timezone.
-    """
-
-    serializer_class = AvailableDatesQuerySerializer
-    renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, *args, **kwargs):
-        property_obj = get_object_or_404(
-            Property.objects.select_related("owner"), id=self.kwargs["property_id"]
-        )
-        serializer = self.get_serializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
-        schedule = PropertyVisitService.get_available_dates(
-            property_obj=property_obj,
-            requested_date=serializer.validated_data.get("date"),
-        )
-        return Response(schedule)
-
-
-class OwnerAvailabilityWeekAPIView(generics.GenericAPIView):
-    """Read or save one of the authenticated owner's property availability grids.
-
-    Request Body Example (PUT):
-    {
-        "availability_date": "2026-09-15",
-        "slots": [
-            {"time": "09:00:00", "is_enabled": true},
-            {"time": "12:00:00", "is_enabled": true}
-        ]
-    }
-
-    Empty ``slots`` clears every non-booked slot on the selected date. Booked
-    slots are always preserved and cannot be disabled.
-    """
-
-    renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_property(self):
-        return get_object_or_404(
-            Property.objects.select_related("owner"),
-            id=self.kwargs["property_id"],
-            owner=self.request.user,
-        )
-
-    def get(self, request, *args, **kwargs):
-        serializer = OwnerAvailabilityWeekQuerySerializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
-        start_date = serializer.validated_data.get("start_date")
-        if start_date is None:
-            today = timezone.localdate()
-            start_date = today - timedelta(days=today.weekday())
-        return Response(
-            PropertyVisitService.get_owner_availability(self.get_property(), start_date, serializer.validated_data["day_count"])
-        )
-
-    def put(self, request, *args, **kwargs):
-        serializer = OwnerAvailabilityDayUpdateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        schedule = PropertyVisitService.replace_property_day_availability(
-            property_obj=self.get_property(),
-            availability_date=serializer.validated_data["availability_date"],
-            slots_data=serializer.validated_data["slots"],
-        )
-        return Response({"message": "Availability saved successfully.", **schedule})
-
-
-class OwnerVisitCalendarAPIView(generics.GenericAPIView):
-    """Return calendar indicators and the owner visits for a selected month day."""
-
-    serializer_class = OwnerVisitCalendarQuerySerializer
-    renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        calendar = PropertyVisitService.get_owner_visit_calendar(
-            owner=request.user,
-            year=data["year"],
-            month=data["month"],
-            selected_date=data.get("date"),
-            language=get_visit_language(request),
-        )
-        return Response(calendar)
