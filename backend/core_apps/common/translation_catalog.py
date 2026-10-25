@@ -1,6 +1,9 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "The selected property is unavailable. Refresh and choose another property.": "العقار المختار لم يعد متاحًا. حدّث قائمة عقاراتك واختر عقارًا آخر.",
+    "This property must be published and its ownership verified before it can be offered.": "يجب اعتماد نشر العقار وتوثيق ملكيته قبل إرسال عرض سكن به.",
+    "The accommodation type must match the housing request.": "نوع السكن المختار يجب أن يطابق النوع المطلوب في طلب السكن.",
     "This email is unavailable.": "البريد الإلكتروني غير متاح.",
     "Upload the identity image itself.": "ارفع صورة مستند الهوية نفسها.",
     "Upload a valid supported image.": "ارفع صورة سليمة بإحدى الصيغ المدعومة.",

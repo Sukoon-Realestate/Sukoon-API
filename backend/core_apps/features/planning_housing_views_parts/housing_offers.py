@@ -74,19 +74,13 @@ def housing_offers(request, request_id):
             raise RentalConflict(
                 "The offer limit for this request was reached.", code="offer_limit"
             )
-        from ..services.planning_parts.districts import district_matches
-
         if (
-            not district_matches(prop, item.criteria)
-            or str(prop.city.id) != item.criteria["city_id"]
-            or (
-                item.criteria["rental_scope"]
-                and item.criteria["rental_scope"] != snapshot["rental_scope"]
-            )
+            item.criteria["rental_scope"]
+            and item.criteria["rental_scope"] != snapshot["rental_scope"]
         ):
             raise ValidationError(
                 {
-                    "selection": "The offer must match the requested city and accommodation scope."
+                    "selection": "The accommodation type must match the housing request."
                 }
             )
         capacity = 1 if snapshot["rental_scope"] == "bed" else snapshot.get("capacity")

@@ -144,6 +144,7 @@ def public_properties():
     return visible_properties(Property.objects.filter(
         status="verified",
         is_verified=True,
+        retired_at__isnull=True,
         owner__is_active=True,
         owner__is_verified=True,
     ))

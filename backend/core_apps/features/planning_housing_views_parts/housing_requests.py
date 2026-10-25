@@ -47,7 +47,6 @@ def can_read_request(user, item):
 
 
 def can_offer_request(user, item):
-    from ..services.planning_parts.districts import filter_districts
     from ..services.student_housing.publication import request_current
 
     if not request_current(item):
@@ -56,13 +55,7 @@ def can_offer_request(user, item):
         item.user_id != user.pk
         and request_status(item) == "published"
         and item.visibility == "eligible_owners"
-        and filter_districts(public_properties(), item.criteria)
-        .filter(
-            owner=user,
-            is_ownership_verified=True,
-            city__id=item.criteria.get("city_id"),
-        )
-        .exists()
+        and eligible_owner(user)
     )
 
 
@@ -174,9 +167,8 @@ def housing_demand(request):
         raise PermissionDenied(
             "A verified owned listing is required to read housing demand."
         )
-    # Discovery is available across cities. Matching inventory remains a
-    # separate requirement for sending an offer, enforced by request_actions
-    # and the exact-selection validation in housing_offers.
+    # Location preferences filter discovery only. Owners may suggest a home
+    # elsewhere; sending still validates the exact inventory and rental terms.
     items = (
         HousingRequest.objects.filter(
             status="published",

@@ -2,8 +2,8 @@
 
 from decimal import Decimal, InvalidOperation
 from django.shortcuts import get_object_or_404
-from rest_framework.exceptions import ValidationError
-from core_apps.properties.models import City
+from rest_framework.exceptions import NotFound, ValidationError
+from core_apps.properties.models import City, Property
 from ..commands import money_minor
 from ..rental_phase2 import RentalConflict
 from ..tenancy_invitations import resolve_offer_snapshot
@@ -24,12 +24,27 @@ def selection(request, raw, *, owned=False, lock=True):
         raise ValidationError(
             {"selection": "A property, offer and integer offer_revision are required."}
         )
-    queryset = public_properties()
-    if owned:
-        queryset = queryset.filter(owner=request.user, is_ownership_verified=True)
+    queryset = (
+        Property.objects.filter(owner=request.user) if owned else public_properties()
+    )
     if lock:
         queryset = queryset.select_for_update(of=("self",))
-    prop = get_object_or_404(queryset, id=raw.get("property_id"))
+    prop = queryset.filter(id=raw.get("property_id")).first()
+    if prop is None:
+        raise NotFound(
+            "The selected property is unavailable. Refresh and choose another property."
+        )
+    if (
+        owned
+        and not public_properties()
+        .filter(pk=prop.pk, is_ownership_verified=True)
+        .exists()
+    ):
+        raise ValidationError(
+            {
+                "selection": "This property must be published and its ownership verified before it can be offered."
+            }
+        )
     _, snapshot = resolve_offer_snapshot(
         prop, raw["offer_id"], raw["offer_revision"], request
     )

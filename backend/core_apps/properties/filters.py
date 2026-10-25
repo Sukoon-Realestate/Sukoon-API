@@ -113,6 +113,17 @@ class PropertyVisitFilter(django_filters.FilterSet):
     - status (e.g. ?status=pending) — one of: pending, confirmed, canceled, rejected
     """
 
+    # Older owner clients expose a completed tab, while the authoritative
+    # visit lifecycle currently has four states. An unsupported completed
+    # projection is an empty successful collection, never a fabricated status.
+    status = django_filters.ChoiceFilter(
+        choices=[*PropertyVisit.Status.choices, ("completed", "Completed")],
+        method="filter_status",
+    )
+
+    def filter_status(self, queryset, name, value):
+        return queryset.none() if value == "completed" else queryset.filter(status=value)
+
     class Meta:
         model = PropertyVisit
         fields = ["status"]

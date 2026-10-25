@@ -26,8 +26,12 @@ DEFAULTS = {
 }
 
 
-def limits():
-    return {**DEFAULTS, **getattr(settings, "CHAT_MEDIA_LIMITS", {})}
+def limits(*, property_sharing=False):
+    result = {**DEFAULTS, **getattr(settings, "CHAT_MEDIA_LIMITS", {})}
+    kinds = [kind for kind in result["message_kinds"] if kind != "property"]
+    if property_sharing:
+        kinds.append("property")
+    return {**result, "message_kinds": kinds}
 
 
 class ChatConflict(APIException):

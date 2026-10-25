@@ -56,6 +56,16 @@ class MyPropertyListAPIView(generics.ListAPIView):
             # ! explicitly so pagination stays stable
             .order_by("-created_at")
         )
+        if self.request.query_params.get("housing_offer_eligible") == "true":
+            from core_apps.features.services.planning_parts.selection_payload import (
+                public_properties,
+            )
+
+            queryset = queryset.filter(
+                pk__in=public_properties()
+                .filter(owner=self.request.user, is_ownership_verified=True)
+                .values("pk")
+            )
         rental_scope = self.request.query_params.get("rental_scope")
         if rental_scope:
             if rental_scope not in {"entire_property", "room", "room_group", "bed"}:

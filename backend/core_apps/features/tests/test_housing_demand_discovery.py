@@ -7,6 +7,9 @@ import pytest
 from django.utils import timezone
 
 from core_apps.features.planning_models import HousingOffer, HousingRequest
+from core_apps.features.services.planning_parts.selection_payload import (
+    selection_payload,
+)
 from core_apps.features.services.tenancy_invitations import resolve_offer_snapshot
 from core_apps.properties.models import City
 from .test_funded_settlement import command
@@ -32,7 +35,7 @@ def publish(user, prop, *, city=None, title="Published housing request"):
 
 
 @pytest.mark.django_db
-def test_other_account_request_is_visible_across_cities_but_offer_stays_gated(
+def test_owner_can_offer_verified_accommodation_across_cities(
     rental_participants,
 ):
     owner, tenant, stranger, prop, offer_id = rental_participants
@@ -46,7 +49,7 @@ def test_other_account_request_is_visible_across_cities_but_offer_stays_gated(
     assert demand.status_code == 200
     assert [row["id"] for row in demand.data["results"]] == [item["id"]]
     assert demand.data["results"][0]["criteria"]["city"]["id"] == str(other_city.id)
-    assert demand.data["results"][0]["allowed_actions"] == []
+    assert demand.data["results"][0]["allowed_actions"] == ["offer"]
     detail = client.get(API + f"housing-requests/{item['id']}/")
     assert detail.status_code == 200
     assert detail.data["id"] == item["id"]
@@ -54,14 +57,19 @@ def test_other_account_request_is_visible_across_cities_but_offer_stays_gated(
         API + "planning-capabilities/",
         {"capability": "housing_requests", "subject_id": item["id"]},
     )
-    assert grant.data["allowed_actions"] == ["read"]
+    assert set(grant.data["allowed_actions"]) == {"read", "offer"}
 
     _, snapshot = resolve_offer_snapshot(prop, offer_id, 2)
     body = command(
-        request_id=item["id"], request_revision=item["revision"], selection=snapshot
+        request_id=item["id"],
+        request_revision=item["revision"],
+        selection=selection_payload(snapshot),
     )
-    post(owner, f"housing-requests/{item['id']}/offers/", body, 403)
-    assert not HousingOffer.objects.exists()
+    offered = post(owner, f"housing-requests/{item['id']}/offers/", body, 201)
+    replay = post(owner, f"housing-requests/{item['id']}/offers/", body, 201)
+    assert replay.data == offered.data
+    assert HousingOffer.objects.count() == 1
+    assert offered.data["resource"]["selection"]["property_id"] == str(prop.id)
     assert authenticated(stranger).get(API + "housing-demand/").status_code == 403
     assert (
         authenticated(stranger).get(API + f"housing-requests/{item['id']}/").status_code

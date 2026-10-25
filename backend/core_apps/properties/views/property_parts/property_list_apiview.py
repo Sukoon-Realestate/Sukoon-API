@@ -73,6 +73,11 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
         visit = (
             PropertyVisit.objects.filter(
                 tenant=user,
+                company__isnull=True,
+                academic_plan__isnull=True,
+                renter_workspace="individual",
+                context_kind="personal",
+                groupprocess__isnull=True,
                 status=PropertyVisit.Status.CONFIRMED,
                 visit_date__gte=today,
             )

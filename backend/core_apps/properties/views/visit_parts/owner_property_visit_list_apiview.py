@@ -15,6 +15,7 @@ from ...serializers import (
     TenantVisitRequestSerializer,
 )
 from .property_visit_create_apiview import PropertyVisitPagination
+from .property_review_list_apiview import OwnerVisitRequestPagination
 
 
 class TenantPropertyVisitListAPIView(generics.ListAPIView):
@@ -56,7 +57,7 @@ class OwnerPropertyVisitListAPIView(generics.ListAPIView):
     serializer_class = PropertyVisitDetailSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated]
-    pagination_class = PropertyVisitPagination
+    pagination_class = OwnerVisitRequestPagination
     filterset_class = PropertyVisitFilter
 
     def get_queryset(self):

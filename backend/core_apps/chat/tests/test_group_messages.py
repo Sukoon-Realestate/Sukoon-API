@@ -132,7 +132,7 @@ def test_monotonic_reads_tombstone_permissions_and_muting(chat_group):
     assert delete_group_message(conversation, admin, first.id)["id"] == deleted["id"]
 
 
-def test_group_inbox_opt_in_and_direct_identity(chat_group, api_client):
+def test_group_inbox_workspace_and_direct_identity(chat_group, api_client):
     from core_apps.chat.services.message_service import (
         get_or_create_direct_conversation,
     )
@@ -145,7 +145,13 @@ def test_group_inbox_opt_in_and_direct_identity(chat_group, api_client):
     data = api_client.get(
         reverse("conversation-list"), {"include_groups": "true"}
     ).json()["data"]
-    assert {x["conversation_type"] for x in data} == {"direct", "housing_group"}
+    # The old include_groups hint cannot bypass the active workspace.
+    assert {x["conversation_type"] for x in data} == {"direct"}
+    groups = api_client.get(
+        reverse("conversation-list"),
+        {"workspace": "student", "conversation_type": "housing_group"},
+    ).json()["data"]
+    assert {x["conversation_id"] for x in groups} == {str(conversation.id)}
 
 
 def test_cursor_snapshot_reconnect_and_explicit_resync(chat_group, api_client):

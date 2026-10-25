@@ -95,6 +95,7 @@ class OwnerVisitRequestPagination(PropertyVisitPagination):
                 ),
                 all=models.Count("id"),
             )
+            counts["completed"] = 0
             response.data["tabs"] = counts
         return response
 

@@ -1,10 +1,10 @@
 """Property: property detail apiview."""
 
-from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.db.models import Avg, BooleanField, Exists, FloatField, OuterRef, Q, Value
 from django.db.models.functions import Coalesce
 from rest_framework import generics, permissions, status
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from core_apps.common.models import ContentView
 from core_apps.common.idempotency import (
@@ -169,7 +169,11 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
         )
 
     def get_object(self):
-        obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
+        obj = self.get_queryset().filter(id=self.kwargs["id"]).first()
+        if obj is None:
+            raise NotFound(
+                "The selected property is unavailable. Refresh and choose another property."
+            )
         self.check_object_permissions(self.request, obj)
         return obj
 

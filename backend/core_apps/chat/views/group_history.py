@@ -14,6 +14,7 @@ from core_apps.chat.services.group_cursors import (
 from core_apps.chat.services.group_events import event_payload
 from core_apps.chat.services.group_limits import ChatResync, ChatUnavailable
 from core_apps.chat.services.group_projection import message_payload, summary
+from core_apps.chat.services.property_sharing import properties_for_messages
 
 
 def history_response(conversation, user, query):
@@ -39,8 +40,9 @@ def history_response(conversation, user, query):
         )
         more = len(rows) > count
         rows = rows[:count]
+        properties = properties_for_messages(rows)
         response = Response(
-            [message_payload(m, participant, member) for m in reversed(rows)]
+            [message_payload(m, participant, member, properties=properties) for m in reversed(rows)]
         )
         response["X-Chat-Older-Cursor"] = (
             encode_cursor(
@@ -138,7 +140,8 @@ class GroupMessageContextAPIView(APIView):
             ]
         )
         rows = list(reversed(older)) + newer
-        response = Response([message_payload(m, participant, member) for m in rows])
+        properties = properties_for_messages(rows)
+        response = Response([message_payload(m, participant, member, properties=properties) for m in rows])
         more = visible.filter(sequence__lt=rows[0].sequence).exists()
         response["X-Chat-Older-Cursor"] = (
             encode_cursor(

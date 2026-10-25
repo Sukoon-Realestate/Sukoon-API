@@ -32,6 +32,8 @@ class PropertyNewListSerializer(PropertyPolicyProjection, serializers.ModelSeria
             "images_count",
             "is_verified",
             "title",
+            "latitude",
+            "longitude",
             "location",
             "bedrooms",
             "bathrooms",
