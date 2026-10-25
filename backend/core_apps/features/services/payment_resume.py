@@ -69,17 +69,37 @@ def resume(user, attempt, request_key):
                     "invoice", "quote", "paymob_payment", "checkout_session"
                 ).get(pk=attempt.pk)
             response = client.retrieve_intention(payment)
-            expiry = verified_expiry(response, payment, session, redirect)
+            expiry = verified_expiry(
+                response, payment, session, redirect, allow_expired=True
+            )
             _save_session(payment, session, response, expiry, "renewal_unknown")
             IdempotencyRecord.objects.filter(
                 user=user,
                 operation__startswith=f"payment.resume.{attempt.id}.",
                 recovery_status="unknown",
             ).update(recovery_status="confirmed")
+            # GET resolved the earlier PUT against the original, transaction-free
+            # intention. An expired verified key can now follow normal renewal;
+            # an unreadable/ambiguous response above can never reach another PUT.
+            if expiry <= timezone.now():
+                with transaction.atomic():
+                    payment = PaymobPayment.objects.select_for_update().get(
+                        pk=payment.pk
+                    )
+                    attempt.refresh_from_db()
+                    session.refresh_from_db()
+                    if (
+                        payment.status == "ready"
+                        and attempt.payment_status == "pending"
+                        and session.expires_at <= timezone.now()
+                    ):
+                        record = _start_renewal(user, attempt, session, payment, key)
+                if record is not None:
+                    _renew(payment, attempt, session, redirect, record)
         else:
             _renew(payment, attempt, session, redirect, record)
     except Exception:
-        if not recovering:
+        if record is not None:
             PaymobPayment.objects.filter(pk=payment.pk, status="renewing").update(
                 status="renewal_unknown", failure_code="renewal_unknown"
             )

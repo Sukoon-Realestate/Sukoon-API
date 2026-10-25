@@ -286,11 +286,11 @@ def test_unknown_renewal_recovers_only_verified_read_only_provider_shape(
     ) as retrieve, patch(
         "core_apps.features.services.paymob_client.order_transactions", return_value=[]
     ), patch(
-        "core_apps.features.services.paymob_client.renew_intention"
+        "core_apps.features.services.paymob_client.renew_intention", side_effect=renewal
     ) as renew, patch(
         "core_apps.features.services.paymob_client.create_intention"
     ) as create:
-        if invalid:
+        if invalid and invalid != "expired":
             with pytest.raises(paymob_client.PaymobUnavailable):
                 resume(buyer, payment.attempt, uuid.uuid4())
             payment.refresh_from_db()
@@ -300,7 +300,7 @@ def test_unknown_renewal_recovers_only_verified_read_only_provider_shape(
             assert resumed.checkout_session.expires_at > timezone.now()
             assert resumed.paymob_payment.status == "ready"
         assert retrieve.call_count == 1
-        renew.assert_not_called()
+        assert renew.call_count == (1 if invalid == "expired" else 0)
         create.assert_not_called()
     assert PaymentAttempt.objects.count() == 1
     assert PaymentReceipt.objects.count() == 0

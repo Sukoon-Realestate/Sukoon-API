@@ -10,7 +10,7 @@ from django.utils import timezone
 from .paymob_client import PaymobUnavailable
 
 
-def verified_expiry(response, payment, session, redirect):
+def verified_expiry(response, payment, session, redirect, *, allow_expired=False):
     attempt = payment.attempt
     secret = parse_qs(urlparse(session.hosted_url).query).get("clientSecret", [""])[0]
     detail = response.get("intention_detail") or {}
@@ -80,10 +80,8 @@ def verified_expiry(response, payment, session, redirect):
             ):
                 raise PaymobUnavailable()
         expiry = datetime.fromtimestamp(claims["exp"], datetime_timezone.utc)
-        if (
-            not timezone.now() + timedelta(seconds=15)
-            < expiry
-            <= timezone.now() + timedelta(minutes=16)
+        if expiry > timezone.now() + timedelta(minutes=16) or (
+            not allow_expired and expiry <= timezone.now() + timedelta(seconds=15)
         ):
             raise PaymobUnavailable()
         expiries.append(expiry - timedelta(seconds=15))
