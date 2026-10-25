@@ -156,7 +156,23 @@ def renewal(payment, redirect):
     token = base64.urlsafe_b64encode(json.dumps(claims).encode()).decode().rstrip("=")
     return {
         **intention(payment, {}, redirect),
-        "payment_keys": [{"key": "header." + token + ".signature"}],
+        "confirmed": False,
+        "status": "intended",
+        "payment_methods": [
+            {
+                "integration_id": int(payment.integration_id),
+                "live": False,
+                "currency": payment.attempt.currency,
+            }
+        ],
+        "payment_keys": [
+            {
+                "key": base64.b64encode(
+                    ("header." + token + ".signature").encode()
+                ).decode(),
+                "redirection_url": redirect,
+            }
+        ],
     }
 
 
@@ -204,10 +220,90 @@ def test_resume_rejects_unbound_provider_return_and_never_replays_unknown_put(
     ) as renew:
         with pytest.raises(paymob_client.PaymobUnavailable):
             resume(buyer, payment.attempt, uuid.uuid4())
-        resume(buyer, payment.attempt, uuid.uuid4())
+        with patch(
+            "core_apps.features.services.paymob_client.retrieve_intention",
+            side_effect=paymob_client.PaymobUnavailable,
+        ):
+            with pytest.raises(paymob_client.PaymobUnavailable):
+                resume(buyer, payment.attempt, uuid.uuid4())
         assert renew.call_count == 1
     payment.refresh_from_db()
     assert payment.status == "renewal_unknown"
+
+
+@pytest.mark.parametrize("invalid", [None, "redirect", "order", "live", "expired"])
+def test_unknown_renewal_recovers_only_verified_read_only_provider_shape(
+    client, buyer, plan, hosted, invalid
+):
+    payment = checkout(client, plan)
+    session = payment.attempt.checkout_session
+    session.expires_at = timezone.now() - timedelta(minutes=1)
+    session.save()
+    payment.status = "renewal_unknown"
+    payment.save()
+    from urllib.parse import urlencode
+
+    redirect = (
+        session.navigation["return_url"]
+        + "?"
+        + urlencode(
+            {
+                "state": session.return_state,
+                "payment_attempt_id": str(payment.attempt.id),
+            }
+        )
+    )
+    response = renewal(payment, redirect)
+    response["order_id"] = response.pop("intention_order_id")
+    response["redirection_url"] = redirect
+    response["paid"] = False
+    response["payment_keys"] = {
+        "live": False,
+        "card": response["payment_keys"][0]["key"],
+        "redirection_url": session.navigation["return_url"],
+    }
+    if invalid == "redirect":
+        response["redirection_url"] = "https://wrong.test/"
+    elif invalid == "order":
+        response["order_id"] = 999
+    elif invalid == "live":
+        response["payment_methods"][0]["live"] = True
+    elif invalid == "expired":
+        pieces = base64.b64decode(response["payment_keys"]["card"]).decode().split(".")
+        claims = json.loads(
+            base64.urlsafe_b64decode(pieces[1] + "=" * (-len(pieces[1]) % 4))
+        )
+        claims["exp"] = int((timezone.now() - timedelta(minutes=1)).timestamp())
+        pieces[1] = (
+            base64.urlsafe_b64encode(json.dumps(claims).encode()).decode().rstrip("=")
+        )
+        response["payment_keys"]["card"] = base64.b64encode(
+            ".".join(pieces).encode()
+        ).decode()
+    with patch(
+        "core_apps.features.services.paymob_client.retrieve_intention",
+        return_value=response,
+    ) as retrieve, patch(
+        "core_apps.features.services.paymob_client.order_transactions", return_value=[]
+    ), patch(
+        "core_apps.features.services.paymob_client.renew_intention"
+    ) as renew, patch(
+        "core_apps.features.services.paymob_client.create_intention"
+    ) as create:
+        if invalid:
+            with pytest.raises(paymob_client.PaymobUnavailable):
+                resume(buyer, payment.attempt, uuid.uuid4())
+            payment.refresh_from_db()
+            assert payment.status == "renewal_unknown"
+        else:
+            resumed = resume(buyer, payment.attempt, uuid.uuid4())
+            assert resumed.checkout_session.expires_at > timezone.now()
+            assert resumed.paymob_payment.status == "ready"
+        assert retrieve.call_count == 1
+        renew.assert_not_called()
+        create.assert_not_called()
+    assert PaymentAttempt.objects.count() == 1
+    assert PaymentReceipt.objects.count() == 0
 
 
 from core_apps.features.tests.test_rental_phase5 import phase5_lease

@@ -313,3 +313,18 @@ def renew_intention(payment, return_url):
         authorization="Token " + settings.PAYMOB_SECRET_KEY,
         method="PUT",
     )
+
+
+def retrieve_intention(payment):
+    """Read the original intention after a renewal response was lost/unreadable."""
+    from urllib.parse import parse_qs
+
+    secret = parse_qs(urlparse(payment.attempt.checkout_session.hosted_url).query).get(
+        "clientSecret", [""]
+    )[0]
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,300}", secret):
+        raise PaymobUnavailable()
+    return transport(
+        f"/v1/intention/element/{settings.PAYMOB_PUBLIC_KEY}/{secret}/",
+        authorization="Token " + settings.PAYMOB_SECRET_KEY,
+    )
