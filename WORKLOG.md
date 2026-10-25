@@ -1,5 +1,12 @@
 # Worklog
 
+## 2026-10-26
+
+### Personal chat inbox and authenticated notification actions
+- **What:** Added per-participant conversation pins, unread reminders without rewinding receipts, unread filtering before pagination, and timed mute expiry. Added authenticated notification reply/read actions scoped to the delivered message, recipient and current membership; replies reuse message idempotency.
+- **Compatibility:** Nullable chat and device capability migrations preserve rolling deploys. Only capable registrations receive Android data notifications or the iOS action category. Push content remains private and older clients retain ordinary visible alerts.
+- **Validation:** 390 PostgreSQL chat/notification tests passed, two native-media tests skipped; 28 focused tests passed after the final legacy mute-path cleanup. Django checks and migration drift checks passed. Samsung QA confirmed one inline reply, exact read cutoffs, and later messages remaining unread against the isolated API. Production delivery and physical iOS are separate checks in the sibling verification artifact.
+
 ## 2026-10-23
 
 ### Add property moderation cycle to Django admin

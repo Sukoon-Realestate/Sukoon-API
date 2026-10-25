@@ -159,6 +159,7 @@ def summary(conversation, user):
 
     from .conversation_preferences import preferences_payload, viewer_workspace
     from .message_tools import pins_payload, can_pin
+
     conversation, participant, member = authorize(conversation, user)
     latest = visible_messages(conversation, participant).order_by("-sequence").first()
     preview = conversation_preview(latest, user)
@@ -192,10 +193,12 @@ def summary(conversation, user):
         "last_read_sequence": participant.last_read_sequence,
         "last_sequence": conversation.last_sequence,
         "unread_count": unread_count(conversation, participant),
-        "is_muted": participant.is_muted,
         **preferences_payload(conversation, user, participant),
         "allowed_actions": actions(member),
-        "limits": limits(property_sharing=conversation.kind == "housing_group", polls=conversation.kind != "direct"),
+        "limits": limits(
+            property_sharing=conversation.kind == "housing_group",
+            polls=conversation.kind != "direct",
+        ),
         "can_send": "send_message" in actions(member),
         "policy": policy_projection(conversation, user),
         # Exact sender/client identity and payload are serialized by group_send.
@@ -203,7 +206,8 @@ def summary(conversation, user):
         "idempotent_message_retry": True,
         "supports_mentions": not direct,
         "supports_polls": not direct,
-        "supports_quick_replies": company or viewer_workspace(conversation, user) == "owner",
+        "supports_quick_replies": company
+        or viewer_workspace(conversation, user) == "owner",
         "can_pin_messages": can_pin(conversation, participant, member),
         "pinned_messages": pins_payload(conversation, participant, member),
         "last_message": preview,

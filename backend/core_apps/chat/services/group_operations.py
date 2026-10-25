@@ -24,8 +24,16 @@ def mark_group_read(conversation, user, sequence):
         raise ValidationError(
             {"last_read_sequence": "Supply a visible, persisted message sequence."}
         )
+    if (
+        participant.unread_reminder_sequence is not None
+        and sequence >= participant.unread_reminder_sequence
+    ):
+        participant.unread_reminder_sequence = None
+        participant.save(update_fields=["unread_reminder_sequence", "updated_at"])
+        record_event(conversation, "conversation.updated", actor=user)
     if sequence > participant.last_read_sequence:
         from .message_tools import record_reads
+
         now = timezone.now()
         record_reads(conversation, participant, sequence, now)
         participant.last_read_sequence, participant.last_read_at = (
@@ -108,8 +116,9 @@ def set_preference(conversation, user, muted):
     )
     if type(muted) is not bool:
         raise ValidationError({"is_muted": "Supply a boolean."})
-    if participant.is_muted != muted:
+    if participant.is_muted != muted or participant.muted_until is not None:
         participant.is_muted = muted
-        participant.save(update_fields=["is_muted", "updated_at"])
+        participant.muted_until = None
+        participant.save(update_fields=["is_muted", "muted_until", "updated_at"])
         record_event(conversation, "conversation.updated", actor=user)
     return summary(conversation, user)

@@ -41,8 +41,11 @@ class DeviceTokenCreateAPIView(APIView):
             token=token,
             device_type=device_type,
             device_name=device_name,
+            chat_actions_version=serializer.validated_data.get("chat_actions_version"),
             auth_session=request.auth.get("session_id") if request.auth else None,
-            language=serializer.validated_data.get("language", getattr(request, "LANGUAGE_CODE", "ar")),
+            language=serializer.validated_data.get(
+                "language", getattr(request, "LANGUAGE_CODE", "ar")
+            ),
         )
 
         response_serializer = DeviceTokenSerializer(device)

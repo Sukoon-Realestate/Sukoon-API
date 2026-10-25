@@ -111,8 +111,11 @@ def _notify_recipients(
         .select_related("user")
     )
     from core_apps.chat.services.conversation_preferences import viewer_workspace
+
     for participant in recipients:
-        if participant.is_muted:
+        from ..inbox_preferences import notifications_muted
+
+        if notifications_muted(participant):
             continue
         try:
             from core_apps.notifications.models import Notification
