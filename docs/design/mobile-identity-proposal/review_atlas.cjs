@@ -23,7 +23,7 @@ function contrast(a,b) {
   const page = await context.newPage();
   const errors=[];
   page.on('pageerror', e => errors.push(e.message));
-  const base=pathToFileURL(path.join(dir,'index.html')).href;
+  const base=pathToFileURL(path.join(dir,'original-twenty.html')).href;
   const map=pathToFileURL(path.join(dir,'design-map.html')).href;
   const report={screens:manifest.length,contrast:{},overflow:[],interactions:[],errors};
   const tokens=JSON.parse(fs.readFileSync(path.join(dir,'design-tokens.json'),'utf8'));

@@ -181,7 +181,7 @@ def theme_controls():
     return '<div class="segmented" role="group" aria-label="المظهر">'+''.join(f'<button data-mode="{mode}" aria-pressed="false">{ic(icon)}{label}</button>' for mode,icon,label in [('light','sun','فاتح'),('dark','moon','داكن'),('system','device','حسب الجهاز')])+'</div>'
 
 def toolbar(map_page=False):
-    return '<div class="toolbar">'+theme_controls()+('<a class="maplink" href="index.html">العودة إلى الـ٢٠ شاشة</a>' if map_page else '<label>اعرض <select id="group-filter"><option value="all">كل الشاشات · ٢٠</option>'+''.join(f'<option value="{g}">{label}</option>' for g,label in GROUPS.items())+'</select></label><a class="maplink" href="design-map.html">افتح الـDesign Map</a>')+'<span class="theme-label" data-theme-label></span></div>'
+    return '<div class="toolbar">'+theme_controls()+('<a class="maplink" href="index.html">العودة إلى كل الشاشات</a>' if map_page else '<label>اعرض <select id="group-filter"><option value="all">كل الشاشات · ٢٠</option>'+''.join(f'<option value="{g}">{label}</option>' for g,label in GROUPS.items())+'</select></label><a class="maplink" href="design-map.html">افتح الـDesign Map</a>')+'<span class="theme-label" data-theme-label></span></div>'
 
 def section(s):
     return f'<section class="screen" id="{s["id"]}" data-group="{s["group"]}"><span class="group-label">{GROUPS[s["group"]]}</span><div class="screen-head"><h2><code>{s["id"]}</code>{s["name"]}</h2><button data-open="{s["number"]}">فتح الشاشة</button></div>{s["html"]}<p class="screen-note">{s["note"]}</p><span class="screen-source">{Path(s["source"]).name}</span></section>'
@@ -220,7 +220,7 @@ def document(title,content,js=True):
 
 if __name__=='__main__':
     assert len(screens)==20
-    (OUT/'index.html').write_text(document('سكون · ٢٠ شاشة بهوية واحدة',body),encoding='utf-8')
+    (OUT/'original-twenty.html').write_text(document('سكون · ٢٠ شاشة بهوية واحدة',body),encoding='utf-8')
     (OUT/'design-map.html').write_text(document('سكون · UI Design Map',mapbody),encoding='utf-8')
     (OUT/'screen-manifest.json').write_text(json.dumps([{k:v for k,v in s.items() if k!='html'} for s in screens],ensure_ascii=False,indent=2),encoding='utf-8')
     tokens={k:{'light':l,'dark':d,'usage':u} for k,(l,d,u) in TOKENS.items()}
@@ -228,4 +228,6 @@ if __name__=='__main__':
     tokens['layout']={'spacing':[4,8,12,16,24,32],'radius':{'control':12,'card':14,'chip':999},'safeArea':True,'prototypeViewport':[350,790]}
     tokens['themePolicy']={'default':'system','persistence':'ThemePreferences / sokoun_theme_mode_v1','transitionMs':320,'curve':'easeInOutCubic','reducedMotion':'no animation','prototypeStorageKey':'sukoon-proposal-theme'}
     (OUT/'design-tokens.json').write_text(json.dumps(tokens,ensure_ascii=False,indent=2),encoding='utf-8')
-    print('Built 20 screens, light/dark/system, design map, tokens and screen manifest.')
+    import runpy
+    runpy.run_path(str(OUT/'build_gallery.py'),run_name='__main__')
+    print('Built original 20 screens and refreshed the combined gallery.')

@@ -1,10 +1,14 @@
-# Sukoon mobile identity — 20 screens
+# Sukoon mobile identity — all 60 completed screens
 
-Open **[index.html](index.html)** for the interactive atlas and **[design-map.html](design-map.html)** for the visual UI design map. Both files embed their fonts, photos, CSS and JavaScript and work offline.
+Open **[index.html](index.html)** for the combined interactive atlas with all 60 completed screens in three titled sections (original S01–S20, Sprint 1 S21–S40, Sprint 2 S41–S60) and **[design-map.html](design-map.html)** for the visual UI design map. Both files embed their fonts, photos, CSS and JavaScript and work offline.
 
-There are **20 distinct screens in Light and Dark**, plus System mode. The global switch and S20 stay synchronized. The preference persists, follows OS changes in System mode, and carries into the design-map page. Switching theme preserves the current fields, scroll and preview state.
+There are **60 completed screens in Light and Dark**, plus System mode. The global switch and S20 stay synchronized. The preference persists, follows OS changes in System mode, and carries into the design-map page. Switching theme preserves the current fields, scroll and preview state.
 
-## Deliverables
+The main page shows every completed section by default. Use the jump links or section filter to focus your review. Theme changes apply across all sections and preserve inputs. The original atlas is preserved separately at [original-twenty.html](original-twenty.html); individual sprint atlases remain under [sprints/](sprints/README.md).
+
+Rebuild the combined page with `python3 docs/design/mobile-identity-proposal/build_gallery.py`. Sprint rebuilds refresh it automatically. The original `build_atlas.py` writes `original-twenty.html` then refreshes the main gallery.
+
+## Original proposal deliverables
 
 - [Light overview](exports/light-overview.png) / [Dark overview](exports/dark-overview.png): all 20 screens.
 - [Light design map](exports/design-map-light.png) / [Dark design map](exports/design-map-dark.png): four foundation panels matching the supplied reference structure.
@@ -39,3 +43,7 @@ node docs/design/mobile-identity-proposal/review_atlas.cjs
 ```
 
 Checks cover desktop and 360/390/768px presentation widths, both themes, System changes, persistence, filters, saves, request confirmation, booking navigation and local chat. All screens were visually reviewed in both themes. Native device, accessibility, localization and tablet checks remain part of Flutter implementation.
+
+## Combined gallery verification
+
+[gallery-review-results.json](gallery-review-results.json) records the 60-screen count, three section titles, shared theme/S20 synchronization, draft preservation, enlarged previews, cross-section navigation and responsive checks. `review_gallery.cjs` uses Playwright and a Chromium executable to repeat those checks.

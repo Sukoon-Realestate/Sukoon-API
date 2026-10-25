@@ -1,0 +1,747 @@
+{
+  "contrast": {
+    "light": {
+      "text/canvas": 13.82,
+      "text/surface": 14.91,
+      "muted/canvas": 6.84,
+      "muted/surface": 7.39,
+      "accent/chip": 6.95,
+      "on-action/action": 14.91,
+      "success/success-bg": 6.36,
+      "warning/warning-bg": 6.1,
+      "error/error-bg": 6.06,
+      "info/info-bg": 6.59
+    },
+    "dark": {
+      "text/canvas": 16.7,
+      "text/surface": 15.82,
+      "muted/canvas": 8.39,
+      "muted/surface": 7.95,
+      "accent/chip": 7.77,
+      "on-action/action": 9.52,
+      "success/success-bg": 8.19,
+      "warning/warning-bg": 8.55,
+      "error/error-bg": 8.65,
+      "info/info-bg": 8.53
+    }
+  },
+  "screens": 20,
+  "themes": [
+    {
+      "theme": "light",
+      "screens": 20,
+      "individualSize": [
+        720,
+        1600
+      ],
+      "horizontalOverflow": []
+    },
+    {
+      "theme": "dark",
+      "screens": 20,
+      "individualSize": [
+        720,
+        1600
+      ],
+      "horizontalOverflow": []
+    }
+  ],
+  "widths": [
+    {
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1680,
+      "overflow": false
+    }
+  ],
+  "variants": [
+    {
+      "theme": "light",
+      "id": "S21",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S21",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S22",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S22",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S23",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S23",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S24",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S25",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S26",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S26",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S26",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S26",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S27",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S27",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S28",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S29",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S29",
+      "state": "pending"
+    },
+    {
+      "theme": "light",
+      "id": "S29",
+      "state": "rejected"
+    },
+    {
+      "theme": "light",
+      "id": "S29",
+      "state": "incomplete"
+    },
+    {
+      "theme": "light",
+      "id": "S29",
+      "state": "unknown"
+    },
+    {
+      "theme": "light",
+      "id": "S29",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S29",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S30",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S30",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S30",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S31",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S31",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S32",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S32",
+      "state": "verify-old"
+    },
+    {
+      "theme": "light",
+      "id": "S32",
+      "state": "enter-new"
+    },
+    {
+      "theme": "light",
+      "id": "S32",
+      "state": "verify-new"
+    },
+    {
+      "theme": "light",
+      "id": "S32",
+      "state": "expired"
+    },
+    {
+      "theme": "light",
+      "id": "S32",
+      "state": "complete"
+    },
+    {
+      "theme": "light",
+      "id": "S32",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S33",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S33",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S33",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S34",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S34",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S35",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S35",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S36",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S36",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S36",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S36",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S37",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S37",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S37",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S37",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S38",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S38",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S38",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S39",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S39",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S39",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S40",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S40",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S40",
+      "state": "server-error"
+    },
+    {
+      "theme": "light",
+      "id": "S40",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S21",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S21",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S22",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S22",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S23",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S23",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S24",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S25",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S26",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S26",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S26",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S26",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S27",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S27",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S28",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S29",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S29",
+      "state": "pending"
+    },
+    {
+      "theme": "dark",
+      "id": "S29",
+      "state": "rejected"
+    },
+    {
+      "theme": "dark",
+      "id": "S29",
+      "state": "incomplete"
+    },
+    {
+      "theme": "dark",
+      "id": "S29",
+      "state": "unknown"
+    },
+    {
+      "theme": "dark",
+      "id": "S29",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S29",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S30",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S30",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S30",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S31",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S31",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S32",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S32",
+      "state": "verify-old"
+    },
+    {
+      "theme": "dark",
+      "id": "S32",
+      "state": "enter-new"
+    },
+    {
+      "theme": "dark",
+      "id": "S32",
+      "state": "verify-new"
+    },
+    {
+      "theme": "dark",
+      "id": "S32",
+      "state": "expired"
+    },
+    {
+      "theme": "dark",
+      "id": "S32",
+      "state": "complete"
+    },
+    {
+      "theme": "dark",
+      "id": "S32",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S33",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S33",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S33",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S34",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S34",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S35",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S35",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S36",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S36",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S36",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S36",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S37",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S37",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S37",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S37",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S38",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S38",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S38",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S39",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S39",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S39",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S40",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S40",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S40",
+      "state": "server-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S40",
+      "state": "empty"
+    }
+  ],
+  "interactions": [
+    "Theme persistence, live System changes, draft/scroll preservation",
+    "Group filter",
+    "Failed-save variant retains form draft",
+    "Focused preview moves original screen and preserves form",
+    "Password recovery sent state and change-email return",
+    "Registration validation, mismatch recovery, current eight-character policy",
+    "KYC incomplete submission blocked",
+    "Account deletion acknowledgement and confirmation",
+    "Confirmed local revoke of other session",
+    "Email old OTP → new email → new OTP → completion",
+    "Privacy switch and server-locked notification example",
+    "Mark all read",
+    "FAQ search, empty results and expansion"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "limitations": [
+    "Browser prototype only; no Flutter/device/API tests.",
+    "English selection demonstrates selection, not a full English mockup.",
+    "Later sprints have source inventory only; behavioral audit happens within each sprint."
+  ],
+  "originalStyleParity": [
+    {
+      "component": "input",
+      "result": "matches original",
+      "properties": {
+        "fontFamily": "Plex, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "500",
+        "minHeight": "50px",
+        "borderRadius": "12px",
+        "backgroundColor": "rgb(252, 251, 247)"
+      }
+    },
+    {
+      "component": "primary action",
+      "result": "matches original",
+      "properties": {
+        "fontFamily": "Plex, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "700",
+        "minHeight": "48px",
+        "borderRadius": "12px",
+        "backgroundColor": "rgb(12, 42, 24)",
+        "color": "rgb(252, 251, 247)"
+      }
+    },
+    {
+      "component": "wordmark",
+      "result": "matches original",
+      "properties": {
+        "width": "75px",
+        "height": "48px",
+        "color": "rgb(10, 92, 24)"
+      }
+    },
+    {
+      "component": "phone frame",
+      "result": "matches original",
+      "properties": {
+        "width": "360px",
+        "height": "800px",
+        "borderRadius": "40px",
+        "borderTopWidth": "5px",
+        "backgroundColor": "rgb(246, 242, 233)"
+      }
+    },
+    {
+      "component": "top bar",
+      "result": "matches original",
+      "properties": {
+        "fontFamily": "Plex, sans-serif",
+        "fontSize": "17px",
+        "fontWeight": "600"
+      }
+    },
+    {
+      "component": "OS chrome",
+      "result": "matches original",
+      "properties": {
+        "fontFamily": "Plex, sans-serif",
+        "fontSize": "11px",
+        "height": "43px"
+      }
+    }
+  ],
+  "result": "pass"
+}

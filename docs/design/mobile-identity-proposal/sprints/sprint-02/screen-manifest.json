@@ -1,0 +1,1261 @@
+[
+  {
+    "id": "S41",
+    "name": "حساب المالك",
+    "english": "Owner profile",
+    "group": "الحساب",
+    "back": "S26",
+    "behavior": "OwnerProfileScreen uses the shared profile scaffold, verification, owner actions (reviews hub and revenue), account details and recent reviews. Listen for logged-in user updates, refresh after edit. Owner workspace uses the same pine action system, not a separate gold identity.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "error",
+      "unverified"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/profile/presentation/widgets/owner_profile_content_view.dart",
+        "sha256": "b935ba6a7796359984ea71214e9ed44b558c5362b906d4e5fb1bcb3e370eb941",
+        "localeKeys": [
+          "chatSafeInside"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/profile/presentation/widgets/owner_profile_actions.dart",
+        "sha256": "b78bace302f81007f33c4d68fa1129cfa5764cb697f8ecac1cdde24991c53e9b",
+        "localeKeys": [
+          "ownerRevenueTitle",
+          "ratingHub"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/main_view/presentation/models/home_tab.dart",
+        "sha256": "d845d0b1f8f61bf28d86be8896eb404d2b18693bed9d63d664e4d48ac09b1961",
+        "localeKeys": [
+          "chats",
+          "favoritesNavigationSaved",
+          "home",
+          "individualMyHousing",
+          "notificationsOwnerPropertiesNavigation",
+          "notificationsOwnerRequestsNavigation",
+          "profile",
+          "tenantVisitsTitle",
+          "workspaceCompanyHousing",
+          "workspaceCompanyLists"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S05",
+      "S18",
+      "S19"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/profile/presentation/screens/owner_profile_screen.dart",
+    "sha256": "397dfce0bf4f4a5f9ff096ccdecaacccf67a37693b50194d0538fe64c0e08f46",
+    "localeKeys": [],
+    "renderedVariants": [
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S42",
+    "name": "ملخص الحساب",
+    "english": "Tenant account summary",
+    "group": "الحساب",
+    "back": "S26",
+    "behavior": "Server-owned user, identity status, saved/completed-visit/chat counters and shortcuts. Labels/counts may come from API; absence is not an invented zero success. Shortcuts retain FavoritesScreen, TenantVisitsScreen and ProfileVerificationScreen.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "error",
+      "unverified"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/widgets/tenant_account_summary_content_view.dart",
+        "sha256": "99a2196d22f1c67ad8e4fc7246dfb559a2c08b5fb70371ce2a7adcb6a5c18c7c",
+        "localeKeys": [
+          "profileActiveChats",
+          "profileCompletedVisits",
+          "profileIdentityVerification",
+          "profileSavedProperties",
+          "profileVisitHistory"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S05",
+      "S19",
+      "S20"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/screens/tenant_account_summary_screen.dart",
+    "sha256": "4b8a65811800e9ae6eac16f532e4c7267583a0f1b67259eaba5edf7f2b8ab42c",
+    "localeKeys": [
+      "profileSummaryTitle"
+    ],
+    "renderedVariants": [
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S43",
+    "name": "مرفق طلب الدعم",
+    "english": "Private support attachment",
+    "group": "الدعم",
+    "back": "S45",
+    "behavior": "Authenticated, workspace-scoped bytes; no public attachment URL or new sharing grant. Account cleanup clears preview and closes Cubit. PrivateFilePreview supports image pan/zoom, PDF and video with temporary-file cleanup; retain decode/load failure. This mockup bundles only an illustrative photo.",
+    "requiredStates": [
+      "image",
+      "pdf",
+      "video",
+      "loading",
+      "error",
+      "session-ended"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/private_attachments/presentation/widgets/private_file_preview.dart",
+        "sha256": "cf42b834750d647f38b4b606306d6d367534bc5d897b6d14512c69a13351f2d3",
+        "localeKeys": [
+          "supportAttachmentUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/cubits/support_attachment_cubit.dart",
+        "sha256": "8c80a0cf9b08e361898a48a05012df4e3e4cd8cae609e34a9fa97db22005fd7f",
+        "localeKeys": []
+      }
+    ],
+    "visualReference": [
+      "S08",
+      "S19"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_attachment_screen.dart",
+    "sha256": "df8228d8425fffc1ebd4abdfaf0aa7bc97455f7113fd5ed0dfe5379a7d3b5a52",
+    "localeKeys": [
+      "supportAttachment"
+    ],
+    "renderedVariants": [
+      "pdf",
+      "video",
+      "session-ended",
+      "loading",
+      "error"
+    ]
+  },
+  {
+    "id": "S44",
+    "name": "طلب دعم جديد",
+    "english": "Create support ticket",
+    "group": "الدعم",
+    "back": "S40",
+    "behavior": "Workspace-specific SupportTopic list; feedback defaults other, rental/payment context defaults payment. Subject 3–160 and description 10–4000. Payment issue can be general/off-platform-request/off-platform-payment. Preserve draft and context, retain had-attachments marker across recovery, reselect missing files. Unknown transmitted outcome blocks resubmit and recovers the original request key; do not create duplicate tickets. Navigate to details only after a confirmed ticket.",
+    "requiredStates": [
+      "empty",
+      "invalid",
+      "saving",
+      "error",
+      "unknown-outcome",
+      "payment",
+      "feedback",
+      "attachments-missing"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/new_ticket/support_ticket_form_content.dart",
+        "sha256": "175aeceb79d636cff70f3f49c8bfa5934c6e1170b077264316f53d36e118409e",
+        "localeKeys": [
+          "recoveryResolveOperation",
+          "supportDetails",
+          "supportDetailsHint",
+          "supportIssueType",
+          "supportMyTickets",
+          "supportSendTicket",
+          "supportSubject",
+          "supportSubjectHint",
+          "supportTicketIntro",
+          "uxFeedbackIntro"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/new_ticket/support_ticket_form.dart",
+        "sha256": "2c9136f2257f212fa2fd41de0fa67052f660a3cfdd0b4b4d021e01ddf39b285b",
+        "localeKeys": [
+          "professionalUnknownOutcome",
+          "recoveryClosedUnsent",
+          "supportDetails",
+          "supportFieldMinimum",
+          "supportSubject"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/data/enums/support_topic.dart",
+        "sha256": "6f22da016de0818cca11e8a77846e53772faf1808d8beb9ceef3c7624093972b",
+        "localeKeys": [
+          "identityVerification",
+          "supportTopicOther",
+          "supportTopicPayment",
+          "supportTopicProperty",
+          "supportTopicReportOwner",
+          "supportTopicReportTenant",
+          "supportTopicVisit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/data/enums/support_payment_issue.dart",
+        "sha256": "06f256cfe5814fc03347b709c118ce83d192588ead4719c9ce9a60000e42b0da",
+        "localeKeys": [
+          "rentPaymentIssueGeneral",
+          "rentPaymentIssuePaid",
+          "rentPaymentIssueRequested"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/new_ticket/support_ticket_attachments.dart",
+        "sha256": "5c08af34cedc826be7b8467bda3a87218c40b892bcbf07ca8055421aaab8f9df",
+        "localeKeys": [
+          "privateFileLimits",
+          "supportAttachmentUnavailable",
+          "supportAttachments",
+          "supportPickingImages",
+          "supportRemoveAttachment"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S02",
+      "S17",
+      "S20"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_new_ticket_screen.dart",
+    "sha256": "4b3d5c7d6a2a817aeec3bf414d52dabf3bfb730fc7e1dfa7f6b8fd0ef74515d4",
+    "localeKeys": [
+      "supportNewTicket",
+      "uxSuggestImprovement"
+    ],
+    "renderedVariants": [
+      "payment",
+      "feedback",
+      "unknown-outcome",
+      "error"
+    ]
+  },
+  {
+    "id": "S45",
+    "name": "تفاصيل طلب الدعم",
+    "english": "Support ticket thread",
+    "group": "الدعم",
+    "back": "S46",
+    "behavior": "Authoritative ticket and reply Cubits; thread reference/status/messages, optional linked rental case. Reply enabled only for a fresh open ticket, with text or attachment validation, draft/unsaved guard and request-key recovery. Resolved tickets show new-ticket action with reply disabled; do not pretend a local chat message is a backend send.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "error",
+      "empty",
+      "resolved",
+      "unknown-outcome",
+      "attachments-missing"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/detail/support_ticket_thread.dart",
+        "sha256": "a784637b3d239561235308e957870ced600baa7cb00d707a0be517fee1fa041e",
+        "localeKeys": [
+          "rentPaymentReportFollowUp",
+          "rentPaymentReportNotice",
+          "supportNewTicket",
+          "supportResolvedNotice"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/detail/support_ticket_reply.dart",
+        "sha256": "4bee6fed6d5b18683866762f23370803dd05452cb6237e0cf693f9696f99c6b6",
+        "localeKeys": [
+          "recoveryClosedUnsent",
+          "rentalCheckOperation",
+          "supportAttachmentUnavailable",
+          "supportReplyHint",
+          "supportSendReply"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/detail/support_ticket_detail_content_view.dart",
+        "sha256": "2ade3539efb8165276ce71ff9f843a3029e14e6a74709153a2046442813b7b09",
+        "localeKeys": []
+      }
+    ],
+    "visualReference": [
+      "S14",
+      "S19"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_ticket_detail_screen.dart",
+    "sha256": "6e79db4f0e19e0bb3572fe2b5b7c3e7e8a8b264f8c8a796093d40b87e90514ef",
+    "localeKeys": [
+      "supportRefresh",
+      "supportTicketDetails"
+    ],
+    "renderedVariants": [
+      "resolved",
+      "unknown-outcome",
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S46",
+    "name": "طلباتي في الدعم",
+    "english": "Support ticket list",
+    "group": "الدعم",
+    "back": "S40",
+    "behavior": "Paginated workspace-scoped tickets, open/waiting/resolved/unknown statuses with authoritative subjects/reference/timestamps. Valid empty response shows a new-ticket action. Next pages and retry preserve loaded rows; no invented unread count.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "error",
+      "loading-more"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/tickets/support_tickets_list.dart",
+        "sha256": "4fd6ce4f8b428e3016297809152e311060dee3ac8bcb906d1479603f7aa9b4b1",
+        "localeKeys": [
+          "supportNewTicket"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/tickets/support_ticket_card.dart",
+        "sha256": "6f81589d65f8197afc96cf0a2518978f8620d7195ff792f0c0bd5c37dd4912a8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/shared/support_ticket_status.dart",
+        "sha256": "fbf71adaeebd8176aac0356a3d287296b0743360eebba807fa0ace1fe0f44285",
+        "localeKeys": [
+          "supportStatusOpen",
+          "supportStatusResolved",
+          "supportStatusUnknown",
+          "supportStatusWaiting"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S12",
+      "S18"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_tickets_screen.dart",
+    "sha256": "af2ccd6004ff74877f95bcf3561bfa766422f3b7d3374903d8b039b6a28f19c0",
+    "localeKeys": [
+      "supportMyTickets"
+    ],
+    "renderedVariants": [
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S47",
+    "name": "الشروط والمعلومات",
+    "english": "Public information page",
+    "group": "الإرشادات",
+    "back": "S28",
+    "behavior": "One reusable PublicPageScreen for terms, privacy and aboutUs, not three counted screens. Load by page/language, reload on locale/parameter change, render backend content and links safely. About adds app identity. Empty published content is a valid empty state; mock text is explicitly illustrative, never approved legal content.",
+    "requiredStates": [
+      "terms",
+      "privacy",
+      "about",
+      "loading",
+      "empty",
+      "error"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/public_pages/data/enums/public_page.dart",
+        "sha256": "91d98ad945394845ac9beb3ad671021243170e19a757d9687ade442e181d2325",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/public_pages/presentation/widgets/public_page_body.dart",
+        "sha256": "9cc14a930cb3e3c8d24cdd7bcc627f7c9a8a3571b6dab53eab1f7fcfac061c2c",
+        "localeKeys": []
+      }
+    ],
+    "visualReference": [
+      "S02",
+      "S20"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/public_pages/presentation/screens/public_page_screen.dart",
+    "sha256": "126648f31c4881b08e76acb52dc93e651c8bd26a2c0bd27c0dd4cd3c8f21a483",
+    "localeKeys": [],
+    "renderedVariants": [
+      "privacy",
+      "about",
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S48",
+    "name": "سياسات الاستخدام",
+    "english": "Current and accepted business policies",
+    "group": "الإرشادات",
+    "back": "S28",
+    "behavior": "accepted=null loads current rules; accepted=[] means historical version unknown and must not fall back to current. Show version, effectiveAt, description, rule labels/values. After a failed refresh, retained current data must be marked unconfirmed. No accept-agreement action exists on this read-only page.",
+    "requiredStates": [
+      "current",
+      "loading",
+      "empty",
+      "error",
+      "accepted",
+      "unconfirmed"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/business_policies/presentation/widgets/business_policies_body.dart",
+        "sha256": "f7a024f0092e5c26715928689f0f64597f9cb5489edd39a07f8f1b13a8905fc7",
+        "localeKeys": [
+          "businessPoliciesAcceptedIntro",
+          "businessPoliciesCurrentIntro",
+          "businessPoliciesUnconfirmed"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/business_policies/presentation/widgets/business_policy_card.dart",
+        "sha256": "a8967b82664c7afd4a48f4e2cd902b17b796b8e290ed489624534b0aade3122e",
+        "localeKeys": [
+          "businessPoliciesEffective",
+          "businessPoliciesVersion"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S19",
+      "S20"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/business_policies/presentation/screens/business_policies_screen.dart",
+    "sha256": "bc5ac8ddbde916189745963cc8a913bb7069d78449adc5168112fd3c9f3dc996",
+    "localeKeys": [
+      "businessPoliciesTitle",
+      "ownerRetryAction"
+    ],
+    "renderedVariants": [
+      "accepted",
+      "unconfirmed",
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S49",
+    "name": "إرشادات التجربة",
+    "english": "Guide preferences and replay",
+    "group": "الإرشادات",
+    "back": "S28",
+    "behavior": "Local preference loads asynchronously: disable until known, show failure and preserve baseline if persistence fails. Owner tours: home/navigation/requests; other workspaces: tenant home/navigation/decision tools. Replay checks safe root, update/prompt state and pending destination, opens workspace/tab before requesting tour. Demonstration is a small local tour, not a production navigation replacement.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "error",
+      "owner",
+      "preference-failure",
+      "replay-blocked"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/contextual_onboarding/presentation/cubits/guide_settings_cubit.dart",
+        "sha256": "de822edfeee5be0f8eb7858856ae250af9370716e022274013b67f510658e7ff",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/contextual_onboarding/presentation/guide_replay.dart",
+        "sha256": "be5d461eff695b8a92a850824b823c8e0c930150ed3c6ea7c1694a6a67b24337",
+        "localeKeys": []
+      }
+    ],
+    "visualReference": [
+      "S20"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/contextual_onboarding/presentation/screens/guide_settings_screen.dart",
+    "sha256": "c7c2e48d4e5033d8e7c6d2765ed922b644ea005cf1d655a77142749beceae0fc",
+    "localeKeys": [
+      "guideAutomatic",
+      "guidePreferencesFailed",
+      "guideReachScreen",
+      "guideTitle"
+    ],
+    "renderedVariants": [
+      "owner",
+      "loading",
+      "error"
+    ]
+  },
+  {
+    "id": "S50",
+    "name": "الجديد في سكون",
+    "english": "Release notes",
+    "group": "الإرشادات",
+    "back": "S28",
+    "behavior": "Role-scoped release notes begin with installed version. Version chips combine installed/current/service history, deduplicated. Retry current selected version or reload installed when unknown. Notes empty is legitimate; sample release text is not a claim that new features shipped.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "error",
+      "older-version"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/whats_new/presentation/cubits/release_notes_cubit.dart",
+        "sha256": "31fc35ebdb76c2c7adfbc614c9e7eca1bd25af78f8d3ca79a63723f381415296",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/whats_new/presentation/whats_new_service.dart",
+        "sha256": "fff540ec9bcd94e6ff207d9a54537ef6316d9b7a0dda654c1f1a6141ba8d70f0",
+        "localeKeys": []
+      }
+    ],
+    "visualReference": [
+      "S04",
+      "S20"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/whats_new/presentation/screens/release_notes_screen.dart",
+    "sha256": "fb87e0feb7f6072f5e280a85c789799ee3c417ea3843c0f9f162e257bdf6ea25",
+    "localeKeys": [
+      "uxReleaseNotes"
+    ],
+    "renderedVariants": [
+      "older-version",
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S51",
+    "name": "كمّل من مكانك",
+    "english": "Continue drafts and operations",
+    "group": "الإرشادات",
+    "back": "S28",
+    "behavior": "Local continuation list and private-memory paginated server records remain separate. recoveryOnly filters applicable local work. Draft resumes are not blind write replays; unknown submissions/payment checks resolve original operation identity. Preserve upload counts and unsupported destination state; return refreshes server list.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "error",
+      "recovery-only",
+      "unsupported",
+      "upload-incomplete"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/presentation/widgets/server_continuation_list.dart",
+        "sha256": "47f8bef832195b8fa8dde37ca675a0b2671fd40fa0661cea2f6b30ff90863ecb",
+        "localeKeys": [
+          "continuationLocal",
+          "continuationServer",
+          "continuationServerEmpty",
+          "continuationServerHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/presentation/widgets/continuation_card.dart",
+        "sha256": "cf55655a8b8e2a40cf122c10daca6a478cc601bba1e154abef677e465a7d8f29",
+        "localeKeys": [
+          "companyCreate",
+          "companyHousing",
+          "freeDraftSaved",
+          "freeResumeDraft",
+          "housingNewRequest",
+          "paidDigitalLeases",
+          "portfolioManageBuildings",
+          "portfolioManageComplexes",
+          "professionalUnavailableDestination",
+          "professionalUnknownOutcome",
+          "rentalCaseTitle",
+          "studentPlanAction",
+          "supportMyTickets",
+          "uxCheckSubmission",
+          "uxLastSaved",
+          "uxLastUpdated",
+          "uxPaymentCheck",
+          "uxPaymentRecovery",
+          "uxPropertyDraft",
+          "uxPropertyStep",
+          "uxReference",
+          "uxReviewUploads",
+          "uxServerDraftSaved",
+          "uxUploadCount",
+          "uxUploadRecovery"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/presentation/widgets/continuation_list.dart",
+        "sha256": "01f14150f8e0ecec221f01ed97aeb28ba2c0d187f4bd42211fcd8abecc47fa5c",
+        "localeKeys": [
+          "uxContinue",
+          "uxLoadingSavedWork",
+          "uxNoContinuation",
+          "uxRecoveryReadFailed",
+          "uxViewAll"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S18",
+      "S20"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/presentation/screens/continuation_screen.dart",
+    "sha256": "5cd4fe3b135bd0eca1c9e552fc80fb9599d064e07077921bb769cbcc6850e94d",
+    "localeKeys": [
+      "uxCheckExistingOperations",
+      "uxContinue"
+    ],
+    "renderedVariants": [
+      "recovery-only",
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S52",
+    "name": "بدء التطبيق",
+    "english": "Branded splash",
+    "group": "البداية",
+    "back": "S26",
+    "behavior": "Native startup waits for initialization, session restore and logo completion, checks route/mounted state, navigates authenticated users to HomeScreen and others to WorkspaceEntryScreen, then enables pending property-link delivery. Reduced-motion applies. Source explicitly keeps splash light in both themes, including retry theme; preserve this documented exception. No artificial login success or timed browser redirect.",
+    "requiredStates": [
+      "starting",
+      "startup-error",
+      "guest",
+      "authenticated"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/splash/presentation/cubits/splash_startup_cubit.dart",
+        "sha256": "880565ebdfd6ef004bf2c0b91ba24cbb338ca452adce298472dea9697f7fa315",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/splash/presentation/widgets/animated_splash_logo.dart",
+        "sha256": "4ee5bc767ded99ae0f10f46175fbf7fe192ba1a9a3ed3821281a737ba2a0b692",
+        "localeKeys": []
+      }
+    ],
+    "visualReference": [
+      "S01",
+      "S02"
+    ],
+    "chrome": "launch",
+    "source": "sokoun/apps/sokoun_app/lib/features/splash_screen.dart",
+    "sha256": "02bdc61731299cb57f233a2cb1c4a75a0ed4476112112bdebc48f88e13d7e596",
+    "localeKeys": [],
+    "renderedVariants": [
+      "startup-error",
+      "guest"
+    ]
+  },
+  {
+    "id": "S53",
+    "name": "اختار مساحتك",
+    "english": "Workspace entry",
+    "group": "البداية",
+    "back": "S52",
+    "behavior": "Four workspaces: individual, owner, student, company. selectEntry persists intent and replaces route with HomeScreen. A workspace is presentation context, not account identity, ownership, verification or company authorization. Do not invent an access gate or require login solely to choose; deeper features retain original gates.",
+    "requiredStates": [
+      "loaded",
+      "selection",
+      "storage-failure"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/main_view/data/enums/app_workspace.dart",
+        "sha256": "849a301a1b29ce6b47e6826495f0c5d806cbbcf03860a63f05775137e36519fd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/main_view/presentation/cubits/workspace_cubit.dart",
+        "sha256": "421679d9d5b85a4f45815f75770f560ab38fbb21f2038c8720bc120f557fc0de",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/main_view/presentation/models/workspace_labels.dart",
+        "sha256": "b3ead8038e72c2f73ae17ab2f7f37ec9e37a2863e85272466c197b19061989eb",
+        "localeKeys": [
+          "workspaceCompanies",
+          "workspaceCompanyHelp",
+          "workspaceIndividualHelp",
+          "workspaceIndividuals",
+          "workspaceOwner",
+          "workspaceOwnerHelp",
+          "workspaceStudentHelp",
+          "workspaceStudents"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S01",
+      "S02",
+      "S20"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/main_view/presentation/screens/workspace_entry_screen.dart",
+    "sha256": "d9c196cea2fcc602eeadc97d0dad88f66c5d6b3d2ef8214db12eaa0b61b3abe6",
+    "localeKeys": [
+      "workspaceChoose",
+      "workspaceChooseHelp"
+    ],
+    "renderedVariants": []
+  },
+  {
+    "id": "S54",
+    "name": "العقارات على الخريطة",
+    "english": "Map search results",
+    "group": "البحث",
+    "back": "S06",
+    "behavior": "Map/list use paginated loaded public properties; only valid coordinates receive markers. Viewport filtering only filters loaded results, not a server search of all inventory. Show loaded/located counts and load-more footer, no-location rows stay accessible. Category uses rentalScope, resets page/cache/map owner and preserves viewing/group context. Schematic artwork and marker selection are local.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "error",
+      "map-unavailable",
+      "no-coordinates",
+      "loading-more"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/widgets/property_map/property_map_results.dart",
+        "sha256": "b03c09581a6726b514a43bfc129393f6b70f8a2097bdad187d33711293679ce9",
+        "localeKeys": [
+          "freeMapUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/widgets/property_map/property_map_results_content.dart",
+        "sha256": "762c063628854627a4dd57029c95cbe99407d22323b372cc3761c65b3cc72af7",
+        "localeKeys": [
+          "freeMapNoLoadedMatches",
+          "freeMapNoResults",
+          "freeMapResults"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/widgets/property_map/property_map_header.dart",
+        "sha256": "02b70f5935f3e08f1fb4a497deeaac9b48cbae23b63777d0588cd3a3718705db",
+        "localeKeys": [
+          "freeFilterLoadedArea",
+          "freeMapLoadedExplanation",
+          "freeShowAllLoaded",
+          "mapAreaCount",
+          "mapNoLocations",
+          "mapSelectMarker"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_offers/data/enums/rental_listing_category.dart",
+        "sha256": "2e45b007c1cd3c1cad18a6a9333e08c13d1263bacd3357c6664e7c11415f079c",
+        "localeKeys": []
+      }
+    ],
+    "visualReference": [
+      "S06",
+      "S08"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/property_map_screen.dart",
+    "sha256": "b7032f3c10c6fff0a81adb36f89092d4740ae2fcd5c8004ed5fbb75b70fd9ab7",
+    "localeKeys": [
+      "freeMapResults"
+    ],
+    "renderedVariants": [
+      "map-unavailable",
+      "no-coordinates",
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S55",
+    "name": "صور العقار",
+    "english": "Property photo viewer",
+    "group": "البحث",
+    "back": "S08",
+    "behavior": "Fixed slate/dark immersive viewer in both themes. Preserve initialIndex and image-transition identity, previous/next boundaries, thumbnail selection, photo labels/descriptions and empty gallery. Save uses PropertyPhotoSaveCubit and permission/error handling; prototype does not download actual files.",
+    "requiredStates": [
+      "loaded",
+      "empty",
+      "image-error",
+      "saving",
+      "permission-denied"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/widgets/tenant_property_photos/photo_viewer.dart",
+        "sha256": "5e8a19776fd7541dbee50777a59cd46e063c08062bc4d54e2aa64d1beb8ea664",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/widgets/tenant_property_photos/tenant_property_photo_viewer_content.dart",
+        "sha256": "4420cc56b5ec24c1d31391b7f7bd6afe6b597261a5b6551820af0710b3d12095",
+        "localeKeys": [
+          "tenantPropertyDetailsPhotoCountUnit",
+          "tenantPropertyPhotosEmpty",
+          "tenantPropertyPhotosNext",
+          "tenantPropertyPhotosPrevious"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/cubits/property_photo_save_cubit.dart",
+        "sha256": "33ddef2ccb9a75ef8c8b4d64ef1bf709ceafc5ee55343c8c4e848314b393811a",
+        "localeKeys": [
+          "tenantPropertyPhotoSaveFailed",
+          "tenantPropertyPhotoStorageFull",
+          "tenantPropertyPhotoUnsupportedFormat"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S08"
+    ],
+    "chrome": "viewer",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_property_photos_screen.dart",
+    "sha256": "3017de92f1b905e7d10852efee28ec24aeac94279cc1bfa5f00722431dd05d68",
+    "localeKeys": [
+      "tenantPropertyPhotosClose"
+    ],
+    "renderedVariants": [
+      "permission-denied",
+      "empty"
+    ]
+  },
+  {
+    "id": "S56",
+    "name": "البحث عن سكن",
+    "english": "Search entry",
+    "group": "البحث",
+    "back": "S05",
+    "behavior": "Search query, property type, rental scope, areas, recent searches, filter count and saved-search restoration. Recent item/current-area/filter return preserve current filters and navigate results with correct context. Location resolves an area, not a silently accepted address. Restore validates saved filters; server options failure is not fabricated success.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "error",
+      "permission-denied",
+      "restored-search"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/widgets/tenant_search_screen_content.dart",
+        "sha256": "71015ac09db15ce19b4c4e19382740cdc3d3e7bde83442e1e742cc367be9e558",
+        "localeKeys": [
+          "professionalRestoreSearch",
+          "tenantSearchTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_search_entry_commands.dart",
+        "sha256": "11744241a08f4b7d3636485068803e06815988b29b5f0c521258c1a3f78e6d57",
+        "localeKeys": [
+          "search",
+          "uxSearchCriteriaRequired"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/cubits/search_restoration_cubit.dart",
+        "sha256": "18205e1b93030a38eff207c8276b7f6eb652217637fd8667c0a0df71c8d565e5",
+        "localeKeys": []
+      }
+    ],
+    "visualReference": [
+      "S02",
+      "S05",
+      "S07"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_search_screen.dart",
+    "sha256": "4e256e5bbb48a93c17c1a06e6741fd5320a9909e139b0df74bd4d0a6155fbbad",
+    "localeKeys": [],
+    "renderedVariants": [
+      "permission-denied",
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S57",
+    "name": "تفاصيل المعاينة",
+    "english": "Tenant viewing detail",
+    "group": "المعاينات",
+    "back": "S12",
+    "behavior": "Fresh authoritative details gate cancel/review/reschedule/reassign. Pending remains awaiting owner, not confirmed. Cancellation requires confirmation and successful server result, then returns updated visit. CanChat starts context-aware conversation; canReview opens ReviewsHub, and contact permission refreshes on return/resume. Calendar export only when VisitCalendarData can build an event. Cached data cannot trigger mutating actions. Owner phone is never invented or exposed.",
+    "requiredStates": [
+      "pending",
+      "confirmed",
+      "completed",
+      "cancelled",
+      "loading",
+      "error",
+      "stale",
+      "restricted-contact"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/widgets/details/visit_details_content.dart",
+        "sha256": "00d220c51bb9cb1424a7a86ba60601b8fa2e3ce62602680bb758ed24bc9fe53c",
+        "localeKeys": [
+          "ratingHub",
+          "tenantVisitOwnerLabel",
+          "tenantVisitSummaryDay",
+          "tenantVisitSummaryProperty",
+          "tenantVisitSummaryStatus",
+          "tenantVisitSummaryTime",
+          "viewingReschedule"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/widgets/details/visit_details_actions.dart",
+        "sha256": "6cac95eceb934917eaf143f81e2a0b54fc0a7bda71d28d03c5fe1c8cd2945c8c",
+        "localeKeys": [
+          "tenantVisitCancelRequest",
+          "tenantVisitCancelVisit",
+          "tenantVisitFindAlternative",
+          "tenantVisitOpenOwnerChat",
+          "tenantVisitRateAction"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/widgets/details/visit_details_extra.dart",
+        "sha256": "f5968205ee7a2b2725068b6009d07978ed833e9768ca304ffceb5fdc5bc76c10",
+        "localeKeys": [
+          "ownerAddPropertyBedrooms",
+          "tenantVisitOwnerLabel",
+          "verified",
+          "visitDaily",
+          "visitMonthly",
+          "visitPricePeriod",
+          "visitPropertyLocation",
+          "visitPropertyPrice",
+          "visitYearly"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/widgets/details/visit_calendar_button.dart",
+        "sha256": "6f8a7df356e0aa3f90fb204983cecb55b20c909ac18f4f775fb3a51aba6fe53a",
+        "localeKeys": [
+          "freeCalendarExportFailed",
+          "freeExportVisitCalendar"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S11",
+      "S12",
+      "S19"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/screens/visit_details_screen.dart",
+    "sha256": "aef887fed8d39ef1912582e79e29213b73d00e33ecdcf89a93fd791e3a4bc8d1",
+    "localeKeys": [
+      "professionalUnavailableDestination",
+      "tenantVisitDetailsTitle"
+    ],
+    "renderedVariants": [
+      "confirmed",
+      "completed",
+      "cancelled",
+      "stale",
+      "loading",
+      "error"
+    ]
+  },
+  {
+    "id": "S58",
+    "name": "طلبات المالك",
+    "english": "Owner requests workspace",
+    "group": "المالك",
+    "back": "S15",
+    "behavior": "Distinct multi-tab OwnerRequestsScreen, unlike the already-covered embedded OwnerVisitRequestsScreen. Visits always; housingOffers enables demand and my-offers; groupApplications enables group tab, with tab-set reset key when capability set changes. Verified-account and planning gates stay authoritative; no blanket entitlement from tab preview.",
+    "requiredStates": [
+      "visits",
+      "loading",
+      "empty",
+      "error",
+      "restricted",
+      "groups",
+      "offers",
+      "capability-change"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_requests_screen.dart",
+        "sha256": "5fa3fe1691cd35df94f80da38bfdc7eded77a24d487f0d54598a8b2687cb683c",
+        "localeKeys": [
+          "groupsApplications",
+          "housingDemand",
+          "housingMyOffers",
+          "notificationsOwnerRequestsNavigation",
+          "ownerVisitsTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/widgets/owner_group_applications.dart",
+        "sha256": "ca018316ecc52f8bff11dc1e5fe0e580ce6edf9b8f15015d1edc39236b35e7a5",
+        "localeKeys": [
+          "groupsApplications",
+          "groupsApplicationsEmpty",
+          "groupsConsentProgress",
+          "groupsJointUnavailable",
+          "groupsMember",
+          "groupsRequestChanges",
+          "housingStart",
+          "planningDecline",
+          "rentalApprove",
+          "rentalCreateGroupBooking",
+          "rentalGroupBooking"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/planning_feature_gate.dart",
+        "sha256": "11d6b67e75fe338e276955dfea0c8aeaeb94f930f6ecada9bf02065bdadbfbd8",
+        "localeKeys": [
+          "planningUnavailable",
+          "searchRetry",
+          "workspaceFeatureUnavailable"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S18"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_requests_screen.dart",
+    "sha256": "5fa3fe1691cd35df94f80da38bfdc7eded77a24d487f0d54598a8b2687cb683c",
+    "localeKeys": [
+      "groupsApplications",
+      "housingDemand",
+      "housingMyOffers",
+      "notificationsOwnerRequestsNavigation",
+      "ownerVisitsTitle"
+    ],
+    "renderedVariants": [
+      "restricted",
+      "groups",
+      "offers",
+      "loading",
+      "empty",
+      "error"
+    ]
+  },
+  {
+    "id": "S59",
+    "name": "تحديد موقع العقار",
+    "english": "Property location picker",
+    "group": "المالك",
+    "back": "S17",
+    "behavior": "Map tap/search/native locate selects valid coordinates; confirm Go.back(selected) only when valid and not busy. Satellite is a separate local view option. Async generation rejects stale geocoder results; reverse-geocode failure retains coordinates. Distinct denied/denied-forever/service-off/no-results/unavailable failures with settings entry. Tablet uses map/sidebar; no real device location is requested by this offline mockup.",
+    "requiredStates": [
+      "selected",
+      "no-location",
+      "loading",
+      "error",
+      "permission-denied",
+      "map-unavailable",
+      "no-results",
+      "geocoder-offline"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/property_location/property_location_confirmation.dart",
+        "sha256": "89a2483a8f0a47367d196d5572e0010fd0630496499454d810bbfcdc505ea7aa",
+        "localeKeys": [
+          "ownerAddPropertySelectedLocation",
+          "propertyMapConfirm",
+          "propertyMapTapHint"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/cubits/property_location_cubit.dart",
+        "sha256": "a7c9418bc3176d801dc5d9b8676fc8111baa1b548726ae26a5cd662bf9ba641f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/property_location/property_location_controls.dart",
+        "sha256": "40565e455203c96b242ef004a3a649ff443f1e8c1bad328277730bffa13d2091",
+        "localeKeys": [
+          "propertyMapSatellite",
+          "propertyMapStandard",
+          "useMyLocation"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S07",
+      "S17"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/property_location_picker_screen.dart",
+    "sha256": "25e0d703e48cb42accc3276782cf660c5561b8d576dae9cba13bfd59839bfac7",
+    "localeKeys": [
+      "ownerAddPropertyMapTitle"
+    ],
+    "renderedVariants": [
+      "no-location",
+      "permission-denied",
+      "map-unavailable",
+      "loading",
+      "error"
+    ]
+  },
+  {
+    "id": "S60",
+    "name": "إضافة العقار · الصور",
+    "english": "Property creation: media step",
+    "group": "المالك",
+    "back": "S17",
+    "behavior": "Photos step is distinct from original S17 basics. Current validator requires 10–25 nonduplicate photos AND ready video (1–60s); video preparation blocks next. Keep main selection, reorder/replace/delete, names/descriptions, virtual-tour-later checkbox and partial-offering accommodation media. This is step 2 of 3, not publish. Demo thumbnails reuse bundled artwork for visual layout only; no real media validation/upload occurs. Next opens later planned pricing step explanation.",
+    "requiredStates": [
+      "ready",
+      "empty",
+      "duplicate",
+      "preparing",
+      "video-missing",
+      "permission-denied",
+      "partial-offering",
+      "error"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_photos_page.dart",
+        "sha256": "9127698f87f9ea59c03b03ac105d940cab0eeb21a68397a647073348ccf28b6c",
+        "localeKeys": [
+          "ownerAddPropertyPhotoMetadataRecommended",
+          "ownerAddPropertyPhotosProgress",
+          "ownerAddPropertyPhotosReady",
+          "ownerAddPropertyPhotosReadyDescription",
+          "ownerAddPropertyPricingTitle",
+          "ownerPropertiesPhotos",
+          "ownerPropertyVideoTitle",
+          "rentalPropertyMediaOnce",
+          "virtualTourAddLater",
+          "virtualTourSeparateMedia"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/property_form_validation.dart",
+        "sha256": "0b5927c5ec1a12e01fcc6f5f8f170cf7ed496344389e892243a6db6116fa1125",
+        "localeKeys": [
+          "fillField",
+          "ownerAddPropertyBuildingYearInvalid",
+          "ownerAddPropertyPhotoTipLimits",
+          "ownerAddPropertyPhotosRemaining",
+          "ownerPropertyVideoPreparing",
+          "ownerPropertyVideoRequired",
+          "propertyDescriptionMinimum",
+          "propertyPositiveNumber",
+          "rentalDuplicatePhotos",
+          "validationInteger"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/property_photo_grid.dart",
+        "sha256": "27e9275c32e4c63271a2aea9c45f09c8fad4a62fc4df81f29509ea9184c989fc",
+        "localeKeys": [
+          "ownerAddPropertyPhotosCount",
+          "ownerPhotoDragHint",
+          "ownerPropertiesPhotos"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/property_video_picker.dart",
+        "sha256": "04b1c9cfb1d99d35d54b1b7fb95920e2e819633a6a3f08317db4d66bf343108f",
+        "localeKeys": [
+          "ownerPropertyVideoFailed",
+          "ownerPropertyVideoPreparing",
+          "ownerPropertyVideoRecord",
+          "ownerPropertyVideoRemove",
+          "ownerPropertyVideoRequirementDuration",
+          "ownerPropertyVideoTitle",
+          "ownerPropertyVideoUpload",
+          "permissionRestricted",
+          "unableToAccessCameraPleaseOpenIt",
+          "unableToAccessPhotosPleaseOpenIt"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/rental_accommodation_media_section.dart",
+        "sha256": "75898b029e66c6971bcfa2ff2e9eab8746c38eaabf6821547c7c8bb6d8e61688",
+        "localeKeys": [
+          "ownerAddPropertyPhotoNumber",
+          "rentalBedDetails",
+          "rentalRoomDetails",
+          "rentalSharedPhotos",
+          "rentalSharedRoomDetails",
+          "rentalUnitPhotoHelp"
+        ]
+      },
+      {
+        "source": "sokoun/packages/core/lib/core/helpers/validators.dart",
+        "sha256": "2806fa892456439d12294dbf603e2aa1b975a8a768b31cd6e6cefb51ed912ae3",
+        "localeKeys": [
+          "chatMessageLettersValidation",
+          "chatMessageRequired",
+          "fillField",
+          "scripInjectionValidate",
+          "validationFieldRequired",
+          "validationMaxLength",
+          "validationMinLength"
+        ]
+      }
+    ],
+    "visualReference": [
+      "S17",
+      "S08"
+    ],
+    "chrome": "standard",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_photos_page.dart",
+    "sha256": "9127698f87f9ea59c03b03ac105d940cab0eeb21a68397a647073348ccf28b6c",
+    "localeKeys": [
+      "ownerAddPropertyPhotoMetadataRecommended",
+      "ownerAddPropertyPhotosProgress",
+      "ownerAddPropertyPhotosReady",
+      "ownerAddPropertyPhotosReadyDescription",
+      "ownerAddPropertyPricingTitle",
+      "ownerPropertiesPhotos",
+      "ownerPropertyVideoTitle",
+      "rentalPropertyMediaOnce",
+      "virtualTourAddLater",
+      "virtualTourSeparateMedia"
+    ],
+    "renderedVariants": [
+      "preparing",
+      "duplicate",
+      "partial-offering",
+      "error"
+    ]
+  }
+]

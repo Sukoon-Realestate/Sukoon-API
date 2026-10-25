@@ -1,0 +1,1158 @@
+{
+  "contrast": {
+    "light": {
+      "text/canvas": 13.82,
+      "text/surface": 14.91,
+      "muted/canvas": 6.84,
+      "muted/surface": 7.39,
+      "accent/chip": 6.95,
+      "on-action/action": 14.91,
+      "success/success-bg": 6.36,
+      "warning/warning-bg": 6.1,
+      "error/error-bg": 6.06,
+      "info/info-bg": 6.59
+    },
+    "dark": {
+      "text/canvas": 16.7,
+      "text/surface": 15.82,
+      "muted/canvas": 8.39,
+      "muted/surface": 7.95,
+      "accent/chip": 7.77,
+      "on-action/action": 9.52,
+      "success/success-bg": 8.19,
+      "warning/warning-bg": 8.55,
+      "error/error-bg": 8.65,
+      "info/info-bg": 8.53
+    }
+  },
+  "screens": 20,
+  "themes": [
+    {
+      "theme": "light",
+      "screens": 20,
+      "individualSize": [
+        720,
+        1600
+      ],
+      "horizontalOverflow": []
+    },
+    {
+      "theme": "dark",
+      "screens": 20,
+      "individualSize": [
+        720,
+        1600
+      ],
+      "horizontalOverflow": []
+    }
+  ],
+  "widths": [
+    {
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1680,
+      "overflow": false
+    }
+  ],
+  "variants": [
+    {
+      "theme": "light",
+      "id": "S41",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S41",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S41",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S41",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S42",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S42",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S42",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S42",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S43",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S43",
+      "state": "pdf"
+    },
+    {
+      "theme": "light",
+      "id": "S43",
+      "state": "video"
+    },
+    {
+      "theme": "light",
+      "id": "S43",
+      "state": "session-ended"
+    },
+    {
+      "theme": "light",
+      "id": "S43",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S43",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S44",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S44",
+      "state": "payment"
+    },
+    {
+      "theme": "light",
+      "id": "S44",
+      "state": "feedback"
+    },
+    {
+      "theme": "light",
+      "id": "S44",
+      "state": "unknown-outcome"
+    },
+    {
+      "theme": "light",
+      "id": "S44",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S45",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S45",
+      "state": "resolved"
+    },
+    {
+      "theme": "light",
+      "id": "S45",
+      "state": "unknown-outcome"
+    },
+    {
+      "theme": "light",
+      "id": "S45",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S45",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S45",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S46",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S46",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S46",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S46",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S47",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S47",
+      "state": "privacy"
+    },
+    {
+      "theme": "light",
+      "id": "S47",
+      "state": "about"
+    },
+    {
+      "theme": "light",
+      "id": "S47",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S47",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S47",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S48",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S48",
+      "state": "accepted"
+    },
+    {
+      "theme": "light",
+      "id": "S48",
+      "state": "unconfirmed"
+    },
+    {
+      "theme": "light",
+      "id": "S48",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S48",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S48",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S49",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S49",
+      "state": "owner"
+    },
+    {
+      "theme": "light",
+      "id": "S49",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S49",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S50",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S50",
+      "state": "older-version"
+    },
+    {
+      "theme": "light",
+      "id": "S50",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S50",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S50",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S51",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S51",
+      "state": "recovery-only"
+    },
+    {
+      "theme": "light",
+      "id": "S51",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S51",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S51",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S52",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S52",
+      "state": "startup-error"
+    },
+    {
+      "theme": "light",
+      "id": "S52",
+      "state": "guest"
+    },
+    {
+      "theme": "light",
+      "id": "S53",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S54",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S54",
+      "state": "map-unavailable"
+    },
+    {
+      "theme": "light",
+      "id": "S54",
+      "state": "no-coordinates"
+    },
+    {
+      "theme": "light",
+      "id": "S54",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S54",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S54",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S55",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S55",
+      "state": "permission-denied"
+    },
+    {
+      "theme": "light",
+      "id": "S55",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S56",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S56",
+      "state": "permission-denied"
+    },
+    {
+      "theme": "light",
+      "id": "S56",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S56",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S56",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S57",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S57",
+      "state": "confirmed"
+    },
+    {
+      "theme": "light",
+      "id": "S57",
+      "state": "completed"
+    },
+    {
+      "theme": "light",
+      "id": "S57",
+      "state": "cancelled"
+    },
+    {
+      "theme": "light",
+      "id": "S57",
+      "state": "stale"
+    },
+    {
+      "theme": "light",
+      "id": "S57",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S57",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S58",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S58",
+      "state": "restricted"
+    },
+    {
+      "theme": "light",
+      "id": "S58",
+      "state": "groups"
+    },
+    {
+      "theme": "light",
+      "id": "S58",
+      "state": "offers"
+    },
+    {
+      "theme": "light",
+      "id": "S58",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S58",
+      "state": "empty"
+    },
+    {
+      "theme": "light",
+      "id": "S58",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S59",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S59",
+      "state": "no-location"
+    },
+    {
+      "theme": "light",
+      "id": "S59",
+      "state": "permission-denied"
+    },
+    {
+      "theme": "light",
+      "id": "S59",
+      "state": "map-unavailable"
+    },
+    {
+      "theme": "light",
+      "id": "S59",
+      "state": "loading"
+    },
+    {
+      "theme": "light",
+      "id": "S59",
+      "state": "error"
+    },
+    {
+      "theme": "light",
+      "id": "S60",
+      "state": "default"
+    },
+    {
+      "theme": "light",
+      "id": "S60",
+      "state": "preparing"
+    },
+    {
+      "theme": "light",
+      "id": "S60",
+      "state": "duplicate"
+    },
+    {
+      "theme": "light",
+      "id": "S60",
+      "state": "partial-offering"
+    },
+    {
+      "theme": "light",
+      "id": "S60",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S41",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S41",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S41",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S41",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S42",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S42",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S42",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S42",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S43",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S43",
+      "state": "pdf"
+    },
+    {
+      "theme": "dark",
+      "id": "S43",
+      "state": "video"
+    },
+    {
+      "theme": "dark",
+      "id": "S43",
+      "state": "session-ended"
+    },
+    {
+      "theme": "dark",
+      "id": "S43",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S43",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S44",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S44",
+      "state": "payment"
+    },
+    {
+      "theme": "dark",
+      "id": "S44",
+      "state": "feedback"
+    },
+    {
+      "theme": "dark",
+      "id": "S44",
+      "state": "unknown-outcome"
+    },
+    {
+      "theme": "dark",
+      "id": "S44",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S45",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S45",
+      "state": "resolved"
+    },
+    {
+      "theme": "dark",
+      "id": "S45",
+      "state": "unknown-outcome"
+    },
+    {
+      "theme": "dark",
+      "id": "S45",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S45",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S45",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S46",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S46",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S46",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S46",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S47",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S47",
+      "state": "privacy"
+    },
+    {
+      "theme": "dark",
+      "id": "S47",
+      "state": "about"
+    },
+    {
+      "theme": "dark",
+      "id": "S47",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S47",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S47",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S48",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S48",
+      "state": "accepted"
+    },
+    {
+      "theme": "dark",
+      "id": "S48",
+      "state": "unconfirmed"
+    },
+    {
+      "theme": "dark",
+      "id": "S48",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S48",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S48",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S49",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S49",
+      "state": "owner"
+    },
+    {
+      "theme": "dark",
+      "id": "S49",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S49",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S50",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S50",
+      "state": "older-version"
+    },
+    {
+      "theme": "dark",
+      "id": "S50",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S50",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S50",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S51",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S51",
+      "state": "recovery-only"
+    },
+    {
+      "theme": "dark",
+      "id": "S51",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S51",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S51",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S52",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S52",
+      "state": "startup-error"
+    },
+    {
+      "theme": "dark",
+      "id": "S52",
+      "state": "guest"
+    },
+    {
+      "theme": "dark",
+      "id": "S53",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S54",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S54",
+      "state": "map-unavailable"
+    },
+    {
+      "theme": "dark",
+      "id": "S54",
+      "state": "no-coordinates"
+    },
+    {
+      "theme": "dark",
+      "id": "S54",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S54",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S54",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S55",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S55",
+      "state": "permission-denied"
+    },
+    {
+      "theme": "dark",
+      "id": "S55",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S56",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S56",
+      "state": "permission-denied"
+    },
+    {
+      "theme": "dark",
+      "id": "S56",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S56",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S56",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S57",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S57",
+      "state": "confirmed"
+    },
+    {
+      "theme": "dark",
+      "id": "S57",
+      "state": "completed"
+    },
+    {
+      "theme": "dark",
+      "id": "S57",
+      "state": "cancelled"
+    },
+    {
+      "theme": "dark",
+      "id": "S57",
+      "state": "stale"
+    },
+    {
+      "theme": "dark",
+      "id": "S57",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S57",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S58",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S58",
+      "state": "restricted"
+    },
+    {
+      "theme": "dark",
+      "id": "S58",
+      "state": "groups"
+    },
+    {
+      "theme": "dark",
+      "id": "S58",
+      "state": "offers"
+    },
+    {
+      "theme": "dark",
+      "id": "S58",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S58",
+      "state": "empty"
+    },
+    {
+      "theme": "dark",
+      "id": "S58",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S59",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S59",
+      "state": "no-location"
+    },
+    {
+      "theme": "dark",
+      "id": "S59",
+      "state": "permission-denied"
+    },
+    {
+      "theme": "dark",
+      "id": "S59",
+      "state": "map-unavailable"
+    },
+    {
+      "theme": "dark",
+      "id": "S59",
+      "state": "loading"
+    },
+    {
+      "theme": "dark",
+      "id": "S59",
+      "state": "error"
+    },
+    {
+      "theme": "dark",
+      "id": "S60",
+      "state": "default"
+    },
+    {
+      "theme": "dark",
+      "id": "S60",
+      "state": "preparing"
+    },
+    {
+      "theme": "dark",
+      "id": "S60",
+      "state": "duplicate"
+    },
+    {
+      "theme": "dark",
+      "id": "S60",
+      "state": "partial-offering"
+    },
+    {
+      "theme": "dark",
+      "id": "S60",
+      "state": "error"
+    }
+  ],
+  "interactions": [
+    "Theme persistence/live System and draft/scroll preservation",
+    "Group filter",
+    "Form error retains input and multiline draft",
+    "Focused preview preserves original controls",
+    "Payment topic conditional fields and local attachment add/remove",
+    "Ticket submission confirmation and uncertain-write recovery gate",
+    "Local reply escapes text and resolved tickets block new replies",
+    "Attachment zoom and session-ended preview removal",
+    "Public-page variants and missing historical policy does not fall back to current",
+    "Guide preference/replay confirmation and release-version selection",
+    "Operation recovery does not resend; startup retry and fixed launch/media surfaces",
+    "Workspace preview does not grant company authority",
+    "Map marker/detail selection and loaded-only viewport scope",
+    "Photo viewer previous/next bounds and thumbnail synchronization",
+    "Recent search populates search draft",
+    "Viewing cancellation confirmation and stale-data mutation gate",
+    "Owner capability-gated request tabs",
+    "Location confirm gates, keyboard selection and local satellite view",
+    "Media minimum photo count, required video and single main photo",
+    "Cross-sprint source-linked navigation preserves theme"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "limitations": [
+    "Browser prototype only; no Flutter/device/API tests.",
+    "Maps are schematic offline illustrations; gallery and launch have fixed source-defined surfaces.",
+    "Later sprints have source inventory only; behavioral audit happens within each sprint."
+  ],
+  "originalStyleParity": [
+    {
+      "component": "input",
+      "result": "matches original",
+      "properties": {
+        "fontFamily": "Plex, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "500",
+        "minHeight": "50px",
+        "borderRadius": "12px",
+        "backgroundColor": "rgb(252, 251, 247)"
+      }
+    },
+    {
+      "component": "primary action",
+      "result": "matches original",
+      "properties": {
+        "fontFamily": "Plex, sans-serif",
+        "fontSize": "13px",
+        "fontWeight": "700",
+        "minHeight": "48px",
+        "borderRadius": "12px",
+        "backgroundColor": "rgb(12, 42, 24)",
+        "color": "rgb(252, 251, 247)"
+      }
+    },
+    {
+      "component": "wordmark",
+      "result": "matches original",
+      "properties": {
+        "width": "75px",
+        "height": "48px",
+        "color": "rgb(10, 92, 24)"
+      }
+    },
+    {
+      "component": "phone frame",
+      "result": "matches original",
+      "properties": {
+        "width": "360px",
+        "height": "800px",
+        "borderRadius": "40px",
+        "borderTopWidth": "5px",
+        "backgroundColor": "rgb(246, 242, 233)"
+      }
+    },
+    {
+      "component": "top bar",
+      "result": "matches original",
+      "properties": {
+        "fontFamily": "Plex, sans-serif",
+        "fontSize": "17px",
+        "fontWeight": "600"
+      }
+    },
+    {
+      "component": "OS chrome",
+      "result": "matches original",
+      "properties": {
+        "fontFamily": "Plex, sans-serif",
+        "fontSize": "11px",
+        "height": "43px"
+      }
+    }
+  ],
+  "result": "pass",
+  "visualReview": {
+    "screens": 20,
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "presentationSheets": 10,
+    "reference": "Original S01–S20, per-screen lineage in manifest",
+    "corrections": [
+      "Reconciled the OwnerListings wrapper instead of duplicating S16.",
+      "Retained startup no-back behavior, fixed light splash, dark photo viewer and original component proportions.",
+      "Removed nested continuation-card frames and stabilized presentation-sheet header capture."
+    ]
+  }
+}

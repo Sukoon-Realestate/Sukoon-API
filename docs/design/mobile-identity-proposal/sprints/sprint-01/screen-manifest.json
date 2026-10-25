@@ -1,0 +1,931 @@
+[
+  {
+    "id": "S21",
+    "name": "إنشاء حساب",
+    "english": "Registration",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/register_screen.dart",
+    "sha256": "9a6a5e7c20f3a543ee4987c4b4acd775569bf3506def90250de8dda6e49768a6",
+    "group": "account",
+    "behavior": "Separate first/last names, Egyptian mobile, email, password and confirmation. RegisterFlowScreen submits registration then shows email OTP; successful verification returns to login. Do not route registration directly to KYC or mark identity verified.",
+    "requiredStates": [
+      "empty",
+      "invalid",
+      "submitting",
+      "server-error",
+      "otp-next"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/register_flow_screen.dart",
+        "sha256": "f3e3907aa2c37b4208b9ce6ec66a3446875752ad9a50357201ec992fd1c08122",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/widgets/register/register_intro.dart",
+        "sha256": "2630a51f8b08d0526c662219a01de39a462c7ea1ea62c24a0c5fec9478e208c7",
+        "localeKeys": [
+          "workspaceAccountDescription"
+        ]
+      },
+      {
+        "source": "sokoun/packages/core/lib/core/helpers/credential_validators.dart",
+        "sha256": "67c2773e96957abbfc7ad64d7128d5007d0ab633500b7759a7d5eb39f052cb50",
+        "localeKeys": [
+          "accountEmailLocalPartTooLong",
+          "accountEmailRequired",
+          "accountEmailTooLong",
+          "accountOtpRequired",
+          "accountOtpValidation",
+          "accountPasswordConfirmationRequired",
+          "accountPasswordTooShort",
+          "accountPasswordWhitespaceValidation",
+          "confirmValidation",
+          "googleSignInFailed",
+          "mailValidation",
+          "passRequiredValidation"
+        ]
+      }
+    ],
+    "back": "S01",
+    "visualReference": [
+      "S02",
+      "S17"
+    ],
+    "layout": "auth",
+    "renderedVariants": []
+  },
+  {
+    "id": "S22",
+    "name": "استعادة كلمة المرور",
+    "english": "Password recovery",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/forgot_password_screen.dart",
+    "sha256": "27291b9968cd1501043e0f287f2d31dc5873262fe5840906a63518a829ad8d11",
+    "group": "account",
+    "behavior": "Email reset link, not an OTP password-reset flow. Mask sent-to address, allow changing email and resending; display authoritative server messages and cooldown.",
+    "requiredStates": [
+      "empty",
+      "invalid",
+      "sending",
+      "sent",
+      "server-error"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/widgets/forgot_password/forgot_password_form.dart",
+        "sha256": "20e2c94bcd1cd3a0b528f9ed27baade2b7a03afc4b83d13e50d23e29c8cf85f8",
+        "localeKeys": [
+          "email",
+          "forgotPasswordEmailHint",
+          "login",
+          "rememberedPassword",
+          "sendRecoveryLink"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/widgets/forgot_password/forgot_password_sent_view_content.dart",
+        "sha256": "49c011c5197cf8aa82196550ef6b9c3c7617e2c409f13107d224c73d93bc744d",
+        "localeKeys": [
+          "changeEmail",
+          "checkSpamFirst",
+          "createNewPassword",
+          "emailNotReceived",
+          "lookForSokoonEmail",
+          "minimumEightCharacters",
+          "openYourEmail",
+          "recoveryLinkValidFor24Hours",
+          "resend",
+          "resetLinkSentDescription",
+          "tapTheLink"
+        ]
+      }
+    ],
+    "back": "S02",
+    "visualReference": [
+      "S02"
+    ],
+    "layout": "auth",
+    "renderedVariants": []
+  },
+  {
+    "id": "S23",
+    "name": "رفع مستندات الهوية",
+    "english": "Identity documents",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/kyc_upload_documents_screen.dart",
+    "sha256": "02f5c33cba54f3d25e36c99a4a7227fb4ffadf1ae45e3d2f2c364f6c188c108f",
+    "group": "account",
+    "behavior": "Audit mismatch: widgets label some existing-account inputs optional and canSubmit permits blank ID, but _submit always calls MediaValidators.validateKycDocuments, which requires a valid Egyptian national ID and all three images. Proposal follows the executed validator, flags the copy mismatch; no invented optional bypass. Preserve unsaved changes and file limits.",
+    "requiredStates": [
+      "empty",
+      "selected",
+      "invalid",
+      "uploading",
+      "permission-denied",
+      "server-error",
+      "pending"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/widgets/kyc/kyc_upload_documents_view.dart",
+        "sha256": "7ab58be6f8a87eb05e77f9d62f2fd84f0892f22aaf0fa84092ba5b5db3ea0eb2",
+        "localeKeys": [
+          "capturePhoto",
+          "idBackLabel",
+          "idFrontLabel",
+          "idPhotoNeverVisible",
+          "kycExistingDocumentsHint",
+          "kycOptionalSelfie",
+          "kycUploadPrivacyTitle",
+          "selfiePhoto",
+          "uploadClearIdImage",
+          "uploadDocumentsTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/data/models/kyc_upload_documents_data.dart",
+        "sha256": "e445df9fde44df71b111c8cc521576585dc32ea4b07d5a0a5c5bcf7edda740a8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/kyc_document_picker.dart",
+        "sha256": "9c8d2fa4eb269fa0f8fc686650a42b90c107faa33f175d8dad57dc492162a879",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/packages/core/lib/core/helpers/media_validators.dart",
+        "sha256": "bb7a3a812ada28c05c0fa8aeb39cb203d015866438f17cdbf3107a42c4c6a5f9",
+        "localeKeys": [
+          "accountAvatarFormatValidation",
+          "accountDocumentFormatValidation",
+          "accountDocumentUploadHint",
+          "accountImageInvalid",
+          "accountImageTooLarge",
+          "idBackLabel",
+          "idFrontLabel",
+          "ownerPropertyVideoDurationInvalid",
+          "selfiePhoto",
+          "validationFileRequired",
+          "validationImageRequired"
+        ]
+      }
+    ],
+    "back": "S04",
+    "visualReference": [
+      "S04",
+      "S17"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S24",
+    "name": "الهوية قيد المراجعة",
+    "english": "Identity pending",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/kyc_pending_screen.dart",
+    "sha256": "0ba49a18905687aad36381ae97d09b6746af9a5b44897b0eed7379a33f000d2d",
+    "group": "account",
+    "behavior": "Pending is not approved. Name, submittedAt and expectedReviewTime render only when present. OK returns existing accounts to initial route; new registration returns to login.",
+    "requiredStates": [
+      "pending",
+      "metadata-absent",
+      "existing-account"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/widgets/kyc/kyc_status_summary_card.dart",
+        "sha256": "21a721961a9c59c8176e5ae649426cab144afed4431bbfc667f64cc3d887bf17",
+        "localeKeys": []
+      }
+    ],
+    "back": "S29",
+    "visualReference": [
+      "S03",
+      "S19"
+    ],
+    "layout": "status",
+    "renderedVariants": []
+  },
+  {
+    "id": "S25",
+    "name": "تم توثيق الحساب",
+    "english": "Identity approved",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/kyc_approved_screen.dart",
+    "sha256": "8c4c10da77df89e1a6dc5b1fb9feccdd561a633a7997940a4a5b0319cf1af5cd",
+    "group": "account",
+    "behavior": "Render approved only from authoritative verification result. Current KycApprovedScreen primary navigation is TenantSearchScreen; preserve entitlement decisions in app/server rather than granting capabilities from prototype.",
+    "requiredStates": [
+      "approved"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/widgets/kyc/kyc_feature_tile.dart",
+        "sha256": "e19b95d0ca914459f4f8c5d0c87a5dd831c79352d1a5b17d06e7e15d1cf8b4d7",
+        "localeKeys": []
+      }
+    ],
+    "back": "S29",
+    "visualReference": [
+      "S03",
+      "S04"
+    ],
+    "layout": "status",
+    "renderedVariants": []
+  },
+  {
+    "id": "S26",
+    "name": "حساب المستأجر",
+    "english": "Tenant profile",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/screens/tenant_profile_screen.dart",
+    "sha256": "ba1f7a0af11cb3c47bb484ec352d8c80699b03e9ef5057299ca125c840c377c8",
+    "group": "profile",
+    "behavior": "ProfileScreen dispatches workspace; this mockup represents TenantProfileScreen, not owner/company variants. Keep API-driven account details, activity and menu visibility, refresh after edits; preserve five individual-workspace tabs (home, saved, messages, housing, profile); company workspace has different activity entry.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "server-error",
+      "unverified"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_screen.dart",
+        "sha256": "0cfa7c4f160c1f6d85be059d225cba58ae3db254e1b08d378357da46cf18825a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/widgets/tenant_profile_content_view.dart",
+        "sha256": "0c48b0f46910b41c9d1a0dd4a75158d8a63a49207cea5c1b7e953fa843930105",
+        "localeKeys": [
+          "workspaceCompanyHousing"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/shared/profile_content_view.dart",
+        "sha256": "bc1ff09d8ef6105a77fe60a05685a15788e9012d2749b375d6a11391e6dc3f31",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/widgets/tenant_profile_actions.dart",
+        "sha256": "0f6b3d9ae53247f7039c6fc8b83e312239a94c62bbf2c4a5da238540b86aa9c7",
+        "localeKeys": [
+          "profileContractCountLabel",
+          "profileContracts",
+          "profileMyReviews",
+          "profileReviewCountLabel",
+          "profileSummaryTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/main_view/presentation/models/home_tab.dart",
+        "sha256": "d845d0b1f8f61bf28d86be8896eb404d2b18693bed9d63d664e4d48ac09b1961",
+        "localeKeys": [
+          "chats",
+          "favoritesNavigationSaved",
+          "home",
+          "individualMyHousing",
+          "notificationsOwnerPropertiesNavigation",
+          "notificationsOwnerRequestsNavigation",
+          "profile",
+          "tenantVisitsTitle",
+          "workspaceCompanyHousing",
+          "workspaceCompanyLists"
+        ]
+      }
+    ],
+    "back": "S26",
+    "visualReference": [
+      "S05",
+      "S18"
+    ],
+    "layout": "hub",
+    "renderedVariants": []
+  },
+  {
+    "id": "S27",
+    "name": "تعديل الملف الشخصي",
+    "english": "Edit profile",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_edit_screen.dart",
+    "sha256": "2384f9b7bb83ce472c4772e3aa676e86e23e64999f2c08f87ddf17f5fcb071f3",
+    "group": "profile",
+    "behavior": "Editable full name, avatar and city. Email is read-only with separate email-change flow. Preserve draft on failed save, server-known details on load failure and unsaved-changes guard. Save/refresh only after successful response.",
+    "requiredStates": [
+      "loaded",
+      "dirty",
+      "saving",
+      "saved",
+      "load-error",
+      "server-error"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/shared/profile_editor_scaffold.dart",
+        "sha256": "3afaa9723fec84599f396bd0a79320103e7e8e72ac1430406d9afa1467b6f308",
+        "localeKeys": [
+          "emailChangeTitle",
+          "fullName",
+          "fullNameHint",
+          "profileChangePhoto",
+          "profileEditLoadingDetails",
+          "profileSave"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/shared/profile_account_fields.dart",
+        "sha256": "10289a2cd8a5bc199edd109cba3c0295ac6d3d426cb6c1603e8f94747f6691d4",
+        "localeKeys": []
+      }
+    ],
+    "back": "S26",
+    "visualReference": [
+      "S17",
+      "S19"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S28",
+    "name": "إعدادات الحساب",
+    "english": "Account settings",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_settings_screen.dart",
+    "sha256": "c98466f1ee93a077d21e3db1d28d1c05eea907df814e6ea59d9d991a8a005953",
+    "group": "profile",
+    "behavior": "Preserve billing visibility (!workspace.isCompany), preference routes, security, public pages, experience guide and business policies. Logout and delete remain separate confirmed operations. Company/owner copy and visibility use workspace.",
+    "requiredStates": [
+      "loaded",
+      "owner",
+      "company"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/shared/profile_settings_content_view.dart",
+        "sha256": "6145a85165cdf6e4df20d8a68074e3b81a9537326b9639a8cbe8ba142b3d5553",
+        "localeKeys": [
+          "appearanceTitle",
+          "billingMyInvoices",
+          "billingSubscriptions",
+          "changeLanguage",
+          "chatPolicyReview",
+          "notificationSettingsTitle",
+          "securitySessionsTitle",
+          "settingsChangePassword",
+          "settingsLegal",
+          "settingsOwnerIntro",
+          "settingsPreferences",
+          "settingsPrivacyOptions",
+          "settingsSecurity",
+          "settingsTenantIntro"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/settings/profile_logout_sheet.dart",
+        "sha256": "5229212c4287cadba894367bbad4dea59c62c36299be4bb39ff7de5bc730d38b",
+        "localeKeys": [
+          "cancel",
+          "profileLogout",
+          "settingsLogoutDescription",
+          "settingsLogoutTitle"
+        ]
+      }
+    ],
+    "back": "S26",
+    "visualReference": [
+      "S20"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S29",
+    "name": "حالة توثيق الهوية",
+    "english": "Verification status",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_verification_screen.dart",
+    "sha256": "78ff0b77e5178a6505392905b5d94a9fdc2d80ac3b12e2e5c66161d74c777459",
+    "group": "profile",
+    "behavior": "Status comes from ProfileVerificationContent: approved, pending, rejected, incomplete, unknown. Show rejection reason when present. Upload action only for canSubmit; refresh after returning from KycIntroScreen.",
+    "requiredStates": [
+      "approved",
+      "pending",
+      "rejected",
+      "incomplete",
+      "unknown",
+      "loading",
+      "server-error"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/shared/profile_verification_content_view.dart",
+        "sha256": "2e7bb5193ed277a15d1148cd656df33e4d69ffaaeca336bcd732b8af64aa510e",
+        "localeKeys": [
+          "kycApprovedDescription",
+          "kycApprovedTitle",
+          "kycIntroDescription",
+          "kycPendingDescription",
+          "kycPendingTitle",
+          "profileVerificationReason",
+          "profileVerificationRejected",
+          "profileVerificationRejectedDescription",
+          "profileVerificationUnknown",
+          "profileVerificationUnknownDescription",
+          "submittedAt",
+          "uploadDocuments",
+          "verifyIdentityAndStart"
+        ]
+      }
+    ],
+    "back": "S26",
+    "visualReference": [
+      "S03",
+      "S19"
+    ],
+    "layout": "status",
+    "renderedVariants": [
+      "pending",
+      "rejected",
+      "incomplete",
+      "unknown"
+    ]
+  },
+  {
+    "id": "S30",
+    "name": "خيارات الخصوصية",
+    "english": "Privacy",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_privacy_screen.dart",
+    "sha256": "80b35665443bcc34769f46c405454f56dfaba5a08f023d9473456dc377515b05",
+    "group": "security",
+    "behavior": "Only shareLocation and showProfile from server settings values. Per-toggle pending; preserve/restore baseline on failure. Do not invent phone disclosure switches or treat sharing preference as OS permission.",
+    "requiredStates": [
+      "loaded",
+      "saving",
+      "server-error",
+      "empty"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/settings/profile_privacy_content_view.dart",
+        "sha256": "12e65b7ca42a86eaeeba37432d4d45044b4b0ea8ccc568b90eb28d210ad1812b",
+        "localeKeys": [
+          "chatSafeInside",
+          "settingsLocationDescription",
+          "settingsSearchProfileDescription"
+        ]
+      }
+    ],
+    "back": "S28",
+    "visualReference": [
+      "S20"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S31",
+    "name": "تغيير كلمة المرور",
+    "english": "Change password",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/change_password_screen.dart",
+    "sha256": "97ffb360ff561060dc298c626dd0d289c6a7ce1c84cbbb62618d81b6451e3309",
+    "group": "security",
+    "behavior": "Current/new/confirmation fields; same credential policy as app validator. Preserve unsaved-changes guard. Successful save stops notification device registration and logs out; never return with a still-authenticated success.",
+    "requiredStates": [
+      "empty",
+      "invalid",
+      "saving",
+      "server-error",
+      "reauthenticate"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/settings/change_password_form.dart",
+        "sha256": "73fcf1b5d3035ef98af75d354c90b5217fc8f34f2f54fe293f0a6081caed93a5",
+        "localeKeys": [
+          "confirmPassword",
+          "createNewPassword",
+          "settingsCurrentPassword",
+          "settingsPasswordIntro",
+          "settingsPasswordPolicyDescription",
+          "settingsPasswordPolicyTitle",
+          "settingsSavePassword"
+        ]
+      },
+      {
+        "source": "sokoun/packages/core/lib/core/helpers/credential_validators.dart",
+        "sha256": "67c2773e96957abbfc7ad64d7128d5007d0ab633500b7759a7d5eb39f052cb50",
+        "localeKeys": [
+          "accountEmailLocalPartTooLong",
+          "accountEmailRequired",
+          "accountEmailTooLong",
+          "accountOtpRequired",
+          "accountOtpValidation",
+          "accountPasswordConfirmationRequired",
+          "accountPasswordTooShort",
+          "accountPasswordWhitespaceValidation",
+          "confirmValidation",
+          "googleSignInFailed",
+          "mailValidation",
+          "passRequiredValidation"
+        ]
+      }
+    ],
+    "back": "S28",
+    "visualReference": [
+      "S02",
+      "S17"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S32",
+    "name": "تغيير البريد الإلكتروني",
+    "english": "Change email",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/email_change_screen.dart",
+    "sha256": "5ec5e2a9ccdf41a7115e0da00bf09e4955307380288e0b2826b00e2356702e75",
+    "group": "security",
+    "behavior": "Start → verify_old (shared 6-digit OTP challenge) → enter_new → verify_new → complete. Authoritative resendAt, status recovery, expired/restart; only update local user after server complete, retain server email if local cache write fails.",
+    "requiredStates": [
+      "start",
+      "verify-old",
+      "enter-new",
+      "verify-new",
+      "expired",
+      "server-error",
+      "complete"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/email_change/email_change_form.dart",
+        "sha256": "40f4cbc9c2dd25c00693298d9914cab191c994e163b9bc96069d139fe98e742a",
+        "localeKeys": [
+          "email",
+          "emailChangeContinue",
+          "emailChangeNew",
+          "emailChangeStart",
+          "emailChangeSteps"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/email_change/email_change_recovery_actions.dart",
+        "sha256": "6b5ca11cb000ebf471e6c54472b82efd7ce7aacf4190c803b8802334cd91d358",
+        "localeKeys": [
+          "emailChangeCheck",
+          "emailChangeStart"
+        ]
+      }
+    ],
+    "back": "S27",
+    "visualReference": [
+      "S02",
+      "S03"
+    ],
+    "layout": "auth",
+    "renderedVariants": [
+      "verify-old",
+      "enter-new",
+      "verify-new",
+      "expired",
+      "complete"
+    ]
+  },
+  {
+    "id": "S33",
+    "name": "الأجهزة والجلسات",
+    "english": "Security sessions",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/security_sessions_screen.dart",
+    "sha256": "ea764848b06e2c9b84f427221fd423ea118e335fae83638c6a6f6382ceb73d7a",
+    "group": "security",
+    "behavior": "Distinct confirmed revoke-one, others, all, compromise. Other session revocation reloads; current/all/compromised stops device notifications and logs out only after successful write. Keep no-session/read failure states.",
+    "requiredStates": [
+      "loaded",
+      "confirming",
+      "saving",
+      "empty",
+      "server-error",
+      "reauthenticate"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/settings/security_sessions_body.dart",
+        "sha256": "931740972b6fe296b1a375347c2b70d582a611628eaca812df0f51f9dda0bec7",
+        "localeKeys": [
+          "exceptionError",
+          "securityConfirmFreeze",
+          "securityCurrentSession",
+          "securityEndAll",
+          "securityEndOthers",
+          "securityEndSession",
+          "securityLastActive",
+          "securityReportCompromise",
+          "securitySessionCreated",
+          "securitySessionsEmpty",
+          "securitySessionsHelp",
+          "securitySessionsTitle",
+          "securityUnknownDevice"
+        ]
+      }
+    ],
+    "back": "S28",
+    "visualReference": [
+      "S18",
+      "S20"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S34",
+    "name": "لغة التطبيق",
+    "english": "Language",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/language_selection_screen.dart",
+    "sha256": "fd68a9d3cb25cd229cad6028bb64229b606db54b1e79600fb0ff2aab15705d4c",
+    "group": "profile",
+    "behavior": "Arabic and English selection; explicit confirm persists via Languages. This Arabic visual proposal demonstrates selection/confirmation only, not a fabricated complete English translation.",
+    "requiredStates": [
+      "arabic",
+      "english-selected",
+      "saving",
+      "server-error"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/language_selection/language_selection_options.dart",
+        "sha256": "86c5f4b4cc3d72068d1a8732c4ad155a12a37ef0f8be0b60b669d1018dfaf9ea",
+        "localeKeys": [
+          "languageArabicName",
+          "languageArabicTranslation",
+          "languageEnglishNativeName",
+          "languageEnglishTranslation"
+        ]
+      }
+    ],
+    "back": "S28",
+    "visualReference": [
+      "S20"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S35",
+    "name": "حذف الحساب",
+    "english": "Delete account",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_delete_account_screen.dart",
+    "sha256": "d8e78a9c6fa37059fba449ecd00626f1279da3c48959ed686c724df001eb7294",
+    "group": "security",
+    "behavior": "Acknowledgement checkbox gates delete. Preserve server refusal and message, lock back during submission. Only successful delete triggers device-notification stop and logout. Prototype never deletes or collects real credentials.",
+    "requiredStates": [
+      "unchecked",
+      "acknowledged",
+      "saving",
+      "server-error",
+      "deleted"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/settings/profile_deletion_content.dart",
+        "sha256": "88c1a8dea70f51bf07e04cd07b57094071b1e50234457dac890e0de2a3020b5b",
+        "localeKeys": [
+          "deletingWillRemoveAllYourData",
+          "settingsDeleteActivity",
+          "settingsDeleteConsequences",
+          "settingsDeleteIdentity",
+          "settingsDeleteListings",
+          "settingsDeleteWarning"
+        ]
+      }
+    ],
+    "back": "S28",
+    "visualReference": [
+      "S20",
+      "S19"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S36",
+    "name": "عقودي",
+    "english": "Profile contracts",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_contracts_screen.dart",
+    "sha256": "118ab11d1b330ba4e24b7ebf55f4d88019d7a2539cb78132db6f086289e81de1",
+    "group": "profile",
+    "behavior": "Paginated server contracts; statuses active/expired/cancelled/unknown; document link is validated and can be unavailable. Preserve workspace-specific journey entries. Owner rentals/leases/finance and tenancy invitations belong to later destinations.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "server-error",
+      "document-unavailable"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/contracts/profile_contracts_list.dart",
+        "sha256": "b70dfbe8337f5c8778aa65a73dbd8ed6b44079a6f9e636c62e4c66ad7c431f71",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/contracts/profile_contract_card.dart",
+        "sha256": "2e19a136d6dc2bac59a6ad62f34ce94abe19f0b4fd357c78edc554d8d9f1681d",
+        "localeKeys": [
+          "profileContractActive",
+          "profileContractCancelled",
+          "profileContractDocument",
+          "profileContractEnd",
+          "profileContractExpired",
+          "profileContractStart",
+          "profileContractUnknown",
+          "supportLinkUnavailable"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/widgets/contracts/contracts_journey_actions.dart",
+        "sha256": "8fce3c84e269af551464204705b97af5d25fefb678719f93c064c1fb26660ac0",
+        "localeKeys": [
+          "individualHousingHelp",
+          "individualMyHousing"
+        ]
+      }
+    ],
+    "back": "S26",
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S37",
+    "name": "الإشعارات",
+    "english": "Notifications",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/screens/notifications_screen.dart",
+    "sha256": "e1ee297496f9724407e2c035bfaedd2915f85ec7e4c8b8dbb255e2fa2ee904fa",
+    "group": "notifications",
+    "behavior": "Role-resolved paginated inbox, unread count, mark-one/read-all with rollback and account-session guard. Detail fetches authoritative data; related destination is validated, not an arbitrary push URL. Invoice shortcut preserved when available.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "empty",
+      "marking",
+      "server-error"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/widgets/notifications_screen_content.dart",
+        "sha256": "6ca35e8f7572d1a4ae6e144aa0866062e2c9bd009e85848f50aeea5dea9ce847",
+        "localeKeys": [
+          "notificationSettingsTitle",
+          "workspaceAllNotifications"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/data/notification_destination.dart",
+        "sha256": "aebf26f96f769e769465547eae0348a1d980dd3173e2641949ba04a5f166b41a",
+        "localeKeys": []
+      }
+    ],
+    "back": "S26",
+    "visualReference": [
+      "S05",
+      "S18"
+    ],
+    "layout": "hub",
+    "renderedVariants": []
+  },
+  {
+    "id": "S38",
+    "name": "تفاصيل الإشعار",
+    "english": "Notification detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/screens/notification_detail_screen.dart",
+    "sha256": "cf9a0aab7e89287d19e9d4e2453ad089edffaf9850da6222b7d25bc031d224f2",
+    "group": "notifications",
+    "behavior": "Load detail, preserve primary destination from validated notification data and role. Dismiss returns; do not convert pending request into confirmed visit. Related content may be unavailable/unauthorized/deleted.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "server-error",
+      "destination-unavailable"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/widgets/notification_details_content.dart",
+        "sha256": "44fca037671116028f3dbc54b507830b9ba4f9825059f10349f5745a73cce6ac",
+        "localeKeys": [
+          "notificationDismiss",
+          "notificationOpenRelated",
+          "notificationViewRequest",
+          "notificationViewVisit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/notification_navigation.dart",
+        "sha256": "86c9acefa21bbec08d18408eedd3887cd3c3a7f03eaa80ff9da26dbdabbf2465",
+        "localeKeys": []
+      }
+    ],
+    "back": "S37",
+    "visualReference": [
+      "S19"
+    ],
+    "layout": "status",
+    "renderedVariants": []
+  },
+  {
+    "id": "S39",
+    "name": "إعدادات الإشعارات",
+    "english": "Notification settings",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/screens/notification_settings_screen.dart",
+    "sha256": "7c45f16fd95f6564ba0919f678e76fb5ebbd8ef9c53763cf9123bfe0b24d39da",
+    "group": "notifications",
+    "behavior": "Server-driven items, canChange and footerNote; five known fallback keys. Demonstrated locked security alert is illustrative, not a hardcoded rule. Per-key optimistic preference with baseline recovery; device permission separate.",
+    "requiredStates": [
+      "loaded",
+      "saving",
+      "server-error",
+      "permission-denied",
+      "empty"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/widgets/notification_settings_content.dart",
+        "sha256": "fcaebd1a44c56b0db79988c48f9ac852c26b2295134c7c2715754c4c0d860eb4",
+        "localeKeys": [
+          "notificationSettingNewMessages",
+          "notificationSettingNewMessagesDescription",
+          "notificationSettingPromotions",
+          "notificationSettingPromotionsDescription",
+          "notificationSettingPropertyUpdates",
+          "notificationSettingPropertyUpdatesDescription",
+          "notificationSettingSecurityAlerts",
+          "notificationSettingSecurityAlertsDescription",
+          "notificationSettingVisitRequests",
+          "notificationSettingVisitRequestsDescription",
+          "notificationSettingsInfo"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/widgets/device_notification_permission_tile.dart",
+        "sha256": "f577930fc45891fd655cd2054ea32fbc366a206760f568ac35af0959b44a6678",
+        "localeKeys": [
+          "deviceNotificationsDisabled",
+          "deviceNotificationsEnabled",
+          "deviceNotificationsTitle",
+          "notificationPermissionTitle",
+          "permissionOpenSettings",
+          "permissionUnavailable"
+        ]
+      }
+    ],
+    "back": "S37",
+    "visualReference": [
+      "S20"
+    ],
+    "layout": "utility",
+    "renderedVariants": []
+  },
+  {
+    "id": "S40",
+    "name": "مركز المساعدة",
+    "english": "Help center",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_screen.dart",
+    "sha256": "13a3ce916d3dd4b5879ac4d500343840a92850d0fb4746f9e69edcaa235e4657",
+    "group": "support",
+    "behavior": "Workspace/language-scoped remote help, FAQ search and empty results; support new/tickets/feedback are separate next-sprint destinations. Email contact only if backend supplies a valid address. FAQ content here is illustrative.",
+    "requiredStates": [
+      "loaded",
+      "loading",
+      "server-error",
+      "empty",
+      "no-search-results",
+      "contact-unavailable"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/help/support_help_header.dart",
+        "sha256": "95a7592cd7cf3ac04c1735ba894bcc26f4d2d9c80490e0e395490150ab46f45b",
+        "localeKeys": [
+          "supportMyTickets",
+          "supportNewTicket",
+          "supportOwnerIntro",
+          "supportTenantIntro",
+          "uxSuggestImprovement"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/widgets/help/support_help_content_view.dart",
+        "sha256": "6cf82464fd2408b5ed668972afa4c499e1e366e41e4970710042c76a0601134a",
+        "localeKeys": [
+          "supportContactUnavailable",
+          "supportEmailUs",
+          "supportFaqTitle",
+          "supportSearchHint"
+        ]
+      }
+    ],
+    "back": "S26",
+    "visualReference": [
+      "S05",
+      "S18"
+    ],
+    "layout": "hub",
+    "renderedVariants": []
+  }
+]

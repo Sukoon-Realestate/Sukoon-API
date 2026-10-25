@@ -1,0 +1,45 @@
+{
+  "screens": 60,
+  "sections": [
+    {
+      "key": "original",
+      "screens": 20
+    },
+    {
+      "key": "sprint-01",
+      "screens": 20
+    },
+    {
+      "key": "sprint-02",
+      "screens": 20
+    }
+  ],
+  "widths": [
+    {
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1680,
+      "overflow": false
+    }
+  ],
+  "checks": [
+    "All 60 screens visible by default in three titled sections",
+    "Global appearance syncs all batches and S20; System follows OS; draft preserved",
+    "Section filter and restore-all",
+    "Enlarged preview stays inside visible parent viewport and closes cleanly",
+    "Cross-section action opens the existing destination without losing a section"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "result": "pass"
+}

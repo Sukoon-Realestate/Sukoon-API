@@ -1,0 +1,5551 @@
+{
+  "auditDate": "2026-10-25",
+  "sourceRoot": "sokoun/apps/sokoun_app/lib",
+  "method": "Concrete classes ending in Screen or Page in app lib; wrappers/components explicitly reconciled. Presentation states and parameter variants are not separate screen counts. Other Dart helpers are not screens.",
+  "counts": {
+    "sourceFiles": 304,
+    "original": 20,
+    "excluded": 6,
+    "remaining": 278,
+    "sprints": 14
+  },
+  "screens": [
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/main_view/presentation/screens/view.dart",
+      "file": "view.dart",
+      "classes": [
+        "HomeScreen"
+      ],
+      "feature": "main_view/presentation",
+      "sha256": "17f85dc14d4e45a29a5c749a2aa3bf307b2207375c73a09a57773b0bd1257c3d",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "alias-or-component",
+      "aliasOf": null,
+      "reason": "Main navigation shell; tabs are inventoried as destinations."
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/main_view/presentation/screens/workspace_entry_screen.dart",
+      "file": "workspace_entry_screen.dart",
+      "classes": [
+        "WorkspaceEntryScreen"
+      ],
+      "feature": "main_view/presentation",
+      "sha256": "d9c196cea2fcc602eeadc97d0dad88f66c5d6b3d2ef8214db12eaa0b61b3abe6",
+      "localeKeys": [
+        "workspaceChoose",
+        "workspaceChooseHelp"
+      ],
+      "navigationReferences": [
+        "HomeScreen"
+      ],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S53",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/advanced_analytics/presentation/screens/advanced_analytics_screen.dart",
+      "file": "advanced_analytics_screen.dart",
+      "classes": [
+        "AdvancedAnalyticsScreen"
+      ],
+      "feature": "owner/advanced_analytics",
+      "sha256": "b3e3ec52e41bf4d3fb2bfc2dfbd30d5d6af8fd56601c3d6213475d4468957160",
+      "localeKeys": [
+        "paidAdvancedAnalytics"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S186",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/ai_assistant/presentation/screens/listing_ai_screen.dart",
+      "file": "listing_ai_screen.dart",
+      "classes": [
+        "ListingAiScreen"
+      ],
+      "feature": "owner/ai_assistant",
+      "sha256": "bb62c2443511dc6ea26e3e3e06962619dc9dec70a2f9f17ba88efacb9fbeabef",
+      "localeKeys": [
+        "paidAiAssistant"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S78",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/banner_ad_detail_screen.dart",
+      "file": "banner_ad_detail_screen.dart",
+      "classes": [
+        "BannerAdDetailScreen"
+      ],
+      "feature": "owner/banner_ads",
+      "sha256": "c0d6d963b0e76968a3d2b6e766a8239d26805221efb960d24fc29dee6a96ae6c",
+      "localeKeys": [
+        "bannerDetails"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S81",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/banner_property_picker_screen.dart",
+      "file": "banner_property_picker_screen.dart",
+      "classes": [
+        "BannerPropertyPickerScreen"
+      ],
+      "feature": "owner/banner_ads",
+      "sha256": "e012bd67804e40a56ce92ef58f325f47c43f14345bb87cc2e9e7185c95576785",
+      "localeKeys": [
+        "paidSelectProperty"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S82",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/create_banner_ad_screen.dart",
+      "file": "create_banner_ad_screen.dart",
+      "classes": [
+        "CreateBannerAdScreen"
+      ],
+      "feature": "owner/banner_ads",
+      "sha256": "10e71758b2cbe6a18191b49479414ec9b0b0259c50357627786ecf515ba035ed",
+      "localeKeys": [
+        "bannerAdvertise"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S83",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/owner_banner_ads_screen.dart",
+      "file": "owner_banner_ads_screen.dart",
+      "classes": [
+        "OwnerBannerAdsScreen"
+      ],
+      "feature": "owner/banner_ads",
+      "sha256": "dee3e861d90d28ed06fccb919f9b0323c9c67a08b8ed04e6f36541157e4f987a",
+      "localeKeys": [
+        "bannerCreate",
+        "bannerMyAds"
+      ],
+      "navigationReferences": [
+        "CreateBannerAdScreen"
+      ],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S84",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/lease_draft_screen.dart",
+      "file": "lease_draft_screen.dart",
+      "classes": [
+        "LeaseDraftScreen"
+      ],
+      "feature": "owner/digital_leases",
+      "sha256": "79f9413783253f6bd7f6af9b81b9f5fbe1538a5b1d53979f1413308da31f157a",
+      "localeKeys": [
+        "paidCreateLease"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S130",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/lease_tenant_picker_screen.dart",
+      "file": "lease_tenant_picker_screen.dart",
+      "classes": [
+        "LeaseTenantPickerScreen"
+      ],
+      "feature": "owner/digital_leases",
+      "sha256": "c6c5a12358e6594b10244e4e34d6673cd500a70c3ea4f1e692e9417c92763632",
+      "localeKeys": [
+        "paidLeaseTenant"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S131",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/rental_agreement_draft_screen.dart",
+      "file": "rental_agreement_draft_screen.dart",
+      "classes": [
+        "RentalAgreementDraftScreen"
+      ],
+      "feature": "owner/digital_leases",
+      "sha256": "b94984de8126b5635734016304b6cfd9a7c09a793f07851b587e8d346441e0f5",
+      "localeKeys": [
+        "paidCreateLease"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S132",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/rental_agreement_edit_screen.dart",
+      "file": "rental_agreement_edit_screen.dart",
+      "classes": [
+        "RentalAgreementEditScreen"
+      ],
+      "feature": "owner/digital_leases",
+      "sha256": "a756694f1889ab24634027a29e360a5880163df1b0e7b828c154ba2dce815637",
+      "localeKeys": [
+        "rentalEdit"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S133",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_home_screen.dart",
+      "file": "owner_home_screen.dart",
+      "classes": [
+        "OwnerHomeScreen"
+      ],
+      "feature": "owner/home",
+      "sha256": "ab12c65b837ca63a7d14c1606da02a52b19383cc92cc103f0d2166483a91d76d",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S15"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_listings_screen.dart",
+      "file": "owner_listings_screen.dart",
+      "classes": [
+        "OwnerListingsScreen"
+      ],
+      "feature": "owner/home",
+      "sha256": "53fa582c49d8f6b800fd42edffa031a9bdc69d40e060ab0edbffbbe6f079e8e2",
+      "localeKeys": [],
+      "navigationReferences": [
+        "OwnerPropertiesScreen"
+      ],
+      "status": "alias-or-component",
+      "aliasOf": "owner_properties_screen.dart",
+      "reason": "Wrapper directly returns OwnerPropertiesScreen, already represented by original S16; reconciled during Sprint 2 audit."
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_property_flow_screen.dart",
+      "file": "owner_property_flow_screen.dart",
+      "classes": [
+        "OwnerPropertyFlowScreen"
+      ],
+      "feature": "owner/home",
+      "sha256": "cf64b8625c490b43f2c51793a66c8ab190129c67b680d6684f9717b0328e6876",
+      "localeKeys": [
+        "ownerAddPropertyTitle"
+      ],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S17"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_requests_screen.dart",
+      "file": "owner_requests_screen.dart",
+      "classes": [
+        "OwnerRequestsScreen"
+      ],
+      "feature": "owner/home",
+      "sha256": "5fa3fe1691cd35df94f80da38bfdc7eded77a24d487f0d54598a8b2687cb683c",
+      "localeKeys": [
+        "groupsApplications",
+        "housingDemand",
+        "housingMyOffers",
+        "notificationsOwnerRequestsNavigation",
+        "ownerVisitsTitle"
+      ],
+      "navigationReferences": [
+        "HousingRequestsScreen",
+        "OwnerVisitRequestsScreen"
+      ],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S58",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_visit_requests_screen.dart",
+      "file": "owner_visit_requests_screen.dart",
+      "classes": [
+        "OwnerVisitRequestsScreen"
+      ],
+      "feature": "owner/home",
+      "sha256": "e81276ec684d75740a633415a56dd00f08238f5b92fb6ab71587a93e466e4304",
+      "localeKeys": [
+        "ownerCalendarTitle",
+        "ownerVisitsTitle"
+      ],
+      "navigationReferences": [
+        "OwnerRequestDetailsScreen",
+        "OwnerRequestsCalendarScreen"
+      ],
+      "status": "original-proposal",
+      "proposalId": "S18"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/property_location_picker_screen.dart",
+      "file": "property_location_picker_screen.dart",
+      "classes": [
+        "PropertyLocationPickerScreen"
+      ],
+      "feature": "owner/home",
+      "sha256": "25e0d703e48cb42accc3276782cf660c5561b8d576dae9cba13bfd59839bfac7",
+      "localeKeys": [
+        "ownerAddPropertyMapTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S59",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_basics_page.dart",
+      "file": "add_property_basics_page.dart",
+      "classes": [
+        "AddPropertyBasicsPage"
+      ],
+      "feature": "owner/home",
+      "sha256": "5e95de402da7960df9de4fe13221b3ea1cfde589e8fe9a619d49ffc4d15d1b23",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "alias-or-component",
+      "aliasOf": "owner_property_flow_screen.dart",
+      "reason": "Basic-information step already represented by original S17."
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_photos_page.dart",
+      "file": "add_property_photos_page.dart",
+      "classes": [
+        "AddPropertyPhotosPage"
+      ],
+      "feature": "owner/home",
+      "sha256": "9127698f87f9ea59c03b03ac105d940cab0eeb21a68397a647073348ccf28b6c",
+      "localeKeys": [
+        "ownerAddPropertyPhotoMetadataRecommended",
+        "ownerAddPropertyPhotosProgress",
+        "ownerAddPropertyPhotosReady",
+        "ownerAddPropertyPhotosReadyDescription",
+        "ownerAddPropertyPricingTitle",
+        "ownerPropertiesPhotos",
+        "ownerPropertyVideoTitle",
+        "rentalPropertyMediaOnce",
+        "virtualTourAddLater",
+        "virtualTourSeparateMedia"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S60",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_pricing_page.dart",
+      "file": "add_property_pricing_page.dart",
+      "classes": [
+        "AddPropertyPricingPage"
+      ],
+      "feature": "owner/home",
+      "sha256": "39b55de8b56bb9b73d3711b317a200df7ad4c4a9b92e9f2acd4864a0e215d2cb",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S61",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_submitted_page.dart",
+      "file": "add_property_submitted_page.dart",
+      "classes": [
+        "AddPropertySubmittedPage"
+      ],
+      "feature": "owner/home",
+      "sha256": "b35f0d74402661ef3edc4ad8bd5bbfaf3fa8dbe6912f223af48a2df8297d1ee8",
+      "localeKeys": [
+        "ownerOpenPropertyDetails",
+        "ownerPropertySubmittedAddAnother",
+        "ownerPropertySubmittedDescription",
+        "ownerPropertySubmittedStatus",
+        "ownerPropertySubmittedViewProperties",
+        "virtualTourAddAfterSave"
+      ],
+      "navigationReferences": [
+        "OwnerListingsScreen",
+        "PropertyDetailsScreen"
+      ],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S62",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_demand/presentation/screens/housing_offer_compose_screen.dart",
+      "file": "housing_offer_compose_screen.dart",
+      "classes": [
+        "HousingOfferComposeScreen"
+      ],
+      "feature": "owner/housing_demand",
+      "sha256": "d1080b82be55dfd79c556f5ddbdd913812b52dd3b49132ef3807c280e1f86a68",
+      "localeKeys": [
+        "housingSendOffer"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S106",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_detail_screen.dart",
+      "file": "group_application_detail_screen.dart",
+      "classes": [
+        "GroupApplicationDetailScreen"
+      ],
+      "feature": "owner/housing_groups",
+      "sha256": "99c80d61f2a1aeca7c08da3a7a69801e23d36f9e2ac2f1ed241c44f295e7b098",
+      "localeKeys": [
+        "groupsApplications"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S213",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_review_screen.dart",
+      "file": "group_application_review_screen.dart",
+      "classes": [
+        "GroupApplicationReviewScreen"
+      ],
+      "feature": "owner/housing_groups",
+      "sha256": "9b326470c3559e0b99c7ddf347203d775089aa56a36a68e3e787cec1b647be98",
+      "localeKeys": [
+        "groupsJointUnavailable"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S214",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/premium/presentation/screens/premium_property_picker_screen.dart",
+      "file": "premium_property_picker_screen.dart",
+      "classes": [
+        "PremiumPropertyPickerScreen"
+      ],
+      "feature": "owner/premium",
+      "sha256": "f7a578052b63e85c4d7d13ebdd692c186dfafe4222e07f933027e97c0d2d99bb",
+      "localeKeys": [
+        "paidSelectProperty"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S86",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/profile/presentation/screens/owner_profile_screen.dart",
+      "file": "owner_profile_screen.dart",
+      "classes": [
+        "OwnerProfileScreen"
+      ],
+      "feature": "owner/profile",
+      "sha256": "397dfce0bf4f4a5f9ff096ccdecaacccf67a37693b50194d0538fe64c0e08f46",
+      "localeKeys": [],
+      "navigationReferences": [
+        "ProfileEditScreen"
+      ],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S41",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/promotions/presentation/screens/promotions_screen.dart",
+      "file": "promotions_screen.dart",
+      "classes": [
+        "PromotionsScreen"
+      ],
+      "feature": "owner/promotions",
+      "sha256": "91cc70c5a8e5f70531dbb31f9e07ff71359d44eba97c19cbcf5ca07e26a66b00",
+      "localeKeys": [],
+      "navigationReferences": [
+        "CreateBannerAdScreen"
+      ],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S85",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_properties_screen.dart",
+      "file": "owner_properties_screen.dart",
+      "classes": [
+        "OwnerPropertiesScreen"
+      ],
+      "feature": "owner/properties",
+      "sha256": "1cd0ffadcefe0a3b8d30e759da47ffb62e91a88bbeffea57c9b0025dbfc1e72f",
+      "localeKeys": [],
+      "navigationReferences": [
+        "OwnerCreationScreen",
+        "OwnerPropertyFlowScreen",
+        "OwnerPropertyRejectionScreen"
+      ],
+      "status": "original-proposal",
+      "proposalId": "S16"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_property_analytics_screen.dart",
+      "file": "owner_property_analytics_screen.dart",
+      "classes": [
+        "OwnerPropertyAnalyticsScreen"
+      ],
+      "feature": "owner/properties",
+      "sha256": "940f22a1502e26a5e90d222bd290763119c0c62d288f2ba6bd34d66d4e1f1acb",
+      "localeKeys": [
+        "ownerAnalyticsNinetyDays",
+        "ownerAnalyticsPeriod",
+        "ownerAnalyticsSevenDays",
+        "ownerAnalyticsThirtyDays",
+        "ownerAnalyticsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S63",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_property_rejection_screen.dart",
+      "file": "owner_property_rejection_screen.dart",
+      "classes": [
+        "OwnerPropertyRejectionScreen"
+      ],
+      "feature": "owner/properties",
+      "sha256": "7fcdbc2bb1b67aa4d121ab0763c3238679e8ef6024f972476c3998eccaaf928d",
+      "localeKeys": [
+        "ownerPropertyEditAndResubmit",
+        "ownerPropertyRejectedHeadline",
+        "ownerPropertyRejectionDetailsUnavailable",
+        "ownerPropertyRejectionTitle",
+        "ownerPropertyRejectionWarning"
+      ],
+      "navigationReferences": [
+        "OwnerPropertyFlowScreen"
+      ],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S64",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_revenue_screen.dart",
+      "file": "owner_revenue_screen.dart",
+      "classes": [
+        "OwnerRevenueScreen"
+      ],
+      "feature": "owner/properties",
+      "sha256": "6b462c91ada7325777c5278c589678562439acc2509fcc0cbc1c70118efe9b7b",
+      "localeKeys": [
+        "ownerRevenueTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S65",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_interests/presentation/screens/terms_proposal_edit_screen.dart",
+      "file": "terms_proposal_edit_screen.dart",
+      "classes": [
+        "TermsProposalEditScreen"
+      ],
+      "feature": "owner/rental_interests",
+      "sha256": "92823dd8ddf014a416f989f80b732970440258a7b34b93a0fc99144e428df843",
+      "localeKeys": [
+        "rentalTerms"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S111",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_interests/presentation/screens/terms_proposal_form_screen.dart",
+      "file": "terms_proposal_form_screen.dart",
+      "classes": [
+        "TermsProposalFormScreen"
+      ],
+      "feature": "owner/rental_interests",
+      "sha256": "d045c6b3736870cb1a5ea73e810a0bcfd582d20374458ac8d654d478ff44793d",
+      "localeKeys": [
+        "rentalTerms"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S112",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_onboarding_screen.dart",
+      "file": "owner_onboarding_screen.dart",
+      "classes": [
+        "OwnerOnboardingScreen"
+      ],
+      "feature": "owner/rental_payouts",
+      "sha256": "45dc4169b69fe3e15f515453813bb877af4c7125bb84365ac34ece84b3ee6ed2",
+      "localeKeys": [
+        "rentalSetupBeneficiary"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S181",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_payables_screen.dart",
+      "file": "owner_payables_screen.dart",
+      "classes": [
+        "OwnerPayablesScreen"
+      ],
+      "feature": "owner/rental_payouts",
+      "sha256": "4fd95dc3d02e79c21b455d386e59f71456f45323d4523868b11e555c21f57c97",
+      "localeKeys": [
+        "rentalOwnerPayables"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S182",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_payment_readiness_screen.dart",
+      "file": "owner_payment_readiness_screen.dart",
+      "classes": [
+        "OwnerPaymentReadinessScreen"
+      ],
+      "feature": "owner/rental_payouts",
+      "sha256": "23db219f4a92ec8d6fc06c7d7b344b6f0a90f068256b6d5eaf9278123d105bfe",
+      "localeKeys": [
+        "rentalOwnerReadiness"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S183",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/rental_payout_detail_screen.dart",
+      "file": "rental_payout_detail_screen.dart",
+      "classes": [
+        "RentalPayoutDetailScreen"
+      ],
+      "feature": "owner/rental_payouts",
+      "sha256": "6a55106bda749074a9da6d466fa2d2386a6bccd277b35d6d0916eae15db3a49f",
+      "localeKeys": [
+        "rentalPayouts"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S184",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/rental_payout_list_screen.dart",
+      "file": "rental_payout_list_screen.dart",
+      "classes": [
+        "RentalPayoutsScreen"
+      ],
+      "feature": "owner/rental_payouts",
+      "sha256": "f8eae8986df83fe8c46c5adddb54a79b10433c1d53381cf47ef1a2fe47daa320",
+      "localeKeys": [
+        "rentalPayouts"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S185",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/tenancy_invitations/presentation/screens/rental_interest_invitation_screen.dart",
+      "file": "rental_interest_invitation_screen.dart",
+      "classes": [
+        "RentalInterestInvitationScreen"
+      ],
+      "feature": "owner/tenancy_invitations",
+      "sha256": "57add68bff0a2232e42cd7f9bceb19276a70dd912641ec29fc5e2fee9e73bcd6",
+      "localeKeys": [
+        "tenancyInviteToRent"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S115",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/tenancy_invitations/presentation/screens/tenancy_invite_screen.dart",
+      "file": "tenancy_invite_screen.dart",
+      "classes": [
+        "TenancyInviteScreen"
+      ],
+      "feature": "owner/tenancy_invitations",
+      "sha256": "8226c131f085885368516fbab66991ef345a4dad72668c33a0aa53e686e81d7f",
+      "localeKeys": [
+        "tenancyInviteToRent"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S116",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/screens/owner_availability_screen.dart",
+      "file": "owner_availability_screen.dart",
+      "classes": [
+        "OwnerAvailabilityScreen"
+      ],
+      "feature": "owner/visits",
+      "sha256": "340d61185c3c7d3df901611f9aec3ef608151bb51c5398151fe3cabf735cc69e",
+      "localeKeys": [
+        "ownerAvailabilityTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S66",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/screens/owner_request_details_screen.dart",
+      "file": "owner_request_details_screen.dart",
+      "classes": [
+        "OwnerRequestDetailsScreen"
+      ],
+      "feature": "owner/visits",
+      "sha256": "ada03eee49616d2d4447c02f41d940e31aba7b9993cf217d0fac163b71be0acf",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S19"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/screens/owner_requests_calendar_screen.dart",
+      "file": "owner_requests_calendar_screen.dart",
+      "classes": [
+        "OwnerRequestsCalendarScreen"
+      ],
+      "feature": "owner/visits",
+      "sha256": "0946edf75be1299a071e6db440214ec39b0a0beb52510f8972e9fd17d2167e3d",
+      "localeKeys": [
+        "ownerCalendarTitle"
+      ],
+      "navigationReferences": [
+        "OwnerAvailabilityScreen",
+        "PremiumPropertyPickerScreen"
+      ],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S67",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_action_screen.dart",
+      "file": "execution_action_screen.dart",
+      "classes": [
+        "ExecutionActionScreen"
+      ],
+      "feature": "shared/advanced_execution",
+      "sha256": "e7456609a08bfc4dc6eee14ca8fe2c52e34028456fe7859d15fda148aa2f766e",
+      "localeKeys": [
+        "executionAck",
+        "executionMockNotice",
+        "executionOutcome",
+        "executionPolicy",
+        "planningConsentRequired"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S296",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_detail_screen.dart",
+      "file": "execution_detail_screen.dart",
+      "classes": [
+        "ExecutionDetailScreen"
+      ],
+      "feature": "shared/advanced_execution",
+      "sha256": "d68ae1dc2b30d6c019c404cc6542168acde60ad650d8b3d9c8eeb589adbbd6e4",
+      "localeKeys": [
+        "executionTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S297",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_inbox_screen.dart",
+      "file": "execution_inbox_screen.dart",
+      "classes": [
+        "ExecutionInboxScreen"
+      ],
+      "feature": "shared/advanced_execution",
+      "sha256": "e9aa349ccd7e00ed901d0748b228bfbc09495fa1ebc286057f5f3beb78f53e59",
+      "localeKeys": [
+        "executionInbox"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S298",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/appearance/presentation/screens/appearance_screen.dart",
+      "file": "appearance_screen.dart",
+      "classes": [
+        "AppearanceScreen"
+      ],
+      "feature": "shared/appearance",
+      "sha256": "caf72e2052f2e1bbcbdaceeee0ecc0113f474f9c7a5436d0c29e64cbad44da0e",
+      "localeKeys": [
+        "appearanceTitle"
+      ],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S20"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/asset_passport/presentation/screens/asset_item_screen.dart",
+      "file": "asset_item_screen.dart",
+      "classes": [
+        "AssetItemScreen"
+      ],
+      "feature": "shared/asset_passport",
+      "sha256": "89c07ad1b4a8c884ea27bb33ab3a600093c0c155dce7f2843d79b4a1de635503",
+      "localeKeys": [
+        "assetPassport"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S157",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/asset_passport/presentation/screens/asset_passport_screen.dart",
+      "file": "asset_passport_screen.dart",
+      "classes": [
+        "AssetPassportScreen"
+      ],
+      "feature": "shared/asset_passport",
+      "sha256": "52ecca2c16ab91a986c47ccd33113115b31d9c15c4e983ff5c9b7873eb68ec7e",
+      "localeKeys": [
+        "assetPassport"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S158",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/asset_passport/presentation/screens/asset_review_workspace_screen.dart",
+      "file": "asset_review_workspace_screen.dart",
+      "classes": [
+        "AssetReviewWorkspaceScreen"
+      ],
+      "feature": "shared/asset_passport",
+      "sha256": "0ea6e0dffe1215c5512d778663b32e3989029d8925778aa7fb01b0d12afdc273",
+      "localeKeys": [
+        "assetReviewTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S159",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/forgot_password_screen.dart",
+      "file": "forgot_password_screen.dart",
+      "classes": [
+        "ForgotPasswordScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "27291b9968cd1501043e0f287f2d31dc5873262fe5840906a63518a829ad8d11",
+      "localeKeys": [
+        "checkYourEmail",
+        "recoverPasswordTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S22",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/kyc_approved_screen.dart",
+      "file": "kyc_approved_screen.dart",
+      "classes": [
+        "KycApprovedScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "8c4c10da77df89e1a6dc5b1fb9feccdd561a633a7997940a4a5b0319cf1af5cd",
+      "localeKeys": [
+        "accountVerifiedBadge",
+        "chatEnabled",
+        "kycApprovedDescription",
+        "kycApprovedTitle",
+        "priorityVisitBooking",
+        "startHousingSearch",
+        "verified"
+      ],
+      "navigationReferences": [
+        "TenantSearchScreen"
+      ],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S25",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/kyc_intro_screen.dart",
+      "file": "kyc_intro_screen.dart",
+      "classes": [
+        "KycIntroScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "3e617bae1dd878a543560b7b8608087646e6a007fa713ffa4b6b395c3f993ee8",
+      "localeKeys": [
+        "clearSelfie",
+        "identityVerification",
+        "internalReviewOnly",
+        "kycIntroDescription",
+        "kycPrivacyIntroTitle",
+        "nationalIdFrontBack",
+        "requiredDocuments",
+        "skip",
+        "uploadDocuments",
+        "verifyIdentityAndStart"
+      ],
+      "navigationReferences": [
+        "KycUploadDocumentsScreen"
+      ],
+      "status": "original-proposal",
+      "proposalId": "S04"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/kyc_pending_screen.dart",
+      "file": "kyc_pending_screen.dart",
+      "classes": [
+        "KycPendingScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "0ba49a18905687aad36381ae97d09b6746af9a5b44897b0eed7379a33f000d2d",
+      "localeKeys": [
+        "expected",
+        "kycPendingBadge",
+        "kycPendingDescription",
+        "kycPendingTitle",
+        "name",
+        "ok",
+        "submittedAt"
+      ],
+      "navigationReferences": [
+        "LoginScreen"
+      ],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S24",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/kyc_upload_documents_screen.dart",
+      "file": "kyc_upload_documents_screen.dart",
+      "classes": [
+        "KycUploadDocumentsScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "02f5c33cba54f3d25e36c99a4a7227fb4ffadf1ae45e3d2f2c364f6c188c108f",
+      "localeKeys": [
+        "nationalId"
+      ],
+      "navigationReferences": [
+        "KycPendingScreen"
+      ],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S23",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/login_screen.dart",
+      "file": "login_screen.dart",
+      "classes": [
+        "LoginScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "35dcb5f476b6106c96373abbf4b3334f70cf897026ad5582b8c36fdb5156ea84",
+      "localeKeys": [
+        "email",
+        "forgotPassword",
+        "login",
+        "password",
+        "signInAsVisitor"
+      ],
+      "navigationReferences": [
+        "ForgotPasswordScreen",
+        "HomeScreen"
+      ],
+      "status": "original-proposal",
+      "proposalId": "S02"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/otp_screen.dart",
+      "file": "otp_screen.dart",
+      "classes": [
+        "OtpScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "4e403a23e2bc6feb6ba1c6f6c9f0dd8ca0cf81e7f2f53b209bf97be836b266b7",
+      "localeKeys": [
+        "verificationCode"
+      ],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S03"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/register_flow_screen.dart",
+      "file": "register_flow_screen.dart",
+      "classes": [
+        "RegisterFlowScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "f3e3907aa2c37b4208b9ce6ec66a3446875752ad9a50357201ec992fd1c08122",
+      "localeKeys": [],
+      "navigationReferences": [
+        "LoginScreen",
+        "OtpScreen",
+        "RegisterScreen"
+      ],
+      "status": "alias-or-component",
+      "aliasOf": "register_screen.dart",
+      "reason": "Flow host switches between registration and the existing OTP surface."
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/register_screen.dart",
+      "file": "register_screen.dart",
+      "classes": [
+        "RegisterScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "9a6a5e7c20f3a543ee4987c4b4acd775569bf3506def90250de8dda6e49768a6",
+      "localeKeys": [
+        "confirmPassword",
+        "createAccount",
+        "email",
+        "firstName",
+        "firstNameHint",
+        "lastName",
+        "lastNameHint",
+        "password",
+        "phoneNumber",
+        "registrationSubmitting"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S21",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/welcome_screen.dart",
+      "file": "welcome_screen.dart",
+      "classes": [
+        "WelcomeScreen"
+      ],
+      "feature": "shared/auth",
+      "sha256": "85ffb25fffebb42fcff92f22377cd532e49c12ac595204e754d89c1770c17f00",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S01"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/my_invoices_screen.dart",
+      "file": "my_invoices_screen.dart",
+      "classes": [
+        "MyInvoicesScreen"
+      ],
+      "feature": "shared/billing",
+      "sha256": "fe8a7cc5301d3099ec82f7ffdfc3825bfda1e0fcfe467fcddfbf5980a2b06b1d",
+      "localeKeys": [
+        "billingAll",
+        "billingClearDate",
+        "billingDateFilter",
+        "billingMyInvoices",
+        "billingOwnPurchases"
+      ],
+      "navigationReferences": [
+        "PurchaseInvoiceScreen",
+        "RentInvoiceScreen"
+      ],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S87",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/purchase_invoice_screen.dart",
+      "file": "purchase_invoice_screen.dart",
+      "classes": [
+        "PurchaseInvoiceScreen"
+      ],
+      "feature": "shared/billing",
+      "sha256": "3a59b529aca60870a8ab29284e18b09b1b9bcb4544f9b04164509ac8010b844e",
+      "localeKeys": [
+        "billingMockNotice",
+        "billingPay",
+        "billingReviewInvoice",
+        "commerceSandboxNotice",
+        "rentalOperationUnknown"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S88",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/subscriptions_screen.dart",
+      "file": "subscriptions_screen.dart",
+      "classes": [
+        "SubscriptionsScreen"
+      ],
+      "feature": "shared/billing",
+      "sha256": "ed0b9907c4e831375a816a2d69ec854028c9140275e175018055c9a01fcc8e8a",
+      "localeKeys": [
+        "billingEnds",
+        "billingMyInvoices",
+        "billingNoSubscription",
+        "billingOwnerSubscriptions",
+        "billingRetryInvoice",
+        "billingReviewInvoice",
+        "billingStarts",
+        "billingTenantSubscriptions",
+        "commerceCompanyPlans",
+        "commerceGraceEnds",
+        "rentalOperationUnknown"
+      ],
+      "navigationReferences": [
+        "MyInvoicesScreen",
+        "PurchaseInvoiceScreen"
+      ],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S89",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/business_policies/presentation/screens/business_policies_screen.dart",
+      "file": "business_policies_screen.dart",
+      "classes": [
+        "BusinessPoliciesScreen"
+      ],
+      "feature": "shared/business_policies",
+      "sha256": "bc5ac8ddbde916189745963cc8a913bb7069d78449adc5168112fd3c9f3dc996",
+      "localeKeys": [
+        "businessPoliciesTitle",
+        "ownerRetryAction"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S48",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_policy_cases_screen.dart",
+      "file": "chat_policy_cases_screen.dart",
+      "classes": [
+        "ChatPolicyCasesScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "e93e10cf8a84d8b45e720d3a2425503205120afeab9943a1f07925336bd8ce75",
+      "localeKeys": [
+        "chatPolicyReview"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S93",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_property_groups_screen.dart",
+      "file": "chat_property_groups_screen.dart",
+      "classes": [
+        "ChatPropertyGroupsScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "354f9faad82911f4e5360c048cc1d8be6487196a662c02bc9c37e43a3956fad5",
+      "localeKeys": [
+        "chatChooseGroup"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S94",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_property_picker_screen.dart",
+      "file": "chat_property_picker_screen.dart",
+      "classes": [
+        "ChatPropertyPickerScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "beb98f72fdba6ef1a3edcd11fb66f23db33951a7639e2b956697d2821e1185d1",
+      "localeKeys": [
+        "chatChooseProperty",
+        "chatPropertyAll",
+        "chatPropertyFavorites"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S95",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_restricted_screen.dart",
+      "file": "chat_restricted_screen.dart",
+      "classes": [
+        "ChatRestrictedScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "73f4ff7644474958930510efa7c3179eba234af6f97f8aed11db839e62258c19",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S96",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_screen.dart",
+      "file": "chat_screen.dart",
+      "classes": [
+        "ChatScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "28f83b3999f134d26b807f654510caa6ac7c370a624bcbecaca934d0e3c8c28d",
+      "localeKeys": [
+        "chatManageConversation",
+        "rentalChatContext",
+        "rentalChatContextHelp"
+      ],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S14"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_search_screen.dart",
+      "file": "chat_search_screen.dart",
+      "classes": [
+        "ChatSearchScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "b4c92c24110bcf414ac9cf7a2418fad29378670e929c0849b770cf6d452d73f6",
+      "localeKeys": [
+        "chatLibrary",
+        "chatLibraryFiles",
+        "chatLibraryLinks",
+        "chatLibraryVoice",
+        "chatSearchMessages",
+        "privatePhotos",
+        "search"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S97",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chats_screen.dart",
+      "file": "chats_screen.dart",
+      "classes": [
+        "ChatsScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "626b7b424531cea1f7a31f505fdfd25b58d593eb5f92bc1f862a73c66c0502a1",
+      "localeKeys": [
+        "chatAllInWorkspace",
+        "chatConversationsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S13"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/group_chat_screen.dart",
+      "file": "group_chat_screen.dart",
+      "classes": [
+        "GroupChatScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "1008db2690f31e62baff46e639b284efb24fe81e531b7e5f2802eaee276d3e61",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S98",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/previous_chat_screen.dart",
+      "file": "previous_chat_screen.dart",
+      "classes": [
+        "PreviousChatScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "dd4fbb96ea25afc41bd166e8ec5135b08076e6608af8e75f1c0c814040a7e961",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S99",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/start_conversation_screen.dart",
+      "file": "start_conversation_screen.dart",
+      "classes": [
+        "StartConversationScreen"
+      ],
+      "feature": "shared/chat",
+      "sha256": "537f8f3eb5d93c183599d24bc4f0e268da583b108706b679a2442d999d3012cb",
+      "localeKeys": [
+        "chatConversationsTitle"
+      ],
+      "navigationReferences": [
+        "ChatScreen"
+      ],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S100",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/account_contexts_screen.dart",
+      "file": "account_contexts_screen.dart",
+      "classes": [
+        "AccountContextsScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "79bed6ab1273409966fdb60943b29d3d65128b0f124abc5600cf49427c7b4033",
+      "localeKeys": [
+        "companyAccountContexts"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S233",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_activation_screen.dart",
+      "file": "company_activation_screen.dart",
+      "classes": [
+        "CompanyActivationScreen",
+        "CompanyActivationReviewScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "a7dff4ab80c042a29daf9076ed5180ded9cbeb5d3f7948262482f9f352b24207",
+      "localeKeys": [
+        "companyActivateAccess"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S234",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_contact_proof_screen.dart",
+      "file": "company_contact_proof_screen.dart",
+      "classes": [
+        "CompanyContactProofScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "8eea38551f5f29402fea33d63f9bea202f4ec102bfa7a9fea1dcf9ae194929a8",
+      "localeKeys": [
+        "companyVerifyWorkContact"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S235",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_contract_screen.dart",
+      "file": "company_contract_screen.dart",
+      "classes": [
+        "CompanyContractScreen",
+        "CompanyContractFormScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "74de8343dd82be9166c4f15f86001228ec07c4d7fecf2f8125cd2961bd056e6d",
+      "localeKeys": [
+        "companyContractPreparations",
+        "companyContractPrepare"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S236",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_costs_screen.dart",
+      "file": "company_costs_screen.dart",
+      "classes": [
+        "CompanyCostsScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "d5d8faa64386bee99b2773aae99573d8ea6802a3c53e36d7d5cfa7bfd94e8ec4",
+      "localeKeys": [
+        "companyApplyFilters",
+        "companyCosts",
+        "companyExportCsv",
+        "companyExportJson",
+        "companyTenancyRefreshToAct"
+      ],
+      "navigationReferences": [
+        "CompanyTenancyScreen"
+      ],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S237",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_create_screen.dart",
+      "file": "company_create_screen.dart",
+      "classes": [
+        "CompanyCreateScreen",
+        "CompanyJoinScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "72e9caa1bc4470f5c565df8159a7b8127a9d8260c4dd1378929d7f5e47bdd920",
+      "localeKeys": [
+        "companyCreate",
+        "companyJoin"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S238",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_hub_screen.dart",
+      "file": "company_hub_screen.dart",
+      "classes": [
+        "CompanyHubScreen",
+        "CompanyScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "44e63a99fb5620d3203625cbf56c41831e1dc2d753d4862a8f515470d2a42763",
+      "localeKeys": [
+        "companyHousing"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S239",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_invitation_screen.dart",
+      "file": "company_invitation_screen.dart",
+      "classes": [
+        "CompanyInvitationScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "fe1381e54da8900f241167c2713cdf89d82dbcd476e4f081bd0fc43cc142be55",
+      "localeKeys": [
+        "companyInvitationToken"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S240",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_members_screen.dart",
+      "file": "company_members_screen.dart",
+      "classes": [
+        "CompanyMembersScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "33680975c2e4b07f3bc3383e1d2f7fcd0592e4971ad3f36bc2b09f5b22a75ad4",
+      "localeKeys": [
+        "companyPeople"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S241",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_rental_summary_screen.dart",
+      "file": "company_rental_summary_screen.dart",
+      "classes": [
+        "CompanyRentalSummaryScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "58fc1876113025e0d98cebb0dcc0e1a1246f9d1385b142dcb0360c996a8bf091",
+      "localeKeys": [
+        "companyHousingAndPeople",
+        "companyToday"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S242",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_requests_screen.dart",
+      "file": "company_requests_screen.dart",
+      "classes": [
+        "CompanyRequestEntryScreen",
+        "CompanyRequestsScreen",
+        "CompanyRequestScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "e8532c23201fd7db02267a642af3e2cf9f6e78537ecb587ee4ed04f375c70365",
+      "localeKeys": [
+        "companyRequests"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S243",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_save_offer_screen.dart",
+      "file": "company_save_offer_screen.dart",
+      "classes": [
+        "CompanySaveOfferScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "3131669271085cbad98f5bc576dafbdf94842ebd35f972999b7c1c2c3b58f12e",
+      "localeKeys": [
+        "workspaceSaveForCompany"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S244",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_action_screen.dart",
+      "file": "company_saved_action_screen.dart",
+      "classes": [
+        "CompanySavedActionScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "9cdb9a50db6aa501e7c306cba6848890bef61138889864a2ef94cfb0441d096d",
+      "localeKeys": [
+        "rentalInvalidInput",
+        "workspaceCompanyLists",
+        "workspaceListArchive",
+        "workspaceListCreate",
+        "workspaceListRemove",
+        "workspaceListRename",
+        "workspaceSaveForCompany"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S245",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_detail_screen.dart",
+      "file": "company_saved_detail_screen.dart",
+      "classes": [
+        "CompanySavedDetailScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "dc54f827cdb99f44de7edaab44ed7b93aebe195af0b5fcc25e193cf23dceb439",
+      "localeKeys": [
+        "workspaceListArchive",
+        "workspaceListEmptyHelp",
+        "workspaceListItemsEmpty",
+        "workspaceListRemove",
+        "workspaceListRename",
+        "workspaceListUnavailable"
+      ],
+      "navigationReferences": [
+        "CompanySavedActionScreen"
+      ],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S246",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_batch_screen.dart",
+      "file": "company_staff_batch_screen.dart",
+      "classes": [
+        "CompanyStaffBatchScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "972ea5777682302023da6a54c549b221b673ff9fe05d5bb372a55cf9d042bd76",
+      "localeKeys": [
+        "companyStaffBatch"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S247",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_import_screen.dart",
+      "file": "company_staff_import_screen.dart",
+      "classes": [
+        "CompanyStaffImportScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "81b00f6a947fbe09a70b301215031a05721b8b6c1b7760d2ecc16d3ccaabc4bc",
+      "localeKeys": [
+        "companyImportCsv"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S248",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_screen.dart",
+      "file": "company_staff_screen.dart",
+      "classes": [
+        "CompanyStaffScreen",
+        "CompanyStaffDetailScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "3a07a6fbdc529455ad080929bb56915ef7130f9d6349a8e375620983c865b901",
+      "localeKeys": [
+        "companyPeople"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S249",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_tenancy_screen.dart",
+      "file": "company_tenancy_screen.dart",
+      "classes": [
+        "CompanyTenancyScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "20935907fbadfbae719f62e6beff1b2741078ac8c265e4e9d02ad76f2d3bc6b3",
+      "localeKeys": [
+        "companyTenancies"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S250",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_viewing_request_screen.dart",
+      "file": "company_viewing_request_screen.dart",
+      "classes": [
+        "CompanyViewingRequestScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "945d784e4f9f5ce457e23bd66a3f98e69ef3328a6f6792e055352295eff65bc0",
+      "localeKeys": [
+        "companyContinueViewing",
+        "companyViewingCoordinatorRequired"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S251",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_workspace_screen.dart",
+      "file": "company_workspace_screen.dart",
+      "classes": [
+        "CompanyWorkspaceScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "a292176a55796d41bd4f57450b2b11a2f42c149f4458f95c5a6b074d98eaa50d",
+      "localeKeys": [
+        "searchRetry",
+        "uxViewWork",
+        "workspaceCompanies",
+        "workspaceCompanyAccessLost",
+        "workspaceCompanySelect"
+      ],
+      "navigationReferences": [
+        "ChatsScreen",
+        "CompanyRentalSummaryScreen",
+        "ContinuationScreen"
+      ],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S252",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/owner_creation_screen.dart",
+      "file": "owner_creation_screen.dart",
+      "classes": [
+        "OwnerCreationScreen",
+        "ResidentialAssetCreateScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "034898c10fe984e8f13e22df665a3fcf5dbbac442c720a1778fc6c290b12a5e0",
+      "localeKeys": [
+        "ownerAddPropertyTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S253",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/portfolio_change_screen.dart",
+      "file": "portfolio_change_screen.dart",
+      "classes": [
+        "PortfolioChangeCreateScreen",
+        "PortfolioChangeScreen",
+        "PortfolioDestinationScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "92620a2e55777330c6eeb0a36a1bd5936c361cbf38656a37917c07d103fe254b",
+      "localeKeys": [
+        "portfolioBulkEdit",
+        "portfolioChangeReview",
+        "portfolioDestination",
+        "portfolioInventoryChange"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S254",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/portfolio_media_screen.dart",
+      "file": "portfolio_media_screen.dart",
+      "classes": [
+        "PortfolioMediaScreen",
+        "PortfolioMediaItemScreen",
+        "PortfolioMediaPreviewScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "1d90e9f93e463405d27d41e5ac598f6ca960030dabbe4a1870f7816d0cc24b97",
+      "localeKeys": [
+        "portfolioAddMedia",
+        "portfolioMediaEvidence",
+        "portfolioViewMedia"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S255",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/residential_assets_screen.dart",
+      "file": "residential_assets_screen.dart",
+      "classes": [
+        "ResidentialAssetsScreen",
+        "ResidentialAssetScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "ff8ab29be762ca406221d66ab56016281789acafeba0f9ec5317a8c3e6a4e009",
+      "localeKeys": [
+        "portfolioInventory",
+        "portfolioManageBuildings",
+        "portfolioManageComplexes",
+        "virtualTourRefresh"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S256",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/unit_batch_screen.dart",
+      "file": "unit_batch_screen.dart",
+      "classes": [
+        "UnitBatchScreen",
+        "UnitBatchResultScreen"
+      ],
+      "feature": "shared/company_housing",
+      "sha256": "9f9091dc7388958fcfec7f741dbd65f55f973acce9b9deb3ccc00baff698352b",
+      "localeKeys": [
+        "portfolioBatchResults",
+        "portfolioMultipleUnits",
+        "portfolioSwitchMode"
+      ],
+      "navigationReferences": [
+        "OwnerCreationScreen"
+      ],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S257",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/contextual_onboarding/presentation/screens/guide_settings_screen.dart",
+      "file": "guide_settings_screen.dart",
+      "classes": [
+        "GuideSettingsScreen"
+      ],
+      "feature": "shared/contextual_onboarding",
+      "sha256": "c7c2e48d4e5033d8e7c6d2765ed922b644ea005cf1d655a77142749beceae0fc",
+      "localeKeys": [
+        "guideAutomatic",
+        "guidePreferencesFailed",
+        "guideReachScreen",
+        "guideTitle"
+      ],
+      "navigationReferences": [
+        "DecisionToolsScreen"
+      ],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S49",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/digital_lease_details_screen.dart",
+      "file": "digital_lease_details_screen.dart",
+      "classes": [
+        "DigitalLeaseDetailsScreen"
+      ],
+      "feature": "shared/digital_leases",
+      "sha256": "87a4e8450996b762bddd97c92c56febaaba839aea260bd8cba95e700b8ca58d0",
+      "localeKeys": [
+        "paidDigitalLeases"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S134",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/digital_leases_screen.dart",
+      "file": "digital_leases_screen.dart",
+      "classes": [
+        "DigitalLeasesScreen"
+      ],
+      "feature": "shared/digital_leases",
+      "sha256": "734cc8176e4806a3aadcc02b5233310fd0b5a5caa374834a9bb7b3ce2513891b",
+      "localeKeys": [
+        "paidDigitalLeases"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S135",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/rental_agreement_review_screen.dart",
+      "file": "rental_agreement_review_screen.dart",
+      "classes": [
+        "RentalAgreementReviewScreen"
+      ],
+      "feature": "shared/digital_leases",
+      "sha256": "5617d6d4a880e13fbd917d1a75012341784c9efc77e35e69c7b51edb080ac55f",
+      "localeKeys": [
+        "rentalReviewContract"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S136",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/rental_signing_screen.dart",
+      "file": "rental_signing_screen.dart",
+      "classes": [
+        "RentalSigningScreen"
+      ],
+      "feature": "shared/digital_leases",
+      "sha256": "2006ad4ae9d30f70fe9b2ceee8b0bedb30d6ac64308ce365547ae64342e58285",
+      "localeKeys": [
+        "rentalSignature"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S137",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/presentation/screens/housing_offer_action_screen.dart",
+      "file": "housing_offer_action_screen.dart",
+      "classes": [
+        "HousingOfferActionScreen"
+      ],
+      "feature": "shared/housing_requests",
+      "sha256": "ff5711e59a01f37490406331c29f502c71d98bcb7c7b1e9f978db2d891fa5c41",
+      "localeKeys": [
+        "housingSelectProceedHelp"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S101",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/presentation/screens/housing_request_screen.dart",
+      "file": "housing_request_screen.dart",
+      "classes": [
+        "HousingRequestScreen"
+      ],
+      "feature": "shared/housing_requests",
+      "sha256": "238e4a218e4cdb8d22a0fd34319dbde31fcac9bd7a74a1a48a4b1442b815e9eb",
+      "localeKeys": [
+        "housingViewRequest"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S102",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/presentation/screens/housing_requests_screen.dart",
+      "file": "housing_requests_screen.dart",
+      "classes": [
+        "HousingRequestsScreen"
+      ],
+      "feature": "shared/housing_requests",
+      "sha256": "79e2625b551fddaffa04fe2e71053d0e0d8d9f1cbc2343bfddf38ec5f6be4d7e",
+      "localeKeys": [
+        "housingDemand",
+        "housingRequestsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S103",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/housing_scenario_screen.dart",
+      "file": "housing_scenario_screen.dart",
+      "classes": [
+        "HousingScenarioScreen"
+      ],
+      "feature": "shared/housing_simulator",
+      "sha256": "72eeaa9631ee1a050faa0524ce546201455bc1a65932df144cfe45d8c7bbc241",
+      "localeKeys": [
+        "housingSimulator"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S282",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/housing_scenarios_screen.dart",
+      "file": "housing_scenarios_screen.dart",
+      "classes": [
+        "HousingScenariosScreen"
+      ],
+      "feature": "shared/housing_simulator",
+      "sha256": "3669caaac7ec31c344b9494d43665a3fb6287c46063eb145d401b583e0f50d6b",
+      "localeKeys": [
+        "housingSimulator"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S283",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/scenario_decision_inbox_screen.dart",
+      "file": "scenario_decision_inbox_screen.dart",
+      "classes": [
+        "HousingScenarioDecisionInboxScreen"
+      ],
+      "feature": "shared/housing_simulator",
+      "sha256": "f0ceb42c3a2944246fba827acdcc970b1ca144f130981ac331cc8c23d6aa4c6a",
+      "localeKeys": [
+        "scenarioDecisionHelp",
+        "scenarioDecisionInbox",
+        "scenarioNoDecisions"
+      ],
+      "navigationReferences": [
+        "ScenarioReviewScreen"
+      ],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S284",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/scenario_review_screen.dart",
+      "file": "scenario_review_screen.dart",
+      "classes": [
+        "ScenarioReviewScreen"
+      ],
+      "feature": "shared/housing_simulator",
+      "sha256": "f9b4474540f885be4b37af5dacb114e98f2f0a27e4d9a83db9308dc66ee56125",
+      "localeKeys": [
+        "scenarioComparisonTitle",
+        "scenarioDecisionReview"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S285",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/housing_tender_screen.dart",
+      "file": "housing_tender_screen.dart",
+      "classes": [
+        "HousingTenderScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "3a6fa362ccbd47caf79b5156080ca7caea21bc44e0c29cadb083c9825cbb9a29",
+      "localeKeys": [
+        "tenderTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S258",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/housing_tenders_screen.dart",
+      "file": "housing_tenders_screen.dart",
+      "classes": [
+        "HousingTendersScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "290a04dcef60b8312090367e6a8a4e2d18675a4f515f757da172e5dec0fdd2b7",
+      "localeKeys": [
+        "tenderTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S259",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_action_screen.dart",
+      "file": "tender_action_screen.dart",
+      "classes": [
+        "TenderActionScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "0707206519f1013affd0e647d96084cee1779dffb90171abf6149a2af574a6e8",
+      "localeKeys": [
+        "planningConsentRequired",
+        "studentDatesHelp",
+        "tenderAmend",
+        "tenderAmendHelp",
+        "tenderDisclose",
+        "tenderIndependentHelp",
+        "tenderMyRequirements",
+        "tenderPublish",
+        "tenderRequirementsHelp",
+        "tenderWithdraw"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 12,
+      "proposalId": "S260",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bid_edit_screen.dart",
+      "file": "tender_bid_edit_screen.dart",
+      "classes": [
+        "TenderBidEditScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "3a41abd331bb91faa91f35e8cfe515e8b7b3ddf14704ee1fbd567ed697ea039c",
+      "localeKeys": [
+        "studentDatesHelp",
+        "tenderBidInvalid",
+        "tenderQuoteExpiry",
+        "tenderQuoteOnly",
+        "tenderReviseHelp",
+        "tenderSealedHelp",
+        "tenderSubmitBid"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S261",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bid_withdraw_screen.dart",
+      "file": "tender_bid_withdraw_screen.dart",
+      "classes": [
+        "TenderBidWithdrawScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "7077e537597ec38ed3983fac2b9de640e2fc059d7db036941672d23e9df29429",
+      "localeKeys": [
+        "tenderWithdraw",
+        "tenderWithdrawHelp"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S262",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bids_screen.dart",
+      "file": "tender_bids_screen.dart",
+      "classes": [
+        "TenderBidsScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "fc369f303b78bbcf924d97a6783c5ce0ec4e115ab34c6b706743ef6a08eb9b75",
+      "localeKeys": [
+        "tenderBids"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S263",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_clarification_edit_screen.dart",
+      "file": "tender_clarification_edit_screen.dart",
+      "classes": [
+        "TenderClarificationEditScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "42b046c6b45124f7bb2eb551874b7586dfdd88d423904b385a172d561d8350f3",
+      "localeKeys": [
+        "tenderClarificationHelp",
+        "tenderClarifications",
+        "tenderClarify"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S264",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_clarifications_screen.dart",
+      "file": "tender_clarifications_screen.dart",
+      "classes": [
+        "TenderClarificationsScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "a00c53759b08336ff87e36262af12cba5b1f29735bd3c7b0b0cc94874aca80f6",
+      "localeKeys": [
+        "tenderClarifications"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S265",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_consent_screen.dart",
+      "file": "tender_consent_screen.dart",
+      "classes": [
+        "TenderConsentScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "730e6039b4b59e62a59c90238e68ef5f98b9882103e0f907eac7703555ea0ee6",
+      "localeKeys": [
+        "executionPlanningNotice",
+        "planningConsentRequired",
+        "tenderAcceptPlan",
+        "tenderDeclinePlan",
+        "tenderDeposit",
+        "tenderIndependentHelp",
+        "tenderMonthlyRent",
+        "tenderOwnConsent",
+        "tenderReviewPackage"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S266",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_construction_screen.dart",
+      "file": "tender_construction_screen.dart",
+      "classes": [
+        "TenderConstructionScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "d9920471546595c4ac3c4f61c423d31e26ba175bbed16723520a41f59f9df7dc",
+      "localeKeys": [
+        "tenderConstructTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S267",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_construction_start_screen.dart",
+      "file": "tender_construction_start_screen.dart",
+      "classes": [
+        "TenderConstructionStartScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "a39e48a997f661de7500e9e5c11b8df599e984e8d850940e9fb325f2689922f3",
+      "localeKeys": [
+        "tenderConstructDispatch",
+        "tenderConstructHelp",
+        "tenderConstructStart",
+        "tenderConstructTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S268",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_create_screen.dart",
+      "file": "tender_create_screen.dart",
+      "classes": [
+        "TenderCreateScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "5048cdbbb885f62958307a399ca2201bdc19c794ac764a74f1e1f5596bce5154",
+      "localeKeys": [
+        "tenderCloses",
+        "tenderCreate",
+        "tenderDatesRequired",
+        "tenderIndependentHelp"
+      ],
+      "navigationReferences": [
+        "HousingTenderScreen"
+      ],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S269",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_execution_screen.dart",
+      "file": "tender_execution_screen.dart",
+      "classes": [
+        "TenderExecutionScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "6eacd43e35add0681f978450c667bd2bdebf831d2c58d3ec98491947de94860c",
+      "localeKeys": [
+        "executionAck",
+        "executionConditional",
+        "executionIndependent",
+        "executionMockNotice",
+        "executionPolicy",
+        "executionPrepareProposal",
+        "planningConsentRequired"
+      ],
+      "navigationReferences": [
+        "ExecutionDetailScreen"
+      ],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S270",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_inventory_screen.dart",
+      "file": "tender_inventory_screen.dart",
+      "classes": [
+        "TenderInventoryScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "36c4b45237656b31410604e59bc284d64eeb2a2811cf3013261dd9e077bca2b3",
+      "localeKeys": [
+        "rentalChooseOffer"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S271",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_package_builder_screen.dart",
+      "file": "tender_package_builder_screen.dart",
+      "classes": [
+        "TenderPackageBuilderScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "7a14f261478fcb22c0ead4b595663d1633b5b59d8175b63496cc35c7b0f9ab93",
+      "localeKeys": [
+        "tenderAllocated",
+        "tenderBuildHelp",
+        "tenderBuildPackage",
+        "tenderChooseAllocation",
+        "tenderIndependentHelp"
+      ],
+      "navigationReferences": [
+        "TenderPackageScreen"
+      ],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S272",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_package_screen.dart",
+      "file": "tender_package_screen.dart",
+      "classes": [
+        "TenderPackageScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "8d7e700b5d457968a17a39e88775457535ec7d858823c56990a57c9a78d65f51",
+      "localeKeys": [
+        "tenderReviewPackage"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S273",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_packages_screen.dart",
+      "file": "tender_packages_screen.dart",
+      "classes": [
+        "TenderPackagesScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "eda93b8e2383fd4c358c2ccde125b74336833928fb0115cb4c91fc8ec5951657",
+      "localeKeys": [
+        "tenderPackages"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S274",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_source_screen.dart",
+      "file": "tender_source_screen.dart",
+      "classes": [
+        "TenderSourceScreen"
+      ],
+      "feature": "shared/housing_tenders",
+      "sha256": "681e31d1d4adf1ab46303b52e046a06829c82de47b8bca7a2bd7be837ee08e01",
+      "localeKeys": [
+        "tenderChooseSource"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S275",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_action_screen.dart",
+      "file": "living_lab_action_screen.dart",
+      "classes": [
+        "LivingLabActionScreen"
+      ],
+      "feature": "shared/living_lab",
+      "sha256": "b01d0763ca8c79427f6a5376cb367b8658798734c82f5ce3135692cfbe4e0a40",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S276",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_create_screen.dart",
+      "file": "living_lab_create_screen.dart",
+      "classes": [
+        "LivingLabCreateScreen"
+      ],
+      "feature": "shared/living_lab",
+      "sha256": "ac97ec65310968491463cd0eb723ff403f8f30f7a2584afacd70a4d68a2f2feb",
+      "localeKeys": [
+        "livingLabCreate"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S277",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_planning_screen.dart",
+      "file": "living_lab_planning_screen.dart",
+      "classes": [
+        "LivingLabPlanningScreen"
+      ],
+      "feature": "shared/living_lab",
+      "sha256": "d8483a8f18d61434a0cb25089406dfb8b10a9a3fde7a58cb91cdf802de44bafe",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S278",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_lab_screen.dart",
+      "file": "living_lab_screen.dart",
+      "classes": [
+        "LivingLabScreen"
+      ],
+      "feature": "shared/living_lab",
+      "sha256": "02a10f9382bd055ab248a8cc1609fde82d81f17be0549f3b712e6d39fb6ce570",
+      "localeKeys": [
+        "livingLabTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S279",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_labs_screen.dart",
+      "file": "living_labs_screen.dart",
+      "classes": [
+        "LivingLabsScreen"
+      ],
+      "feature": "shared/living_lab",
+      "sha256": "db378d5d43acd8f04216df0908164ceccf07321a30fc2007ec54312f4cf640a0",
+      "localeKeys": [
+        "livingLabTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 13,
+      "proposalId": "S280",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/living_lab/presentation/screens/living_requirements_screen.dart",
+      "file": "living_requirements_screen.dart",
+      "classes": [
+        "LivingRequirementsScreen"
+      ],
+      "feature": "shared/living_lab",
+      "sha256": "d4bbe2a81ce4cc5ad428dda4c8382ab965614feb50e787b99499b07ae8823eae",
+      "localeKeys": [
+        "livingLabDisclosureTitle",
+        "livingLabMyRequirements"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S281",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/screens/notification_detail_screen.dart",
+      "file": "notification_detail_screen.dart",
+      "classes": [
+        "NotificationDetailScreen"
+      ],
+      "feature": "shared/notifications",
+      "sha256": "cf9a0aab7e89287d19e9d4e2453ad089edffaf9850da6222b7d25bc031d224f2",
+      "localeKeys": [
+        "notificationDetailsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S38",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/screens/notification_settings_screen.dart",
+      "file": "notification_settings_screen.dart",
+      "classes": [
+        "NotificationSettingsScreen"
+      ],
+      "feature": "shared/notifications",
+      "sha256": "7c45f16fd95f6564ba0919f678e76fb5ebbd8ef9c53763cf9123bfe0b24d39da",
+      "localeKeys": [
+        "notificationSettingsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S39",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/notifications/presentation/screens/notifications_screen.dart",
+      "file": "notifications_screen.dart",
+      "classes": [
+        "NotificationsScreen"
+      ],
+      "feature": "shared/notifications",
+      "sha256": "e1ee297496f9724407e2c035bfaedd2915f85ec7e4c8b8dbb255e2fa2ee904fa",
+      "localeKeys": [],
+      "navigationReferences": [
+        "NotificationDetailScreen"
+      ],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S37",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/screens/premium_screen.dart",
+      "file": "premium_screen.dart",
+      "classes": [
+        "PremiumScreen"
+      ],
+      "feature": "shared/premium",
+      "sha256": "534ca6382838ded6eeb403250dddfbcf807e54ed3f9652e0db002eb88f0bdf4f",
+      "localeKeys": [
+        "toolsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S90",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/screens/rental_mock_provider_screen.dart",
+      "file": "rental_mock_provider_screen.dart",
+      "classes": [
+        "RentalMockProviderScreen"
+      ],
+      "feature": "shared/premium",
+      "sha256": "750385aae96c15efbb436294005b87d1efc2c96358a7b8c731e99bf07afaddf8",
+      "localeKeys": [
+        "rentalMockProvider"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S91",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/rental_decision_screen.dart",
+      "file": "rental_decision_screen.dart",
+      "classes": [
+        "RentalDecisionScreen"
+      ],
+      "feature": "shared/premium",
+      "sha256": "65aedf54208ce0a226671debe48010068c7531046b5c4079fc56fde6fb57bf6e",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 4,
+      "proposalId": "S92",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/change_password_screen.dart",
+      "file": "change_password_screen.dart",
+      "classes": [
+        "ChangePasswordScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "97ffb360ff561060dc298c626dd0d289c6a7ce1c84cbbb62618d81b6451e3309",
+      "localeKeys": [
+        "settingsChangePassword"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S31",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/email_change_screen.dart",
+      "file": "email_change_screen.dart",
+      "classes": [
+        "EmailChangeScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "5ec5e2a9ccdf41a7115e0da00bf09e4955307380288e0b2826b00e2356702e75",
+      "localeKeys": [
+        "emailChangeTitle",
+        "emailChangeVerifyNew",
+        "emailChangeVerifyOld",
+        "freeLocalSaveFailed"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S32",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/language_selection_screen.dart",
+      "file": "language_selection_screen.dart",
+      "classes": [
+        "LanguageSelectionScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "fd68a9d3cb25cd229cad6028bb64229b606db54b1e79600fb0ff2aab15705d4c",
+      "localeKeys": [
+        "confirm",
+        "languageSelectionTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S34",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_contracts_screen.dart",
+      "file": "profile_contracts_screen.dart",
+      "classes": [
+        "ProfileContractsScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "118ab11d1b330ba4e24b7ebf55f4d88019d7a2539cb78132db6f086289e81de1",
+      "localeKeys": [
+        "profileContracts"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S36",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_delete_account_screen.dart",
+      "file": "profile_delete_account_screen.dart",
+      "classes": [
+        "ProfileDeleteAccountScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "d8e78a9c6fa37059fba449ecd00626f1279da3c48959ed686c724df001eb7294",
+      "localeKeys": [
+        "deleteAccount",
+        "settingsDeleteAcknowledgement",
+        "settingsDeletePermanently"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S35",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_edit_screen.dart",
+      "file": "profile_edit_screen.dart",
+      "classes": [
+        "ProfileEditScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "2384f9b7bb83ce472c4772e3aa676e86e23e64999f2c08f87ddf17f5fcb071f3",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S27",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_privacy_screen.dart",
+      "file": "profile_privacy_screen.dart",
+      "classes": [
+        "ProfilePrivacyScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "80b35665443bcc34769f46c405454f56dfaba5a08f023d9473456dc377515b05",
+      "localeKeys": [
+        "settingsPrivacyOptions"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S30",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_screen.dart",
+      "file": "profile_screen.dart",
+      "classes": [
+        "ProfileScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "0cfa7c4f160c1f6d85be059d225cba58ae3db254e1b08d378357da46cf18825a",
+      "localeKeys": [],
+      "navigationReferences": [
+        "OwnerProfileScreen",
+        "TenantProfileScreen"
+      ],
+      "status": "alias-or-component",
+      "aliasOf": "tenant_profile_screen.dart",
+      "reason": "Workspace dispatcher; tenant and owner profiles are audited separately."
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_settings_screen.dart",
+      "file": "profile_settings_screen.dart",
+      "classes": [
+        "ProfileSettingsScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "c98466f1ee93a077d21e3db1d28d1c05eea907df814e6ea59d9d991a8a005953",
+      "localeKeys": [
+        "profileSettingsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S28",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/profile_verification_screen.dart",
+      "file": "profile_verification_screen.dart",
+      "classes": [
+        "ProfileVerificationScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "78ff0b77e5178a6505392905b5d94a9fdc2d80ac3b12e2e5c66161d74c777459",
+      "localeKeys": [
+        "profileIdentityVerification",
+        "supportRefresh"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S29",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/security_sessions_screen.dart",
+      "file": "security_sessions_screen.dart",
+      "classes": [
+        "SecuritySessionsScreen"
+      ],
+      "feature": "shared/profile",
+      "sha256": "ea764848b06e2c9b84f427221fd423ea118e335fae83638c6a6f6382ceb73d7a",
+      "localeKeys": [
+        "cancel",
+        "confirm",
+        "securityConfirmFreeze",
+        "securityConfirmSession",
+        "securityEndAll",
+        "securityEndOthers",
+        "securityEndSession",
+        "securityReportCompromise",
+        "securitySessionsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S33",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/screens/capture_selection_screen.dart",
+      "file": "capture_selection_screen.dart",
+      "classes": [
+        "CaptureSelectionScreen"
+      ],
+      "feature": "shared/property_capture",
+      "sha256": "df6f101c9be81f14e84ef6cbdca67314e29f9066b9eef99a9423d3e383818e71",
+      "localeKeys": [
+        "captureChooseOutputs",
+        "captureNoSelectableOutputs",
+        "captureResumeTourDraft",
+        "virtualTourRefresh"
+      ],
+      "navigationReferences": [
+        "OwnerTourEditorScreen"
+      ],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S68",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/screens/property_capture_screen.dart",
+      "file": "property_capture_screen.dart",
+      "classes": [
+        "PropertyCaptureScreen"
+      ],
+      "feature": "shared/property_capture",
+      "sha256": "32e063bef62a12ec72cc90224e3ecd932e76f247756bd160e6f13461832dfbd7",
+      "localeKeys": [
+        "captureDevelopment",
+        "captureTitle"
+      ],
+      "navigationReferences": [
+        "CaptureSelectionScreen"
+      ],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S69",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/public_pages/presentation/screens/public_page_screen.dart",
+      "file": "public_page_screen.dart",
+      "classes": [
+        "PublicPageScreen"
+      ],
+      "feature": "shared/public_pages",
+      "sha256": "126648f31c4881b08e76acb52dc93e651c8bd26a2c0bd27c0dd4cd3c8f21a483",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S47",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/presentation/screens/continuation_screen.dart",
+      "file": "continuation_screen.dart",
+      "classes": [
+        "ContinuationScreen"
+      ],
+      "feature": "shared/recovery",
+      "sha256": "5cd4fe3b135bd0eca1c9e552fc80fb9599d064e07077921bb769cbcc6850e94d",
+      "localeKeys": [
+        "uxCheckExistingOperations",
+        "uxContinue"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S51",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rent_management/presentation/screens/payment_record_screen.dart",
+      "file": "payment_record_screen.dart",
+      "classes": [
+        "PaymentRecordScreen"
+      ],
+      "feature": "shared/rent_management",
+      "sha256": "4bdfa8766816c5d6f9e9c602589ffee33bf118d0146118b3bb45d8f241c536cc",
+      "localeKeys": [
+        "rentalReceipt"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S143",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rent_management/presentation/screens/rent_invoice_screen.dart",
+      "file": "rent_invoice_screen.dart",
+      "classes": [
+        "RentInvoiceScreen"
+      ],
+      "feature": "shared/rent_management",
+      "sha256": "dcc3dcbf3c0caf524387690fe3e306ead632fb7ecbe82c02fea69b5f39032ed1",
+      "localeKeys": [
+        "paidRentManagement"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S144",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rent_management/presentation/screens/rent_management_screen.dart",
+      "file": "rent_management_screen.dart",
+      "classes": [
+        "RentManagementScreen"
+      ],
+      "feature": "shared/rent_management",
+      "sha256": "9604ff03ba925700bf19ee7dc9dac39ebb1f587dc8086df3bbdf03c131c36b39",
+      "localeKeys": [
+        "paidRentManagement"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S145",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rent_management/presentation/screens/rental_payment_history_screen.dart",
+      "file": "rental_payment_history_screen.dart",
+      "classes": [
+        "RentalPaymentHistoryScreen"
+      ],
+      "feature": "shared/rent_management",
+      "sha256": "5523782e668a42b55cedaa0dec48956d70c5446aa1e9505c9c7c60b28fcb1bf0",
+      "localeKeys": [
+        "rentalPaymentHistory"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S146",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/my_housing_screen.dart",
+      "file": "my_housing_screen.dart",
+      "classes": [
+        "MyHousingScreen"
+      ],
+      "feature": "shared/rental_center",
+      "sha256": "bc7133a9e46bd2d46be1d159eed688860975f8382daf817bd5c1e86183aba169",
+      "localeKeys": [
+        "individualHousingCurrent",
+        "individualHousingHistory",
+        "individualMyHousing",
+        "tenancyInvitations",
+        "tenantVisitsTitle"
+      ],
+      "navigationReferences": [
+        "TenantVisitsScreen"
+      ],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S138",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/my_rentals_screen.dart",
+      "file": "my_rentals_screen.dart",
+      "classes": [
+        "MyRentalsScreen"
+      ],
+      "feature": "shared/rental_center",
+      "sha256": "5cac9f5c7b0b62ff0ea29fa1bbeb1219e2187cc8d6d30dc10ea407d25f22e07c",
+      "localeKeys": [
+        "rentalMyRentals"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S139",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/rental_billing_schedule_screen.dart",
+      "file": "rental_billing_schedule_screen.dart",
+      "classes": [
+        "RentalBillingScheduleScreen"
+      ],
+      "feature": "shared/rental_center",
+      "sha256": "1dd08c92e4e29244471a7bcf6d52c428c39c39603469d00e2e6eae78710ae959",
+      "localeKeys": [
+        "rentalSchedule"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S140",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/rental_center_screen.dart",
+      "file": "rental_center_screen.dart",
+      "classes": [
+        "RentalCenterScreen"
+      ],
+      "feature": "shared/rental_center",
+      "sha256": "1540035e07e049b907550953b1baecb8e3a836cc0df7b0e6499d508f95b7d28d",
+      "localeKeys": [
+        "rentalCenter"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S141",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/rental_timeline_screen.dart",
+      "file": "rental_timeline_screen.dart",
+      "classes": [
+        "RentalTimelineScreen"
+      ],
+      "feature": "shared/rental_center",
+      "sha256": "9fa946ce4f7f879e082f5a9a9ced6827cc6c3f5e0d536821d2144fc55b3832aa",
+      "localeKeys": [
+        "rentalTimeline"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S142",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_change_detail_screen.dart",
+      "file": "rental_change_detail_screen.dart",
+      "classes": [
+        "RentalChangeDetailScreen"
+      ],
+      "feature": "shared/rental_changes",
+      "sha256": "956725bc0119187bfe370024594aecca251111630538812e7214f03b4d1a58c1",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S166",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_change_form_screen.dart",
+      "file": "rental_change_form_screen.dart",
+      "classes": [
+        "RentalChangeFormScreen"
+      ],
+      "feature": "shared/rental_changes",
+      "sha256": "45ffb5df32dae7b935ec18c0342332080802ed50cbd99f5097f9539540809766",
+      "localeKeys": [],
+      "navigationReferences": [
+        "SupportNewTicketScreen"
+      ],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S167",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_change_signing_screen.dart",
+      "file": "rental_change_signing_screen.dart",
+      "classes": [
+        "RentalChangeSigningScreen"
+      ],
+      "feature": "shared/rental_changes",
+      "sha256": "56468ebf1fb4925e14c3f8930d13407bb31bf3d254f296cae315cb792748a003",
+      "localeKeys": [
+        "rentalSignature"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S168",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_changes_screen.dart",
+      "file": "rental_changes_screen.dart",
+      "classes": [
+        "RentalChangesScreen"
+      ],
+      "feature": "shared/rental_changes",
+      "sha256": "af556dae155db73985dc5cc3c67cd20aaa028caa4ef0fcd975dc8e96dd7f9707",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S169",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/tenancy_planning_screen.dart",
+      "file": "tenancy_planning_screen.dart",
+      "classes": [
+        "TenancyPlanningScreen"
+      ],
+      "feature": "shared/rental_changes",
+      "sha256": "fb3a8ef3e5799f74c2f0773d0ae6daf0cd99f234ea0cbafaafd23fdfdaaeefea",
+      "localeKeys": [
+        "departureNotice",
+        "departureReplacement",
+        "departureTitle",
+        "rentalRenewal"
+      ],
+      "navigationReferences": [
+        "RentalChangesScreen"
+      ],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S170",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/tenancy_transition_edit_screen.dart",
+      "file": "tenancy_transition_edit_screen.dart",
+      "classes": [
+        "TenancyTransitionEditScreen"
+      ],
+      "feature": "shared/rental_changes",
+      "sha256": "aa95566f387ac0e88eb6a3df1903d438a34c0d9830ecf5d7aec29703b8f19652",
+      "localeKeys": [
+        "departureNotice",
+        "departureReplacement"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S171",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/tenancy_transition_screen.dart",
+      "file": "tenancy_transition_screen.dart",
+      "classes": [
+        "TenancyTransitionScreen"
+      ],
+      "feature": "shared/rental_changes",
+      "sha256": "b794a585453cb1d3bdba82b3b6b8f850ec54807103b4c568bc41c7b2ba8bc060",
+      "localeKeys": [
+        "departureTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S172",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_deposits/presentation/screens/rental_deposit_screen.dart",
+      "file": "rental_deposit_screen.dart",
+      "classes": [
+        "RentalDepositScreen"
+      ],
+      "feature": "shared/rental_deposits",
+      "sha256": "3b8c82926074e3aedd47d657fb9aefed30e170b3a8890f1488b12977d3f8c9b0",
+      "localeKeys": [
+        "rentalDeposit"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S148",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/screens/rental_dispute_detail_screen.dart",
+      "file": "rental_dispute_detail_screen.dart",
+      "classes": [
+        "RentalDisputeDetailScreen"
+      ],
+      "feature": "shared/rental_disputes",
+      "sha256": "1c6b55c58a41b7a021c01bc5b49ec9e55c3dfd027218ab767642753ac8cd292c",
+      "localeKeys": [
+        "rentalDisputes"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S163",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/screens/rental_dispute_form_screen.dart",
+      "file": "rental_dispute_form_screen.dart",
+      "classes": [
+        "RentalDisputeFormScreen"
+      ],
+      "feature": "shared/rental_disputes",
+      "sha256": "dffefe475d1817c1738e36db33d1e50fd5c0b3b047c6b3008cdefcb487e8f5ef",
+      "localeKeys": [
+        "rentalDispute"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S164",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/screens/rental_dispute_list_screen.dart",
+      "file": "rental_dispute_list_screen.dart",
+      "classes": [
+        "RentalDisputesScreen"
+      ],
+      "feature": "shared/rental_disputes",
+      "sha256": "285305827a0e6f78acbd5e87359bb07546bd3b6854ba455d0a20f284b288eb4a",
+      "localeKeys": [
+        "rentalDisputes"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S165",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/condition_report_action_screen.dart",
+      "file": "condition_report_action_screen.dart",
+      "classes": [
+        "ConditionReportActionScreen"
+      ],
+      "feature": "shared/rental_handovers",
+      "sha256": "392e5f404e8c4fe135596d36a1463eb1d7c7dad57d9ada2a004fde61a9fed391",
+      "localeKeys": [
+        "conditionNoLiability",
+        "conditionObjectionItem",
+        "conditionTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S149",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/condition_report_edit_screen.dart",
+      "file": "condition_report_edit_screen.dart",
+      "classes": [
+        "ConditionReportEditScreen"
+      ],
+      "feature": "shared/rental_handovers",
+      "sha256": "08d15f6093cb26f64d2f98a7f1408153529db53e44506c853444ee896f5234d1",
+      "localeKeys": [
+        "conditionTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S150",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/condition_report_screen.dart",
+      "file": "condition_report_screen.dart",
+      "classes": [
+        "ConditionReportScreen"
+      ],
+      "feature": "shared/rental_handovers",
+      "sha256": "705ae402f5b7051023f3acc4ce9a65bf02d54643379426125da8186396c92295",
+      "localeKeys": [
+        "conditionTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S151",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/condition_reports_screen.dart",
+      "file": "condition_reports_screen.dart",
+      "classes": [
+        "ConditionReportsScreen"
+      ],
+      "feature": "shared/rental_handovers",
+      "sha256": "c7b5e16dff5dcec16b5570e6dec77bffaafa6d7f5737711f9f814625d8afa2df",
+      "localeKeys": [
+        "conditionTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S152",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/rental_evidence_image_screen.dart",
+      "file": "rental_evidence_image_screen.dart",
+      "classes": [
+        "RentalEvidenceImageScreen"
+      ],
+      "feature": "shared/rental_handovers",
+      "sha256": "43775f7fe0741e8335a1a75d057ba021ea543053323601ac8c08fff87583a80e",
+      "localeKeys": [
+        "rentalEvidence"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S153",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/rental_handover_detail_screen.dart",
+      "file": "rental_handover_detail_screen.dart",
+      "classes": [
+        "RentalHandoverDetailScreen"
+      ],
+      "feature": "shared/rental_handovers",
+      "sha256": "5e8050387770ada431ac1ecf8d9a5862ce7b9768f9f1ea04110cd7a388b7c55b",
+      "localeKeys": [
+        "rentalHandovers"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S154",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/rental_handover_form_screen.dart",
+      "file": "rental_handover_form_screen.dart",
+      "classes": [
+        "RentalHandoverFormScreen"
+      ],
+      "feature": "shared/rental_handovers",
+      "sha256": "f5804b5cb0cfcfa82a76d0e4f6abc67d4f5940ea4a2ce74c83a6d093687a68cd",
+      "localeKeys": [
+        "rentalHandovers"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S155",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/rental_handover_list_screen.dart",
+      "file": "rental_handover_list_screen.dart",
+      "classes": [
+        "RentalHandoversScreen"
+      ],
+      "feature": "shared/rental_handovers",
+      "sha256": "c596c38a0563d2898cc05f86ede121e9820342eb73d7dccf50a378b381fbed9f",
+      "localeKeys": [
+        "rentalHandovers"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S156",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_interests/presentation/screens/rental_interest_detail_screen.dart",
+      "file": "rental_interest_detail_screen.dart",
+      "classes": [
+        "RentalInterestDetailScreen"
+      ],
+      "feature": "shared/rental_interests",
+      "sha256": "6a1a2a0a2f7d58bcbdbdcac3d871c35851cb76aafb241cf8d38f74f017d9358a",
+      "localeKeys": [
+        "rentalInterests"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S107",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_interests/presentation/screens/rental_interest_list_screen.dart",
+      "file": "rental_interest_list_screen.dart",
+      "classes": [
+        "RentalInterestsScreen"
+      ],
+      "feature": "shared/rental_interests",
+      "sha256": "1873231c5236865ececb45c3f782e136682d26a572d43fac581fb086555398d5",
+      "localeKeys": [
+        "rentalInterests"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S108",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_interests/presentation/screens/terms_proposal_detail_screen.dart",
+      "file": "terms_proposal_detail_screen.dart",
+      "classes": [
+        "TermsProposalDetailScreen"
+      ],
+      "feature": "shared/rental_interests",
+      "sha256": "01b61dc49cce154dcbce7b08931e09b2533f5d298597e9ba10862002bf408b75",
+      "localeKeys": [
+        "rentalTerms"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S109",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/application_profile_screen.dart",
+      "file": "application_profile_screen.dart",
+      "classes": [
+        "ApplicationProfileScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "b4de893bc65e08b9483aa125921660fb0ad7a805dd5e535d8b5bc16765cd5ccc",
+      "localeKeys": [
+        "rentalApplicationProfile"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S117",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/application_share_detail_screen.dart",
+      "file": "application_share_detail_screen.dart",
+      "classes": [
+        "ApplicationShareDetailScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "3ece518eafac63c6dad46f9e016f8612fa6d4c525e7b628eaa47418eea029391",
+      "localeKeys": [
+        "rentalViewSharedApplication"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S118",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/application_share_screen.dart",
+      "file": "application_share_screen.dart",
+      "classes": [
+        "ApplicationShareScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "abafa195fa94d611ca08a3c5496080f285ae7df3ff45f353d01d08e5ca021a33",
+      "localeKeys": [
+        "rentalReviewShare"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S119",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/application_shares_screen.dart",
+      "file": "application_shares_screen.dart",
+      "classes": [
+        "ApplicationSharesScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "71a14de9fd895fc5386bd844dd5d66f695ecdfbcbb36ae43d5dd0e1829bc394a",
+      "localeKeys": [
+        "rentalSharedApplications"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S120",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/group_booking_create_screen.dart",
+      "file": "group_booking_create_screen.dart",
+      "classes": [
+        "GroupBookingCreateScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "03b8732201817cd25b648033cfecdca9a7a570840c4396c40e46460315eab530",
+      "localeKeys": [
+        "rentalCreateGroupBooking"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S121",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/group_booking_screen.dart",
+      "file": "group_booking_screen.dart",
+      "classes": [
+        "GroupBookingScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "f2bfb0cc228c35a0cef44426dee3ff56f9fe12f857d008437901e3c05129a4f3",
+      "localeKeys": [
+        "rentalGroupBooking"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S122",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/group_bookings_screen.dart",
+      "file": "group_bookings_screen.dart",
+      "classes": [
+        "GroupBookingsScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "14d99d1ceff30fd538ea0e4a07f15713d663f0c6437aee87261dddff6dd18e60",
+      "localeKeys": [
+        "rentalGroupBooking"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S123",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/property_decision_screen.dart",
+      "file": "property_decision_screen.dart",
+      "classes": [
+        "PropertyDecisionScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "ebbbd09c55121a5135154dc4e5b9e9625f2e385a99f79ae8c6b36a9a80f89c64",
+      "localeKeys": [
+        "rentalDecisionSummary"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S124",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_case_screen.dart",
+      "file": "rental_case_screen.dart",
+      "classes": [
+        "RentalCaseScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "3093ca1e72aaacf1fc24fdc759e6f2ed1481fab805db48405762d21df4727845",
+      "localeKeys": [
+        "rentalCaseTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S125",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_cases_screen.dart",
+      "file": "rental_cases_screen.dart",
+      "classes": [
+        "RentalCasesScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "97a76070fa4ea357220b4b6e3d3cc27d2804b97b67aa78782c695c5934317389",
+      "localeKeys": [
+        "rentalMyCases"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S126",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_deal_screen.dart",
+      "file": "rental_deal_screen.dart",
+      "classes": [
+        "RentalDealScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "ebe83e30275de57eb95b0c84983dc5afbcec9855316f347714a064228fd7cee9",
+      "localeKeys": [
+        "rentalDealWorkspace"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S127",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/reservation_screen.dart",
+      "file": "reservation_screen.dart",
+      "classes": [
+        "ReservationScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "b1b5b166af387b84bf01508a0c09819a842abdd35047a15b737d706e1c03e151",
+      "localeKeys": [
+        "rentalReservation"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S128",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/reservations_screen.dart",
+      "file": "reservations_screen.dart",
+      "classes": [
+        "ReservationsScreen"
+      ],
+      "feature": "shared/rental_lifecycle",
+      "sha256": "acd6e9c5d2f5a3038c538ba8dc67ef6b450e634b631827f54f90e85e2d66166c",
+      "localeKeys": [
+        "rentalReservation"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 6,
+      "proposalId": "S129",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/screens/maintenance_request_detail_screen.dart",
+      "file": "maintenance_request_detail_screen.dart",
+      "classes": [
+        "MaintenanceRequestDetailScreen"
+      ],
+      "feature": "shared/rental_maintenance",
+      "sha256": "9ab829b202c43d2f63d85895b02eb1d6a7f5d8795093d2ad0fd0d84858c4c141",
+      "localeKeys": [
+        "rentalMaintenance"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S160",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/screens/maintenance_request_form_screen.dart",
+      "file": "maintenance_request_form_screen.dart",
+      "classes": [
+        "MaintenanceRequestFormScreen"
+      ],
+      "feature": "shared/rental_maintenance",
+      "sha256": "be272414dacd8388291ca51a9e0625007f4ff01a8e7e392468400f3f5d295150",
+      "localeKeys": [
+        "rentalNewMaintenance"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S161",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/screens/maintenance_request_list_screen.dart",
+      "file": "maintenance_request_list_screen.dart",
+      "classes": [
+        "RentalMaintenanceScreen"
+      ],
+      "feature": "shared/rental_maintenance",
+      "sha256": "64e1b0abb260ebc9c02ba413c4ecc7299cb2d350da7a13fed8f0a7c342146e10",
+      "localeKeys": [
+        "rentalMaintenance"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S162",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/final_settlement_screen.dart",
+      "file": "final_settlement_screen.dart",
+      "classes": [
+        "FinalSettlementScreen"
+      ],
+      "feature": "shared/rental_settlement",
+      "sha256": "530c27a1a8696436ad4a250dba99ea78fa15aef5265c2ff4896ecde2902eba55",
+      "localeKeys": [
+        "rentalSettlement"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S175",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_documents_screen.dart",
+      "file": "rental_documents_screen.dart",
+      "classes": [
+        "RentalDocumentsScreen"
+      ],
+      "feature": "shared/rental_settlement",
+      "sha256": "328149f36cf9a0c90e15c7d442e5edee1f5bd42ea812e2d3330ff64978e29322",
+      "localeKeys": [
+        "rentalDocuments"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S176",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_refund_detail_screen.dart",
+      "file": "rental_refund_detail_screen.dart",
+      "classes": [
+        "RentalRefundDetailScreen"
+      ],
+      "feature": "shared/rental_settlement",
+      "sha256": "90d12a1fa39d2ecbe650b0269afc3f46c5b287e5845274b165972feb542c3c15",
+      "localeKeys": [
+        "rentalRefunds"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S177",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_refund_list_screen.dart",
+      "file": "rental_refund_list_screen.dart",
+      "classes": [
+        "RentalRefundsScreen"
+      ],
+      "feature": "shared/rental_settlement",
+      "sha256": "a42fe644dc7fa57ce5a266726e326dcfb218ddb741367ad1ae294bdc87158946",
+      "localeKeys": [
+        "rentalRefunds"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S178",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_reviews_screen.dart",
+      "file": "rental_reviews_screen.dart",
+      "classes": [
+        "RentalReviewsScreen"
+      ],
+      "feature": "shared/rental_settlement",
+      "sha256": "239f1a73e5ac432046f8f20f5dd6089d49960f1225924a345abb81d4bb422297",
+      "localeKeys": [],
+      "navigationReferences": [
+        "ReviewsHubScreen"
+      ],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S179",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/settlement_proposal_screen.dart",
+      "file": "settlement_proposal_screen.dart",
+      "classes": [
+        "SettlementProposalScreen"
+      ],
+      "feature": "shared/rental_settlement",
+      "sha256": "aa89a98b75824edb1b5c2c0ff375f41c2bd376c45851b2d6fe31de19dc22e7fc",
+      "localeKeys": [
+        "rentalProposeSettlement"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S180",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/company_review_authorities_screen.dart",
+      "file": "company_review_authorities_screen.dart",
+      "classes": [
+        "CompanyReviewAuthoritiesScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "042caf63cff3630a23be42f0525b49156f1cc178c09a3a02b37bfa5cfd453d60",
+      "localeKeys": [
+        "ratingReviewAuthority",
+        "ratingReviewAuthorityHelp"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S187",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/experience_choice_screen.dart",
+      "file": "experience_choice_screen.dart",
+      "classes": [
+        "ExperienceChoiceScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "f8e09a0fb31e227ef2379cfa52834e6c2c81ba84bc32378d0978ddedc91732ea",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S188",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/portfolio_reputation_screen.dart",
+      "file": "portfolio_reputation_screen.dart",
+      "classes": [
+        "PortfolioReputationScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "4282f2e0e1ae53f7894bceedf5048664af6c6b0b11a8cb8963656826154afdf4",
+      "localeKeys": [
+        "ratingHistoricalRollup",
+        "ratingPortfolioReviews"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S189",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/property_reviews_screen.dart",
+      "file": "property_reviews_screen.dart",
+      "classes": [
+        "PropertyReviewsScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "dc734f1cae2087b632353f31a5e3fdfb1559c678744bc1556f376ebec841aa78",
+      "localeKeys": [
+        "propertyReviewsTitle",
+        "ratingStays",
+        "ratingViewings"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S190",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_detail_screen.dart",
+      "file": "reputation_detail_screen.dart",
+      "classes": [
+        "ReputationDetailScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "832071a9effabe9cd249db65d1f6da4afa234bb949138903ff852cf70d8ba8f8",
+      "localeKeys": [
+        "ratingHub"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S191",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_grant_summary_screen.dart",
+      "file": "reputation_grant_summary_screen.dart",
+      "classes": [
+        "ReputationGrantSummaryScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "4d68e803c93ac8d636d9240ed364e01a5bb58f3cb0bc594d9f617afee9381f72",
+      "localeKeys": [
+        "ratingShareSummary"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S192",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_grants_screen.dart",
+      "file": "reputation_grants_screen.dart",
+      "classes": [
+        "ReputationGrantsScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "ba71a9c08e97df463de995dd230b079d6f9cf4fdf6bd743d0118d674696497df",
+      "localeKeys": [
+        "ratingShareSummary"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S193",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reputation_recipient_screen.dart",
+      "file": "reputation_recipient_screen.dart",
+      "classes": [
+        "ReputationRecipientScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "faf1bbe379afa7f4edbbfc2b932a710c6b77adca3ce577153f160e9b59f3c1ce",
+      "localeKeys": [
+        "ratingChooseRecipient"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S194",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_case_screen.dart",
+      "file": "review_case_screen.dart",
+      "classes": [
+        "ReviewCaseScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "96219f7dcf9dc6d4182823c6a05c5898e4084af2dd09936f52207056fd6bc84c",
+      "localeKeys": [
+        "ratingCaseReference",
+        "ratingClosed",
+        "ratingPending",
+        "ratingViewCase"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S195",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_cases_screen.dart",
+      "file": "review_cases_screen.dart",
+      "classes": [
+        "ReviewCasesScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "1f50b401bf5fb19f51295fb0196178e7b567f8827c487bcf9d6182a7e1a1fbce",
+      "localeKeys": [
+        "ratingMyCases"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S196",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_experience_screen.dart",
+      "file": "review_experience_screen.dart",
+      "classes": [
+        "ReviewExperienceScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "ec37c60b05dcee0861aeb8078768c5f7f9bdb7f55b94a7d12b0384fdc72ef409",
+      "localeKeys": [
+        "ratingExperienceRecords"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S197",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_experiences_screen.dart",
+      "file": "review_experiences_screen.dart",
+      "classes": [
+        "ReviewExperiencesScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "d3e1eb4109a836ce8cae39e103600a1a5577e621dcb5a184dc868844d3f8f5a6",
+      "localeKeys": [
+        "ratingCompanyLeases",
+        "ratingEmployeeOccupancy",
+        "ratingExperienceRecords",
+        "ratingLinkCompanyLease",
+        "ratingOwnershipChange"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S198",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/review_opportunity_screen.dart",
+      "file": "review_opportunity_screen.dart",
+      "classes": [
+        "ReviewOpportunityScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "32e6cee5d72a3b5222ff2f699e151b3ef8835b1f52deffda31a69f054e7d9c3f",
+      "localeKeys": [
+        "ratingWrite"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S199",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/screens/reviews_hub_screen.dart",
+      "file": "reviews_hub_screen.dart",
+      "classes": [
+        "ReviewsHubScreen"
+      ],
+      "feature": "shared/reviews",
+      "sha256": "3ccb8342e4b284033242fd5eead4278ed79a6557a92532a92424e9bf75c9ea17",
+      "localeKeys": [
+        "ratingAboutMe",
+        "ratingExperienceRecords",
+        "ratingHub",
+        "ratingMyCases",
+        "ratingShareSummary",
+        "ratingToWrite",
+        "ratingWritten"
+      ],
+      "navigationReferences": [
+        "ReputationGrantsScreen",
+        "ReviewCasesScreen",
+        "ReviewExperiencesScreen"
+      ],
+      "status": "planned",
+      "sprint": 9,
+      "proposalId": "S200",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summaries_screen.dart",
+      "file": "rental_summaries_screen.dart",
+      "classes": [
+        "RentalSummariesScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "e304493b2a2b92401a99d6c5b5e7690305960784c2f1c1b1e2f80ce2f30983be",
+      "localeKeys": [
+        "studentFamilySharing",
+        "studentGrantSummary",
+        "studentRevokeSummary",
+        "studentShareLimits"
+      ],
+      "navigationReferences": [
+        "RentalSummaryGrantScreen"
+      ],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S215",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summary_grant_screen.dart",
+      "file": "rental_summary_grant_screen.dart",
+      "classes": [
+        "RentalSummaryGrantScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "817e2f8798fd60c2e6ce5d5efaf31614970982022847caa51050c6c5bf824840",
+      "localeKeys": [
+        "studentGrantSummary"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S216",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangement_edit_screen.dart",
+      "file": "student_arrangement_edit_screen.dart",
+      "classes": [
+        "StudentArrangementEditScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "fc9f0e11ef9e2a39539faa805c611d447399f7e803e414e9d219e92ded405f30",
+      "localeKeys": [
+        "studentExam",
+        "studentSharedLiving"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S217",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangements_screen.dart",
+      "file": "student_arrangements_screen.dart",
+      "classes": [
+        "StudentArrangementsScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "e763e28677d337d923bfb1c6787a4e74bf878020437b0052e974ff7f9a84d8e9",
+      "localeKeys": [
+        "studentChanged",
+        "studentDiscuss",
+        "studentExam",
+        "studentLivingHelp",
+        "studentNewVersion",
+        "studentReview",
+        "studentReviewed",
+        "studentSharedLiving",
+        "studentWaiting"
+      ],
+      "navigationReferences": [
+        "StudentArrangementEditScreen"
+      ],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S218",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_check_in_screen.dart",
+      "file": "student_check_in_screen.dart",
+      "classes": [
+        "StudentCheckInScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "056230806b5e8b77cb26f481281c21db1d3e469e564dd06120062df48cf52fdd",
+      "localeKeys": [
+        "studentCheckIn",
+        "studentCheckInHelp",
+        "studentReportIssue"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S219",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_consent_screen.dart",
+      "file": "student_consent_screen.dart",
+      "classes": [
+        "StudentConsentScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "c58489858cfef350a42796f2b91c2a95879805c52f8888ec6b0c9c7c06217011",
+      "localeKeys": [
+        "rentalUnknown",
+        "studentConsent",
+        "studentDisclosureBudget",
+        "studentDisclosureCampus",
+        "studentDisclosureStudy",
+        "studentMyRequirements",
+        "studentOwnDisclosures",
+        "studentPreview",
+        "studentPublicationHelp",
+        "studentPublish",
+        "studentReview",
+        "studentSharedRequirements"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S220",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_history_screen.dart",
+      "file": "student_history_screen.dart",
+      "classes": [
+        "StudentHistoryScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "a8f9795192deff2191baab5e22b07cd0c4e93d02d8c77e7e63617c6116e0726f",
+      "localeKeys": [
+        "studentHistory",
+        "studentParticipants",
+        "studentVersion"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S221",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_home_screen.dart",
+      "file": "student_home_screen.dart",
+      "classes": [
+        "StudentHomeScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "1053da11058992e21392084ecaa6fe7e479934af8d2585c2a88066cfd3f0000e",
+      "localeKeys": [
+        "workspaceStudents"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S222",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_hub_screen.dart",
+      "file": "student_hub_screen.dart",
+      "classes": [
+        "StudentHubScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "c8d8660b90e4f7b6e6dfde66bdd3876910dc21e43f5d9d846a3761579071fd90",
+      "localeKeys": [
+        "studentHub"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S223",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_offer_policies_screen.dart",
+      "file": "student_offer_policies_screen.dart",
+      "classes": [
+        "StudentOfferPoliciesScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "42d95e4a64ffdf3cd71fc17248f9d9a816e8a7404fb3574c11f9e601d9184d3e",
+      "localeKeys": [
+        "housingEdit",
+        "rentalUnknown",
+        "studentAddPolicy",
+        "studentChanged",
+        "studentExtensionRequests",
+        "studentMonthly",
+        "studentPolicy",
+        "studentPolicyDeadline",
+        "studentPolicyHelp",
+        "studentRenewalRequests",
+        "studentStorageRequest"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S224",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_edit_screen.dart",
+      "file": "student_plan_edit_screen.dart",
+      "classes": [
+        "StudentPlanEditScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "021b86f3b1ffa4f4c9cc52042b561aa4e977052f3ce9843a0e56bf6c3595f216",
+      "localeKeys": [
+        "studentPlanAction"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S225",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_lifecycle_screen.dart",
+      "file": "student_plan_lifecycle_screen.dart",
+      "classes": [
+        "StudentPlanLifecycleScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "8e651e8e0f1c0f0f93eaade0e9435de677088e062206163ebb6006e5804df4ed",
+      "localeKeys": [
+        "studentCompletePlan",
+        "studentPlanLifecycleHelp",
+        "studentWithdrawPlan"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S226",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_plan_screen.dart",
+      "file": "student_plan_screen.dart",
+      "classes": [
+        "StudentPlanScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "ad9748b10883235c583b21e2000b99ef1975b8713b2171b5c470279657c459e4",
+      "localeKeys": [
+        "studentPlanAction"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S227",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_profile_screen.dart",
+      "file": "student_profile_screen.dart",
+      "classes": [
+        "StudentProfileScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "6eaa7e21ed0e2f44b218ad073f106e25897388dfa520d4b04a64c32db20d7057",
+      "localeKeys": [
+        "studentProfile"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S228",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_publication_screen.dart",
+      "file": "student_publication_screen.dart",
+      "classes": [
+        "StudentPublicationScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "3c5b1ac9b948c5a8fc879588be241f5201383da3b646a5cb8e745d5a4665bc84",
+      "localeKeys": [
+        "studentPreview"
+      ],
+      "navigationReferences": [
+        "StudentConsentScreen"
+      ],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S229",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_requirements_screen.dart",
+      "file": "student_requirements_screen.dart",
+      "classes": [
+        "StudentRequirementsScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "660ac86ea4f269e20140628de19f1c7ead2cc88f463b80c111545ed1242cea27",
+      "localeKeys": [
+        "studentMyRequirements"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S230",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_search_screen.dart",
+      "file": "student_search_screen.dart",
+      "classes": [
+        "StudentSearchScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "31351fa564fd4de8dbd1854b1e3a8b38822786e9fd6a1069220d0bfe0c0e49cd",
+      "localeKeys": [
+        "studentFindHousing"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S231",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_verification_screen.dart",
+      "file": "student_verification_screen.dart",
+      "classes": [
+        "StudentVerificationScreen"
+      ],
+      "feature": "shared/student_housing",
+      "sha256": "b0f9ffcfde39cc708ef7080ed6af577a03d209a432f88343ca06da4145b1c346",
+      "localeKeys": [
+        "studentEvidence",
+        "studentEvidencePending",
+        "studentPrivacy"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 11,
+      "proposalId": "S232",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_attachment_screen.dart",
+      "file": "support_attachment_screen.dart",
+      "classes": [
+        "SupportAttachmentScreen"
+      ],
+      "feature": "shared/support",
+      "sha256": "df8228d8425fffc1ebd4abdfaf0aa7bc97455f7113fd5ed0dfe5379a7d3b5a52",
+      "localeKeys": [
+        "supportAttachment"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S43",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_new_ticket_screen.dart",
+      "file": "support_new_ticket_screen.dart",
+      "classes": [
+        "SupportNewTicketScreen"
+      ],
+      "feature": "shared/support",
+      "sha256": "4b3d5c7d6a2a817aeec3bf414d52dabf3bfb730fc7e1dfa7f6b8fd0ef74515d4",
+      "localeKeys": [
+        "supportNewTicket",
+        "uxSuggestImprovement"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S44",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_screen.dart",
+      "file": "support_screen.dart",
+      "classes": [
+        "SupportScreen"
+      ],
+      "feature": "shared/support",
+      "sha256": "13a3ce916d3dd4b5879ac4d500343840a92850d0fb4746f9e69edcaa235e4657",
+      "localeKeys": [
+        "profileHelpCenter",
+        "supportOwnerTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S40",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_ticket_detail_screen.dart",
+      "file": "support_ticket_detail_screen.dart",
+      "classes": [
+        "SupportTicketDetailScreen"
+      ],
+      "feature": "shared/support",
+      "sha256": "6e79db4f0e19e0bb3572fe2b5b7c3e7e8a8b264f8c8a796093d40b87e90514ef",
+      "localeKeys": [
+        "supportRefresh",
+        "supportTicketDetails"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S45",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_tickets_screen.dart",
+      "file": "support_tickets_screen.dart",
+      "classes": [
+        "SupportTicketsScreen"
+      ],
+      "feature": "shared/support",
+      "sha256": "af2ccd6004ff74877f95bcf3561bfa766422f3b7d3374903d8b039b6a28f19c0",
+      "localeKeys": [
+        "supportMyTickets"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S46",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/tenancy_invitations/presentation/screens/tenancy_invitation_detail_screen.dart",
+      "file": "tenancy_invitation_detail_screen.dart",
+      "classes": [
+        "TenancyInvitationDetailScreen"
+      ],
+      "feature": "shared/tenancy_invitations",
+      "sha256": "7df5c3b0ca3441c8affc77dce73744dc98f202a0ca5826d260fb8edbe8720b41",
+      "localeKeys": [
+        "tenancyInvitationDetails"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S113",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/tenancy_invitations/presentation/screens/tenancy_invitations_screen.dart",
+      "file": "tenancy_invitations_screen.dart",
+      "classes": [
+        "TenancyInvitationsScreen"
+      ],
+      "feature": "shared/tenancy_invitations",
+      "sha256": "62105012f3996720964245f81819450bc91bf8c736c433b7a8401e0ffdf5feea",
+      "localeKeys": [
+        "tenancyInvitations"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S114",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_action_screen.dart",
+      "file": "move_action_screen.dart",
+      "classes": [
+        "MoveActionScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "f45578d518ce3d03839c2c05c29968bc22eeb5974071ff46093d8d51c21bed5a",
+      "localeKeys": [
+        "moveNetworkDisclosure",
+        "moveNetworkExecutionBlocked",
+        "moveNetworkHelp",
+        "planningConsentRequired"
+      ],
+      "navigationReferences": [
+        "MoveRunScreen"
+      ],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S286",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_candidate_screen.dart",
+      "file": "move_candidate_screen.dart",
+      "classes": [
+        "MoveCandidateScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "fee192a14ba636e2534814b21389eb917d01091b96227febd8bbb61710d92f8c",
+      "localeKeys": [
+        "moveNetworkProposals"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S287",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_candidates_screen.dart",
+      "file": "move_candidates_screen.dart",
+      "classes": [
+        "MoveCandidatesScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "2aa26cd4c3af344dd3c6f5d70e3c222b0670bac8878ce7e62fd347d81b8df6a5",
+      "localeKeys": [
+        "moveNetworkProposals"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S288",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_create_screen.dart",
+      "file": "move_create_screen.dart",
+      "classes": [
+        "MoveCreateScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "5288bd902608cbef8ad55df770df8e359debbd80ce95ca8effc8e77c3b286db3",
+      "localeKeys": [
+        "moveNetworkCreate"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S289",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_execution_screen.dart",
+      "file": "move_execution_screen.dart",
+      "classes": [
+        "MoveExecutionScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "86497552e76812e7f9f4952909f257b85af87e52d03ec5ab545863478c45bc70",
+      "localeKeys": [
+        "moveNetworkCreateExecution",
+        "moveNetworkExecutionHelp"
+      ],
+      "navigationReferences": [
+        "ExecutionDetailScreen"
+      ],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S290",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_intent_screen.dart",
+      "file": "move_intent_screen.dart",
+      "classes": [
+        "MoveIntentScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "be2a77059806489afe59b16136552a126bd4816dbdabf2adadd782c971bec2e2",
+      "localeKeys": [
+        "moveNetworkTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S291",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_intents_screen.dart",
+      "file": "move_intents_screen.dart",
+      "classes": [
+        "MoveIntentsScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "eda086a9149620da225be8b09444c6a5f095e938d57e0ece652c9bee1cb0e329",
+      "localeKeys": [
+        "moveNetworkTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S292",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_interest_screen.dart",
+      "file": "move_interest_screen.dart",
+      "classes": [
+        "MoveInterestScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "cf56ddd097e80599b1ec84a5ffbde39407bb299ebc80bcc0705e9a807160326a",
+      "localeKeys": [
+        "moveNetworkInterestHelp"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S293",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_run_screen.dart",
+      "file": "move_run_screen.dart",
+      "classes": [
+        "MoveRunScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "cd5cb891073cd007b7cada2162887a683416b527fa716e3184f8df1114261648",
+      "localeKeys": [
+        "moveNetworkFind"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S294",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_runs_screen.dart",
+      "file": "move_runs_screen.dart",
+      "classes": [
+        "MoveRunsScreen"
+      ],
+      "feature": "shared/transition_network",
+      "sha256": "fbdac0667c6ca62794865a986728c4d36ef16e83fe1af157aae0f57cd17b2c30",
+      "localeKeys": [
+        "moveNetworkHistory"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 14,
+      "proposalId": "S295",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/owner_tour_editor_screen.dart",
+      "file": "owner_tour_editor_screen.dart",
+      "classes": [
+        "OwnerTourEditorScreen"
+      ],
+      "feature": "shared/virtual_tours",
+      "sha256": "8360aa03dcde32ce5673cf1d16e493764302feabfd73b0bfce5b85324110e509",
+      "localeKeys": [
+        "virtualTourOverview",
+        "virtualTourPreview",
+        "virtualTourRefresh",
+        "virtualTourScope",
+        "virtualTourUnavailable",
+        "virtualTourWrongSourceScene"
+      ],
+      "navigationReferences": [
+        "TourViewerScreen"
+      ],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S70",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/owner_tour_manager_screen.dart",
+      "file": "owner_tour_manager_screen.dart",
+      "classes": [
+        "OwnerTourManagerScreen"
+      ],
+      "feature": "shared/virtual_tours",
+      "sha256": "32571f4b580f2fe2425d610ca07cf789aeee38f4bbd8d1632388e7f999fafe43",
+      "localeKeys": [
+        "captureEntry",
+        "portfolioCommonAreaTours",
+        "professionalCheckDelivery",
+        "virtualTourCancel",
+        "virtualTourCheckAvailability",
+        "virtualTourConfirm",
+        "virtualTourCreate",
+        "virtualTourCreationUnavailable",
+        "virtualTourDelete",
+        "virtualTourDisableHint",
+        "virtualTourDisabledHint",
+        "virtualTourEdit",
+        "virtualTourManage",
+        "virtualTourNewRevision",
+        "virtualTourOwnerHint",
+        "virtualTourPanoramaHint",
+        "virtualTourPreparationSteps",
+        "virtualTourPreparedModelHint",
+        "virtualTourPublishedHint",
+        "virtualTourRefresh",
+        "virtualTourUnavailable",
+        "virtualTourUnpublish",
+        "virtualTourViewStatus"
+      ],
+      "navigationReferences": [
+        "OwnerTourEditorScreen",
+        "PropertyCaptureScreen"
+      ],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S71",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/tour_viewer_screen.dart",
+      "file": "tour_viewer_screen.dart",
+      "classes": [
+        "TourViewerScreen"
+      ],
+      "feature": "shared/virtual_tours",
+      "sha256": "1f8746d94c8095821d66ba24571474f110b98daa57ca6eea1019ac0b158d6bd4",
+      "localeKeys": [
+        "virtualTourClose",
+        "virtualTourLoading",
+        "virtualTourTitle",
+        "virtualTourUnavailable",
+        "virtualTourUseDirection"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S72",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/shared/whats_new/presentation/screens/release_notes_screen.dart",
+      "file": "release_notes_screen.dart",
+      "classes": [
+        "ReleaseNotesScreen"
+      ],
+      "feature": "shared/whats_new",
+      "sha256": "fb87e0feb7f6072f5e280a85c789799ee3c417ea3843c0f9f162e257bdf6ea25",
+      "localeKeys": [
+        "uxReleaseNotes"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S50",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/splash_screen.dart",
+      "file": "splash_screen.dart",
+      "classes": [
+        "SplashScreen"
+      ],
+      "feature": "startup",
+      "sha256": "02bdc61731299cb57f233a2cb1c4a75a0ed4476112112bdebc48f88e13d7e596",
+      "localeKeys": [],
+      "navigationReferences": [
+        "HomeScreen",
+        "WorkspaceEntryScreen"
+      ],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S52",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/presentation/screens/tenant_assistant_screen.dart",
+      "file": "tenant_assistant_screen.dart",
+      "classes": [
+        "TenantAssistantScreen"
+      ],
+      "feature": "tenant/ai_assistant",
+      "sha256": "0222ed465e0c6fe7a95aa053aa1cfa9e5a980b06fa5a3a5e42f04ac96f12df05",
+      "localeKeys": [
+        "assistantDictation",
+        "assistantStartDictation",
+        "assistantVoicePrivacy",
+        "assistantVoiceUnavailable",
+        "fillField",
+        "rentalInvalidInput"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S77",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/screens/commute_results_screen.dart",
+      "file": "commute_results_screen.dart",
+      "classes": [
+        "CommuteResultsScreen"
+      ],
+      "feature": "tenant/commute",
+      "sha256": "8f49ce03d93843741652de1b0a372bf559eaa7a5aae4b6fd9dfdd4eaa7459930",
+      "localeKeys": [
+        "commuteCancelled",
+        "commuteFailed",
+        "commuteProcessing",
+        "commuteResults",
+        "rentalCancel",
+        "searchRetry"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S73",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/screens/commute_screen.dart",
+      "file": "commute_screen.dart",
+      "classes": [
+        "CommuteScreen"
+      ],
+      "feature": "tenant/commute",
+      "sha256": "8d895e2a215f0f8f4590bbbb4ee2f3699b5168199b887f1a679341c5ac0e52af",
+      "localeKeys": [
+        "commuteTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S74",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/screens/decision_tools_screen.dart",
+      "file": "decision_tools_screen.dart",
+      "classes": [
+        "DecisionToolsScreen"
+      ],
+      "feature": "tenant/decision_tools",
+      "sha256": "39972f5fcba08671c0c44342c554dda20a7cf6d745ba23cb90e498beebbee036",
+      "localeKeys": [
+        "freeDecisionTools",
+        "freeLocalSaveFailed"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S75",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/screens/property_comparison_screen.dart",
+      "file": "property_comparison_screen.dart",
+      "classes": [
+        "PropertyComparisonScreen"
+      ],
+      "feature": "tenant/decision_tools",
+      "sha256": "d44130718f57c02b21109f2b6cc9f6a5b1b13f56b381e9ae8f204c10dbbc5f60",
+      "localeKeys": [
+        "assistantTitle",
+        "freeCompare",
+        "freeComparisonExplanation",
+        "freeLocalSaveFailed"
+      ],
+      "navigationReferences": [
+        "TenantAssistantScreen"
+      ],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S76",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/favorites/presentation/screens/favorites_screen.dart",
+      "file": "favorites_screen.dart",
+      "classes": [
+        "FavoritesScreen"
+      ],
+      "feature": "tenant/favorites",
+      "sha256": "a000f92edbd02464fc884adfd2428235c9c2c6330549c6beaa7b084f58ca508c",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S09"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/property_details_screen.dart",
+      "file": "property_details_screen.dart",
+      "classes": [
+        "PropertyDetailsScreen"
+      ],
+      "feature": "tenant/home",
+      "sha256": "a689dd2eba3f76f50be58bd28ea9d179b9f1a3b0cb27b4fc1954d144a2709daa",
+      "localeKeys": [
+        "propertyPolicyUnavailable",
+        "tenantFilterPropertyDetails"
+      ],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S08"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/property_map_screen.dart",
+      "file": "property_map_screen.dart",
+      "classes": [
+        "PropertyMapScreen"
+      ],
+      "feature": "tenant/home",
+      "sha256": "b7032f3c10c6fff0a81adb36f89092d4740ae2fcd5c8004ed5fbb75b70fd9ab7",
+      "localeKeys": [
+        "freeMapResults"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S54",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_filter_screen.dart",
+      "file": "tenant_filter_screen.dart",
+      "classes": [
+        "TenantFilterScreen"
+      ],
+      "feature": "tenant/home",
+      "sha256": "ef0434916f675524b5f580c6146e4785c024148cb31423a5c0bf42fd94324691",
+      "localeKeys": [
+        "rentalPricePeriodRequired",
+        "searchPriceRangeError",
+        "tenantFilterPriceRange"
+      ],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S07"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_home_screen.dart",
+      "file": "tenant_home_screen.dart",
+      "classes": [
+        "TenantHomeScreen"
+      ],
+      "feature": "tenant/home",
+      "sha256": "912f83f69b194ed4f299bf7220d5a6d15607a23299f742027e7221406eec98ce",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S05"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_property_photos_screen.dart",
+      "file": "tenant_property_photos_screen.dart",
+      "classes": [
+        "TenantPropertyPhotosScreen"
+      ],
+      "feature": "tenant/home",
+      "sha256": "3017de92f1b905e7d10852efee28ec24aeac94279cc1bfa5f00722431dd05d68",
+      "localeKeys": [
+        "tenantPropertyPhotosClose"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S55",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_search_results_screen.dart",
+      "file": "tenant_search_results_screen.dart",
+      "classes": [
+        "TenantSearchResultsScreen"
+      ],
+      "feature": "tenant/home",
+      "sha256": "e8dfee03badc7f64ab18292a133699f1ffc3d568ec998bf046a10c52f8d39c7b",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S06"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_search_screen.dart",
+      "file": "tenant_search_screen.dart",
+      "classes": [
+        "TenantSearchScreen"
+      ],
+      "feature": "tenant/home",
+      "sha256": "4e256e5bbb48a93c17c1a06e6741fd5320a9909e139b0df74bd4d0a6155fbbad",
+      "localeKeys": [],
+      "navigationReferences": [
+        "TenantSearchResultsScreen"
+      ],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S56",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_action_screen.dart",
+      "file": "group_action_screen.dart",
+      "classes": [
+        "GroupActionScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "2a1159f3c88a279e0cef0aaaa3ee8510d54081a5b2aef0852c348079120ec87e",
+      "localeKeys": [
+        "planningConsentRequired"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S202",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invite_create_screen.dart",
+      "file": "group_invite_create_screen.dart",
+      "classes": [
+        "GroupInviteCreateScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "7074346038bc0ab564232d9753a2955a778ee497a84424f1e224a70186800e87",
+      "localeKeys": [
+        "groupsInvite",
+        "groupsInviteHelp"
+      ],
+      "navigationReferences": [
+        "GroupInviteScreen"
+      ],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S203",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invite_screen.dart",
+      "file": "group_invite_screen.dart",
+      "classes": [
+        "GroupInviteScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "993e74eb421b073219f38ceb02d6171d1973468ff2d598634b4dd9966826709a",
+      "localeKeys": [
+        "groupsCopyInvite",
+        "groupsInviteExpired",
+        "groupsInviteHelp",
+        "groupsInvitePreview",
+        "groupsJoin"
+      ],
+      "navigationReferences": [
+        "GroupJoinScreen"
+      ],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S204",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invites_screen.dart",
+      "file": "group_invites_screen.dart",
+      "classes": [
+        "GroupInvitesScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "0b232e066a2ec84209f663c6622b2a49ab0a74f00f5b2921bae5336ebd078229",
+      "localeKeys": [
+        "groupsInvitationLinks"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S205",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_detail_screen.dart",
+      "file": "group_join_detail_screen.dart",
+      "classes": [
+        "GroupJoinDetailScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "17fbc5eb3b976ba015e0a87dd536c35950a76b5f894628014e0578f918999eac",
+      "localeKeys": [
+        "groupsJoinRequests"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S206",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_review_screen.dart",
+      "file": "group_join_review_screen.dart",
+      "classes": [
+        "GroupJoinReviewScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "9e22f06143004aa73c8294249e2e52ff75c79d50def9c8bf0663015e0b313e07",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S207",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_screen.dart",
+      "file": "group_join_screen.dart",
+      "classes": [
+        "GroupJoinScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "58d9a399e68a9cd216b3b40f29d9566f17e9e602e4ebbc0e75b0b1a2ca3818cc",
+      "localeKeys": [
+        "groupsInviteExpired",
+        "groupsInviteHelp",
+        "groupsJoin"
+      ],
+      "navigationReferences": [
+        "HousingGroupScreen"
+      ],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S208",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_create_screen.dart",
+      "file": "housing_group_create_screen.dart",
+      "classes": [
+        "HousingGroupCreateScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "d69dde66b671555b44223666c94a327a87140cbc510dbb0332c05de1a74fed5a",
+      "localeKeys": [
+        "groupsCreate",
+        "housingEdit"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S209",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_screen.dart",
+      "file": "housing_group_screen.dart",
+      "classes": [
+        "HousingGroupScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "5435d734ce7a78f6dc3e6d3935f6e5cdad0acbdf24cecc1dbc9c3e75c2871fa4",
+      "localeKeys": [
+        "groupsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S210",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_groups_screen.dart",
+      "file": "housing_groups_screen.dart",
+      "classes": [
+        "HousingGroupsScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "54c252b04bd2a3c1d60126b6223f57ab5591a92bbfd9bfcc015f75086c725b1f",
+      "localeKeys": [
+        "groupsTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S211",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/open_groups_screen.dart",
+      "file": "open_groups_screen.dart",
+      "classes": [
+        "OpenGroupsScreen"
+      ],
+      "feature": "tenant/housing_groups",
+      "sha256": "c46462834ea8dc6f39654a1b6ef7018a6c4d9aea4aa06c7dfa2a861711297afa",
+      "localeKeys": [
+        "groupsBrowseOpen",
+        "groupsInviteOnly",
+        "groupsJoinRequests",
+        "groupsRequestJoin",
+        "groupsShortlistEmpty"
+      ],
+      "navigationReferences": [
+        "GroupJoinReviewScreen"
+      ],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S212",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_requests/presentation/screens/housing_request_action_screen.dart",
+      "file": "housing_request_action_screen.dart",
+      "classes": [
+        "HousingRequestActionScreen"
+      ],
+      "feature": "tenant/housing_requests",
+      "sha256": "b9b255419bddc74efca4180fea5ff4414fa9b468263d5b847f80729458ed6159",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S104",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_requests/presentation/screens/housing_request_edit_screen.dart",
+      "file": "housing_request_edit_screen.dart",
+      "classes": [
+        "HousingRequestEditScreen"
+      ],
+      "feature": "tenant/housing_requests",
+      "sha256": "1e7c3d818881a9b3c2bc09835737bcff48c6a50a25d5a63698a83b29fb2908d3",
+      "localeKeys": [
+        "housingNewRequest"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S105",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/screens/premium_alert_detail_screen.dart",
+      "file": "premium_alert_detail_screen.dart",
+      "classes": [
+        "PremiumAlertDetailScreen"
+      ],
+      "feature": "tenant/premium_alerts",
+      "sha256": "14f4da5757f55ef037f6abeece5ee3a7ebbeb119ce0b3e54010824e05d8ed3dd",
+      "localeKeys": [
+        "paidPriorityAlerts"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S79",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/screens/premium_alerts_screen.dart",
+      "file": "premium_alerts_screen.dart",
+      "classes": [
+        "PremiumAlertsScreen"
+      ],
+      "feature": "tenant/premium_alerts",
+      "sha256": "e7124e92523aa09905de408b689c1490a4a2ca27bc87ed3eb6e605e634d92e04",
+      "localeKeys": [
+        "paidPriorityAlerts"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 3,
+      "proposalId": "S80",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/screens/tenant_account_summary_screen.dart",
+      "file": "tenant_account_summary_screen.dart",
+      "classes": [
+        "TenantAccountSummaryScreen"
+      ],
+      "feature": "tenant/profile",
+      "sha256": "4b8a65811800e9ae6eac16f532e4c7267583a0f1b67259eaba5edf7f2b8ab42c",
+      "localeKeys": [
+        "profileSummaryTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S42",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/screens/tenant_profile_screen.dart",
+      "file": "tenant_profile_screen.dart",
+      "classes": [
+        "TenantProfileScreen"
+      ],
+      "feature": "tenant/profile",
+      "sha256": "ba1f7a0af11cb3c47bb484ec352d8c80699b03e9ef5057299ca125c840c377c8",
+      "localeKeys": [],
+      "navigationReferences": [
+        "ProfileEditScreen"
+      ],
+      "status": "planned",
+      "sprint": 1,
+      "proposalId": "S26",
+      "reviewStatus": "approved-to-continue"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/rent_management/presentation/screens/rental_checkout_screen.dart",
+      "file": "rental_checkout_screen.dart",
+      "classes": [
+        "RentalCheckoutScreen"
+      ],
+      "feature": "tenant/rent_management",
+      "sha256": "cab474945c870d73c98e3aad1a1ff41b43d9b6163e113734e4096fca809ab92b",
+      "localeKeys": [
+        "rentalCheckout"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 7,
+      "proposalId": "S147",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/presentation/screens/replacement_consent_screen.dart",
+      "file": "replacement_consent_screen.dart",
+      "classes": [
+        "ReplacementConsentScreen"
+      ],
+      "feature": "tenant/rental_changes",
+      "sha256": "91f2cf2c9bedfb506c6a62284236dba40eae3ff772ef7c223367735a958a5f48",
+      "localeKeys": [
+        "rentalReject",
+        "replacementConsentAccept",
+        "replacementInvitesHelp",
+        "replacementInvitesTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S173",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/presentation/screens/replacement_invitations_screen.dart",
+      "file": "replacement_invitations_screen.dart",
+      "classes": [
+        "ReplacementInvitationsScreen"
+      ],
+      "feature": "tenant/rental_changes",
+      "sha256": "0aed7eec54198f16fa8c084f523a1ff33972d70309d65f23a06fcf828be9879a",
+      "localeKeys": [
+        "replacementInvitesTitle"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 8,
+      "proposalId": "S174",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_interests/presentation/screens/rental_interest_form_screen.dart",
+      "file": "rental_interest_form_screen.dart",
+      "classes": [
+        "RentalInterestFormScreen"
+      ],
+      "feature": "tenant/rental_interests",
+      "sha256": "1c86986f9056d61cb16cf942c392a491f0a881140d8add2585a207eff368f1b8",
+      "localeKeys": [
+        "rentalInterest"
+      ],
+      "navigationReferences": [],
+      "status": "planned",
+      "sprint": 5,
+      "proposalId": "S110",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/reviews/presentation/screens/my_reviews_screen.dart",
+      "file": "my_reviews_screen.dart",
+      "classes": [
+        "MyReviewsScreen"
+      ],
+      "feature": "tenant/reviews",
+      "sha256": "00cb9130edb59e09d40a7c9064f5478704c639d8e2d3bf79a9ddab4958543e82",
+      "localeKeys": [],
+      "navigationReferences": [
+        "ReviewsHubScreen"
+      ],
+      "status": "planned",
+      "sprint": 10,
+      "proposalId": "S201",
+      "reviewStatus": "not-started"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/screens/book_visit_screen.dart",
+      "file": "book_visit_screen.dart",
+      "classes": [
+        "BookVisitScreen"
+      ],
+      "feature": "tenant/visits",
+      "sha256": "c7ce51753b36047044e0794074d7cb27c137771340935ddcc159d8272eea0517",
+      "localeKeys": [
+        "tenantVisitBookTitle",
+        "viewingCompanyScope",
+        "viewingRecover",
+        "viewingReschedule"
+      ],
+      "navigationReferences": [
+        "VisitDetailsScreen"
+      ],
+      "status": "original-proposal",
+      "proposalId": "S10"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/screens/tenant_visits_screen.dart",
+      "file": "tenant_visits_screen.dart",
+      "classes": [
+        "TenantVisitsScreen"
+      ],
+      "feature": "tenant/visits",
+      "sha256": "8db68fa90424608fbd456492208f6cb388f2136800048a49e0d93a8b52e8ec9b",
+      "localeKeys": [
+        "tenantVisitsTitle"
+      ],
+      "navigationReferences": [
+        "VisitDetailsScreen"
+      ],
+      "status": "original-proposal",
+      "proposalId": "S12"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/screens/visit_confirmed_screen.dart",
+      "file": "visit_confirmed_screen.dart",
+      "classes": [
+        "VisitConfirmedScreen"
+      ],
+      "feature": "tenant/visits",
+      "sha256": "ff7826ff8bd1ce696d3dbe004fc7e5e5cfd3d97fa3e97244e1c3a080ac05628f",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "original-proposal",
+      "proposalId": "S11"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/features/tenant/visits/presentation/screens/visit_details_screen.dart",
+      "file": "visit_details_screen.dart",
+      "classes": [
+        "VisitDetailsScreen"
+      ],
+      "feature": "tenant/visits",
+      "sha256": "aef887fed8d39ef1912582e79e29213b73d00e33ecdcf89a93fd791e3a4bc8d1",
+      "localeKeys": [
+        "professionalUnavailableDestination",
+        "tenantVisitDetailsTitle"
+      ],
+      "navigationReferences": [
+        "ReviewsHubScreen"
+      ],
+      "status": "planned",
+      "sprint": 2,
+      "proposalId": "S57",
+      "reviewStatus": "awaiting-review"
+    },
+    {
+      "source": "sokoun/apps/sokoun_app/lib/shared_widgets/loading/skeleton_pages.dart",
+      "file": "skeleton_pages.dart",
+      "classes": [
+        "_SkeletonPage"
+      ],
+      "feature": "shared_widgets",
+      "sha256": "9ba8e7a8184d41fbf17f3288760ad7f44ee76573693c818aebb1fb4bd0a63078",
+      "localeKeys": [],
+      "navigationReferences": [],
+      "status": "alias-or-component",
+      "aliasOf": null,
+      "reason": "Passive loading component, not a product destination."
+    }
+  ]
+}
