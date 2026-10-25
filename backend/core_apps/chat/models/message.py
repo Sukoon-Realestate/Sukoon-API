@@ -19,6 +19,7 @@ class Message(TimeStampedModel):
         db_index=True,
     )
     content = models.TextField()
+    is_forwarded = models.BooleanField(default=False)
     client_message_id = models.UUIDField(null=True, blank=True)
     kind = models.CharField(max_length=16, default="text")
     sequence = models.PositiveBigIntegerField(null=True, blank=True)

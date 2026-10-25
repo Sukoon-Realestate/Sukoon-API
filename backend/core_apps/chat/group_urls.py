@@ -1,4 +1,5 @@
 from django.urls import path
+from .views.forwarding import forward_destinations, forward
 from .views.mentions import unread_mentions, mention_seen
 from .views.interactions import MessageReactionAPIView, ConversationMembersAPIView
 from .views.group_attachments import (
@@ -15,6 +16,8 @@ from .views.group_history import (
 )
 
 urlpatterns = [
+    path("conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/", forward_destinations),
+    path("conversations/<uuid:id>/messages/<uuid:message_id>/forward/", forward),
     path("conversations/<uuid:id>/mentions/", unread_mentions),
     path("conversations/<uuid:id>/mentions/<uuid:message_id>/seen/", mention_seen),
     path("conversations/<uuid:id>/members/", ConversationMembersAPIView.as_view()),

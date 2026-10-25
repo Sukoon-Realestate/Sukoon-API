@@ -10,6 +10,7 @@ from datetime import timedelta
 from pathlib import Path
 from django.conf import settings
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 from core_apps.chat.models import ChatAttachment
@@ -220,7 +221,9 @@ def cleanup_orphans():
 
 def remove_files(attachment):
     for key in (attachment.storage_key, attachment.thumbnail_key):
-        if key:
+        if key and not ChatAttachment.objects.filter(
+            Q(storage_key=key) | Q(thumbnail_key=key), state__in=["ready", "attached"]
+        ).exists():
             private_path(key).unlink(missing_ok=True)
             try:
                 group_media_remote.remove(key)

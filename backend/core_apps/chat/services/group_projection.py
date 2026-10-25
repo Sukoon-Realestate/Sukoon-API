@@ -78,6 +78,8 @@ def message_payload(message, participant, membership, *, properties=None):
         permitted.append("edit_message")
     if not deleted and message.kind != "system" and "send_message" in actions(membership):
         permitted.append("react")
+    if not deleted and message.kind != "system":
+        permitted.append("forward")
     reply = None
     if message.reply_to_id and not deleted:
         original = message.reply_to
@@ -109,6 +111,7 @@ def message_payload(message, participant, membership, *, properties=None):
         "sender": sender_payload(message.sender),
         "created_at": message.created_at.isoformat(),
         "is_deleted": deleted,
+        "is_forwarded": message.is_forwarded and not deleted,
         "revision": message.revision,
         "reactions_revision": message.reactions_revision,
         "reactions": reaction_payload(message, participant),

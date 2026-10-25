@@ -17,9 +17,10 @@ class MessageSerializer(serializers.ModelSerializer):
             "content",
             "client_message_id",
             "status",
+            "is_forwarded",
             "created_at",
         )
-        read_only_fields = ("id", "conversation", "created_at")
+        read_only_fields = ("id", "conversation", "created_at", "is_forwarded")
 
     def get_status(self, obj):
         return "sent"

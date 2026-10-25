@@ -1,6 +1,8 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "Choose another conversation.": "اختر محادثة أخرى لتحويل الرسالة إليها.",
+    "System messages cannot be forwarded.": "لا يمكن تحويل رسائل النظام.",
     "Choose a member from the mention list.": "اختر العضو من قائمة المنشن.",
     "A message can mention up to 20 members.": "يمكنك الإشارة إلى 20 عضوًا بحد أقصى في الرسالة.",
     "Mentions are available in group conversations only.": "المنشن متاح داخل محادثات الجروبات فقط.",
