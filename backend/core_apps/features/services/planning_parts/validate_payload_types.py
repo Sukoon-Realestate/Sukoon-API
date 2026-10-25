@@ -11,7 +11,7 @@ from ...renderers import FeatureJsonRenderer
 from .selection_payload import require_planning
 
 
-def criteria_payload(value):
+def criteria_payload(value, *, catalog=None):
     from .districts import district_projection
 
     def major(key):
@@ -19,6 +19,25 @@ def criteria_payload(value):
         return str(Decimal(amount) / 100) if amount is not None else ""
 
     return {
+        **(
+            {
+                "property_type_label": next(
+                    (
+                        option["label"]
+                        for option in catalog["property_types"]
+                        if option["value"] == value.get("property_type")
+                    ),
+                    "",
+                ),
+                "amenity_labels": [
+                    option["label"]
+                    for option in catalog["amenities"]
+                    if option["value"] in value.get("amenities", [])
+                ],
+            }
+            if catalog is not None
+            else {}
+        ),
         "city": value.get("city", {}),
         "district_ids": value.get("district_ids", []),
         "districts": district_projection(value),

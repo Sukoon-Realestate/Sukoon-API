@@ -85,6 +85,16 @@ def request_actions(user, item):
 
 
 def request_payload(item, user):
+    from django.utils.translation import get_language
+    from core_apps.properties.services import PropertyService
+
+    # The authenticated user instance lives for this request; reuse one catalog
+    # for a paginated response without a query per housing request.
+    language = get_language()
+    cached = getattr(user, "_housing_criteria_catalog", None)
+    if cached is None or cached[0] != language:
+        cached = (language, PropertyService.get_filter_options(language))
+        user._housing_criteria_catalog = cached
     return {
         "id": str(item.id),
         "user_id": str(item.user.id),
@@ -93,7 +103,7 @@ def request_payload(item, user):
         "status": request_status(item),
         "visibility": item.visibility,
         "revision": item.revision,
-        "criteria": criteria_payload(item.criteria),
+        "criteria": criteria_payload(item.criteria, catalog=cached[1]),
         "expires_at": item.expires_at.isoformat(),
         "allowed_actions": request_actions(user, item),
         "blocking_reasons": [],

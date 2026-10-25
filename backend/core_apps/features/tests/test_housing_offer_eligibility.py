@@ -171,3 +171,118 @@ def test_removed_property_details_returns_useful_picker_error(
     )
     assert response.status_code == 404
     assert expected in response.json()["message"]
+
+
+def matching_room(prop, offer_id):
+    room_id = str(uuid.uuid4())
+    from core_apps.properties.models import PropertyType
+
+    prop.property_type = PropertyType.objects.get(slug="apartment")
+    prop.has_wifi = True
+    prop.is_furnished = True
+    prop.rental_inventory["mode"] = "rooms"
+    prop.rental_inventory["rooms"] = [
+        {"id": room_id, "name": "غرفة هادئة", "capacity": 1, "beds": []}
+    ]
+    offer = prop.rental_inventory["offers"][0]
+    offer.update(
+        rental_scope="room", room_ids=[room_id], capacity=1, name="الغرفة المطلوبة"
+    )
+    offer["terms"].update(price="5000", price_period="yearly", deposit="none")
+    for field, value in [
+        ("rental_scope", "entire_property"),
+        ("capacity", 0),
+        ("availability", "unavailable"),
+    ]:
+        alternative = deepcopy(offer)
+        alternative.update(id=str(uuid.uuid4()), **{field: value})
+        prop.rental_inventory["offers"].append(alternative)
+    for field, value in [("price", "20000"), ("price_period", "monthly")]:
+        alternative = deepcopy(offer)
+        alternative["id"] = str(uuid.uuid4())
+        alternative["terms"][field] = value
+        prop.rental_inventory["offers"].append(alternative)
+    prop.save()
+    return {
+        "rental_scope": "room",
+        "people": 1,
+        "price_period": "yearly",
+        "budget_min": {"amount_minor": 90000, "currency": "EGP", "exponent": 2},
+        "budget_max": {"amount_minor": 900000, "currency": "EGP", "exponent": 2},
+        "amenities": ["wifi"],
+        "furnished": True,
+        "area_note": "بجوار الجامعة",
+    }
+
+
+def test_matching_room_cycle_preserves_all_requirements_and_exact_offer(
+    rental_participants,
+):
+    owner, tenant, other, prop, offer_id = rental_participants
+    requirements = matching_room(prop, offer_id)
+    endpoint, body = publish_and_body(tenant, prop, offer_id, **requirements)
+    request_id = body["request_id"]
+    client = authenticated(owner)
+    details = client.get(
+        API + f"housing-requests/{request_id}/", HTTP_ACCEPT_LANGUAGE="ar"
+    )
+    criteria = details.data["criteria"]
+    assert criteria["property_type_label"] == "شقة"
+    assert criteria["amenity_labels"] == ["واي فاي"]
+    assert criteria["people"] == 1
+    assert criteria["area_note"] == "بجوار الجامعة"
+    assert criteria["filters"]["rental_scope"] == "room"
+    assert criteria["filters"]["is_furnished"] == "true"
+    assert criteria["filters"]["price_period"] == "yearly"
+    inventory_url = API + f"housing-requests/{request_id}/offer-inventory/{prop.id}/"
+    inventory = client.get(inventory_url)
+    assert inventory.status_code == 200, inventory.data
+    assert [offer["id"] for offer in inventory.data["rental_inventory"]["offers"]] == [
+        offer_id
+    ]
+    assert authenticated(tenant).get(inventory_url).status_code == 403
+    assert authenticated(other).get(inventory_url).status_code in (403, 404)
+    response = client.post(endpoint, body, format="json")
+    assert response.status_code == 201, response.data
+    offer = response.data["resource"]
+    assert offer["selection"]["offer_id"] == offer_id
+    shown = authenticated(tenant).get(endpoint)
+    assert shown.status_code == 200
+    assert shown.data["results"][0]["id"] == offer["id"]
+    selected = post(
+        tenant,
+        f"housing-offers/{offer['id']}/select_to_proceed/",
+        command(offer["revision"], decision="select_to_proceed"),
+    )
+    assert selected.data["resource"]["status"] == "selected_to_proceed"
+
+
+def test_request_aware_property_picker_and_final_check_share_requirements(
+    rental_participants,
+):
+    from core_apps.properties.models import PropertyType
+
+    owner, tenant, _, prop, offer_id = rental_participants
+    requirements = matching_room(prop, offer_id)
+    endpoint, body = publish_and_body(tenant, prop, offer_id, **requirements)
+    villa = PropertyType.objects.get(slug="villa")
+    another_property(prop, property_type=villa, has_wifi=True, is_furnished=True)
+    another_property(prop, has_wifi=False, is_furnished=True)
+    another_property(prop, has_wifi=True, is_furnished=False)
+    response = authenticated(owner).get(
+        "/api/v1/properties/owned/",
+        {"housing_request_id": body["request_id"], "page_size": 1},
+    )
+    assert response.status_code == 200, response.data
+    assert response.data["count"] == 1
+    assert response.data["results"][0]["id"] == str(prop.id)
+    # A valid choice becoming incompatible is still rejected on submission.
+    prop.property_type = villa
+    prop.save(update_fields=["property_type"])
+    rejected = authenticated(owner).post(
+        endpoint, body, format="json", HTTP_ACCEPT_LANGUAGE="ar"
+    )
+    assert rejected.status_code == 400
+    assert "نوع العقار لا يطابق" in rejected.json()["message"]
+    assert "does not match" not in rejected.json()["message"]
+    assert not HousingOffer.objects.exists()

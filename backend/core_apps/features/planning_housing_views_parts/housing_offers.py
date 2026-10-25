@@ -15,6 +15,7 @@ from ..services.planning import (
     text_field,
 )
 from ..services.rental_phase2 import RentalConflict
+from ..services.housing_offer_matching import offer_problem
 from .housing_requests import get_request, request_actions
 from .housing_request_action import offer_actions, offer_payload, get_offer
 
@@ -74,59 +75,10 @@ def housing_offers(request, request_id):
             raise RentalConflict(
                 "The offer limit for this request was reached.", code="offer_limit"
             )
-        if (
-            item.criteria["rental_scope"]
-            and item.criteria["rental_scope"] != snapshot["rental_scope"]
-        ):
-            raise ValidationError(
-                {
-                    "selection": "The accommodation type must match the housing request."
-                }
-            )
-        capacity = 1 if snapshot["rental_scope"] == "bed" else snapshot.get("capacity")
-        if capacity is None or item.criteria["people"] > capacity:
-            raise ValidationError(
-                {"selection": "The accommodation cannot hold the requested party."}
-            )
         rent, deposit = offer_money(snapshot)
-        requirements = item.criteria
-        per_person_group = bool(
-            item.academic_plan_id
-            and item.academic_snapshot.get("budget_basis") == "per_person"
-            and requirements["people"] > 1
-        )
-        if not per_person_group and (
-            rent < (requirements.get("budget_min") or {}).get("amount_minor", 0)
-            or rent > (requirements.get("budget_max") or {}).get("amount_minor", 10**12)
-        ):
-            raise ValidationError(
-                {"selection": "The rent is outside the requested budget."}
-            )
-        if (
-            requirements.get("property_type")
-            and prop.property_type.slug != requirements["property_type"]
-        ):
-            raise ValidationError(
-                {"selection": "The property type does not match the request."}
-            )
-        if (
-            requirements.get("furnished") is not None
-            and prop.is_furnished != requirements["furnished"]
-        ):
-            raise ValidationError(
-                {"selection": "The furnishing requirement is not met."}
-            )
-        if any(
-            not getattr(prop, name if name == "near_metro" else f"has_{name}", False)
-            for name in requirements.get("amenities", [])
-        ):
-            raise ValidationError(
-                {"selection": "The requested amenities are not available."}
-            )
-        if snapshot["terms"].get("price_period") != item.criteria["price_period"]:
-            raise ValidationError(
-                {"selection": "The offer must use the requested price period."}
-            )
+        problem = offer_problem(item, prop, snapshot, rent)
+        if problem:
+            raise ValidationError({"selection": problem})
         if item.academic_plan_id:
             from ..services.student_housing.policies import (
                 validate_response,

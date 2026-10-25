@@ -1,6 +1,14 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    'The property type does not match the request.': 'نوع العقار لا يطابق المطلوب. راجع نوع العقار في تفاصيل طلب السكن، بالإضافة إلى نوع الوحدة المختارة.',
+    'The furnishing requirement is not met.': 'حالة تأثيث العقار لا تطابق طلب السكن.',
+    'The requested amenities are not available.': 'العقار لا يوفر كل المميزات المطلوبة في طلب السكن.',
+    'The accommodation cannot hold the requested party.': 'سعة الوحدة أقل من عدد الأشخاص المطلوب في طلب السكن.',
+    'The offer must use the requested price period.': 'دورية سعر العرض لا تطابق الدورية المطلوبة في طلب السكن.',
+    'The rent is outside the requested budget.': 'سعر الإيجار خارج حدود الميزانية المطلوبة في طلب السكن.',
+    'Only an eligible owner can respond to a published request.': 'يمكن للمالك المؤهل فقط إرسال عرض على طلب سكن منشور.',
+
     "The selected property is unavailable. Refresh and choose another property.": "العقار المختار لم يعد متاحًا. حدّث قائمة عقاراتك واختر عقارًا آخر.",
     "This property must be published and its ownership verified before it can be offered.": "يجب اعتماد نشر العقار وتوثيق ملكيته قبل إرسال عرض سكن به.",
     "The accommodation type must match the housing request.": "نوع السكن المختار يجب أن يطابق النوع المطلوب في طلب السكن.",

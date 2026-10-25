@@ -8,6 +8,9 @@ from . import planning_housing_views as housing
 from . import planning_roommate_views as roommates
 from . import planning_transition_views as transitions
 from .planning_home_views import planning_home
+from .planning_housing_views_parts.housing_offer_inventory import (
+    housing_offer_inventory,
+)
 
 
 urlpatterns = [
@@ -52,6 +55,10 @@ urlpatterns = [
     path("owner-housing-offers/", housing.owner_housing_offers),
     path("housing-requests/<uuid:request_id>/", housing.housing_request_detail),
     path("housing-requests/<uuid:request_id>/offers/", housing.housing_offers),
+    path(
+        "housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
+        housing_offer_inventory,
+    ),
     path(
         "housing-requests/<uuid:request_id>/<slug:action>/",
         housing.housing_request_action,
@@ -108,11 +115,15 @@ urlpatterns = [
 ]
 
 from . import shared_housing_views as shared_housing
+
 urlpatterns += [
     path("shared-housing-plans/", shared_housing.plans),
     path("shared-housing-plans/<uuid:plan_id>/", shared_housing.detail),
     path("shared-housing-plans/<uuid:plan_id>/proposals/", shared_housing.proposals),
-    path("shared-housing-plans/<uuid:plan_id>/proposals/<uuid:proposal_id>/<slug:action>/", shared_housing.proposal_action),
+    path(
+        "shared-housing-plans/<uuid:plan_id>/proposals/<uuid:proposal_id>/<slug:action>/",
+        shared_housing.proposal_action,
+    ),
     path("shared-housing-plans/<uuid:plan_id>/<slug:action>/", shared_housing.action),
     path("shared-housing-demand/", shared_housing.demand),
     path("owner-shared-housing-applications/", shared_housing.applications),

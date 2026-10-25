@@ -66,6 +66,35 @@ class MyPropertyListAPIView(generics.ListAPIView):
                 .filter(owner=self.request.user, is_ownership_verified=True)
                 .values("pk")
             )
+        housing_request_id = self.request.query_params.get("housing_request_id")
+        if housing_request_id:
+            from uuid import UUID
+            from rest_framework.exceptions import PermissionDenied, ValidationError
+            from core_apps.features.planning_housing_views_parts.housing_requests import (
+                get_request,
+                can_offer_request,
+            )
+            from core_apps.features.services.housing_offer_matching import (
+                property_requirements,
+            )
+            from core_apps.features.services.planning_parts.selection_payload import (
+                public_properties,
+            )
+
+            try:
+                identifier = UUID(housing_request_id)
+            except ValueError:
+                raise ValidationError({"housing_request_id": "Invalid UUID."})
+            parent = get_request(self.request.user, identifier)
+            if not can_offer_request(self.request.user, parent):
+                raise PermissionDenied(
+                    "Only an eligible owner can respond to a published request."
+                )
+            queryset = property_requirements(queryset, parent.criteria).filter(
+                pk__in=public_properties()
+                .filter(is_ownership_verified=True)
+                .values("pk")
+            )
         rental_scope = self.request.query_params.get("rental_scope")
         if rental_scope:
             if rental_scope not in {"entire_property", "room", "room_group", "bed"}:
