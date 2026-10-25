@@ -69,7 +69,7 @@ class TestOwnerVisitRequestListScreen:
             visit_time=time(18), status=PropertyVisit.Status.CANCELED,
         )
         url = reverse("owner-visit-request-list")
-        response = auth_client.get(url)
+        response = auth_client.get(url, HTTP_ACCEPT_LANGUAGE="ar")
         assert response.status_code == status.HTTP_200_OK
 
         data = response.json()["data"]
@@ -117,7 +117,7 @@ class TestOwnerVisitRequestListScreen:
         )
 
         url = reverse("owner-visit-request-list")
-        response = auth_client.get(url)
+        response = auth_client.get(url, HTTP_ACCEPT_LANGUAGE="ar")
         assert response.status_code == status.HTTP_200_OK
 
         card = response.json()["data"]["results"][0]
@@ -244,7 +244,7 @@ class TestOwnerVisitRequestDetailScreen:
         )
 
         url = reverse("owner-visit-request-detail", kwargs={"id": v.id})
-        response = auth_client.get(url)
+        response = auth_client.get(url, HTTP_ACCEPT_LANGUAGE="ar")
         assert response.status_code == status.HTTP_200_OK
 
         data = response.json()["data"]
@@ -440,6 +440,7 @@ class TestOwnerVisitCalendarScreen:
         response = auth_client.get(
             url,
             {"year": 2025, "month": 1, "date": "2025-01-15"},
+            HTTP_ACCEPT_LANGUAGE="ar",
         )
         assert response.status_code == status.HTTP_200_OK
 
@@ -477,6 +478,7 @@ class TestOwnerVisitCalendarScreen:
         response = auth_client.get(
             url,
             {"year": 2026, "month": 10, "date": 1},
+            HTTP_ACCEPT_LANGUAGE="ar",
         )
         assert response.status_code == status.HTTP_200_OK
         data = response.json()["data"]
@@ -508,6 +510,7 @@ class TestOwnerVisitCalendarScreen:
         response = auth_client.get(
             url,
             {"year": 2026, "month": 10, "day": 1},
+            HTTP_ACCEPT_LANGUAGE="ar",
         )
         assert response.status_code == status.HTTP_200_OK
         data = response.json()["data"]
@@ -519,6 +522,7 @@ class TestOwnerVisitCalendarScreen:
         response_empty_day = auth_client.get(
             url,
             {"year": 2026, "month": 10, "day": ""},
+            HTTP_ACCEPT_LANGUAGE="ar",
         )
         assert response_empty_day.status_code == status.HTTP_200_OK
         assert response_empty_day.json()["data"]["selected_date"] is None
