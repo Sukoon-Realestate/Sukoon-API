@@ -22,6 +22,12 @@ class PaymobUnavailable(APIException):
     default_code = "provider_unavailable"
 
 
+class PaymobNoTransaction(PaymobUnavailable):
+    """An explicit inquiry response, never inferred from a generic 404."""
+
+    default_code = "provider_no_transaction"
+
+
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
@@ -63,7 +69,9 @@ def checkout_ready():
     )
 
 
-def transport(path, payload=None, *, authorization="", method=None):
+def transport(
+    path, payload=None, *, authorization="", method=None, allow_no_transaction=False
+):
     if not credentials_ready():
         raise PaymobUnavailable()
     request = Request(
@@ -84,7 +92,16 @@ def transport(path, payload=None, *, authorization="", method=None):
         if not isinstance(value, dict):
             raise ValueError()
         return value
-    except (HTTPError, URLError, TimeoutError, ValueError, OSError):
+    except HTTPError as error:
+        if allow_no_transaction and error.code == 404:
+            try:
+                detail = json.loads(error.read(4096))
+            except (ValueError, OSError):
+                detail = None
+            if detail == {"detail": "Transaction Not Found"}:
+                raise PaymobNoTransaction() from None
+        raise PaymobUnavailable() from None
+    except (URLError, TimeoutError, ValueError, OSError):
         raise PaymobUnavailable() from None
 
 
@@ -209,6 +226,7 @@ def inquiry(payment, transaction_id=None):
     return transport(
         "/api/ecommerce/orders/transaction_inquiry",
         {"auth_token": token, "merchant_order_id": payment.reference},
+        allow_no_transaction=True,
     )
 
 
@@ -256,10 +274,21 @@ def order_transactions(payment):
         or order.get("merchant_order_id") != payment.reference
         or order.get("amount_cents") != payment.attempt.amount_minor
         or order.get("currency") != payment.attempt.currency
-        or not isinstance(order.get("transactions"), list)
     ):
         raise PaymobUnavailable()
-    return order["transactions"]
+    if isinstance(order.get("transactions"), list):
+        return order["transactions"]
+    if "transactions" in order or order.get("paid_amount_cents") != 0:
+        raise PaymobUnavailable()
+    # Egypt's order detail can omit transaction history. Only an authenticated
+    # inquiry explicitly reporting no transaction, for this verified unpaid
+    # order, permits renewal of the original intention. A generic 404, timeout,
+    # absent field or declined transaction never proves absence.
+    try:
+        latest = inquiry(payment)
+    except PaymobNoTransaction:
+        return []
+    return [latest]
 
 
 def renew_intention(payment, return_url):
