@@ -5,8 +5,8 @@
   "counts": {
     "sourceFiles": 304,
     "original": 20,
-    "excluded": 6,
-    "remaining": 278,
+    "excluded": 7,
+    "remaining": 277,
     "sprints": 14
   },
   "screens": [
@@ -42,7 +42,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S53",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/advanced_analytics/presentation/screens/advanced_analytics_screen.dart",
@@ -58,7 +58,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S186",
+      "proposalId": "S185",
       "reviewStatus": "not-started"
     },
     {
@@ -76,7 +76,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S78",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/banner_ad_detail_screen.dart",
@@ -93,7 +93,7 @@
       "status": "planned",
       "sprint": 4,
       "proposalId": "S81",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/banner_property_picker_screen.dart",
@@ -110,7 +110,7 @@
       "status": "planned",
       "sprint": 4,
       "proposalId": "S82",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/create_banner_ad_screen.dart",
@@ -127,7 +127,7 @@
       "status": "planned",
       "sprint": 4,
       "proposalId": "S83",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/banner_ads/presentation/screens/owner_banner_ads_screen.dart",
@@ -147,7 +147,7 @@
       "status": "planned",
       "sprint": 4,
       "proposalId": "S84",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/lease_draft_screen.dart",
@@ -163,8 +163,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S130",
-      "reviewStatus": "not-started"
+      "proposalId": "S129",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/lease_tenant_picker_screen.dart",
@@ -180,8 +180,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S131",
-      "reviewStatus": "not-started"
+      "proposalId": "S130",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/rental_agreement_draft_screen.dart",
@@ -197,8 +197,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S132",
-      "reviewStatus": "not-started"
+      "proposalId": "S131",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/digital_leases/presentation/screens/rental_agreement_edit_screen.dart",
@@ -214,8 +214,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S133",
-      "reviewStatus": "not-started"
+      "proposalId": "S132",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_home_screen.dart",
@@ -283,7 +283,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S58",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/screens/owner_visit_requests_screen.dart",
@@ -319,7 +319,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S59",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_basics_page.dart",
@@ -359,7 +359,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S60",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_pricing_page.dart",
@@ -374,7 +374,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S61",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/home/presentation/widgets/owner_add_property/add_property_submitted_page.dart",
@@ -399,7 +399,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S62",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_demand/presentation/screens/housing_offer_compose_screen.dart",
@@ -415,8 +415,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S106",
-      "reviewStatus": "not-started"
+      "proposalId": "S105",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_detail_screen.dart",
@@ -432,7 +432,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S213",
+      "proposalId": "S212",
       "reviewStatus": "not-started"
     },
     {
@@ -449,7 +449,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S214",
+      "proposalId": "S213",
       "reviewStatus": "not-started"
     },
     {
@@ -466,8 +466,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S86",
-      "reviewStatus": "not-started"
+      "proposalId": "S85",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/profile/presentation/screens/owner_profile_screen.dart",
@@ -484,7 +484,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S41",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/promotions/presentation/screens/promotions_screen.dart",
@@ -498,10 +498,9 @@
       "navigationReferences": [
         "CreateBannerAdScreen"
       ],
-      "status": "planned",
-      "sprint": 4,
-      "proposalId": "S85",
-      "reviewStatus": "not-started"
+      "status": "alias-or-component",
+      "aliasOf": "create_banner_ad_screen.dart",
+      "reason": "Legacy alias directly opens CreateBannerAdScreen; reconciled in the five-sprint batch."
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_properties_screen.dart",
@@ -539,7 +538,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S63",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_property_rejection_screen.dart",
@@ -562,7 +561,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S64",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/properties/presentation/screens/owner_revenue_screen.dart",
@@ -579,7 +578,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S65",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_interests/presentation/screens/terms_proposal_edit_screen.dart",
@@ -595,8 +594,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S111",
-      "reviewStatus": "not-started"
+      "proposalId": "S110",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_interests/presentation/screens/terms_proposal_form_screen.dart",
@@ -612,8 +611,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S112",
-      "reviewStatus": "not-started"
+      "proposalId": "S111",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_onboarding_screen.dart",
@@ -628,8 +627,8 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 9,
-      "proposalId": "S181",
+      "sprint": 8,
+      "proposalId": "S180",
       "reviewStatus": "not-started"
     },
     {
@@ -646,7 +645,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S182",
+      "proposalId": "S181",
       "reviewStatus": "not-started"
     },
     {
@@ -663,7 +662,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S183",
+      "proposalId": "S182",
       "reviewStatus": "not-started"
     },
     {
@@ -680,7 +679,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S184",
+      "proposalId": "S183",
       "reviewStatus": "not-started"
     },
     {
@@ -697,7 +696,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S185",
+      "proposalId": "S184",
       "reviewStatus": "not-started"
     },
     {
@@ -714,8 +713,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S115",
-      "reviewStatus": "not-started"
+      "proposalId": "S114",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/tenancy_invitations/presentation/screens/tenancy_invite_screen.dart",
@@ -731,8 +730,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S116",
-      "reviewStatus": "not-started"
+      "proposalId": "S115",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/screens/owner_availability_screen.dart",
@@ -749,7 +748,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S66",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/owner/visits/presentation/screens/owner_request_details_screen.dart",
@@ -782,7 +781,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S67",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/advanced_execution/presentation/screens/execution_action_screen.dart",
@@ -802,7 +801,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S296",
+      "proposalId": "S295",
       "reviewStatus": "not-started"
     },
     {
@@ -819,7 +818,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S297",
+      "proposalId": "S296",
       "reviewStatus": "not-started"
     },
     {
@@ -836,7 +835,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S298",
+      "proposalId": "S297",
       "reviewStatus": "not-started"
     },
     {
@@ -868,8 +867,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S157",
-      "reviewStatus": "not-started"
+      "proposalId": "S156",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/asset_passport/presentation/screens/asset_passport_screen.dart",
@@ -885,8 +884,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S158",
-      "reviewStatus": "not-started"
+      "proposalId": "S157",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/asset_passport/presentation/screens/asset_review_workspace_screen.dart",
@@ -902,8 +901,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S159",
-      "reviewStatus": "not-started"
+      "proposalId": "S158",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/auth/presentation/screens/forgot_password_screen.dart",
@@ -1133,8 +1132,8 @@
       ],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S87",
-      "reviewStatus": "not-started"
+      "proposalId": "S86",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/purchase_invoice_screen.dart",
@@ -1154,8 +1153,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S88",
-      "reviewStatus": "not-started"
+      "proposalId": "S87",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/billing/presentation/screens/subscriptions_screen.dart",
@@ -1184,8 +1183,8 @@
       ],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S89",
-      "reviewStatus": "not-started"
+      "proposalId": "S88",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/business_policies/presentation/screens/business_policies_screen.dart",
@@ -1203,7 +1202,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S48",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_policy_cases_screen.dart",
@@ -1219,8 +1218,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S93",
-      "reviewStatus": "not-started"
+      "proposalId": "S92",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_property_groups_screen.dart",
@@ -1236,8 +1235,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S94",
-      "reviewStatus": "not-started"
+      "proposalId": "S93",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_property_picker_screen.dart",
@@ -1255,8 +1254,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S95",
-      "reviewStatus": "not-started"
+      "proposalId": "S94",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_restricted_screen.dart",
@@ -1270,8 +1269,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S96",
-      "reviewStatus": "not-started"
+      "proposalId": "S95",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_screen.dart",
@@ -1310,8 +1309,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S97",
-      "reviewStatus": "not-started"
+      "proposalId": "S96",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/chats_screen.dart",
@@ -1341,8 +1340,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S98",
-      "reviewStatus": "not-started"
+      "proposalId": "S97",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/previous_chat_screen.dart",
@@ -1356,8 +1355,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S99",
-      "reviewStatus": "not-started"
+      "proposalId": "S98",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/chat/presentation/screens/start_conversation_screen.dart",
@@ -1375,8 +1374,8 @@
       ],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S100",
-      "reviewStatus": "not-started"
+      "proposalId": "S99",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/account_contexts_screen.dart",
@@ -1392,7 +1391,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S233",
+      "proposalId": "S232",
       "reviewStatus": "not-started"
     },
     {
@@ -1410,7 +1409,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S234",
+      "proposalId": "S233",
       "reviewStatus": "not-started"
     },
     {
@@ -1427,7 +1426,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S235",
+      "proposalId": "S234",
       "reviewStatus": "not-started"
     },
     {
@@ -1446,7 +1445,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S236",
+      "proposalId": "S235",
       "reviewStatus": "not-started"
     },
     {
@@ -1469,7 +1468,7 @@
       ],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S237",
+      "proposalId": "S236",
       "reviewStatus": "not-started"
     },
     {
@@ -1488,7 +1487,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S238",
+      "proposalId": "S237",
       "reviewStatus": "not-started"
     },
     {
@@ -1506,7 +1505,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S239",
+      "proposalId": "S238",
       "reviewStatus": "not-started"
     },
     {
@@ -1523,7 +1522,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S240",
+      "proposalId": "S239",
       "reviewStatus": "not-started"
     },
     {
@@ -1539,8 +1538,8 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 12,
-      "proposalId": "S241",
+      "sprint": 11,
+      "proposalId": "S240",
       "reviewStatus": "not-started"
     },
     {
@@ -1558,7 +1557,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S242",
+      "proposalId": "S241",
       "reviewStatus": "not-started"
     },
     {
@@ -1577,7 +1576,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S243",
+      "proposalId": "S242",
       "reviewStatus": "not-started"
     },
     {
@@ -1594,7 +1593,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S244",
+      "proposalId": "S243",
       "reviewStatus": "not-started"
     },
     {
@@ -1617,7 +1616,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S245",
+      "proposalId": "S244",
       "reviewStatus": "not-started"
     },
     {
@@ -1641,7 +1640,7 @@
       ],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S246",
+      "proposalId": "S245",
       "reviewStatus": "not-started"
     },
     {
@@ -1658,7 +1657,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S247",
+      "proposalId": "S246",
       "reviewStatus": "not-started"
     },
     {
@@ -1675,7 +1674,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S248",
+      "proposalId": "S247",
       "reviewStatus": "not-started"
     },
     {
@@ -1693,7 +1692,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S249",
+      "proposalId": "S248",
       "reviewStatus": "not-started"
     },
     {
@@ -1710,7 +1709,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S250",
+      "proposalId": "S249",
       "reviewStatus": "not-started"
     },
     {
@@ -1728,7 +1727,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S251",
+      "proposalId": "S250",
       "reviewStatus": "not-started"
     },
     {
@@ -1753,7 +1752,7 @@
       ],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S252",
+      "proposalId": "S251",
       "reviewStatus": "not-started"
     },
     {
@@ -1771,7 +1770,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S253",
+      "proposalId": "S252",
       "reviewStatus": "not-started"
     },
     {
@@ -1793,7 +1792,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S254",
+      "proposalId": "S253",
       "reviewStatus": "not-started"
     },
     {
@@ -1814,7 +1813,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S255",
+      "proposalId": "S254",
       "reviewStatus": "not-started"
     },
     {
@@ -1835,7 +1834,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S256",
+      "proposalId": "S255",
       "reviewStatus": "not-started"
     },
     {
@@ -1857,7 +1856,7 @@
       ],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S257",
+      "proposalId": "S256",
       "reviewStatus": "not-started"
     },
     {
@@ -1880,7 +1879,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S49",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/digital_lease_details_screen.dart",
@@ -1896,8 +1895,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S134",
-      "reviewStatus": "not-started"
+      "proposalId": "S133",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/digital_leases_screen.dart",
@@ -1913,8 +1912,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S135",
-      "reviewStatus": "not-started"
+      "proposalId": "S134",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/rental_agreement_review_screen.dart",
@@ -1930,8 +1929,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S136",
-      "reviewStatus": "not-started"
+      "proposalId": "S135",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/digital_leases/presentation/screens/rental_signing_screen.dart",
@@ -1947,8 +1946,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S137",
-      "reviewStatus": "not-started"
+      "proposalId": "S136",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/presentation/screens/housing_offer_action_screen.dart",
@@ -1963,9 +1962,9 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 5,
-      "proposalId": "S101",
-      "reviewStatus": "not-started"
+      "sprint": 4,
+      "proposalId": "S100",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/presentation/screens/housing_request_screen.dart",
@@ -1981,8 +1980,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S102",
-      "reviewStatus": "not-started"
+      "proposalId": "S101",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_requests/presentation/screens/housing_requests_screen.dart",
@@ -1999,8 +1998,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S103",
-      "reviewStatus": "not-started"
+      "proposalId": "S102",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_simulator/presentation/screens/housing_scenario_screen.dart",
@@ -2016,7 +2015,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S282",
+      "proposalId": "S281",
       "reviewStatus": "not-started"
     },
     {
@@ -2033,7 +2032,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S283",
+      "proposalId": "S282",
       "reviewStatus": "not-started"
     },
     {
@@ -2054,7 +2053,7 @@
       ],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S284",
+      "proposalId": "S283",
       "reviewStatus": "not-started"
     },
     {
@@ -2072,7 +2071,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S285",
+      "proposalId": "S284",
       "reviewStatus": "not-started"
     },
     {
@@ -2089,7 +2088,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S258",
+      "proposalId": "S257",
       "reviewStatus": "not-started"
     },
     {
@@ -2106,7 +2105,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S259",
+      "proposalId": "S258",
       "reviewStatus": "not-started"
     },
     {
@@ -2132,7 +2131,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 12,
-      "proposalId": "S260",
+      "proposalId": "S259",
       "reviewStatus": "not-started"
     },
     {
@@ -2154,8 +2153,8 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 13,
-      "proposalId": "S261",
+      "sprint": 12,
+      "proposalId": "S260",
       "reviewStatus": "not-started"
     },
     {
@@ -2173,7 +2172,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S262",
+      "proposalId": "S261",
       "reviewStatus": "not-started"
     },
     {
@@ -2190,7 +2189,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S263",
+      "proposalId": "S262",
       "reviewStatus": "not-started"
     },
     {
@@ -2209,7 +2208,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S264",
+      "proposalId": "S263",
       "reviewStatus": "not-started"
     },
     {
@@ -2226,7 +2225,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S265",
+      "proposalId": "S264",
       "reviewStatus": "not-started"
     },
     {
@@ -2251,7 +2250,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S266",
+      "proposalId": "S265",
       "reviewStatus": "not-started"
     },
     {
@@ -2268,7 +2267,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S267",
+      "proposalId": "S266",
       "reviewStatus": "not-started"
     },
     {
@@ -2288,7 +2287,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S268",
+      "proposalId": "S267",
       "reviewStatus": "not-started"
     },
     {
@@ -2310,7 +2309,7 @@
       ],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S269",
+      "proposalId": "S268",
       "reviewStatus": "not-started"
     },
     {
@@ -2335,7 +2334,7 @@
       ],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S270",
+      "proposalId": "S269",
       "reviewStatus": "not-started"
     },
     {
@@ -2352,7 +2351,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S271",
+      "proposalId": "S270",
       "reviewStatus": "not-started"
     },
     {
@@ -2375,7 +2374,7 @@
       ],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S272",
+      "proposalId": "S271",
       "reviewStatus": "not-started"
     },
     {
@@ -2392,7 +2391,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S273",
+      "proposalId": "S272",
       "reviewStatus": "not-started"
     },
     {
@@ -2409,7 +2408,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S274",
+      "proposalId": "S273",
       "reviewStatus": "not-started"
     },
     {
@@ -2426,7 +2425,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S275",
+      "proposalId": "S274",
       "reviewStatus": "not-started"
     },
     {
@@ -2441,7 +2440,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S276",
+      "proposalId": "S275",
       "reviewStatus": "not-started"
     },
     {
@@ -2458,7 +2457,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S277",
+      "proposalId": "S276",
       "reviewStatus": "not-started"
     },
     {
@@ -2473,7 +2472,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S278",
+      "proposalId": "S277",
       "reviewStatus": "not-started"
     },
     {
@@ -2490,7 +2489,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S279",
+      "proposalId": "S278",
       "reviewStatus": "not-started"
     },
     {
@@ -2507,7 +2506,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 13,
-      "proposalId": "S280",
+      "proposalId": "S279",
       "reviewStatus": "not-started"
     },
     {
@@ -2524,8 +2523,8 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 14,
-      "proposalId": "S281",
+      "sprint": 13,
+      "proposalId": "S280",
       "reviewStatus": "not-started"
     },
     {
@@ -2593,8 +2592,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S90",
-      "reviewStatus": "not-started"
+      "proposalId": "S89",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/screens/rental_mock_provider_screen.dart",
@@ -2610,8 +2609,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S91",
-      "reviewStatus": "not-started"
+      "proposalId": "S90",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/rental_decision_screen.dart",
@@ -2625,8 +2624,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 4,
-      "proposalId": "S92",
-      "reviewStatus": "not-started"
+      "proposalId": "S91",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/profile/presentation/screens/change_password_screen.dart",
@@ -2848,7 +2847,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S68",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/property_capture/presentation/screens/property_capture_screen.dart",
@@ -2868,7 +2867,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S69",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/public_pages/presentation/screens/public_page_screen.dart",
@@ -2883,7 +2882,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S47",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/presentation/screens/continuation_screen.dart",
@@ -2901,7 +2900,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S51",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rent_management/presentation/screens/payment_record_screen.dart",
@@ -2917,8 +2916,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S143",
-      "reviewStatus": "not-started"
+      "proposalId": "S142",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rent_management/presentation/screens/rent_invoice_screen.dart",
@@ -2934,8 +2933,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S144",
-      "reviewStatus": "not-started"
+      "proposalId": "S143",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rent_management/presentation/screens/rent_management_screen.dart",
@@ -2951,8 +2950,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S145",
-      "reviewStatus": "not-started"
+      "proposalId": "S144",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rent_management/presentation/screens/rental_payment_history_screen.dart",
@@ -2968,8 +2967,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S146",
-      "reviewStatus": "not-started"
+      "proposalId": "S145",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/my_housing_screen.dart",
@@ -2991,8 +2990,8 @@
       ],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S138",
-      "reviewStatus": "not-started"
+      "proposalId": "S137",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/my_rentals_screen.dart",
@@ -3008,8 +3007,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S139",
-      "reviewStatus": "not-started"
+      "proposalId": "S138",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/rental_billing_schedule_screen.dart",
@@ -3025,8 +3024,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S140",
-      "reviewStatus": "not-started"
+      "proposalId": "S139",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/rental_center_screen.dart",
@@ -3041,9 +3040,9 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 7,
-      "proposalId": "S141",
-      "reviewStatus": "not-started"
+      "sprint": 6,
+      "proposalId": "S140",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_center/presentation/screens/rental_timeline_screen.dart",
@@ -3059,8 +3058,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S142",
-      "reviewStatus": "not-started"
+      "proposalId": "S141",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_change_detail_screen.dart",
@@ -3074,7 +3073,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S166",
+      "proposalId": "S165",
       "reviewStatus": "not-started"
     },
     {
@@ -3091,7 +3090,7 @@
       ],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S167",
+      "proposalId": "S166",
       "reviewStatus": "not-started"
     },
     {
@@ -3108,7 +3107,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S168",
+      "proposalId": "S167",
       "reviewStatus": "not-started"
     },
     {
@@ -3123,7 +3122,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S169",
+      "proposalId": "S168",
       "reviewStatus": "not-started"
     },
     {
@@ -3145,7 +3144,7 @@
       ],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S170",
+      "proposalId": "S169",
       "reviewStatus": "not-started"
     },
     {
@@ -3163,7 +3162,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S171",
+      "proposalId": "S170",
       "reviewStatus": "not-started"
     },
     {
@@ -3180,7 +3179,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S172",
+      "proposalId": "S171",
       "reviewStatus": "not-started"
     },
     {
@@ -3197,8 +3196,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S148",
-      "reviewStatus": "not-started"
+      "proposalId": "S147",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/screens/rental_dispute_detail_screen.dart",
@@ -3214,7 +3213,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S163",
+      "proposalId": "S162",
       "reviewStatus": "not-started"
     },
     {
@@ -3231,7 +3230,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S164",
+      "proposalId": "S163",
       "reviewStatus": "not-started"
     },
     {
@@ -3248,7 +3247,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S165",
+      "proposalId": "S164",
       "reviewStatus": "not-started"
     },
     {
@@ -3267,8 +3266,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S149",
-      "reviewStatus": "not-started"
+      "proposalId": "S148",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/condition_report_edit_screen.dart",
@@ -3284,8 +3283,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S150",
-      "reviewStatus": "not-started"
+      "proposalId": "S149",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/condition_report_screen.dart",
@@ -3301,8 +3300,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S151",
-      "reviewStatus": "not-started"
+      "proposalId": "S150",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/condition_reports_screen.dart",
@@ -3318,8 +3317,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S152",
-      "reviewStatus": "not-started"
+      "proposalId": "S151",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/rental_evidence_image_screen.dart",
@@ -3335,8 +3334,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S153",
-      "reviewStatus": "not-started"
+      "proposalId": "S152",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/rental_handover_detail_screen.dart",
@@ -3352,8 +3351,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S154",
-      "reviewStatus": "not-started"
+      "proposalId": "S153",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/rental_handover_form_screen.dart",
@@ -3369,8 +3368,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S155",
-      "reviewStatus": "not-started"
+      "proposalId": "S154",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_handovers/presentation/screens/rental_handover_list_screen.dart",
@@ -3386,8 +3385,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S156",
-      "reviewStatus": "not-started"
+      "proposalId": "S155",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_interests/presentation/screens/rental_interest_detail_screen.dart",
@@ -3403,8 +3402,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S107",
-      "reviewStatus": "not-started"
+      "proposalId": "S106",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_interests/presentation/screens/rental_interest_list_screen.dart",
@@ -3420,8 +3419,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S108",
-      "reviewStatus": "not-started"
+      "proposalId": "S107",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_interests/presentation/screens/terms_proposal_detail_screen.dart",
@@ -3437,8 +3436,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S109",
-      "reviewStatus": "not-started"
+      "proposalId": "S108",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/application_profile_screen.dart",
@@ -3454,8 +3453,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S117",
-      "reviewStatus": "not-started"
+      "proposalId": "S116",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/application_share_detail_screen.dart",
@@ -3471,8 +3470,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S118",
-      "reviewStatus": "not-started"
+      "proposalId": "S117",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/application_share_screen.dart",
@@ -3488,8 +3487,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S119",
-      "reviewStatus": "not-started"
+      "proposalId": "S118",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/application_shares_screen.dart",
@@ -3505,8 +3504,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S120",
-      "reviewStatus": "not-started"
+      "proposalId": "S119",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/group_booking_create_screen.dart",
@@ -3521,9 +3520,9 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 6,
-      "proposalId": "S121",
-      "reviewStatus": "not-started"
+      "sprint": 5,
+      "proposalId": "S120",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/group_booking_screen.dart",
@@ -3539,8 +3538,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S122",
-      "reviewStatus": "not-started"
+      "proposalId": "S121",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/group_bookings_screen.dart",
@@ -3556,8 +3555,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S123",
-      "reviewStatus": "not-started"
+      "proposalId": "S122",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/property_decision_screen.dart",
@@ -3573,8 +3572,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S124",
-      "reviewStatus": "not-started"
+      "proposalId": "S123",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_case_screen.dart",
@@ -3590,8 +3589,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S125",
-      "reviewStatus": "not-started"
+      "proposalId": "S124",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_cases_screen.dart",
@@ -3607,8 +3606,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S126",
-      "reviewStatus": "not-started"
+      "proposalId": "S125",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/rental_deal_screen.dart",
@@ -3624,8 +3623,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S127",
-      "reviewStatus": "not-started"
+      "proposalId": "S126",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/reservation_screen.dart",
@@ -3641,8 +3640,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S128",
-      "reviewStatus": "not-started"
+      "proposalId": "S127",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_lifecycle/presentation/screens/reservations_screen.dart",
@@ -3658,8 +3657,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 6,
-      "proposalId": "S129",
-      "reviewStatus": "not-started"
+      "proposalId": "S128",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/screens/maintenance_request_detail_screen.dart",
@@ -3675,8 +3674,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S160",
-      "reviewStatus": "not-started"
+      "proposalId": "S159",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/screens/maintenance_request_form_screen.dart",
@@ -3691,9 +3690,9 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 8,
-      "proposalId": "S161",
-      "reviewStatus": "not-started"
+      "sprint": 7,
+      "proposalId": "S160",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/screens/maintenance_request_list_screen.dart",
@@ -3709,7 +3708,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S162",
+      "proposalId": "S161",
       "reviewStatus": "not-started"
     },
     {
@@ -3726,7 +3725,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S175",
+      "proposalId": "S174",
       "reviewStatus": "not-started"
     },
     {
@@ -3743,7 +3742,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S176",
+      "proposalId": "S175",
       "reviewStatus": "not-started"
     },
     {
@@ -3760,7 +3759,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S177",
+      "proposalId": "S176",
       "reviewStatus": "not-started"
     },
     {
@@ -3777,7 +3776,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S178",
+      "proposalId": "S177",
       "reviewStatus": "not-started"
     },
     {
@@ -3794,7 +3793,7 @@
       ],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S179",
+      "proposalId": "S178",
       "reviewStatus": "not-started"
     },
     {
@@ -3811,7 +3810,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S180",
+      "proposalId": "S179",
       "reviewStatus": "not-started"
     },
     {
@@ -3829,7 +3828,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S187",
+      "proposalId": "S186",
       "reviewStatus": "not-started"
     },
     {
@@ -3844,7 +3843,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S188",
+      "proposalId": "S187",
       "reviewStatus": "not-started"
     },
     {
@@ -3862,7 +3861,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S189",
+      "proposalId": "S188",
       "reviewStatus": "not-started"
     },
     {
@@ -3881,7 +3880,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S190",
+      "proposalId": "S189",
       "reviewStatus": "not-started"
     },
     {
@@ -3898,7 +3897,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S191",
+      "proposalId": "S190",
       "reviewStatus": "not-started"
     },
     {
@@ -3915,7 +3914,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S192",
+      "proposalId": "S191",
       "reviewStatus": "not-started"
     },
     {
@@ -3932,7 +3931,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S193",
+      "proposalId": "S192",
       "reviewStatus": "not-started"
     },
     {
@@ -3949,7 +3948,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S194",
+      "proposalId": "S193",
       "reviewStatus": "not-started"
     },
     {
@@ -3969,7 +3968,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S195",
+      "proposalId": "S194",
       "reviewStatus": "not-started"
     },
     {
@@ -3986,7 +3985,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S196",
+      "proposalId": "S195",
       "reviewStatus": "not-started"
     },
     {
@@ -4003,7 +4002,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S197",
+      "proposalId": "S196",
       "reviewStatus": "not-started"
     },
     {
@@ -4024,7 +4023,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S198",
+      "proposalId": "S197",
       "reviewStatus": "not-started"
     },
     {
@@ -4041,7 +4040,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S199",
+      "proposalId": "S198",
       "reviewStatus": "not-started"
     },
     {
@@ -4068,7 +4067,7 @@
       ],
       "status": "planned",
       "sprint": 9,
-      "proposalId": "S200",
+      "proposalId": "S199",
       "reviewStatus": "not-started"
     },
     {
@@ -4090,7 +4089,7 @@
       ],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S215",
+      "proposalId": "S214",
       "reviewStatus": "not-started"
     },
     {
@@ -4107,7 +4106,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S216",
+      "proposalId": "S215",
       "reviewStatus": "not-started"
     },
     {
@@ -4125,7 +4124,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S217",
+      "proposalId": "S216",
       "reviewStatus": "not-started"
     },
     {
@@ -4152,7 +4151,7 @@
       ],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S218",
+      "proposalId": "S217",
       "reviewStatus": "not-started"
     },
     {
@@ -4171,7 +4170,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S219",
+      "proposalId": "S218",
       "reviewStatus": "not-started"
     },
     {
@@ -4199,7 +4198,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S220",
+      "proposalId": "S219",
       "reviewStatus": "not-started"
     },
     {
@@ -4217,8 +4216,8 @@
       ],
       "navigationReferences": [],
       "status": "planned",
-      "sprint": 11,
-      "proposalId": "S221",
+      "sprint": 10,
+      "proposalId": "S220",
       "reviewStatus": "not-started"
     },
     {
@@ -4235,7 +4234,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S222",
+      "proposalId": "S221",
       "reviewStatus": "not-started"
     },
     {
@@ -4252,7 +4251,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S223",
+      "proposalId": "S222",
       "reviewStatus": "not-started"
     },
     {
@@ -4279,7 +4278,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S224",
+      "proposalId": "S223",
       "reviewStatus": "not-started"
     },
     {
@@ -4296,7 +4295,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S225",
+      "proposalId": "S224",
       "reviewStatus": "not-started"
     },
     {
@@ -4315,7 +4314,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S226",
+      "proposalId": "S225",
       "reviewStatus": "not-started"
     },
     {
@@ -4332,7 +4331,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S227",
+      "proposalId": "S226",
       "reviewStatus": "not-started"
     },
     {
@@ -4349,7 +4348,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S228",
+      "proposalId": "S227",
       "reviewStatus": "not-started"
     },
     {
@@ -4368,7 +4367,7 @@
       ],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S229",
+      "proposalId": "S228",
       "reviewStatus": "not-started"
     },
     {
@@ -4385,7 +4384,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S230",
+      "proposalId": "S229",
       "reviewStatus": "not-started"
     },
     {
@@ -4402,7 +4401,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S231",
+      "proposalId": "S230",
       "reviewStatus": "not-started"
     },
     {
@@ -4421,7 +4420,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 11,
-      "proposalId": "S232",
+      "proposalId": "S231",
       "reviewStatus": "not-started"
     },
     {
@@ -4439,7 +4438,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S43",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_new_ticket_screen.dart",
@@ -4457,7 +4456,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S44",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_screen.dart",
@@ -4493,7 +4492,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S45",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/support/presentation/screens/support_tickets_screen.dart",
@@ -4510,7 +4509,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S46",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/tenancy_invitations/presentation/screens/tenancy_invitation_detail_screen.dart",
@@ -4526,8 +4525,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S113",
-      "reviewStatus": "not-started"
+      "proposalId": "S112",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/tenancy_invitations/presentation/screens/tenancy_invitations_screen.dart",
@@ -4543,8 +4542,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S114",
-      "reviewStatus": "not-started"
+      "proposalId": "S113",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/transition_network/presentation/screens/move_action_screen.dart",
@@ -4565,7 +4564,7 @@
       ],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S286",
+      "proposalId": "S285",
       "reviewStatus": "not-started"
     },
     {
@@ -4582,7 +4581,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S287",
+      "proposalId": "S286",
       "reviewStatus": "not-started"
     },
     {
@@ -4599,7 +4598,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S288",
+      "proposalId": "S287",
       "reviewStatus": "not-started"
     },
     {
@@ -4616,7 +4615,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S289",
+      "proposalId": "S288",
       "reviewStatus": "not-started"
     },
     {
@@ -4636,7 +4635,7 @@
       ],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S290",
+      "proposalId": "S289",
       "reviewStatus": "not-started"
     },
     {
@@ -4653,7 +4652,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S291",
+      "proposalId": "S290",
       "reviewStatus": "not-started"
     },
     {
@@ -4670,7 +4669,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S292",
+      "proposalId": "S291",
       "reviewStatus": "not-started"
     },
     {
@@ -4687,7 +4686,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S293",
+      "proposalId": "S292",
       "reviewStatus": "not-started"
     },
     {
@@ -4704,7 +4703,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S294",
+      "proposalId": "S293",
       "reviewStatus": "not-started"
     },
     {
@@ -4721,7 +4720,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 14,
-      "proposalId": "S295",
+      "proposalId": "S294",
       "reviewStatus": "not-started"
     },
     {
@@ -4746,7 +4745,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S70",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/owner_tour_manager_screen.dart",
@@ -4788,7 +4787,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S71",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/virtual_tours/presentation/screens/tour_viewer_screen.dart",
@@ -4809,7 +4808,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S72",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/shared/whats_new/presentation/screens/release_notes_screen.dart",
@@ -4826,7 +4825,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S50",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/splash_screen.dart",
@@ -4844,7 +4843,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S52",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/ai_assistant/presentation/screens/tenant_assistant_screen.dart",
@@ -4866,7 +4865,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S77",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/screens/commute_results_screen.dart",
@@ -4888,7 +4887,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S73",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/commute/presentation/screens/commute_screen.dart",
@@ -4905,7 +4904,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S74",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/screens/decision_tools_screen.dart",
@@ -4923,7 +4922,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S75",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/decision_tools/presentation/screens/property_comparison_screen.dart",
@@ -4945,7 +4944,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S76",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/favorites/presentation/screens/favorites_screen.dart",
@@ -4991,7 +4990,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S54",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_filter_screen.dart",
@@ -5038,7 +5037,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S55",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/home/presentation/screens/tenant_search_results_screen.dart",
@@ -5068,7 +5067,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S56",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_action_screen.dart",
@@ -5084,7 +5083,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S202",
+      "proposalId": "S201",
       "reviewStatus": "not-started"
     },
     {
@@ -5104,7 +5103,7 @@
       ],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S203",
+      "proposalId": "S202",
       "reviewStatus": "not-started"
     },
     {
@@ -5127,7 +5126,7 @@
       ],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S204",
+      "proposalId": "S203",
       "reviewStatus": "not-started"
     },
     {
@@ -5144,7 +5143,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S205",
+      "proposalId": "S204",
       "reviewStatus": "not-started"
     },
     {
@@ -5161,7 +5160,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S206",
+      "proposalId": "S205",
       "reviewStatus": "not-started"
     },
     {
@@ -5176,7 +5175,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S207",
+      "proposalId": "S206",
       "reviewStatus": "not-started"
     },
     {
@@ -5197,7 +5196,7 @@
       ],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S208",
+      "proposalId": "S207",
       "reviewStatus": "not-started"
     },
     {
@@ -5215,7 +5214,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S209",
+      "proposalId": "S208",
       "reviewStatus": "not-started"
     },
     {
@@ -5232,7 +5231,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S210",
+      "proposalId": "S209",
       "reviewStatus": "not-started"
     },
     {
@@ -5249,7 +5248,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S211",
+      "proposalId": "S210",
       "reviewStatus": "not-started"
     },
     {
@@ -5272,7 +5271,7 @@
       ],
       "status": "planned",
       "sprint": 10,
-      "proposalId": "S212",
+      "proposalId": "S211",
       "reviewStatus": "not-started"
     },
     {
@@ -5287,8 +5286,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S104",
-      "reviewStatus": "not-started"
+      "proposalId": "S103",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_requests/presentation/screens/housing_request_edit_screen.dart",
@@ -5304,8 +5303,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S105",
-      "reviewStatus": "not-started"
+      "proposalId": "S104",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/screens/premium_alert_detail_screen.dart",
@@ -5322,7 +5321,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S79",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/premium_alerts/presentation/screens/premium_alerts_screen.dart",
@@ -5339,7 +5338,7 @@
       "status": "planned",
       "sprint": 3,
       "proposalId": "S80",
-      "reviewStatus": "not-started"
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/screens/tenant_account_summary_screen.dart",
@@ -5356,7 +5355,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S42",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/profile/presentation/screens/tenant_profile_screen.dart",
@@ -5389,8 +5388,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 7,
-      "proposalId": "S147",
-      "reviewStatus": "not-started"
+      "proposalId": "S146",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/presentation/screens/replacement_consent_screen.dart",
@@ -5409,7 +5408,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S173",
+      "proposalId": "S172",
       "reviewStatus": "not-started"
     },
     {
@@ -5426,7 +5425,7 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 8,
-      "proposalId": "S174",
+      "proposalId": "S173",
       "reviewStatus": "not-started"
     },
     {
@@ -5443,8 +5442,8 @@
       "navigationReferences": [],
       "status": "planned",
       "sprint": 5,
-      "proposalId": "S110",
-      "reviewStatus": "not-started"
+      "proposalId": "S109",
+      "reviewStatus": "in-progress"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/features/tenant/reviews/presentation/screens/my_reviews_screen.dart",
@@ -5459,8 +5458,8 @@
         "ReviewsHubScreen"
       ],
       "status": "planned",
-      "sprint": 10,
-      "proposalId": "S201",
+      "sprint": 9,
+      "proposalId": "S200",
       "reviewStatus": "not-started"
     },
     {
@@ -5531,7 +5530,7 @@
       "status": "planned",
       "sprint": 2,
       "proposalId": "S57",
-      "reviewStatus": "awaiting-review"
+      "reviewStatus": "approved-to-continue"
     },
     {
       "source": "sokoun/apps/sokoun_app/lib/shared_widgets/loading/skeleton_pages.dart",
