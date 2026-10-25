@@ -354,3 +354,28 @@ async def test_group_mention_is_delivered_with_identity_on_both_sockets(chat_gro
     finally:
         for socket in sockets:
             await socket.disconnect()
+
+
+@pytest.mark.django_db(transaction=True)
+def test_mention_push_attempt_runs_after_commit_without_a_worker(chat_group):
+    _, conversation, owner, peer = chat_group
+    conversation.participant_set.filter(user=peer).update(is_muted=True)
+    with patch("core_apps.notifications.services.fcm_service.FCMService.send_push_to_user") as push:
+        message = send_group_message(conversation, owner, mention_request(peer))
+        push.assert_called_once()
+        assert push.call_args.kwargs["data"]["message_id"] == str(message.id)
+        assert push.call_args.kwargs["data"]["is_mention"] == "true"
+        deliver_pushes()
+        push.assert_called_once()
+
+
+def test_general_chat_maintenance_recovers_pending_pushes():
+    from core_apps.common.tasks import maintain_chat
+    with (
+        patch("core_apps.chat.moderation.queue.process_one"),
+        patch("core_apps.chat.moderation.notifications.deliver_pending"),
+        patch("core_apps.chat.services.group_outbox.drain_outbox"),
+        patch("core_apps.chat.services.group_outbox.deliver_pushes") as deliver,
+    ):
+        maintain_chat()
+        deliver.assert_called_once_with(limit=20)

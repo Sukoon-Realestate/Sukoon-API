@@ -26,11 +26,12 @@ def maintain_chat():
     """Same maintenance as the existing worker, including its private-AI gates."""
     from core_apps.chat.moderation.queue import process_one
     from core_apps.chat.moderation.notifications import deliver_pending
-    from core_apps.chat.services.group_outbox import drain_outbox
+    from core_apps.chat.services.group_outbox import drain_outbox, deliver_pushes
 
     process_one()
     deliver_pending()
     drain_outbox(limit=20)
+    deliver_pushes(limit=20)
     return {"maintenance_cycles": 1}
 
 

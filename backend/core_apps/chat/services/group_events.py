@@ -27,7 +27,8 @@ def record_event(conversation, kind, *, message=None, actor=None, data=None):
         enqueue(message)
     transaction.on_commit(
         lambda: _publish_committed_event(
-            event.pk, immediate_push=conversation.kind == "direct"
+            event.pk,
+            immediate_push=conversation.kind == "direct" or bool(message and message.mentions),
         )
     )
     return event
@@ -45,7 +46,7 @@ def _publish_committed_event(identity, *, immediate_push=False):
 
         deliver_event(identity)
         if immediate_push:
-            # Preserve direct chat's existing post-commit push attempt without
+            # Direct messages and explicit mentions get a post-commit attempt without
             # making it depend on a newly provisioned worker. Durable claims
             # serialize this attempt with a concurrent worker.
             deliver_pushes(event_pk=identity)
