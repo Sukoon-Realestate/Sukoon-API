@@ -628,10 +628,6 @@ CAPTURE_COACH_PRIVATE_INPUTS_APPROVED = getenv("CAPTURE_COACH_PRIVATE_INPUTS_APP
 
 ADMIN_CAMPAIGNS_ENABLED = getenv("ADMIN_CAMPAIGNS_ENABLED", "false").lower() == "true"
 
-# Finalize after every domain has registered its schedule.
-from config.background import configure as configure_background
-configure_background(globals())
-
 # Commerce v1 rollout. Configured adapters must verify server-to-server; no mock
 # fallback is permitted in live environments. Reads/recovery ignore sale flags.
 COMMERCE_STORE_PURCHASES_ENABLED = False
@@ -655,3 +651,15 @@ PAYMOB_INVOICE_CHECKOUT_ENABLED = getenv("PAYMOB_INVOICE_CHECKOUT_ENABLED", "fal
 PAYMOB_CHECKOUT_EXTRA_ORIGINS = []
 
 PAYMOB_REFUNDS_ENABLED = getenv("PAYMOB_REFUNDS_ENABLED", "false").lower() in {"true", "1", "yes"}
+
+# Hosted Sandbox checkout for all authorized accounts/products; never Live.
+COMMERCE_HOSTED_SANDBOX_ENABLED = getenv("COMMERCE_HOSTED_SANDBOX_ENABLED", "false").lower() in {"true", "1", "yes"}
+
+CELERY_BEAT_SCHEDULE["reconcile-hosted-checkout"] = {
+    "task": "core_apps.features.tasks.reconcile_hosted_checkout",
+    "schedule": 60.0,
+}
+
+# Finalize after every domain has registered its schedule, including checkout.
+from config.background import configure as configure_background
+configure_background(globals())

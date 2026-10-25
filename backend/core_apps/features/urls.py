@@ -1,3 +1,4 @@
+from .payment_resume_views import payment_attempt_resume
 from django.urls import include, path
 from .chargeback_views import chargeback_detail
 from .rental_phase6_views_parts.lease_reviews import document_content
@@ -18,8 +19,21 @@ from .rental_lifecycle_views import habitability
 from .views_parts.listing_suggestions import owner_analytics_export
 
 urlpatterns = [
-    path("owner-analytics/<uuid:property_id>/export/", owner_analytics_export, name="owner-analytics-export"),
-    path("operator/chargebacks/<uuid:chargeback_id>/", chargeback_detail, name="operator-chargeback-detail"),
+    path(
+        "payment-attempts/<uuid:attempt_id>/resume/",
+        payment_attempt_resume,
+        name="payment-attempt-resume",
+    ),
+    path(
+        "owner-analytics/<uuid:property_id>/export/",
+        owner_analytics_export,
+        name="owner-analytics-export",
+    ),
+    path(
+        "operator/chargebacks/<uuid:chargeback_id>/",
+        chargeback_detail,
+        name="operator-chargeback-detail",
+    ),
     path(
         "business-policies/",
         business_policy_views.current_policies,

@@ -58,3 +58,10 @@ def reconcile_reviews():
     from .services.reputation.tasks import reconcile
 
     return reconcile()
+
+
+@shared_task
+def reconcile_hosted_checkout():
+    from django.core.management import call_command
+    # The general worker also serves notifications; keep provider IO bounded.
+    call_command("reconcile_paymob_payments", limit=1)

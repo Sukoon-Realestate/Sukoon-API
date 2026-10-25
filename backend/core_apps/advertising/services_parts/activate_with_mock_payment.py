@@ -121,6 +121,24 @@ def activate_with_mock_payment(
 def is_publicly_eligible(advertisement, now=None):
     now = now or timezone.now()
     payment = getattr(advertisement, "payment", None)
+    from core_apps.features.models import PaymentFulfillment
+
+    confirmed = bool(
+        payment
+        and payment.status == MockAdvertisementPayment.STATUS_SUCCEEDED
+        and payment.payment_mode == MockAdvertisementPayment.MODE_MOCK
+    )
+    confirmed = (
+        confirmed
+        or PaymentFulfillment.objects.filter(
+            invoice__purpose="advertising",
+            invoice__purchase_snapshot__subject_id=str(advertisement.id),
+            invoice__payer=advertisement.owner,
+            invoice__status="paid",
+            status="fulfilled",
+            attempt__payment_status="captured",
+        ).exists()
+    )
     return bool(
         advertisement.status == Advertisement.Status.ACTIVE
         and advertisement.placement == Advertisement.PLACEMENT_TENANT_HOME
@@ -128,9 +146,7 @@ def is_publicly_eligible(advertisement, now=None):
         and advertisement.ends_at
         and advertisement.starts_at <= now < advertisement.ends_at
         and advertisement.owner.is_active
-        and payment
-        and payment.status == MockAdvertisementPayment.STATUS_SUCCEEDED
-        and payment.payment_mode == MockAdvertisementPayment.MODE_MOCK
+        and confirmed
         and destination_is_eligible(advertisement)
         and media_is_available(advertisement)
     )

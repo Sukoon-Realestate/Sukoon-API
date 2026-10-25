@@ -55,15 +55,20 @@ def sandbox_ready():
 
 def checkout_ready():
     return bool(
-        getattr(settings, "PAYMOB_INVOICE_CHECKOUT_ENABLED", False) and sandbox_ready()
+        (
+            getattr(settings, "PAYMOB_INVOICE_CHECKOUT_ENABLED", False)
+            or getattr(settings, "COMMERCE_HOSTED_SANDBOX_ENABLED", False)
+        )
+        and sandbox_ready()
     )
 
 
-def transport(path, payload=None, *, authorization=""):
+def transport(path, payload=None, *, authorization="", method=None):
     if not credentials_ready():
         raise PaymobUnavailable()
     request = Request(
         HOST + path,
+        method=method,
         data=json.dumps(payload).encode() if payload is not None else None,
         headers={
             "Content-Type": "application/json",
@@ -122,9 +127,14 @@ def billing_for_invoice(user, invoice, quote):
     """
     route = quote.purchase_route
     if (
-        invoice.purpose == "subscription"
-        and invoice.payer_id == user.pk
-        and not invoice.organization_id
+        getattr(settings, "COMMERCE_HOSTED_SANDBOX_ENABLED", False)
+        and sandbox_ready()
+        and quote.invoice_id == invoice.pk
+    ) or (
+        (
+            invoice.purpose == "subscription"
+            or getattr(settings, "COMMERCE_HOSTED_SANDBOX_ENABLED", False)
+        )
         and quote.invoice_id == invoice.pk
         and route.get("route") == "hosted_checkout"
         and route.get("enabled") is True
@@ -228,4 +238,49 @@ def submit_refund(payment, amount):
         "/api/acceptance/void_refund/refund",
         {"transaction_id": int(payment.transaction_id), "amount_cents": amount},
         authorization="Token " + settings.PAYMOB_SECRET_KEY,
+    )
+
+
+def order_transactions(payment):
+    """Read the original order; an empty list is not permission for a new charge."""
+    token = transport("/api/auth/tokens", {"api_key": settings.PAYMOB_API_KEY}).get(
+        "token"
+    )
+    if not isinstance(token, str) or not token or not payment.order_id:
+        raise PaymobUnavailable()
+    order = transport(
+        f"/api/ecommerce/orders/{payment.order_id}?" + urlencode({"token": token})
+    )
+    if (
+        str(order.get("id")) != payment.order_id
+        or order.get("merchant_order_id") != payment.reference
+        or order.get("amount_cents") != payment.attempt.amount_minor
+        or order.get("currency") != payment.attempt.currency
+        or not isinstance(order.get("transactions"), list)
+    ):
+        raise PaymobUnavailable()
+    return order["transactions"]
+
+
+def renew_intention(payment, return_url):
+    from urllib.parse import parse_qs
+
+    session = payment.attempt.checkout_session
+    secret = parse_qs(urlparse(session.hosted_url).query).get("clientSecret", [""])[0]
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,300}", secret):
+        raise PaymobUnavailable()
+    return transport(
+        f"/v1/intention/{secret}/",
+        {
+            "accept_order_id": int(payment.order_id),
+            "amount": payment.attempt.amount_minor,
+            "currency": payment.attempt.currency,
+            "payment_methods": [int(payment.integration_id)],
+            "special_reference": payment.reference,
+            "expiration": 900,
+            "notification_url": settings.PAYMOB_WEBHOOK_URL,
+            "redirection_url": return_url,
+        },
+        authorization="Token " + settings.PAYMOB_SECRET_KEY,
+        method="PUT",
     )

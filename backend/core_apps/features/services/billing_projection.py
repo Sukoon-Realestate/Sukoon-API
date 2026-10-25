@@ -167,6 +167,9 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
 
 
 def fulfillment_status(invoice):
+    job = getattr(invoice, "fulfillment", None)
+    if job is not None:
+        return job.status
     if invoice.purpose in {
         "rent",
         "maintenance",

@@ -16,55 +16,12 @@ def settle_purchase(
 ):
     """Called under the actor and invoice locks in one database transaction."""
     now = timezone.now()
-    if invoice.purpose == "subscription":
-        snapshot = invoice.purchase_snapshot
-        workspace = snapshot["workspace"]
-        scopes = (
-            ("tenant", "owner", "both") if workspace == "both" else (workspace, "both")
+    if provider_mode != "hosted":
+        fulfill_purchase(
+            invoice, attempt, provider_mode=provider_mode, verified=verified
         )
-        if (
-            AccountSubscription.objects.filter(
-                **(
-                    {"organization": invoice.organization}
-                    if invoice.organization_id
-                    else {"user": attempt.payer, "organization__isnull": True}
-                ),
-                workspace__in=scopes,
-                store_status__in=["", "active", "grace"],
-            )
-            .filter(Q(ends_at__gt=now) | Q(store_status="grace", grace_ends_at__gt=now))
-            .exists()
-        ):
-            raise RentalConflict(
-                "A subscription is already active.", code="subscription_active"
-            )
-        end_day = add_months(now.date(), snapshot["period_months"])
-        ends = now.replace(year=end_day.year, month=end_day.month, day=end_day.day)
-        AccountSubscription.objects.create(
-            user=attempt.payer,
-            plan=SubscriptionPlan.objects.get(id=snapshot["id"]),
-            invoice=invoice,
-            workspace=workspace,
-            organization=invoice.organization,
-            store_platform=(
-                "ios"
-                if provider_mode == "storekit"
-                else "android" if provider_mode == "play_billing" else ""
-            ),
-            store_status="active" if verified else "",
-            auto_renew=verified.auto_renew if verified else False,
-            starts_at=verified.purchased_at if verified else now,
-            ends_at=verified.expires_at if verified else ends,
-            plan_snapshot=snapshot,
-        )
-    elif invoice.purpose == "promotion":
-        from .billing_sources import activate_promotion
-
-        activate_promotion(invoice)
-    elif invoice.purpose == "advertising":
-        from .billing_advertising import activate_advertising_invoice
-
-        activate_advertising_invoice(invoice, attempt)
+    if attempt.payment_status == "captured":
+        return
     attempt.payment_status = "captured"
     attempt.provider_attempt_id = provider_reference
     attempt.confirmed_at = now
@@ -134,3 +91,65 @@ def settle_purchase(
         ],
         metadata={"mode": provider_mode, "purpose": invoice.purpose},
     )
+
+    if provider_mode == "hosted" and invoice.purpose != "maintenance":
+        from ..models import PaymentFulfillment
+        from .payment_fulfillment import deliver
+
+        job, _ = PaymentFulfillment.objects.get_or_create(
+            invoice=invoice, defaults={"attempt": attempt}
+        )
+        deliver(job.pk)
+
+
+def fulfill_purchase(invoice, attempt, *, provider_mode="hosted", verified=None):
+    now = timezone.now()
+    if invoice.purpose == "subscription":
+        snapshot = invoice.purchase_snapshot
+        workspace = snapshot["workspace"]
+        scopes = (
+            ("tenant", "owner", "both") if workspace == "both" else (workspace, "both")
+        )
+        if (
+            AccountSubscription.objects.filter(
+                **(
+                    {"organization": invoice.organization}
+                    if invoice.organization_id
+                    else {"user": attempt.payer, "organization__isnull": True}
+                ),
+                workspace__in=scopes,
+                store_status__in=["", "active", "grace"],
+            )
+            .filter(Q(ends_at__gt=now) | Q(store_status="grace", grace_ends_at__gt=now))
+            .exists()
+        ):
+            raise RentalConflict(
+                "A subscription is already active.", code="subscription_active"
+            )
+        end_day = add_months(now.date(), snapshot["period_months"])
+        ends = now.replace(year=end_day.year, month=end_day.month, day=end_day.day)
+        AccountSubscription.objects.create(
+            user=attempt.payer,
+            plan=SubscriptionPlan.objects.get(id=snapshot["id"]),
+            invoice=invoice,
+            workspace=workspace,
+            organization=invoice.organization,
+            store_platform=(
+                "ios"
+                if provider_mode == "storekit"
+                else "android" if provider_mode == "play_billing" else ""
+            ),
+            store_status="active" if verified else "",
+            auto_renew=verified.auto_renew if verified else False,
+            starts_at=verified.purchased_at if verified else now,
+            ends_at=verified.expires_at if verified else ends,
+            plan_snapshot=snapshot,
+        )
+    elif invoice.purpose == "promotion":
+        from .billing_sources import activate_promotion
+
+        activate_promotion(invoice)
+    elif invoice.purpose == "advertising":
+        from .billing_advertising import activate_advertising_invoice
+
+        activate_advertising_invoice(invoice, attempt, hosted=provider_mode == "hosted")

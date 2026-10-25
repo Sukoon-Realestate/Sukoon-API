@@ -74,8 +74,11 @@ def validate_payable(invoice, user, revision, route=None):
         )
         if (
             AccountSubscription.objects.filter(
-                user=user,
-                organization__isnull=True,
+                **(
+                    {"organization": invoice.organization}
+                    if invoice.organization_id
+                    else {"user": user, "organization__isnull": True}
+                ),
                 workspace__in=scopes,
                 store_status__in=["", "active", "grace"],
             )

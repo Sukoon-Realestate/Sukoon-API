@@ -151,7 +151,13 @@ def prepare(user, invoice_id, body, *, rental):
             body["expected_revision"],
             route,
         )
-    if invoice.purpose not in {"rent", "maintenance", "subscription"}:
+    if invoice.purpose not in {
+        "rent",
+        "maintenance",
+        "subscription",
+        "advertising",
+        "promotion",
+    }:
         raise RentalConflict(
             "This product cannot use Paymob checkout.",
             code="purchase_route_unavailable",
@@ -362,7 +368,13 @@ def rental_response(attempt):
 
 def reconcile(payment, *, transaction_id=None):
     # This remains available when the NEW-sale switch is disabled.
-    snapshot = client.inquiry(payment, transaction_id)
+    try:
+        snapshot = client.inquiry(payment, transaction_id)
+    except client.PaymobUnavailable:
+        # A new order without any card submission is pending, not a failed charge.
+        if transaction_id or not payment.order_id or client.order_transactions(payment):
+            raise
+        return PaymentAttempt.objects.get(pk=payment.attempt_id)
     try:
         return apply_snapshot(payment, snapshot)
     except RentalConflict as exc:
@@ -501,14 +513,10 @@ def apply_snapshot(payment, snapshot):
                 from .rental_phase3_parts.capture_attempt import _capture_attempt
 
                 _capture_attempt(attempt)
-            elif invoice.purpose == "maintenance" or (
-                invoice.purpose == "subscription"
-                and not invoice.organization_id
+            elif (
+                invoice.purpose
+                in {"maintenance", "subscription", "advertising", "promotion"}
                 and payment.environment == "sandbox"
-                and attempt.quote.purchase_route.get("sandbox_only") is True
-                and attempt.quote.purchase_route.get("provider_environment")
-                == "sandbox"
-                and attempt.quote.purchase_route.get("route") == "hosted_checkout"
             ):
                 from .billing_settlement import settle_purchase
 

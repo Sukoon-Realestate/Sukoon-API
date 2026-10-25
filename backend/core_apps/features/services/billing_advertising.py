@@ -61,7 +61,7 @@ def validate_advertisement(ad):
         )
 
 
-def activate_advertising_invoice(invoice, attempt):
+def activate_advertising_invoice(invoice, attempt, *, hosted=False):
     ad = get_object_or_404(
         Advertisement.objects.select_for_update(of=("self",)).select_related(
             "operation"
@@ -70,6 +70,32 @@ def activate_advertising_invoice(invoice, attempt):
         owner=attempt.payer,
     )
     validate_advertisement(ad)
+    if hosted:
+        from core_apps.advertising.services_parts.ensure_media_persisted import (
+            calendar_expiry,
+        )
+        from django.utils import timezone
+
+        if invoice.status != "paid" or attempt.payment_status != "captured":
+            raise RentalConflict("Confirmed payment is required.")
+        now = timezone.now()
+        ad.starts_at = now
+        ad.ends_at = calendar_expiry(
+            now,
+            ad.plan_snapshot["duration_unit"],
+            int(ad.plan_snapshot["duration_count"]),
+        )
+        ad.activated_at, ad.status = now, Advertisement.Status.ACTIVE
+        ad.save(
+            update_fields=[
+                "starts_at",
+                "ends_at",
+                "activated_at",
+                "status",
+                "updated_at",
+            ]
+        )
+        return
     try:
         activate_with_mock_payment(
             attempt.payer,

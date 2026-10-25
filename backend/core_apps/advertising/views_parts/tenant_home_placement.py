@@ -116,7 +116,6 @@ def tenant_home_placement(request):
             starts_at__lte=now,
             ends_at__gt=now,
             owner__is_active=True,
-            payment__status="mock_succeeded",
             media__isnull=False,
         )
         .select_related("owner", "property__owner", "operation", "payment", "media")

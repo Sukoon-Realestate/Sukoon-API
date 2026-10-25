@@ -38,3 +38,18 @@ class PaymobRefund(TimeStampedModel):
     )
     status = models.CharField(max_length=20, default="queued")
     failure_code = models.CharField(max_length=80, blank=True)
+
+
+class PaymentFulfillment(TimeStampedModel):
+    """Durable service delivery, independent of provider capture."""
+
+    invoice = models.OneToOneField(
+        "features.RentInvoice", on_delete=models.PROTECT, related_name="fulfillment"
+    )
+    attempt = models.OneToOneField(
+        "features.PaymentAttempt", on_delete=models.PROTECT, related_name="fulfillment"
+    )
+    status = models.CharField(max_length=20, default="pending")
+    attempts = models.PositiveIntegerField(default=0)
+    failure_code = models.CharField(max_length=80, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)

@@ -65,6 +65,7 @@ def _attempt(request, attempt_id, lock=False):
     attempt = get_object_or_404(queryset, id=attempt_id)
     if attempt.invoice.lease_id is None:
         from ..services.billing_invoices import authorized_invoice
+
         authorized_invoice(request.user, attempt.invoice.id)
         return attempt
     if attempt.invoice.beneficiary_id != request.user.pk and not commercial_read(
@@ -92,7 +93,12 @@ def _active_session(attempt):
     ).first()
     if not receipt:
         return None
-    resource = receipt.response_data.get("resource", {})
+    if hasattr(attempt, "paymob_payment"):
+        from ..services.paymob_payments import session_payload
+
+        resource = session_payload(attempt)
+    else:
+        resource = receipt.response_data.get("resource", {})
     if resource.get("session_id") != str(session.id) or resource.get(
         "payment_attempt_id"
     ) != str(attempt.id):

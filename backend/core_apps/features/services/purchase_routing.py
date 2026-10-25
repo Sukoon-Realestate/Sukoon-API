@@ -61,6 +61,29 @@ def routing(
             "reason": "unknown_product_or_platform",
             "product_id": product_id,
         }
+    # This switch is confined to a test-key staging/development environment.
+    # Business authorization still belongs to the catalog/invoice/source adapter.
+    from .paymob_client import sandbox_ready
+
+    if getattr(settings, "COMMERCE_HOSTED_SANDBOX_ENABLED", False) and sandbox_ready():
+        enabled = bool(
+            user is not None
+            and user.is_authenticated
+            and user.is_active
+            and (purpose != "subscription" or (plan is not None and plan.active))
+        )
+        return {
+            "category": category,
+            "route": "hosted_checkout",
+            "enabled": enabled,
+            "provider": "paymob",
+            "provider_mode": "hosted",
+            "provider_environment": "sandbox",
+            "sandbox_only": True,
+            "external_checkout_allowed": True,
+            "product_id": "",
+            "reason": "" if enabled else "purchase_not_eligible",
+        }
     if (
         purpose == "subscription"
         and not organization
