@@ -164,6 +164,8 @@ class PropertyListSerializer(PropertyPolicyProjection, serializers.ModelSerializ
             "main_image",
             "images_count",
             "title",
+            "latitude",
+            "longitude",
             "price",
             "price_period",
             "property_type",

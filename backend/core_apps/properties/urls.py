@@ -1,3 +1,4 @@
+from .views.home_visit_reminder import home_visit_reminder
 from .views.operation_recovery import PropertyOperationRecovery
 from django.urls import path
 from .views.districts import DistrictListAPIView
@@ -51,6 +52,7 @@ from .views import (
 from .views.image_order import order_images
 
 urlpatterns = [
+    path("visits/home-reminder/", home_visit_reminder, name="home-visit-reminder"),
     path("<uuid:property_id>/images/order/", order_images),
     path(
         "operation-recovery/",

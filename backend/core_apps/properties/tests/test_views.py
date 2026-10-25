@@ -158,8 +158,8 @@ class TestPropertyViews:
         assert "images" not in first_item
         assert "floor" not in first_item
         assert "description" not in first_item
-        assert "latitude" not in first_item
-        assert "longitude" not in first_item
+        assert "latitude" in first_item
+        assert "longitude" in first_item
         assert "area" in first_item
         assert "rate" in first_item
         assert first_item["images_count"] == 0
