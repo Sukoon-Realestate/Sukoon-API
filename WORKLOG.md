@@ -1072,3 +1072,11 @@
 - **Preservation:** All five hosted media files were preserved and verified after deployment of `dc30314`; zero files needed restoration. Before the local fast-forward, all 14 dirty/untracked files were privately backed up with hashes and patches. Only WORKLOG overlapped the incoming commit: its complete local October 24 deployment entry was retained alongside the incoming October 25 entry. All other existing housing/property files, untracked tests, staged state and `backend/dev.sqlite3` remained byte-identical.
 - **Boundary:** This was provider sandbox money. No additional source push, deployment, housing commit, live charge or automatic-renewal implementation was performed during synchronization.
 - **Files:** Local branch reference and this work log; existing published payment source arrived through the fast-forward. Private preservation evidence is outside the repositories.
+
+
+### Add group-wide mentions and independent mention navigation
+
+- **What:** Added typed `@all` mentions and per-member unread mention progress, with authenticated next-mention and exact-message acknowledgement endpoints.
+- **Behavior:** Broadcast recipients are the current eligible members at send time, excluding the sender. Each receives the existing exact-message mention notification. Opening the conversation and advancing its normal read cursor does not consume the mention queue; only the displayed mention is acknowledged. Receipts are scoped to the current membership period and exclude removed messages. Edits can remove recipients but cannot add notifications.
+- **Validation:** Clean-release PostgreSQL chat suite: 301 passed, 2 skipped; company discussion suite: 7 passed; no pending model changes. Real Android cycle sent `@all`, received it on two authenticated peer sockets with individual notifications, and navigated five exact mentions across old history pages, retaining consumed progress after reopening. Provider push delivery to a physical recipient device remains unverified.
+- **Files:** Chat models/migration 0023, mention services, group send/events/edit handling, authenticated routes, and focused chat tests. Flutter integration and its video are maintained in darak-app.

@@ -93,12 +93,13 @@ def mutate_message(conversation, user, data):
         )
     from core_apps.chat.models import MessageEdit
     MessageEdit.objects.create(message=message, revision=message.revision + 1, before=message.content, after=content)
-    from .mentions import retained_mentions
+    from .mentions import retained_mentions, retain_mention_receipts
     message.mentions = retained_mentions(message, content)
     message.content = content
     message.edited_at = timezone.now()
     message.revision += 1
     message.save(update_fields=["content", "mentions", "edited_at", "revision", "updated_at"])
+    retain_mention_receipts(message)
     # Keep the original send fingerprint immutable: a delayed original send must
     # return this same message, never restore the previous text or create a copy.
     if conversation.kind == "direct" and message.sequence == conversation.last_sequence:

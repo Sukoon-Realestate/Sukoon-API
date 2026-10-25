@@ -7,7 +7,7 @@ from core_apps.chat.models import ChatAttachment, Message, ConversationParticipa
 from django.db.models import F
 from .group_access import authorize, visible_messages
 from .group_limits import ChatConflict, limits
-from .mentions import normalize_mentions, resolve_mentions
+from .mentions import normalize_mentions, resolve_mentions, create_mention_receipts
 from .rich_media import validate_location
 from .property_sharing import normalize_reference, require_shareable
 
@@ -175,6 +175,7 @@ def send_group_message(conversation, sender, data):
         location=payload.get("location"),
         property_reference=payload.get("property"),
     )
+    create_mention_receipts(message)
     for position, attachment in enumerate(attachments):
         attachment.message, attachment.state, attachment.position = (
             message,

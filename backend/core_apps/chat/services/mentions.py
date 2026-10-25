@@ -25,22 +25,24 @@ def normalize_mentions(content, raw):
     previous_end = 0
     for item in raw:
         if not isinstance(item, dict):
-            raise ValidationError(
-                {"mentions": "Choose a member from the mention list."}
-            )
-        try:
-            identity = str(UUID(str(item["user_id"])))
-        except (KeyError, ValueError, TypeError):
-            raise ValidationError(
-                {"mentions": "Choose a member from the mention list."}
-            )
+            raise ValidationError({"mentions": "Choose a member from the mention list."})
+        kind = item.get("kind", "member")
+        if kind not in {"member", "all"}:
+            raise ValidationError({"mentions": "Choose a member from the mention list."})
+        identity = None
+        if kind == "member":
+            try:
+                identity = str(UUID(str(item["user_id"])))
+            except (KeyError, ValueError, TypeError):
+                raise ValidationError({"mentions": "Choose a member from the mention list."})
         start, end = item.get("start"), item.get("end")
         label = mention_span(content, start, end)
         if start < previous_end or not label.startswith("@") or len(label) < 2:
-            raise ValidationError(
-                {"mentions": "Choose a member from the mention list."}
-            )
-        result.append({"user_id": identity, "start": start, "end": end})
+            raise ValidationError({"mentions": "Choose a member from the mention list."})
+        target = {"kind": "all"} if kind == "all" else {"user_id": identity}
+        if kind == "all" and label != "@all":
+            raise ValidationError({"mentions": "Choose a member from the mention list."})
+        result.append({**target, "start": start, "end": end})
         previous_end = end
     return result
 
@@ -51,27 +53,19 @@ def resolve_mentions(conversation, content, mentions):
     if not mentions:
         return []
     if conversation.kind == "direct":
-        raise ValidationError(
-            {"mentions": "Mentions are available in group conversations only."}
-        )
-    members = {
-        str(p.user.id): p
-        for p in eligible_participants(conversation).select_related("user")
-    }
+        raise ValidationError({"mentions": "Mentions are available in group conversations only."})
+    members = {str(p.user.id): p for p in eligible_participants(conversation).select_related("user")}
     resolved = []
     for mention in mentions:
+        if mention.get("kind") == "all":
+            resolved.append({**mention, "name": "all"})
+            continue
         member = members.get(mention["user_id"])
         if member is None:
-            raise ValidationError(
-                {"mentions": "A mentioned member is no longer in this conversation."}
-            )
+            raise ValidationError({"mentions": "A mentioned member is no longer in this conversation."})
         name = sender_payload(member.user)["name"]
         if mention_span(content, mention["start"], mention["end"]) != f"@{name}":
-            raise ValidationError(
-                {
-                    "mentions": "A mentioned member changed. Choose them again from the list."
-                }
-            )
+            raise ValidationError({"mentions": "A mentioned member changed. Choose them again from the list."})
         resolved.append(
             {
                 **mention,
@@ -87,7 +81,7 @@ def mentions_payload(message):
         []
         if message.deleted_at
         else [
-            {key: item[key] for key in ("user_id", "name", "start", "end")}
+            {key: item[key] for key in ("kind", "user_id", "name", "start", "end") if key in item}
             for item in message.mentions
         ]
     )
@@ -95,10 +89,40 @@ def mentions_payload(message):
 
 def is_mentioned(message, participant):
     return not message.deleted_at and any(
-        item["user_id"] == str(participant.user.id)
-        and item["membership_period"] == str(participant.membership_period)
+        (
+            message.mention_receipts.filter(
+                user_id=participant.user_id, membership_period=participant.membership_period
+            ).exists()
+            if item.get("kind") == "all"
+            else item["user_id"] == str(participant.user.id)
+            and item["membership_period"] == str(participant.membership_period)
+        )
         for item in message.mentions
     )
+
+
+def create_mention_receipts(message):
+    from core_apps.chat.models import MessageMention
+
+    if not message.mentions:
+        return
+    everyone = any(item.get("kind") == "all" for item in message.mentions)
+    identities = {item.get("user_id") for item in message.mentions}
+    MessageMention.objects.bulk_create(
+        [
+            MessageMention(message=message, user_id=p.user_id, membership_period=p.membership_period)
+            for p in eligible_participants(message.conversation)
+            .exclude(user_id=message.sender_id)
+            .select_related("user")
+            if everyone or str(p.user.id) in identities
+        ]
+    )
+
+
+def retain_mention_receipts(message):
+    # Edits may remove recipients, but never add or notify new recipients.
+    if not any(item.get("kind") == "all" for item in message.mentions):
+        message.mention_receipts.exclude(user__id__in=[item["user_id"] for item in message.mentions]).delete()
 
 
 def retained_mentions(message, content):
@@ -112,8 +136,6 @@ def retained_mentions(message, content):
             end = len(old[: a + size].encode("utf-16-le")) // 2
             if start <= item["start"] and item["end"] <= end:
                 shift = len(new[:b].encode("utf-16-le")) // 2 - start
-                result.append(
-                    {**item, "start": item["start"] + shift, "end": item["end"] + shift}
-                )
+                result.append({**item, "start": item["start"] + shift, "end": item["end"] + shift})
                 break
     return result

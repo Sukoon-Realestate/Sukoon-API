@@ -1,6 +1,7 @@
 from .conversation import Conversation, ConversationParticipant
 from .message import Message
 from .reaction import MessageReaction
+from .mention import MessageMention
 
 __all__ = [
     "Conversation",

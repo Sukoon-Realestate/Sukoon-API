@@ -320,7 +320,8 @@ async def test_reaction_reaches_both_authorized_sockets(request, chat):
 
 @pytest.mark.asyncio
 @pytest.mark.django_db(transaction=True)
-async def test_group_mention_is_delivered_with_identity_on_both_sockets(chat_group):
+@pytest.mark.parametrize("broadcast", [False, True])
+async def test_group_mention_is_delivered_with_identity_on_both_sockets(chat_group, broadcast):
     _, conversation, owner, peer = chat_group
     sockets = []
     try:
@@ -330,6 +331,8 @@ async def test_group_mention_is_delivered_with_identity_on_both_sockets(chat_gro
             assert (await socket.connect())[0]
             sockets.append(socket)
         body = await database_sync_to_async(mention_request)(peer)
+        if broadcast:
+            body = message_request("@all", mentions=[{"kind": "all", "start": 0, "end": 4}])
         await sockets[0].send_json_to(
             {
                 "type": "message.send",
@@ -342,7 +345,8 @@ async def test_group_mention_is_delivered_with_identity_on_both_sockets(chat_gro
         assert {p["type"] for p in sender_packets} == {"message.ack", "message.new"}
         received = await sockets[1].receive_json_from()
         assert received["type"] == "message.new"
-        assert received["payload"]["mentions"][0]["user_id"] == str(peer.id)
+        mention = received["payload"]["mentions"][0]
+        assert mention.get("kind") == "all" if broadcast else mention["user_id"] == str(peer.id)
         assert received["payload"]["content"] == body["content"]
         assert await database_sync_to_async(
             lambda: ChatNotificationDelivery.objects.filter(
@@ -351,17 +355,24 @@ async def test_group_mention_is_delivered_with_identity_on_both_sockets(chat_gro
                 notification__data__is_mention="true",
             ).exists()
         )()
+        from core_apps.chat.services.mention_navigation import see_mention
+        _, participant, _ = await database_sync_to_async(authorize)(conversation, peer)
+        await database_sync_to_async(see_mention)(conversation, peer, received["payload"]["id"], participant.membership_period)
+        assert (await sockets[1].receive_json_from())["type"] == "mentions.updated"
+        assert await sockets[0].receive_nothing(timeout=0.1)
     finally:
         for socket in sockets:
             await socket.disconnect()
 
 
 @pytest.mark.django_db(transaction=True)
-def test_mention_push_attempt_runs_after_commit_without_a_worker(chat_group):
+@pytest.mark.parametrize("broadcast", [False, True])
+def test_mention_push_attempt_runs_after_commit_without_a_worker(chat_group, broadcast):
     _, conversation, owner, peer = chat_group
     conversation.participant_set.filter(user=peer).update(is_muted=True)
     with patch("core_apps.notifications.services.fcm_service.FCMService.send_push_to_user") as push:
-        message = send_group_message(conversation, owner, mention_request(peer))
+        body = message_request("@all", mentions=[{"kind": "all", "start": 0, "end": 4}]) if broadcast else mention_request(peer)
+        message = send_group_message(conversation, owner, body)
         push.assert_called_once()
         assert push.call_args.kwargs["data"]["message_id"] == str(message.id)
         assert push.call_args.kwargs["data"]["is_mention"] == "true"
