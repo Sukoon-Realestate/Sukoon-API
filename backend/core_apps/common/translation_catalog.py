@@ -1,6 +1,26 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "This message kind cannot be forwarded.": "لا يمكن تحويل هذا النوع من الرسائل.",
+    "Choose each message and conversation only once.": "اختر كل رسالة ومحادثة مرة واحدة فقط.",
+    "Refresh the selected conversations before forwarding.": "حدّث المحادثات المختارة قبل تحويل الرسائل.",
+    "A selected message is unavailable.": "إحدى الرسائل المختارة لم تعد متاحة.",
+    "Poll options must be different.": "يجب أن تكون اختيارات التصويت مختلفة.",
+    "Polls are available in group chats only.": "التصويت متاح داخل محادثات الجروبات فقط.",
+    "This message is not a poll.": "هذه الرسالة ليست تصويتًا.",
+    "Only the poll creator or group administrator can close it.": "يمكن لمنشئ التصويت أو مسؤول المجموعة فقط إنهاؤه.",
+    "This poll is closed.": "انتهى هذا التصويت.",
+    "Choose valid poll options.": "اختر إجابات صالحة لهذا التصويت.",
+    "Only group administrators can pin messages.": "يمكن لمسؤولي المجموعة فقط تثبيت الرسائل.",
+    "Unpin a message before pinning another one.": "ألغِ تثبيت رسالة قبل تثبيت رسالة أخرى. الحد الأقصى ٣ رسائل.",
+    "Only the sender can view message reading details.": "يمكن لمرسل الرسالة فقط الاطلاع على تفاصيل قراءتها.",
+    "This saved reply is unavailable.": "الرد المحفوظ غير متاح.",
+    "This saved reply was deleted. Create a new reply.": "تم حذف الرد المحفوظ. أنشئ ردًا جديدًا.",
+    "This saved reply changed. Reload it before editing.": "تم تعديل الرد المحفوظ. حدّثه قبل إجراء تعديل جديد.",
+    "You can save up to 50 quick replies.": "يمكنك حفظ ٥٠ ردًا سريعًا بحد أقصى.",
+    "Only poll messages may carry a poll.": "يمكن إرفاق تصويت برسائل التصويت فقط.",
+    "Polls cannot include attachments.": "لا يمكن إضافة مرفقات إلى التصويت.",
+
     "Choose another conversation.": "اختر محادثة أخرى لتحويل الرسالة إليها.",
     "System messages cannot be forwarded.": "لا يمكن تحويل رسائل النظام.",
     "Choose a member from the mention list.": "اختر العضو من قائمة المنشن.",

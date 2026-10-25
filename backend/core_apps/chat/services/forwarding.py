@@ -28,8 +28,8 @@ class ForwardBody(serializers.Serializer):
 def source_message(conversation, user, message_id):
     conversation, participant, _ = authorize(conversation, user)
     message = get_object_or_404(visible_messages(conversation, participant), id=message_id, deleted_at__isnull=True)
-    if message.kind == "system":
-        raise ValidationError("System messages cannot be forwarded.")
+    if message.kind in {"system", "poll"}:
+        raise ValidationError("This message kind cannot be forwarded.")
     return message, participant
 
 
@@ -73,7 +73,7 @@ def lock_roots(conversations):
 
     direct = [c.pk for c in conversations if c.kind == "direct"]
     people = User.objects.filter(conversation_participants__conversation_id__in=direct).values_list("pk", flat=True)
-    list(User.objects.select_for_update().filter(pk__in=people).order_by("pk"))
+    list(User.objects.select_for_update(no_key=True).filter(pk__in=people).order_by("pk"))
     requests = CompanyHousingRequest.objects.filter(
         pk__in=[c.company_request_id for c in conversations if c.kind == "company_request"]
     )
@@ -124,8 +124,8 @@ def forward_message(conversation, user, message_id, data):
     message = visible_messages(conversation, source_member).filter(id=message_id, deleted_at__isnull=True).first()
     if message is None:
         raise NotFound("This message is unavailable.")
-    if message.kind == "system":
-        raise ValidationError("System messages cannot be forwarded.")
+    if message.kind in {"system", "poll"}:
+        raise ValidationError("This message kind cannot be forwarded.")
     if message.revision != body["expected_revision"]:
         raise ChatConflict("This message changed. Reload it before continuing.")
     attachments = []

@@ -15,7 +15,18 @@ from .views.group_history import (
     GroupMessageLookupAPIView,
 )
 
+from .views import productivity
+
 urlpatterns = [
+    path("quick-replies/", productivity.saved_replies),
+    path("quick-replies/<uuid:id>/", productivity.saved_reply),
+    path("conversations/<uuid:id>/starred/", productivity.starred_messages),
+    path("conversations/<uuid:id>/forward/", productivity.forward_messages),
+    path("conversations/<uuid:id>/messages/<uuid:message_id>/star/", productivity.message_star),
+    path("conversations/<uuid:id>/messages/<uuid:message_id>/pin/", productivity.message_pin),
+    path("conversations/<uuid:id>/messages/<uuid:message_id>/readers/", productivity.message_readers),
+    path("conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/", productivity.poll_vote),
+    path("conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/", productivity.poll_close),
     path("conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/", forward_destinations),
     path("conversations/<uuid:id>/messages/<uuid:message_id>/forward/", forward),
     path("conversations/<uuid:id>/mentions/", unread_mentions),

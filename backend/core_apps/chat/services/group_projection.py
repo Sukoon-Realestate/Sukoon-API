@@ -49,6 +49,8 @@ def message_payload(message, participant, membership, *, properties=None):
     from .property_sharing import property_card
     from .reactions import reaction_payload
     from .mentions import mentions_payload
+    from .message_tools import star_payload, can_pin
+    from .polls import poll_payload
     deleted = message.deleted_at is not None
     readers = (
         eligible_participants(message.conversation)
@@ -78,8 +80,16 @@ def message_payload(message, participant, membership, *, properties=None):
         permitted.append("edit_message")
     if not deleted and message.kind != "system" and "send_message" in actions(membership):
         permitted.append("react")
-    if not deleted and message.kind != "system":
+    if not deleted and message.kind not in {"system", "poll"}:
         permitted.append("forward")
+    if not deleted and message.kind != "system":
+        permitted.append("star")
+        if can_pin(message.conversation, participant, membership):
+            permitted.append("pin")
+        if message.sender_id == participant.user_id:
+            permitted.append("message_info")
+        if message.kind == "poll" and (message.sender_id == participant.user_id or membership.role == "admin"):
+            permitted.append("close_poll")
     reply = None
     if message.reply_to_id and not deleted:
         original = message.reply_to
@@ -112,6 +122,8 @@ def message_payload(message, participant, membership, *, properties=None):
         "created_at": message.created_at.isoformat(),
         "is_deleted": deleted,
         "is_forwarded": message.is_forwarded and not deleted,
+        **star_payload(message, participant),
+        "poll": poll_payload(message, participant),
         "revision": message.revision,
         "reactions_revision": message.reactions_revision,
         "reactions": reaction_payload(message, participant),
@@ -145,7 +157,8 @@ def summary(conversation, user):
     from core_apps.chat.moderation.policy import projection as policy_projection
     from .group_cursors import encode_cursor
 
-    from .conversation_preferences import preferences_payload
+    from .conversation_preferences import preferences_payload, viewer_workspace
+    from .message_tools import pins_payload, can_pin
     conversation, participant, member = authorize(conversation, user)
     latest = visible_messages(conversation, participant).order_by("-sequence").first()
     preview = conversation_preview(latest, user)
@@ -182,13 +195,17 @@ def summary(conversation, user):
         "is_muted": participant.is_muted,
         **preferences_payload(conversation, user, participant),
         "allowed_actions": actions(member),
-        "limits": limits(property_sharing=conversation.kind == "housing_group"),
+        "limits": limits(property_sharing=conversation.kind == "housing_group", polls=conversation.kind != "direct"),
         "can_send": "send_message" in actions(member),
         "policy": policy_projection(conversation, user),
         # Exact sender/client identity and payload are serialized by group_send.
         # A retry may additionally fence its original membership period.
         "idempotent_message_retry": True,
         "supports_mentions": not direct,
+        "supports_polls": not direct,
+        "supports_quick_replies": company or viewer_workspace(conversation, user) == "owner",
+        "can_pin_messages": can_pin(conversation, participant, member),
+        "pinned_messages": pins_payload(conversation, participant, member),
         "last_message": preview,
         "last_message_at": latest.created_at.isoformat() if latest else None,
         "event_cursor": encode_cursor(

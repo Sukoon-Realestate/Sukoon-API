@@ -74,7 +74,7 @@ def actions(membership):
 
 
 def visible_messages(conversation, participant):
-    return conversation.messages.filter(sequence__gte=participant.visible_from_sequence)
+    return conversation.messages.filter(sequence__gte=participant.visible_from_sequence).select_related("poll").prefetch_related("stars", "poll__votes")
 
 
 def unread_count(conversation, participant):

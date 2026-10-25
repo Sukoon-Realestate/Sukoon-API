@@ -276,3 +276,25 @@ def test_concurrent_case_send_uses_one_canonical_message(company_setup):
         ).count()
         == 1
     )
+
+
+@pytest.mark.django_db
+def test_company_chat_tools_keep_coordinator_and_personal_boundaries(company_setup):
+    from core_apps.chat.services.message_tools import set_message_tool
+    from core_apps.chat.services.polls import change_poll
+    from core_apps.chat.services.quick_replies import save, listing
+    _, coordinator, approver, company = company_setup[:4]
+    conversation = Conversation.objects.get(company_request=company_setup[-1])
+    resource = send_group_message(conversation, coordinator, message('Pinned company note'))
+    projection = summary(conversation, coordinator)
+    assert projection['supports_polls'] and projection['supports_quick_replies']
+    body = {'membership_period': projection['membership_period'], 'operation_id': str(uuid.uuid4()), 'enabled': True}
+    assert set_message_tool(conversation, coordinator, resource.id, body, pin=True)['pinned_messages']
+    save(coordinator, uuid.uuid4(), {'title':'Private','content':'My template','expected_revision':0})
+    assert not listing(approver)
+    poll = send_group_message(conversation, coordinator, {**message(), 'kind':'poll', 'poll':{'question':'Choose','options':['A','B']}})
+    voted = change_poll(conversation, coordinator, poll.id, {**body, 'operation_id':str(uuid.uuid4()), 'option_ids':[poll.poll.options[0]['id']]})
+    assert voted['poll']['voter_count'] == 1
+    CompanyMembership.objects.filter(company=company, user=coordinator).update(is_active=False)
+    with pytest.raises(PermissionDenied):
+        set_message_tool(conversation, coordinator, resource.id, {**body,'operation_id':str(uuid.uuid4())},pin=True)

@@ -91,7 +91,7 @@ def event_payload(event, user):
             conversation, participant, "events", event.sequence
         ),
     }
-    if event.kind == "mentions.updated":
+    if event.kind in {"mentions.updated", "message.star"}:
         if event.data.get("user_id") != str(user.id) or event.data.get("membership_period") != str(participant.membership_period):
             return None
     if event.message:

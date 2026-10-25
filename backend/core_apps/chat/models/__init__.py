@@ -27,3 +27,5 @@ from .moderation import (
     ChatModerationAction,
     GeminiUsageReservation,
 )
+
+from .productivity import MessageStar, MessagePin, MessageReadReceipt, ChatQuickReply, MessagePoll, MessagePollVote, ChatForwardBatch

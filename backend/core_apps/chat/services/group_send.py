@@ -23,6 +23,7 @@ def normalize_request(data):
         "location",
         "property",
         "mentions",
+        "poll",
     }
     if not isinstance(data, dict) or set(data) - permitted:
         raise ValidationError("Unsupported message fields.")
@@ -46,6 +47,12 @@ def normalize_request(data):
     policy = limits(property_sharing=True)
     if kind not in policy["message_kinds"]:
         raise ValidationError({"kind": "Unsupported message kind."})
+    from .polls import normalize_poll
+    poll = normalize_poll(data.get("poll")) if kind == "poll" else None
+    if kind != "poll" and data.get("poll") is not None:
+        raise ValidationError("Only poll messages may carry a poll.")
+    if poll is not None:
+        content = poll["question"]
     location = validate_location(data.get("location")) if kind == "location" else None
     reference = normalize_reference(data.get("property")) if kind == "property" else None
     if kind != "property" and data.get("property") is not None:
@@ -69,6 +76,7 @@ def normalize_request(data):
         or (kind in {"file", "video"} and len(attachment_ids) == 1)
         or (kind == "location" and location is not None and not attachment_ids)
         or (kind == "property" and reference is not None and not attachment_ids)
+        or (kind == "poll" and poll is not None and not attachment_ids)
     )
     if not valid or len(set(attachment_ids)) != len(attachment_ids):
         raise ValidationError("Invalid message kind or attachment bundle.")
@@ -82,6 +90,8 @@ def normalize_request(data):
         canonical["location"] = location
     if kind == "property":
         canonical["property"] = reference
+    if poll is not None:
+        canonical["poll"] = poll
     mentions = normalize_mentions(content, data.get("mentions", []))
     if mentions:
         canonical["mentions"] = mentions
@@ -99,6 +109,8 @@ def send_group_message(conversation, sender, data):
     conversation, participant, _ = authorize(
         conversation, sender, action="send_message", lock=True
     )
+    if payload["kind"] == "poll" and conversation.kind == "direct":
+        raise ValidationError("Polls are available in group chats only.")
     if payload["kind"] == "property" and conversation.kind != "housing_group":
         raise ValidationError({"kind": "Property sharing is available in housing groups only."})
     if "membership_period" in data and str(data["membership_period"]) != str(
@@ -175,6 +187,9 @@ def send_group_message(conversation, sender, data):
         location=payload.get("location"),
         property_reference=payload.get("property"),
     )
+    if payload["kind"] == "poll":
+        from .polls import create_poll
+        create_poll(message, payload["poll"])
     create_mention_receipts(message)
     for position, attachment in enumerate(attachments):
         attachment.message, attachment.state, attachment.position = (

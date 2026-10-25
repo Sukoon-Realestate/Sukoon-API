@@ -25,9 +25,12 @@ def mark_group_read(conversation, user, sequence):
             {"last_read_sequence": "Supply a visible, persisted message sequence."}
         )
     if sequence > participant.last_read_sequence:
+        from .message_tools import record_reads
+        now = timezone.now()
+        record_reads(conversation, participant, sequence, now)
         participant.last_read_sequence, participant.last_read_at = (
             sequence,
-            timezone.now(),
+            now,
         )
         participant.save(
             update_fields=["last_read_sequence", "last_read_at", "updated_at"]
