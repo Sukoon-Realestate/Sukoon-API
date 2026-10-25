@@ -200,11 +200,11 @@ def test_mentions_reject_nonmembers_removed_members_and_forged_spans(
 
 
 @pytest.mark.django_db
-def test_mentions_do_not_create_duplicate_notifications_and_override_conversation_mute(
+def test_mentions_only_notifies_once_and_suppresses_ordinary_messages(
     chat_group,
 ):
     _, conversation, owner, peer = chat_group
-    conversation.participant_set.filter(user=peer).update(is_muted=True)
+    conversation.participant_set.filter(user=peer).update(notification_mode="mentions")
     body = mention_request(peer)
     message = send_group_message(conversation, owner, body)
     event = ChatEvent.objects.get(message=message, kind="message.new")
@@ -248,7 +248,7 @@ def test_editing_retains_unchanged_mention_and_drops_changed_name(chat_group):
 @pytest.mark.django_db
 def test_mention_push_is_claimed_once_and_revoked_member_is_not_notified(chat_group):
     group, conversation, owner, peer = chat_group
-    conversation.participant_set.filter(user=peer).update(is_muted=True)
+    conversation.participant_set.filter(user=peer).update(notification_mode="mentions")
     message = send_group_message(conversation, owner, mention_request(peer))
     event = ChatEvent.objects.get(message=message, kind="message.new")
     _notify(event, peer)
@@ -369,7 +369,7 @@ async def test_group_mention_is_delivered_with_identity_on_both_sockets(chat_gro
 @pytest.mark.parametrize("broadcast", [False, True])
 def test_mention_push_attempt_runs_after_commit_without_a_worker(chat_group, broadcast):
     _, conversation, owner, peer = chat_group
-    conversation.participant_set.filter(user=peer).update(is_muted=True)
+    conversation.participant_set.filter(user=peer).update(notification_mode="mentions")
     with patch("core_apps.notifications.services.fcm_service.FCMService.send_push_to_user") as push:
         body = message_request("@all", mentions=[{"kind": "all", "start": 0, "end": 4}]) if broadcast else mention_request(peer)
         message = send_group_message(conversation, owner, body)

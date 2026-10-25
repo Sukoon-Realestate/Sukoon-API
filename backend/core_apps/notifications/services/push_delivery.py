@@ -68,6 +68,15 @@ def allowed(item):
 
         if notifications_muted(participant):
             return False
+        if chat.kind != "direct" or data.get("message_id"):
+            from core_apps.chat.models import Message
+            from core_apps.chat.services.group_notification_preferences import allows_message
+            try:
+                message = Message.objects.get(id=UUID(str(data.get("message_id"))), conversation=chat)
+            except (ValueError, TypeError, Message.DoesNotExist):
+                return False
+            if not allows_message(participant, message):
+                return False
         peers = (
             ConversationParticipant.objects.filter(conversation__id=conversation)
             .exclude(user=user)

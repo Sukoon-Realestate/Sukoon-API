@@ -1106,3 +1106,13 @@
 - **Concurrency:** A concurrent group-send/forward test exposed conflicting foreign-key locks on direct-chat users. The shared direct/forward user locks now use NO KEY UPDATE so unrelated group inserts can complete without weakening authorization. One batch operation identity is serialized separately; existing sorted conversation/root locking remains authoritative.
 - **Validation:** Isolated PostgreSQL chat/company regression: 335 passed, 2 skipped; an additional company-tool authorization test passed. Django system and migration drift checks passed; new services/models/views/tests passed focused Flake8. Flutter/device/deployment evidence is maintained separately in darak-app.
 - **Files:** Chat migration 0025, productivity models/services/views/routes, message projections/read handling/send/event support, direct lock compatibility, translations, and focused group/direct/company tests.
+
+
+## 2026-10-26
+
+### Respect group notification choices at creation and delivery
+
+- **What:** Added private per-membership choices for all messages, mentions only, or mute, plus an independent receive-`@all` setting for housing groups and company discussions.
+- **Behavior:** Personal mentions remain eligible when broadcast mentions are disabled; full mute suppresses every message alert. Timed mute resumes the member's previous all/mentions mode. Mention navigation remains independent of notification delivery. Both chat outbox and durable push dispatch recheck the current preference, membership, message visibility and read cursor before delivery.
+- **Compatibility:** Direct chat keeps its existing mute controls. Migration 0027 preserves PostgreSQL insert defaults for prior application instances during rolling deployment. Existing participants retain all-message notifications and `@all` unless already muted.
+- **Validation:** Isolated PostgreSQL chat/notification regression: 406 passed, 2 skipped before adding the rolling-default assertion; 17 focused policy and migration-default tests then passed on a newly created test database. Django system and model-drift checks passed. Flutter media controls are device-local and do not delete messages or server attachments. Device and deployed evidence are reported separately in darak-app.

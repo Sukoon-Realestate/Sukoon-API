@@ -15,6 +15,7 @@ from core_apps.chat.models import (
 )
 
 from .inbox_preferences import inbox_payload, apply_inbox_preferences
+from . import group_notification_preferences
 
 WORKSPACES = {"individual", "student", "owner"}
 
@@ -118,6 +119,7 @@ def preferences_payload(conversation, user, participant=None):
         "delete_through_sequence": conversation.last_sequence,
         "is_favorite": participant.is_favorite,
         **inbox_payload(participant),
+        **group_notification_preferences.payload(conversation, participant),
         "blocked_by_me": own,
         "is_blocked": blocked,
         "list_ids": [
@@ -159,6 +161,8 @@ def update_preferences(conversation, user, data):
         "is_pinned",
         "is_marked_unread",
         "mute_duration",
+        "notification_mode",
+        "notify_all_mentions",
     }
     if set(data) - allowed:
         raise ValidationError("Unsupported conversation preference.")
@@ -169,6 +173,7 @@ def update_preferences(conversation, user, data):
         if field in data:
             setattr(participant, field, data[field])
     apply_inbox_preferences(participant, conversation, data)
+    group_notification_preferences.apply(conversation, participant, data)
     if data.get("delete_for_me"):
         participant.unread_reminder_sequence = None
         cutoff = data.get("delete_through_sequence")

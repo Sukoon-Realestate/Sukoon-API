@@ -7,7 +7,7 @@ from core_apps.chat.models import ChatEvent, ChatNotificationDelivery
 from .group_access import authorize, lock_conversation_root
 from .group_events import event_payload
 from .mentions import is_mentioned
-from .inbox_preferences import notifications_muted
+from .group_notification_preferences import allows_message
 
 
 def drain_outbox(limit=100):
@@ -66,9 +66,7 @@ def _notify(event, user):
     except APIException:
         return
     mentioned = is_mentioned(event.message, participant)
-    if (
-        notifications_muted(participant) and not mentioned
-    ) or participant.last_read_sequence >= event.message.sequence:
+    if not allows_message(participant, event.message):
         return
     delivery, _ = ChatNotificationDelivery.objects.get_or_create(event=event, user=user)
     if delivery.notification_id:
@@ -199,11 +197,7 @@ def deliver_pushes(limit=100, *, event_pk=None):
                 continue
             delivery.event.message.refresh_from_db()
             if (
-                (
-                    notifications_muted(participant)
-                    and not is_mentioned(delivery.event.message, participant)
-                )
-                or participant.last_read_sequence >= delivery.event.message.sequence
+                not allows_message(participant, delivery.event.message)
                 or event_payload(delivery.event, delivery.user) is None
                 or delivery.event.message.deleted_at
             ):

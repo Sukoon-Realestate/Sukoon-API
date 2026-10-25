@@ -27,13 +27,13 @@ def all_request():
 
 
 @pytest.mark.django_db
-def test_all_notifies_every_current_member_once_even_when_muted(chat_group, superuser):
+def test_all_notifies_every_current_member_once_in_mentions_mode(chat_group, superuser):
     group, conversation, owner, peer = chat_group
     superuser.is_verified = True
     superuser.save(update_fields=["is_verified"])
     GroupMembership.objects.create(group=group, user=superuser)
     provision_group(group)
-    conversation.participant_set.exclude(user=owner).update(is_muted=True)
+    conversation.participant_set.exclude(user=owner).update(notification_mode="mentions")
     body = all_request()
     message = send_group_message(conversation, owner, body)
     assert send_group_message(conversation, owner, body).pk == message.pk
