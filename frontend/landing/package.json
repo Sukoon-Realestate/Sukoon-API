@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/prepare-design-docs.mjs",
     "dev": "next dev --webpack --port 3000",
+    "prebuild": "node scripts/prepare-design-docs.mjs",
     "build": "next build",
     "start": "next start --port 3000",
     "lint": "eslint"

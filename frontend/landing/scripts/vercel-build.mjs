@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
+import { prepareDesignDocs } from './prepare-design-docs.mjs';
 
 const require = createRequire(import.meta.url);
 
@@ -19,6 +20,7 @@ export function deploymentEnvironment(source) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  prepareDesignDocs();
   const result = spawnSync(process.execPath, [require.resolve('next/dist/bin/next'), 'build'], {
     stdio: 'inherit',
     env: deploymentEnvironment(process.env),

@@ -20,6 +20,9 @@
 # production
 /build
 
+# Generated from the repository design reference before dev/build.
+/public/docs/design/mobile-identity-proposal/
+
 # misc
 .DS_Store
 *.pem
