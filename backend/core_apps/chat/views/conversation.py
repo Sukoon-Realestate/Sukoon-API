@@ -40,6 +40,12 @@ class ConversationListAPIView(ListAPIView):
 
     def get_queryset(self):
         queryset = self._base_queryset()
+        conversation_type = self.request.query_params.get("conversation_type")
+        if conversation_type is not None:
+            from rest_framework.exceptions import ValidationError
+            if conversation_type not in {"housing_group", "direct", "company_request"}:
+                raise ValidationError({"conversation_type": "Unknown conversation type."})
+            queryset = queryset.filter(kind=conversation_type)
         if "q" in self.request.query_params:
             from core_apps.chat.services.search import filter_conversations, query_text
 

@@ -8,6 +8,7 @@ from django.db.models import F
 from .group_access import authorize, visible_messages
 from .group_limits import ChatConflict, limits
 from .rich_media import validate_location
+from .property_sharing import normalize_reference, require_shareable
 
 
 def normalize_request(data):
@@ -19,6 +20,7 @@ def normalize_request(data):
         "reply_to_message_id",
         "membership_period",
         "location",
+        "property",
     }
     if not isinstance(data, dict) or set(data) - permitted:
         raise ValidationError("Unsupported message fields.")
@@ -39,10 +41,13 @@ def normalize_request(data):
     if not isinstance(content, str):
         raise ValidationError({"content": "Supply text."})
     content = content.replace("\r\n", "\n").replace("\r", "\n")
-    policy = limits()
+    policy = limits(property_sharing=True)
     if kind not in policy["message_kinds"]:
         raise ValidationError({"kind": "Unsupported message kind."})
     location = validate_location(data.get("location")) if kind == "location" else None
+    reference = normalize_reference(data.get("property")) if kind == "property" else None
+    if kind != "property" and data.get("property") is not None:
+        raise ValidationError({"property": "Only property messages may carry a property."})
     if kind != "location" and data.get("location") is not None:
         raise ValidationError(
             {"location": "Only location messages may carry coordinates."}
@@ -61,6 +66,7 @@ def normalize_request(data):
         or (kind == "voice" and len(attachment_ids) == 1 and content == "")
         or (kind in {"file", "video"} and len(attachment_ids) == 1)
         or (kind == "location" and location is not None and not attachment_ids)
+        or (kind == "property" and reference is not None and not attachment_ids)
     )
     if not valid or len(set(attachment_ids)) != len(attachment_ids):
         raise ValidationError("Invalid message kind or attachment bundle.")
@@ -72,6 +78,8 @@ def normalize_request(data):
     }
     if kind == "location":
         canonical["location"] = location
+    if kind == "property":
+        canonical["property"] = reference
     fingerprint = hashlib.sha256(
         json.dumps(canonical, sort_keys=True, ensure_ascii=False).encode()
     ).hexdigest()
@@ -86,6 +94,8 @@ def send_group_message(conversation, sender, data):
     conversation, participant, _ = authorize(
         conversation, sender, action="send_message", lock=True
     )
+    if payload["kind"] == "property" and conversation.kind != "housing_group":
+        raise ValidationError({"kind": "Property sharing is available in housing groups only."})
     if "membership_period" in data and str(data["membership_period"]) != str(
         participant.membership_period
     ):
@@ -110,6 +120,8 @@ def send_group_message(conversation, sender, data):
                 "This operation belongs to an earlier membership period."
             )
         return existing
+    if payload["kind"] == "property":
+        require_shareable(payload["property"])
     reply = None
     if payload["reply_to_message_id"]:
         reply = (
@@ -154,6 +166,7 @@ def send_group_message(conversation, sender, data):
         sequence=conversation.last_sequence,
         payload_fingerprint=fingerprint,
         location=payload.get("location"),
+        property_reference=payload.get("property"),
     )
     for position, attachment in enumerate(attachments):
         attachment.message, attachment.state, attachment.position = (

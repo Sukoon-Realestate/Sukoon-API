@@ -45,7 +45,8 @@ def attachment_payload(attachment):
     }
 
 
-def message_payload(message, participant, membership):
+def message_payload(message, participant, membership, *, properties=None):
+    from .property_sharing import property_card
     deleted = message.deleted_at is not None
     readers = (
         eligible_participants(message.conversation)
@@ -100,6 +101,7 @@ def message_payload(message, participant, membership):
         "status": "sent",
         "content": "" if deleted else message.content,
         "location": None if deleted else message.location,
+        "property": None if deleted else property_card(message.property_reference, properties),
         "sender": sender_payload(message.sender),
         "created_at": message.created_at.isoformat(),
         "is_deleted": deleted,
@@ -170,7 +172,7 @@ def summary(conversation, user):
         "is_muted": participant.is_muted,
         **preferences_payload(conversation, user, participant),
         "allowed_actions": actions(member),
-        "limits": limits(),
+        "limits": limits(property_sharing=conversation.kind == "housing_group"),
         "can_send": "send_message" in actions(member),
         "policy": policy_projection(conversation, user),
         # Exact sender/client identity and payload are serialized by group_send.

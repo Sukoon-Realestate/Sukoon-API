@@ -33,6 +33,7 @@ class Message(TimeStampedModel):
     )
     system_data = models.JSONField(default=dict, blank=True)
     location = models.JSONField(null=True, blank=True)
+    property_reference = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Message")
