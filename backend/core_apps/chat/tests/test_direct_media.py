@@ -296,19 +296,20 @@ def test_legacy_socket_and_rich_direct_send_race_keeps_one_message(direct_chat):
 def test_direct_push_keeps_post_commit_delivery_and_worker_deduplication(direct_chat):
     from core_apps.chat.services.group_outbox import deliver_pushes
     from core_apps.chat.services.group_send import send_group_message
+    from core_apps.notifications.models import DeviceToken, PushDelivery
+    from core_apps.notifications.services.push_delivery import dispatch
 
     conversation, user, other = direct_chat
+    device = DeviceToken.objects.create(user=other, token="direct-queue-device")
     with patch(
-        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_user"
+        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_device", return_value=True
     ) as push:
         message = send_group_message(conversation, user, message_request())
-        push.assert_called_once()
-        assert push.call_args.kwargs["user"] == other
-        assert (
-            ChatNotificationDelivery.objects.get(
-                event__message=message, user=other
-            ).push_claimed_at
-            is not None
-        )
+        push.assert_not_called()
+        assert PushDelivery.objects.filter(notification__data__message_id=str(message.id)).count() == 1
+        assert ChatNotificationDelivery.objects.get(event__message=message, user=other).push_claimed_at is not None
         deliver_pushes()
+        assert dispatch() == 1
+        assert dispatch() == 0
         push.assert_called_once()
+        assert push.call_args.kwargs["token"] == device.token

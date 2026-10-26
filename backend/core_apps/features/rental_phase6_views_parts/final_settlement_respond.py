@@ -90,6 +90,10 @@ def final_settlement_respond(request, lease_id):
 
 
 def refund_payload(item):
+    from ..models import PaymobRefund
+    from ..services.refund_notifications import history, attempt_history
+
+    instruction = PaymobRefund.objects.filter(refund=item, current=True).first()
     return {
         "id": str(item.id),
         "lease_id": str(item.lease.id),
@@ -101,6 +105,9 @@ def refund_payload(item):
         "reason": item.reason,
         "provider_refund_id": item.provider_refund_id,
         "failure_code": item.failure_code,
+        "instruction_status": instruction.status if instruction else None,
+        "history": history(item),
+        "attempts": attempt_history(item),
         "allocations": item.allocations,
         "purpose": item.purpose,
         "owner_recovery": _money(
@@ -116,18 +123,20 @@ def _refund(request, refund_id, allow_operations=False, lock=False):
     if lock:
         queryset = queryset.select_for_update(of=("self",))
     item = get_object_or_404(queryset, id=refund_id)
-    profile = getattr(request.user, "staff_profile", None)
-    operator = allow_operations and (
-        request.user.is_superuser
-        or (
-            profile
-            and profile.is_active
-            and profile.role_name
-            in {
-                StaffProfile.RoleName.REFUND_OPERATOR,
-                StaffProfile.RoleName.FINANCIAL_APPROVER,
-            }
-        )
+    from ..models import PrivateAccessRevocation
+
+    if PrivateAccessRevocation.objects.filter(
+        lease=item.lease, user=request.user
+    ).exists():
+        raise NotFound()
+    from ..services.rental_lifecycle.common import staff_role
+
+    operator = allow_operations and staff_role(
+        request.user,
+        {
+            StaffProfile.RoleName.REFUND_OPERATOR,
+            StaffProfile.RoleName.FINANCIAL_APPROVER,
+        },
     )
     if request.user not in (item.lease.owner, item.lease.tenant) and not operator:
         raise NotFound()

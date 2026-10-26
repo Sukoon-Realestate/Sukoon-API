@@ -2,7 +2,7 @@ from .views.home_visit_reminder import home_visit_reminder
 from .views.operation_recovery import PropertyOperationRecovery
 from django.urls import path
 from .views.districts import DistrictListAPIView
-from .views.viewing_commands import viewing_command, viewing_receipt
+from .views.viewing_commands import viewing_command, viewing_receipt, resolve_viewing_command
 from .views.viewing_representatives import representatives
 from .views.post_visit_decision import post_visit_decision
 
@@ -63,6 +63,7 @@ urlpatterns = [
     ),
     path("visits/creation-receipt/", viewing_receipt, name="viewing-creation-receipt"),
     path("visits/<uuid:id>/commands/", viewing_command, name="viewing-command"),
+    path("visits/<uuid:id>/commands/resolve/", resolve_viewing_command, name="viewing-command-resolve"),
     path(
         "cities/<uuid:city_id>/districts/",
         DistrictListAPIView.as_view(),

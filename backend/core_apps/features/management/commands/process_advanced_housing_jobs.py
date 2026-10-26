@@ -5,11 +5,9 @@ from datetime import timedelta
 from django.db import transaction
 from django.utils import timezone
 from core_apps.features.housing_scenario_models import HousingScenarioRun
-from core_apps.features.asset_passport_models import AssetAnalysisJob
 from core_apps.features.transition_network_models import TransitionMatchRun
 from core_apps.features.advanced_tender_models import TenderPackageRun
 from core_apps.features.services.housing_scenarios.jobs import calculate
-from core_apps.features.services.asset_passport.analysis import process
 from core_apps.features.services.transition_network.jobs import process_transition_match
 from core_apps.features.services.housing_tenders.jobs import process_tender_packages
 
@@ -28,7 +26,6 @@ class Command(BaseCommand):
         cutoff = timezone.now() - timedelta(minutes=15)
         for model, busy in (
             (HousingScenarioRun, "running"),
-            (AssetAnalysisJob, "processing"),
         ):
             with transaction.atomic():
                 stale = (
@@ -57,7 +54,6 @@ class Command(BaseCommand):
         for model, state, worker in (
             (TenderPackageRun, "status", process_tender_packages),
             (HousingScenarioRun, "state", calculate),
-            (AssetAnalysisJob, "state", process),
             (TransitionMatchRun, "status", process_transition_match),
         ):
             ids = list(

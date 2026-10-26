@@ -12,7 +12,7 @@ from pathlib import Path
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError as ApiValidationError
 from core_apps.admin_api.models import StaffProfile
 from core_apps.admin_api.permissions import require_staff_actor
 from core_apps.common.idempotency import fingerprint
@@ -30,6 +30,7 @@ def state(row):
     if row is None:
         return "absent"
     values = {name: getattr(row, name) for name in COMMON}
+    values["revision"] = row.revision
     if isinstance(row, Campus):
         values.update(university_id=str(row.university.id), city_id=str(row.city.id),
             latitude=str(row.latitude) if row.latitude is not None else None,
@@ -67,7 +68,7 @@ class Command(BaseCommand):
         model = University if manifest["kind"] == "university" else Campus
         fields = COMMON | (CAMPUS if model is Campus else set())
         identities = set()
-        prepared, report = [], []
+        prepared, report, snapshots = [], [], {}
         with transaction.atomic():
             actor = None
             if apply:
@@ -95,6 +96,9 @@ class Command(BaseCommand):
                     expected = state(previous)
                     if apply and record.get("expected_state") != expected:
                         raise CommandError(f"Record {index}: state changed or not reviewed. Recreate the report.")
+                    from core_apps.admin_api.services.content_registry import projection
+                    kind = "universities" if model is University else "campuses"
+                    snapshots[str(identity)] = projection(kind, previous) if previous else {}
                     row = model(id=identity) if previous is None else previous
                     for name in COMMON:
                         setattr(row, name, values[name])
@@ -103,16 +107,29 @@ class Command(BaseCommand):
                         row.university = University.objects.get(id=uuid.UUID(values["university_id"]))
                         row.city = City.objects.get(id=uuid.UUID(values["city_id"]))
                         row.latitude, row.longitude = values["latitude"], values["longitude"]
+                    if previous is not None and model is Campus:
+                        old = snapshots[str(identity)]["values"]
+                        if str(row.city.id) != old["city"] or str(row.university.id) != old["university"]:
+                            raise ValueError("Catalog hierarchy is fixed.")
+                    if model is Campus:
+                        from core_apps.properties.catalog_access import require_current_selection
+                        for field in ("university", "city"):
+                            parent = getattr(row, field)
+                            require_current_selection(parent, previous=parent if previous else None, field=field)
+                    row.revision = (snapshots[str(identity)].get("revision", 0) + 1)
                     row.full_clean()
                     prepared.append(row)
                     report.append({"id": str(identity), "expected_state": expected,
                         "action": "create" if previous is None else "update",
                         "coordinates_known": model is Campus and row.latitude is not None})
-                except (ValueError, TypeError, KeyError, ValidationError, University.DoesNotExist, City.DoesNotExist):
+                except (ValueError, TypeError, KeyError, ValidationError, ApiValidationError, University.DoesNotExist, City.DoesNotExist):
                     raise CommandError(f"Record {index}: invalid fields, provenance, coordinates or catalog identity. Nothing applied.")
             if apply:
                 for row in prepared:
                     row.save()
+                    from core_apps.common.content_models import ContentEditAudit
+                    ContentEditAudit.objects.create(kind=kind, object_id=str(row.id), revision=row.revision,
+                        actor=actor, reason=options["reason"], before=snapshots[str(row.id)], after=projection(kind, row))
                 RentalAuditEvent.objects.create(actor=actor, subject_kind="academic_catalog_import",
                     subject_id=uuid.uuid5(uuid.NAMESPACE_URL, f"sokoun:academic-catalog:{digest}"),
                     subject_revision=1, action="catalog.import", reason=options["reason"],

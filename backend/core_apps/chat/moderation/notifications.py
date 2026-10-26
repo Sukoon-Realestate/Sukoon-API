@@ -24,6 +24,8 @@ def create_notice(case):
         category="account_policy",
         icon_type="warning",
         data={
+            "event_kind": "chat_policy_update",
+            "scope": "account",
             "action_type": "open_chat",
             "conversation_id": str(case.conversation.id),
             "case_id": str(case.id),
@@ -35,7 +37,7 @@ def create_notice(case):
 
 
 def deliver_pending(limit=20):
-    from core_apps.notifications.services.fcm_service import FCMService
+    from core_apps.notifications.services.push_delivery import queue_notification
 
     for pk in ChatModerationCase.objects.filter(
         notification__isnull=False,
@@ -44,24 +46,12 @@ def deliver_pending(limit=20):
     ).values_list("pk", flat=True)[:limit]:
         with transaction.atomic():
             case = (
-                ChatModerationCase.objects.select_for_update()
+                ChatModerationCase.objects.select_for_update(of=("self",))
                 .select_related("notification", "subject")
                 .get(pk=pk)
             )
             if case.push_claimed_at or case.resolved_at:
                 continue
+            queue_notification(case.notification)
             case.push_claimed_at = timezone.now()
             case.save(update_fields=["push_claimed_at", "updated_at"])
-        # At-most-once provider attempt. The durable in-app notice is authoritative
-        # even if delivery is uncertain; never replay sensitive push payloads.
-        n = case.notification
-        try:
-            FCMService.send_push_to_user(
-                user=case.subject,
-                title=n.title,
-                body=n.body,
-                data=n.data,
-                notification_type="general",
-            )
-        except Exception:
-            pass

@@ -1,7 +1,4 @@
 from django.db import transaction
-from rest_framework.exceptions import PermissionDenied
-from core_apps.admin_api.permissions import require_staff_actor
-from core_apps.features.models import RentalAuditEvent
 
 """Property service: get admin property detail."""
 
@@ -12,11 +9,20 @@ from core_apps.admin_api.models import UserReport
 from .get_admin_properties_queryset import _get_property_by_identifier
 
 
-def get_admin_property_detail(property_id):
+@transaction.atomic
+def get_admin_property_detail(property_id, *, reviewer=None):
     """
     Returns detailed property info with view counts, visit counts, owner info, and images.
     """
-    prop = _get_property_by_identifier(property_id)
+    from core_apps.properties.services.moderation import (
+        snapshot,
+        version,
+        history,
+        capabilities,
+    )
+
+    found = _get_property_by_identifier(property_id)
+    prop = Property.objects.select_for_update().get(pk=found.pk)
 
     content_type = ContentType.objects.get_for_model(Property)
     views_count = ContentView.objects.filter(
@@ -38,7 +44,7 @@ def get_admin_property_detail(property_id):
         Property.Status.VERIFIED: "مقبول",
         Property.Status.UNDER_REVIEW: "قيد المراجعة",
         Property.Status.NEEDS_REVISION: "تعديل",
-        Property.Status.HIDDEN: "مرفوض",
+        Property.Status.HIDDEN: "مخفي",
     }
 
     images_urls = []
@@ -58,6 +64,13 @@ def get_admin_property_detail(property_id):
 
     return {
         "id": str(prop.id),
+        "review_revision": prop.review_revision,
+        "review_version": version(prop),
+        "review_snapshot": snapshot(prop),
+        "moderation_blocked": prop.moderation_blocked,
+        "moderation_reason": prop.moderation_reason,
+        "review_history": history(prop, internal=True),
+        "actions": capabilities(prop, reviewer) if reviewer else {},
         "title": prop.title,
         "description": prop.description,
         "price": f"{int(prop.price):,} ج.م" if prop.price else "0 ج.م",
@@ -99,85 +112,60 @@ def get_admin_property_detail(property_id):
     }
 
 
-@transaction.atomic
-def approve_admin_property(property_id, *, reviewer):
-    """
-    Approves and verifies a property listing.
-    """
-    require_staff_actor(
-        reviewer, {"system_owner", "main_admin", "property_reviewer"}, lock=True
+def approve_admin_property(
+    property_id, *, reviewer, expected_version=None, request_key=None, internal_note=""
+):
+    from core_apps.properties.services.moderation import decide
+
+    return decide(
+        property_id,
+        reviewer=reviewer,
+        action="approve",
+        expected_version=expected_version,
+        request_key=request_key,
+        internal_note=internal_note,
     )
-    prop = _get_property_by_identifier(property_id)
-    prop = Property.objects.select_for_update().get(pk=prop.pk)
-    if prop.owner_id == reviewer.pk:
-        raise PermissionDenied("A listing requires independent moderation.")
-    before = prop.status
-    prop.status = Property.Status.VERIFIED
-    prop.is_verified = True
-    prop.save(update_fields=["status", "is_verified", "updated_at"])
-    RentalAuditEvent.objects.create(
-        actor=reviewer,
-        subject_kind="property",
-        subject_id=prop.id,
-        subject_revision=0,
-        action="approve_admin_property",
-        reason="",
-        metadata={"before": before, "after": prop.status},
-    )
-    return prop
 
 
-@transaction.atomic
-def reject_admin_property(property_id, reason=None, *, reviewer):
-    """
-    Rejects and hides a property listing.
-    """
-    require_staff_actor(
-        reviewer, {"system_owner", "main_admin", "property_reviewer"}, lock=True
-    )
-    prop = _get_property_by_identifier(property_id)
-    prop = Property.objects.select_for_update().get(pk=prop.pk)
-    if prop.owner_id == reviewer.pk:
-        raise PermissionDenied("A listing requires independent moderation.")
-    before = prop.status
-    prop.status = Property.Status.HIDDEN
-    prop.is_verified = False
-    prop.save(update_fields=["status", "is_verified", "updated_at"])
-    RentalAuditEvent.objects.create(
-        actor=reviewer,
-        subject_kind="property",
-        subject_id=prop.id,
-        subject_revision=0,
-        action="reject_admin_property",
+def reject_admin_property(
+    property_id,
+    reason=None,
+    *,
+    reviewer,
+    expected_version=None,
+    request_key=None,
+    internal_note="",
+):
+    from core_apps.properties.services.moderation import decide
+
+    return decide(
+        property_id,
+        reviewer=reviewer,
+        action="reject",
+        expected_version=expected_version,
+        request_key=request_key,
         reason=reason or "",
-        metadata={"before": before, "after": prop.status},
+        internal_note=internal_note,
     )
-    return prop
 
 
-@transaction.atomic
-def request_admin_property_revision(property_id, reason=None, *, reviewer):
-    """
-    Requests changes/revision for a property listing.
-    """
-    require_staff_actor(
-        reviewer, {"system_owner", "main_admin", "property_reviewer"}, lock=True
-    )
-    prop = _get_property_by_identifier(property_id)
-    prop = Property.objects.select_for_update().get(pk=prop.pk)
-    if prop.owner_id == reviewer.pk:
-        raise PermissionDenied("A listing requires independent moderation.")
-    before = prop.status
-    prop.status = Property.Status.NEEDS_REVISION
-    prop.is_verified = False
-    prop.save(update_fields=["status", "is_verified", "updated_at"])
-    RentalAuditEvent.objects.create(
-        actor=reviewer,
-        subject_kind="property",
-        subject_id=prop.id,
-        subject_revision=0,
-        action="request_admin_property_revision",
+def request_admin_property_revision(
+    property_id,
+    reason=None,
+    *,
+    reviewer,
+    expected_version=None,
+    request_key=None,
+    internal_note="",
+):
+    from core_apps.properties.services.moderation import decide
+
+    return decide(
+        property_id,
+        reviewer=reviewer,
+        action="request_revision",
+        expected_version=expected_version,
+        request_key=request_key,
         reason=reason or "",
-        metadata={"before": before, "after": prop.status},
+        internal_note=internal_note,
     )
-    return prop

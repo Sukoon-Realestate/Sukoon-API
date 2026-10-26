@@ -85,6 +85,9 @@ def mutate(request, operation, load, apply, serialize, *, creating=False):
     if replay:
         return Response(replay[0], status=replay[1])
     if creating:
+        from core_apps.users.services.new_business import require_new_business
+
+        require_new_business(request.user.pk)
         check_revision(0, revision)
     elif parent is not None:
         check_revision(parent.revision, revision)

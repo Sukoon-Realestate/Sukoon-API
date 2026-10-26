@@ -98,7 +98,7 @@ def _proposal(request, group):
     for process in group.processes.filter(
         kind="application", academic_plan=academic
     ).exclude(status__in=["withdrawn", "expired", "rejected", "completed"]):
-        invalidate_process(process)
+        invalidate_process(process, "costs_changed")
 
 
 def _dispatch_process(request, group, item):
@@ -178,3 +178,8 @@ def _dispatch_process(request, group, item):
     if item.kind == "visit":
         item.status = "submitted"
     item.save()
+    if item.visit_id:
+        from core_apps.properties.services.viewing_commands import notify
+        # Booking precedes the process-to-visit link. Now include every approved
+        # attendee; the same key preserves the already-created owner receipt.
+        notify(item.visit, "requested")

@@ -2,6 +2,7 @@
 
 from django.db import transaction
 from django.http import Http404
+from django.core.exceptions import ValidationError as DjangoValidationError
 from datetime import timedelta
 from django.db.models import Q
 from django.utils import timezone
@@ -12,13 +13,14 @@ def deliver_planning_events(*, event_kinds=None):
     from core_apps.notifications.services.notification_service import (
         NotificationService,
     )
-    from core_apps.notifications.services.fcm_service import FCMService
-    from ..planning_access import planning_subject
-    from rest_framework.exceptions import NotFound, PermissionDenied
+    from .event_copy import event_copy
+    from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 
     delivered = 0
     retry_before = timezone.now() - timedelta(minutes=2)
-    pending = PlanningEvent.objects.filter(delivered_at__isnull=True, attempts__lt=5)
+    pending = PlanningEvent.objects.filter(
+        delivered_at__isnull=True, attempts__lt=5, recipient__is_active=True
+    )
     if event_kinds is not None:
         pending = pending.filter(destination__event_kind__in=event_kinds)
     for identifier in (
@@ -37,173 +39,17 @@ def deliver_planning_events(*, event_kinds=None):
             if event.attempts and event.updated_at >= retry_before:
                 continue
             try:
-                from ..rent_payment_reminders import (
-                    EVENT_KINDS,
-                    authorize,
-                    notification_copy,
-                )
-
-                rent_reminder = event.destination.get("event_kind") in EVENT_KINDS
-                copy = {}
-                if rent_reminder:
-                    copy = notification_copy(event)
-                elif event.destination.get("action_type") == "open_search_alert":
-                    from ...models import SearchAlert
-
-                    if not SearchAlert.objects.filter(
-                        id=event.destination.get("target_id"),
-                        user=event.recipient,
-                        revision=event.destination.get("revision"),
-                        enabled=True,
-                        deleted_at__isnull=True,
-                    ).exists():
-                        raise NotFound()
-                elif event.destination.get("event_kind") == "viewing_changed":
-                    from core_apps.properties.models import PropertyVisit
-                    from core_apps.properties.services.viewing_access import can_read
-
-                    visit = PropertyVisit.objects.filter(
-                        id=event.destination.get("visit_id"),
-                        revision=event.destination.get("revision"),
-                    ).first()
-                    if not visit or not can_read(visit, event.recipient):
-                        raise NotFound()
-                elif event.destination.get("action_type") == "open_support_ticket":
-                    from core_apps.support.services import get_ticket_detail
-                    from core_apps.support.models import Ticket
-
-                    try:
-                        get_ticket_detail(
-                            event.recipient,
-                            event.destination["target_id"],
-                            workspace=event.destination.get("workspace"),
-                        )
-                    except Ticket.DoesNotExist as error:
-                        raise NotFound() from error
-                elif event.destination.get("action_type") in {
-                    "open_reviews",
-                    "open_review_opportunity",
-                    "open_review_section",
-                }:
-                    from ..reputation.tasks import authorize_notification
-
-                    authorize_notification(event)
-                elif event.destination.get("action_type") == "open_company_tenancy":
-                    from ..company.tenancy_access import get
-
-                    get(event.recipient, event.destination["target_id"])
-                elif event.destination.get("action_type") == "open_company_contract":
-                    from ..company.contract_access import get
-
-                    get(event.recipient, event.destination["target_id"])
-                elif event.destination.get("action_type") == "open_company_mandates":
-                    from ..company.mandates import authorize
-
-                    authorize(event.recipient, event.destination["mandate_id"])
-                elif event.destination.get("action_type") == "open_company_work":
-                    from ..company.access import company_for
-                    from ..company.approval_routing import work_items
-
-                    company = company_for(
-                        event.recipient, event.destination["target_id"]
-                    )
-                    if (
-                        not work_items(event.recipient, company)
-                        .filter(
-                            id=event.destination.get("item_id"),
-                            revision=event.destination.get("revision"),
-                        )
-                        .exists()
-                    ):
-                        raise NotFound()
-                elif event.destination.get("rental_lifecycle"):
-                    from ..rental_foundation import get_authorized_rental_subject
-
-                    item = get_authorized_rental_subject(
-                        event.recipient, event.destination["target_id"]
-                    )
-                    if getattr(item, "revision", 1) != event.destination.get(
-                        "revision"
-                    ):
-                        raise NotFound()
-                elif event.destination.get("event_kind") == "company_viewing_decision":
-                    from core_apps.properties.models import PropertyVisitDecision
-                    from core_apps.properties.services.viewing_access import can_read
-                    from ..company.viewing_handoff import validate_source
-                    from ..rental_phase2 import RentalConflict
-
-                    decision = (
-                        PropertyVisitDecision.objects.select_related(
-                            "visit__property", "visit__tenant"
-                        )
-                        .filter(
-                            id=event.destination.get("source_decision_id"),
-                            visit__id=event.destination.get("target_id"),
-                            visit__company__id=event.destination.get("company_id"),
-                            visit__company__memberships__user=event.recipient,
-                            visit__company__memberships__is_active=True,
-                            visit__company__memberships__is_coordinator=True,
-                        )
-                        .first()
-                    )
-                    if not decision or not can_read(decision.visit, event.recipient):
-                        raise NotFound()
-                    try:
-                        validate_source(decision.visit, decision)
-                    except RentalConflict:
-                        raise NotFound()
-                elif event.destination.get("event_kind") == "visit_post_decision":
-                    from core_apps.properties.models import PropertyVisitDecision
-
-                    if (
-                        event.destination.get("target_id")
-                        != event.destination.get("visit_id")
-                        or not PropertyVisitDecision.objects.filter(
-                            id=event.destination.get("source_decision_id"),
-                            visit__id=event.destination.get("visit_id"),
-                            owner=event.recipient,
-                            visit__property__owner=event.recipient,
-                        ).exists()
-                    ):
-                        raise NotFound()
-                elif event.destination.get("action_type") == "open_rental_center":
-                    from ...planning_condition_views import participant_lease
-
-                    lease = participant_lease(
-                        event.recipient, event.destination["lease_id"]
-                    )
-                    if lease.status != "active" or lease.occupancy_status == "returned":
-                        raise NotFound()
-                elif event.destination.get("action_type") == "open_rental_change":
-                    from ...models import RentalChange
-                    from ...planning_condition_views import participant_lease
-
-                    lease = participant_lease(
-                        event.recipient, event.destination["lease_id"]
-                    )
-                    if not RentalChange.objects.filter(
-                        id=event.destination["target_id"], lease=lease
-                    ).exists():
-                        raise NotFound()
-                elif (
-                    event.destination.get("action_type")
-                    == "open_replacement_invitations"
-                ):
-                    from ...planning_models import TenancyTransition
-
-                    if not TenancyTransition.objects.filter(
-                        id=event.destination["target_id"],
-                        candidate__tenant=event.recipient,
-                        kind="replacement",
-                        status="candidate_pending",
-                    ).exists():
-                        raise NotFound()
-                else:
-                    planning_subject(event.recipient, event.destination["target_id"])
-                    if event.destination.get("action_type") == "open_shared_housing_plan":
-                        copy = {"title": "تحديث خطة السكن المشترك / Shared housing update",
-                                "body": "افتح خطة السكن لمتابعة الخطوة التالية / Open your housing plan for the next step."}
-            except (NotFound, Http404, PermissionDenied):
+                copy = event_copy(event)
+            except (
+                NotFound,
+                Http404,
+                PermissionDenied,
+                ValidationError,
+                DjangoValidationError,
+                ValueError,
+                TypeError,
+                KeyError,
+            ):
                 event.delivered_at = timezone.now()
                 event.delivery_status = "stale_or_unauthorized"
                 event.save(
@@ -232,9 +78,21 @@ def deliver_planning_events(*, event_kinds=None):
                     or "افتح التطبيق لمراجعة التفاصيل / Open the app to review.",
                     category=copy.get("category", "housing_planning"),
                     notification_type=copy.get("notification_type", "general"),
-                    data={**event.destination, "event_id": str(event.id)},
+                    data={
+                        **event.destination,
+                        "event_id": str(event.id),
+                        "event_source": "planning",
+                    },
                     send_push=False,
                 )
+            elif event.destination.get("event_kind") == "viewing_changed":
+                event.notification.data = {
+                    **event.notification.data,
+                    **event.destination,
+                    "presentation_workspace": event.destination["workspace"],
+                }
+                event.notification.scope = event.destination["workspace"]
+                event.notification.save(update_fields=["data", "scope", "updated_at"])
             if event.destination.get("decision_id"):
                 from ...models import ReviewModerationDecision
                 from ..reputation.visibility import decision_notice
@@ -244,53 +102,14 @@ def deliver_planning_events(*, event_kinds=None):
                 ).first()
                 if decision:
                     decision_notice(decision, event.recipient)
-            event.delivery_status = "attempting"
+            from core_apps.notifications.services.push_delivery import (
+                queue_notification,
+            )
+
+            queue_notification(event.notification)
+            event.delivery_status = "push_queued"
+            event.delivered_at = timezone.now()
             event.attempts += 1
             event.save()
-        # The external call is outside the database transaction. Event ID deduplicates delivery.
-        try:
-            if rent_reminder:
-                # A payment/authority change after enqueueing must not dispatch
-                # a stale financial instruction. Push copy remains private.
-                authorize(event)
-            sent = FCMService.send_push_to_user(
-                user=event.recipient,
-                title=event.notification.title,
-                body=event.notification.body,
-                data=event.notification.data,
-                notification_type=event.notification.notification_type,
-            )
-            # FCM reports delivery failures as zero as well as exceptions. Keep
-            # the durable event pending when an eligible active device exists.
-            from core_apps.notifications.models import DeviceToken
-
-            if (
-                sent == 0
-                and FCMService.should_send_to_user(
-                    event.recipient, event.notification.notification_type
-                )
-                and DeviceToken.objects.filter(
-                    user=event.recipient, is_active=True
-                ).exists()
-            ):
-                PlanningEvent.objects.filter(
-                    pk=event.pk, delivered_at__isnull=True
-                ).update(delivery_status="retry_pending")
-                continue
-        except (NotFound, Http404, PermissionDenied):
-            PlanningEvent.objects.filter(pk=event.pk, delivered_at__isnull=True).update(
-                delivered_at=timezone.now(), delivery_status="stale_or_unauthorized"
-            )
-            continue
-        except Exception:
-            PlanningEvent.objects.filter(pk=event.pk, delivered_at__isnull=True).update(
-                delivery_status="retry_pending"
-            )
-            continue
-        PlanningEvent.objects.filter(pk=event.pk, delivered_at__isnull=True).update(
-            delivered_at=timezone.now(),
-            delivery_status="provider_accepted" if sent else "no_delivery",
-            provider_accepted_at=timezone.now() if sent else None,
-        )
-        delivered += 1
+            delivered += 1
     return delivered

@@ -110,7 +110,7 @@ def test_create_interest_without_provider_preserves_receipt_and_owner_delivery(
     assert resource["offer_id"] == offer_id
     assert resource["offer_snapshot"]["offer_revision"] == 2
     assert resource["status"] == "submitted"
-    assert resource["allowed_actions"] == ["withdraw"]
+    assert resource["allowed_actions"] == ["withdraw", "create_terms_proposal"]
     assert receipt["request_key"] == body["request_key"]
     assert receipt["subject_id"] == resource["id"]
     assert receipt["revision"] == 1
@@ -120,6 +120,7 @@ def test_create_interest_without_provider_preserves_receipt_and_owner_delivery(
     owner_list = owner_client.get(API + "rental-interests/?workspace=owner")
     assert [item["id"] for item in owner_list.data["results"]] == [resource["id"]]
     assert owner_list.data["results"][0]["allowed_actions"] == [
+        "create_terms_proposal",
         "reject",
         "request_information",
         "mark_under_review",
@@ -228,9 +229,9 @@ def test_interest_can_be_closed_without_provider_and_replayed(
     client = tenant_client if decision == "withdraw" else authenticated(owner)
     grant = readiness(client, interest_id, decision)
     assert grant.data["allowed_actions"] == (
-        ["reject", "request_information", "mark_under_review"]
+        ["create_terms_proposal", "reject", "request_information", "mark_under_review"]
         if decision == "reject"
-        else [decision]
+        else [decision, "create_terms_proposal"]
     )
     assert grant.data["blocking_reasons"] == []
     body = {
@@ -259,7 +260,7 @@ def test_interest_can_be_closed_without_provider_and_replayed(
     assert RentalInterest.objects.get(id=interest_id).revision == 2
 
 
-def test_agreement_and_onboarding_remain_provider_gated(
+def test_negotiation_independent_of_provider_while_onboarding_remains_gated(
     rental_participants,
 ):  # noqa: F811
     owner, tenant, _, property_obj, offer_id = rental_participants
@@ -270,13 +271,14 @@ def test_agreement_and_onboarding_remain_provider_gated(
     interest = created.data["resource"]
     client = authenticated(owner)
     grant = readiness(client, interest["id"], "create_terms_proposal")
-    assert grant.data["enabled_capabilities"] == ["rental_interests"]
+    assert set(grant.data["enabled_capabilities"]) == {"rental_interests", "rental_agreements"}
     assert grant.data["allowed_actions"] == [
+        "create_terms_proposal",
         "reject",
         "request_information",
         "mark_under_review",
     ]
-    assert grant.data["blocking_reasons"]
+    assert not grant.data["blocking_reasons"]
     starts_on = timezone.localdate() + timedelta(days=10)
     terms = client.post(
         API + "terms-proposals/",
@@ -288,12 +290,12 @@ def test_agreement_and_onboarding_remain_provider_gated(
             "expected_revision": 0,
             "request_key": str(uuid.uuid4()),
             "terms": agreement_terms(starts_on, starts_on + timedelta(days=31)),
+            "expires_at": (timezone.now() + timedelta(days=1)).isoformat(),
         },
         format="json",
     )
-    assert terms.status_code == 403
-    assert terms["X-App-Error-Code"] == "capability_unavailable"
-    assert TermsProposal.objects.count() == 0
+    assert terms.status_code == 201, terms.data
+    assert TermsProposal.objects.count() == 1
     profile = client.get(API + "owner-payment-profile/").data
     profile_grant = readiness(client, profile["id"], "onboard_beneficiary")
     assert "onboard_beneficiary" not in profile_grant.data["allowed_actions"]

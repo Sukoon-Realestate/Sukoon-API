@@ -100,6 +100,10 @@ def settle_purchase(
             invoice=invoice, defaults={"attempt": attempt}
         )
         deliver(job.pk)
+    elif provider_mode == "mock":
+        from .billing_notifications import record_fulfilled
+
+        record_fulfilled(invoice, attempt)
 
 
 def fulfill_purchase(invoice, attempt, *, provider_mode="hosted", verified=None):

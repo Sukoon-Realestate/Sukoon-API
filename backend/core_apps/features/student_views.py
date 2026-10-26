@@ -12,7 +12,6 @@ from .renderers import FeatureJsonRenderer
 from .student_models import (
     Campus,
     StudentProfile,
-    AcademicHousingPlan,
     SharedLivingAgreement,
 )
 from .models import Lease
@@ -20,7 +19,6 @@ from .services.planning import (
     planning_api,
     mutate,
     page,
-    check_revision,
     require_planning,
 )
 from .rental_lifecycle_views.common import validated
@@ -53,7 +51,7 @@ from .student_serializers import (
 @renderer_classes([FeatureJsonRenderer])
 def campuses(request):
     query = request.query_params.get("search", "").strip()[:200]
-    qs = Campus.objects.filter(active=True, university__active=True).select_related(
+    qs = Campus.objects.filter(active=True, university__active=True, city__is_active=True, city__governorate__is_active=True).select_related(
         "university", "city"
     )
     if query:
@@ -65,7 +63,7 @@ def campuses(request):
         )
     return page(
         request,
-        qs.order_by("university__name_en", "name_en", "id"),
+        qs.order_by("university__sort_order", "university__name_en", "sort_order", "name_en", "id"),
         lambda c: profiles.campus_payload(
             c, resolve_request_language(request)
         ),
@@ -287,7 +285,15 @@ def living_arrangement(request, arrangement_id, action=""):
         request.user, "exam_arrangements" if found.kind == "exam" else "shared_living"
     )
     if request.method == "GET":
-        return Response(arrangements.payload(found, request.user))
+        if action == "history":
+            period = found.plan.group.memberships.filter(user=request.user, status="active").values_list("joined_revision", flat=True).first()
+            return page(request, arrangements.history(found), lambda event: arrangements.history_payload(event, request.user, period))
+        if action:
+            raise NotFound()
+        return Response({
+            **arrangements.payload(found, request.user),
+            "plan": plans.payload(found.plan, request.user),
+        })
     if action not in {"decide", "revise"}:
         raise NotFound()
     data = validated(

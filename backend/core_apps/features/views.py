@@ -107,6 +107,10 @@ from .views_parts.tenancy_invitation_respond import (
     tenancy_invitation_respond,
     _lease_queryset,
 )
+from .views_parts.tenancy_invitation_recovery import (
+    tenancy_invitation_response_resolve,
+    tenancy_invitation_create_resolve,
+)
 from .views_parts.leases import (
     leases,
     _get_authorized_lease,

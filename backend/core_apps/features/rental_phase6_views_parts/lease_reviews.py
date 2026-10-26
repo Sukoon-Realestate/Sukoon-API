@@ -22,12 +22,12 @@ from .final_settlement_propose import _lease
 from .disputes import document_payload
 
 
-def document_lease(request, lease_id, *, lock=False):
+def document_lease(request, lease_id, *, lock=False, provider_required=False):
     from ..models import Lease
 
     lease = get_object_or_404(Lease, id=lease_id)
     if not lease.renter_company_id:
-        return _lease(request, lease_id, lock=lock)
+        return _lease(request, lease_id, lock=lock, provider_required=provider_required)
     from ..services.company.tenancy_access import get, commercial_read
     from rest_framework.exceptions import NotFound
 

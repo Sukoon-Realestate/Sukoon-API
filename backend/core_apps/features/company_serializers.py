@@ -247,6 +247,8 @@ class OfferBody(CommandBody):
 
 
 class SelectionBody(CommandBody):
+    replaces_item_id = serializers.UUIDField(required=False)
+    replaces_item_revision = serializers.IntegerField(min_value=1, required=False)
     offer_id = serializers.UUIDField()
     offer_revision = serializers.IntegerField(min_value=1)
     occupant_ids = serializers.ListField(
@@ -255,6 +257,13 @@ class SelectionBody(CommandBody):
     staff_ids = serializers.ListField(
         child=serializers.UUIDField(), max_length=1000, default=list
     )
+
+    def validate(self, data):
+        if ("replaces_item_id" in data) != ("replaces_item_revision" in data):
+            raise serializers.ValidationError(
+                "Identify the package and revision being replaced."
+            )
+        return data
 
 
 class ApprovalBody(CommandBody):

@@ -7,6 +7,22 @@ from ..models import RentalAuditEvent
 from .rental_lifecycle.common import staff_role
 
 
+def authorization_context(user):
+    """Invalidate an unsent instruction even when recovery finished while offline."""
+    from core_apps.users.models import TotpFactor, TotpRecoveryRequest
+
+    profile = StaffProfile.objects.filter(user=user).first()
+    factor = TotpFactor.objects.filter(user=user).first()
+    recovery = TotpRecoveryRequest.objects.filter(user=user).order_by("-pk").first()
+    return {
+        "actor_id": str(user.id),
+        "security_epoch": user.security_epoch,
+        "factor_revision": factor.revision if factor else None,
+        "recovery_id": str(recovery.id) if recovery else None,
+        "staff_revision_at": profile.updated_at.isoformat() if profile else None,
+    }
+
+
 def require_financial_actor(user, roles, action, *, lock=False):
     if not getattr(user, "is_authenticated", False) or user.pk is None:
         raise PermissionDenied("A current authenticated financial actor is required.")
@@ -20,6 +36,9 @@ def require_financial_actor(user, roles, action, *, lock=False):
         raise PermissionDenied(
             "New financial actions are restricted; reconcile original instructions separately."
         )
+    from core_apps.users.services.totp import require_sensitive_access
+
+    require_sensitive_access(current)
     if not staff_role(current, roles):
         if not lock:
             RentalAuditEvent.objects.create(

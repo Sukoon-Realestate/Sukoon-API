@@ -63,10 +63,33 @@ def external_claim_create(request, invoice_id):
     return reject_external_claim(request, invoice)
 
 
-@api_view(["GET"])
+@api_view(["GET", "PATCH"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def change_detail(request, change_id, kind):
+    if request.method == "PATCH":
+        from ..services.change_versions import ChangeEditBody, revise
+        from ..services.rental_lifecycle.common import command
+        from .maintenance_payload import _safe_evidence
+
+        serializer = ChangeEditBody(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        def execute(item):
+            item = revise(item, request.user, data, _safe_evidence(item.lease, data["evidence_ids"]))
+            return item, change_payload(item, request.user), 200
+
+        def parties():
+            item = _change(request, change_id, kind)
+            return {item.lease.owner_id, item.lease.tenant_id}
+
+        output, response_status = command(
+            user=request.user, operation=f"rental_change.edit.{change_id}", data=request.data,
+            authorize=lambda: _change(request, change_id, kind, lock=True), execute=execute,
+            account_parties=parties,
+        )
+        return Response(output, status=response_status)
     return Response(change_payload(_change(request, change_id, kind), request.user))
 
 
@@ -111,6 +134,18 @@ def change_respond(request, change_id, kind):
             RentalChange.Status.REVIEW_REQUIRED,
         }:
             raise RentalConflict("This change is no longer awaiting a response.")
+        if kind != RentalChange.Kind.EXTERNAL_PAYMENT:
+            from ..services.cycle_permissions import cycle_actions
+            if action == "accept" and kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
+                from ..services.change_terms import validate_changed_terms
+                validate_changed_terms(item.terms)
+                if item.previous_terms and item.previous_terms != item.lease.terms:
+                    raise RentalConflict("The lease terms changed. The author must review and submit an updated proposal.", code="lease_changed")
+            if action == "accept" and kind == RentalChange.Kind.PAYMENT_EXTENSION:
+                if item.invoice.status in {"paid", "settled", "cancelled", "written_off"} or item.invoice.due_at != item.original_due_at:
+                    raise RentalConflict("This invoice no longer matches the proposed payment extension.", code="invoice_changed")
+            if action not in cycle_actions(request.user, item):
+                raise PermissionDenied("Review the current proposal and your role before responding.")
         if action == "reject":
             item.status = RentalChange.Status.REJECTED
         elif action == "request_changes":
@@ -147,6 +182,10 @@ def change_respond(request, change_id, kind):
                         item.applied_at = timezone.now()
         item.revision += 1
         item.save()
+        from ..services.change_versions import freeze, snapshot
+        from ..services.rental_lifecycle.consents import record_consent
+        freeze(item, baseline=not item.versions.exists())
+        record_consent(item, request.user, action, {**snapshot(item), "note": note})
         record_response_note(item, request.user, "change", action, note)
         from ..services.planning_notifications import record_event
 

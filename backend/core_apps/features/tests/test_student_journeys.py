@@ -3,6 +3,8 @@
 No university partnership, production signature, receipt, or occupancy is asserted.
 """
 
+# flake8: noqa: F811 -- imported pytest fixtures are injected by name.
+
 import copy
 import json
 import os
@@ -133,11 +135,6 @@ def response_for(owner, tenant, prop, plan, offer_id):
             note="Synthetic available accommodation; study facilities unverified",
         ),
         201,
-    ).data["resource"]
-    response = post(
-        tenant,
-        f"housing-offers/{response['id']}/select_to_proceed/",
-        command(response["revision"], decision="select_to_proceed"),
     ).data["resource"]
     assert (Lease.objects.count(), PaymentAttempt.objects.count()) == original_resources
     return plan, response, selection
@@ -289,8 +286,7 @@ def group_application(owner, tenant, prop, members):
     plan = reviewed_plan(tenant, prop, members, group=canonical)
     plan, response, selection = response_for(owner, tenant, prop, plan, base_id)
     group = authenticated(tenant).get(API + f"housing-groups/{group['id']}/").data
-    assert len(group["shortlist"]) == 1
-    assert group["shortlist"][0]["academic_plan_ids"] == [plan["id"]]
+    assert group["shortlist"] == []
     context = dict(
         academic_plan_id=plan["id"], academic_revision=plan["requirements_revision"]
     )
@@ -314,6 +310,9 @@ def group_application(owner, tenant, prop, members):
             roster_revision=group["roster_revision"],
             action="propose_costs",
             proposal=cost,
+            selection=selection,
+            source_housing_offer_id=response["id"],
+            source_housing_offer_revision=response["revision"],
             consent=False,
             **context,
         ),
@@ -463,6 +462,9 @@ def test_journeys_b_d_f_canonical_group_three_completed_one_declined_next_year(
         date.fromisoformat(plan["starts_on"]),
         date.fromisoformat(plan["ends_on_exclusive"]),
     )
+    # The owner proposes a private price within the reviewed per-person budget.
+    # Each participant still consents independently before the original invoice.
+    terms["monthly_rent"]["amount_minor"] = 500000
     body = command(
         application_id=application["id"],
         application_revision=application["revision"],
@@ -488,8 +490,19 @@ def test_journeys_b_d_f_canonical_group_three_completed_one_declined_next_year(
         f"group-booking-proposals/{proposal['id']}/submit/",
         command(proposal["revision"]),
     ).data["resource"]
+    proposal = post(
+        tenant,
+        f"group-booking-proposals/{proposal['id']}/terms/accept/",
+        command(proposal["revision"], terms_digest=proposal["terms_digest"]),
+    ).data["resource"]
+    assert not Lease.objects.exists() and not PaymentAttempt.objects.exists()
     leases = []
     for member, offer in zip(members[:3], offers[:3]):
+        current = authenticated(member).get(
+            API + f"group-booking-proposals/{proposal['id']}/"
+        )
+        assert current.status_code == 200, current.data
+        proposal = current.data
         proposal = post(
             member,
             f"group-booking-proposals/{proposal['id']}/consents/",
@@ -510,6 +523,11 @@ def test_journeys_b_d_f_canonical_group_three_completed_one_declined_next_year(
     prior_amounts = list(
         PaymentAttempt.objects.values_list("id", "amount_minor", "payment_status")
     )
+    current = authenticated(members[-1]).get(
+        API + f"group-booking-proposals/{proposal['id']}/"
+    )
+    assert current.status_code == 200, current.data
+    proposal = current.data
     proposal = post(
         members[-1],
         f"group-booking-proposals/{proposal['id']}/consents/",
@@ -522,7 +540,7 @@ def test_journeys_b_d_f_canonical_group_three_completed_one_declined_next_year(
     assert (
         proposal["status"] == "submitted" and proposal["booking_model"] == "independent"
     )
-    assert proposal["total_rent_minor"] == 4000000
+    assert proposal["total_rent_minor"] == 2000000
     assert all(Lease.objects.get(pk=lease.pk).status == "active" for lease in leases)
     assert not Lease.objects.filter(tenant=members[-1]).exists()
     assert (

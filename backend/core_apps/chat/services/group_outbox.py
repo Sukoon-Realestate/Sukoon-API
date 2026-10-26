@@ -98,11 +98,12 @@ def _notify(event, user):
                 "conversation_id": str(conversation.id),
                 "message_id": str(event.message.id),
                 "schema_version": "1",
-                "workspace": "tenant",
+                "workspace": "company",
             }
             if company
             else {
                 "type": "housing_group_chat",
+                "workspace": "student",
                 "event_kind": "housing_group_chat",
                 "group_id": group_id,
                 "conversation_id": str(conversation.id),
@@ -158,20 +159,24 @@ def _notify(event, user):
 
 
 def deliver_pushes(limit=100, *, event_pk=None):
-    """Claim once before provider I/O. Provider exactly-once delivery is not assumed."""
-    from core_apps.notifications.services.fcm_service import FCMService
-    from contextlib import nullcontext
+    """Atomically hand unclaimed notices to the durable per-device outbox."""
+    from django.http import Http404
+    from core_apps.notifications.services.push_delivery import queue_notification
 
     pending = ChatNotificationDelivery.objects.filter(
         push_claimed_at__isnull=True, notification__isnull=False
     )
     if event_pk is not None:
         pending = pending.filter(event_id=event_pk)
-    ids = pending.values_list("pk", flat=True)[:limit]
+    ids = list(pending.values_list("pk", flat=True)[:limit])
     for identity in ids:
-        initial = ChatNotificationDelivery.objects.select_related(
-            "event__conversation"
-        ).get(pk=identity)
+        initial = (
+            ChatNotificationDelivery.objects.select_related("event__conversation")
+            .filter(pk=identity)
+            .first()
+        )
+        if initial is None:
+            continue
         with transaction.atomic():
             lock_conversation_root(initial.event.conversation)
             delivery = (
@@ -179,34 +184,25 @@ def deliver_pushes(limit=100, *, event_pk=None):
                 .select_related(
                     "event__conversation", "event__message", "user", "notification"
                 )
-                .get(pk=identity)
+                .filter(pk=identity)
+                .first()
             )
-            if delivery.push_claimed_at:
+            if delivery is None or delivery.push_claimed_at:
                 continue
-            delivery.push_claimed_at = timezone.now()
-            delivery.save(update_fields=["push_claimed_at", "updated_at"])
-        # Company delivery rechecks current case authority immediately before
-        # dispatch, without retaining database locks during provider I/O.
-        company = delivery.event.conversation.kind == "company_request"
-        with nullcontext() if company else transaction.atomic():
             try:
                 _, participant, _ = authorize(
-                    delivery.event.conversation, delivery.user, lock=not company
+                    delivery.event.conversation, delivery.user, lock=True
                 )
-            except APIException:
-                continue
-            delivery.event.message.refresh_from_db()
-            if (
-                not allows_message(participant, delivery.event.message)
-                or event_payload(delivery.event, delivery.user) is None
-                or delivery.event.message.deleted_at
-            ):
-                continue
-            n = delivery.notification
-            FCMService.send_push_to_user(
-                user=delivery.user,
-                title=n.title,
-                body=n.body,
-                data=n.data,
-                notification_type="new_message",
-            )
+                eligible = (
+                    delivery.event.message is not None
+                    and allows_message(participant, delivery.event.message)
+                    and event_payload(delivery.event, delivery.user) is not None
+                )
+            except (APIException, Http404):
+                eligible = False
+            if eligible:
+                # No provider I/O here. The device worker rechecks membership,
+                # reads, deletions, mute, scope preference and session at each try.
+                queue_notification(delivery.notification)
+            delivery.push_claimed_at = timezone.now()
+            delivery.save(update_fields=["push_claimed_at", "updated_at"])

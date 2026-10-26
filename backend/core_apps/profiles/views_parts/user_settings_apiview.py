@@ -83,6 +83,9 @@ class OwnerUnreadCountsAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs) -> Response:
+        from core_apps.notifications.services.preferences import touch
+        if request.query_params.get("active_workspace") == "true":
+            touch(request.user, "owner")
         data = ProfileService.get_owner_unread_counts(request.user)
         serializer = self.get_serializer(data)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -102,7 +105,12 @@ class TenantUnreadCountsAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs) -> Response:
-        data = ProfileService.get_tenant_unread_counts(request.user)
+        from core_apps.notifications.services.inbox_scope import request_scope
+        from core_apps.notifications.services.preferences import touch
+        scope = request_scope(request)
+        if request.query_params.get("active_workspace") == "true":
+            touch(request.user, scope)
+        data = ProfileService.get_tenant_unread_counts(request.user, scope=scope)
         serializer = self.get_serializer(data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

@@ -17,6 +17,7 @@ from core_apps.features.tests.test_rental_lifecycle import (
 )
 from core_apps.features.tests.test_rental_lifecycle_safety import booking_setup, checkout
 from core_apps.features.tests.test_rental_phase3 import phase3_lease
+from core_apps.features.tests.test_negotiation_versions import create as create_negotiation
 
 pytestmark = pytest.mark.django_db
 
@@ -40,9 +41,9 @@ def test_rental_policy_acceptance_rejected_but_rejection_allowed(
     rental_participants, settings, target,
 ):
     owner, tenant, _, prop, offer = rental_participants
-    proposal = proposal_for(tenant, prop, offer)
-    proposal.status, proposal.accepted_by = "proposed", [str(owner.id)]
-    proposal.save()
+    # Use a current proposal with an explicit author/version/deadline so the
+    # rejection tests policy authority rather than expired legacy fixture data.
+    proposal, _, _ = create_negotiation(rental_participants)
     restrict(owner if target == "owner" else tenant, tenant if target == "owner" else owner, settings)
     base = f"terms-proposals/{proposal.id}/respond/"
     denied = post(tenant, base, command(proposal.revision, decision="accept"))
@@ -101,14 +102,17 @@ def test_rental_policy_group_acceptance_cannot_create_invitation_but_can_decline
     proposal = created.data["resource"]
     base = f"group-booking-proposals/{proposal['id']}/"
     assert post(owner, base + "submit/", command(1)).status_code == 200
+    agreed = post(tenant, base + "terms/accept/", command(2, terms_digest=proposal["terms_digest"]))
+    assert agreed.status_code == 200, agreed.data
+    proposal = agreed.data["resource"]
     restrict(owner, tenant, settings)
     result = post(tenant, base + "consents/", command(
-        2, decision="accept", terms_digest=proposal["terms_digest"],
+        proposal["revision"], decision="accept", terms_digest=proposal["terms_digest"],
     ))
     assert result.status_code == 403, result.data
     assert not TenancyInvitation.objects.exists()
     declined = post(tenant, base + "consents/", command(
-        2, decision="decline", terms_digest=proposal["terms_digest"],
+        proposal["revision"], decision="decline", terms_digest=proposal["terms_digest"],
     ))
     assert declined.status_code == 200, declined.data
 

@@ -3,12 +3,15 @@ from .access import member_for
 
 
 def membership_payload(member):
+    from core_apps.users.services.new_business import restricted_accounts
+
     return {
         "id": str(member.id),
         "user_id": str(member.user.id),
         "name": member.user.get_full_name,
         "revision": member.revision,
         "is_active": member.is_active,
+        "account_closure_blocked": bool(restricted_accounts(member.user_id)),
         "roles": [
             role
             for role in ("admin", "coordinator", "approver", "employee")
@@ -106,6 +109,9 @@ def company_payload(company, user):
             Q(status="committed")
             | Q(status="reserved", approval__expires_at__gt=timezone.now())
         )
+        from .listing_changes import live_budget
+
+        rows = live_budget(rows)
         result.update(
             budget_limit_minor=company.budget_limit_minor,
             deposit_limit_minor=company.deposit_limit_minor,

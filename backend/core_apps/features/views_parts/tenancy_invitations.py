@@ -74,7 +74,9 @@ def tenancy_invitations(request):
     try:
         with transaction.atomic():
             property_obj = get_object_or_404(
-                Property.objects.select_for_update().select_related("owner"),
+                Property.objects.select_for_update(of=("self",)).select_related(
+                    "owner"
+                ),
                 pk=property_obj.pk,
                 owner=request.user,
             )

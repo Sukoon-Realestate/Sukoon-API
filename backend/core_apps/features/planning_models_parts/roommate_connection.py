@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from core_apps.common.models import TimeStampedModel
+from core_apps.users.services.new_business import NewAccountBusinessMixin
 
 
 class LifestyleProfile(TimeStampedModel):
@@ -68,7 +69,9 @@ class HousingGroup(TimeStampedModel):
     proposals = models.JSONField(default=list)
 
 
-class GroupMembership(TimeStampedModel):
+class GroupMembership(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ("user_id",)
+
     group = models.ForeignKey(
         HousingGroup, on_delete=models.CASCADE, related_name="memberships"
     )
@@ -118,6 +121,7 @@ class GroupProcess(TimeStampedModel):
     kind = models.CharField(max_length=20)
     revision = models.PositiveIntegerField(default=1)
     roster_revision = models.PositiveIntegerField()
+    access_group_revision = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=24, default="collecting_consent")
     selection = models.JSONField(default=dict)
     participant_ids = models.JSONField(default=list)
@@ -134,7 +138,10 @@ class GroupProcess(TimeStampedModel):
     )
 
 
-class HousingRequest(TimeStampedModel):
+class HousingRequest(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ('user_id',)
+
+    content_revision = models.PositiveIntegerField(default=1)
     academic_plan = models.ForeignKey(
         "features.AcademicHousingPlan",
         on_delete=models.PROTECT,
@@ -158,7 +165,18 @@ class HousingRequest(TimeStampedModel):
     expires_at = models.DateTimeField()
 
 
-class HousingOffer(TimeStampedModel):
+class HousingOffer(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ('owner_id', 'request.user_id', 'property.owner_id')
+
+    reviewed_content_revision = models.PositiveIntegerField(default=1)
+    reviewed_request_snapshot = models.JSONField(default=dict)
+    review_state = models.CharField(max_length=24, default="current", db_index=True)
+    review_reasons = models.JSONField(default=list)
+    source_changes = models.JSONField(default=list)
+    replaces = models.OneToOneField(
+        "self", null=True, blank=True, on_delete=models.PROTECT,
+        related_name="replacement",
+    )
     student_policy_snapshot = models.JSONField(default=dict)
     request = models.ForeignKey(
         HousingRequest, on_delete=models.PROTECT, related_name="offers"

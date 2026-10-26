@@ -47,6 +47,10 @@ def result_for(profile, submission):
 @transaction.atomic
 def submit_identity(user, data, *, request_key=None):
     user = User.objects.select_for_update().get(pk=user.pk)
+    if user.closed_at or not user.is_active:
+        from rest_framework.exceptions import PermissionDenied
+
+        raise PermissionDenied("Account unavailable.")
     profile = Profile.objects.select_for_update().get(user=user)
     supplied_fingerprint = fingerprint(data)
     latest = profile.kyc_submissions.order_by("-created_at", "-pk").first()

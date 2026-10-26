@@ -1,5 +1,16 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.conf import settings
+
+
+CONTENT_WORKSPACES = [
+    ("tenant", "Individual"),
+    ("owner", "Owner"),
+    ("student", "Student"),
+    ("company", "Company"),
+    ("both", "Individual and owner"),
+    ("all", "All workspaces"),
+]
 
 
 class ManagedContent(models.Model):
@@ -39,7 +50,7 @@ class ReleaseNote(ManagedContent):
     workspace = models.CharField(
         max_length=10,
         default="both",
-        choices=[("tenant", "Tenant"), ("owner", "Owner"), ("both", "Both")],
+        choices=CONTENT_WORKSPACES,
     )
     items_en = models.TextField(
         help_text="One plain-text release note per line; at most 20."
@@ -74,3 +85,24 @@ class ReleaseNote(ManagedContent):
 
     def __str__(self):
         return f"{self.version} / {self.workspace}"
+
+
+class ContentEditAudit(models.Model):
+    """Snapshots of public application copy, never commercial policy grants."""
+
+    kind = models.CharField(max_length=40)
+    object_id = models.CharField(max_length=150)
+    revision = models.PositiveIntegerField()
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    reason = models.CharField(max_length=500)
+    before = models.JSONField(default=dict)
+    after = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["kind", "object_id", "revision"],
+                name="unique_content_edit_revision",
+            )
+        ]

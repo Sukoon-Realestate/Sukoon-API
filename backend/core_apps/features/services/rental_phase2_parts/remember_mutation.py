@@ -96,16 +96,13 @@ def ensure_policy():
 
 
 def get_or_create_owner_profile(owner):
+    from ...providers import fake_provider_available
+
     ensure_policy()
     profile, _ = OwnerPaymentProfile.objects.get_or_create(
         owner=owner,
         defaults={
-            "provider": (
-                getattr(settings, "RENTAL_PROVIDER_BACKEND", "disabled")
-                if getattr(settings, "RENTAL_PROVIDER_BACKEND", "disabled")
-                != "disabled"
-                else ""
-            ),
+            "provider": "fake" if fake_provider_available() else "",
             "requirements": ["beneficiary", "identity_verification"],
         },
     )

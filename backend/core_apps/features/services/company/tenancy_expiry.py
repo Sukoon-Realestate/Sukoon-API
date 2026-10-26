@@ -4,6 +4,7 @@ from django.db import transaction
 from django.utils import timezone
 from ...models import CompanyTenancy, CompanyBudgetReservation, ReservationHold
 from ..rental_lifecycle.inventory import unresolved_payment
+from ..signing_documents import unresolved as unresolved_signature
 from ..rental_lifecycle.cases import open_system_case
 from . import tenancy_access as access
 
@@ -24,6 +25,7 @@ def expire(item, now=None):
     # A timeout is not proof of failure and must not authorize a new allocation.
     if (
         unresolved_payment(lease)
+        or unresolved_signature(lease)
         or lease.signing_sessions.filter(
             status__in=["pending", "completed", "review_required"]
         ).exists()

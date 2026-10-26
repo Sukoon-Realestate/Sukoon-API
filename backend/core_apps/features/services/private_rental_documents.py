@@ -40,8 +40,22 @@ def generate(document):
             "employees_are_debtors": False,
         }
     if document.document_type in {"contract", "change"}:
-        # No retrieval adapter exists for the provider's signed artifact bytes.
-        return fail(document, "signed_source_artifact_unavailable")
+        from ..models import RentalSigningDocument
+        from django.db import transaction
+        from .signing_jobs import persist_original
+
+        lookup = {"id": document.source_reference} if document.document_type == "contract" else {"change__id": document.source_reference}
+        try:
+            uuid.UUID(document.source_reference)
+        except (ValueError, TypeError):
+            return fail(document, "signed_source_artifact_unavailable")
+        source = RentalSigningDocument.objects.filter(lease=lease, **lookup).exclude(completed_hash="").order_by("-source_revision").first()
+        if source is None or not source.completed_content:
+            return fail(document, "signed_source_artifact_unavailable")
+        with transaction.atomic():
+            persist_original(source)
+        document.refresh_from_db()
+        return document.status == "ready"
     if document.document_type == "receipt":
         try:
             uuid.UUID(document.source_reference)
@@ -230,7 +244,7 @@ def content_response(document_id, token):
         raise Http404()
     response = HttpResponse(content, content_type=document.media_type)
     response["Content-Disposition"] = (
-        f'attachment; filename="{document.document_type}-{document.id}.json"'
+        f'attachment; filename="{document.document_type}-{document.id}.{"pdf" if document.media_type == "application/pdf" else "json"}"'
     )
     response["Cache-Control"] = "private, no-store"
     response["X-Content-Type-Options"] = "nosniff"

@@ -1,16 +1,13 @@
 from django.db.models import Q
 from core_apps.support.models import HelpArticle, HelpContact
+from core_apps.common.content_audience import workspace as normalize_workspace, audience
 
 
 def get_help_center_content(workspace="tenant", lang="ar"):
-    workspace = "owner" if workspace.lower() == "owner" else "tenant"
+    workspace = normalize_workspace(workspace)
     language = "en" if lang.lower() == "en" else "ar"
     contact = HelpContact.objects.filter(workspace=workspace, active=True).first()
-    articles = list(
-        HelpArticle.objects.filter(
-            Q(workspace=workspace) | Q(workspace="both"), active=True
-        )
-    )
+    articles = list(HelpArticle.objects.filter(audience(workspace), active=True))
     return {
         "phone": contact.phone if contact else "",
         "email": contact.email if contact else "",

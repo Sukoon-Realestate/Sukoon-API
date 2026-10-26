@@ -109,10 +109,37 @@ def fake_provider_available():
 
 
 def get_rental_provider():
+    if getattr(settings, "SIGNWELL_TEST_ENABLED", False):
+        return SigningRentalProvider()
     backend = getattr(settings, "RENTAL_PROVIDER_BACKEND", "disabled")
     if backend == "fake":
         return FakeRentalProvider()
     raise ImproperlyConfigured("No production rental provider is configured.")
+
+
+class SigningRentalProvider:
+    name = "signwell_test"
+
+    def generate_agreement(self, identity, revision, terms):
+        from .services.signing_documents import prepare
+        return prepare(identity, revision, terms)
+
+    def create_signing_session(self, identity, signer_id, request_key):
+        from .services.signing_documents import hosted_session
+        return hosted_session(identity, signer_id, request_key)
+
+    def __getattr__(self, name):
+        if fake_provider_available():
+            return getattr(FakeRentalProvider(), name)
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("This separate provider operation is not configured.")
+
+
+def signing_available():
+    if getattr(settings, "SIGNWELL_TEST_ENABLED", False):
+        from .services.signwell_client import ready
+        return ready()
+    return fake_provider_available()
 
 
 def checkout_available():
@@ -138,7 +165,7 @@ def require_rental_provider(user):
     from rest_framework.exceptions import PermissionDenied
 
     require_verified_rental_account(user)
-    if not fake_provider_available():
+    if not fake_provider_available() and not signing_available():
         raise PermissionDenied(
             {
                 "message": "A rental provider is not configured for this environment.",
@@ -159,6 +186,14 @@ def verify_fake_webhook(payload, signature):
 
 
 def mock_completion_metadata(kind, subject_id, revision):
+    if kind in {"signing-sessions", "change-signing-sessions"}:
+        from .models import SigningSession, ChangeSigningSession, RentalSigningDocument
+
+        model = SigningSession if kind == "signing-sessions" else ChangeSigningSession
+        if RentalSigningDocument.objects.filter(
+            id__in=model.objects.filter(id=subject_id).values("document_id")
+        ).exists():
+            return {"provider_mode": "hosted", "provider_environment": "test"}
     if not fake_provider_available():
         return {}
     suffix = "events" if kind == "payment-attempts" else "complete"

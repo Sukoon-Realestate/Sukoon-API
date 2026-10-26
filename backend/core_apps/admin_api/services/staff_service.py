@@ -1,5 +1,6 @@
 import logging
 import uuid
+import secrets
 from django.db import transaction
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError, NotFound, PermissionDenied
@@ -128,6 +129,9 @@ def get_roles_summary():
         },
     ]
     labels = {
+        "support_supervisor": "مشرف الدعم والتصعيد",
+        "account_closure_reviewer": "مراجع طلبات حذف الحساب",
+        "security_recovery_reviewer": "مراجع مستقل لاستعادة عامل التحقق",
         "financial_approver": "معتمد مالي",
         "psp_reconciliation": "مطابقة مزود الدفع",
         "payout_operator": "مشغل التحويلات",
@@ -180,6 +184,12 @@ def invite_staff_member(email, name, role_name, *, actor, reason):
         },
     )
 
+    if created:
+        # No password is chosen by the inviter or returned to the browser.
+        # The existing email reset flow lets the account holder set it.
+        user.set_password(secrets.token_urlsafe(48))
+        user.save(update_fields=["password"])
+
     if user.is_superuser:
         raise PermissionDenied(
             "Superuser authority cannot be changed through staff invitations."
@@ -210,6 +220,10 @@ def invite_staff_member(email, name, role_name, *, actor, reason):
             "is_active": True,
         },
     )
+    if before != _snapshot(staff_profile):
+        from core_apps.users.services.totp_recovery import _invalidate
+
+        _invalidate(user)
 
     logger.info(f"Staff member {email} created/updated with role {canonical_role}")
     StaffAuthorityAudit.objects.create(
@@ -246,6 +260,9 @@ def remove_staff_member(staff_id, *, actor, reason):
     user = staff_profile.user
     user.is_staff = False
     user.save(update_fields=["is_staff"])
+    from core_apps.users.services.totp_recovery import _invalidate
+
+    _invalidate(user)
 
     logger.info(f"Staff member {user.email} removed from staff privileges")
     StaffAuthorityAudit.objects.create(

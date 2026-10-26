@@ -100,12 +100,14 @@ def activate_with_mock_payment(
             now, snapshot["duration_unit"], int(snapshot["duration_count"])
         )
         advertisement.activated_at = now
+        advertisement.expiration_processed_at = None
         advertisement.status = Advertisement.Status.ACTIVE
         advertisement.save(
             update_fields=[
                 "starts_at",
                 "ends_at",
                 "activated_at",
+                "expiration_processed_at",
                 "status",
                 "updated_at",
             ]

@@ -23,6 +23,7 @@ class PropertyLifecycleMixin:
             or property_obj.retired_at
             or property_obj.complex_id
             or property_obj.portfolio_offers.exists()
+            or property_obj.moderation_decisions.exists()
         ):
             from core_apps.features.services.rental_phase2 import RentalConflict
 
@@ -64,6 +65,10 @@ class PropertyLifecycleMixin:
         else:
             new_hidden = bool(is_hidden)
 
+        if property_obj.moderation_blocked and not new_hidden:
+            from core_apps.features.services.rental_phase2 import RentalConflict
+            raise RentalConflict("An authorized reviewer must lift this listing's block.", code="property_blocked")
+
         # Historical owner edits left a stale approval flag on pending content.
         # Hiding and showing that content must never act as reviewer approval.
         if property_obj.status in {
@@ -80,5 +85,6 @@ class PropertyLifecycleMixin:
             else:
                 property_obj.status = Property.Status.UNDER_REVIEW
 
-        property_obj.save(update_fields=["status", "is_verified", "updated_at"])
+        property_obj.review_revision += 1
+        property_obj.save(update_fields=["status", "is_verified", "review_revision", "updated_at"])
         return property_obj

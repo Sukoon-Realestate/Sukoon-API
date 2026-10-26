@@ -86,7 +86,7 @@ def _remember_session(
     return response_data
 
 
-def _participant_interest(request, interest_id, lock=False, *, provider_required=True):
+def _participant_interest(request, interest_id, lock=False, *, provider_required=False):
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
         if provider_required:
             require_rental_provider(request.user)
@@ -94,19 +94,29 @@ def _participant_interest(request, interest_id, lock=False, *, provider_required
             require_verified_rental_account(request.user)
     queryset = RentalInterest.objects.select_related("property__owner", "tenant")
     if lock:
-        queryset = queryset.select_for_update()
+        from core_apps.properties.models import Property
+
+        root = get_object_or_404(queryset, id=interest_id)
+        if request.user not in (root.tenant, root.property.owner):
+            raise NotFound()
+        Property.objects.select_for_update().get(pk=root.property_id)
+        queryset = queryset.select_for_update(of=("self",))
     interest = get_object_or_404(queryset, id=interest_id)
     if request.user not in (interest.tenant, interest.property.owner):
         raise NotFound()
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
         from ..services.shared_housing.access import guard_individual
+
         guard_individual(interest)
     return interest
 
 
-def _participant_proposal(request, proposal_id, lock=False):
+def _participant_proposal(request, proposal_id, lock=False, *, provider_required=False):
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
-        require_rental_provider(request.user)
+        if provider_required:
+            require_rental_provider(request.user)
+        else:
+            require_verified_rental_account(request.user)
     queryset = TermsProposal.objects.select_related(
         "owner", "interest__tenant", "interest__property"
     )
@@ -123,6 +133,7 @@ def _participant_proposal(request, proposal_id, lock=False):
         raise NotFound()
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
         from ..services.shared_housing.access import guard_individual
+
         guard_individual(proposal.interest)
     return proposal
 
@@ -134,7 +145,7 @@ def _participant_lease(request, lease_id, lock=False):
         get_object_or_404(Lease, id=lease_id, renter_company__isnull=True)
     )
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
-        require_rental_provider(request.user)
+        require_verified_rental_account(request.user)
     queryset = Lease.objects.select_related("property", "owner", "tenant")
     if lock:
         from core_apps.properties.models import Property
@@ -196,6 +207,8 @@ def _notify(user, notification_type, title, action_type, target_id, **context):
 @renderer_classes([FeatureJsonRenderer])
 def owner_payment_profile(request):
     profile = get_or_create_owner_profile(request.user)
-    return Response(
+    response = Response(
         OwnerPaymentProfileSerializer(profile, context={"request": request}).data
     )
+    response["Cache-Control"] = "private, no-store"
+    return response

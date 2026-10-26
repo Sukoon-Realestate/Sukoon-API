@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
     busy = true; picker.disabled = true; ids.value = '';
     try {
       const workspace = ids.dataset.workspace;
-      if (!['owner', 'tenant'].includes(workspace)) throw new Error('Refresh the ticket before uploading attachments.');
+      if (!['owner', 'tenant', 'student', 'company', 'account'].includes(workspace)) throw new Error('Refresh the ticket before uploading attachments.');
       const uploaded = [];
       for (const file of files) {
         const identity = crypto.randomUUID();

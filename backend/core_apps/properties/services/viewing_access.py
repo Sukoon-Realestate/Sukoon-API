@@ -2,8 +2,8 @@
 
 from django.db.models import Q, F
 from django.shortcuts import get_object_or_404
-from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
-from core_apps.features.company_models import Company, CompanyMembership
+from rest_framework.exceptions import PermissionDenied, ValidationError
+from core_apps.features.company_models import CompanyMembership
 from core_apps.features.planning_models import GroupProcess
 from ..models import PropertyVisit
 
@@ -32,7 +32,9 @@ def participant(visit, user):
             str(user.id) in process.participant_ids
             and str(user.id) in process.consented_ids
             and process.group.memberships.filter(
-                user=user, status="active", joined_revision__lte=process.roster_revision
+                user=user,
+                status="active",
+                joined_revision__lte=process.access_group_revision,
             ).exists()
             and (
                 not process.academic_plan_id
@@ -68,7 +70,7 @@ def for_user(user):
     processes = GroupProcess.objects.filter(
         group__memberships__user=user,
         group__memberships__status="active",
-        group__memberships__joined_revision__lte=F("roster_revision"),
+        group__memberships__joined_revision__lte=F("access_group_revision"),
         participant_ids__contains=[str(user.id)],
         consented_ids__contains=[str(user.id)],
     ).filter(Q(academic_plan__isnull=True) | Q(academic_plan_id__in=current_plans))
@@ -139,6 +141,10 @@ def prepare_context(actor, raw):
 
 
 def context_payload(visit, actor):
+    from core_apps.features.planning_group_views_parts.process_payload import (
+        process_history,
+    )
+
     process = group_process(visit)
     kind = (
         "student_group"
@@ -177,6 +183,7 @@ def context_payload(visit, actor):
             )
     return {
         "kind": kind,
+        "history": visit.change_history if can_read(visit, actor) else [],
         "company_id": str(visit.company.id) if visit.company_id else None,
         "company_name": visit.company.name if visit.company_id else None,
         "academic_plan_id": (
@@ -189,6 +196,9 @@ def context_payload(visit, actor):
             )
         ),
         "group_id": str(process.group.id) if process else None,
+        "group_history": (
+            process_history(process) if process and can_read(visit, actor) else []
+        ),
         "requested_by_id": (
             str(visit.requested_by.id)
             if visit.requested_by_id

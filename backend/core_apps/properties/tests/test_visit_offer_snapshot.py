@@ -1,5 +1,7 @@
 """Public bookings retain the same complete accommodation snapshot as invitations."""
 
+from .viewing_support import response_body
+
 import copy
 import json
 import os
@@ -145,7 +147,9 @@ def test_public_booking_details_decision_and_invitation_share_complete_frozen_sn
         assert detail.status_code == 200, detail.data
         assert detail.data["offer_snapshot"] == expected
         examples[name] = detail.json()
-    accepted = owner_client.post(owner_path + "accept/", {}, format="json")
+    accepted = owner_client.post(
+        owner_path + "accept/", response_body(visit.revision), format="json"
+    )
     assert accepted.status_code == 200, accepted.data
     visit.refresh_from_db()
     after_start = timezone.now()

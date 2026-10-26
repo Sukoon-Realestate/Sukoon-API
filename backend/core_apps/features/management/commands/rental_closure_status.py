@@ -13,10 +13,6 @@ from core_apps.features.models import (
 )
 from core_apps.features.planning_models import PlanningEvent
 from core_apps.features.models import HabitabilityRestriction, PolicyDecision
-from core_apps.features.asset_passport_models import (
-    AssetAnalysisSuggestion,
-    AssetWarrantyReference,
-)
 from core_apps.features.company_staff_models import CompanyAccountProvisioning
 from core_apps.users.models import User
 
@@ -48,12 +44,6 @@ class Command(BaseCommand):
             ),
             "habitability_reviews_due": HabitabilityRestriction.objects.filter(
                 cleared_at__isnull=True, review_at__lt=observed_at
-            ),
-            "manual_visual_reviews": AssetAnalysisSuggestion.objects.filter(
-                review_status="ready_for_review", job__provider="manual_visual_review"
-            ),
-            "warranty_handoffs_pending": AssetWarrantyReference.objects.filter(
-                status="manual_review_pending"
             ),
             "company_activation_delivery_pending": CompanyAccountProvisioning.objects.filter(
                 delivery_status__in=["queued", "unknown"]

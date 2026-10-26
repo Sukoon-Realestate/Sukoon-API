@@ -1,11 +1,9 @@
 """Planning housing views: housing request action."""
 
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from ..planning_models import HousingOffer
-from ..services.planning import money, mutate, planning_api, public_properties
-from ..services.rental_phase2 import RentalConflict
+from ..services.planning import money, mutate, planning_api
 from .housing_requests import (
     request_status,
     get_request,
@@ -25,8 +23,9 @@ def housing_request_action(request, request_id, action):
         if request.data.get("action") != action:
             raise ValidationError({"action": "Body and route action must match."})
         if action == "edit":
-            for key, value in _request_values(request.data).items():
-                setattr(item, key, value)
+            from ..services.housing_request_reviews import edit_content
+
+            edit_content(item, _request_values(request.data, previous=item.criteria), request.user)
         else:
             item.status = {
                 "pause": "paused",
@@ -47,57 +46,64 @@ def housing_request_action(request, request_id, action):
     )
 
 
-def offer_status(item):
+def offer_status(item, *, existing_process=False):
+    from ..services.housing_request_reviews import LIVE, TERMINAL, incompatibility
     from ..services.student_housing.publication import request_current
 
+    if item.status in TERMINAL or item.status == "tender_quote":
+        return item.status
+    if request_status(item.request) != "published":
+        return (
+            "request_closed"
+            if item.request.status in {"closed", "fulfilled"}
+            else "expired"
+        )
     if not request_current(item.request):
         return "review_required"
     if item.request.academic_plan_id:
         from ..services.student_housing.policies import response_policy_current
-
         if not response_policy_current(item):
             return "review_required"
-    if item.status not in {"declined", "withdrawn"} and (
-        request_status(item.request) != "published"
-        or item.request_revision != item.request.revision
+    if item.review_state == "incompatible":
+        return "incompatible"
+    if item.status in LIVE and incompatibility(
+        item, check_academic_availability=not existing_process
     ):
-        return "expired"
-    if item.status in {"sent", "viewed", "shortlisted", "selected_to_proceed"}:
-        from ..services.tenancy_invitations import resolve_offer_snapshot
-
-        try:
-            if not public_properties().filter(pk=item.property_id).exists():
-                return "unavailable"
-            resolve_offer_snapshot(
-                item.property,
-                item.selection["offer_id"],
-                item.selection["offer_revision"],
-            )
-        except (ValidationError, RentalConflict, KeyError):
-            return "unavailable"
-    return item.status
+        return "unavailable"
+    if (
+        item.reviewed_content_revision != item.request.content_revision
+        or item.review_state == "pending_reconfirm"
+    ):
+        return "pending_reconfirm"
+    return (
+        "sent" if item.status in {"shortlisted", "selected_to_proceed"} else item.status
+    )
 
 
 def offer_actions(user, item):
+    from ..services.housing_request_reviews import LIVE
+    from .housing_requests import can_offer_request
+
     if item.status == "tender_quote" or hasattr(item, "tender_line"):
         return []
+    state = offer_status(item)
     if user.pk == item.owner_id:
-        return (
-            ["withdraw"]
-            if item.status in {"sent", "viewed", "shortlisted", "selected_to_proceed"}
-            else []
-        )
-    if user.pk == item.request.user_id and offer_status(item) in {
-        "sent",
-        "viewed",
-        "shortlisted",
-    }:
-        return (["shortlist"] if item.status != "shortlisted" else []) + [
-            "select_to_proceed",
-            "decline",
-        ]
-    if user.pk == item.request.user_id and offer_status(item) == "selected_to_proceed":
-        return ["decline"]
+        if item.status not in LIVE or request_status(item.request) not in {
+            "published",
+            "paused",
+        }:
+            return []
+        actions = ["withdraw"]
+        if can_offer_request(user, item.request):
+            actions.append("replace")
+            if state == "pending_reconfirm":
+                actions.append("reconfirm")
+        return actions
+    if user.pk == item.request.user_id:
+        if state in {"sent", "viewed"}:
+            return ["review", "decline"]
+        if state in {"pending_reconfirm", "incompatible", "unavailable"}:
+            return ["decline"]
     return []
 
 
@@ -105,6 +111,8 @@ def offer_payload(item, user):
     from ..services.student_housing.publication import participant_can_read
 
     _check_sealed_offer(user, item)
+    from ..services.housing_request_reviews import pending_changes
+    from core_apps.common.translation import translate_message
 
     return {
         "id": str(item.id),
@@ -114,6 +122,14 @@ def offer_payload(item, user):
         "note": item.note,
         "revision": item.revision,
         "request_revision": item.request_revision,
+        "current_request_revision": item.request.revision,
+        "request_content_revision": item.request.content_revision,
+        "reviewed_content_revision": item.reviewed_content_revision,
+        "review_state": item.review_state,
+        "source_changes": item.source_changes,
+        "request_changes": pending_changes(item),
+        "review_reasons": [translate_message(reason) for reason in item.review_reasons],
+        "replaces_offer_id": str(item.replaces.id) if item.replaces_id else None,
         "selection": item.selection,
         "rent": money(item.rent_minor),
         "deposit": (
@@ -135,7 +151,9 @@ def offer_payload(item, user):
 
 
 def get_offer(user, identifier, *, lock=False):
-    queryset = HousingOffer.objects.select_related("request", "owner")
+    queryset = HousingOffer.objects.select_related(
+        "request", "owner", "property", "replaces"
+    )
     if lock:
         queryset = queryset.select_for_update(of=("self",))
     item = get_object_or_404(queryset, id=identifier)

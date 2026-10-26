@@ -106,10 +106,20 @@ def configure(user, company_id, data):
 @transaction.atomic
 def submit(user, item_id, data):
     require_new_business()
+    from .access import booking_account_parties, lock_account_parties
+    from core_apps.users.services.new_business import (
+        require_new_business as require_account_business,
+    )
+
+    parties = lock_account_parties(user, booking_account_parties(item_id))
+    require_account_business(*parties)
     initial = get_object_or_404(CompanyBookingItem, id=item_id)
     request = request_for(user, initial.request.id, lock=True)
     item = CompanyBookingItem.objects.select_for_update().get(pk=initial.pk)
     require_revision(item, data["expected_revision"])
+    from .negotiation_binding import require_accepted
+
+    require_accepted(item)
     if item.status != "proposed" or item.quote_expires_at <= timezone.now():
         raise RentalConflict(
             "Obtain a current proposed quote before submitting approval.",
@@ -154,7 +164,7 @@ def notify(item, recipient):
                 "item_id": str(item.id),
                 "revision": item.revision,
                 "schema_version": "1",
-                "workspace": "tenant",
+                "workspace": "company",
             }
         },
     )
@@ -195,6 +205,8 @@ def reassign(user, item_id, data):
 
 
 def work_items(user, company):
+    from .listing_changes import invalidated_ids
+
     # Derived from current canonical business state. No generic completion API.
     member = member_for(user, company)
     admin = company.memberships.filter(
@@ -204,10 +216,20 @@ def work_items(user, company):
     coordinator = (
         Q(request__coordinator=user) if member.is_coordinator else Q(pk__in=[])
     )
+    affected = Q(id__in=invalidated_ids()) & ~Q(status__in=["withdrawn", "replaced"])
     return (
         CompanyBookingItem.objects.filter(request__company=company)
         .filter(
             administrative
+            | affected
+            & (
+                coordinator
+                | Q(
+                    assigned_approver__user=user,
+                    assigned_approver__is_active=True,
+                    assigned_approver__is_approver=True,
+                )
+            )
             | Q(
                 status="approval_pending",
                 assigned_approver__user=user,
@@ -231,6 +253,17 @@ def work_items(user, company):
 
 
 def work_payload(item, user):
+    from .listing_changes import needs_review, publication_blocked
+    from .access import booking_account_parties
+    from core_apps.users.services.new_business import restricted_accounts
+
+    source_review = needs_review(item)
+    unpublished = publication_blocked(item)
+    closure_blocked = bool(
+        restricted_accounts(
+            user.pk, *booking_account_parties(item.id, include_preparation=False)
+        )
+    )
     pending = item.status == "approval_pending"
     reassign = (
         pending
@@ -239,8 +272,12 @@ def work_payload(item, user):
             user=user, is_active=True, is_admin=True
         ).exists()
     )
-    actionable = item.quote_expires_at > timezone.now() and (
-        not pending or eligible(item.assigned_approver, item)
+    actionable = (
+        not source_review
+        and not unpublished
+        and not closure_blocked
+        and item.quote_expires_at > timezone.now()
+        and (not pending or eligible(item.assigned_approver, item))
     )
     return {
         "id": str(item.id),
@@ -249,8 +286,24 @@ def work_payload(item, user):
         "title": item.request.title,
         "revision": item.revision,
         "status": item.status,
-        "action": "reassign" if reassign else "decide" if pending else "review_request",
+        "action": (
+            "review_request"
+            if source_review
+            else "reassign" if reassign else "decide" if pending else "review_request"
+        ),
         "due_at": item.quote_expires_at.isoformat(),
         "actionable": actionable,
-        "blocking_reason": "" if actionable else "refresh_quote_or_authority",
+        "blocking_reason": (
+            "account_closure_pending"
+            if closure_blocked
+            else (
+                "company_source_changed"
+                if source_review
+                else (
+                    "portfolio_offer_unpublished"
+                    if unpublished
+                    else "" if actionable else "refresh_quote_or_authority"
+                )
+            )
+        ),
     }

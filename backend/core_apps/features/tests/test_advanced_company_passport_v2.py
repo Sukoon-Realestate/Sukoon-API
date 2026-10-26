@@ -1,4 +1,4 @@
-"""Mock staged execution/analysis proof; no assertion claims a live provider result."""
+"""Mock staged company execution proof; no assertion claims a live provider result."""
 
 from copy import deepcopy
 from datetime import timedelta
@@ -8,21 +8,13 @@ from django.utils import timezone
 from core_apps.features.tests.test_advanced_company_passport import (
     scenario_input,
     command,
-    observation,
     advanced_enabled,
 )
-import core_apps.features.tests.test_advanced_company_passport as test_advanced_company_passport_fixtures
 import core_apps.features.tests.test_company_housing as test_company_housing_fixtures
 from core_apps.features.tests.test_rental_lifecycle import policy
 from core_apps.features.tests.test_rental_phase2 import (
     rental_participants,
     authenticated,
-)
-from core_apps.features.asset_passport_models import (
-    AssetObservation,
-    AssetAnalysisJob,
-    AssetAnalysisSuggestion,
-    AssetItem,
 )
 from core_apps.features.housing_scenario_models import (
     HousingScenario,
@@ -40,9 +32,7 @@ from core_apps.features.company_models import (
 )
 from core_apps.features.services.housing_scenarios import jobs
 from core_apps.features.services.housing_scenarios.solver import solve, validate_plan
-from core_apps.features.services.asset_passport import analysis
 
-passport = test_advanced_company_passport_fixtures.passport
 company_setup = test_company_housing_fixtures.company_setup
 
 API = "/api/v1/features/v1/"
@@ -54,8 +44,6 @@ def mock_mode(settings):
     settings.ADVANCED_HOUSING_ENABLED_SERVICES = [
         "corporate_housing_simulation",
         "corporate_housing_execution",
-        "asset_passport",
-        "asset_assisted_analysis",
     ]
 
 
@@ -193,124 +181,6 @@ def test_individual_commute_limit_and_missing_routes_are_hard_constraints():
         )
     snapshot["planning_assumptions"]["unavailable_property_ids"] = ["u3"]
     assert solve(snapshot)["result_status"] == "infeasible"
-
-
-def add_observations(passport, *, comparable=True):
-    owner, tenant, _, _, lease, report, asset = passport
-    item = AssetItem.objects.get(id=asset["id"])
-    rows = []
-    for offset, condition in ((0, "good"), (1, "worn")):
-        media = RentalEvidence.objects.create(
-            lease=lease,
-            uploader=tenant,
-            request_key=uuid.uuid4(),
-            original_name="evidence.jpg",
-            content_type="image/jpeg",
-            size_bytes=4,
-            sha256="a" * 64,
-            storage_key=str(uuid.uuid4()),
-            malware_status="safe",
-        )
-        report.evidence.add(media)
-        row = AssetObservation.objects.create(
-            asset=item,
-            property=item.property,
-            lease=lease,
-            author=tenant,
-            observed_on=report.inspected_on + timedelta(days=offset),
-            condition=condition,
-            note="A documented observed symptom without attributed cause.",
-            source_kind="condition_report",
-            source_id=report.id,
-            source_revision=report.revision,
-            source_status=report.status,
-            capture_context={
-                "quality": "comparable" if comparable else "low_light",
-                "identity_confirmed": True,
-            },
-        )
-        row.evidence.add(media)
-        rows.append(row)
-    return rows
-
-
-@pytest.mark.django_db
-def test_analysis_source_snapshot_review_and_new_owner_privacy(passport):
-    owner, tenant, stranger, prop, lease, report, asset = passport
-    rows = add_observations(passport)
-    client = authenticated(tenant)
-    response = client.post(
-        API + f"asset-items/{asset['id']}/analysis/",
-        command(asset["revision"], observation_ids=[str(row.id) for row in rows]),
-        format="json",
-    )
-    assert response.status_code == 200, response.data
-    job_id = response.data["resource"]["id"]
-    analysis.process.run(job_id)
-    job = client.get(API + f"asset-analysis-jobs/{job_id}/").data
-    assert job["state"] == "ready_for_review" and job["simulated"]
-    assert {f["kind"] for f in job["findings"]} == {
-        "possible_reused_evidence",
-        "reported_condition_difference",
-    }
-    finding = job["findings"][-1]
-    reviewed = client.post(
-        API + f"asset-analysis-findings/{finding['id']}/review/",
-        command(
-            finding["revision"],
-            decision="accepted_as_observation",
-            reason="Reviewed the source reports. Inspection still needed.",
-        ),
-        format="json",
-    )
-    assert reviewed.status_code == 200, reviewed.data
-    assert AssetObservation.objects.count() == 2
-    assert reviewed.data["resource"]["output"]["liability_determined"] is False
-    prop.owner = stranger
-    prop.save()
-    assert (
-        authenticated(stranger).get(API + f"asset-analysis-jobs/{job_id}/").status_code
-        == 404
-    )
-    assert client.get(API + f"asset-analysis-jobs/{job_id}/").status_code == 200
-
-
-@pytest.mark.django_db
-def test_low_quality_analysis_stays_inconclusive_and_reanalysis_versions(passport):
-    _, tenant, _, _, _, _, asset = passport
-    rows = add_observations(passport, comparable=False)
-    item = AssetItem.objects.get(id=asset["id"])
-    first = analysis.create(
-        tenant, item, {"observation_ids": [str(row.id) for row in rows]}
-    )
-    analysis.process.run(str(first.id))
-    finding = first.suggestions.get()
-    assert finding.kind == "insufficient_comparable_evidence"
-    with pytest.raises(Exception):
-        analysis.review(
-            tenant,
-            finding,
-            {"decision": "accepted_as_observation", "reason": "Reviewed"},
-        )
-    analysis.review(
-        tenant,
-        finding,
-        {
-            "decision": "inconclusive",
-            "reason": "Different lighting prevents comparison.",
-        },
-    )
-    second = analysis.create(
-        tenant,
-        item,
-        {
-            "observation_ids": [str(row.id) for row in rows],
-            "previous_run_id": str(first.id),
-        },
-    )
-    assert second.pk != first.pk and second.previous_run_id == first.pk
-    finding.refresh_from_db()
-    assert finding.review_status == "inconclusive"
 
 
 def corporate_execution_setup(setup):
@@ -548,7 +418,7 @@ def test_disabled_jobs_preserve_queue_and_stale_worker_cannot_write(
 
 @pytest.mark.django_db
 def test_broker_failure_leaves_recoverable_queued_jobs(
-    company_setup, passport, monkeypatch, django_capture_on_commit_callbacks
+    company_setup, monkeypatch, django_capture_on_commit_callbacks
 ):
     from core_apps.features.services.housing_scenarios import commands
 
@@ -559,250 +429,14 @@ def test_broker_failure_leaves_recoverable_queued_jobs(
         raise RuntimeError("local broker outage")
 
     monkeypatch.setattr(jobs.calculate, "delay", fail)
-    monkeypatch.setattr(analysis.process, "delay", fail)
-    rows = add_observations(passport)
     with django_capture_on_commit_callbacks(execute=True):
         jobs.enqueue(actor, scenario)
-        job = analysis.create(
-            passport[1],
-            AssetItem.objects.get(id=passport[-1]["id"]),
-            {"observation_ids": [str(row.id) for row in rows]},
-        )
     run = scenario.runs.get()
-    job.refresh_from_db()
-    assert run.state == job.state == "queued"
-    assert run.failure_code == job.failure_code == "worker_dispatch_failed"
+    assert run.state == "queued"
+    assert run.failure_code == "worker_dispatch_failed"
     jobs.calculate.run(str(run.id))
-    analysis.process.run(str(job.id))
     run.refresh_from_db()
-    job.refresh_from_db()
-    assert run.state == "completed" and job.state == "ready_for_review"
-
-
-@pytest.mark.django_db
-def test_shared_system_case_requires_two_real_units_and_inspection_closure(
-    company_setup, passport
-):
-    from core_apps.features.services.asset_passport import investigations
-    from core_apps.features.asset_passport_models import AssetLocationPeriod
-    from core_apps.features.planning_models import ConditionReport
-
-    owner, tenant, _, _, lease, report, asset = passport
-    building = company_setup[4]
-    second_property = company_setup[5][1]
-    first = add_observations(passport)[0]
-    second_lease = Lease.objects.create(
-        property=second_property,
-        owner=owner,
-        tenant=tenant,
-        start_date=lease.start_date,
-        end_date=lease.end_date,
-        status="active",
-        occupancy_status="occupied",
-        rent_amount_minor=10000,
-        offer_snapshot={"rental_scope": "entire_property"},
-    )
-    second_report = ConditionReport.objects.create(
-        lease=second_lease,
-        author=tenant,
-        kind="periodic",
-        inspected_on=report.inspected_on,
-        status="acknowledged",
-    )
-    second_asset = AssetItem.objects.create(
-        property=second_property,
-        registered_by=owner,
-        label="Supply valve",
-        category="fixture",
-    )
-    AssetLocationPeriod.objects.create(
-        asset=second_asset, property=second_property, starts_on=report.inspected_on
-    )
-    second = AssetObservation.objects.create(
-        asset=second_asset,
-        property=second_property,
-        lease=second_lease,
-        author=tenant,
-        observed_on=report.inspected_on,
-        condition="faulty",
-        note="The same reported water pressure symptom needs inspection.",
-        source_kind="condition_report",
-        source_id=second_report.id,
-        source_revision=second_report.revision,
-        source_status=second_report.status,
-    )
-    item = AssetItem.objects.get(id=asset["id"])
-    system = investigations.create_system(
-        owner,
-        item,
-        {
-            "building_id": str(building.id),
-            "asset_ids": [str(item.id), str(second_asset.id)],
-            "kind": "water_pressure",
-            "name": "Documented supply line",
-            "authority_reference": "Owner drawing A7",
-        },
-    )
-    case = investigations.create_case(
-        owner,
-        system,
-        {
-            "observation_ids": [str(first.id), str(second.id)],
-            "symptom": "water_pressure",
-        },
-    )
-    assert (
-        case.state == "investigation_required"
-        and not case.hypothesis["cause_confirmed"]
-    )
-    second_report.status = "draft"
-    second_report.save()
-    with pytest.raises(Exception):
-        investigations.close_case(
-            owner,
-            case,
-            {
-                "decision": "common_issue_inspected",
-                "source_kind": "condition_report",
-                "source_id": str(second_report.id),
-                "source_revision": second_report.revision,
-                "reason": "Unacknowledged source cannot close investigation.",
-            },
-        )
-    second_report.status = "acknowledged"
-    second_report.save()
-    closed = investigations.close_case(
-        owner,
-        case,
-        {
-            "decision": "inconclusive",
-            "source_kind": "condition_report",
-            "source_id": str(second_report.id),
-            "source_revision": second_report.revision,
-            "reason": "Independent inspection did not establish a common cause.",
-        },
-    )
-    assert (
-        closed.state == "closed_inconclusive"
-        and closed.resolution_source_id == second_report.id
-    )
-    with pytest.raises(Exception):
-        investigations.case_for(tenant, case.id)
-
-
-@pytest.mark.django_db
-def test_warranty_mock_claim_keeps_source_and_never_confirms_coverage(passport):
-    from core_apps.features.services.asset_passport import investigations
-
-    owner, _, stranger, prop, _, report, asset = passport
-    item = AssetItem.objects.get(id=asset["id"])
-    row = investigations.warranty(
-        owner,
-        item,
-        {
-            "source_kind": "condition_report",
-            "source_id": str(report.id),
-            "source_revision": report.revision,
-            "issuer": "Recorded issuer",
-            "reference": "Document ref A1",
-            "starts_on": str(report.inspected_on),
-            "ends_on_exclusive": str(report.inspected_on + timedelta(days=365)),
-        },
-    )
-    assert row.status == "recorded_unverified"
-    result = investigations.claim(
-        owner, row, {"reason": "Please review the supplied source document."}
-    )
-    assert (
-        result.status == "mock_claim_received"
-        and not result.mock_result["coverage_confirmed"]
-        and not result.mock_result["claim_accepted"]
-        and not result.mock_result["money_transferred"]
-    )
-    report.revision += 1
-    report.save()
-    with pytest.raises(Exception):
-        investigations.claim(
-            owner, row, {"reason": "Changed document requires new reference."}
-        )
-    prop.owner = stranger
-    prop.save()
-    with pytest.raises(Exception):
-        investigations.warranty_for(stranger, row.id)
-
-
-@pytest.mark.django_db
-def test_analysis_revalidates_sources_after_provider_and_stale_claim(
-    passport, monkeypatch, settings
-):
-    _, tenant, _, _, _, report, asset = passport
-    rows = add_observations(passport)
-    job = analysis.create(
-        tenant,
-        AssetItem.objects.get(id=asset["id"]),
-        {"observation_ids": [str(row.id) for row in rows]},
-    )
-    original = analysis.mock_compare
-
-    def changed_source(sources):
-        report.revision += 1
-        report.save()
-        return original(sources)
-
-    monkeypatch.setattr(analysis, "mock_compare", changed_source)
-    analysis.process.run(str(job.id))
-    job.refresh_from_db()
-    assert job.state == "failed" and not job.suggestions.exists()
-    next_job = analysis.create(
-        tenant, job.asset, {"observation_ids": [str(row.id) for row in rows]}
-    )
-
-    def reclaimed(sources):
-        AssetAnalysisJob.objects.filter(pk=next_job.pk).update(
-            state="queued", revision=3
-        )
-        return original(sources)
-
-    monkeypatch.setattr(analysis, "mock_compare", reclaimed)
-    analysis.process.run(str(next_job.id))
-    next_job.refresh_from_db()
-    assert (
-        next_job.state == "queued"
-        and next_job.revision == 3
-        and not next_job.suggestions.exists()
-    )
-    settings.ADVANCED_HOUSING_PROVIDER_MODE = "disabled"
-    analysis.process.run(str(next_job.id))
-    next_job.refresh_from_db()
-    assert next_job.state == "queued"
-
-
-@pytest.mark.django_db
-def test_recorded_asset_status_keeps_identity_and_inventory(passport):
-    owner, tenant, _, prop, _, _, asset = passport
-    original = deepcopy(prop.rental_inventory)
-    path = API + f"asset-items/{asset['id']}/update/"
-    body = command(
-        asset["revision"],
-        label="Same physical item",
-        category="air_conditioner",
-        make_model="Corrected model",
-        serial_number="Observed serial",
-        status="under_maintenance",
-        effective_on=str(timezone.localdate()),
-    )
-    assert authenticated(tenant).post(path, body, format="json").status_code == 404
-    response = authenticated(owner).post(path, body, format="json")
-    assert response.status_code == 200, response.data
-    assert (
-        response.data["resource"]["id"] == asset["id"]
-        and response.data["resource"]["status"] == "under_maintenance"
-    )
-    assert (
-        response.data["resource"]["events"][-1]["action"] == "status_under_maintenance"
-    )
-    prop.refresh_from_db()
-    assert prop.rental_inventory == original
+    assert run.state == "completed"
 
 
 def test_declared_arrival_cost_is_a_forecast_not_a_realized_move_count():

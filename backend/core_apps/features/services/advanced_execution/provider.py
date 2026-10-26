@@ -19,6 +19,8 @@ def mock_instruction(
     from config.advanced_housing import require_mock_mode
 
     require_mock_mode()
+    if plan.provider_mode != "mock":
+        raise ValidationError("This execution does not accept simulated provider outcomes.")
     if behavior not in BEHAVIORS or len(kind) > 21:
         raise ValidationError("Choose a supported mock provider outcome.")
     identity = str(
@@ -98,7 +100,7 @@ def reconcile_instructions(plan, leg, actor):
 
     require_mock_mode()
     for item in RentalProviderInstruction.objects.select_for_update().filter(
-        subject_id=leg.id, status="unknown"
+        subject_id=leg.id, status="unknown", provider="fake"
     ):
         # This is an original-reference lookup. It does not submit again.
         item.status = (

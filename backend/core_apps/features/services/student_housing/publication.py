@@ -90,28 +90,62 @@ def publish(user, plan, data):
             },
             code=reasons[0],
         )
-    if plan.housing_requests.filter(
-        academic_revision=plan.requirements_revision
-    ).exists():
+    requests = list(
+        plan.housing_requests.select_for_update().order_by("created_at")[:2]
+    )
+    if len(requests) > 1:
+        raise RentalConflict(
+            "Multiple historical requests need explicit reconciliation before publication.",
+            code="academic_request_reconciliation_required",
+        )
+    existing = requests[0] if requests else None
+    if existing and existing.academic_revision == plan.requirements_revision:
         raise RentalConflict(
             "This plan revision already has a housing request.", code="request_exists"
         )
     if (
-        HousingRequest.objects.filter(
+        not existing
+        and HousingRequest.objects.filter(
             user=user, status__in=["published", "paused"], expires_at__gt=timezone.now()
         ).count()
         >= settings.PLANNING_MAX_LIVE_REQUESTS
     ):
         raise RentalConflict("Close an existing request first.", code="request_limit")
-    HousingRequest.objects.create(
-        user=user,
-        title=plan.label,
-        criteria=plan.criteria,
-        expires_at=timezone.now() + timedelta(days=settings.PLANNING_REQUEST_TTL_DAYS),
-        academic_plan=plan,
-        academic_revision=plan.requirements_revision,
-        academic_snapshot=preview(plan),
-    )
+    publication = preview(plan)
+    if existing:
+        from ..housing_request_reviews import edit_content
+        from ..planning_notifications import record_event
+
+        existing.academic_plan = plan
+        edit_content(
+            existing,
+            {
+                "title": plan.label,
+                "note": existing.note,
+                "criteria": plan.criteria,
+                "academic_revision": plan.requirements_revision,
+                "academic_snapshot": publication,
+            },
+            user,
+        )
+        existing.revision += 1
+        existing.status = "published"
+        existing.expires_at = timezone.now() + timedelta(
+            days=settings.PLANNING_REQUEST_TTL_DAYS
+        )
+        existing.save()
+        record_event(existing, user, "academic_request.republished")
+    else:
+        HousingRequest.objects.create(
+            user=user,
+            title=plan.label,
+            criteria=plan.criteria,
+            expires_at=timezone.now()
+            + timedelta(days=settings.PLANNING_REQUEST_TTL_DAYS),
+            academic_plan=plan,
+            academic_revision=plan.requirements_revision,
+            academic_snapshot=publication,
+        )
     plan.revision += 1
     plan.save(update_fields=["revision", "updated_at"])
     audit(

@@ -98,12 +98,16 @@ class RevisionAdmin(ReadOnlyTourAdmin):
                             "preview": True,
                             "revision_id": str(revision.id),
                             "context": request.POST.get("context", "overview"),
+                            "supported_manifest_versions": [1, 2],
                         },
                     )
                     response = JsonResponse(data)
                     response["Cache-Control"] = "private, no-store"
                     return response
                 with transaction.atomic():
+                    from .review_access import reviewer
+
+                    reviewer(request.user, write=True, lock=True)
                     locked = (
                         TourRevision.objects.select_for_update(of=("self",))
                         .select_related("tour__property")

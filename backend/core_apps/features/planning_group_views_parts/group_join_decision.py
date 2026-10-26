@@ -127,6 +127,9 @@ def owner_group_application_action(request, application_id, action):
             property__owner=request.user,
         )
         HousingGroup.objects.select_for_update().get(pk=item.group_id)
+        from core_apps.properties.models import Property
+
+        Property.objects.select_for_update().get(pk=item.property_id)
         return GroupProcess.objects.select_for_update().get(pk=item.pk)
 
     def apply(item, revision):

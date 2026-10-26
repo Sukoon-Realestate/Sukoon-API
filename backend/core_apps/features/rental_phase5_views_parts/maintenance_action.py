@@ -13,6 +13,7 @@ from ..models import (
     MaintenanceEvent,
     MaintenanceRequest,
     RentalChange,
+    RentInvoice,
     PrivateAccessRevocation,
 )
 from ..renderers import FeatureJsonRenderer
@@ -221,7 +222,10 @@ def maintenance_action(request, request_id):
 
 
 def change_payload(item, user=None):
+    from ..services.signing_documents import projection
     from ..services.change_terms import changed_terms_blocker
+    from ..services.change_versions import history, comments
+    from ..rental_phase4_views_parts.handover_payload import evidence_payload
 
     blocker = changed_terms_blocker(item)
     return {
@@ -231,6 +235,12 @@ def change_payload(item, user=None):
         "lease_id": str(item.lease.id),
         "invoice_id": str(item.invoice.id) if item.invoice else None,
         "revision": item.revision,
+        "content_revision": item.content_revision,
+        "requester_id": str(item.requester.id),
+        "history": history(item),
+        "comments": comments(item),
+        "evidence_ids": [str(value) for value in item.evidence.values_list("id", flat=True)],
+        "evidence": [evidence_payload(value) for value in item.evidence.all()],
         "kind": item.kind,
         "status": item.status,
         "reason": item.reason,
@@ -246,6 +256,7 @@ def change_payload(item, user=None):
         "terms": item.terms,
         "previous_terms": item.previous_terms,
         "document_id": str(item.document_id) if item.document_id else None,
+        "signing_document": projection(item, user),
         "document_hash": item.document_hash,
         "signature_document_id": str(item.document_id) if item.document_id else None,
         "accepted_by": item.approvals,
@@ -258,12 +269,16 @@ def _change(request, change_id, expected_kind=None, lock=False):
         "lease__owner", "lease__tenant", "invoice"
     )
     item = get_object_or_404(queryset, id=change_id)
+    from ..services.rental_lifecycle.locks import require_personal_workflow
+    require_personal_workflow(item.lease)
     if expected_kind and item.kind != expected_kind:
         raise NotFound()
     if lock:
         lease = Lease.objects.select_for_update().get(pk=item.lease_id)
         item = queryset.select_for_update(of=("self",)).get(pk=item.pk)
         item.lease = lease
+        if item.invoice_id:
+            item.invoice = RentInvoice.objects.select_for_update().get(pk=item.invoice_id)
     from core_apps.users.models import User
 
     current = User.objects.get(pk=request.user.pk)

@@ -13,21 +13,39 @@ from .selection_payload import require_planning
 
 def criteria_payload(value, *, catalog=None):
     from .districts import district_projection
+    from core_apps.properties.models import City, PropertyType
+    from core_apps.properties.catalog_labels import location_label, property_type_label
+    from django.utils.translation import get_language
+
+    try:
+        city = (
+            City.objects.filter(id=value.get("city_id")).first()
+            if value.get("city_id")
+            else None
+        )
+    except (DjangoValidationError, ValueError):
+        city = None
+    city_label = (
+        {
+            **value.get("city", {}),
+            "name": location_label(city, get_language() or "en"),
+            "revision": city.revision,
+        }
+        if city
+        else value.get("city", {})
+    )
 
     def major(key):
         amount = (value.get(key) or {}).get("amount_minor")
         return str(Decimal(amount) / 100) if amount is not None else ""
 
+    kind = PropertyType.objects.filter(slug=value.get("property_type", "")).first()
+
     return {
         **(
             {
-                "property_type_label": next(
-                    (
-                        option["label"]
-                        for option in catalog["property_types"]
-                        if option["value"] == value.get("property_type")
-                    ),
-                    "",
+                "property_type_label": (
+                    property_type_label(kind, get_language() or "en") if kind else ""
                 ),
                 "amenity_labels": [
                     option["label"]
@@ -38,7 +56,7 @@ def criteria_payload(value, *, catalog=None):
             if catalog is not None
             else {}
         ),
-        "city": value.get("city", {}),
+        "city": city_label,
         "district_ids": value.get("district_ids", []),
         "districts": district_projection(value),
         "district_scope": "selected" if value.get("district_ids") else "all_city",

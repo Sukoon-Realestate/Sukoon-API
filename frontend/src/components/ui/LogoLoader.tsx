@@ -1,12 +1,9 @@
 import React from 'react';
 import wordmark from '@/assets/brand/wordmark.png';
-import { BASE_PATH } from '@/lib/basePath';
+import { assetPath } from '@/lib/basePath';
 
 // Rendered wordmark height in px; the width follows the lockup's aspect ratio.
 const HEIGHTS = { sm: 32, md: 48, lg: 112 } as const;
-
-// ! The wordmark is used as a CSS mask, i.e. a raw URL, so it needs the /admin basePath.
-const LOGO_URL = wordmark.src.startsWith(BASE_PATH) ? wordmark.src : `${BASE_PATH}${wordmark.src}`;
 
 interface LogoLoaderProps {
   label?: string;
@@ -31,7 +28,7 @@ export const LogoLoader: React.FC<LogoLoaderProps> = ({
       <span
         aria-hidden
         className="logo-loader block"
-        style={{ width, height, '--logo': `url(${LOGO_URL})` } as React.CSSProperties}
+        style={{ width, height, '--logo': `url(${assetPath(wordmark.src)})` } as React.CSSProperties}
       />
       <span className={showLabel ? 'text-xs font-bold' : 'sr-only'}>{label}</span>
     </div>
@@ -40,8 +37,8 @@ export const LogoLoader: React.FC<LogoLoaderProps> = ({
 
 // Full-screen splash for the first paint. It only shows while html[data-loading]
 // is set by the init script in app/layout.tsx, so without JS it never appears.
-export const Splash: React.FC = () => (
+export const Splash: React.FC<{ label?: string }> = ({ label = 'جاري التحميل...' }) => (
   <div aria-hidden className="splash fixed inset-0 z-[100] place-items-center bg-[var(--background)]">
-    <LogoLoader size="lg" />
+    <LogoLoader size="lg" label={label} />
   </div>
 );

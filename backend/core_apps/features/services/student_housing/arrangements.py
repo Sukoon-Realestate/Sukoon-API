@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from ...student_models import SharedLivingAgreement
 from ...models import RentalConsentRecord
@@ -13,6 +12,17 @@ def current_rows(plan):
     return list(
         plan.participants.exclude(status="withdrawn").select_related(
             "user", "membership"
+        )
+    )
+
+
+def can_propose(user, plan):
+    return bool(
+        plan.group_id
+        and plan.status != "completed"
+        and any(
+            row.user_id == user.pk and participant_current(row)
+            for row in current_rows(plan)
         )
     )
 
@@ -72,7 +82,7 @@ def propose(user, plan, data, previous=None):
         item,
         user,
         "student_arrangement.proposed",
-        metadata={"snapshot": payload(item, user)},
+        metadata=audit_snapshot(item, user),
     )
     return item
 
@@ -137,7 +147,12 @@ def decide(user, item, data):
         item.status = "accepted"
     item.revision += 1
     item.save(update_fields=["status", "revision", "updated_at"])
-    audit(item, user, "student_arrangement." + decision)
+    audit(
+        item,
+        user,
+        "student_arrangement." + decision,
+        metadata=audit_snapshot(item, user),
+    )
     return item
 
 
@@ -171,3 +186,54 @@ def payload(item, user):
         "grants_access": False,
         "creates_financial_obligation": False,
     }
+
+
+def history(item):
+    from ...models import RentalAuditEvent
+
+    return RentalAuditEvent.objects.filter(
+        subject_kind=item._meta.model_name,
+        subject_id=item.id,
+        action__in=[
+            "student_arrangement.proposed",
+            "student_arrangement.accept",
+            "student_arrangement.discuss",
+        ],
+    ).order_by("-created_at", "-pkid")
+
+
+def audit_snapshot(item, user):
+    return {
+        "snapshot": payload(item, user),
+        "membership_periods": {
+            str(row.user.id): row.membership_period
+            for row in current_rows(item.plan)
+            if str(row.user.id) in item.participant_ids and participant_current(row)
+        },
+    }
+
+
+def history_payload(event, user, membership_period):
+    # Historical content requires the same affected membership period.
+    # Older audit records remain intact; missing evidence never grants content.
+    snapshot = event.metadata.get("snapshot") or {}
+    visible = bool(
+        membership_period is not None
+        and str(user.id) in snapshot.get("participant_ids", [])
+        and event.metadata.get("membership_periods", {}).get(str(user.id))
+        == membership_period
+    )
+    result = {
+        "revision": event.subject_revision,
+        "terms_revision": snapshot.get("terms_revision"),
+        "action": event.action.split(".")[-1],
+        "created_at": event.created_at.isoformat(),
+        "content_available": visible,
+    }
+    if visible:
+        result.update(
+            rules=snapshot.get("rules", {}),
+            starts_on=snapshot.get("starts_on", ""),
+            ends_on_exclusive=snapshot.get("ends_on_exclusive", ""),
+        )
+    return result

@@ -241,12 +241,12 @@ def test_checkout_rechecks_allowlist_plan_and_quote_before_provider(
             client.post(base + "checkout/", command, format="json").status_code == 409
         )
         sandbox.COMMERCE_SUBSCRIPTION_SANDBOX_USER_IDS = [str(buyer.id)]
-        plan.amount_minor += 1
+        plan.active = False
         plan.save()
         assert (
             client.post(base + "checkout/", command, format="json").status_code == 409
         )
-        plan.amount_minor -= 1
+        plan.active = True
         plan.save()
         saved = PaymentQuote.objects.get(id=quote["id"])
         saved.purchase_route.pop("sandbox_only")

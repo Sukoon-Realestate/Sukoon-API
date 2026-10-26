@@ -16,7 +16,9 @@ def assistant_filters(text, language, context, extracted):
     city = next(
         (
             x
-            for x in City.objects.order_by("pkid")
+            for x in City.objects.filter(
+                is_active=True, governorate__is_active=True
+            ).order_by("pkid")
             if x.name.casefold() in text.casefold()
         ),
         None,
@@ -63,7 +65,9 @@ def assistant_filters(text, language, context, extracted):
             else "Specify the price period before applying this budget."
         )
     if extracted is not None:
-        filters = extracted["filters"]
+        # A model response is a draft patch. Omitted reviewed criteria survive;
+        # supported explicit empty values can still clear their own field.
+        filters = {**context.get("filters", {}), **extracted["filters"]}
         unresolved = extracted["unresolved_requirements"]
     return filters, unresolved
 

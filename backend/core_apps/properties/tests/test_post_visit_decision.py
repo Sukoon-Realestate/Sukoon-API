@@ -276,7 +276,9 @@ def test_schedule_revision_and_attended_appointment_are_protected(visit):
     )
     decide(visit)
     response = authenticated(visit.tenant).post(
-        PROPERTIES + f"visits/{visit.id}/cancel/", {}, format="json"
+        PROPERTIES + f"visits/{visit.id}/cancel/",
+        {"request_key": str(uuid.uuid4()), "expected_revision": visit.revision},
+        format="json",
     )
     assert response.status_code == 409
     visit.refresh_from_db()
@@ -349,27 +351,35 @@ def test_historical_journey_resumes_without_fabricated_decision(visit):
 
 @pytest.mark.django_db
 def test_notification_failure_keeps_decision_and_deduplicated_retry(visit, monkeypatch):
+    from core_apps.notifications.models import DeviceToken, PushDelivery
+    from core_apps.notifications.services.push_delivery import dispatch
+
     decide(visit)
+    DeviceToken.objects.create(
+        user=visit.property.owner, token="synthetic-visit-device"
+    )
     monkeypatch.setattr(
-        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_user",
+        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_device",
         lambda **kw: (_ for _ in ()).throw(RuntimeError("offline")),
     )
-    assert deliver_planning_events() == 0
-    assert PlanningEvent.objects.get().delivered_at is None
+    assert deliver_planning_events() == 1
+    assert dispatch() == 0
+    assert PlanningEvent.objects.get().provider_accepted_at is None
     assert (
         PropertyVisitDecision.objects.count()
         == Notification.objects.filter(data__event_kind="visit_post_decision").count()
         == 1
     )
     monkeypatch.setattr(
-        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_user",
+        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_device",
         lambda **kw: 1,
     )
     retry_at = timezone.now() + timedelta(minutes=3)
     monkeypatch.setattr(timezone, "now", lambda: retry_at)
-    assert deliver_planning_events() == 1
+    assert dispatch() == 1
     assert deliver_planning_events() == 0
-    assert PlanningEvent.objects.get().attempts == 2
+    assert PlanningEvent.objects.get().attempts == 1
+    assert PushDelivery.objects.get().attempts == 2
     assert (
         Notification.objects.filter(data__event_kind="visit_post_decision").count() == 1
     )
@@ -395,7 +405,9 @@ def test_decision_transaction_races(visit, race):
             return client.post(path(visit), payload, format="json").status_code
         if race == "cancel":
             return client.post(
-                PROPERTIES + f"visits/{visit.id}/cancel/", {}, format="json"
+                PROPERTIES + f"visits/{visit.id}/cancel/",
+                {"request_key": str(uuid.uuid4()), "expected_revision": visit.revision},
+                format="json",
             ).status_code
         item = PropertyVisit.objects.get(pk=visit.pk)
         item.visit_date += timedelta(days=3)
@@ -801,8 +813,6 @@ def test_export_actual_visit_contract_for_flutter(visit, rental_participants):
             )
             + "\n"
         )
-
-
 
 
 @pytest.mark.django_db

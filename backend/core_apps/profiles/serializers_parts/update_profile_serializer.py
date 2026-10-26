@@ -43,6 +43,14 @@ class ProfileCitySerializer(serializers.Serializer):
     id = serializers.UUIDField(read_only=True)
     name = serializers.CharField(read_only=True)
     slug = serializers.CharField(read_only=True)
+    revision = serializers.IntegerField(read_only=True)
+
+    def to_representation(self, instance):
+        from core_apps.properties.catalog_labels import location_label, catalog_language
+
+        data = super().to_representation(instance)
+        data["name"] = location_label(instance, catalog_language(self.context))
+        return data
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -146,6 +154,9 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 
                 try:
                     attrs["city"] = City.objects.get(id=city_id)
+                    from core_apps.properties.catalog_access import require_current_selection
+
+                    require_current_selection(attrs["city"], previous=getattr(self.instance, "city", None), field="city_id")
                 except City.DoesNotExist:
                     raise serializers.ValidationError({"city_id": "Invalid city ID."})
             else:

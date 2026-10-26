@@ -86,6 +86,9 @@ class ProfileEditSerializer(serializers.ModelSerializer):
 
                 try:
                     attrs["city"] = City.objects.get(id=city_id)
+                    from core_apps.properties.catalog_access import require_current_selection
+
+                    require_current_selection(attrs["city"], previous=getattr(self.instance, "city", None), field="city_id")
                 except City.DoesNotExist:
                     raise serializers.ValidationError({"city_id": "Invalid city ID."})
             else:

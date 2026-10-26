@@ -1,3 +1,4 @@
+from core_apps.support.services.workspace import normalize_workspace
 """Ticket service: get ticket detail."""
 
 import uuid
@@ -33,7 +34,7 @@ def get_ticket_detail(
         raise Ticket.DoesNotExist("Ticket not found or access denied.")
 
     if workspace:
-        normalized_workspace = "owner" if workspace.lower() == "owner" else "tenant"
+        normalized_workspace = normalize_workspace(workspace)
         if ticket.workspace != normalized_workspace:
             raise Ticket.DoesNotExist("Ticket does not belong to requested workspace.")
 

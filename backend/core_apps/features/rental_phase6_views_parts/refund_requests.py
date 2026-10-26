@@ -31,6 +31,9 @@ def refund_requests(request):
         )
         if request.query_params.get("lease_id"):
             queryset = queryset.filter(lease__id=request.query_params["lease_id"])
+        queryset = queryset.exclude(
+            lease__private_access_revocations__user=request.user
+        )
         results = [
             refund_payload(x)
             for x in queryset.select_related("lease", "payment_attempt__invoice")
@@ -98,6 +101,9 @@ def refund_requests(request):
             request_key=request_key,
             allocations=allocations,
         )
+        from ..services.refund_notifications import record
+
+        record(item, "requested", request.user)
         output = remember_mutation(
             user=request.user,
             operation=operation,
@@ -123,18 +129,11 @@ def refund_detail(request, refund_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def refund_respond(request, refund_id):
+    from ..services.financial_authority import require_financial_actor
+    from ..services.paymob_refunds import ROLES
+
+    require_financial_actor(request.user, ROLES, "refund.review")
     item = _refund(request, refund_id, allow_operations=True)
-    profile = getattr(request.user, "staff_profile", None)
-    if not request.user.is_superuser and (
-        not profile
-        or not profile.is_active
-        or profile.role_name
-        not in {
-            StaffProfile.RoleName.REFUND_OPERATOR,
-            StaffProfile.RoleName.FINANCIAL_APPROVER,
-        }
-    ):
-        raise PermissionDenied("Refund approval requires an operations role.")
     action = request.data.get("action") or request.data.get("decision")
     if action not in {"approve", "reject"}:
         raise ValidationError({"action": "Must be approve or reject."})
@@ -143,11 +142,11 @@ def refund_respond(request, refund_id):
         raise ValidationError({"request_key": "Required."})
     operation = f"refund.respond.{item.id}"
     with transaction.atomic():
+        require_financial_actor(request.user, ROLES, "refund.review", lock=True)
         from ..services.rental_lifecycle.locks import lock_financial_lease
 
         if item.purpose == "chargeback_excess":
             from ..services.chargebacks.operations import require_operator
-            from ..services.financial_authority import require_financial_actor
 
             require_financial_actor(
                 request.user,
@@ -182,6 +181,9 @@ def refund_respond(request, refund_id):
         item.approved_by = request.user
         item.revision += 1
         item.save()
+        from ..services.refund_notifications import record
+
+        record(item, "approved" if action == "approve" else "rejected", request.user)
         output = remember_mutation(
             user=request.user,
             operation=operation,

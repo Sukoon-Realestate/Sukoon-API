@@ -2,8 +2,7 @@
 
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
-from ...company_models import CompanyBookingItem
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from ...models import RentalProviderInstruction
 from ..company.access import member_for
 from ..company import bookings, approval_routing, offers
@@ -26,6 +25,9 @@ def _items(decision):
 
 
 def create(user, decision):
+    from config.advanced_housing import execution_mode
+
+    provider_mode = execution_mode()
     authorize(user, decision.id)
     if decision.status != "prepared" or not decision.booking_items.exists():
         raise RentalConflict(
@@ -105,11 +107,11 @@ def create(user, decision):
                     "currency": "EGP",
                     "starts_on": str(item.request.starts_on),
                     "ends_on_exclusive": str(item.request.ends_on_exclusive),
-                    "agreement": "mock-corporate-agreement-v2",
+                    "agreement": "mock-corporate-agreement-v2" if provider_mode == "mock" else "company-rental-v1",
                     "actual_occupancy": False,
                 },
                 "metadata": {
-                    "provider_mode": "mock",
+                    "provider_mode": provider_mode,
                     "staff_are_not_personal_payers": True,
                 },
             }
@@ -125,9 +127,9 @@ def create(user, decision):
         context={
             "company_id": str(company.id),
             "scenario_id": str(decision.scenario.id),
-            "provider_mode": "mock",
+            "provider_mode": provider_mode,
             "actual_occupancy": False,
-            "policy_version": "corporate-mock-execution-v2",
+            "policy_version": "corporate-mock-execution-v2" if provider_mode == "mock" else "advanced-partial-preserve-v1",
         },
     )
 
@@ -187,12 +189,14 @@ def revalidate(plan, action="prepare"):
 def prepare(plan, actor):
     decision = authorize(actor, plan.source_id)
     for leg in plan.legs.all():
+        if plan.provider_mode == "test" and leg.state != "proposed":
+            continue
         item = get_object_or_404(_items(decision), id=leg.canonical_id)
         if not item.hold_id:
             item = bookings.hold_item(
                 actor, item.id, {"expected_revision": item.revision}
             )
-        leg.state = "mock_contract_ready"
+        leg.state = "mock_contract_ready" if plan.provider_mode == "mock" else "held"
         leg.save(update_fields=["state", "updated_at"])
         record_step(
             plan,
@@ -203,7 +207,7 @@ def prepare(plan, actor):
             item.hold.id,
             {
                 "organization_payer": str(decision.scenario.company.id),
-                "provider_mode": "mock",
+                "provider_mode": plan.provider_mode,
                 "actual_occupancy": False,
             },
             actor,
@@ -221,6 +225,8 @@ def _signed(leg):
 
 
 def leg_actions(plan, leg, actor):
+    if plan.provider_mode == "test":
+        return []
     if str(actor.id) not in leg.actor_ids or leg.state in {
         "mock_confirmed",
         "withdrawn",
@@ -242,6 +248,10 @@ def leg_actions(plan, leg, actor):
 
 
 def leg_payload(plan, leg, actor):
+    if plan.provider_mode == "test":
+        from .execution_canonical import leg_payload as canonical_payload
+
+        return canonical_payload(plan, leg, actor)
     terms = leg.specification["terms"]
     own = str(actor.id)
     role = (
@@ -396,6 +406,11 @@ def sync(plan):
 
 
 def reconcile(plan, actor):
+    if plan.provider_mode == "test":
+        from ..advanced_execution.progress import refresh
+
+        refresh(plan, persist=True)
+        return plan
     for leg in plan.legs.all():
         if str(actor.id) in leg.actor_ids:
             reconcile_instructions(plan, leg, actor)
@@ -403,6 +418,10 @@ def reconcile(plan, actor):
 
 
 def withdraw(plan, actor, data):
+    if plan.provider_mode == "test":
+        from .execution_canonical import withdraw as canonical_withdraw
+
+        return canonical_withdraw(plan, actor, data)
     decision = authorize(actor, plan.source_id)
     leg = get_object_or_404(plan.legs.select_for_update(), id=data.get("leg_id"))
     if RentalProviderInstruction.objects.filter(

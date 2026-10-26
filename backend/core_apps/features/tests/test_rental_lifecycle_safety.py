@@ -364,7 +364,7 @@ def test_cases_require_responsible_role_and_executed_remedy(phase3_lease):
 
 
 @pytest.mark.django_db
-def test_answer_becomes_new_terms_and_invalidates_prior_free_hold(
+def test_answer_cannot_replace_accepted_terms_after_reservation(
     rental_participants, policy
 ):
     owner, tenant, _, prop, offer = rental_participants
@@ -372,23 +372,16 @@ def test_answer_becomes_new_terms_and_invalidates_prior_free_hold(
     proposal = proposal_for(tenant, prop, offer)
     result = post(tenant, "reservation-holds/", hold_body(proposal))
     assert result.status_code == 201, result.data
-    body = command(
-        proposal.revision,
-        field="included_services",
-        wording="Internet is included in the monthly rent.",
-    )
+    original = copy.deepcopy(proposal.terms)
+    body = command(proposal.revision, field="included_services",
+                   wording="Internet is included in the monthly rent.")
     result = post(owner, f"terms-proposals/{proposal.id}/propose-answer/", body)
-    assert result.status_code == 200, result.data
+    assert result.status_code == 403, result.data
     proposal.refresh_from_db()
-    assert proposal.status == "proposed"
-    assert proposal.accepted_by == [str(owner.id)]
-    assert proposal.previous_terms[0]["included_services"] == []
-    assert not RentalInventoryDayLock.objects.exists()
-    assert (
-        post(owner, f"terms-proposals/{proposal.id}/propose-answer/", body).data
-        == result.data
-    )
-    assert RentalConsentRecord.objects.filter(subject_id=proposal.id).count() == 1
+    assert proposal.status == "accepted"
+    assert proposal.terms == original and proposal.previous_terms == []
+    assert RentalInventoryDayLock.objects.exists()
+    assert not RentalConsentRecord.objects.filter(subject_id=proposal.id).exists()
 
 
 @pytest.mark.django_db
@@ -522,10 +515,12 @@ def test_group_each_member_consents_only_for_self_no_automatic_lease_or_charge(
     base = f"group-booking-proposals/{proposal['id']}/"
     submitted = post(owner, base + "submit/", command(1))
     assert submitted.status_code == 200, submitted.data
+    accepted = post(tenant, base + "terms/accept/", command(2, terms_digest=proposal["terms_digest"]))
+    assert accepted.status_code == 200, accepted.data
     result = post(
         tenant,
         base + "consents/",
-        command(2, decision="accept", terms_digest=proposal["terms_digest"]),
+        command(3, decision="accept", terms_digest=proposal["terms_digest"]),
     )
     assert result.status_code == 200, result.data
     rows = list(
@@ -624,17 +619,25 @@ def test_provider_instruction_identity_unknown_recovery_and_production_gate(
     )
     from core_apps.features.services.rental_phase2 import RentalConflict
 
-    _, _, lease = phase3_lease
+    _, tenant, lease = phase3_lease
+    from core_apps.features.models import RefundRequest
+    attempt = checkout(tenant, lease)
+    process_provider_event(event(attempt, "captured"))
+    refund = RefundRequest.objects.create(
+        lease=lease, payment_attempt=attempt, requester=tenant, amount_minor=100,
+        refundable_balance_snapshot_minor=attempt.amount_minor, reason="Identity test",
+        request_key=uuid.uuid4(),
+    )
     item = prepare_instruction(
         kind="refund",
-        subject=lease,
+        subject=refund,
         request_key="same-key",
         payload={"amount_minor": 100},
     )
     assert (
         prepare_instruction(
             kind="refund",
-            subject=lease,
+            subject=refund,
             request_key="same-key",
             payload={"amount_minor": 100},
         ).pk
@@ -643,7 +646,7 @@ def test_provider_instruction_identity_unknown_recovery_and_production_gate(
     with pytest.raises(RentalConflict):
         prepare_instruction(
             kind="refund",
-            subject=lease,
+            subject=refund,
             request_key="same-key",
             payload={"amount_minor": 101},
         )
@@ -651,7 +654,7 @@ def test_provider_instruction_identity_unknown_recovery_and_production_gate(
     with pytest.raises(RentalConflict):
         execute_local_instruction(
             kind="refund",
-            subject=lease,
+            subject=refund,
             request_key="same-key",
             payload={"amount_minor": 100},
         )
@@ -663,7 +666,7 @@ def test_provider_instruction_identity_unknown_recovery_and_production_gate(
         with pytest.raises(RentalConflict):
             execute_local_instruction(
                 kind="refund",
-                subject=lease,
+                subject=refund,
                 request_key="new-key",
                 payload={"amount_minor": 100},
             )

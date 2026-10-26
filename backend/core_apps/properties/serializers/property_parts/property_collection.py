@@ -1,9 +1,11 @@
 """Request-local list projections; never reused for inventory authorization."""
 
-from rest_framework import serializers
+from core_apps.chat.moderation.property_projection import (
+    PropertyPolicyCollectionSerializer,
+)
 
 
-class PropertyCollectionSerializer(serializers.ListSerializer):
+class PropertyCollectionSerializer(PropertyPolicyCollectionSerializer):
     def to_representation(self, data):
         from core_apps.features.services.reputation.visibility import (
             sections,
@@ -15,11 +17,6 @@ class PropertyCollectionSerializer(serializers.ListSerializer):
         rows = list(data.all() if hasattr(data, "all") else data)
         if not rows:
             return []
-        from core_apps.chat.models import AccountRestriction
-        from core_apps.chat.moderation.policy import ACTIVE_RESTRICTIONS
-        blocked = set(AccountRestriction.objects.filter(user_id__in={r.owner_id for r in rows}, state__in=ACTIVE_RESTRICTIONS).values_list('user_id', flat=True))
-        for row in rows:
-            row._policy_owner_restricted = row.owner_id in blocked
         grouped = {str(row.id): [] for row in rows}
         for section in (
             sections()

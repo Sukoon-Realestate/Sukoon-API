@@ -85,6 +85,9 @@ def payload(user, company, params):
     budgets = company.budget_reservations.filter(
         status="reserved", item__lease__isnull=True
     ).select_related("item__request")
+    from .listing_changes import live_budget
+
+    budgets = live_budget(budgets)
     if not (member.is_admin or member.is_approver):
         budgets = (
             budgets.filter(item__request__coordinator=user)

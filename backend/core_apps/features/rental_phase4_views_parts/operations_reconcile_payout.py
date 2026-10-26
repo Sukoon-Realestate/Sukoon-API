@@ -7,8 +7,7 @@ from rest_framework.decorators import api_view, permission_classes, renderer_cla
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ..models import Lease, PayoutAuditEvent, RentalPayout
-from ..providers import get_rental_provider
+from ..models import Lease, PaymobPayout, PayoutAuditEvent, RentalPayout
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import remember_mutation, replay_operation
 from ..services.rental_phase3 import post_ledger_transaction
@@ -20,7 +19,15 @@ from .operations_execute_payout import _require_payout_role
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def operations_reconcile_payout(request, payout_id):
-    _require_payout_role(request.user)
+    from .payout_review import _reader
+
+    instruction = PaymobPayout.objects.filter(
+        payout__id=payout_id, current=True
+    ).first()
+    if instruction:
+        _reader(request.user)
+    else:
+        _require_payout_role(request.user)
     request_key = request.data.get("request_key")
     if not request_key:
         raise ValidationError({"request_key": "Required."})
@@ -28,8 +35,17 @@ def operations_reconcile_payout(request, payout_id):
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])
+    if instruction:
+        from ..services.paymob_payouts import process
+
+        # Reconciliation can only query an already submitted instruction.
+        # It never sends a queued transfer or grants a replacement approval.
+        process(instruction, allow_submit=False)
     with transaction.atomic():
-        _require_payout_role(request.user, lock=True)
+        if instruction:
+            _reader(request.user)
+        else:
+            _require_payout_role(request.user, lock=True)
         candidate = get_object_or_404(RentalPayout, id=payout_id)
         from ..services.rental_lifecycle.locks import lock_financial_lease
 
@@ -41,7 +57,7 @@ def operations_reconcile_payout(request, payout_id):
             RentalPayout.objects.select_for_update().prefetch_related("payables"),
             id=payout_id,
         )
-        if payout.status != RentalPayout.Status.PAID:
+        if payout.status != RentalPayout.Status.PAID and not instruction:
             from ..services.rental_lifecycle.provider_instructions import (
                 execute_local_instruction,
             )
@@ -75,6 +91,9 @@ def operations_reconcile_payout(request, payout_id):
                 action="paid",
                 metadata={"provider_payout_id": payout.provider_payout_id},
             )
+            from ..services.payout_notifications import record
+
+            record(payout, "paid")
         output = remember_mutation(
             user=request.user,
             operation=operation,

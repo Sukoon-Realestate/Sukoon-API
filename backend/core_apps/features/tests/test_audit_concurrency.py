@@ -1,3 +1,6 @@
+# Pytest imports fixtures for injection by name.
+# flake8: noqa: F401,F811
+
 import uuid
 import pytest
 from django.db import connection
@@ -43,7 +46,7 @@ def test_first_chat_pair_is_canonical_under_opposite_direction_race(phase6_lease
     assert ConversationParticipant.objects.count() == 2
 
 
-def test_legacy_duplicate_chat_selects_earliest_without_deleting_history(phase6_lease):
+def test_unscoped_legacy_chats_are_not_reassigned_to_a_new_workspace(phase6_lease):
     owner, tenant, _ = phase6_lease
     originals = []
     for _ in range(2):
@@ -51,12 +54,18 @@ def test_legacy_duplicate_chat_selects_earliest_without_deleting_history(phase6_
         ConversationParticipant.objects.create(conversation=item, user=owner)
         ConversationParticipant.objects.create(conversation=item, user=tenant)
         originals.append(item)
+    current = get_or_create_direct_conversation(user=owner, other_user=tenant)
+    assert current.pk not in {item.pk for item in originals}
+    assert get_or_create_direct_conversation(user=tenant, other_user=owner) == current
+    assert Conversation.objects.count() == 3
     assert (
-        get_or_create_direct_conversation(user=owner, other_user=tenant).pk
-        == originals[0].pk
+        Conversation.objects.filter(pk__in=[item.pk for item in originals]).count() == 2
     )
-    assert Conversation.objects.count() == 2
-    assert Conversation.objects.exclude(direct_pair_key=None).count() == 1
+    assert all(not item.workspace_contexts.exists() for item in originals)
+    assert set(current.workspace_contexts.values_list("workspace", flat=True)) == {
+        "individual"
+    }
+    assert Conversation.objects.exclude(direct_context_key=None).count() == 1
 
 
 def test_same_revision_alert_edits_have_one_winner(phase6_lease):
@@ -100,6 +109,7 @@ def test_distinct_promotion_commands_cannot_overlap(phase6_lease):
             {
                 "property_id": str(lease.property.id),
                 "option_id": option.id,
+                "option_revision": option.revision,
                 "request_key": str(uuid.uuid4()),
             },
             format="json",

@@ -16,7 +16,8 @@ from core_apps.properties.models import Property, PropertyImage, PropertyVisit
 @pytest.fixture(autouse=True)
 def mock_cloudinary_upload():
     mock_upload_response = lambda file, **kwargs: {
-        "public_id": f"mocked_{getattr(file, 'name', 'file')}",
+        # The upload receipt must prove the exact server-assigned resource.
+        "public_id": kwargs.get("public_id", f"mocked_{getattr(file, 'name', 'file')}"),
         "url": f"https://res.cloudinary.com/mocked/{getattr(file, 'name', 'file')}",
         "secure_url": f"https://res.cloudinary.com/mocked/{getattr(file, 'name', 'file')}",
         "format": "jpg",
@@ -384,8 +385,14 @@ class TestCheck5_ModerationStatusAndTenantIsolation:
         assert len(matched) == 1
         assert matched[0]["status"] == Property.Status.UNDER_REVIEW
 
-        # Tenant (another_user) fetches property details: ownership_proof is omitted or null
+        # A pending edit is not public; existing-party access has separate tests.
         api_client.force_authenticate(user=another_user)
+        res_tenant = api_client.get(detail_url)
+        assert res_tenant.status_code == status.HTTP_404_NOT_FOUND
+        # Isolate the reviewed publication state to check the public projection.
+        Property.objects.filter(pk=prop.pk).update(
+            status=Property.Status.VERIFIED, is_verified=True
+        )
         res_tenant = api_client.get(detail_url)
         assert res_tenant.status_code == status.HTTP_200_OK
         assert api_json(res_tenant)["data"]["ownership_proof"] is None

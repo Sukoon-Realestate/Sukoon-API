@@ -29,6 +29,7 @@ def viewer_workspace(conversation, user):
     return values[0] if len(values) == 1 else ""
 
 
+@transaction.atomic
 def contextual_conversation(user, other, workspace, context=None):
     if workspace not in WORKSPACES:
         raise ValidationError({"workspace": "Choose a personal message workspace."})
@@ -73,6 +74,9 @@ def contextual_conversation(user, other, workspace, context=None):
     conversation = Conversation.objects.filter(direct_context_key=key).first()
     if conversation:
         return conversation
+    from core_apps.users.services.new_business import require_new_business as require_account_business
+
+    require_account_business(user.pk, other.pk)
     from .message_service_parts.get_or_create_direct_conversation import direct_message_blocked
     if direct_message_blocked(user, other, lock=True):
         raise PermissionDenied("Messaging consent is not active for this connection.")

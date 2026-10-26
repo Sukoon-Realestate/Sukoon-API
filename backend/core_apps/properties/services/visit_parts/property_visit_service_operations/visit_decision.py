@@ -20,7 +20,7 @@ class VisitDecisionMixin:
             return cls.accept_visit(user=user, visit_obj=visit_obj)
 
         visit_obj = (
-            PropertyVisit.objects.select_for_update()
+            PropertyVisit.objects.select_for_update(of=("self",))
             .select_related("property", "property__owner", "property__city", "tenant")
             .get(pk=visit_obj.pk)
         )
@@ -91,6 +91,16 @@ class VisitDecisionMixin:
                     category="حجز زيارة",
                     icon_type="cancel",
                     data={
+                        "workspace": (
+                            "company"
+                            if visit_obj.company_id
+                            else (
+                                "student"
+                                if visit_obj.academic_plan_id
+                                or visit_obj.context_kind == "group"
+                                else visit_obj.renter_workspace
+                            )
+                        ),
                         "visit_id": str(visit_obj.id),
                         "property_id": str(visit_obj.property.id),
                     },
@@ -109,7 +119,7 @@ class VisitDecisionMixin:
     def accept_visit(cls, user, visit_obj):
         """Atomically accept a visit and persist its reciprocal contact grant."""
         visit = (
-            PropertyVisit.objects.select_for_update()
+            PropertyVisit.objects.select_for_update(of=("self",))
             .select_related("property", "property__owner", "property__city", "tenant")
             .get(pk=visit_obj.pk)
         )
@@ -131,15 +141,33 @@ class VisitDecisionMixin:
         from core_apps.chat.models import Conversation
         from core_apps.notifications.models import Notification
         from core_apps.notifications.services import NotificationService
-        from core_apps.notifications.services.fcm_service import FCMService
 
         conversation = (
-            Conversation.objects.filter(participant_set__user=user, kind="direct", direct_context_key__isnull=False, workspace_contexts__user=visit.tenant, workspace_contexts__workspace=("student" if visit.academic_plan_id or visit.context_kind == "group" else visit.renter_workspace))
+            Conversation.objects.filter(
+                participant_set__user=user,
+                kind="direct",
+                direct_context_key__isnull=False,
+                workspace_contexts__user=visit.tenant,
+                workspace_contexts__workspace=(
+                    "student"
+                    if visit.academic_plan_id or visit.context_kind == "group"
+                    else visit.renter_workspace
+                ),
+            )
             .filter(participant_set__user=visit.tenant)
             .first()
         )
         owner_name = visit.property.owner.get_full_name or "المالك"
         notification_data = {
+            "workspace": (
+                "company"
+                if visit.company_id
+                else (
+                    "student"
+                    if visit.academic_plan_id or visit.context_kind == "group"
+                    else visit.renter_workspace
+                )
+            ),
             "visit_id": str(visit.id),
             "property_id": str(visit.property.id),
             "address": (

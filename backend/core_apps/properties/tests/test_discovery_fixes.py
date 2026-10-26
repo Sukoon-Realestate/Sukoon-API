@@ -1,9 +1,10 @@
 import pytest
+from django.db import connection
 from unittest.mock import patch
 from rest_framework.test import APIRequestFactory
 from core_apps.properties.models import Property, PropertyImage, SavedProperty
 from core_apps.properties.services.public_access import public_properties
-from core_apps.properties.search import PropertySearchFilter
+from core_apps.properties.search import PropertySearchFilter, trigram_available
 from core_apps.properties.services.search_document import normalize
 from rest_framework.request import Request
 
@@ -40,14 +41,27 @@ def test_publication_is_authoritative(listing, auth_client):
         assert auth_client.get(f"/api/v1/properties/{listing.id}/").status_code == 200
 
 
-def test_search_partial_typo_and_description(listing):
+@pytest.fixture
+def fuzzy_search_database():
+    # The dedicated PostgreSQL test database is created from template0.
+    # Exercise the deployed-capability path explicitly, without changing a
+    # developer or deployed database or pretending the fallback supports typos.
+    if connection.vendor == "postgresql":
+        with connection.cursor() as cursor:
+            cursor.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+    trigram_available.cache_clear()
+    yield
+    trigram_available.cache_clear()
+
+
+def test_search_partial_typo_and_description(listing, fuzzy_search_database):
     factory = APIRequestFactory()
     for text in ["gard", "gardeen", "اوضة مفروشة فيها واي فاي"]:
         request = Request(factory.get("/", {"search": text}))
         found = PropertySearchFilter().filter_queryset(
             request, public_properties(), None
         )
-        assert list(found.values_list("pk", flat=True)) == [listing.pk]
+        assert list(found.values_list("pk", flat=True)) == [listing.pk], text
     request = Request(factory.get("/", {"search": "بدون واي فاي"}))
     assert (
         not PropertySearchFilter()
@@ -98,12 +112,22 @@ def test_photo_order_survives_and_rejects_foreign_ids(listing, auth_client):
 
 
 def test_hidden_listing_is_not_exposed_by_saved_or_image_endpoints(
-    listing, auth_client
+    listing, auth_client, superuser
 ):
     from rest_framework.test import APIClient
 
     SavedProperty.objects.create(user=listing.owner, property=listing)
     image = PropertyImage.objects.create(property=listing, image="sample")
+    from core_apps.properties.services.moderation import decide, version
+
+    listing.refresh_from_db()
+    decide(
+        listing.id,
+        reviewer=superuser,
+        action="approve",
+        expected_version=version(listing),
+        request_key="approve-photo",
+    )
     visitor = APIClient()
     assert visitor.get(f"/api/v1/properties/images/{image.id}/").status_code == 200
     listing.status = "under_review"

@@ -3,7 +3,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, ValidationError
 from ..models import Lease, RentalEvidence, RentalHandover
-from ..providers import require_rental_provider
+from ..providers import require_verified_rental_account
 from ..services.lease_permissions import handover_actions
 
 
@@ -13,13 +13,24 @@ PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 MAX_EVIDENCE_BYTES = 5 * 1024 * 1024
 
 
+def _current_actor(request, lock=False):
+    if request.method in {"GET", "HEAD", "OPTIONS"}:
+        return
+    from core_apps.users.models import User
+    from core_apps.users.services.sessions import validate_session
+
+    users = User.objects.select_for_update() if lock else User.objects
+    request.user = users.get(pk=request.user.pk)
+    validate_session(request.user, request.auth or {})
+    require_verified_rental_account(request.user)
+
+
 def _money(value):
     return {"amount_minor": value, "currency": "EGP", "exponent": 2}
 
 
 def _lease(request, lease_id, lock=False):
-    if request.method not in {"GET", "HEAD", "OPTIONS"}:
-        require_rental_provider(request.user)
+    _current_actor(request, lock)
     queryset = Lease.objects.select_related("owner", "tenant")
     if lock:
         queryset = queryset.select_for_update(of=("self",))
@@ -70,6 +81,10 @@ def handover_payload(item, user=None):
 
 
 def _handover(request, handover_id, lock=False):
+    _current_actor(request, lock)
+    if lock:
+        reference = get_object_or_404(RentalHandover, id=handover_id)
+        Lease.objects.select_for_update().get(pk=reference.lease_id)
     queryset = RentalHandover.objects.select_related(
         "lease__owner", "lease__tenant"
     ).prefetch_related("evidence")

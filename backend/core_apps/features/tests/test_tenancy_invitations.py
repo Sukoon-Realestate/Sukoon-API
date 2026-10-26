@@ -147,13 +147,17 @@ def test_create_legacy_invitation_is_idempotent_and_notifies_once(
     assert first.data["id"] == replay.data["id"]
     assert first.data["status"] == "pending"
     assert first.data["offer_snapshot"] is None
-    assert first.data["actions"] == {"can_respond": False}
+    assert first.data["actions"] == {"can_respond": False, "can_accept": False, "can_reject": False}
     assert TenancyInvitation.objects.count() == 1
     notification = Notification.objects.get(
         user=tenant, notification_type="tenancy_invitation"
     )
     assert notification.data == {
-        "workspace": "tenant",
+        "revision": 1,
+        "schema_version": "1",
+        "workspace": "individual",
+        "presentation_workspace": "individual",
+        "scope": "workspace",
         "action_label": "Review invitation",
         "action_type": "open_tenancy_invitation",
         "target_id": first.data["id"],
@@ -510,7 +514,7 @@ def test_list_is_workspace_scoped_and_empty_page_shape(participants, owned_prope
     assert tenant_list.status_code == 200
     assert tenant_list.data["count"] == 1
     assert tenant_list.data["results"][0]["id"] == created.data["id"]
-    assert tenant_list.data["results"][0]["actions"] == {"can_respond": True}
+    assert tenant_list.data["results"][0]["actions"] == {"can_respond": True, "can_accept": True, "can_reject": True}
 
     empty = authenticated(stranger).get(
         "/api/v1/features/v1/tenancy-invitations/?workspace=tenant"

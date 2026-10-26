@@ -1,4 +1,7 @@
 from .payment_resume_views import payment_attempt_resume
+from . import refund_operations
+from . import beneficiary_views
+from .signing_views import signing_callback, signing_status
 from django.urls import include, path
 from .chargeback_views import chargeback_detail
 from .rental_phase6_views_parts.lease_reviews import document_content
@@ -17,8 +20,36 @@ from .models import RentalChange
 from .rental_lifecycle_views import habitability
 
 from .views_parts.listing_suggestions import owner_analytics_export
+from .views_parts.boost_campaigns import boost_campaign_detail, boost_campaign_resolve
 
 urlpatterns = [
+    path("operations/refunds/", refund_operations.queue, name="operation-refund-queue"),
+    path(
+        "operations/refunds/<uuid:refund_id>/review/",
+        refund_operations.review,
+        name="operation-refund-review",
+    ),
+    path(
+        "operations/refunds/<uuid:refund_id>/reconcile/",
+        refund_operations.reconcile,
+        name="operation-refund-reconcile",
+    ),
+    path(
+        "operations/refunds/<uuid:refund_id>/reauthorize/",
+        refund_operations.reauthorize,
+        name="operation-refund-reauthorize",
+    ),
+    path(
+        "operations/refunds/<uuid:refund_id>/retry/",
+        refund_operations.retry,
+        name="operation-refund-retry",
+    ),
+    path("signing/provider-events/", signing_callback, name="signwell-provider-events"),
+    path(
+        "signing/documents/<uuid:document_id>/",
+        signing_status,
+        name="rental-signing-status",
+    ),
     path(
         "payment-attempts/<uuid:attempt_id>/resume/",
         payment_attempt_resume,
@@ -60,7 +91,6 @@ urlpatterns = [
     path("", include("core_apps.features.advanced_tender_urls")),
     path("", include("core_apps.features.living_lab_urls")),
     path("", include("core_apps.features.housing_scenario_urls")),
-    path("", include("core_apps.features.asset_passport_urls")),
     path("", include("core_apps.features.transition_network_urls")),
     path("", include("core_apps.features.reputation_urls")),
     path("", include("core_apps.features.company_urls")),
@@ -102,6 +132,16 @@ urlpatterns = [
     ),
     path("configuration/", views.configuration, name="feature-configuration"),
     path("boost-campaigns/", views.boost_campaigns, name="boost-campaigns"),
+    path(
+        "boost-campaigns/resolve/",
+        boost_campaign_resolve,
+        name="boost-campaign-resolve",
+    ),
+    path(
+        "boost-campaigns/<uuid:campaign_id>/",
+        boost_campaign_detail,
+        name="boost-campaign-detail",
+    ),
     path("search-alerts/", views.search_alerts, name="search-alerts"),
     path(
         "search-alerts/<uuid:alert_id>/",
@@ -119,6 +159,16 @@ urlpatterns = [
         "owner-payment-profile/",
         views_phase2.owner_payment_profile,
         name="owner-payment-profile",
+    ),
+    path(
+        "owner-payment-profile/beneficiary-details/",
+        beneficiary_views.submit_details,
+        name="owner-beneficiary-details",
+    ),
+    path(
+        "owner-payment-profile/confirm-beneficiary/",
+        beneficiary_views.confirm,
+        name="owner-beneficiary-confirm",
     ),
     path(
         "owner-payment-profile/onboarding-session/",
@@ -149,6 +199,16 @@ urlpatterns = [
     ),
     path("lease-tenants/", views.lease_tenants, name="lease-tenants"),
     path("tenancy-invitations/", views.tenancy_invitations, name="tenancy-invitations"),
+    path(
+        "tenancy-invitations/create/resolve/",
+        views.tenancy_invitation_create_resolve,
+        name="tenancy-invitation-create-resolve",
+    ),
+    path(
+        "tenancy-invitations/<uuid:invitation_id>/respond/resolve/",
+        views.tenancy_invitation_response_resolve,
+        name="tenancy-invitation-response-resolve",
+    ),
     path(
         "tenancy-invitations/<uuid:invitation_id>/",
         views.tenancy_invitation_detail,
@@ -285,6 +345,34 @@ urlpatterns = [
         "operations/payouts/execute/",
         views_phase4.operations_execute_payout,
         name="operations-payout-execute",
+    ),
+    path(
+        "operations/payouts/preview/",
+        views_phase4.payout_preview,
+        name="operations-payout-preview",
+    ),
+    path(
+        "operations/payouts/", views_phase4.payout_queue, name="operations-payout-queue"
+    ),
+    path(
+        "operations/payables/",
+        views_phase4.payable_queue,
+        name="operations-payable-queue",
+    ),
+    path(
+        "operations/payouts/<uuid:payout_id>/review/",
+        views_phase4.payout_review,
+        name="operations-payout-review",
+    ),
+    path(
+        "operations/payouts/<uuid:payout_id>/reauthorize/",
+        views_phase4.reauthorize_payout,
+        name="operations-payout-reauthorize",
+    ),
+    path(
+        "operations/payouts/<uuid:payout_id>/retry/",
+        views_phase4.retry_failed_payout,
+        name="operations-payout-retry",
     ),
     path(
         "operations/payouts/<uuid:payout_id>/reconcile/",

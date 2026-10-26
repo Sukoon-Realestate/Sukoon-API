@@ -21,6 +21,7 @@ from .policy import digest
 
 def job_payload(job):
     from .services import revision_payload
+
     outputs = copy.deepcopy(job.outputs)
     for station in outputs.get("panorama360", {}).get("stations", []):
         for name, resource in station.get("resources", {}).items():
@@ -44,8 +45,95 @@ def job_payload(job):
         "outputs": outputs,
         "attempt": job.attempt,
         "cancelRequested": job.cancel_requested,
-        "selectedRevisions": [revision_payload(r) for r in job.tour_revisions.order_by("-created_at")[:2]],
+        **retry_status(job),
+        "selectedRevisions": [
+            revision_payload(r) for r in job.tour_revisions.order_by("-created_at")[:2]
+        ],
     }
+
+
+def retry_status(job):
+    next_job = CaptureProcessingJob.objects.filter(retry_of=job).first()
+    modes = [
+        mode
+        for mode in MODES
+        if job.outputs.get(mode, {}).get("status") in {"failed", "needsProcessing"}
+    ]
+    reason = ""
+    if next_job:
+        reason = "retry_exists"
+    elif job.state in {"queued", "processing"}:
+        reason = "processing_in_progress"
+    elif job.cancel_requested or job.state == "cancelled":
+        reason = "processing_cancelled"
+    elif job.attempt >= 3:
+        reason = "attempts_exhausted"
+    elif not modes:
+        reason = "capture_inputs_required"
+    elif not settings.PROPERTY_CAPTURE_ENABLED:
+        reason = "capture_disabled"
+    elif modes == ["walkthrough3d"] and not settings.CAPTURE_RECONSTRUCTION_ENABLED:
+        reason = "reconstruction_unavailable"
+    return {
+        "canRetry": not reason,
+        "retryBlocker": reason,
+        "retryJobId": str(next_job.id) if next_job else None,
+    }
+
+
+def retry(job, body):
+    fields(body, {"expectedAttempt", "expectedManifestHash"})
+    require(
+        type(body["expectedAttempt"]) is int
+        and body["expectedAttempt"] == job.attempt
+        and body["expectedManifestHash"] == job.manifest.sha256,
+        "capture_result_changed",
+        "Refresh the original processing attempt.",
+        409,
+    )
+    existing = CaptureProcessingJob.objects.filter(retry_of=job).first()
+    if existing:
+        return job_payload(existing), 200
+    state = retry_status(job)
+    require(
+        state["canRetry"],
+        state["retryBlocker"],
+        "Processing cannot be retried yet. Review the current result and resource availability.",
+        409,
+    )
+    outputs = copy.deepcopy(job.outputs)
+    queued = []
+    for mode in MODES:
+        if outputs.get(mode, {}).get("status") not in {"failed", "needsProcessing"}:
+            continue
+        if (
+            mode == "walkthrough3d"
+            and not capture_reconstruction.runtime_status()["available"]
+        ):
+            continue
+        outputs[mode] = {"status": "pending"}
+        queued.append(mode)
+    require(
+        queued,
+        "reconstruction_unavailable",
+        "The reconstruction resource is not available. Existing outputs remain unchanged.",
+        409,
+    )
+    # A child owns the new attempt. Existing selections, hashes and files keep
+    # their original source, even if a panorama was published before 3D finished.
+    child = CaptureProcessingJob.objects.create(
+        retry_of=job,
+        manifest=job.manifest,
+        profile=digest(
+            {
+                "profile": capture_reconstruction.profile_identity(),
+                "retry_of": str(job.id),
+            }
+        ),
+        attempt=job.attempt,
+        outputs=outputs,
+    )
+    return job_payload(child), 202
 
 
 def session_payload(session):

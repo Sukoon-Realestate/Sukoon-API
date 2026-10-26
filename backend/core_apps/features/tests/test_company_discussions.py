@@ -37,6 +37,36 @@ def message(content="Synthetic company discussion"):
 
 
 @pytest.mark.django_db
+def test_company_push_retry_rechecks_revoked_membership(company_setup):
+    from datetime import timedelta
+    from django.utils import timezone
+    from core_apps.chat.services.group_outbox import _notify, deliver_pushes
+    from core_apps.notifications.models import DeviceToken, PushDelivery
+    from core_apps.notifications.services.push_delivery import dispatch
+
+    proposed(company_setup)
+    coordinator, approver, company = company_setup[1:4]
+    conversation = Conversation.objects.get(company_request=company_setup[-1])
+    DeviceToken.objects.create(user=approver, token="company-retry-device")
+    sent = send_group_message(conversation, coordinator, message())
+    event = ChatEvent.objects.get(message=sent, kind="message.new")
+    _notify(event, approver)
+    deliver_pushes(event_pk=event.pk)
+    with patch("core_apps.notifications.services.fcm_service.FCMService.send_push_to_device", return_value=False) as provider:
+        assert dispatch() == 0
+        provider.assert_called_once()
+    delivery = PushDelivery.objects.get()
+    assert delivery.notification.scope == "company"
+    CompanyMembership.objects.filter(company=company, user=approver).update(is_active=False)
+    PushDelivery.objects.filter(pk=delivery.pk).update(next_attempt_at=timezone.now() - timedelta(seconds=1))
+    with patch("core_apps.notifications.services.fcm_service.FCMService.send_push_to_device") as provider:
+        assert dispatch() == 0
+        provider.assert_not_called()
+    delivery.refresh_from_db()
+    assert delivery.suppressed and Message.objects.filter(pk=sent.pk).exists()
+
+
+@pytest.mark.django_db
 def test_unknown_company_send_can_retry_exact_identity_with_membership_fence(
     company_setup,
 ):

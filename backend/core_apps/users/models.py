@@ -21,6 +21,7 @@ class User(AbstractUser):
     security_epoch = models.PositiveIntegerField(default=0)
     requires_bound_session = models.BooleanField(default=False)
     sensitive_actions_frozen = models.BooleanField(default=False)
+    closed_at = models.DateTimeField(null=True, editable=False)
 
     username = None
 
@@ -132,6 +133,9 @@ class SensitiveAuthorization(TimeStampedModel):
     verified_at = models.DateTimeField(null=True, blank=True)
     consumed_at = models.DateTimeField(null=True, blank=True)
     assurance = models.CharField(max_length=80, blank=True, default="")
+    factor_revision = models.PositiveIntegerField(null=True)
+    code_hash = models.CharField(max_length=128, blank=True)
+    failed_attempts = models.PositiveSmallIntegerField(default=0)
 
 
 class EmailChange(models.Model):
@@ -149,3 +153,13 @@ class EmailChange(models.Model):
     resend_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+from .totp_models import (  # noqa: E402,F401
+    StaffSecurityIdentity, TotpFactor, TotpRecoveryRequest, TotpEnrollment, SecurityNotice,
+    TotpRecoveryDecision,
+)
+
+from .closure_models import (  # noqa: E402,F401
+    AccountClosureRequest, AccountClosureDecision, AccountClosureNotice, AccountProfileErasureFile,
+)

@@ -61,6 +61,7 @@ class TestUnreadCountsAndMyRates:
         Notification.objects.create(
             user=user,
             title="طلب زيارة جديد",
+            scope="owner",
             is_read=False,
         )
 
@@ -98,6 +99,7 @@ class TestUnreadCountsAndMyRates:
         Notification.objects.create(
             user=user,
             title="تحديث العقار",
+            scope="individual",
             is_read=False,
         )
 

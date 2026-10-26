@@ -4,6 +4,7 @@ import copy
 from decimal import Decimal, InvalidOperation
 from rest_framework.exceptions import ValidationError
 from .inheritable import SCOPES, AVAILABILITY, INHERITABLE, _resolve_id
+from .offer_revision import reviewed_content
 
 
 def normalize_inventory(value, existing=None):
@@ -166,9 +167,12 @@ def normalize_inventory(value, existing=None):
         offer.setdefault("availability", "available")
         offer.setdefault("archived", False)
         old_revision = int(old_offers.get(offer["id"], {}).get("revision", 0))
-        offer["revision"] = old_revision + 1
         offer["offer_link"] = ""
         offer["actions"] = {"can_archive": True, "can_set_availability": True}
+        changed = reviewed_content(output, offer) != reviewed_content(
+            existing, old_offers.get(offer["id"])
+        )
+        offer["revision"] = max(1, old_revision + int(changed))
         normalized_offers.append(offer)
 
     if mode == "whole" and (

@@ -1,14 +1,14 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
-from core_apps.common.content_models import ManagedContent
+from core_apps.common.content_models import ManagedContent, CONTENT_WORKSPACES
 
 
 class HelpContact(ManagedContent):
     workspace = models.CharField(
         primary_key=True,
         max_length=10,
-        choices=[("tenant", "Tenant"), ("owner", "Owner")],
+        choices=CONTENT_WORKSPACES[:4],
     )
     phone = models.CharField(
         max_length=25, blank=True, validators=[RegexValidator(r"^\+?[0-9 ()-]{7,25}$")]
@@ -25,7 +25,7 @@ class HelpArticle(ManagedContent):
     slug = models.SlugField(primary_key=True)
     workspace = models.CharField(
         max_length=10,
-        choices=[("tenant", "Tenant"), ("owner", "Owner"), ("both", "Both")],
+        choices=CONTENT_WORKSPACES,
     )
     question_en = models.CharField(max_length=250)
     question_ar = models.CharField(max_length=250)

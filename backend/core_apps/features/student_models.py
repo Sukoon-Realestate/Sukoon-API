@@ -7,6 +7,8 @@ from core_apps.common.models import TimeStampedModel
 
 
 class University(TimeStampedModel):
+    revision = models.PositiveIntegerField(default=1)
+    sort_order = models.PositiveIntegerField(default=0)
     name_en = models.CharField(max_length=200)
     name_ar = models.CharField(max_length=200)
     active = models.BooleanField(default=True)
@@ -15,6 +17,8 @@ class University(TimeStampedModel):
 
 
 class Campus(TimeStampedModel):
+    revision = models.PositiveIntegerField(default=1)
+    sort_order = models.PositiveIntegerField(default=0)
     university = models.ForeignKey(
         University, on_delete=models.PROTECT, related_name="campuses"
     )

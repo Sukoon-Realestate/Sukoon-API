@@ -7,7 +7,6 @@ from celery import shared_task
 from .services.transition_network.jobs import process_transition_match
 from .services.housing_tenders.jobs import process_tender_packages
 from .services.housing_scenarios.jobs import calculate as calculate_housing_scenario
-from .services.asset_passport.analysis import process as analyze_asset_observations
 from .services.advanced_housing_jobs import recover_jobs, purge_private_inputs
 from datetime import timedelta
 from django.db import models, transaction
@@ -54,6 +53,13 @@ from .tasks_parts.rent_payment_notifications import process_rent_payment_notific
 
 
 @shared_task
+def expire_purchase_services():
+    from .services.commerce_expiration import expire
+
+    return expire(kinds=("subscription", "promotion"))
+
+
+@shared_task
 def reconcile_reviews():
     from .services.reputation.tasks import reconcile
 
@@ -65,3 +71,16 @@ def reconcile_hosted_checkout():
     from django.core.management import call_command
     # The general worker also serves notifications; keep provider IO bounded.
     call_command("reconcile_paymob_payments", limit=1)
+
+
+@shared_task(acks_late=True)
+def reconcile_signing_documents():
+    from .services.signing_jobs import drain
+    return drain(limit=1)
+
+
+@shared_task(acks_late=True)
+def reconcile_advanced_execution():
+    from .services.advanced_execution.progress import reconcile_progress
+
+    return reconcile_progress()

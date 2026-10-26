@@ -474,23 +474,14 @@ def test_housing_request_offer_identity_permissions_expiry_and_recovery(
     )
     offer = offer_response.data["resource"]
     assert offer["rent"]["amount_minor"] == 1_000_000
-    assert offer["allowed_actions"] == ["withdraw"]
+    assert offer["allowed_actions"] == ["withdraw", "replace"]
     tenant_offer = (
         authenticated(tenant)
         .get(API + f"housing-requests/{item['id']}/offers/")
         .data["results"][0]
     )
-    assert tenant_offer["allowed_actions"] == [
-        "shortlist",
-        "select_to_proceed",
-        "decline",
-    ]
-    shortlisted = post(
-        tenant,
-        f"housing-offers/{offer['id']}/shortlist/",
-        command(1, decision="shortlist"),
-    )
-    assert shortlisted.data["resource"]["status"] == "shortlisted"
+    assert tenant_offer["allowed_actions"] == ["review", "decline"]
+    retired = post(tenant, f"housing-offers/{offer['id']}/shortlist/", command(1, decision="shortlist"), 409)
     assert Lease.objects.count() == 0
     # Continue into the actual interest workflow with independent validation.
     interest = post(
@@ -520,7 +511,7 @@ def test_housing_request_offer_identity_permissions_expiry_and_recovery(
         .get(API + f"housing-requests/{item['id']}/offers/")
         .data["results"][0]
     )
-    assert stale["status"] == "expired" and stale["allowed_actions"] == []
+    assert stale["status"] == "pending_reconfirm" and stale["allowed_actions"] == ["decline"]
     directory = os.environ.get("SOKOUN_PLANNING_ARTIFACT_DIR")
     if directory:
         target = Path(directory)
@@ -535,7 +526,7 @@ def test_housing_request_offer_identity_permissions_expiry_and_recovery(
                     "offer_body": offer_body,
                     "offer": offer_response.json(),
                     "tenant_offer": tenant_offer,
-                    "shortlisted": shortlisted.json(),
+                    "retired_selection": retired.json(),
                     "request_grant": planning_grant(
                         tenant, "housing_requests", "publish"
                     ),

@@ -1,9 +1,5 @@
 """Owner-facing planning sources exercised through authenticated HTTP actors."""
 
-from datetime import timedelta
-
-from django.utils import timezone
-
 from core_apps.features.models import Lease, RentalInterest
 from core_apps.features.services.planning import selection_payload
 from core_apps.features.services.tenancy_invitations import resolve_offer_snapshot
@@ -31,17 +27,9 @@ def marketplace_entry(actors, participants):
     assert saved.status_code in (200, 201), saved.data
     listed = tenant_api.get(PROPERTIES + "saved/")
     assert listed.status_code == 200, listed.data
-    appointment = timezone.localdate() + timedelta(days=1)
-    schedule = owner_api.put(
-        PROPERTIES + f"owner/properties/{prop.id}/availability/",
-        {"availability_date": str(appointment), "slots": [{"time": "14:00"}]},
-    )
-    assert schedule.status_code == 200, schedule.data
     visit = tenant_api.post(
         PROPERTIES + f"{prop.id}/visits/",
         {
-            "visit_date": str(appointment),
-            "visit_time": "14:00",
             "note": "HTTP cycle",
             "offer_id": offer_id,
             "expected_offer_revision": 2,
@@ -49,7 +37,8 @@ def marketplace_entry(actors, participants):
     )
     assert visit.status_code == 201, visit.data
     accepted = owner_api.post(
-        PROPERTIES + f"owner/visits/requests/{visit.data['id']}/accept/", {}
+        PROPERTIES + f"owner/visits/requests/{visit.data['id']}/accept/",
+        command(visit.data["revision"]),
     )
     assert accepted.status_code == 200, accepted.data
     tenant_read = tenant_api.get(PROPERTIES + f"visits/{visit.data['id']}/")
@@ -85,15 +74,9 @@ def housing_request_entry(actors, participants):
         ),
         201,
     )
-    selected = mutate(
-        tenant_api,
-        f"housing-offers/{offer['id']}/shortlist/",
-        command(
-            offer["revision"],
-            decision="shortlist",
-        ),
-    )
-    assert selected["selection"]["offer_id"] == offer_id
+    current = tenant_api.get(API + f"housing-offers/{offer['id']}/")
+    assert current.status_code == 200, current.data
+    assert current.data["selection"]["offer_id"] == offer_id
     assert not Lease.objects.exists() and not RentalInterest.objects.exists()
     interest = mutate(
         tenant_api,
@@ -105,7 +88,7 @@ def housing_request_entry(actors, participants):
             desired_start=criteria["start_on"],
             months=1,
             occupants=2,
-            message="Continue selected housing offer",
+            message="Continue the reviewed housing offer",
         ),
         201,
     )
@@ -245,9 +228,13 @@ def group_entry(actors, participants):
         tenant_api,
         "rental-interests/",
         command(
-            property_id=str(prop.id), offer_id=offer_id, offer_revision=2,
-            desired_start=criteria_for(prop)["start_on"], months=1,
-            occupants=2, message="Explicit individual application after owner group review",
+            property_id=str(prop.id),
+            offer_id=offer_id,
+            offer_revision=2,
+            desired_start=criteria_for(prop)["start_on"],
+            months=1,
+            occupants=2,
+            message="Explicit individual application after owner group review",
         ),
         201,
     )

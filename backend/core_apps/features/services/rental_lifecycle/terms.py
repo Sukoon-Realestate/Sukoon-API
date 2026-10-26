@@ -79,30 +79,15 @@ def propose_answer(item, actor, data):
         )
     if data["wording"] in item.terms.get(data["field"], []):
         raise ValidationError({"wording": "This reviewed term already exists."})
-    item.previous_terms = [*item.previous_terms, copy.deepcopy(item.terms)]
-    item.terms = {
-        **item.terms,
-        data["field"]: [*item.terms.get(data["field"], []), data["wording"]],
-    }
-    item.revision += 1
-    item.accepted_by = [str(actor.id)]
-    item.status = "proposed"
-    item.save()
-    record_consent(item, actor, "propose_answer")
-    audit(
-        item,
-        actor,
-        "terms.answer_proposed",
-        metadata={
-            "source_message_id": str(source.id) if source else None,
-            "field": data["field"],
-        },
-    )
-    release_proposal_holds(item)
-    TenancyInvitation.objects.filter(
-        terms_proposal=item, lease__isnull=True, status__in=["pending", "accepted"]
-    ).update(status="revoked", revoked_at=timezone.now(), revision=F("revision") + 1)
-    record_rental_event(
-        item, {item.interest.tenant}, "terms.answer_proposed", "open_rental_terms"
-    )
+    from ..negotiation_terms import revise, current_selection
+
+    snapshot = current_selection(item)
+    terms = {**item.terms, data["field"]: [*item.terms.get(data["field"], []), data["wording"]]}
+    item = revise(item, actor, {
+        "expected_revision": data["expected_revision"], "terms": terms,
+        "expires_at": item.expires_at, "action": "edit_terms",
+    }, snapshot)
+    audit(item, actor, "terms.answer_proposed", metadata={
+        "source_message_id": str(source.id) if source else None, "field": data["field"],
+    })
     return item

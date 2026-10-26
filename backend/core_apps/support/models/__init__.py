@@ -5,3 +5,4 @@ from .attachment import TicketAttachment
 __all__ = ["Ticket", "TicketMessage", "TicketAttachment"]
 
 from .help_content import HelpContact, HelpArticle
+from .operations import TicketTransition, TicketInternalNote

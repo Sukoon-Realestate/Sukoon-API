@@ -28,6 +28,7 @@ from .plans import record_step
 
 
 def terms_for(spec, plan):
+    from ..negotiation_terms import FIXED_TEMPLATE_TERMS
     start = date.fromisoformat(spec["starts_on"])
     return {
         "starts_on": spec["starts_on"],
@@ -46,8 +47,7 @@ def terms_for(spec, plan):
         "deposit_holder": "platform",
         "included_services": [],
         "excluded_services": [],
-        "termination_policy": {"notice_days": 30},
-        "renewal_policy": {"automatic": False},
+        **{key: value.copy() for key, value in FIXED_TEMPLATE_TERMS.items()},
         "policy_version": "rental-policy-v1",
         "template_id": "eg-residential-v1",
         "template_version": "1",
@@ -65,7 +65,7 @@ def terms_for(spec, plan):
             "source_kind": plan.source_kind,
             "source_id": str(plan.source_id),
             "partial_policy": plan.policy_version,
-            "provider_mode": "mock",
+            "provider_mode": plan.provider_mode,
         },
     }
 
@@ -73,6 +73,11 @@ def terms_for(spec, plan):
 def prepare_leg(plan, leg, actor):
     if leg.lease_id:
         return leg
+    if plan.provider_mode == "test":
+        from ..signwell_client import ready
+
+        if not ready():
+            raise RentalConflict("Signing is not configured.", code="capability_unavailable")
     spec = leg.specification
     prop = get_object_or_404(
         Property.objects.select_for_update(), id=spec["property_id"]
@@ -186,7 +191,7 @@ def prepare_leg(plan, leg, actor):
         "confirmed",
         "lease",
         lease.id,
-        {"hold_expires_at": lease.hold_expires_at.isoformat(), "provider_mode": "mock"},
+        {"hold_expires_at": lease.hold_expires_at.isoformat(), "provider_mode": plan.provider_mode},
         actor=actor,
     )
     return leg

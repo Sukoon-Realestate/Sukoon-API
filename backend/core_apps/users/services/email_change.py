@@ -23,6 +23,8 @@ def message(en, ar):
 
 
 def projection(item):
+    from .totp import is_staff_account
+
     address = item.new_email if item.stage == "verify_new" else item.old_email
     local, domain = address.rsplit("@", 1)
     return {
@@ -31,6 +33,9 @@ def projection(item):
         "masked_email": local[:1] + "***@" + domain,
         "expires_at": item.expires_at,
         "resend_at": item.resend_at,
+        "staff_verification_required": item.stage == "verify_new"
+        and is_staff_account(item.user),
+        "verification_email": item.new_email if item.stage == "verify_new" else "",
         **({"email": item.new_email} if item.stage == "complete" else {}),
     }
 
@@ -63,7 +68,9 @@ def start(request):
                     "سجل الدخول مجددًا قبل تغيير البريد.",
                 )
             )
-        if user.sensitive_actions_frozen:
+        from .totp import pending_recovery
+
+        if user.sensitive_actions_frozen or pending_recovery(user):
             raise PermissionDenied(
                 message("Account recovery is required.", "يلزم استعادة الحساب أولًا.")
             )
@@ -89,6 +96,8 @@ def start(request):
 
 
 def command(request, identity, action):
+    from .totp import pending_recovery
+
     delivery = None
     with transaction.atomic():
         user = User.objects.select_for_update().get(pk=request.user.pk)
@@ -108,6 +117,7 @@ def command(request, identity, action):
             or item.old_email.casefold() != user.email.casefold()
             and item.stage != "complete"
             or user.sensitive_actions_frozen
+            or pending_recovery(user)
         ):
             raise PermissionDenied(
                 message("Verification is no longer valid.", "التحقق لم يعد صالحًا.")
@@ -167,6 +177,17 @@ def command(request, identity, action):
                 item.expires_at = timezone.now() + timedelta(minutes=10)
                 item.save()
             else:
+                from .totp import is_staff_account
+                from .sensitive_actions import consume
+
+                if is_staff_account(user):
+                    consume(
+                        request,
+                        action="account.contact.change",
+                        resource_id=item.id,
+                        revision=0,
+                        payload={"email": item.new_email},
+                    )
                 if (
                     User.objects.filter(email__iexact=item.new_email)
                     .exclude(pk=user.pk)

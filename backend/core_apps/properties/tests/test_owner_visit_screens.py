@@ -1,3 +1,4 @@
+from .viewing_support import response_body
 from datetime import date, time, timedelta
 import uuid
 
@@ -9,7 +10,9 @@ from rest_framework import status
 from core_apps.properties.models import Property, PropertyVisit
 
 
-def create_property(owner, apartment_type, cairo_city, cairo_governorate, title="شقة مدينة نصر"):
+def create_property(
+    owner, apartment_type, cairo_city, cairo_governorate, title="شقة مدينة نصر"
+):
     return Property.objects.create(
         owner=owner,
         title=title,
@@ -65,8 +68,11 @@ class TestOwnerVisitRequestListScreen:
         )
 
         PropertyVisit.objects.create(
-            property=prop, tenant=another_user, visit_date=today,
-            visit_time=time(18), status=PropertyVisit.Status.CANCELED,
+            property=prop,
+            tenant=another_user,
+            visit_date=today,
+            visit_time=time(18),
+            status=PropertyVisit.Status.CANCELED,
         )
         url = reverse("owner-visit-request-list")
         response = auth_client.get(url, HTTP_ACCEPT_LANGUAGE="ar")
@@ -171,7 +177,9 @@ class TestOwnerVisitRequestListScreen:
         cairo_city,
         cairo_governorate,
     ):
-        prop = create_property(another_user, apartment_type, cairo_city, cairo_governorate)
+        prop = create_property(
+            another_user, apartment_type, cairo_city, cairo_governorate
+        )
         PropertyVisit.objects.create(
             property=prop,
             tenant=user,
@@ -203,7 +211,9 @@ class TestOwnerVisitRequestDetailScreen:
         cairo_city,
         cairo_governorate,
     ):
-        prop = create_property(another_user, apartment_type, cairo_city, cairo_governorate)
+        prop = create_property(
+            another_user, apartment_type, cairo_city, cairo_governorate
+        )
         v = PropertyVisit.objects.create(
             property=prop,
             tenant=another_user,
@@ -318,6 +328,7 @@ class TestOwnerVisitRequestRejectModal:
 
         url = reverse("owner-visit-request-reject", kwargs={"id": v.id})
         payload = {
+            **response_body(v.revision),
             "reason": "visit_unavailable",
             "custom_reason": "الوقت لا يناسب المالك",
         }
@@ -346,7 +357,9 @@ class TestOwnerVisitRequestRejectModal:
         )
 
         url = reverse("owner-visit-request-reject", kwargs={"id": v.id})
-        response = auth_client.post(url, {"reason": "visit_unavailable"}, format="json")
+        response = auth_client.post(
+            url, response_body(v.revision, reason="visit_unavailable"), format="json"
+        )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
@@ -376,7 +389,7 @@ class TestOwnerVisitRequestAcceptAction:
         )
 
         url = reverse("owner-visit-request-accept", kwargs={"id": v.id})
-        response = auth_client.post(url, {}, format="json")
+        response = auth_client.post(url, response_body(v.revision), format="json")
         assert response.status_code == status.HTTP_200_OK
 
         v.refresh_from_db()
@@ -402,5 +415,5 @@ class TestOwnerVisitRequestAcceptAction:
         )
 
         url = reverse("owner-visit-request-accept", kwargs={"id": v.id})
-        response = auth_client.post(url, {}, format="json")
+        response = auth_client.post(url, response_body(v.revision), format="json")
         assert response.status_code == status.HTTP_400_BAD_REQUEST

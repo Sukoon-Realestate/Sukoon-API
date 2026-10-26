@@ -82,11 +82,6 @@ class TestAvailablePlaces:
             {
                 "governorate": "Cairo",
                 "city": "Cairo",
-                "district": "Heliopolis",
-            },
-            {
-                "governorate": "Cairo",
-                "city": "Cairo",
                 "district": "Maadi",
             },
             {
@@ -172,7 +167,6 @@ class TestPropertyDetailsMobileFields:
         assert "owner_is_verified" in data
         assert "is_ownership_verified" in data
         assert data["owner"]["is_verified"] == another_user.is_verified
-
 
 
 class PropertyDetailAmenityFields:

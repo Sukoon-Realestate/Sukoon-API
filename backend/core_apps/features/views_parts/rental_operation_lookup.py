@@ -52,6 +52,11 @@ def _replay(user, operation, request_key, payload):
     ).first()
     if not record:
         return None
+    if record.recovery_status == IdempotencyRecord.RecoveryStatus.ABSENT_FINAL:
+        raise Conflict(
+            "This operation was closed without execution. Review the current resource before using a new request key.",
+            code="operation_closed",
+        )
     if record.fingerprint != _fingerprint(payload):
         raise Conflict(
             "This request_key was already used with a different payload.",

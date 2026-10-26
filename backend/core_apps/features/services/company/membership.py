@@ -12,7 +12,11 @@ from .access import company_for, require_new_business
 ROLES = {"admin", "coordinator", "approver", "employee"}
 
 
+@transaction.atomic
 def create_company(user, data):
+    from core_apps.users.services.new_business import require_new_business as require_account_business
+
+    require_account_business(user.pk)
     require_new_business()
     company = Company.objects.create(
         **{key: data[key] for key in ("name", "registration_number", "contact_email")}

@@ -1,8 +1,7 @@
 """Visit request inputs; timing is coordinated by the participants in chat."""
 
-from datetime import date, datetime
+from datetime import date
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from ...models import PropertyVisit
 from ...services import PropertyVisitService
@@ -95,14 +94,7 @@ class PropertyVisitCreateSerializer(serializers.ModelSerializer):
         )
 
 
-class PropertyVisitUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PropertyVisit
-        fields = ["status"]
-
-    def update(self, instance, validated_data):
-        user = self.context["request"].user
-        status = validated_data.get("status")
-        return PropertyVisitService.update_visit_status(
-            user=user, visit_obj=instance, status=status
-        )
+class PropertyVisitUpdateSerializer(serializers.Serializer):
+    status = serializers.ChoiceField(choices=["confirmed", "rejected", "canceled"])
+    expected_revision = serializers.IntegerField(min_value=1, write_only=True)
+    request_key = serializers.UUIDField(write_only=True)

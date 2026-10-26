@@ -6,10 +6,13 @@ from django.db import models
 from django.db.models import F, Q
 from django.utils import timezone
 from core_apps.common.models import TimeStampedModel
+from core_apps.users.services.new_business import NewAccountBusinessMixin
 from .agreements import Lease
 
 
-class RentalInterest(TimeStampedModel):
+class RentalInterest(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ('tenant_id', 'property.owner_id')
+
     academic_plan = models.ForeignKey(
         "AcademicHousingPlan",
         on_delete=models.PROTECT,
@@ -86,13 +89,17 @@ class RentalInterest(TimeStampedModel):
         ]
 
 
-class TermsProposal(TimeStampedModel):
+class TermsProposal(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ('owner_id', 'interest.tenant_id')
+
     class Status(models.TextChoices):
         PROPOSED = "proposed", "Proposed"
         CHANGES_REQUESTED = "changes_requested", "Changes requested"
         ACCEPTED = "accepted", "Accepted"
         REJECTED = "rejected", "Rejected"
         SUPERSEDED = "superseded", "Superseded"
+        WITHDRAWN = "withdrawn", "Withdrawn"
+        EXPIRED = "expired", "Expired"
 
     interest = models.ForeignKey(
         RentalInterest, on_delete=models.PROTECT, related_name="terms_proposals"
@@ -110,9 +117,33 @@ class TermsProposal(TimeStampedModel):
     previous_terms = models.JSONField(default=list, blank=True)
     offer_snapshot = models.JSONField()
     accepted_by = models.JSONField(default=list, blank=True)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+        related_name="authored_rental_terms", null=True, blank=True,
+    )
+    content_revision = models.PositiveIntegerField(default=1)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    withdrawal_reason = models.TextField(blank=True)
 
 
-class TenancyInvitation(TimeStampedModel):
+class TermsProposalVersion(TimeStampedModel):
+    proposal = models.ForeignKey(TermsProposal, on_delete=models.PROTECT, related_name="versions")
+    version = models.PositiveIntegerField()
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    terms = models.JSONField()
+    offer_snapshot = models.JSONField()
+    expires_at = models.DateTimeField(null=True, blank=True)
+    baseline = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            fields=["proposal", "version"], name="rental_terms_content_version",
+        )]
+
+
+class TenancyInvitation(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ('owner_id', 'tenant_id')
+
     class Status(models.TextChoices):
         PENDING = "pending", "Pending"
         ACCEPTED = "accepted", "Accepted"

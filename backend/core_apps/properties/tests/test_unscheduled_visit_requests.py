@@ -1,5 +1,7 @@
 """Visit requests need notes only; the parties agree on timing in chat."""
 
+from .viewing_support import response_body
+
 import uuid
 import pytest
 from django.urls import reverse
@@ -50,7 +52,10 @@ def test_request_notes_owner_decision_and_chat(
     action_url = reverse(f"owner-visit-request-{decision}", kwargs={"id": visit.id})
     result = owner.post(
         action_url,
-        {"reason": "visit_unavailable"} if decision == "reject" else {},
+        response_body(
+            visit.revision,
+            **({"reason": "visit_unavailable"} if decision == "reject" else {}),
+        ),
         format="json",
     )
     assert result.status_code == 200, result.data
@@ -80,7 +85,9 @@ def test_duplicate_request_and_note_limit(user, another_user, apartment_type):
     assert PropertyVisit.objects.count() == 1
     visit = PropertyVisit.objects.get()
     tenant.post(
-        reverse("property-visit-cancel", kwargs={"id": visit.id}), {}, format="json"
+        reverse("property-visit-cancel", kwargs={"id": visit.id}),
+        response_body(visit.revision),
+        format="json",
     )
     assert tenant.post(url, {}, format="json").status_code == 201
 

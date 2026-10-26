@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import Link from '@/components/ui/AdminLink';
 import { usePathname } from 'next/navigation';
+import { adminRelativePath } from '@/lib/basePath';
 import { Home, ChevronLeft } from 'lucide-react';
 
 interface BreadcrumbItem {
@@ -37,22 +38,21 @@ const ROUTE_LABELS: Record<string, string> = {
 };
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
-  const pathname = usePathname();
+  const pathname = adminRelativePath(usePathname());
 
   let breadcrumbs: BreadcrumbItem[] = [];
 
   if (items && items.length > 0) {
-    breadcrumbs = items;
+    breadcrumbs = items.filter((item, index) => !(index === 0 && item.href && adminRelativePath(item.href) === '/'));
   } else {
     const segments = pathname.split('/').filter(Boolean);
-    let currentPath = '';
-
-    breadcrumbs = segments.map((segment) => {
-      currentPath += `/${segment}`;
+    breadcrumbs = segments.map((segment, index) => {
+      const currentPath = `/${segments.slice(0, index + 1).join('/')}`;
       const label = ROUTE_LABELS[segment] || (segment.startsWith('prop-') ? 'تفاصيل العقار' : segment.length > 10 ? 'تفاصيل السجل' : segment);
       return {
         label,
-        href: currentPath,
+        // /system groups the health and logs pages; it has no page of its own.
+        href: currentPath === '/system' ? undefined : currentPath,
       };
     });
   }
@@ -60,7 +60,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
   if (pathname === '/') return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-bold text-[var(--text-subtle)] mb-4 flex-wrap animate-fadeIn">
+    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-bold text-[var(--text-subtle)] mb-4 flex-wrap ">
       <Link
         href="/"
         className="inline-flex items-center gap-1 text-[var(--text-muted)] hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
@@ -76,7 +76,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
           <React.Fragment key={index}>
             <ChevronLeft className="w-3.5 h-3.5 text-[var(--text-subtle)] shrink-0" />
             {isLast || !item.href ? (
-              <span className="px-2 py-0.5 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 font-extrabold">
+              <span className="px-2 py-0.5 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 font-semibold">
                 {item.label}
               </span>
             ) : (

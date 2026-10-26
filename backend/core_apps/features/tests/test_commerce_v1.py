@@ -35,6 +35,26 @@ from core_apps.features.tests.test_billing_subscriptions import (
 pytestmark = pytest.mark.django_db
 
 
+@pytest.fixture(autouse=True)
+def existing_feature_catalog(db):
+    # Transaction tests flush migration seed rows. Each test owns the catalog
+    # preconditions it exercises, including on a reused PostgreSQL test database.
+    for code, workspace, label in [
+        ("priority_alerts", "tenant", "Priority alerts"),
+        ("advanced_analytics", "owner", "Advanced analytics"),
+    ]:
+        CommerceFeature.objects.get_or_create(
+            code=code,
+            defaults={
+                "workspace": workspace,
+                "label_en": label,
+                "label_ar": label,
+                "available": True,
+                "enforced": False,
+            },
+        )
+
+
 class TestStoreAdapter:
     __test__ = False
 
@@ -551,6 +571,7 @@ def test_paid_promotion_uses_invoice_and_activation_time_but_free_option_stays_f
             {
                 "property_id": str(lease.property.id),
                 "option_id": option.id,
+                "option_revision": option.revision,
                 "request_key": str(uuid.uuid4()),
             },
             format="json",
@@ -582,6 +603,7 @@ def test_paid_promotion_uses_invoice_and_activation_time_but_free_option_stays_f
             {
                 "property_id": str(lease.property.id),
                 "option_id": option.id,
+                "option_revision": option.revision,
                 "request_key": str(uuid.uuid4()),
             },
             format="json",

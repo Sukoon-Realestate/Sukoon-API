@@ -75,9 +75,7 @@ def plan_payload(plan, language, *, user=None):
     }
 
 
-def subscription_payload(subscription):
-    if subscription is None:
-        return None
+def subscription_status(subscription):
     status = subscription.store_status or (
         "expired" if subscription.ends_at <= timezone.now() else "active"
     )
@@ -88,6 +86,13 @@ def subscription_payload(subscription):
     )
     if access_end <= timezone.now() and status not in {"revoked", "expired"}:
         status = "expired"
+    return status
+
+
+def subscription_payload(subscription):
+    if subscription is None:
+        return None
+    status = subscription_status(subscription)
     return {
         "id": str(subscription.id),
         "plan_id": subscription.plan_snapshot["id"],

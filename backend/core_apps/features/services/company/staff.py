@@ -332,6 +332,8 @@ def response_payload(provisioning):
 
 
 def staff_payload(staff):
+    from core_apps.users.services.new_business import restricted_accounts
+
     latest = staff.provisionings.order_by("-created_at").first()
     status = latest.status if latest else "prepared"
     if (
@@ -351,6 +353,9 @@ def staff_payload(staff):
         "proposal_revision": staff.proposal_revision,
         "access_status": status,
         "employment_status": staff.employment_status,
+        "account_closure_blocked": bool(
+            staff.membership_id and restricted_accounts(staff.membership.user_id)
+        ),
         "activation_delivery_status": (
             latest.delivery_status if latest else "not_requested"
         ),

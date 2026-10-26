@@ -11,20 +11,28 @@ class PropertyCatalogMixin:
     def get_filter_options(cls, language: Optional[str] = None):
         """Return the option catalog supported by the property list filters."""
         is_en = bool(language and language.lower().startswith("en"))
-        property_types = PropertyType.objects.only("id", "name", "slug").order_by(
-            "name"
+        property_types = (
+            PropertyType.objects.filter(is_active=True)
+            .only("id", "name", "name_ar", "name_en", "slug", "revision", "sort_order")
+            .order_by("sort_order", "name")
         )
         return {
             "property_types": [
                 {
                     "id": str(property_type.id),
                     "value": property_type.slug,
-                    "label": property_type_label(property_type, "en" if is_en else "ar"),
+                    "revision": property_type.revision,
+                    "label": property_type_label(
+                        property_type, "en" if is_en else "ar"
+                    ),
                 }
                 for property_type in property_types
             ],
             "ordering": [
-                {"value": "relevance", "label": "Most relevant" if is_en else "الأكثر صلة"},
+                {
+                    "value": "relevance",
+                    "label": "Most relevant" if is_en else "الأكثر صلة",
+                },
                 {"value": "-created_at", "label": "Newest" if is_en else "الأحدث"},
                 {"value": "created_at", "label": "Oldest" if is_en else "الأقدم"},
                 {"value": "price", "label": "Lowest Price" if is_en else "السعر الأقل"},

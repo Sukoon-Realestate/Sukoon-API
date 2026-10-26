@@ -77,9 +77,14 @@ def test_company_representative_can_reach_first_post_visit_decision(
     owner, coordinator, representative, company, _, props, _, _ = company_setup
     yesterday = timezone.localtime() - timedelta(days=1)
     visit = PropertyVisit.objects.create(
-        property=props[0], tenant=representative, requested_by=coordinator,
-        company=company, context_kind="company", status="confirmed",
-        visit_date=yesterday.date(), visit_time=yesterday.time().replace(tzinfo=None),
+        property=props[0],
+        tenant=representative,
+        requested_by=coordinator,
+        company=company,
+        context_kind="company",
+        status="confirmed",
+        visit_date=yesterday.date(),
+        visit_time=yesterday.time().replace(tzinfo=None),
         accepted_at=yesterday - timedelta(days=1),
     )
     before = visit_context(visit, representative)
@@ -90,11 +95,17 @@ def test_company_representative_can_reach_first_post_visit_decision(
         projection = visit_context(visit, observer)
         assert projection["post_visit_actions"]["can_submit"] is False
         assert projection["rental_continuation"]["next_action"] is None
-    submit_decision(representative, visit.id, {
-        "decision": decision_value, "attended": True,
-        "reason": "Private reason" if decision_value == "decline" else "",
-        "expected_revision": visit.revision, "request_key": str(uuid.uuid4()),
-    })
+    submit_decision(
+        representative,
+        visit.id,
+        {
+            "decision": decision_value,
+            "attended": True,
+            "reason": "Private reason" if decision_value == "decline" else "",
+            "expected_revision": visit.revision,
+            "request_key": str(uuid.uuid4()),
+        },
+    )
     visit.refresh_from_db()
     after = visit_context(visit, coordinator)["rental_continuation"]
     if decision_value == "proceed":
@@ -115,9 +126,14 @@ def test_company_viewing_cannot_offer_decision_before_eligibility(
     _, coordinator, representative, company, _, props, _, _ = company_setup
     day = timezone.localtime() + timedelta(days=1 if future else -1)
     visit = PropertyVisit.objects.create(
-        property=props[0], tenant=representative, requested_by=coordinator,
-        company=company, context_kind="company", status=status,
-        visit_date=day.date(), visit_time=day.time().replace(tzinfo=None),
+        property=props[0],
+        tenant=representative,
+        requested_by=coordinator,
+        company=company,
+        context_kind="company",
+        status=status,
+        visit_date=day.date(),
+        visit_time=day.time().replace(tzinfo=None),
     )
     projection = visit_context(visit, representative)
     assert projection["post_visit_actions"]["can_submit"] is False
@@ -240,25 +256,30 @@ def test_company_viewing_delivery_reauthorizes_current_coordinator(
         deliver_planning_events,
     )
     from core_apps.notifications.services.fcm_service import FCMService
+    from core_apps.notifications.models import DeviceToken
+    from core_apps.notifications.services.push_delivery import dispatch
 
     setup, _, _, _ = viewed
+    DeviceToken.objects.create(user=setup[1], token="synthetic-coordinator-device")
     sent = []
     monkeypatch.setattr(
         FCMService,
-        "send_push_to_user",
-        lambda **kwargs: sent.append(kwargs["user"].pk) or True,
+        "send_push_to_device",
+        lambda **kwargs: sent.append(kwargs["token"]) or True,
     )
     if revoked:
         CompanyMembership.objects.filter(company=setup[3], user=setup[1]).update(
             is_coordinator=False
         )
     deliver_planning_events()
+    dispatch()
     task = PlanningEvent.objects.get(
         recipient=setup[1], event_key__startswith="company.viewing_decision:"
     )
     if revoked:
         assert (
-            task.delivery_status == "stale_or_unauthorized" and setup[1].pk not in sent
+            task.delivery_status == "stale_or_unauthorized"
+            and "synthetic-coordinator-device" not in sent
         )
     else:
-        assert setup[1].pk in sent
+        assert "synthetic-coordinator-device" in sent

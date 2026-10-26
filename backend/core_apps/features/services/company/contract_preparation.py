@@ -16,6 +16,29 @@ from .access import request_for, require_new_business
 from . import contract_access as access, contract_snapshot as snapshots
 
 
+def account_parties(booking_id, data):
+    from .access import booking_account_parties
+
+    parties = booking_account_parties(booking_id, include_preparation=False)
+    parties.update(
+        CompanyMandate.objects.filter(
+            id__in=[data["signer_mandate_id"], data["payer_mandate_id"]]
+        ).values_list("membership__user_id", flat=True)
+    )
+    return parties
+
+
+def existing_account_parties(identity):
+    item = get_object_or_404(CompanyContractPreparation, id=identity)
+    return account_parties(
+        item.booking.id,
+        {
+            "signer_mandate_id": item.signer_mandate.id,
+            "payer_mandate_id": item.payer_mandate.id,
+        },
+    )
+
+
 def booking_for(user, identity, *, lock=False):
     initial = get_object_or_404(CompanyBookingItem, id=identity)
     request_for(user, initial.request.id, lock=lock)
@@ -44,7 +67,9 @@ def notify(item, *, coordinator_only=False):
                     "action_type": "open_company_contract",
                     "target_id": str(item.id),
                     "schema_version": "1",
-                    "workspace": "tenant",
+                    "workspace": (
+                        "owner" if actor == item.snapshot.get("owner_id") else "company"
+                    ),
                 }
             },
         )
@@ -53,6 +78,9 @@ def notify(item, *, coordinator_only=False):
 @transaction.atomic
 def prepare(user, booking_id, data):
     require_new_business()
+    from .access import lock_account_parties
+
+    lock_account_parties(user, account_parties(booking_id, data))
     booking = booking_for(user, booking_id, lock=True)
     existing = (
         CompanyContractPreparation.objects.select_for_update()
@@ -74,6 +102,9 @@ def prepare(user, booking_id, data):
         cycle=cycle,
         lock=True,
     )
+    from ..advanced_execution.progress import validate_company_preparation
+
+    validate_company_preparation(booking, snapshot)
     item = existing or CompanyContractPreparation(booking=booking, created_by=user)
     item.signer_mandate = CompanyMandate.objects.get(id=data["signer_mandate_id"])
     item.payer_mandate = CompanyMandate.objects.get(id=data["payer_mandate_id"])
@@ -106,6 +137,9 @@ def prepare(user, booking_id, data):
 
 @transaction.atomic
 def respond(user, identity, data):
+    from .access import lock_account_parties
+
+    lock_account_parties(user, existing_account_parties(identity))
     item = access.get(user, identity, lock=True)
     require_revision(item, data["expected_revision"])
     if (
@@ -230,6 +264,9 @@ def hold_recorded(booking, user):
 
 @transaction.atomic
 def reserve(user, identity, data):
+    from .access import lock_account_parties
+
+    lock_account_parties(user, existing_account_parties(identity))
     item = access.get(user, identity, lock=True)
     if not access.manages(item, user):
         raise PermissionDenied(

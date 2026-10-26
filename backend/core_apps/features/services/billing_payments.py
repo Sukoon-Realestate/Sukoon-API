@@ -136,6 +136,7 @@ def quote_purchase(user, invoice_id, body, *, platform="unknown"):
     )
     if (
         route["enabled"]
+        and route.get("route") in {"storekit", "play_billing"}
         and plan is not None
         and (
             invoice.amount_minor,

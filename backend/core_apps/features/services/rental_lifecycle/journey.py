@@ -2,7 +2,7 @@
 
 from django.utils import timezone
 from ...models import FinalSettlement
-from ...providers import fake_provider_available
+from ...providers import signing_available
 from ..lease_permissions import agreement_actions
 from ..rental_phase6 import closure_blocking_reasons
 
@@ -110,10 +110,15 @@ def lease_journey(lease, user):
         )
         if actionable:
             next_actor = role
-        elif not fake_provider_available():
-            next_actor = "provider"
         elif lease.status == "draft" and str(user.id) in lease.reviewed_by:
-            next_actor = "tenant" if is_owner else "owner"
+            both_reviewed = {str(lease.owner.id), str(lease.tenant.id)}.issubset(
+                lease.reviewed_by
+            )
+            next_actor = (
+                ("provider" if not signing_available() else "owner")
+                if both_reviewed
+                else ("tenant" if is_owner else "owner")
+            )
         else:
             next_actor = "provider"
         next_action = action(
@@ -224,7 +229,7 @@ def application_journey(interest, proposal, invitation, user):
             # A stopped proposal does not withdraw the underlying application.
             item, kind, actor = interest, "application", "owner"
         elif proposal.status == "accepted":
-            actor = "owner" if fake_provider_available() else "provider"
+            actor = "owner"
         else:
             actor = (
                 ("owner" if user.pk == proposal.owner_id else "tenant")

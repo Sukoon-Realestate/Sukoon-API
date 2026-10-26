@@ -23,12 +23,14 @@ from .model_parts.rental_experiences import (
 from .model_parts.offers import (
     RentalInterest,
     TermsProposal,
+    TermsProposalVersion,
     TenancyInvitation,
 )
 from .model_parts.owner_payments import (
     RentalCommercialPolicy,
     OwnerPaymentProfile,
     OwnerOnboardingSession,
+    OwnerBeneficiarySubmission,
 )
 from .model_parts.recovery import (
     IdempotencyRecord,
@@ -65,6 +67,7 @@ from .model_parts.maintenance_changes import (
     MaintenanceRequest,
     MaintenanceEvent,
     RentalChange,
+    RentalChangeVersion,
     ChangeSigningSession,
 )
 from .model_parts.settlements import (
@@ -107,7 +110,11 @@ from .model_parts.decision_facts import (
     RentalAvailabilityConfirmation,
 )
 from .model_parts.reservations import RentalInventoryUnit, ReservationHold
-from .model_parts.group_bookings import GroupBookingProposal, GroupBookingParticipant
+from .model_parts.group_bookings import (
+    GroupBookingProposal,
+    GroupBookingParticipant,
+    GroupBookingTermsVersion,
+)
 from .model_parts.operational_cases import (
     RentalOperationalCase,
     RentalAuditEvent,
@@ -125,7 +132,9 @@ from .student_models import (
     StudentOfferPolicy,
 )
 
+from .company_negotiation_models import CompanyTermsNegotiation, CompanyTermsVersion
 from .company_models import (
+    CompanyRequestVersion,
     Company,
     CompanyMembership,
     CompanyInvitation,
@@ -199,17 +208,6 @@ from .housing_scenario_models import (
     HousingScenarioDecision,
     HousingScenarioComparison,
 )
-from .asset_passport_models import (
-    AssetItem,
-    AssetLocationPeriod,
-    AssetLifecycleEvent,
-    AssetObservation,
-    AssetAnalysisJob,
-    AssetAnalysisSuggestion,
-    AssetSharedSystem,
-    AssetPatternCase,
-    AssetWarrantyReference,
-)
 from .advanced_execution_models import (
     AdvancedExecution,
     AdvancedExecutionLeg,
@@ -228,6 +226,12 @@ from .model_parts.chargebacks import (
 )
 
 from .company_saved_models import CompanySavedList, CompanySavedItem
+from .decision_models import (
+    DecisionNotebook,
+    DecisionNotebookVersion,
+    DecisionNotebookConflict,
+    DecisionNotebookOperation,
+)
 
 from .commerce_models import (
     CommerceFeature,
@@ -245,7 +249,11 @@ from .commerce_models import (
 )
 
 from .paymob_models import PaymobPayment
-from .paymob_models import PaymobRefund, PaymentFulfillment
+from .paymob_models import PaymobRefund, PaymobPayout, PaymentFulfillment
+from .signing_models import RentalSigningDocument, RentalSigningHint
 from .shared_housing_models import (
-    SharedHousingPlan, SharedHousingProposal, SharedHousingAllocation, SharedHousingConsent,
+    SharedHousingPlan,
+    SharedHousingProposal,
+    SharedHousingAllocation,
+    SharedHousingConsent,
 )

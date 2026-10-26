@@ -8,6 +8,7 @@ from ...models import (
     CheckoutSession,
     Lease,
     OwnerOnboardingSession,
+    OwnerBeneficiarySubmission,
     OwnerPaymentProfile,
     RentalInterest,
     RentInvoice,
@@ -62,6 +63,7 @@ def get_authorized_rental_subject(user, subject_id):
     # Session/quote receipts identify the created resource, not its parent.
     # Resolve these private results when reconciling an uncertain creation.
     for model, actor_filter in (
+        (OwnerBeneficiarySubmission, {"profile__owner": user}),
         (OwnerOnboardingSession, {"owner_profile__owner": user}),
         (SigningSession, {"signer": user}),
         (ChangeSigningSession, {"signer": user}),

@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import Link from '@/components/ui/AdminLink';
 import { Users, Building2, Clock, TrendingUp, Calendar, AlertTriangle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { DashboardMetric } from '@/lib/api/types';
 
@@ -67,12 +67,14 @@ export const MetricCard: React.FC<MetricCardProps> = ({ metric, delay = 0, href 
 
         <span
           className={`inline-flex items-center gap-1 text-xs font-black px-2.5 py-1 rounded-full dir-ltr ${
-            metric.isPositive
+            metric.isPositive === null
+              ? 'text-[var(--text-muted)] border border-[var(--card-border)]'
+              : metric.isPositive
               ? 'bg-emerald-100 text-emerald-800 border border-emerald-300/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30'
               : 'bg-rose-100 text-rose-800 border border-rose-300/80 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30'
           }`}
         >
-          {metric.isPositive ? (
+          {metric.isPositive === null ? null : metric.isPositive ? (
             <ArrowUpRight className="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
           ) : (
             <ArrowDownRight className="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />

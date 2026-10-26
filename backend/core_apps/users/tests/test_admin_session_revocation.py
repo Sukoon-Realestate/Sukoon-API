@@ -34,17 +34,17 @@ def test_global_revocation_ends_both_original_browser_sessions(operator):
         assert "_auth_user_id" not in browser.session
 
 
-def test_compromise_revocation_ends_original_browser_authority(operator):
+def test_independent_restriction_revocation_ends_original_browser_authority(operator):
     browser = Client()
     browser.force_login(operator)
-    revoke_all(operator, actor=operator, action="account.compromised", freeze=True)
+    revoke_all(operator, actor=operator, action="account.administrative_restriction", freeze=True)
     response = browser.get(reverse("admin:index"))
     assert response.status_code == 302 and "/login/" in response.url
     assert "_auth_user_id" not in browser.session
 
 
 def test_frozen_operator_cannot_start_a_new_admin_session_with_password(operator):
-    revoke_all(operator, actor=operator, action="account.compromised", freeze=True)
+    revoke_all(operator, actor=operator, action="account.administrative_restriction", freeze=True)
     browser = Client()
     response = browser.post(
         reverse("admin:login"),

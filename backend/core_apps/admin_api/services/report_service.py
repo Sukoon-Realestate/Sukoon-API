@@ -75,42 +75,24 @@ def get_report_metrics():
 
 
 def get_support_tickets_queryset():
-    """
-    Returns optimized queryset for support tickets mapped from UserReport.
-    """
-    return (
-        UserReport.objects.select_related("reported_user", "reporter", "reviewed_by")
-        .prefetch_related("reported_user__properties")
-        .order_by("-created_at")
-    )
+    from core_apps.support.models import Ticket
+    return Ticket.objects.select_related("user", "assigned_to").order_by("-updated_at", "-id")
 
 
 def get_support_metrics():
-    """
-    Returns live support ticket operational metrics.
-    """
+    from core_apps.support.models import Ticket
+    from django.db.models import Avg, F
     today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    
-    # ? Solved today includes dismissed or resolved reports reviewed today
-    solved_today = UserReport.objects.filter(
-        status__in=[UserReport.Status.DISMISSED, UserReport.Status.BANNED, UserReport.Status.SUSPENDED],
-        reviewed_at__gte=today_start,
-    ).count()
-
-    in_progress = UserReport.objects.filter(
-        status=UserReport.Status.ACTIVE,
-        reviewed_by__isnull=False,
-    ).count()
-
-    open_tickets = UserReport.objects.filter(
-        status=UserReport.Status.ACTIVE,
-    ).count()
-
+    tickets = Ticket.objects.all()
+    duration = tickets.filter(resolved_at__isnull=False).aggregate(
+        duration=Avg(F("resolved_at") - F("created_at"))
+    )["duration"]
     return {
-        "avgResolutionTime": "4.2h",
-        "solvedToday": solved_today,
-        "inProgress": in_progress,
-        "openTickets": open_tickets,
+        "avgResolutionTime": f"{duration.total_seconds() / 3600:.1f}h" if duration else "غير متاح",
+        "solvedToday": tickets.filter(status__in=["resolved", "closed"], resolved_at__gte=today_start).count(),
+        "inProgress": tickets.filter(status="in_progress").count(),
+        "openTickets": tickets.filter(status="open").count(),
+        "escalated": tickets.filter(escalated=True, status__in=["open", "in_progress"]).count(),
     }
 
 
@@ -118,7 +100,8 @@ def get_reports_overview_stats():
     """
     Returns aggregated stats and recent tickets for the reports & tickets overview page.
     """
-    today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    now = timezone.now()
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
     active_disputes = UserReport.objects.filter(
         status=UserReport.Status.ACTIVE,
@@ -128,6 +111,7 @@ def get_reports_overview_stats():
     solved_today = UserReport.objects.filter(
         status__in=[UserReport.Status.DISMISSED, UserReport.Status.BANNED, UserReport.Status.SUSPENDED],
         reviewed_at__gte=today_start,
+        reviewed_at__lte=now,
     ).count()
 
     open_tickets = UserReport.objects.filter(
@@ -148,21 +132,23 @@ def get_reports_overview_stats():
         {"title": "دقة المعلومات والوصف", "count": reason_counts["misleading"], "color": "bg-amber-500"},
         {"title": "إساءة وسلوك غير لائق", "count": reason_counts["abusive"], "color": "bg-blue-500"},
         {"title": "إعلانات مزعجة وتكرار", "count": reason_counts["spam"], "color": "bg-teal-500"},
+        {"title": "أسباب أخرى", "count": reason_counts["other"], "color": "bg-slate-500"},
     ]
 
     # ? Recent property visits for booking log
     from core_apps.properties.models.visit import PropertyVisit
-    recent_visits_qs = PropertyVisit.objects.select_related("property", "tenant").order_by("-created_at")[:6]
+    recent_visits_qs = PropertyVisit.objects.filter(created_at__lte=now).select_related("property", "tenant").order_by("-created_at")[:6]
     booking_log = []
     for visit in recent_visits_qs:
         booking_log.append({
-            "id": f"BK-{str(visit.id)[:6].upper()}",
-            "title": visit.property.title[:25],
-            "status": "مكتمل" if visit.status == PropertyVisit.Status.CONFIRMED else "ملغي",
+            "id": str(visit.id),
+            "title": visit.property.title,
+            "status": visit.get_status_display(),
         })
 
     return {
-        "avgResolutionTime": "4.2 ساعة",
+        "avgResolutionTime": "غير متاح",
+        "measured_at": now.isoformat(),
         "activeDisputes": active_disputes,
         "solvedToday": solved_today,
         "openTickets": open_tickets,

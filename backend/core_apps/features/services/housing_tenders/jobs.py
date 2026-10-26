@@ -38,6 +38,9 @@ def process_tender_packages(identifier):
         run.completed_at = timezone.now()
         run.revision += 1
         run.save()
+        from ..advanced_planning_notifications import record
+
+        record(run, None, "tender.result")
         return run.status
 
 

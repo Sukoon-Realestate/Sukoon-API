@@ -8,13 +8,24 @@ from ...models import (
     FinalSettlement,
     RentalChargeback,
 )
-from ...providers import fake_provider_available, mock_completion_metadata
+from ...providers import (
+    fake_provider_available,
+    signing_available,
+    mock_completion_metadata,
+)
 from ..rental_phase3 import invoice_balance_minor, invoice_payment_allowed
 from ..rental_phase6 import closure_blocking_reasons
 from . import tenancy_access as access
+from ..signing_documents import (
+    projection as signing_projection,
+    unresolved as unresolved_signature,
+    renewable_session,
+)
 
 
 def payload(item, user):
+    from .tenancy_events import history
+    from ..refund_notifications import history as refund_history, attempt_history
     from .tenancy_changes import can_withdraw
     from ..business_policies import public_bound
     from django.utils.translation import get_language
@@ -38,7 +49,7 @@ def payload(item, user):
         else [r for r in assignments if r.employee_id == user.pk]
     )
     allowed = ["open_case"]
-    provider = fake_provider_available()
+    provider = signing_available()
     blockers = []
     if lease.status in {"draft", "pending_signatures"}:
         from .tenancy_contracts import validate_unsigned
@@ -65,6 +76,7 @@ def payload(item, user):
             allowed += ["submit_signature"]
     if (
         lease.status in {"draft", "expired", "pending_signatures"}
+        and not unresolved_signature(lease)
         and roles & {"owner", "coordinator"}
         and not (
             lease.status == "pending_signatures" and lease.signing_sessions.exists()
@@ -81,11 +93,14 @@ def payload(item, user):
         and provider
         and not blockers
         and not release_pending
-        and not lease.signing_sessions.filter(
-            signer=user,
-            document_id=lease.document_id,
-            document_hash=lease.document_hash,
-        ).exists()
+        and (
+            not lease.signing_sessions.filter(
+                signer=user,
+                document_id=lease.document_id,
+                document_hash=lease.document_hash,
+            ).exists()
+            or renewable_session(lease, user)
+        )
     ):
         allowed += ["sign"]
     if roles & {"owner", "signer"} and initial_recovery.can_propose(item):
@@ -212,6 +227,11 @@ def payload(item, user):
                     row, user, roles, provider
                 ),
                 "signing_sessions": continuation_sessions(row, user),
+                "signing_document": (
+                    signing_projection(row.rental_change, user)
+                    if commercial and row.rental_change_id
+                    else None
+                ),
                 "decisions": (
                     row.decisions
                     if commercial
@@ -301,6 +321,7 @@ def payload(item, user):
         "id": str(item.id),
         "lease_id": str(lease.id),
         "revision": lease.revision,
+        "history": history(item, user),
         "company_id": str(lease.renter_company.id),
         "company_name": lease.renter_company.name,
         "title": booking.request.title,
@@ -315,6 +336,7 @@ def payload(item, user):
         "ends_on_exclusive": str(lease.end_date),
         "terms_digest": item.terms_digest,
         "document_hash": lease.document_hash if commercial else "",
+        "signing_document": signing_projection(lease, user) if commercial else None,
         "business_policies": (
             public_bound(
                 lease.terms, "ar" if (get_language() or "").startswith("ar") else "en"
@@ -326,7 +348,15 @@ def payload(item, user):
         "reviewed_roles": list(item.contract_reviews) if commercial else [],
         "actions": allowed,
         "provider_available": provider,
-        "provider_mode": "mock" if provider else "unavailable",
+        "provider_mode": (
+            (
+                "test"
+                if lease.signing_documents.filter(id=lease.document_id).exists()
+                else "mock" if fake_provider_available() else "test"
+            )
+            if provider
+            else "unavailable"
+        ),
         "blocking_reasons": blockers,
         "closure_blocking_reasons": (
             closure_blocking_reasons(lease) if commercial else []
@@ -442,6 +472,8 @@ def payload(item, user):
                     "amount_minor": r.amount_minor,
                     "purpose": r.purpose,
                     "failure_code": r.failure_code,
+                    "history": refund_history(r),
+                    "attempts": attempt_history(r),
                 }
                 for r in lease.refund_requests.order_by("created_at")
             ]

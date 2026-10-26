@@ -5,11 +5,20 @@ from core_apps.features.models import RentalAuditEvent
 from core_apps.properties.models import Property, PropertyImage
 
 
+@pytest.fixture(autouse=True)
+def local_admin_assets(settings):
+    settings.STATICFILES_STORAGE = (
+        "django.contrib.staticfiles.storage.StaticFilesStorage"
+    )
+
+
 @pytest.mark.django_db
 def test_property_requests_admin_lists_filters_and_opens_submissions(
     client, superuser, user, apartment_type, cairo_city, cairo_governorate, settings
 ):
-    settings.STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    settings.STATICFILES_STORAGE = (
+        "django.contrib.staticfiles.storage.StaticFilesStorage"
+    )
     pending = Property.objects.create(
         owner=user,
         title="Pending submission",
@@ -52,14 +61,22 @@ def test_property_requests_admin_lists_filters_and_opens_submissions(
         reverse("admin:properties_propertyrequest_change", args=[pending.pk])
     )
     assert response.status_code == 200
-    assert set(response.context["adminform"].form.fields) == {"status", "is_verified"}
+    assert set(response.context["adminform"].form.fields) == {
+        "decision",
+        "reason",
+        "internal_note",
+        "expected_version",
+        "request_key",
+    }
 
 
 @pytest.mark.django_db
 def test_property_request_edit_only_changes_status_and_verification(
     client, superuser, user, apartment_type, cairo_city, cairo_governorate, settings
 ):
-    settings.STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    settings.STATICFILES_STORAGE = (
+        "django.contrib.staticfiles.storage.StaticFilesStorage"
+    )
     property_obj = Property.objects.create(
         owner=user,
         title="Original title",
@@ -79,6 +96,11 @@ def test_property_request_edit_only_changes_status_and_verification(
     assert not inline.has_change_permission
     assert not inline.has_delete_permission
     payload = {
+        "decision": "approve",
+        "expected_version": response.context["adminform"].form.initial[
+            "expected_version"
+        ],
+        "request_key": str(response.context["adminform"].form.initial["request_key"]),
         "status": Property.Status.VERIFIED,
         "is_verified": "on",
         "title": "Tampered title",
@@ -108,7 +130,9 @@ def test_property_request_edit_only_changes_status_and_verification(
 def test_property_requests_admin_reuses_property_permissions(client, user, settings):
     from django.contrib.auth.models import Permission
 
-    settings.STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    settings.STATICFILES_STORAGE = (
+        "django.contrib.staticfiles.storage.StaticFilesStorage"
+    )
     user.is_staff = True
     user.save(update_fields=["is_staff"])
     client.force_login(user)
@@ -142,30 +166,30 @@ def test_property_requests_admin_reuses_property_permissions(client, user, setti
     ),
     [
         (
-            "approve_selected_properties",
+            "approve",
             Property.Status.UNDER_REVIEW,
             False,
             Property.Status.VERIFIED,
             True,
-            "approve_admin_property",
+            "property.moderation.approve",
             "",
         ),
         (
-            "request_property_revisions",
+            "request_revision",
             Property.Status.VERIFIED,
             True,
             Property.Status.NEEDS_REVISION,
             False,
-            "request_admin_property_revision",
+            "property.moderation.request_revision",
             "Please update the ownership details.",
         ),
         (
-            "reject_selected_properties",
+            "reject",
             Property.Status.UNDER_REVIEW,
             False,
-            Property.Status.HIDDEN,
+            Property.Status.NEEDS_REVISION,
             False,
-            "reject_admin_property",
+            "property.moderation.reject",
             "The listing does not meet the publication requirements.",
         ),
     ],
@@ -198,15 +222,20 @@ def test_property_admin_moderation_actions_are_audited(
     )
     client.force_login(superuser)
 
-    response = client.post(
-        reverse(f"admin:properties_{admin_model}_changelist"),
-        {
-            "action": action,
-            "_selected_action": str(property_obj.pk),
-            "index": "0",
-            "reason": reason,
-        },
-    )
+    url = reverse(f"admin:properties_{admin_model}_change", args=[property_obj.pk])
+    response = client.get(url)
+    form = response.context["adminform"].form
+    payload = {
+        "decision": action,
+        "reason": reason,
+        "expected_version": form.initial["expected_version"],
+        "request_key": str(form.initial["request_key"]),
+        "_save": "Save",
+    }
+    for inline in response.context["inline_admin_formsets"]:
+        for field in inline.formset.management_form:
+            payload[field.html_name] = field.value()
+    response = client.post(url, payload)
 
     assert response.status_code == 302
     property_obj.refresh_from_db()
@@ -221,9 +250,7 @@ def test_property_admin_moderation_actions_are_audited(
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "action", ["request_property_revisions", "reject_selected_properties"]
-)
+@pytest.mark.parametrize("action", ["request_revision", "reject"])
 def test_property_admin_requires_reason_for_negative_decisions(
     client,
     superuser,
@@ -243,17 +270,22 @@ def test_property_admin_requires_reason_for_negative_decisions(
     )
     client.force_login(superuser)
 
-    response = client.post(
-        reverse("admin:properties_property_changelist"),
-        {
-            "action": action,
-            "_selected_action": str(property_obj.pk),
-            "index": "0",
-            "reason": "",
-        },
-    )
-
-    assert response.status_code == 302
+    url = reverse("admin:properties_property_change", args=[property_obj.pk])
+    response = client.get(url)
+    form = response.context["adminform"].form
+    payload = {
+        "decision": action,
+        "reason": "",
+        "expected_version": form.initial["expected_version"],
+        "request_key": str(form.initial["request_key"]),
+        "_save": "Save",
+    }
+    for inline in response.context["inline_admin_formsets"]:
+        for field in inline.formset.management_form:
+            payload[field.html_name] = field.value()
+    response = client.post(url, payload)
+    assert response.status_code == 200
+    assert "reason" in response.context["adminform"].form.errors
     property_obj.refresh_from_db()
     assert property_obj.status == Property.Status.UNDER_REVIEW
     assert not RentalAuditEvent.objects.filter(

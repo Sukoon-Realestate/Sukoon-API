@@ -8,7 +8,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import FinalSettlement, Lease, PrivateAccessRevocation, RentalEvidence
-from ..providers import require_rental_provider
+from ..providers import require_rental_provider, require_verified_rental_account
 from ..renderers import FeatureJsonRenderer
 from ..services.cycle_permissions import cycle_actions
 from ..services.commands import command_identity, money_minor
@@ -26,9 +26,13 @@ def _money(value):
     return {"amount_minor": value, "currency": "EGP", "exponent": 2}
 
 
-def _lease(request, lease_id, lock=False):
+def _lease(request, lease_id, lock=False, *, provider_required=False):
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
-        require_rental_provider(request.user)
+        (
+            require_rental_provider
+            if provider_required
+            else require_verified_rental_account
+        )(request.user)
     queryset = Lease.objects.select_related("owner", "tenant", "property")
     if lock:
         queryset = queryset.select_for_update(of=("self",))

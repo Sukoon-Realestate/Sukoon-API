@@ -131,7 +131,7 @@ def process_current(process):
             source
             and source.revision
             == process.academic_snapshot.get("source_housing_offer_revision")
-            and offer_status(source) == "selected_to_proceed"
+            and offer_status(source, existing_process=True) in {"sent", "viewed"}
         )
     return True
 
@@ -192,7 +192,7 @@ def source_snapshot(user, group, plan, selection):
     response = get_offer(user, source["housing_offer_id"], lock=True)
     if (
         response.revision != source["housing_offer_revision"]
-        or offer_status(response) != "selected_to_proceed"
+        or offer_status(response) not in {"sent", "viewed"}
         or response.request.academic_revision != plan.requirements_revision
     ):
         raise RentalConflict(
@@ -203,3 +203,44 @@ def source_snapshot(user, group, plan, selection):
         "source_housing_offer_revision": response.revision,
         "student_policy": response.student_policy_snapshot,
     }
+
+
+def bind_housing_response(user, group, data):
+    """Bind the source atomically with a real group action, never on viewing a card."""
+    identifier = data.get("source_housing_offer_id")
+    if not identifier:
+        return
+    from ...planning_housing_views_parts.housing_request_action import (
+        get_offer,
+        offer_status,
+    )
+    from ...planning_models import HousingRequest
+
+    plan = context(user, group, data)
+    if not plan:
+        raise ValidationError({"academic_plan_id": "Choose the source academic plan."})
+    response = get_offer(user, identifier)
+    HousingRequest.objects.select_for_update().get(pk=response.request_id)
+    response = get_offer(user, identifier, lock=True)
+    check_revision(response.revision, data.get("source_housing_offer_revision"))
+    supplied = data.get("selection") or {}
+    if (
+        response.request.academic_plan_id != plan.pk
+        or offer_status(response) not in {"sent", "viewed"}
+        or any(
+            str(response.selection.get(key)) != str(supplied.get(key))
+            for key in ("property_id", "offer_id", "offer_revision")
+        )
+    ):
+        raise RentalConflict(
+            "Review the changed source housing response.", code="source_changed"
+        )
+    link_selection(
+        group,
+        plan,
+        response.selection,
+        source={
+            "housing_offer_id": str(response.id),
+            "housing_offer_revision": response.revision,
+        },
+    )

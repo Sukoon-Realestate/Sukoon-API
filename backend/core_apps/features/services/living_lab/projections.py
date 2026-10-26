@@ -121,6 +121,9 @@ def lab_payload(lab, user, *, detail=True):
         "purged_at": lab.purged_at.isoformat() if lab.purged_at else "",
     }
     if detail:
+        from .notifications import public_history
+
+        value["public_history"] = public_history(lab)
         value["previous_arrangement"] = None
         if lab.parent_agreement_id:
             from .access import lab_for

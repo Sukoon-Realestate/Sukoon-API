@@ -22,6 +22,9 @@ ACTIONS = {
     "account.contact.change",
     "private.export",
     "account.mfa.manage",
+    "account.totp.recovery.review",
+    "account.closure.request",
+    "account.closure.review",
 }
 
 
@@ -30,8 +33,10 @@ def _digest(value):
 
 
 def _adapter(policy):
-    name = getattr(settings, "SECURITY_ASSURANCE_PROVIDER", "")
-    if not name or name != policy.rules.get("provider"):
+    name = getattr(settings, "SECURITY_ASSURANCE_PROVIDER", "") or (
+        "core_apps.users.services.assurance.AccountAssuranceProvider"
+    )
+    if name != policy.rules.get("provider"):
         raise RentalConflict(
             "Approved identity verification is unavailable.",
             code="assurance_unavailable",
@@ -47,10 +52,9 @@ def _adapter(policy):
 def _actor(request):
     user = User.objects.select_for_update().get(pk=request.user.pk)
     validate_session(user, request.auth or {})
-    if user.sensitive_actions_frozen:
-        raise PermissionDenied(
-            "New sensitive actions are restricted. Existing receipts remain available."
-        )
+    from .totp import require_sensitive_access
+
+    require_sensitive_access(user)
     session = AuthSession.objects.filter(
         user=user, id=(request.auth or {}).get("session_id"), revoked_at__isnull=True
     ).first()
@@ -95,7 +99,7 @@ def begin(request, data):
         resource_revision=data["resource_revision"],
         payload_digest=fingerprint(data["payload"]),
         policy=policy,
-        expires_at=timezone.now() + timedelta(seconds=ttl),
+        expires_at=timezone.now() + timedelta(seconds=min(ttl, 300)),
     )
     result = provider.begin(_binding(item))
     item.provider_challenge = result["reference"]
@@ -107,8 +111,16 @@ def begin(request, data):
     }
 
 
-@transaction.atomic
 def verify(request, identity, assertion):
+    # Invalid-code counters must commit; raising inside atomic would reset them.
+    with transaction.atomic():
+        result = _verify_locked(request, identity, assertion)
+    if result is None:
+        raise PermissionDenied("Identity verification was not confirmed.")
+    return result
+
+
+def _verify_locked(request, identity, assertion):
     user, session = _actor(request)
     item = (
         SensitiveAuthorization.objects.select_for_update()
@@ -135,7 +147,7 @@ def verify(request, identity, assertion):
         or result.get("assurance") != current.rules["assurance"]
         or result.get("verified") is not True
     ):
-        raise PermissionDenied("Identity verification was not confirmed.")
+        return None
     proof = secrets.token_urlsafe(32)
     item.proof_digest, item.verified_at = _digest(proof), timezone.now()
     item.assurance = result["assurance"]
@@ -146,6 +158,8 @@ def verify(request, identity, assertion):
 def consume(request, *, action, resource_id, revision, payload=None):
     if not transaction.get_connection().in_atomic_block:
         raise RuntimeError("Consume the authorization inside the command transaction.")
+    from .totp import require_sensitive_access
+
     # Explicit isolated test setting only; never enabled by production defaults.
     if getattr(
         settings, "RENTAL_RUNTIME_ENVIRONMENT", "production"
@@ -153,6 +167,9 @@ def consume(request, *, action, resource_id, revision, payload=None):
         from core_apps.features.providers import fake_provider_available
 
         if fake_provider_available():
+            require_sensitive_access(
+                User.objects.select_for_update().get(pk=request.user.pk)
+            )
             return
     user, session = _actor(request)
     policy = approved_policy("D26", action)
@@ -183,6 +200,18 @@ def consume(request, *, action, resource_id, revision, payload=None):
         raise PermissionDenied(
             "Fresh verification for these exact action details is required."
         )
+    if item.assurance == "email_otp_or_totp":
+        from .totp import is_staff_account, current_factor
+
+        if is_staff_account(user):
+            if current_factor(user).revision != item.factor_revision:
+                raise PermissionDenied(
+                    "The staff verification factor changed. Verify this action again."
+                )
+        elif item.factor_revision is not None:
+            raise PermissionDenied(
+                "The account verification context changed. Verify this action again."
+            )
     item.consumed_at = timezone.now()
     item.save(update_fields=["consumed_at", "updated_at"])
     SecurityEvent.objects.create(

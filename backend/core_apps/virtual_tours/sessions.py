@@ -17,6 +17,7 @@ def available_variant(variant, preview=False, user=None):
     tour, prop = revision.tour, revision.tour.target
     if revision.capture_job_id:
         from .capture_delivery import source
+
         source(revision)
     require(
         enabled(tour.kind, preview) and not tour.deleted,
@@ -32,13 +33,27 @@ def available_variant(variant, preview=False, user=None):
         409,
     )
     if preview:
-        require(
+        from django.contrib.auth import get_user_model
+        from rest_framework.exceptions import PermissionDenied
+        from .review_access import reviewer
+
+        user = (
+            get_user_model().objects.filter(pk=user.pk, is_active=True).first()
+            if user and user.is_authenticated
+            else None
+        )
+        authorized = bool(
             user
-            and user.is_authenticated
-            and (
-                getattr(prop, "owner_id", getattr(prop, "manager_id", None)) == user.pk
-                or (user.is_staff and user.has_perm("virtual_tours.view_tourrevision"))
-            ),
+            and getattr(prop, "owner_id", getattr(prop, "manager_id", None)) == user.pk
+        )
+        if user and not authorized:
+            try:
+                reviewer(user)
+                authorized = True
+            except (PermissionDenied, TourError):
+                pass
+        require(
+            authorized,
             "preview_forbidden",
             "Preview access is restricted.",
             403,
@@ -123,7 +138,15 @@ def available(prop, context="overview"):
 
 def create_session(tour, user, body):
     require(
-        set(body).issubset({"offer_id", "preview", "revision_id", "context", "supported_manifest_versions"}),
+        set(body).issubset(
+            {
+                "offer_id",
+                "preview",
+                "revision_id",
+                "context",
+                "supported_manifest_versions",
+            }
+        ),
         "invalid_session",
         "Unsupported viewer session field.",
     )
@@ -168,10 +191,15 @@ def create_session(tour, user, body):
     )
     available_variant(variant, preview, user)
     versions = body.get("supported_manifest_versions", [1])
-    require(isinstance(versions, list) and 1 <= len(versions) <= 4
-            and all(type(v) is int and v in (1, 2) for v in versions)
-            and variant.manifest["schema_version"] in versions,
-            "unsupported_manifest", "Update the app to open this capture tour.", 409)
+    require(
+        isinstance(versions, list)
+        and 1 <= len(versions) <= 4
+        and all(type(v) is int and v in (1, 2) for v in versions)
+        and variant.manifest["schema_version"] in versions,
+        "unsupported_manifest",
+        "Update the app to open this capture tour.",
+        409,
+    )
     token = secrets.token_urlsafe(32)
     now = timezone.now()
     session = TourViewerSession.objects.create(

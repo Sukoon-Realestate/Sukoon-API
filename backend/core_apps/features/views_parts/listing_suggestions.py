@@ -4,19 +4,15 @@ from core_apps.common.locale_middleware import resolve_request_language
 
 from datetime import timedelta
 from django.contrib.contenttypes.models import ContentType
-from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from core_apps.common.models import ContentView
 from core_apps.properties.models import Property, PropertyVisit, SavedProperty
-from ..models import ListingSuggestion
 from ..renderers import FeatureJsonRenderer
-from .rental_operation_lookup import _replay, _remember
 
 
 def analytics_snapshot(request, property_id):
@@ -138,66 +134,7 @@ def owner_analytics_export(request, property_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def listing_suggestions(request):
-    required = {"facts", "language", "request_key"}
-    if not required.issubset(request.data):
-        raise ValidationError(
-            {key: "This field is required." for key in required - set(request.data)}
-        )
-    if request.data["language"] not in {"ar", "en"} or not isinstance(
-        request.data["facts"], dict
-    ):
-        raise ValidationError("language must be ar/en and facts must be an object.")
-    replay = _replay(
-        request.user, "suggestion.create", request.data["request_key"], request.data
-    )
-    if replay:
-        return replay
-    property_obj = None
-    if request.data.get("property_id"):
-        property_obj = get_object_or_404(
-            Property, id=request.data["property_id"], owner=request.user
-        )
-    facts = request.data["facts"]
-    title = str(
-        facts.get("title")
-        or ("مسكن مميز" if request.data["language"] == "ar" else "A distinctive home")
-    )[:150]
-    description = str(facts.get("description") or "").strip()
-    if not description:
-        place = facts.get("district") or facts.get("governorate") or ""
-        description = (
-            f"مسكن متاح في {place}"
-            if request.data["language"] == "ar"
-            else f"A home available in {place}"
-        ).strip()
-    warnings = (
-        []
-        if facts.get("description")
-        else ["Description was generated only from the supplied public facts."]
-    )
-    with transaction.atomic():
-        suggestion = ListingSuggestion.objects.create(
-            owner=request.user,
-            property=property_obj,
-            language=request.data["language"],
-            facts=facts,
-            suggested_title=title,
-            suggested_description=description[:5000],
-            warnings=warnings,
-        )
-        data = {
-            "id": str(suggestion.id),
-            "property_id": str(property_obj.id) if property_obj else "",
-            "suggested_title": suggestion.suggested_title,
-            "suggested_description": suggestion.suggested_description,
-            "warnings": warnings,
-        }
-        _remember(
-            request.user,
-            "suggestion.create",
-            request.data["request_key"],
-            request.data,
-            data,
-            201,
-        )
-    return Response(data, status=status.HTTP_201_CREATED)
+    from ..services.listing_suggestion_commands import create
+
+    data, response_status = create(request.user, request.data, auth_claims=request.auth)
+    return Response(data, status=response_status)

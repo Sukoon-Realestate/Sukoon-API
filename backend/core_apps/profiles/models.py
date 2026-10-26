@@ -17,7 +17,7 @@ class Profile(TimeStampedModel):
         User, verbose_name=_("User"), on_delete=models.CASCADE, related_name="profile"
     )
     gender = models.CharField(
-        _("Gender"), max_length=6, choices=Gender.choices, default=Gender.MALE
+        _("Gender"), max_length=6, choices=Gender.choices, default=Gender.MALE, null=True, blank=True
     )
     birth_date = models.DateField(_("Birth Date"), null=True, blank=True)
     phone_number = PhoneNumberField(_("Phone Number"), blank=True, default="")

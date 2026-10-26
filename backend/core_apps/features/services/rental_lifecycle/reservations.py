@@ -101,8 +101,12 @@ def create_hold(prop, actor, data, *, external=False):
         from ..shared_housing.access import guard_individual
         guard_individual(proposal.interest)
         require_revision(proposal, data.get("proposal_revision"))
+        if proposal.author_id:
+            from ..negotiation_terms import require_followup, current_selection
+            require_followup(proposal)
+            current_selection(proposal)
         if (
-            proposal.offer_snapshot != snapshot
+            (not proposal.author_id and proposal.offer_snapshot != snapshot)
             or proposal.terms["starts_on"] != starts.isoformat()
             or proposal.terms["ends_on_exclusive"] != ends.isoformat()
         ):
@@ -248,7 +252,11 @@ def change_hold(hold, actor, data, action):
             or fingerprint(hold.proposal.terms) != hold.terms_digest
         ):
             raise RentalConflict("Review the changed terms.", code="document_changed")
-        resolve_offer_snapshot(hold.property, hold.offer_id, hold.offer_revision)
+        if hold.proposal and hold.proposal.author_id:
+            from ..negotiation_terms import current_selection
+            current_selection(hold.proposal)
+        else:
+            resolve_offer_snapshot(hold.property, hold.offer_id, hold.offer_revision)
         hold.expires_at = timezone.now() + timedelta(
             minutes=hold.policy_snapshot["hold_minutes"]
         )
@@ -289,10 +297,17 @@ def transfer_hold(lease, proposal):
     )
     if not hold:
         return False
-    if (
-        hold.selection_snapshot != lease.offer_snapshot
-        or hold.terms_digest != fingerprint(lease.terms)
-    ):
+    if proposal.author_id:
+        from ..negotiation_terms import current_selection, material_selection, with_context
+        current_selection(proposal)
+        same_selection = material_selection(with_context(hold.selection_snapshot, lease.property)) == material_selection(lease.offer_snapshot)
+        same_terms = hold.terms_digest == fingerprint(proposal.terms) and all(
+            lease.terms.get(key) == value for key, value in proposal.terms.items()
+        )
+    else:
+        same_selection = hold.selection_snapshot == lease.offer_snapshot
+        same_terms = hold.terms_digest == fingerprint(lease.terms)
+    if not same_selection or not same_terms:
         raise RentalConflict(
             "The reservation and agreement differ.", code="document_changed"
         )

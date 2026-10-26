@@ -82,69 +82,7 @@ class UserReportActionSerializer(serializers.Serializer):
     notes = serializers.CharField(required=False, default="", allow_blank=True)
 
 
-class SupportTicketSerializer(serializers.ModelSerializer):
-    id = serializers.SerializerMethodField()
-    rawId = serializers.SerializerMethodField()
-    subject = serializers.CharField(source="reason", read_only=True)
-    user = serializers.SerializerMethodField()
-    userType = serializers.SerializerMethodField()
-    priority = serializers.SerializerMethodField()
-    status = serializers.SerializerMethodField()
-    statusRaw = serializers.CharField(source="status", read_only=True)
-    timeAgo = serializers.SerializerMethodField()
-    assignedTo = serializers.SerializerMethodField()
-
-    class Meta:
-        model = UserReport
-        fields = [
-            "id",
-            "rawId",
-            "subject",
-            "user",
-            "userType",
-            "priority",
-            "status",
-            "statusRaw",
-            "timeAgo",
-            "assignedTo",
-            "notes",
-            "created_at",
-        ]
-        read_only_fields = fields
-
-    def get_id(self, obj):
-        return f"SUP-{str(obj.id)[:6].upper()}"
-
-    def get_rawId(self, obj):
-        return str(obj.id)
-
-    def get_user(self, obj):
-        return obj.reported_user.get_full_name or obj.reported_user.email
-
-    def get_userType(self, obj):
-        return "مالك" if obj.reported_user.properties.exists() else "مستأجر"
-
-    def get_priority(self, obj):
-        mapping = {
-            "high": "عالي",
-            "auto": "متوسط",
-            "low": "منخفض",
-        }
-        return mapping.get(obj.automation_level, "متوسط")
-
-    def get_status(self, obj):
-        mapping = {
-            "active": "مفتوح",
-            "suspended": "قيد المعالجة",
-            "dismissed": "محلول",
-            "banned": "مغلق",
-        }
-        return mapping.get(obj.status, "مفتوح")
-
-    def get_timeAgo(self, obj):
-        return obj.created_at.strftime("%Y/%m/%d %H:%M")
-
-    def get_assignedTo(self, obj):
-        if obj.reviewed_by:
-            return obj.reviewed_by.get_full_name or obj.reviewed_by.email
-        return "فريق الدعم"
+class SupportTicketSerializer(serializers.BaseSerializer):
+    def to_representation(self, instance):
+        from core_apps.support.services.operations import projection
+        return projection(instance, self.context["request"].user)

@@ -261,6 +261,7 @@ def run_interest_to_activation(
         {
             "interest_id": interest["id"],
             "offer_id": offer_id,
+            "expires_at": (timezone.now() + timedelta(days=2)).isoformat(),
             "terms": terms,
             "interest_revision": interest["revision"],
             "offer_revision": 2,

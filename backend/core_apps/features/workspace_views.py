@@ -12,7 +12,12 @@ from core_apps.profiles.services import ProfileService
 @company_api(["GET"])
 def summary(request):
     user = request.user
-    data = ProfileService.get_tenant_unread_counts(user)
+    from core_apps.notifications.services.inbox_scope import request_scope
+    from core_apps.notifications.services.preferences import touch
+    scope = request_scope(request)
+    if request.query_params.get("active_workspace") == "true":
+        touch(user, scope)
+    data = ProfileService.get_tenant_unread_counts(user, scope=scope)
     counts = {
         key: 0
         for key in ("individual", "student", "owner", "company", "general", "all")

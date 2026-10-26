@@ -36,65 +36,24 @@ from .owner_payment_profile import (
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def terms_proposal_respond(request, proposal_id):
-    proposal = _participant_proposal(request, proposal_id)
     serializer = RentalDecisionSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
-    operation = f"terms_proposal.respond.{proposal_id}"
-    replay = _replay_response(
-        request.user, operation, data["request_key"], request.data
-    )
-    if replay:
-        return replay
-    with transaction.atomic():
-        proposal = _participant_proposal(request, proposal_id, lock=True)
-        if data["expected_revision"] != proposal.revision:
-            raise RentalConflict("Proposal revision conflict.", code="stale_revision")
-        if proposal.status in {
-            TermsProposal.Status.REJECTED,
-            TermsProposal.Status.ACCEPTED,
-        }:
-            raise RentalConflict("This proposal is already closed.")
-        decision = data["decision"]
-        if decision == "accept":
-            from core_apps.chat.moderation.policy import require_business_participants
+    from ..services.rental_lifecycle.common import command
+    from ..services.negotiation_terms import respond
+    from .terms_proposals import proposal_parties
 
-            require_business_participants(proposal.owner, proposal.interest.tenant)
-        actor_id = str(request.user.id)
-        from ..services.rental_lifecycle.consents import record_consent
+    def authorize():
+        return _participant_proposal(request, proposal_id, lock=True, provider_required=False)
 
-        record_consent(proposal, request.user, decision)
-        if decision == "accept":
-            proposal.accepted_by = list(
-                dict.fromkeys([*proposal.accepted_by, actor_id])
-            )
-            required = {str(proposal.owner.id), str(proposal.interest.tenant.id)}
-            proposal.status = (
-                TermsProposal.Status.ACCEPTED
-                if required.issubset(set(proposal.accepted_by))
-                else TermsProposal.Status.PROPOSED
-            )
-        elif decision == "reject":
-            proposal.status = TermsProposal.Status.REJECTED
-        elif decision == "request_changes":
-            proposal.status = TermsProposal.Status.CHANGES_REQUESTED
-            proposal.accepted_by = []
-        else:
-            raise ValidationError({"decision": "Unsupported proposal decision."})
-        proposal.revision += 1
-        proposal.save(update_fields=["accepted_by", "status", "revision", "updated_at"])
-        resource = TermsProposalSerializer(proposal, context={"request": request}).data
-        output = remember_mutation(
-            user=request.user,
-            operation=operation,
-            request_key=data["request_key"],
-            payload=request.data,
-            request_subject_id=proposal.id,
-            result_subject_id=proposal.id,
-            result_revision=proposal.revision,
-            resource=resource,
-        )
-    return Response(output)
+    def execute(proposal):
+        proposal = respond(proposal, request.user, data)
+        return proposal, TermsProposalSerializer(proposal, context={"request": request}).data, 200
+
+    output, status = command(user=request.user, operation=f"terms_proposal.respond.{proposal_id}",
+                             data=request.data, authorize=authorize, execute=execute,
+                             account_parties=lambda: proposal_parties(request, proposal_id))
+    return Response(output, status=status)
 
 
 def create_interest_invitation(request):
@@ -105,56 +64,51 @@ def create_interest_invitation(request):
     if request.user != interest.property.owner:
         raise PermissionDenied("Only the property owner can create the invitation.")
     assert_owner_ready(request.user, interest.property)
-    operation = "rental_invitation.create"
-    replay = _replay_response(
-        request.user, operation, data["request_key"], request.data
-    )
-    if replay:
-        return replay
-    with transaction.atomic():
-        interest = _participant_interest(request, data["interest_id"], lock=True)
+    from ..services.rental_lifecycle.common import command
+    from .terms_proposals import interest_parties
+
+    def authorize():
+        return _participant_interest(request, data["interest_id"], lock=True)
+
+    def execute(interest):
         proposal = _participant_proposal(request, data["terms_proposal_id"], lock=True)
         from core_apps.chat.moderation.policy import require_business_participants
+        from core_apps.users.services.new_business import require_new_business
 
+        if interest.property.owner_id != request.user.pk:
+            raise PermissionDenied("Only the current owner may invite the applicant.")
+        require_new_business(request.user.pk, interest.tenant_id)
         require_business_participants(request.user, interest.tenant)
         if proposal.interest_id != interest.pk:
-            raise ValidationError(
-                {"terms_proposal_id": "Proposal does not belong to interest."}
-            )
+            raise ValidationError({"terms_proposal_id": "Proposal does not belong to interest."})
         if proposal.status != TermsProposal.Status.ACCEPTED:
             raise RentalConflict("Both parties must accept the current terms first.")
         if data["interest_revision"] != interest.revision:
             raise RentalConflict("Interest revision conflict.", code="stale_revision")
-        if str(data["property_id"]) != str(interest.property.id) or str(
-            data["tenant_id"]
-        ) != str(interest.tenant.id):
+        if str(data["property_id"]) != str(interest.property.id) or str(data["tenant_id"]) != str(interest.tenant.id):
             raise ValidationError("Invitation participants do not match the interest.")
         if data["offer_id"] != interest.offer_id:
-            raise RentalConflict(
-                "The invitation must preserve the selected interest offer.",
-                code="offer_mismatch",
+            raise RentalConflict("Keep the selected interest offer.", code="offer_mismatch")
+        if proposal.author_id:
+            from ..services.negotiation_terms import require_followup, current_selection
+            require_followup(proposal, continue_hold=True)
+            current_selection(proposal)
+            if data["offer_revision"] != proposal.offer_snapshot["offer_revision"]:
+                raise RentalConflict("Review the accepted offer version.", code="stale_revision")
+            snapshot = proposal.offer_snapshot
+        else:
+            _, snapshot = resolve_offer_snapshot(
+                interest.property, data["offer_id"], data["offer_revision"], request,
             )
-        _, snapshot = resolve_offer_snapshot(
-            interest.property, data["offer_id"], data["offer_revision"], request
-        )
         from ..services.rental_application_records import create_invitation
-
-        invitation = create_invitation(
-            interest=interest, proposal=proposal, owner=request.user, snapshot=snapshot,
-        )
-        resource = TenancyInvitationSerializer(
-            invitation, context={"request": request}
-        ).data
-        output = remember_mutation(
-            user=request.user,
-            operation=operation,
-            request_key=data["request_key"],
-            payload=request.data,
-            request_subject_id=interest.id,
-            result_subject_id=invitation.id,
-            result_revision=invitation.revision,
-            resource=resource,
-            response_status=201,
-        )
+        invitation = create_invitation(interest=interest, proposal=proposal, owner=request.user, snapshot=snapshot)
+        resource = TenancyInvitationSerializer(invitation, context={"request": request}).data
         create_notification_for_invitation(request, invitation)
-    return Response(output, status=status.HTTP_201_CREATED)
+        return invitation, resource, 201
+
+    output, response_status = command(
+        user=request.user, operation="rental_invitation.create", data=request.data,
+        authorize=authorize, execute=execute,
+        account_parties=lambda: interest_parties(request, data["interest_id"]),
+    )
+    return Response(output, status=response_status)

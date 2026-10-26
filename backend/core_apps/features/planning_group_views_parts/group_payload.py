@@ -177,6 +177,7 @@ def group_payload(group, user):
             .select_related("visit", "interest")
             .order_by("pkid")
             if str(user.id) in x.participant_ids
+            and member.joined_revision <= x.access_group_revision
         ],
         "applications": [
             process_payload(x, user)
@@ -184,6 +185,7 @@ def group_payload(group, user):
             .select_related("visit", "interest")
             .order_by("pkid")
             if str(user.id) in x.participant_ids
+            and member.joined_revision <= x.access_group_revision
         ],
         "allowed_actions": group_actions(user, group),
         "blocking_reasons": [],

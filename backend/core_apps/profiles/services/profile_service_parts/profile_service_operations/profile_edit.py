@@ -6,13 +6,32 @@ from core_apps.profiles.models import Profile, UserSettings
 
 
 class ProfileEditMixin:
+    @staticmethod
+    def _current_account(user):
+        from django.contrib.auth import get_user_model
+        from rest_framework.exceptions import PermissionDenied
+
+        current = get_user_model().objects.select_for_update().get(pk=user.pk)
+        if (
+            not current.is_active
+            or current.closed_at
+            or current.security_epoch != user.security_epoch
+        ):
+            raise PermissionDenied("Account authority changed. Sign in again.")
+        return current
+
     @classmethod
     @transaction.atomic
     def update_user_profile(cls, user: Any, validated_data: Dict[str, Any]) -> Profile:
         """
         Updates user and profile fields atomically for Screen 3: 'تعديل الملف'.
         """
+        user = cls._current_account(user)
         profile, _ = Profile.objects.get_or_create(user=user)
+        if "city" in validated_data:
+            from core_apps.properties.catalog_access import require_current_selection
+
+            require_current_selection(validated_data["city"], previous=profile.city, field="city_id")
         validated_data.pop("gender", None)
         validated_data.pop("birth_date", None)
 
@@ -112,6 +131,7 @@ class ProfileEditMixin:
         Updates settings for the given user within an atomic transaction.
         Enforces privacy constraints (e.g. always_hide_mobile_number cannot be disabled).
         """
+        user = cls._current_account(user)
         settings_obj, _ = UserSettings.objects.get_or_create(user=user)
 
         settings_obj = UserSettings.objects.select_for_update().get(pk=settings_obj.pk)

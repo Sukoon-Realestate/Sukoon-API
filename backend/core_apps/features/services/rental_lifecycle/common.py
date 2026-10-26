@@ -118,6 +118,8 @@ def policy_available(capability):
 
 def staff_role(user, roles):
     profile = getattr(user, "staff_profile", None)
+    if profile and profile.role_name == "security_recovery_reviewer":
+        return False
     return bool(
         user
         and user.is_active
@@ -133,7 +135,7 @@ def require_staff(user, roles):
         raise PermissionDenied("This operation requires an assigned staff role.")
 
 
-def command(*, user, operation, data, authorize, execute):
+def command(*, user, operation, data, authorize, execute, account_parties=None):
     """Lock actor before domain roots; serialize same-actor retries across resources.
 
     authorize runs before receipt replay as well as before new execution. A receipt
@@ -145,9 +147,23 @@ def command(*, user, operation, data, authorize, execute):
     except (ValueError, TypeError, AttributeError):
         raise ValidationError({"request_key": "A UUID request key is required."})
     with transaction.atomic():
+        parties = set(account_parties()) | {user.pk} if account_parties else {user.pk}
+        # Multi-party commands must acquire all accounts before their domain
+        # root. Taking the actor first can deadlock a second actor's command.
+        if account_parties:
+            list(
+                User.objects.select_for_update(no_key=True)
+                .filter(pk__in=parties)
+                .order_by("pk")
+            )
         current_actor = User.objects.select_for_update(no_key=True).get(pk=user.pk)
         require_actor(current_actor)
         subject = authorize()
+        if account_parties and (set(account_parties()) | {user.pk}) != parties:
+            raise RentalConflict(
+                "The participants changed. Refresh before continuing.",
+                code="participants_changed",
+            )
         replay = replay_operation(user, operation, key, data)
         if replay:
             return replay

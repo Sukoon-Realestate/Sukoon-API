@@ -2,13 +2,19 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from core_apps.common.models import TimeStampedModel
+from core_apps.users.services.new_business import NewAccountBusinessMixin
 from cloudinary.models import CloudinaryField
 
 User = get_user_model()
 
 
-class Property(TimeStampedModel):
+class Property(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ('owner_id',)
+
     media_revision = models.PositiveIntegerField(default=0)
+    review_revision = models.PositiveIntegerField(default=1, editable=False)
+    moderation_blocked = models.BooleanField(default=False, editable=False)
+    moderation_reason = models.TextField(blank=True, default="", editable=False)
     search_document = models.TextField(blank=True, default="", editable=False)
     # A direct complex parent is only for standalone units. Building membership
     # derives its complex through the building, so contradictory parents cannot exist.
@@ -263,6 +269,18 @@ class PropertyImage(TimeStampedModel):
     class Meta:
         verbose_name = _("Property Image")
         verbose_name_plural = _("Property Images")
+
+    def save(self, *args, **kwargs):
+        from django.db import transaction
+        with transaction.atomic():
+            Property.objects.select_for_update().get(pk=self.property_id)
+            return super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        from django.db import transaction
+        with transaction.atomic():
+            Property.objects.select_for_update().get(pk=self.property_id)
+            return super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"Image for property: {self.property.title}"

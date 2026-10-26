@@ -72,6 +72,7 @@ def preparation(request, item_id):
         lambda _: c.prepare(request.user, item_id, body),
         lambda item: p.payload(item, request.user),
         creating=True,
+        account_parties=lambda: c.account_parties(item_id, body),
     )
 
 
@@ -112,4 +113,5 @@ def preparation_action(request, preparation_id, action):
         lambda: a.get(request.user, preparation_id, lock=True),
         lambda _: handler(request.user, preparation_id, body),
         lambda item: p.payload(item, request.user),
+        account_parties=lambda: c.existing_account_parties(preparation_id),
     )

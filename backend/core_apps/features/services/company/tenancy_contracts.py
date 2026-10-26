@@ -85,9 +85,11 @@ def verify_mandate(user, identity, data):
 
 @transaction.atomic
 def create(user, identity, data):
-    from .access import require_new_business
+    from .access import require_new_business, lock_account_parties
+    from .contract_preparation import existing_account_parties
 
     require_new_business()
+    lock_account_parties(user, existing_account_parties(identity))
     preparation = contract_access.get(user, identity, lock=True)
     if not contract_access.manages(preparation, user):
         raise PermissionDenied(
@@ -112,6 +114,9 @@ def create(user, identity, data):
             code="execution_authority_required",
         )
     booking = preparation.booking
+    from .request_versions import period
+
+    starts_on, ends_on = period(booking)
     if booking.request.coordinator_id == booking.offer.owner_id:
         raise PermissionDenied(
             "Assign a company coordinator distinct from the property owner before contracting."
@@ -123,9 +128,7 @@ def create(user, identity, data):
         member = CompanyMembership.objects.get(
             company=booking.request.company, user__id=place["employee_id"]
         )
-        require_available(
-            member.user, booking.request.starts_on, booking.request.ends_on_exclusive
-        )
+        require_available(member.user, starts_on, ends_on)
     if (
         not booking.hold_id
         or booking.hold.status != "active"
@@ -161,7 +164,7 @@ def create(user, identity, data):
             "exponent": 2,
         },
         "deposit_holder": "platform",
-        "billing_anchor_day": booking.request.starts_on.day,
+        "billing_anchor_day": starts_on.day,
         "handover_on": snapshot["starts_on"],
         "portfolio": snapshot["inventory"],
         "placements": snapshot["placements"],
@@ -177,8 +180,8 @@ def create(user, identity, data):
         renter_company=booking.request.company,
         template_id="company-rental",
         template_version="1",
-        start_date=booking.request.starts_on,
-        end_date=booking.request.ends_on_exclusive,
+        start_date=starts_on,
+        end_date=ends_on,
         rent_amount_minor=booking.snapshot["monthly_rent"]["amount_minor"],
         legacy_read_only=False,
         offer_id=str(booking.offer.id),
@@ -350,10 +353,24 @@ def signing_session(item, user, data):
             "Resolve or withdraw the separate agreement release before starting another original signing session."
         )
     validate_unsigned(item)
-    if lease.signing_sessions.filter(
+    prior = lease.signing_sessions.filter(
         signer=user,
         document_hash=lease.document_hash,
-    ).exists():
+    ).first()
+    if prior:
+        from ..signing_documents import renewable_session, hosted_session
+
+        if renewable_session(lease, user):
+            hosted = hosted_session(lease.id, user.id, data["request_key"])
+            prior.hosted_url = hosted.hosted_url
+            prior.expires_at = min(
+                lease.hold_expires_at,
+                timezone.now() + timedelta(minutes=settings.RENTAL_SIGNING_TTL_MINUTES),
+            )
+            prior.save(update_fields=["hosted_url", "expires_at", "updated_at"])
+            return access.changed(
+                item, user, "company_original_signing_session_resumed"
+            )
         raise RentalConflict("Resume or reconcile the original signing session.")
 
     hosted = get_rental_provider().create_signing_session(
@@ -448,7 +465,10 @@ def complete_signature(session, *, reconcile=False):
             source_key=f"company-signature:{session.id}",
             lease=lease,
             reason=failure,
-            next_action="Reconcile the recorded provider signature against the original document and current company authority.",
+            next_action=(
+                "Reconcile the recorded provider signature against the "
+                "original document and current company authority."
+            ),
         )
         access.changed(
             item,
@@ -507,10 +527,13 @@ def complete_signature(session, *, reconcile=False):
 
 
 def cancel(item, user, data):
+    from ..signing_documents import unresolved
+
     access.require_role(item, user, {"owner", "coordinator"})
     lease = item.lease
     if (
         lease.status not in {"draft", "expired", "pending_signatures"}
+        or unresolved(lease)
         or lease.status == "pending_signatures"
         and lease.signing_sessions.exists()
         or lease.signing_sessions.filter(

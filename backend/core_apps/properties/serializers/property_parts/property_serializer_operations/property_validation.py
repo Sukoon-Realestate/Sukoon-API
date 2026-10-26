@@ -94,6 +94,9 @@ class PropertyValidationMixin:
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
+        from core_apps.properties.catalog_access import validate_property_locations
+
+        validate_property_locations(attrs, self.instance)
         city = attrs.get("city", getattr(self.instance, "city", None))
         governorate = attrs.get(
             "governorate", getattr(self.instance, "governorate", None)

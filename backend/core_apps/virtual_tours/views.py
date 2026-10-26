@@ -19,7 +19,6 @@ from rest_framework.parsers import BaseParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from core_apps.features.renderers import FeatureJsonRenderer
-from core_apps.properties.models import Property
 from . import services, sessions, storage, uploads
 from .errors import require
 from .models import (
@@ -66,6 +65,20 @@ def mutation(request, action, resource, execute):
     return Response(
         data, status=status, headers={"Idempotency-Replayed": str(replayed).lower()}
     )
+
+
+@endpoint(["GET"])
+def owner_update(request, event_id):
+    from core_apps.features.planning_models import PlanningEvent
+    from .notifications import ACTION, update_payload
+
+    event = get_object_or_404(
+        PlanningEvent.objects.select_related("recipient"),
+        id=event_id,
+        recipient=request.user,
+        destination__action_type=ACTION,
+    )
+    return Response(update_payload(event))
 
 
 def asset_kind_for(request):
@@ -503,6 +516,10 @@ def resource_bytes(
 
 @endpoint(["POST"])
 def review_decision(request, property_id, tour_id, revision_id, asset_kind="property"):
+    from .review_access import reviewer
+
+    reviewer(request.user, write=True)
+
     def execute():
         value = get_object_or_404(
             TourRevision.objects.select_for_update(of=("self",)).select_related(

@@ -8,6 +8,7 @@ from ..models import (
     OwnerOnboardingSession,
     RentalInventoryDayLock,
     SigningSession,
+    RentalSigningDocument,
     TenancyInvitation,
     BillingPeriod,
     PaymentAttempt,
@@ -109,7 +110,13 @@ def expire_rental_sources_and_holds(self):
             expired_agreements += (
                 Lease.objects.filter(property=prop, status="expired").count() - before
             )
+    from ..services.negotiation_terms import expire_due as expire_negotiations
+    from ..services.rental_lifecycle.group_terms import expire_due as expire_group_terms
+    from ..services.company.negotiation import expire_due as expire_company_terms
     return {
+        "expired_company_terms": expire_company_terms(),
+        "expired_group_terms": expire_group_terms(now),
+        "expired_negotiations": expire_negotiations(),
         "expired_invitations": expired_invitations,
         "expired_holds": expired_holds,
         "expired_agreements": expired_agreements,
@@ -131,6 +138,8 @@ def reconcile_rental_provider_sessions(self):
     ).update(status="expired", updated_at=now)
     signing = SigningSession.objects.filter(
         status="pending", expires_at__lte=now, lease__renter_company__isnull=True
+    ).exclude(
+        document_id__in=RentalSigningDocument.objects.values("id")
     ).update(status="expired", updated_at=now)
     # A corporate signature can have succeeded externally before timeout.
     # Its original pending evidence is reconciled by the company lifecycle;

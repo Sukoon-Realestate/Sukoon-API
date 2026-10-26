@@ -46,6 +46,11 @@ def create_structured_lease(request):
         return replay
     with transaction.atomic():
         from core_apps.properties.models import Property
+        from django.contrib.auth import get_user_model
+
+        list(get_user_model().objects.select_for_update(no_key=True).filter(
+            pk__in={request.user.pk, invitation.tenant_id},
+        ).order_by("pk"))
 
         Property.objects.select_for_update().get(pk=invitation.property_id)
         invitation = (
@@ -95,14 +100,21 @@ def create_structured_lease(request):
                 "The accepted offer has changed; a fresh invitation is required.",
                 "stale_revision",
             )
-        _, snapshot = resolve_offer_snapshot(
-            invitation.property, data["offer_id"], data["offer_revision"], request
-        )
+        if invitation.terms_proposal_id and invitation.terms_proposal.author_id:
+            from ..services.negotiation_terms import current_selection, policy_terms
+            current_selection(invitation.terms_proposal, expected_snapshot=invitation.offer_snapshot)
+            snapshot = invitation.offer_snapshot
+            data["terms"] = policy_terms(data["terms"])
+        else:
+            _, snapshot = resolve_offer_snapshot(
+                invitation.property, data["offer_id"], data["offer_revision"], request
+            )
         if snapshot != invitation.offer_snapshot:
             raise DecisionConflict(
                 "The accepted accommodation has changed.", "accommodation_changed"
             )
-        _validate_terms_offer(data["terms"], snapshot)
+        if not (invitation.terms_proposal_id and invitation.terms_proposal.author_id):
+            _validate_terms_offer(data["terms"], snapshot)
         from ..services.student_housing.policies import validate_occupants
 
         validate_occupants(

@@ -45,6 +45,9 @@ class PropertyCreationMixin:
         from core_apps.chat.moderation.policy import require_new_business
         require_new_business(owner, lock=True)
         data = validated_data.copy()
+        from ...catalog_access import validate_property_locations
+
+        validate_property_locations(data)
         cls._apply_rental_projection(data)
         main_image_file = data.pop("main_image", None)
         main_image_name = (data.pop("main_image_name", "") or "").strip()

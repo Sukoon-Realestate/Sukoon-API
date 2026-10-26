@@ -45,6 +45,9 @@ def test_staff_reply_has_one_durable_generic_event_and_no_financial_effect(
     inquiry, monkeypatch
 ):
     ticket, operator = inquiry
+    from core_apps.notifications.models import PushDelivery
+    from core_apps.notifications.services.push_delivery import dispatch
+
     first = reply(ticket, operator)
     assert reply(ticket, operator)[:2] == first[:2]
     assert first[0]["effect"] == "advice_only"
@@ -55,17 +58,20 @@ def test_staff_reply_has_one_durable_generic_event_and_no_financial_effect(
     assert event.destination["action_type"] == "open_support_ticket"
     assert "Sensitive" not in str(event.destination)
     DeviceToken.objects.create(user=ticket.user, token="disposable-device")
-    monkeypatch.setattr(FCMService, "send_push_to_user", lambda **kwargs: 0)
-    assert deliver_planning_events() == 0
+    monkeypatch.setattr(FCMService, "send_push_to_device", lambda **kwargs: False)
+    assert deliver_planning_events() == 1
+    assert dispatch() == 0
     event.refresh_from_db()
-    assert event.delivered_at is None and event.notification_id is not None
+    assert event.delivered_at is not None and event.notification_id is not None
+    assert event.provider_accepted_at is None
     assert Notification.objects.filter(user=ticket.user).count() == 1
     assert "Sensitive" not in event.notification.body
-    PlanningEvent.objects.filter(pk=event.pk).update(
-        updated_at=timezone.now() - timedelta(minutes=3)
+    PushDelivery.objects.filter(notification=event.notification).update(
+        next_attempt_at=timezone.now() - timedelta(minutes=3)
     )
-    monkeypatch.setattr(FCMService, "send_push_to_user", lambda **kwargs: 1)
-    assert deliver_planning_events() == 1
+    monkeypatch.setattr(FCMService, "send_push_to_device", lambda **kwargs: True)
+    assert dispatch() == 1
+    assert dispatch() == 0
     assert deliver_planning_events() == 0
     assert Notification.objects.filter(user=ticket.user).count() == 1
 

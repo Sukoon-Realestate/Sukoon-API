@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from core_apps.common.renderers import GenericJsonRenderer
 from .services import sensitive_actions
 from .services.sessions import revoke_all
-from .models import AuthSession, User, SecurityEvent
+from .models import AuthSession, User
 from django.utils import timezone
 
 
@@ -50,9 +50,9 @@ def sessions(request):
 
             data, code, replayed = revoke_selected(request)
             return Response(data, status=code, headers=response_headers(replayed))
-        if action not in {"revoke_all", "report_compromise"}:
+        if action != "revoke_all":
             raise serializers.ValidationError(
-                {"action": "Use revoke_all or report_compromise."}
+                {"action": "Use revoke_all, revoke_session or revoke_others."}
             )
         with transaction.atomic():
             current = User.objects.select_for_update().get(pk=request.user.pk)
@@ -60,46 +60,12 @@ def sessions(request):
                 from .services.sessions import validate_session
 
                 validate_session(current, request.auth)
-            ticket = None
-            if action == "report_compromise" and not current.sensitive_actions_frozen:
-                from core_apps.support.services import create_ticket
-
-                ticket = create_ticket(
-                    current,
-                    workspace=(
-                        "owner"
-                        if request.data.get("workspace") == "owner"
-                        else "tenant"
-                    ),
-                    category="verification",
-                    subject="Account access security review",
-                    description="The account holder reported possible unauthorized access. Sensitive actions were frozen and all sessions revoked. Review identity and original operation receipts before authorizing recovery. No reversal or replacement payment is authorized.",
-                )
-            current = revoke_all(
+            revoke_all(
                 current,
                 actor=current,
-                action=(
-                    "account.compromise_reported"
-                    if action == "report_compromise"
-                    else "session.revoke_all"
-                ),
-                freeze=action == "report_compromise",
+                action="session.revoke_all",
             )
-            if ticket:
-                SecurityEvent.objects.create(
-                    user=current,
-                    actor=current,
-                    action="account.security_case",
-                    security_epoch=current.security_epoch,
-                    subject_id=ticket.id,
-                    decision="awaiting_review",
-                )
-        return Response(
-            {
-                "status": "revoked",
-                "support_ticket_id": str(ticket.id) if ticket else None,
-            }
-        )
+        return Response({"status": "revoked"})
     return Response(
         {
             "sensitive_actions_frozen": request.user.sensitive_actions_frozen,

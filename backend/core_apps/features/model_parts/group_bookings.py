@@ -31,6 +31,14 @@ class GroupBookingProposal(TimeStampedModel):
     roster_revision = models.PositiveIntegerField()
     allocation_revision = models.PositiveIntegerField(default=1)
     terms_revision = models.PositiveIntegerField(default=1)
+    terms_author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="authored_group_booking_terms",
+    )
+    terms_accepted_by = models.JSONField(default=list, blank=True)
     terms_digest = models.CharField(max_length=64)
     policy_version = models.CharField(max_length=40)
     starts_on = models.DateField()
@@ -48,8 +56,37 @@ class GroupBookingProposal(TimeStampedModel):
         constraints = [
             models.UniqueConstraint(
                 fields=["application"],
-                condition=Q(status__in=["draft", "submitted", "awaiting_participants"]),
+                condition=Q(
+                    status__in=[
+                        "draft",
+                        "negotiating",
+                        "changes_requested",
+                        "submitted",
+                        "awaiting_participants",
+                    ]
+                ),
                 name="unique_live_group_booking",
+            )
+        ]
+
+
+class GroupBookingTermsVersion(TimeStampedModel):
+    proposal = models.ForeignKey(
+        GroupBookingProposal,
+        on_delete=models.PROTECT,
+        related_name="terms_versions",
+    )
+    version = models.PositiveIntegerField()
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    participants = models.JSONField()
+    terms_digest = models.CharField(max_length=64)
+    deadline = models.DateTimeField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["proposal", "version"],
+                name="unique_group_booking_terms_version",
             )
         ]
 

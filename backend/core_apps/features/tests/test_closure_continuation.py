@@ -73,24 +73,25 @@ def test_server_pagination_and_support_workspace_are_not_local_drafts(phase3_lea
 
 
 def test_protected_deletion_keeps_obligations_and_one_review_request(phase3_lease):
-    from django.urls import reverse
-    from core_apps.users.models import User
+    from core_apps.users.models import User, AccountClosureRequest
 
     owner, tenant, lease = phase3_lease
     attempt = checkout(tenant, lease)
-    url = reverse("user-delete")
     for _ in range(2):
-        response = client_for(tenant).delete(url)
-        assert response.status_code == 409, response.data
-        assert response.data["status"] == "awaiting_policy"
+        response = client_for(tenant).post(
+            "/api/v1/auth/account-closure/",
+            {"expected_revision": 0, "reason": "Closure requested"},
+            format="json", HTTP_IDEMPOTENCY_KEY=str(__import__("uuid").uuid4()),
+        )
+        assert response.status_code in {200, 201}, response.data
+        assert response.data["request"]["status"] == "in_review"
+        assert response.data["request"]["blockers"]
         assert not response.cookies
     assert User.objects.filter(pk=tenant.pk, is_active=True).exists()
     assert Lease.objects.filter(pk=lease.pk).exists()
     assert PaymentAttempt.objects.filter(pk=attempt.pk).exists()
-    assert (
-        Ticket.objects.filter(user=tenant, reference__startswith="PRIVACY-").count()
-        == 1
-    )
+    assert AccountClosureRequest.objects.filter(user=tenant, active=True).count() == 1
+    assert not Ticket.objects.filter(user=tenant, reference__startswith="PRIVACY-").exists()
 
 
 from core_apps.features.tests.test_company_housing import (

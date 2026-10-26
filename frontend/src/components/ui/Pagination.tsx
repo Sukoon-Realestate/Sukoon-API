@@ -59,15 +59,16 @@ export const Pagination: React.FC<PaginationProps> = ({
       {/* Range summary */}
       <div className="flex items-center gap-3">
         <span>
-          عرض <span className="font-extrabold text-[var(--foreground)]">{startItem}–{endItem}</span> من أصل{' '}
-          <span className="font-extrabold text-[var(--foreground)]">{totalItems}</span> سجل
+          عرض <span className="font-semibold text-[var(--foreground)]">{startItem}–{endItem}</span> من أصل{' '}
+          <span className="font-semibold text-[var(--foreground)]">{totalItems}</span> سجل
         </span>
 
         {onItemsPerPageChange && (
           <div className="flex items-center gap-1.5 border-r border-[var(--divider)] pr-3">
             <span>صفوف:</span>
             <select
-              value={itemsPerPage}
+              aria-label="عدد الصفوف في الصفحة"
+              value={finalItemsPerPage}
               onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
               className="bg-[var(--card-hover)] border border-[var(--card-border)] text-[var(--foreground)] text-xs font-bold rounded-lg px-2 py-1 cursor-pointer focus:outline-hidden focus:ring-1 focus:ring-teal-500"
             >
@@ -97,9 +98,11 @@ export const Pagination: React.FC<PaginationProps> = ({
             {typeof page === 'number' && Number.isFinite(page) ? (
               <button
                 onClick={() => onPageChange(page)}
-                className={`w-8 h-8 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
+                aria-current={validCurrentPage === page ? 'page' : undefined}
+                aria-label={`الصفحة ${page}`}
+                className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   validCurrentPage === page
-                    ? 'bg-teal-600 text-white shadow-xs glow-teal-sm'
+                    ? 'bg-teal-600 text-white shadow-xs '
                     : 'bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--foreground)] hover:bg-[var(--card-hover)]'
                 }`}
               >

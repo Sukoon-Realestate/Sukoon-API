@@ -14,12 +14,12 @@ class DistrictSerializer(serializers.ModelSerializer):
         from ..catalog_labels import catalog_language, location_label
 
         result = super().to_representation(instance)
-        result["name"] = location_label(instance.name, catalog_language(self.context))
+        result["name"] = location_label(instance, catalog_language(self.context))
         return result
 
     class Meta:
         model = District
-        fields = ["id", "city_id", "name", "is_active"]
+        fields = ["id", "city_id", "name", "is_active", "revision", "sort_order"]
 
 
 class DistrictListAPIView(generics.ListAPIView):
@@ -30,4 +30,9 @@ class DistrictListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         city = get_object_or_404(City, id=self.kwargs["city_id"])
-        return District.objects.filter(city=city, is_active=True).select_related("city")
+        return District.objects.filter(
+            city=city,
+            is_active=True,
+            city__is_active=True,
+            city__governorate__is_active=True,
+        ).select_related("city")

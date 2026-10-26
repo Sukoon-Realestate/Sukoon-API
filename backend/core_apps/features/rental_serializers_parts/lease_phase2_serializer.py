@@ -15,6 +15,7 @@ class LeasePhase2Serializer(serializers.ModelSerializer):
     lease_status = serializers.CharField(source="status", read_only=True)
     allowed_actions = serializers.SerializerMethodField()
     blocking_reasons = serializers.SerializerMethodField()
+    signing_document = serializers.SerializerMethodField()
 
     class Meta:
         model = Lease
@@ -44,6 +45,7 @@ class LeasePhase2Serializer(serializers.ModelSerializer):
             "legacy_read_only",
             "allowed_actions",
             "blocking_reasons",
+            "signing_document",
         ]
 
     def get_invitation_id(self, obj):
@@ -60,3 +62,7 @@ class LeasePhase2Serializer(serializers.ModelSerializer):
         if obj.legacy_read_only:
             return ["This legacy agreement is not eligible for the new workflow."]
         return []
+
+    def get_signing_document(self, obj):
+        from ..services.signing_documents import projection
+        return projection(obj, getattr(self.context.get("request"), "user", None))

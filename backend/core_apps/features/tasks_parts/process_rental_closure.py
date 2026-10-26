@@ -25,9 +25,10 @@ def process_rental_closure(self):
 
     ended = end_due_leases()
     refunded = generated = evaluated = revoked = 0
-    for refund in RefundRequest.objects.filter(status=RefundRequest.Status.APPROVED)[
-        :100
-    ]:
+    for refund in RefundRequest.objects.filter(
+        status=RefundRequest.Status.APPROVED,
+        payment_attempt__paymob_payment__isnull=True,
+    )[:100]:
         try:
             result = execute_refund(refund)
             refunded += int(result.status == "succeeded")
@@ -50,9 +51,11 @@ def process_rental_closure(self):
             reconcile_paymob(payment)
         except APIException:
             pass  # The original attempt/case remains durable for the next run.
-    for item in PaymobRefund.objects.exclude(refund__status="succeeded").select_related(
-        "payment__attempt", "refund__lease"
-    )[:100]:
+    for item in (
+        PaymobRefund.objects.filter(current=True)
+        .exclude(refund__status="succeeded")
+        .select_related("payment__attempt", "refund__lease")[:100]
+    ):
         try:
             result = process_paymob_refund(item)
             refunded += int(result.status == "succeeded")

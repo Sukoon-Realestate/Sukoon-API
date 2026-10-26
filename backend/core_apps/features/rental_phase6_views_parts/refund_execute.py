@@ -108,6 +108,7 @@ def refund_execute(request, refund_id):
             if item.status != "approved":
                 raise RentalConflict("Only an approved refund can execute.")
             from core_apps.users.services.sensitive_actions import consume
+            from ..refund_operations import details
 
             consume(
                 request,
@@ -116,11 +117,10 @@ def refund_execute(request, refund_id):
                 revision=item.revision,
                 payload={
                     "command": request.data,
-                    "amount_minor": item.amount_minor,
-                    "payment_attempt_id": str(item.payment_attempt_id),
+                    **details(item),
                 },
             )
-            item = execute_refund(item)
+            item = execute_refund(item, actor=request.user)
         evaluate_financial_closure(lease)
         return Response(
             remember_mutation(

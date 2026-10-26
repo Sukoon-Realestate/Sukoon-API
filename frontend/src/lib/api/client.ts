@@ -9,6 +9,7 @@ export class ApiError extends Error {
 export interface RequestOptions extends Omit<RequestInit, 'body'> {
   params?: Record<string, string | number | boolean | undefined | null>;
   body?: any;
+  anonymous?: boolean;
 }
 
 export async function apiClient<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
@@ -16,7 +17,7 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
   if (!isBackendEnabled()) {
     return handleMockRequest<T>(endpoint, options);
   }
-  const { params, headers, body, ...restOptions } = options;
+  const { params, headers, body, anonymous = false, ...restOptions } = options;
 
   let url = `${API_BASE_URL}${endpoint}`;
   if (params) {
@@ -40,7 +41,7 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
   // Bind rejection handling to the credential used by this exact request.
   let requestToken: string | null = null;
   // Attach Bearer token if present in localStorage
-  if (typeof window !== 'undefined') {
+  if (!anonymous && typeof window !== 'undefined') {
     const token = localStorage.getItem('sukoon_access_token');
     requestToken = token;
     if (token) {
@@ -56,7 +57,7 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
   let response: Response;
   try {
     response = await fetch(url, {
-      credentials: 'include',
+      credentials: anonymous ? 'omit' : 'include',
       headers: {
         ...defaultHeaders,
         ...(headers as Record<string, string>),
@@ -66,6 +67,10 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     });
   } catch {
     throw new Error('Connection interrupted. The result is unknown; refresh the original record before retrying.');
+  }
+
+  if (!anonymous && typeof window !== 'undefined' && localStorage.getItem('sukoon_access_token') !== requestToken) {
+    throw new Error('Account session changed. Discard the previous response.');
   }
 
   if (!response.ok) {
@@ -78,7 +83,7 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     const errorMessage = typeof errorData?.message === 'string' && errorData.message.trim()
       ? errorData.message : 'حدث خطأ في الاتصال بالخادم';
 
-    if (response.status === 401 && !endpoint.includes('/auth/login/') &&
+    if (!anonymous && response.status === 401 && !endpoint.includes('/auth/login/') &&
         typeof window !== 'undefined' && localStorage.getItem('sukoon_access_token') === requestToken) {
       if (typeof window !== 'undefined') {
         try {
@@ -98,6 +103,9 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
   }
 
   const json: unknown = await response.json();
+  if (!anonymous && typeof window !== 'undefined' && localStorage.getItem('sukoon_access_token') !== requestToken) {
+    throw new Error('Account session changed. Discard the previous response.');
+  }
   if (!json || typeof json !== 'object' || Array.isArray(json)) {
     throw new Error('Invalid API response');
   }

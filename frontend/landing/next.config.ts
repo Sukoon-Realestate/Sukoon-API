@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   },
   // Pin the app root so Turbopack resolves this merged app against its own lockfile.
   turbopack: {
-    root: __dirname,
+    root: require("node:path").resolve(__dirname, ".."),
   },
   // harfbuzzjs loads its .wasm from its own folder; keep it out of the bundle.
   serverExternalPackages: ["harfbuzzjs"],

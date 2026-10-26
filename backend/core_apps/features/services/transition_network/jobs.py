@@ -31,6 +31,11 @@ def process_transition_match(identifier):
         run.completed_at = timezone.now()
         run.revision += 1
         run.save()
+        from ..advanced_planning_notifications import record
+
+        record(run, None, "transition.result")
+        for candidate in run.candidates.all():
+            record(candidate, None, "transition.proposed")
         return run.status
 
 

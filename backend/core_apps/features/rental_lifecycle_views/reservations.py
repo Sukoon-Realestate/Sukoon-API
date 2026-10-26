@@ -37,6 +37,7 @@ def reservation_holds(request, external=False):
             request.user, data["property_id"], owner=external, lock=True
         ),
         execute,
+        account_parties=lambda: {request.user.pk, property_for(request.user, data["property_id"]).owner_id},
     )
 
 

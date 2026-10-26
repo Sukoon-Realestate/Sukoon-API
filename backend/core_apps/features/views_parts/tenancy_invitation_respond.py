@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view, permission_classes, renderer_cla
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from core_apps.properties.models import Property
 from ..models import Lease, TenancyInvitation
 from ..renderers import FeatureJsonRenderer
 from ..serializers import (
@@ -17,6 +18,8 @@ from ..serializers import (
 from ..services.tenancy_invitations import (
     InvitationConflict,
     create_notification_for_response,
+    current_invitation_problem,
+    localized,
     refresh_effective_status,
 )
 from .rental_operation_lookup import _replay, _remember
@@ -62,8 +65,10 @@ def tenancy_invitation_respond(request, invitation_id):
     if replay:
         return replay
     with transaction.atomic():
+        # Match creation, inventory edits and lease consumption: property first.
+        get_object_or_404(Property.objects.select_for_update(), pk=visible.property_id)
         invitation = get_object_or_404(
-            TenancyInvitation.objects.select_for_update().select_related(
+            TenancyInvitation.objects.select_for_update(of=("self",)).select_related(
                 "property", "property__owner", "owner", "tenant"
             ),
             id=invitation_id,
@@ -73,13 +78,31 @@ def tenancy_invitation_respond(request, invitation_id):
         if replay:
             return replay
         refresh_effective_status(invitation)
-        if invitation.status != TenancyInvitation.Status.PENDING:
+        if (
+            invitation.status != TenancyInvitation.Status.PENDING
+            or invitation.lease_id
+            or invitation.consumed_at
+        ):
             return Response(
                 {"message": "This invitation can no longer be answered."},
                 status=status.HTTP_409_CONFLICT,
             )
         if data_in["revision"] != invitation.revision:
             raise InvitationConflict("Invitation revision conflict.")
+        if data_in["decision"] == TenancyInvitation.Status.ACCEPTED:
+            problem = current_invitation_problem(invitation)
+            if problem:
+                return Response(
+                    {
+                        "code": problem,
+                        "message": localized(
+                            request,
+                            "Acceptance is paused while the property is reviewed. Refresh after approval and review the current terms.",
+                            "القبول متوقف أثناء مراجعة العقار. حدّث الدعوة بعد الاعتماد وراجع الشروط الحالية.",
+                        ),
+                    },
+                    status=status.HTTP_409_CONFLICT,
+                )
         now = timezone.now()
         invitation.status = data_in["decision"]
         invitation.revision += 1

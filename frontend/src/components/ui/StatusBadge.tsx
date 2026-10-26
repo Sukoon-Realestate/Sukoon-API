@@ -39,7 +39,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value, status })
     if (val === 'نشط') {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
           {val}
         </span>
       );
@@ -111,32 +111,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value, status })
   }
 
   if (resolvedType === 'role') {
-    if (val === 'مستأجر') {
-      return (
-        <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-500/15 dark:text-slate-300 dark:border-slate-500/20">
-          {val}
-        </span>
-      );
-    }
-    if (val === 'عقار') {
-      return (
-        <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/20">
-          {val}
-        </span>
-      );
-    }
-    if (val === 'مالك') {
-      return (
-        <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/20">
-          {val}
-        </span>
-      );
-    }
-    return (
-      <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-teal-100 text-teal-800 border border-teal-200 dark:bg-teal-500/15 dark:text-teal-300 dark:border-teal-500/20">
-        {val}
-      </span>
-    );
+    return <span className="inline-flex px-2 py-1 rounded-md text-xs font-medium bg-[var(--badge-bg-muted)] text-[var(--text-muted)] border border-[var(--card-border)]">{val}</span>;
   }
 
   return <span className="px-2.5 py-1 text-xs font-bold bg-[var(--badge-bg-muted)] text-[var(--text-muted)] border border-[var(--card-border)] rounded-lg">{val}</span>;

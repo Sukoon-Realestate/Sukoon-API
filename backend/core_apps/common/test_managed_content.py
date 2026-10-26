@@ -17,6 +17,27 @@ from core_apps.admin_api.services.settings_service import (
 pytestmark = pytest.mark.django_db
 
 
+@pytest.fixture(autouse=True)
+def published_catalogs(db):
+    # Transaction tests flush migration data. Reuse the approved seed contents
+    # explicitly, so this preservation suite also works on a reused empty DB.
+    import_module("core_apps.common.migrations.0004_seed_public_content").seed_content(
+        apps, None
+    )
+    import_module("core_apps.support.migrations.0004_seed_help_content").seed_content(
+        apps, None
+    )
+    from core_apps.advertising.models import AdvertisingPlan
+
+    for plan in import_module(
+        "core_apps.advertising.migrations.0002_seed_advertising_plans"
+    ).PLANS:
+        AdvertisingPlan.objects.get_or_create(
+            id=plan["id"],
+            defaults={key: value for key, value in plan.items() if key != "id"},
+        )
+
+
 def test_admin_content_edit_is_localized_and_visible_without_restart(
     api_client, superuser, user
 ):
@@ -86,21 +107,27 @@ def test_content_validation_and_seed_replay_preserve_edits():
     assert PublicContentPage.objects.count() == 3
 
 
-def test_platform_preferences_are_durable_validated_and_audited(superuser):
-    before = get_platform_settings()
-    after = update_platform_settings(
-        {"maxReviewHours": not before["maxReviewHours"]}, actor=superuser
+def test_inert_settings_are_hidden_without_rewriting_history(superuser):
+    previous, _ = PlatformPreferences.objects.get_or_create(pk=1)
+    before = dict(previous.values)
+    audit = PlatformPreferenceAudit.objects.create(
+        actor=superuser, revision=previous.revision, before=before, after=before
     )
-    assert PlatformPreferences.objects.get(pk=1).values == after
-    assert get_platform_settings() == after
-    audit = PlatformPreferenceAudit.objects.get()
-    assert audit.before == before and audit.after == after and audit.actor == superuser
+    assert get_platform_settings() == {}
     from rest_framework.exceptions import ValidationError as ApiValidationError
 
-    for bad in [{"autoVerification": "false"}, {"authorizationBypass": True}, []]:
+    for bad in [
+        {"autoVerification": False},
+        {"autoVerification": "false"},
+        {"authorizationBypass": True},
+        [],
+    ]:
         with pytest.raises(ApiValidationError):
             update_platform_settings(bad, actor=superuser)
-    assert get_platform_settings() == after
+    assert update_platform_settings({}, actor=superuser) == {}
+    previous.refresh_from_db()
+    audit.refresh_from_db()
+    assert previous.values == before and audit.before == before
 
 
 def test_release_notes_target_exact_version_workspace_schedule_and_language(

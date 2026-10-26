@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 from core_apps.properties.models import District
 
 
-def validate_districts(city, raw):
+def validate_districts(city, raw, *, retained=()):
     if (
         not isinstance(raw, list)
         or len(raw) > 100
@@ -18,7 +18,7 @@ def validate_districts(city, raw):
         raise ValidationError({"district_ids": "Use district catalog UUIDs."})
     rows = {
         str(x.id): x
-        for x in District.objects.filter(id__in=identities, city=city, is_active=True)
+        for x in District.objects.filter(id__in=identities, city=city).order_by("pkid")
     }
     if len(rows) != len(identities):
         raise ValidationError(
@@ -26,18 +26,24 @@ def validate_districts(city, raw):
                 "district_ids": "Refresh and choose active districts belonging to the selected city."
             }
         )
+    from core_apps.properties.catalog_access import require_current_selections
+
+    require_current_selections([row for identity, row in rows.items() if identity not in retained], field="district_ids")
     return identities, [
         {
             "id": value,
             "city_id": str(city.id),
             "name": rows[value].name,
-            "is_active": True,
+            "is_active": rows[value].is_active,
         }
         for value in identities
     ]
 
 
 def district_projection(criteria):
+    from django.utils.translation import get_language
+    from core_apps.properties.catalog_labels import location_label
+
     identities = criteria.get("district_ids", [])
     # Preserve historical IDs and names, including deleted or inactive choices.
     current = {
@@ -50,13 +56,14 @@ def district_projection(criteria):
             "id": value,
             "city_id": criteria.get("city_id", ""),
             "name": (
-                current[value].name
+                location_label(current[value], get_language() or "en")
                 if value in current
                 else historical.get(value, {}).get("name", "")
             ),
             "is_active": value in current
             and current[value].is_active
             and str(current[value].city.id) == criteria.get("city_id"),
+            "revision": current[value].revision if value in current else 0,
         }
         for value in identities
     ]

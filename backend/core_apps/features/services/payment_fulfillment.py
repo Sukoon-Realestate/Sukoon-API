@@ -48,4 +48,11 @@ def deliver(identity):
             type(exc).__name__,
         )
     job.save()
+    from .fulfillment_cases import follow_up
+
+    follow_up(job)
+    if job.status == "fulfilled":
+        from .billing_notifications import record_fulfilled
+
+        record_fulfilled(job.invoice, job.attempt)
     return job

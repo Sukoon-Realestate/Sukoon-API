@@ -1,4 +1,5 @@
 import { apiClient } from './client';
+import { validateSystemHealth } from './systemHealth';
 import {
   SystemHealth,
   AuditLogItem,
@@ -6,8 +7,10 @@ import {
   PaginatedResponse,
 } from './types';
 
-export async function fetchSystemHealth(): Promise<SystemHealth> {
-  return apiClient<SystemHealth>('/api/v1/admin/system/health/');
+export async function fetchSystemHealth(signal?: AbortSignal): Promise<SystemHealth> {
+  const data: unknown = await apiClient('/api/v1/admin/system/health/', {signal});
+  validateSystemHealth(data);
+  return data;
 }
 
 export async function fetchAuditLogs(params?: {
@@ -31,10 +34,19 @@ export async function fetchPushCampaigns(): Promise<PushCampaign[]> {
 export async function sendPushNotification(payload: {
   title: string;
   body: string;
-  audience?: 'all' | 'tenants' | 'landlords' | 'verified';
+  audience?: 'all' | 'tenants' | 'landlords' | 'verified' | 'students' | 'companies';
 }): Promise<PushCampaign> {
   return apiClient<PushCampaign>('/api/v1/admin/system/notifications/send/', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
+}
+
+
+export async function previewCampaign(payload: {title: string; body: string; audience: 'all' | 'tenants' | 'landlords' | 'verified' | 'students' | 'companies'; request_key: string}): Promise<PushCampaign> {
+  return apiClient<PushCampaign>('/api/v1/admin/system/notifications/preview/', {method: 'POST', body: payload});
+}
+
+export async function changeCampaign(campaign: PushCampaign, action: 'confirm' | 'cancel'): Promise<PushCampaign> {
+  return apiClient<PushCampaign>(`/api/v1/admin/system/notifications/${encodeURIComponent(campaign.id)}/`, {method: 'POST', body: {action, expected_revision: campaign.revision, preview_digest: campaign.preview_digest}});
 }

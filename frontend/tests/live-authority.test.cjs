@@ -12,7 +12,15 @@ function load(file, modules, globals = {}) {
   }).outputText;
   const exports = {};
   vm.runInNewContext(output, { exports, require: id => {
-    if (!(id in modules)) throw new Error(`Unexpected dependency ${id}`);
+      if (!(id in modules)) {
+        if (id.startsWith('.')) {
+          for (const extension of ['.ts', '.tsx']) {
+            const target = path.resolve(path.dirname(file), id + extension);
+            if (fs.existsSync(target)) return load(target, modules, globals);
+          }
+        }
+        throw new Error(`Unexpected dependency ${id}`);
+      }
     return modules[id];
   }, URLSearchParams, FormData, Blob, Event, console, ...globals }, { filename: file });
   return exports;
@@ -40,18 +48,31 @@ for (const root of ['src', 'landing/src']) {
     await assert.rejects(c.api('/api/v1/admin/staff/invite/', { method: 'POST' }), /Invalid API response/);
     assert.equal(c.count(), 0);
   });
+  test(`${root}: an old account response is discarded after a session change`, async () => {
+    let token = 'first-account';
+    let finish;
+    const module = load(path.join(root, 'lib/api/client.ts'), {
+      './config': { isBackendEnabled: () => true, API_BASE_URL: 'https://test.invalid' },
+      './mockHandler': { handleMockRequest: () => { throw new Error('No fallback'); } },
+      '../basePath': { BASE_PATH: '/admin' },
+    }, { window: {}, localStorage: { getItem: () => token }, fetch: () => new Promise(resolve => { finish = resolve; }) });
+    const pending = module.apiClient('/api/v1/admin/support/');
+    token = 'second-account';
+    finish(new Response(JSON.stringify({ message: 'Saved', data: { private: 'first account' } })));
+    await assert.rejects(pending, /Account session changed/);
+  });
   test(`${root}: demo routing requires explicit configuration`, async () => {
     const c = client(async () => { throw new Error('Must not contact live server'); }, false);
     assert.equal((await c.api('/demo')).demo, true);
     assert.equal(c.count(), 1);
   });
   function auth(api, live = true) {
-    const states = [], refs = [];
+    const states = [], refs = [], effects = [];
     let stateIndex = 0, refIndex = 0;
     const storage = new Map();
     const react = {
       createContext: value => ({ Provider: 'provider', value }), useContext: c => c.value,
-      useEffect: () => {},
+      useEffect: effect => { effects.push(effect); },
       useRef: value => refs[refIndex++] ?? (refs[refIndex - 1] = { current: value }),
       useState: value => { const i = stateIndex++; if (!(i in states)) states[i] = value; return [states[i], v => { states[i] = v; }]; },
       createElement: (type, props) => ({ type, props }),
@@ -62,7 +83,7 @@ for (const root of ['src', 'landing/src']) {
       '@/lib/api/client': { apiClient: api }, '@/lib/api/config': { isBackendEnabled: () => live },
       '@/lib/basePath': { adminPath: x => x, adminRelativePath: x => x },
     }, { localStorage: { getItem: k => storage.get(k), setItem: (k, v) => storage.set(k, v), removeItem: k => storage.delete(k) } });
-    return { value: () => { stateIndex = refIndex = 0; return module.AuthProvider({ children: null }).props.value; }, storage };
+    return { value: () => { stateIndex = refIndex = 0; return module.AuthProvider({ children: null }).props.value; }, storage, mountRestore: () => effects[0]() };
   }
   test(`${root}: rejected password login never authenticates demo`, async () => {
     const a = auth(async () => { throw new Error('Rejected'); });
@@ -73,7 +94,7 @@ for (const root of ['src', 'landing/src']) {
   });
   test(`${root}: role comes from current server session, not email`, async () => {
     const a = auth(async endpoint => endpoint.includes('/auth/login/') ? { access: 'real-shaped-test-token' }
-      : { id: 'support-id', name: 'Support', email: 'admin@example.test', role: 'support', canManageStaff: false });
+      : { id: 'support-id', name: 'Support', email: 'admin@example.test', role: 'support', canManageStaff: false, allowedPaths: ['/', '/support', '/security'] });
     assert.equal(await a.value().login('admin@example.test', 'valid'), true);
     assert.equal(a.value().user.role, 'support');
     assert.equal(a.value().user.canManageStaff, false);
@@ -87,5 +108,24 @@ for (const root of ['src', 'landing/src']) {
     assert.equal(await pending, false);
     assert.equal(a.value().isAuthenticated, false);
     assert.equal(a.storage.has('sukoon_access_token'), false);
+  });
+  test(`${root}: leaving the auth provider discards an in-flight login`, async () => {
+    let finish;
+    const a = auth(() => new Promise(resolve => { finish = resolve; }));
+    a.value();
+    const cleanup = a.mountRestore();
+    const pending = a.value().login('admin@example.test', 'valid');
+    cleanup();
+    finish({ access: 'late-test-token' });
+    assert.equal(await pending, false);
+    assert.equal(a.storage.has('sukoon_access_token'), false);
+  });
+  test(`${root}: malformed or missing navigation cannot become an authoritative session`, async () => {
+    for (const allowedPaths of [undefined, '/financials', ['/unregistered-area']]) {
+      const a = auth(async endpoint => endpoint.includes('/auth/login/') ? { access: 'test-token' }
+        : { id: 'support-id', name: 'Support', email: 'admin@example.test', role: 'support', canManageStaff: false, allowedPaths });
+      assert.equal(await a.value().login('admin@example.test', 'valid'), false);
+      assert.equal(a.storage.has('sukoon_access_token'), false);
+    }
   });
 }

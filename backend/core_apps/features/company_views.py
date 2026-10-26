@@ -84,7 +84,9 @@ def page(request, qs, mapper):
     )
 
 
-def mutate(request, operation, authorize, execute, mapper, creating=False):
+def mutate(
+    request, operation, authorize, execute, mapper, creating=False, account_parties=None
+):
     def apply(subject):
         item = execute(subject)
         return item, mapper(item), 201 if creating else 200
@@ -95,6 +97,7 @@ def mutate(request, operation, authorize, execute, mapper, creating=False):
         data=request.data,
         authorize=authorize,
         execute=apply,
+        account_parties=account_parties,
     )
     return Response(data, status=status)
 
@@ -290,6 +293,8 @@ def housing_requests(request, company_id):
 @company_api(["GET", "POST"])
 def housing_request(request, request_id):
     if request.method == "POST":
+        from .services.company.access import request_account_parties
+
         data = validated(RequestBody, request.data)
         return mutate(
             request,
@@ -297,6 +302,7 @@ def housing_request(request, request_id):
             lambda: request_for(request.user, request_id, lock=True),
             lambda _: bookings.update_request(request.user, request_id, data),
             lambda item: bookings.request_payload(item, request.user),
+            account_parties=lambda: request_account_parties(request_id),
         )
     item = get_object_or_404(CompanyHousingRequest, id=request_id)
     member = member_for(request.user, item.company)
@@ -313,6 +319,8 @@ def housing_request(request, request_id):
 
 @company_api(["POST"])
 def select_offer(request, request_id):
+    from .services.company.access import selection_account_parties
+
     data = validated(SelectionBody, request.data)
     return mutate(
         request,
@@ -321,11 +329,14 @@ def select_offer(request, request_id):
         lambda _: bookings.select_offer(request.user, request_id, data),
         bookings.item_payload,
         creating=True,
+        account_parties=lambda: selection_account_parties(request_id, data),
     )
 
 
 @company_api(["POST"])
 def item_action(request, item_id, action):
+    from .services.company.access import booking_account_parties
+
     if action not in {"submit", "decide", "hold", "withdraw"}:
         raise ValidationError("Unsupported booking action.")
     data = validated(ApprovalBody if action == "decide" else CommandBody, request.data)
@@ -368,6 +379,7 @@ def item_action(request, item_id, action):
         authorize,
         lambda _: handler(request.user, item_id, data),
         bookings.item_payload,
+        account_parties=lambda: booking_account_parties(item_id),
     )
 
 
@@ -481,16 +493,18 @@ def portfolio_offers(request):
     if request.query_params.get("owner") == "true":
         qs = PortfolioOffer.objects.filter(owner=request.user)
     else:
-        company = company_for(
-            request.user, request.query_params.get("company_id"), "coordinate"
-        )
+        company_for(request.user, request.query_params.get("company_id"), "coordinate")
         qs = PortfolioOffer.objects.filter(status="published")
-    if request.query_params.get('saved_list_id'):
+    if request.query_params.get("saved_list_id"):
         from .services.company.saved_lists import get_list
-        saved = get_list(request.user, request.query_params['saved_list_id'])
-        if str(saved.company.id) != request.query_params.get('company_id') or saved.archived:
-            raise PermissionDenied('Choose an active list from this company.')
-        qs = qs.filter(id__in=saved.items.values('portfolio_offer__id'))
+
+        saved = get_list(request.user, request.query_params["saved_list_id"])
+        if (
+            str(saved.company.id) != request.query_params.get("company_id")
+            or saved.archived
+        ):
+            raise PermissionDenied("Choose an active list from this company.")
+        qs = qs.filter(id__in=saved.items.values("portfolio_offer__id"))
     starts = ends = None
     requirement = None
     if request.query_params.get("request_id"):
@@ -529,6 +543,7 @@ def portfolio_offer_action(request, offer_id, action):
 
     def execute(offer):
         require_revision(offer, data["expected_revision"])
+        previous_status = offer.status
         if action == "publish":
             offers.resolve_scope(offer, lock=True)
         offer.status = "published" if action == "publish" else "paused"
@@ -537,6 +552,9 @@ def portfolio_offer_action(request, offer_id, action):
         from .services.rental_lifecycle.common import audit
 
         audit(offer, request.user, "portfolio_offer_" + action)
+        from .services.company.listing_changes import visibility_changed
+
+        visibility_changed(offer, previous_status)
         return offer
 
     return mutate(
@@ -545,7 +563,6 @@ def portfolio_offer_action(request, offer_id, action):
 
 
 def _secured_member_update(request, company_id, membership_id, data):
-    from core_apps.features.company_models import CompanyMembership
     from core_apps.users.services.sensitive_actions import consume
 
     member = CompanyMembership.objects.select_for_update().get(

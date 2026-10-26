@@ -247,24 +247,30 @@ def test_editing_retains_unchanged_mention_and_drops_changed_name(chat_group):
 
 @pytest.mark.django_db
 def test_mention_push_is_claimed_once_and_revoked_member_is_not_notified(chat_group):
+    from core_apps.notifications.models import DeviceToken
+    from core_apps.notifications.services.push_delivery import dispatch
+
     group, conversation, owner, peer = chat_group
+    device = DeviceToken.objects.create(user=peer, token="mention-device")
     conversation.participant_set.filter(user=peer).update(notification_mode="mentions")
     message = send_group_message(conversation, owner, mention_request(peer))
     event = ChatEvent.objects.get(message=message, kind="message.new")
     _notify(event, peer)
     with patch(
-        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_user"
+        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_device", return_value=True
     ) as push:
         deliver_pushes(event_pk=event.pk)
         deliver_pushes(event_pk=event.pk)
+        assert dispatch() == 1
         push.assert_called_once()
         assert push.call_args.kwargs["data"]["is_mention"] == "true"
-        assert push.call_args.kwargs["user"].pk == peer.pk
+        assert push.call_args.kwargs["token"] == device.token
         newer = send_group_message(conversation, owner, mention_request(peer))
         newer_event = ChatEvent.objects.get(message=newer, kind="message.new")
         _notify(newer_event, peer)
         group.memberships.filter(user=peer).update(status="removed")
         deliver_pushes(event_pk=newer_event.pk)
+        assert dispatch() == 0
         push.assert_called_once()
 
 
@@ -367,16 +373,24 @@ async def test_group_mention_is_delivered_with_identity_on_both_sockets(chat_gro
 
 @pytest.mark.django_db(transaction=True)
 @pytest.mark.parametrize("broadcast", [False, True])
-def test_mention_push_attempt_runs_after_commit_without_a_worker(chat_group, broadcast):
+def test_mention_is_queued_after_commit_and_sent_by_device_worker(chat_group, broadcast):
+    from core_apps.notifications.models import DeviceToken, PushDelivery
+    from core_apps.notifications.services.push_delivery import dispatch
+
     _, conversation, owner, peer = chat_group
+    DeviceToken.objects.create(user=peer, token="committed-mention-device")
     conversation.participant_set.filter(user=peer).update(notification_mode="mentions")
-    with patch("core_apps.notifications.services.fcm_service.FCMService.send_push_to_user") as push:
+    with patch("core_apps.notifications.services.fcm_service.FCMService.send_push_to_device", return_value=True) as push:
         body = message_request("@all", mentions=[{"kind": "all", "start": 0, "end": 4}]) if broadcast else mention_request(peer)
         message = send_group_message(conversation, owner, body)
+        push.assert_not_called()
+        assert PushDelivery.objects.filter(notification__data__message_id=str(message.id)).count() == 1
+        assert dispatch() == 1
         push.assert_called_once()
         assert push.call_args.kwargs["data"]["message_id"] == str(message.id)
         assert push.call_args.kwargs["data"]["is_mention"] == "true"
         deliver_pushes()
+        assert dispatch() == 0
         push.assert_called_once()
 
 

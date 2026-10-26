@@ -4,7 +4,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
-from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from core_apps.admin_api.models import StaffProfile
@@ -82,8 +82,6 @@ def operations_execute_payout(request):
     if replay:
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
-        from core_apps.users.models import User
-
         _require_payout_role(request.user, lock=True)
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
@@ -132,6 +130,12 @@ def operations_execute_payout(request):
             )
         from core_apps.users.services.sensitive_actions import consume
 
+        recipient = None
+        if profile.provider == "paymob_payouts":
+            from ..services.paymob_payout_targets import for_profile
+
+            recipient = for_profile(profile)
+
         consume(
             request,
             action="payout.execute",
@@ -143,6 +147,7 @@ def operations_execute_payout(request):
                 "currency": "EGP",
                 "beneficiary_revision": profile.revision,
                 "beneficiary_account_digest": fingerprint(profile.provider_account_id),
+                **({"recipient_digest": fingerprint(recipient)} if recipient else {}),
             },
         )
         payout = RentalPayout.objects.create(
@@ -163,6 +168,13 @@ def operations_execute_payout(request):
         PayoutAuditEvent.objects.create(
             payout=payout, actor=request.user, action="approved"
         )
+        if recipient:
+            from ..services.paymob_payouts import stage
+
+            stage(payout, recipient)
+        from ..services.payout_notifications import record
+
+        record(payout, "approved")
         output = remember_mutation(
             user=request.user,
             operation=operation,

@@ -26,7 +26,9 @@ pytestmark = pytest.mark.django_db
 @pytest.mark.parametrize(
     "reason", ["quote_expired", "dates_expired", "offer_changed", "hold_expired"]
 )
-def test_package_requiring_new_quote_does_not_offer_unusable_revision(cycle, reason):
+def test_package_requiring_new_quote_does_not_offer_unusable_revision(
+    cycle, reason, monkeypatch
+):
     item = create(cycle)
     if reason == "hold_expired":
         for role in ["owner", "signer", "payer", "employee", "colleague"]:
@@ -48,13 +50,18 @@ def test_package_requiring_new_quote_does_not_offer_unusable_revision(cycle, rea
         booking.quote_expires_at = timezone.now() - timedelta(seconds=1)
         booking.save(update_fields=["quote_expires_at"])
     elif reason == "dates_expired":
-        request = item.booking.request
-        request.starts_on = timezone.localdate() - timedelta(days=1)
-        request.save(update_fields=["starts_on"])
+        # The reviewed package's interval is immutable when the need changes.
+        # Advance the clock past that interval instead of rewriting the need.
+        monkeypatch.setattr(
+            "core_apps.features.services.company.contract_snapshot.timezone.localdate",
+            lambda: item.booking.request.starts_on + timedelta(days=1),
+        )
     else:
         offer = item.booking.offer
-        offer.status = "paused"
-        offer.save(update_fields=["status"])
+        # Publication pauses are reversible without changing reviewed terms.
+        # This case is an actual commercial change requiring a new quote.
+        offer.monthly_rent_minor += 100
+        offer.save(update_fields=["monthly_rent_minor"])
 
     current = prep.access.get(cycle["coordinator"], item.id)
     before = (current.revision, current.snapshot_digest, current.state)

@@ -253,8 +253,9 @@ def test_matching_room_cycle_preserves_all_requirements_and_exact_offer(
         tenant,
         f"housing-offers/{offer['id']}/select_to_proceed/",
         command(offer["revision"], decision="select_to_proceed"),
+        409,
     )
-    assert selected.data["resource"]["status"] == "selected_to_proceed"
+    assert selected.data["message"].code == "action_retired"
 
 
 def test_request_aware_property_picker_and_final_check_share_requirements(

@@ -74,3 +74,19 @@ urlpatterns = [
     path("rental-cases/<uuid:case_id>/", cases.rental_case),
     path("rental-cases/<uuid:case_id>/actions/", cases.rental_case),
 ]
+
+urlpatterns += [
+    path(
+        f"group-booking-proposals/<uuid:booking_id>/terms/{suffix}/",
+        group_bookings.group_booking,
+        {"action": action},
+    )
+    for suffix, action in [
+        ("edit", "edit_group_terms"),
+        ("counter", "counter_group_terms"),
+        ("accept", "accept_group_terms"),
+        ("reject", "reject_group_terms"),
+        ("request-changes", "request_group_terms_changes"),
+        ("withdraw", "withdraw_group_terms"),
+    ]
+]

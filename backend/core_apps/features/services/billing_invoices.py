@@ -88,6 +88,9 @@ def authorized_invoice(user, invoice_id, lock=False):
 @transaction.atomic
 def issue_purchase(user, body):
     require_actor(user)
+    from .billing_notifications import purchase_workspace
+
+    notification_workspace = purchase_workspace(body)
     get_user_model().objects.select_for_update().get(pk=user.pk)
     key, workspace = body["request_key"], workspace_for(body["workspace"])
     from .commerce_access import organization_for
@@ -106,6 +109,9 @@ def issue_purchase(user, body):
                 code="idempotency_conflict",
             )
         return authorized_invoice(user, record.result_subject_id), False
+    from core_apps.users.services.new_business import require_new_business
+
+    require_new_business(user.pk)
     if body["purpose"] == "subscription":
         plan = get_object_or_404(
             SubscriptionPlan.objects.select_for_update(), id=body.get("plan_id")
@@ -197,6 +203,7 @@ def issue_purchase(user, body):
         snapshot = advertising_snapshot(user, body)
     else:
         raise ValidationError("Unsupported purchase purpose.")
+    snapshot["notification_workspace"] = notification_workspace
     invoice = RentInvoice.objects.create(
         purpose=body["purpose"],
         payer=user,

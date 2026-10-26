@@ -76,6 +76,9 @@ class AccountSubscription(TimeStampedModel):
     grace_ends_at = models.DateTimeField(null=True, blank=True)
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
+    expiration_processed_at = models.DateTimeField(
+        null=True, blank=True, editable=False
+    )
     cancelled_at = models.DateTimeField(null=True, blank=True)
     plan_snapshot = models.JSONField()
 

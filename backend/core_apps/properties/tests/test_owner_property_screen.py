@@ -58,7 +58,7 @@ class TestMyPropertyListEndpoint:
             status=Property.Status.VERIFIED,
             is_verified=True,
         )
-        prop2 = _create_property(
+        _create_property(
             owner=user,
             property_type=apartment_type,
             city=cairo_city,
@@ -68,7 +68,7 @@ class TestMyPropertyListEndpoint:
             status=Property.Status.UNDER_REVIEW,
             is_verified=False,
         )
-        prop3 = _create_property(
+        _create_property(
             owner=user,
             property_type=apartment_type,
             city=cairo_city,
@@ -259,14 +259,8 @@ class TestPropertyStatisticsAPI:
         assert "day_name" in data["views_last_14_days"][0]
         assert "count" in data["views_last_14_days"][0]
 
-        # Top search criteria
-        assert len(data["top_search_criteria"]) == 4
-        criteria_keys = [c["key"] for c in data["top_search_criteria"]]
-        assert criteria_keys == ["area", "price", "location", "amenities"]
-        criteria_labels = [c["label"] for c in data["top_search_criteria"]]
-        assert criteria_labels == ["المساحة", "السعر", "الموقع", "المرافق"]
-        criteria_percentages = [c["percentage"] for c in data["top_search_criteria"]]
-        assert criteria_percentages == [78, 65, 55, 42]
+        # No visitor-criteria measurements exist. Do not restore demo percentages.
+        assert data["top_search_criteria"] == []
 
 
 @pytest.mark.django_db

@@ -93,9 +93,15 @@ class TermsProposalBodySerializer(serializers.Serializer):
     offer_revision = serializers.IntegerField(min_value=1)
     request_key = serializers.UUIDField()
     expected_revision = serializers.IntegerField(min_value=0)
+    expires_at = serializers.DateTimeField()
+    action = serializers.ChoiceField(choices=["edit_terms", "counter_terms"], default="edit_terms")
 
 
 class TermsProposalSerializer(serializers.ModelSerializer):
+    author_id = serializers.SerializerMethodField()
+    author_name = serializers.SerializerMethodField()
+    history = serializers.SerializerMethodField()
+    decisions = serializers.SerializerMethodField()
     terms_digest = serializers.SerializerMethodField()
     interest_id = serializers.UUIDField(source="interest.id", read_only=True)
     invitation_id = serializers.SerializerMethodField()
@@ -109,6 +115,13 @@ class TermsProposalSerializer(serializers.ModelSerializer):
             "interest_id",
             "invitation_id",
             "revision",
+            "content_revision",
+            "author_id",
+            "author_name",
+            "expires_at",
+            "withdrawal_reason",
+            "history",
+            "decisions",
             "status",
             "terms",
             "terms_digest",
@@ -117,6 +130,37 @@ class TermsProposalSerializer(serializers.ModelSerializer):
             "allowed_actions",
             "blocking_reasons",
         ]
+
+    def get_author_id(self, obj):
+        return str((obj.author or obj.owner).id)
+
+    def get_author_name(self, obj):
+        return (obj.author or obj.owner).get_full_name
+
+    def get_history(self, obj):
+        return [{
+            "version": row.version, "author_id": str(row.author.id), "author_name": row.author.get_full_name,
+            "terms": row.terms, "offer_snapshot": row.offer_snapshot,
+            "expires_at": row.expires_at.isoformat() if row.expires_at else None, "baseline": row.baseline,
+            "created_at": row.created_at.isoformat(),
+        } for row in obj.versions.select_related("author").order_by("version")]
+
+    def get_decisions(self, obj):
+        from ..models import RentalConsentRecord
+        return [{"decision": row.decision, "revision": row.subject_revision,
+                 "content_version": row.snapshot.get("content_version"),
+                 "actor_name": row.actor.get_full_name, "actor_id": str(row.actor.id),
+                 "created_at": row.created_at.isoformat(), "note": row.snapshot.get("note", "")}
+                for row in RentalConsentRecord.objects.filter(
+                    subject_kind="termsproposal", subject_id=obj.id,
+                ).select_related("actor").order_by("created_at", "pk")]
+
+    def to_representation(self, obj):
+        value = super().to_representation(obj)
+        from ..services.negotiation_terms import is_expired, stage_started
+        if obj.status in {"proposed", "changes_requested", "accepted"} and is_expired(obj) and not stage_started(obj):
+            value["status"] = "expired"
+        return value
 
     def get_invitation_id(self, obj):
         invitation = obj.invitations.order_by("-created_at").first()

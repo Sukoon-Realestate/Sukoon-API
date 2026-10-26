@@ -6,15 +6,13 @@ from rest_framework.exceptions import NotFound, PermissionDenied
 from .housing_tenders import access as tenders
 from .living_lab import access as labs
 from .housing_scenarios import access as scenarios
-from .asset_passport import access as assets
 from .transition_network import access as transitions
 
-DOMAINS = (tenders, labs, scenarios, assets, transitions)
+DOMAINS = (tenders, labs, scenarios, transitions)
 CAPABILITIES = {
     "collective_tender_planning": tenders,
     "shared_living_lab": labs,
     "corporate_housing_simulation": scenarios,
-    "asset_passport": assets,
     "housing_transition_planning": transitions,
 }
 
@@ -53,8 +51,6 @@ def actions(user, capability, subject_id=""):
             "conditional_group_execution": tenders,
             "corporate_housing_execution": scenarios,
         }[capability]
-    elif capability == "asset_assisted_analysis":
-        domain = assets
     else:
         domain = CAPABILITIES.get(capability)
     if domain is None:

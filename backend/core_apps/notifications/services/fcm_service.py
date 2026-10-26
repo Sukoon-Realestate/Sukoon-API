@@ -112,16 +112,18 @@ class FCMService:
         return "sokoun-99c7b"
 
     @classmethod
-    def should_send_to_user(cls, user: Any, notification_type: str) -> bool:
+    def should_send_to_user(cls, user: Any, notification_type: str, *, scope=None) -> bool:
         """
         Checks user notification preferences before sending push notification.
         """
-        try:
+        if scope:
+            from .preferences import get
+            user_settings = get(user, scope)
+            if not user_settings.push_enabled:
+                return False
+        else:
             from core_apps.profiles.models import UserSettings
-
             user_settings = UserSettings.objects.filter(user=user).first()
-        except Exception:
-            user_settings = getattr(user, "settings", None)
 
         if not user_settings:
             return True
@@ -232,7 +234,11 @@ class FCMService:
                     "payload": {"aps": {"sound": "default"}},
                 },
                 "notification": {
-                    "title": "سكون" if language == "ar" else "Sokoun",
+                    "title": (
+                        ("سكون — خاص بالحساب" if language == "ar" else "Sokoun — Account update")
+                        if formatted_data.get("scope") == "account"
+                        else ("سكون" if language == "ar" else "Sokoun")
+                    ),
                     "body": (
                         "لديك تحديث جديد. افتح التطبيق لعرضه."
                         if language == "ar"
@@ -295,7 +301,8 @@ class FCMService:
         respecting user settings preferences.
         Returns provider acceptances, not proof of device delivery or reading.
         """
-        if not cls.should_send_to_user(user, notification_type):
+        from .inbox_scope import canonical_scope
+        if not cls.should_send_to_user(user, notification_type, scope=canonical_scope(data, notification_type)):
             return 0
 
         active_tokens = list(

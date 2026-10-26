@@ -16,9 +16,27 @@ from .views import (
 )
 
 
-from . import security_views, email_change_views
+from . import security_views, email_change_views, totp_views, closure_views
 
 urlpatterns = [
+    path("account-closure/", closure_views.current),
+    path("account-closure/receipt/", closure_views.receipt),
+    path("account-closure/review/", closure_views.queue),
+    path("account-closure/<uuid:identity>/review/", closure_views.review),
+    path("account-closure/<uuid:identity>/withdraw/", closure_views.withdraw),
+    path("security/totp/", totp_views.security),
+    path("security/totp/initial-enrollment/", totp_views.initial_enrollment),
+    path("security/totp/staff-identities/", totp_views.staff_identities),
+    path(
+        "security/totp/staff-identities/<uuid:identity>/document/",
+        totp_views.document_staff_identity,
+    ),
+    path("security/totp/recoveries/", totp_views.recoveries),
+    path("security/totp/review/", totp_views.queue),
+    path("security/totp/recoveries/<uuid:identity>/review/", totp_views.decide),
+    path("security/totp/recoveries/<uuid:identity>/respond/", totp_views.respond),
+    path("security/totp/recoveries/<uuid:identity>/enroll/", totp_views.enroll),
+    path("security/totp/enrollments/<uuid:identity>/confirm/", totp_views.confirm),
     path("email-change/start/", email_change_views.start),
     path("email-change/<uuid:identity>/", email_change_views.change),
     path("email-change/<uuid:identity>/<str:action>/", email_change_views.change),

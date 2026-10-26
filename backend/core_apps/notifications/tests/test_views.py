@@ -21,7 +21,7 @@ class TestNotificationListView:
 
     def test_list_notifications_happy_path(self, auth_client, user):
         n1 = Notification.objects.create(
-            user=user,
+            user=user, scope="individual",
             title="تم قبول طلب زيارتك",
             body="وافق المالك على موعد الزيارة",
             category="حجز زيارة",
@@ -29,7 +29,7 @@ class TestNotificationListView:
             is_read=False,
         )
         n2 = Notification.objects.create(
-            user=user,
+            user=user, scope="individual",
             title="رسالة جديدة",
             body="مرحبا بك",
             category="الرسائل",
@@ -48,8 +48,8 @@ class TestNotificationListView:
         assert data["results"][1]["title"] == "تم قبول طلب زيارتك"
 
     def test_list_notifications_filter_unread(self, auth_client, user):
-        Notification.objects.create(user=user, title="Unread", is_read=False)
-        Notification.objects.create(user=user, title="Read", is_read=True)
+        Notification.objects.create(user=user, scope="individual", title="Unread", is_read=False)
+        Notification.objects.create(user=user, scope="individual", title="Read", is_read=True)
 
         response = auth_client.get(f"{NOTIFICATIONS_LIST_URL}?unread=true")
         assert response.status_code == status.HTTP_200_OK
@@ -71,7 +71,7 @@ class TestNotificationDetailView:
 
     def test_detail_happy_path_marks_read_and_formats_screen_2(self, auth_client, user):
         notif = Notification.objects.create(
-            user=user,
+            user=user, scope="individual",
             title="تم قبول طلب زيارتك",
             body="وافق المالك أحمد محمد على موعد الزيارة. يُرجى الحضور في الوقت المحدد للاطلاع على الشقة.",
             category="حجز زيارة",
@@ -113,7 +113,7 @@ class TestNotificationMarkReadView:
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_mark_read_happy_path(self, auth_client, user):
-        notif = Notification.objects.create(user=user, title="Unread", is_read=False)
+        notif = Notification.objects.create(user=user, scope="individual", title="Unread", is_read=False)
         url = reverse("notification-mark-read", kwargs={"pk": notif.id})
         response = auth_client.patch(url)
         assert response.status_code == status.HTTP_200_OK
@@ -127,8 +127,8 @@ class TestNotificationMarkAllReadView:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_mark_all_read_happy_path(self, auth_client, user):
-        Notification.objects.create(user=user, title="N1", is_read=False)
-        Notification.objects.create(user=user, title="N2", is_read=False)
+        Notification.objects.create(user=user, scope="individual", title="N1", is_read=False)
+        Notification.objects.create(user=user, scope="individual", title="N2", is_read=False)
 
         response = auth_client.post(NOTIFICATIONS_MARK_ALL_READ_URL)
         assert response.status_code == status.HTTP_200_OK
@@ -142,9 +142,9 @@ class TestNotificationUnreadCountView:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_unread_count_happy_path(self, auth_client, user):
-        Notification.objects.create(user=user, title="N1", is_read=False)
-        Notification.objects.create(user=user, title="N2", is_read=False)
-        Notification.objects.create(user=user, title="N3", is_read=True)
+        Notification.objects.create(user=user, scope="individual", title="N1", is_read=False)
+        Notification.objects.create(user=user, scope="individual", title="N2", is_read=False)
+        Notification.objects.create(user=user, scope="individual", title="N3", is_read=True)
 
         response = auth_client.get(NOTIFICATIONS_UNREAD_COUNT_URL)
         assert response.status_code == status.HTTP_200_OK
@@ -167,7 +167,8 @@ class TestNotificationSettingsView:
         assert "visit_notifications" in item_keys
         assert "owner_messages" in item_keys
         assert "property_updates" in item_keys
-        assert "security_alerts" in item_keys
+        assert "security_alerts" not in item_keys
+        assert "push_enabled" in item_keys
         assert "promotions_and_updates" in item_keys
 
         # Patch setting
@@ -191,7 +192,7 @@ class TestNotificationSettingsView:
         # Verify other toggles were not modified
         assert single_res.data["visit_notifications"] is False
         assert single_res.data["owner_messages"] is True
-        assert single_res.data["security_alerts"] is True
+        assert "security_alerts" not in single_res.data
 
 
 @pytest.mark.django_db

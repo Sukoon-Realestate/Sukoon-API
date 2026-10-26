@@ -79,6 +79,10 @@ def require_business_participants(*users):
 
 
 def visible_properties(qs):
+    from core_apps.users.models import AccountClosureRequest
+
+    qs = qs.exclude(owner_id__in=AccountClosureRequest.objects.filter(active=True).values("user_id"))
+    qs = qs.filter(owner__closed_at__isnull=True)
     return qs.exclude(
         owner_id__in=AccountRestriction.objects.filter(
             state__in=ACTIVE_RESTRICTIONS

@@ -24,7 +24,8 @@ from core_apps.features.services.rent_payment_reminders import (
 )
 from core_apps.features.services.planning_notifications import deliver_planning_events
 from core_apps.features.services.rental_phase3_parts.issue_invoice import issue_invoice
-from core_apps.notifications.models import DeviceToken, Notification
+from core_apps.notifications.models import DeviceToken, Notification, PushDelivery
+from core_apps.notifications.services.push_delivery import dispatch
 from core_apps.notifications.services.fcm_service import FCMService
 from .test_rental_phase5 import phase5_lease
 from .test_company_tenancy import (
@@ -191,19 +192,23 @@ def test_first_invoice_outbox_is_created_in_issuance_transaction(phase5_lease):
 def test_revocation_and_retries_preserve_one_inbox_notification(invoice, monkeypatch):
     record_reminders(now=NOW)
     DeviceToken.objects.create(user=invoice.lease.tenant, token="synthetic-device")
-    monkeypatch.setattr(FCMService, "send_push_to_user", lambda **kw: 0)
+    monkeypatch.setattr(FCMService, "send_push_to_device", lambda **kw: False)
     with patch("django.utils.timezone.now", return_value=NOW):
-        assert deliver_planning_events(event_kinds=EVENT_KINDS) == 0
+        assert deliver_planning_events(event_kinds=EVENT_KINDS) == 1
+        PushDelivery.objects.update(next_attempt_at=NOW)
+        assert dispatch() == 0
     event = PlanningEvent.objects.get()
-    assert event.attempts == 1 and event.delivery_status == "retry_pending"
+    assert event.attempts == 1 and event.delivery_status == "push_queued"
+    assert not event.provider_accepted_at and PushDelivery.objects.get().attempts == 1
     assert Notification.objects.count() == 1
     PrivateAccessRevocation.objects.create(
         lease=invoice.lease, user=invoice.lease.tenant, reason="Authority withdrawn"
     )
     with patch("django.utils.timezone.now", return_value=NOW + timedelta(minutes=3)):
         assert deliver_planning_events(event_kinds=EVENT_KINDS) == 0
+        assert dispatch() == 0
     event.refresh_from_db()
-    assert event.delivery_status == "stale_or_unauthorized"
+    assert not event.provider_accepted_at and PushDelivery.objects.get().suppressed
     assert Notification.objects.count() == 1
 
 
@@ -211,14 +216,19 @@ def test_successful_retry_and_repeat_job_do_not_duplicate_notification(
     invoice, monkeypatch
 ):
     record_reminders(now=NOW)
+    DeviceToken.objects.create(user=invoice.lease.tenant, token="synthetic-device")
     calls = []
     monkeypatch.setattr(
-        FCMService, "send_push_to_user", lambda **kw: calls.append(kw) or 1
+        FCMService, "send_push_to_device", lambda **kw: calls.append(kw) or True
     )
     with patch("django.utils.timezone.now", return_value=NOW):
         assert deliver_planning_events(event_kinds=EVENT_KINDS) == 1
         assert deliver_planning_events(event_kinds=EVENT_KINDS) == 0
+        PushDelivery.objects.update(next_attempt_at=NOW)
+        assert dispatch() == 1
+        assert dispatch() == 0
     assert len(calls) == Notification.objects.count() == 1
+    assert PlanningEvent.objects.get().provider_accepted_at
 
 
 def test_company_payer_coordinator_only_and_current_membership(signed_agreement):

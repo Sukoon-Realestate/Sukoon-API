@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from core_apps.admin_api.models import StaffProfile
 
 
-def require_staff_actor(user, roles=None, *, lock=False):
+def require_staff_actor(user, roles=None, *, lock=False, allow_recovery=False):
     """Read current authority; never trust a cached request-user relationship."""
     query = get_user_model().objects
     if lock:
@@ -14,8 +14,24 @@ def require_staff_actor(user, roles=None, *, lock=False):
     if lock:
         profiles = profiles.select_for_update()
     profile = profiles.filter(user=current).first()
-    if not current.is_active or (lock and current.sensitive_actions_frozen):
+    if (
+        not current.is_active
+        or (profile is not None and not profile.is_active)
+        or (lock and current.sensitive_actions_frozen)
+    ):
         raise PermissionDenied("Current active administrative authority is required.")
+    if lock:
+        from core_apps.users.services.totp import require_sensitive_access
+
+        require_sensitive_access(current)
+    if (
+        profile
+        and profile.role_name == "security_recovery_reviewer"
+        and (not allow_recovery or not profile.is_active)
+    ):
+        raise PermissionDenied(
+            "This account is limited to independent factor recovery."
+        )
     if current.is_superuser:
         return current
     if profile is not None:
@@ -93,6 +109,10 @@ class IsUserManager(IsRoleStaff):
     roles = {"system_owner", "main_admin"}
 
 
+class IsSupportStaff(IsRoleStaff):
+    roles = {"system_owner", "support", "support_supervisor"}
+
+
 class IsPropertyReviewer(IsRoleStaff):
     roles = {"system_owner", "main_admin", "property_reviewer"}
 
@@ -105,3 +125,11 @@ class IsFinancialStaff(IsRoleStaff):
         "payout_operator",
         "refund_operator",
     }
+
+
+class IsPayoutStaff(IsRoleStaff):
+    roles = {"payout_operator", "psp_reconciliation"}
+
+
+class IsRefundStaff(IsRoleStaff):
+    roles = {"refund_operator", "financial_approver", "psp_reconciliation"}

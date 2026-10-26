@@ -117,8 +117,12 @@ def continuation(
         if status in {"pending", "accepted"}:
             if invitation.expires_at <= timezone.now():
                 status = "expired"
-            elif current_invitation_problem(invitation):
-                status = "revoked"
+            else:
+                problem = current_invitation_problem(invitation)
+                if problem == "property_review_pending":
+                    base["blocked_reason"] = problem
+                elif problem:
+                    status = "revoked"
         base.update(status=f"invitation_{status}", next_action="open_invitation")
         if status == "pending":
             base["next_actor"] = "tenant"
@@ -127,11 +131,15 @@ def continuation(
             profile = OwnerPaymentProfile.objects.filter(
                 owner=visit.property.owner
             ).first()
-            if owner and (
-                not profile
-                or profile.status != "ready"
-                or not profile.payout_ready
-                or "rental-policy-v1" not in profile.accepted_policy_versions
+            if (
+                owner
+                and not base["blocked_reason"]
+                and (
+                    not profile
+                    or profile.status != "ready"
+                    or not profile.payout_ready
+                    or "rental-policy-v1" not in profile.accepted_policy_versions
+                )
             ):
                 base["next_action"] = "setup_owner_payments"
         return base
@@ -155,8 +163,7 @@ def continuation(
                 next_action="create_rental_invitation" if owner else None,
             )
     elif actions["can_submit"] or (
-        actor.pk != visit.tenant_id
-        and visit.status == "confirmed"
+        actor.pk != visit.tenant_id and visit.status == "confirmed"
     ):
         base.update(
             status="awaiting_tenant_decision",

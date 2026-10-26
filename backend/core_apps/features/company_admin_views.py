@@ -79,6 +79,8 @@ def reassign_coordinator(request, request_id):
 
 @company_api(["GET"])
 def occupants(request, company_id):
+    from core_apps.users.services.new_business import restricted_accounts
+
     company = company_for(request.user, company_id, "coordinate")
     return page(
         request,
@@ -91,5 +93,6 @@ def occupants(request, company_id):
             "name": m.user.get_full_name,
             "revision": m.revision,
             "is_active": True,
+            "account_closure_blocked": bool(restricted_accounts(m.user_id)),
         },
     )

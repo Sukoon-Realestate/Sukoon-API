@@ -16,6 +16,12 @@ def act_on_case(user, case_id, data, *, command_data=None):
 
         StaffProfile.objects.select_for_update().filter(user=current).first()
         item = get_object_or_404(case_queryset(current), id=case_id)
+        if item.kind == "service_activation" and item.payment_attempt_id:
+            from ...models import Company, RentInvoice
+            invoice = item.payment_attempt.invoice
+            if invoice.organization_id:
+                Company.objects.select_for_update().get(pk=invoice.organization_id)
+            RentInvoice.objects.select_for_update().get(pk=invoice.pk)
         if item.housing_request_id:
             from ...models import Company, CompanyHousingRequest
 

@@ -63,7 +63,7 @@ class AttachmentUploadAPIView(APIView):
         workspace, ticket_id = request.data.get("workspace"), request.data.get(
             "ticket_id"
         )
-        if workspace not in {"tenant", "owner"} or bool(ticket_id) == bool(creation):
+        if workspace not in {"tenant", "owner", "student", "company", "account"} or bool(ticket_id) == bool(creation):
             raise ValidationError(
                 "Supply exactly one ticket or creation request and a workspace."
             )

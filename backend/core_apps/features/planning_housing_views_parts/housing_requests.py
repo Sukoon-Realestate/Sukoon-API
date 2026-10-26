@@ -85,6 +85,7 @@ def request_actions(user, item):
 
 
 def request_payload(item, user):
+    from ..services.housing_request_reviews import can_read_history
     from django.utils.translation import get_language
     from core_apps.properties.services import PropertyService
 
@@ -103,6 +104,8 @@ def request_payload(item, user):
         "status": request_status(item),
         "visibility": item.visibility,
         "revision": item.revision,
+        "content_revision": item.content_revision,
+        "can_read_changes": can_read_history(user, item),
         "criteria": criteria_payload(item.criteria, catalog=cached[1]),
         "expires_at": item.expires_at.isoformat(),
         "allowed_actions": request_actions(user, item),
@@ -111,14 +114,14 @@ def request_payload(item, user):
     }
 
 
-def _request_values(data):
+def _request_values(data, previous=None):
     visibility = data.get("visibility", "eligible_owners")
     if visibility != "eligible_owners":
         raise ValidationError({"visibility": "Only eligible_owners is supported."})
     return {
         "title": text_field(data, "title", required=True, limit=160),
         "note": text_field(data, "note"),
-        "criteria": criteria(data.get("criteria")),
+        "criteria": criteria(data.get("criteria"), previous=previous),
         "visibility": visibility,
     }
 
@@ -225,4 +228,20 @@ def housing_demand(request):
 def housing_request_detail(request, request_id):
     return Response(
         request_payload(get_request(request.user, request_id), request.user)
+    )
+
+
+@planning_api(["GET"], "housing_requests")
+def housing_request_changes(request, request_id):
+    from ..services.housing_request_reviews import (
+        require_history_access,
+        change_payload,
+    )
+
+    item = get_request(request.user, request_id)
+    require_history_access(request.user, item)
+    return page(
+        request,
+        item.changes.select_related("request").order_by("-to_revision"),
+        change_payload,
     )

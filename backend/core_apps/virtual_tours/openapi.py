@@ -39,6 +39,7 @@ REVISION = obj(
         "source_hash": STRING,
         "stage": STRING,
         "report": {"type": "object"},
+        "capture_job_id": {"anyOf": [UUID, {"type": "null"}]},
         "assets": array(ref("Asset"), 0, 2000),
         "variants": array(
             obj({"id": UUID, "context": STRING, "scope_fingerprint": HASH}), 0, 50
@@ -56,6 +57,7 @@ REVISION = obj(
         "source_hash",
         "stage",
         "report",
+        "capture_job_id",
         "assets",
         "variants",
     ],

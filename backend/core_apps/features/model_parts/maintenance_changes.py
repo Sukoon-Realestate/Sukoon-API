@@ -130,6 +130,19 @@ class RentalChange(TimeStampedModel):
     document_hash = models.CharField(max_length=64, blank=True, default="")
     signed_by = models.JSONField(default=list, blank=True)
     applied_at = models.DateTimeField(null=True, blank=True)
+    content_revision = models.PositiveIntegerField(default=1)
+
+
+class RentalChangeVersion(TimeStampedModel):
+    change = models.ForeignKey(RentalChange, on_delete=models.PROTECT, related_name="versions")
+    version = models.PositiveIntegerField()
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    lease_revision = models.PositiveIntegerField()
+    snapshot = models.JSONField()
+    baseline = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["change", "version"], name="rental_change_content_version")]
 
 
 class ChangeSigningSession(TimeStampedModel):

@@ -6,6 +6,17 @@ from core_apps.common.models import TimeStampedModel
 
 
 class Notification(TimeStampedModel):
+    class Scope(models.TextChoices):
+        ACCOUNT = "account", _("Account")
+        INDIVIDUAL = "individual", _("Individual")
+        OWNER = "owner", _("Owner")
+        STUDENT = "student", _("Student")
+        COMPANY = "company", _("Company")
+
+    scope = models.CharField(
+        max_length=16, choices=Scope.choices, default="", db_index=True
+    )
+
     class NotificationType(models.TextChoices):
         VISIT_REQUEST = "visit_request", _("Visit Request")
         VISIT_ACCEPTED = "visit_accepted", _("Visit Accepted")
@@ -69,9 +80,27 @@ class Notification(TimeStampedModel):
         verbose_name_plural = _("Notifications")
         ordering = ["-created_at", "-pkid"]
         indexes = [
+            models.Index(fields=["user", "scope", "is_read"]),
             models.Index(fields=["user", "is_read"]),
             models.Index(fields=["user", "-created_at"]),
         ]
 
     def __str__(self) -> str:
         return f"{self.title} -> {self.user.email}"
+
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            from ..services.inbox_scope import canonical_scope
+
+            self.scope = self.scope or canonical_scope(
+                self.data, self.notification_type
+            )
+            self.data = {
+                **(self.data or {}),
+                "scope": "account" if self.scope == "account" else "workspace",
+            }
+            if self.scope != "account":
+                self.data.update(
+                    workspace=self.scope, presentation_workspace=self.scope
+                )
+        return super().save(*args, **kwargs)

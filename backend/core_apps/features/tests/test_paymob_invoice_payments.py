@@ -333,12 +333,19 @@ def captured_payment(phase3_lease):
 def approved_refund(payment):
     from core_apps.features.models import RefundRequest
     from core_apps.features.services.refunds import execute_refund
+    from core_apps.users.models import User
+    from core_apps.admin_api.models import StaffProfile
+
+    operator = User.objects.create_user(
+        email=f"refund-{uuid.uuid4()}@example.com", password="test", is_verified=True
+    )
+    StaffProfile.objects.create(user=operator, role_name="refund_operator")
 
     refund = RefundRequest.objects.create(
         lease=payment.attempt.invoice.lease,
         payment_attempt=payment.attempt,
         requester=payment.attempt.payer,
-        approved_by=payment.attempt.invoice.lease.owner,
+        approved_by=operator,
         request_key=uuid.uuid4(),
         amount_minor=10000,
         refundable_balance_snapshot_minor=payment.attempt.amount_minor,
@@ -346,7 +353,7 @@ def approved_refund(payment):
         reason="Synthetic approved refund",
         allocations={"rent": 10000, "deposit": 0},
     )
-    execute_refund(refund)
+    execute_refund(refund, actor=operator)
     refund.refresh_from_db()
     assert refund.status == "processing"
     return refund

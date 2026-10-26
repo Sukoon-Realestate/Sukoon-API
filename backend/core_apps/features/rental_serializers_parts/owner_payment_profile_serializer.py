@@ -70,6 +70,8 @@ class RentalTermsSerializer(serializers.Serializer):
 
 
 class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
+    submitted_beneficiary = serializers.SerializerMethodField()
+    prepared_beneficiary = serializers.SerializerMethodField()
     policy_summary = serializers.SerializerMethodField()
     structured_summary = serializers.SerializerMethodField()
     required_policy_versions = serializers.SerializerMethodField()
@@ -81,6 +83,8 @@ class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
         model = OwnerPaymentProfile
         fields = [
             "id",
+            "prepared_beneficiary",
+            "submitted_beneficiary",
             "revision",
             "status",
             "masked_beneficiary",
@@ -144,31 +148,75 @@ class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
 
     def get_allowed_actions(self, obj):
         from ..providers import fake_provider_available
+        from ..services.beneficiary_confirmation import can_confirm
+        from core_apps.users.services import totp
+        from ..services.beneficiary_details import can_submit
 
         request = self.context.get("request")
-        return (
+        actions = (
             ["onboard_beneficiary"]
             if (
                 request
                 and request.user.pk == obj.owner_id
                 and request.user.is_active
                 and request.user.is_verified
-                and fake_provider_available()
-                and obj.status != OwnerPaymentProfile.Status.READY
+                and not request.user.sensitive_actions_frozen
+                and not totp.pending_recovery(request.user)
+                and (fake_provider_available() or can_confirm(obj, request.user))
+                and (
+                    obj.status != OwnerPaymentProfile.Status.READY
+                    or can_confirm(obj, request.user)
+                )
             )
             else []
         )
+        if request and can_submit(obj, request.user):
+            actions.append("submit_beneficiary_details")
+        return actions
+
+    def get_submitted_beneficiary(self, obj):
+        from ..services.beneficiary_details import latest, projection
+
+        return projection(latest(obj))
 
     def get_blocking_reasons(self, obj):
         from ..providers import fake_provider_available
+        from ..services.beneficiary_confirmation import preview
 
         is_ar = self._is_arabic()
         reasons = []
-        if not fake_provider_available():
+        request = self.context.get("request")
+        from core_apps.users.services import totp
+
+        if request and (
+            request.user.sensitive_actions_frozen or totp.pending_recovery(request.user)
+        ):
+            reasons.append(
+                "راجع أمان الحساب قبل تأكيد المستفيد."
+                if is_ar
+                else "Review account security before confirming a beneficiary."
+            )
+        if (
+            not fake_provider_available()
+            and not preview(obj, request.user if request else None)
+            and not obj.payout_ready
+        ):
             reasons.append(
                 "خدمة إعداد المستفيد غير متاحة حالياً."
                 if is_ar
                 else "Beneficiary onboarding is unavailable in this environment."
+            )
+        from ..services.beneficiary_confirmation import verification_ready
+
+        if (
+            request
+            and obj.status != OwnerPaymentProfile.Status.READY
+            and not verification_ready(request.user)
+        ):
+            reasons.append(
+                "أكمل تحقق البريد أو إعداد عامل الموظف من أمان الحساب."
+                if is_ar
+                else "Complete email verification or staff factor setup in account security."
             )
         if obj.status != OwnerPaymentProfile.Status.READY:
             reasons.append(
@@ -183,6 +231,12 @@ class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
                 else "The required rental policy has not been accepted."
             )
         return reasons
+
+    def get_prepared_beneficiary(self, obj):
+        from ..services.beneficiary_confirmation import preview
+
+        request = self.context.get("request")
+        return preview(obj, request.user if request else None)
 
 
 class OwnerOnboardingBodySerializer(serializers.Serializer):

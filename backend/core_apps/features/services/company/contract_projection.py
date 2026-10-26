@@ -34,6 +34,8 @@ def reviewed_package(item):
 
 
 def payload(item, user):
+    from ...providers import signing_available
+
     roles = access.roles_for(item, user)
     manages = access.manages(item, user)
     employee_only = roles == ["employee"] and not manages
@@ -63,15 +65,23 @@ def payload(item, user):
     )
     shown = [r for r in rows if not employee_only or r.actor_id == user.pk]
     allowed = []
+    available = []
     enabled = getattr(settings, "COMPANY_HOUSING_ENABLED", False)
     if not finished:
         for row in rows:
             if row.actor_id == user.pk and row.role in roles:
                 if row.decision == "pending":
+                    available.extend(
+                        [
+                            {"role": row.role, "decision": "accepted"},
+                            {"role": row.role, "decision": "declined"},
+                        ]
+                    )
                     if not blocking and enabled:
                         allowed.append({"role": row.role, "decision": "accepted"})
                     allowed.append({"role": row.role, "decision": "declined"})
                 if row.decision == "accepted":
+                    available.append({"role": row.role, "decision": "withdrawn"})
                     allowed.append({"role": row.role, "decision": "withdrawn"})
     source = item.snapshot
     from .tenancy_access import execution_mandate
@@ -107,7 +117,7 @@ def payload(item, user):
         "renter_kind": "company",
         "payer_kind": "company",
         "employees_are_debtors": False,
-        "provider_available": False,
+        "provider_available": signing_available(),
         "package": {} if employee_only else reviewed_package(item),
         "signer_name": source["signer_name"] if not employee_only else "",
         "payer_name": source["payer_name"] if not employee_only else "",
@@ -139,6 +149,7 @@ def payload(item, user):
             "quote_expired",
             "hold_expired",
             "dates_expired",
+            "company_request_changed",
             "offer_changed",
         }.intersection(blocking),
         "can_withdraw": manages and not finished,
@@ -150,6 +161,7 @@ def payload(item, user):
         "can_reserve": manages and effective == "ready_for_hold" and enabled,
         "new_business_enabled": enabled,
         "responses": allowed,
+        "available_responses": available,
         "units": units,
         "placements": [
             {**p, "employee_name": names[p["employee_id"]]} for p in placements

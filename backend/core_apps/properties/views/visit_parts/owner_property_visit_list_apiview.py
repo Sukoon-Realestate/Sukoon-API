@@ -96,7 +96,9 @@ class PropertyVisitUpdateAPIView(generics.UpdateAPIView):
 
     Request Body Example (PATCH):
     {
-        "status": "confirmed"
+        "status": "confirmed",
+        "expected_revision": 1,
+        "request_key": "original-request-uuid"
     }
     """
 
@@ -107,6 +109,20 @@ class PropertyVisitUpdateAPIView(generics.UpdateAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsTenantOrPropertyOwner]
     lookup_field = "id"
+
+    def update(self, request, *args, **kwargs):
+        from rest_framework.exceptions import ValidationError
+        from ..viewing_commands import execute_visit_response
+
+        visit = self.get_object()
+        action = {
+            "confirmed": "accept",
+            "rejected": "reject",
+            "canceled": "cancel",
+        }.get(request.data.get("status"))
+        if action is None:
+            raise ValidationError({"status": "Choose confirmed, rejected or canceled."})
+        return execute_visit_response(request, visit.id, action)
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])

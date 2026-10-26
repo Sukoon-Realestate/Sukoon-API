@@ -1,6 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, PermissionDenied
 from django.http import Http404
+from django.db import transaction
+from django.db.models import Q
+from core_apps.users.models import User
 from .advanced_execution_models import AdvancedExecution
 from .services.planning import planning_api, mutate, page
 from .services.advanced_execution.plans import get_plan
@@ -34,7 +37,21 @@ def detail(request, execution_id):
 
 
 @planning_api(["POST"], None)
+@transaction.atomic
 def action(request, execution_id, action):
+    # Account guards on a new Lease also lock both parties. Acquire the whole
+    # immutable actor set before mutate() takes its single-actor lock and before
+    # any physical inventory lock, including competing plans by different users.
+    plan = get_plan(request.user, execution_id)
+    participants = list(
+        User.objects.select_for_update(no_key=True)
+        .filter(Q(id__in=plan.required_actor_ids) | Q(pk=request.user.pk))
+        .order_by("pk")
+    )
+    if action == "prepare":
+        from core_apps.users.services.new_business import require_new_business
+
+        require_new_business(*(user.pk for user in participants))
     return mutate(
         request,
         f"advanced_execution.{action}.{execution_id}",

@@ -12,24 +12,35 @@ from ...models import (
     RefundRequest,
     RentInvoice,
 )
-from ...providers import get_rental_provider
 from ..rental_phase2 import RentalConflict
 from ..rental_phase3 import invoice_balance_minor, post_ledger_transaction
 from .remaining_components import captured_components, validate_allocations
 
 
 @transaction.atomic
-def execute_refund(refund):
+def execute_refund(refund, *, actor=None):
     # Shared lease lock orders settlement, refunds, capture and payouts consistently.
     from ..rental_lifecycle.locks import lock_financial_lease
 
+    if actor is not None:
+        from ..financial_authority import require_financial_actor
+        from ..paymob_refunds import ROLES
+
+        actor = require_financial_actor(actor, ROLES, "refund.execute", lock=True)
     lease = lock_financial_lease(Lease.objects.get(pk=refund.lease_id))
     refund = RefundRequest.objects.select_for_update().get(pk=refund.pk)
     from ...models import PaymobRefund, PaymobPayment
 
     confirmed_paymob = PaymobRefund.objects.filter(
-        refund=refund, status="confirmed"
+        refund=refund, current=True, status="confirmed"
     ).exists()
+    provider_payment = PaymobPayment.objects.filter(
+        attempt_id=refund.payment_attempt_id
+    ).exists()
+    if provider_payment and not confirmed_paymob and actor is None:
+        # Approval of the request is not authorization to send money. A worker
+        # may only dispatch an instruction staged by the sensitive command.
+        return refund
     if refund.status != RefundRequest.Status.APPROVED and not (
         refund.status == "processing" and confirmed_paymob
     ):
@@ -112,7 +123,7 @@ def execute_refund(refund):
     if PaymobPayment.objects.filter(attempt=attempt).exists() and not confirmed_paymob:
         from ..paymob_refunds import stage
 
-        stage(refund, attempt, split)
+        stage(refund, attempt, split, actor=actor)
         return refund
     refund.provider_refund_id = execute_local_instruction(
         kind="refund",
@@ -222,4 +233,7 @@ def execute_refund(refund):
         from ..chargebacks.facts import changed
 
         changed(chargeback, "ordinary_refund_recorded")
+    from ..refund_notifications import record
+
+    record(refund, "succeeded")
     return refund

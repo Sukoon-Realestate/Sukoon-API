@@ -97,7 +97,14 @@ def _active_record(*, user, operation, key):
         record
         and record.created_at < cutoff
         and not operation.startswith(
-            ("support.ticket.", "property.", "viewing.command:", "identity.submit")
+            (
+                "support.ticket.",
+                "property.",
+                "viewing.command:",
+                "identity.submit",
+                "account.closure.",
+                "content.edit:",
+            )
         )
     ):
         records.delete()
@@ -150,7 +157,9 @@ def execute_idempotent(
             if recoverable_operation(operation):
                 from core_apps.users.models import User
 
-                current = User.objects.select_for_update().get(pk=user.pk)
+                current = User.objects.select_for_update(
+                    no_key=operation.startswith("viewing.command:")
+                ).get(pk=user.pk)
                 if (
                     not current.is_active
                     or current.security_epoch != user.security_epoch
@@ -193,9 +202,16 @@ def recoverable_operation(operation):
     return operation == "property.create" or operation.startswith(
         (
             "property.update:",
+            "property.moderate:",
+            "viewing.command:",
+            "account.closure.",
+            "content.edit:",
             "property.image.upload:",
             "support.ticket.create:",
             "support.ticket.reply:",
+            "support.ticket.staff_reply:",
+            "support.ticket.staff_resolve:",
+            "support.ticket.manage:",
         )
     )
 
@@ -210,7 +226,9 @@ def resolve_or_close(*, user, operation, key, auth_claims=None):
 
     if not key or not recoverable_operation(operation):
         raise ValidationError("Unsupported recovery identity.")
-    current = User.objects.select_for_update().get(pk=user.pk)
+    current = User.objects.select_for_update(
+        no_key=operation.startswith("viewing.command:")
+    ).get(pk=user.pk)
     if not current.is_active or current.security_epoch != user.security_epoch:
         raise PermissionDenied("Account authority changed. Sign in again.")
     if auth_claims is not None:

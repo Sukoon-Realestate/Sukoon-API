@@ -5,8 +5,9 @@ import logging
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.utils import timezone
-from rest_framework.exceptions import NotFound
-from core_apps.properties.models import Property
+from rest_framework.exceptions import NotFound, ValidationError
+from core_apps.properties.models import Property, PropertyType
+from core_apps.properties.catalog_labels import property_type_label
 from core_apps.admin_api.models import UserReport
 
 
@@ -29,7 +30,9 @@ def _get_property_by_identifier(prop_id):
     raise NotFound("A current canonical property UUID is required.")
 
 
-def get_admin_properties_queryset(status=None, property_type=None, search=None):
+def get_admin_properties_queryset(
+    status=None, property_type=None, search=None, property_type_id=None
+):
     """
     Returns an optimized queryset for admin properties list.
     """
@@ -43,22 +46,30 @@ def get_admin_properties_queryset(status=None, property_type=None, search=None):
         .order_by("-created_at")
     )
 
-    if status:
+    if status in {"blocked", "محظور"}:
+        qs = qs.filter(moderation_blocked=True)
+    elif status:
         status_map = {
             "verified": Property.Status.VERIFIED,
             "مقبول": Property.Status.VERIFIED,
             "under_review": Property.Status.UNDER_REVIEW,
             "pending": Property.Status.UNDER_REVIEW,
             "قيد المراجعة": Property.Status.UNDER_REVIEW,
-            "rejected": Property.Status.HIDDEN,
-            "مرفوض": Property.Status.HIDDEN,
+            "rejected": Property.Status.NEEDS_REVISION,
+            "مرفوض": Property.Status.NEEDS_REVISION,
             "needs_revision": Property.Status.NEEDS_REVISION,
             "تعديل": Property.Status.NEEDS_REVISION,
         }
         mapped_status = status_map.get(status.lower(), status)
         qs = qs.filter(status=mapped_status)
 
-    if property_type and property_type != "all":
+    if property_type_id is not None:
+        try:
+            identity = uuid.UUID(str(property_type_id))
+        except (ValueError, TypeError, AttributeError):
+            raise ValidationError({"property_type_id": "A catalog UUID is required."})
+        qs = qs.filter(property_type__id=identity)
+    elif property_type and property_type != "all":
         qs = qs.filter(
             Q(property_type__name__icontains=property_type)
             | Q(property_type__slug__icontains=property_type)
@@ -78,24 +89,23 @@ def get_admin_properties_queryset(status=None, property_type=None, search=None):
     return qs
 
 
-def get_admin_property_metrics():
+def get_admin_property_metrics(language=None):
     """
     Returns high-level statistics for property management and review.
     """
     total = Property.objects.count()
-    active = Property.objects.filter(status=Property.Status.VERIFIED).count()
+    active = Property.objects.filter(
+        status=Property.Status.VERIFIED, moderation_blocked=False
+    ).count()
     pending = Property.objects.filter(status=Property.Status.UNDER_REVIEW).count()
-    rejected = Property.objects.filter(
-        status__in=[Property.Status.HIDDEN, Property.Status.NEEDS_REVISION]
-    ).count()
+    rejected = Property.objects.filter(status=Property.Status.NEEDS_REVISION).count()
 
-    today = timezone.now().date()
-    accepted_today = Property.objects.filter(
-        status=Property.Status.VERIFIED, updated_at__date=today
-    ).count()
-    rejected_today = Property.objects.filter(
-        status=Property.Status.HIDDEN, updated_at__date=today
-    ).count()
+    today = timezone.localdate()
+    from core_apps.properties.models import PropertyModerationDecision
+
+    decisions = PropertyModerationDecision.objects.filter(created_at__date=today)
+    accepted_today = decisions.filter(action="approve").count()
+    rejected_today = decisions.filter(action="reject").count()
     open_reports = UserReport.objects.filter(status=UserReport.Status.ACTIVE).count()
 
     return {
@@ -103,7 +113,19 @@ def get_admin_property_metrics():
         "active": active,
         "pending": pending,
         "rejected": rejected,
-        "acceptedToday": accepted_today if accepted_today > 0 else 1,
+        "blocked": Property.objects.filter(moderation_blocked=True).count(),
+        "acceptedToday": accepted_today,
         "rejectedToday": rejected_today,
         "openReports": open_reports,
+        # These are management filters, not choices for a new listing. Retired
+        # types remain available so reviewers can find their historical records.
+        "propertyTypes": [
+            {
+                "id": str(kind.id),
+                "name": property_type_label(kind, language),
+                "is_active": kind.is_active,
+                "revision": kind.revision,
+            }
+            for kind in PropertyType.objects.all()
+        ],
     }

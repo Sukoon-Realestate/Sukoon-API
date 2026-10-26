@@ -1,5 +1,7 @@
 """Normal deployment defaults must work without test-settings feature overrides."""
 
+# flake8: noqa: F811 -- imported pytest fixtures are injected by name.
+
 import json
 import os
 from pathlib import Path
@@ -17,7 +19,9 @@ from .test_rental_phase2 import authenticated, rental_participants
 API = "/api/v1/features/v1/"
 ALWAYS_READ_SERVICES = ["company_housing", "residential_portfolios"]
 CORE_SERVICES = [
-    name for name in SERVICES if name not in {"commute", "tenant_assistant", "shared_housing_plans"}
+    name
+    for name in SERVICES
+    if name not in {"commute", "tenant_assistant", "shared_housing_plans"}
 ]
 
 
@@ -70,7 +74,7 @@ def test_normal_deployment_enables_planning_by_default(module, value):
     assert configured["RENTAL_PROVIDER_BACKEND"] == "disabled"
     assert configured["RENTAL_FAKE_PROVIDER_ALLOWED"] is False
     assert configured["planning_schedule"] == {
-        "task": "core_apps.features.tasks.process_planning_jobs",
+        "task": "core_apps.features.tasks_parts.expire_rental_sources_and_holds.process_planning_jobs",
         "schedule": 30.0,
     }
 
@@ -140,7 +144,9 @@ def test_core_service_grants_work_without_providers(
         API + "planning-capabilities/", {"capability": capability, "action": "read"}
     )
     assert response.status_code == 200
-    assert response.data["enabled_capabilities"] == ALWAYS_READ_SERVICES + list(SERVICES)
+    assert response.data["enabled_capabilities"] == ALWAYS_READ_SERVICES + list(
+        SERVICES
+    )
     assert response.data["verified_services"] == ALWAYS_READ_SERVICES + CORE_SERVICES
     assert response.data["allowed_actions"] == ["read"]
     assert response.data["blocking_reasons"] == []
@@ -286,9 +292,15 @@ def test_provider_capabilities_become_available_independently(
     client = authenticated(rental_participants[1])
     for capability, action in [("commute", "search"), ("tenant_assistant", "ask")]:
         grant = client.get(API + "planning-capabilities/", {"capability": capability})
-        assert grant.data["verified_services"] == ALWAYS_READ_SERVICES + CORE_SERVICES + ready
+        assert (
+            grant.data["verified_services"]
+            == ALWAYS_READ_SERVICES + CORE_SERVICES + ready
+        )
         assert (action in grant.data["allowed_actions"]) == (capability in ready)
 
 
 def test_shared_housing_rollout_requires_explicit_flag():
-    assert deployment_settings(SHARED_HOUSING_ENABLED="true")["SHARED_HOUSING_ENABLED"] is True
+    assert (
+        deployment_settings(SHARED_HOUSING_ENABLED="true")["SHARED_HOUSING_ENABLED"]
+        is True
+    )

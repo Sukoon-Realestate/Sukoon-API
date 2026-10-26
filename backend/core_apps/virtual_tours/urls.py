@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, review_views
 from .capture_urls import urlpatterns as capture_patterns
 
 app_name = "virtual_tours"
@@ -10,7 +10,10 @@ upload_base = "virtual-tour-uploads/<uuid:upload_id>/"
 session_base = "virtual-tour-viewer/sessions/<uuid:session_id>/"
 resource_base = session_base + "resources/<str:resource_id>/"
 urlpatterns = [
+    path("admin/virtual-tours/reviews/", review_views.collection),
+    path("admin/virtual-tours/reviews/<uuid:revision_id>/", review_views.detail),
     *capture_patterns,
+    path("virtual-tour-updates/<uuid:event_id>/", views.owner_update),
     path("properties/virtual-tours/capabilities/", views.capabilities),
     path(property_base, views.tours),
     path(property_base + "available/", views.availability),

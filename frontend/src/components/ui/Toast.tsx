@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { CheckCircle2, AlertTriangle, Info, X } from 'lucide-react';
 
 interface ToastItem {
@@ -18,14 +18,14 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
-  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+  const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type }]);
 
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
-  };
+  }, []);
 
   const removeToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -39,12 +39,12 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto relative overflow-hidden flex items-center justify-between gap-3 px-4 py-3.5 rounded-2xl shadow-2xl border backdrop-blur-md animate-fadeInUp text-xs font-extrabold transition-all ${
+            className={`pointer-events-auto relative overflow-hidden flex items-center justify-between gap-3 px-4 py-3.5 rounded-2xl shadow-2xl border backdrop-blur-md  text-xs font-semibold transition-all ${
               toast.type === 'success'
-                ? 'bg-emerald-950/95 text-emerald-100 border-emerald-600/50 glow-teal-sm'
+                ? 'bg-emerald-950/95 text-emerald-100 border-emerald-600/50 '
                 : toast.type === 'error'
-                ? 'bg-rose-950/95 text-rose-100 border-rose-600/50 glow-rose-sm'
-                : 'bg-slate-950/95 text-slate-100 border-slate-700/50 glow-blue-sm'
+                ? 'bg-rose-950/95 text-rose-100 border-rose-600/50 '
+                : 'bg-slate-950/95 text-slate-100 border-slate-700/50 '
             }`}
           >
             <div className="flex items-center gap-2.5">

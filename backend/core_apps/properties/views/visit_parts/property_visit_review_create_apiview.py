@@ -11,18 +11,16 @@ from core_apps.common.idempotency import (
 from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
 from ...models import PropertyVisit
-from ...serializers import (
-    PropertyVisitReviewSerializer,
-    TenantVisitRequestDetailSerializer,
-)
+from ...serializers import PropertyVisitReviewSerializer
 from ...services import PropertyVisitService
+from ..viewing_commands import execute_visit_response
 
 
 class PropertyVisitCancelAPIView(generics.GenericAPIView):
     """Cancel one of the authenticated tenant's pending or confirmed visits.
 
     Request Body Example:
-    {}
+    {"expected_revision": 1, "request_key": "original-request-uuid"}
     """
 
     renderer_classes = [GenericJsonRenderer]
@@ -43,15 +41,7 @@ class PropertyVisitCancelAPIView(generics.GenericAPIView):
             id=self.kwargs["id"],
             tenant=request.user,
         )
-        visit = PropertyVisitService.update_visit_status(
-            user=request.user,
-            visit_obj=visit,
-            status=PropertyVisit.Status.CANCELED,
-        )
-        data = TenantVisitRequestDetailSerializer(
-            visit, context={"request": request}
-        ).data
-        return Response({"message": "Visit canceled successfully.", **data})
+        return execute_visit_response(request, visit.id, "cancel")
 
 
 class PropertyVisitReviewCreateAPIView(generics.GenericAPIView):

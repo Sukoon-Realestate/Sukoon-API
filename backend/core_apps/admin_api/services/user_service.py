@@ -157,6 +157,9 @@ def suspend_user(user_id, admin_user, reason="إيقاف إداري"):
 
     user.is_active = False
     user.save(update_fields=["is_active"])
+    from core_apps.users.services.sessions import revoke_all
+
+    user = revoke_all(user, actor=admin_user, action="account.admin_suspended")
 
     UserReport.objects.create(
         reported_user=user,
@@ -187,6 +190,9 @@ def unsuspend_user(user_id, admin_user):
             "Use staff authority management for administrative accounts."
         )
     user = User.objects.select_for_update().get(pk=user.pk)
+
+    if user.closed_at is not None:
+        raise ValidationError("A completed account deletion cannot be reactivated.")
 
     if user.is_active:
         raise ValidationError("User account is already active.")

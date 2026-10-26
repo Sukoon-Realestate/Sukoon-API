@@ -62,16 +62,13 @@ def mock_discovery():
 def ready_services(enabled):
     from config.advanced_housing import (
         PROVIDER_SERVICES,
-        mock_mode_available,
-        manual_review_available,
+        execution_available,
     )
 
     result = [
         service
         for service in enabled
-        if service not in PROVIDER_SERVICES
-        or mock_mode_available()
-        or (service == "asset_assisted_analysis" and manual_review_available())
+        if service not in PROVIDER_SERVICES or execution_available()
     ]
     if not getattr(settings, "SHARED_HOUSING_ENABLED", False):
         result = [name for name in result if name != "shared_housing_plans"]
@@ -177,17 +174,24 @@ def route_matrix(origins, destination):
             type(index) is not int
             or not 0 <= index < len(origins)
             or index in seen
+            or type(element.get("destinationIndex", 0)) is not int
             or element.get("destinationIndex", 0) != 0
         ):
             raise DiscoveryUnavailable(code="invalid_provider_response")
         seen.add(index)
         if not isinstance(element.get("status", {}), dict):
             raise DiscoveryUnavailable(code="invalid_provider_response")
-        if (
-            element.get("status", {}).get("code", 0) != 0
-            or element.get("condition") != "ROUTE_EXISTS"
-        ):
+        code = element.get("status", {}).get("code", 0)
+        if type(code) is not int or code < 0:
+            raise DiscoveryUnavailable(code="invalid_provider_response")
+        if code != 0:
+            # A per-element provider failure does not establish no available
+            # route. Preserve an unknown result and never invent zero duration.
+            continue
+        if element.get("condition") == "ROUTE_NOT_FOUND":
             results[index]["status"] = "no_route"
+            continue
+        if element.get("condition") != "ROUTE_EXISTS":
             continue
         try:
             duration = element["duration"]

@@ -145,6 +145,17 @@ def expire_property_holds(prop, now=None):
     for lease in (
         Lease.objects.select_for_update().filter(pk__in=lease_ids).order_by("pk")
     ):
+        from ..signing_documents import unresolved
+
+        if unresolved(lease):
+            open_system_case(
+                kind="agreement_terms_review",
+                source_key=f"hold-signature:{lease.id}",
+                lease=lease,
+                reason="The original signature result requires reconciliation before this allocation can expire.",
+                next_action="Query the original signing document and review its outcome before releasing accommodation.",
+            )
+            continue
         if unresolved_payment(lease):
             hold = ReservationHold.objects.filter(lease=lease).first()
             if hold and hold.status != "reconciliation_pending":

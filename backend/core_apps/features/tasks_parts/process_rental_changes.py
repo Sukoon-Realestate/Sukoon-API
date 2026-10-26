@@ -141,11 +141,13 @@ def scan_rental_evidence(self):
 )
 def reconcile_approved_payouts(self):
     from ..services.rental_phase3 import post_ledger_transaction
+    from ..services.paymob_payouts import process_pending
 
-    paid = 0
-    for candidate in RentalPayout.objects.filter(status=RentalPayout.Status.CREATED)[
-        :100
-    ]:
+    provider_result = process_pending()
+    paid = provider_result["paid"]
+    for candidate in RentalPayout.objects.filter(
+        status=RentalPayout.Status.CREATED
+    ).exclude(beneficiary_provider="paymob_payouts")[:100]:
         with transaction.atomic():
             from ..services.rental_lifecycle.locks import lock_financial_lease
 
@@ -185,8 +187,15 @@ def reconcile_approved_payouts(self):
                     ("platform_cash", "credit", payout.amount_minor),
                 ],
             )
+            from ..models import PayoutAuditEvent
+            from ..services.payout_notifications import record
+
+            PayoutAuditEvent.objects.create(
+                payout=payout, actor=payout.batch.approved_by, action="paid"
+            )
+            record(payout, "paid")
             paid += 1
-    return {"paid": paid}
+    return {**provider_result, "paid": paid}
 
 
 @shared_task(

@@ -8,10 +8,11 @@ export interface FetchReportsParams {
   reason_type?: string;
   page?: number;
   page_size?: number;
+  id?: string;
 }
 
-export async function fetchReports(params?: FetchReportsParams): Promise<PaginatedResponse<ReportItem>> {
-  return apiClient<PaginatedResponse<ReportItem>>('/api/v1/admin/reports/', { params });
+export async function fetchReports(params?: FetchReportsParams, signal?: AbortSignal): Promise<PaginatedResponse<ReportItem>> {
+  return apiClient<PaginatedResponse<ReportItem>>('/api/v1/admin/reports/', { params, signal });
 }
 
 export async function takeReportAction(
@@ -35,7 +36,10 @@ export async function fetchReportMetrics(): Promise<{
   return apiClient('/api/v1/admin/reports/metrics/');
 }
 
-export async function fetchReportsOverview(): Promise<import('./types').ReportsOverviewStats> {
-  return apiClient('/api/v1/admin/reports/overview/');
+export async function fetchReportsOverview(signal?: AbortSignal): Promise<import('./types').ReportsOverviewStats> {
+  const data = await apiClient<import('./types').ReportsOverviewStats>('/api/v1/admin/reports/overview/', { signal });
+  if (!data || !Number.isFinite(Date.parse(data.measured_at)) || !data.metrics ||
+      ![data.tickets, data.disputeReasons, data.bookingLog].every(Array.isArray)) throw new Error('Invalid reports overview');
+  return data;
 }
 

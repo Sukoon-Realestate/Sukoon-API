@@ -6,9 +6,12 @@ from django.db import models
 from django.db.models import F, Q
 from django.utils import timezone
 from core_apps.common.models import TimeStampedModel
+from core_apps.users.services.new_business import NewAccountBusinessMixin
 
 
-class BoostCampaign(TimeStampedModel):
+class BoostCampaign(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ("owner_id",)
+
     class Status(models.TextChoices):
         PENDING = "pending", "Pending"
         ACTIVE = "active", "Active"
@@ -33,6 +36,9 @@ class BoostCampaign(TimeStampedModel):
     )
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
+    expiration_processed_at = models.DateTimeField(
+        null=True, blank=True, editable=False
+    )
     impressions = models.PositiveIntegerField(null=True, blank=True)
 
 

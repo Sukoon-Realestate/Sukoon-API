@@ -70,9 +70,13 @@ def test_property_moderation_rechecks_current_role_and_records_actor(
     )
     with pytest.raises(PermissionDenied):
         approve_admin_property(lease.property.id, reviewer=owner)
-    approve_admin_property(lease.property.id, reviewer=superuser)
+    from core_apps.properties.services.moderation import version
+    from core_apps.properties.models import Property
+    Property.objects.filter(pk=lease.property.pk).update(status="under_review")
+    lease.property.refresh_from_db()
+    approve_admin_property(lease.property.id, reviewer=superuser, expected_version=version(lease.property), request_key="review")
     event = RentalAuditEvent.objects.get(subject_id=lease.property.id)
-    assert event.actor == superuser and event.action == "approve_admin_property"
+    assert event.actor == superuser and event.action == "property.moderation.approve"
     assert any(row["id"] == f"property-{event.id}" for row in get_audit_logs())
 
 

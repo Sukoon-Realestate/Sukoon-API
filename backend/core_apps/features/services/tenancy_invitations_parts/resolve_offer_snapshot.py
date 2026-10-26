@@ -92,6 +92,8 @@ def resolve_offer_snapshot(
 def current_invitation_problem(invitation):
     if invitation.owner_id != invitation.property.owner_id:
         return "ownership_changed"
+    if invitation.property.status == invitation.property.Status.UNDER_REVIEW:
+        return "property_review_pending"
     if (
         invitation.property.status != invitation.property.Status.VERIFIED
         or not invitation.property.is_verified
@@ -102,11 +104,24 @@ def current_invitation_problem(invitation):
     if not invitation.tenant.is_active or not invitation.tenant.is_verified:
         return "tenant_access_changed"
     try:
-        _, current = resolve_offer_snapshot(
-            invitation.property,
-            invitation.offer_id,
-            (invitation.offer_snapshot or {}).get("offer_revision"),
-        )
+        if invitation.terms_proposal_id and invitation.terms_proposal.author_id:
+            from ..negotiation_terms import current_selection
+            from ..rental_phase2 import RentalConflict
+
+            try:
+                current_selection(
+                    invitation.terms_proposal,
+                    expected_snapshot=invitation.offer_snapshot,
+                )
+            except RentalConflict:
+                return "accommodation_changed"
+            current = invitation.offer_snapshot
+        else:
+            _, current = resolve_offer_snapshot(
+                invitation.property,
+                invitation.offer_id,
+                (invitation.offer_snapshot or {}).get("offer_revision"),
+            )
     except (ValidationError, InvitationConflict):
         return "accommodation_changed"
     if current != invitation.offer_snapshot:
@@ -133,9 +148,13 @@ def refresh_effective_status(invitation, save=True):
     now = timezone.now()
     if invitation.expires_at <= now:
         new_status = TenancyInvitation.Status.EXPIRED
-    elif current_invitation_problem(invitation):
+    elif current_invitation_problem(invitation) not in {
+        None,
+        "property_review_pending",
+    }:
         new_status = TenancyInvitation.Status.REVOKED
     if new_status:
+        previous_status, previous_revision = invitation.status, invitation.revision
         invitation.status = new_status
         invitation.revision += 1
         if new_status == TenancyInvitation.Status.REVOKED:
@@ -144,7 +163,22 @@ def refresh_effective_status(invitation, save=True):
             fields = ["status", "revision", "updated_at"]
             if invitation.revoked_at:
                 fields.append("revoked_at")
-            invitation.save(update_fields=fields)
+            changed = TenancyInvitation.objects.filter(
+                pk=invitation.pk,
+                status=previous_status,
+                revision=previous_revision,
+                lease__isnull=True,
+            ).update(
+                **{
+                    field: getattr(invitation, field)
+                    for field in fields
+                    if field != "updated_at"
+                },
+                updated_at=now
+            )
+            if not changed:
+                # A stale GET must never undo a response or a consumed invitation.
+                invitation.refresh_from_db()
     return invitation
 
 

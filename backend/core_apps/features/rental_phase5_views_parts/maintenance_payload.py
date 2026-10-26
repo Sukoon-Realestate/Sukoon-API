@@ -3,7 +3,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from ..models import Lease, MaintenanceRequest, RentalEvidence, PrivateAccessRevocation
-from ..providers import require_rental_provider
+from ..providers import require_verified_rental_account
 from ..services.cycle_permissions import cycle_actions
 
 
@@ -47,7 +47,7 @@ def _lease(request, lease_id, lock=False, servicing=False):
 
             require_actor(request.user)
         else:
-            require_rental_provider(request.user)
+            require_verified_rental_account(request.user)
     queryset = Lease.objects.select_related("owner", "tenant")
     if lock:
         queryset = queryset.select_for_update(of=("self",))
@@ -78,6 +78,7 @@ def _safe_evidence(lease, ids):
 
 def maintenance_payload(item, user=None):
     from ..services.billing_sources import source_invoices
+
     return {
         "billing_invoices": source_invoices("maintenance", item.id),
         "allowed_actions": cycle_actions(user, item),

@@ -1,5 +1,8 @@
 from django.urls import path
+from .views.support import AdminSupportDetailAPIView, AdminSupportTeamAPIView, AdminSupportReceiptAPIView
 from .views.session import AdminSessionAPIView
+from .views.followups import AdminFollowupsAPIView
+from .views.content import AdminContentAPIView, AdminContentReceiptAPIView
 from .views.kyc import AdminKYCIdentityMediaAPIView
 from .views import (
     AdminDashboardStatsView,
@@ -46,9 +49,14 @@ from .views import (
 from .views.system import AdminCampaignPreviewAPIView, AdminCampaignDetailAPIView
 
 urlpatterns = [
+    path("content/", AdminContentAPIView.as_view(), name="admin-content"),
+    path("content/<slug:kind>/receipts/<uuid:key>/", AdminContentReceiptAPIView.as_view(), name="admin-content-receipt"),
+    path("content/<slug:kind>/", AdminContentAPIView.as_view(), name="admin-content-list"),
+    path("content/<slug:kind>/<str:identity>/", AdminContentAPIView.as_view(), name="admin-content-detail"),
     path("system/notifications/preview/", AdminCampaignPreviewAPIView.as_view(), name="admin-campaign-preview"),
     path("system/notifications/<uuid:campaign_id>/", AdminCampaignDetailAPIView.as_view(), name="admin-campaign-detail"),
     path("session/", AdminSessionAPIView.as_view(), name="admin-session"),
+    path("followups/", AdminFollowupsAPIView.as_view(), name="admin-followups"),
     # Dashboard stats
     path("dashboard/", AdminDashboardStatsView.as_view(), name="admin-dashboard-stats"),
     path("dashboard/executive/", AdminExecutiveDashboardStatsView.as_view(), name="admin-executive-dashboard"),
@@ -102,6 +110,9 @@ urlpatterns = [
     # Support Tickets & Customer Support
     path("support/", AdminSupportTicketsListAPIView.as_view(), name="admin-support-list"),
     path("support/metrics/", AdminSupportMetricsAPIView.as_view(), name="admin-support-metrics"),
+    path("support/team/", AdminSupportTeamAPIView.as_view(), name="admin-support-team"),
+    path("support/<uuid:ticket_id>/", AdminSupportDetailAPIView.as_view(), name="admin-support-detail"),
+    path("support/<uuid:ticket_id>/receipts/<uuid:key>/", AdminSupportReceiptAPIView.as_view(), name="admin-support-receipt"),
 
     # Analytics & Reports
     path("analytics/", AdminAnalyticsStatsAPIView.as_view(), name="admin-analytics-stats"),
@@ -136,4 +147,13 @@ from core_apps.features import reputation_experience_views as review_experiences
 urlpatterns += [
     path("review-recovery/", review_experiences.ReviewRecoveryView.as_view()),
     path("review-windows/<uuid:identity>/extend/", review_experiences.ReviewWindowExtensionView.as_view()),
+]
+
+from core_apps.admin_api.views.property_views import (
+    AdminPropertyBlockAPIView, AdminPropertyUnblockAPIView, AdminPropertyReceiptAPIView,
+)
+urlpatterns += [
+    path("properties/<uuid:property_id>/block/", AdminPropertyBlockAPIView.as_view()),
+    path("properties/<uuid:property_id>/unblock/", AdminPropertyUnblockAPIView.as_view()),
+    path("properties/<uuid:property_id>/receipts/<uuid:key>/", AdminPropertyReceiptAPIView.as_view()),
 ]

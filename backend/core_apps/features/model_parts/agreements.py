@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import F, Q
 from django.utils import timezone
 from core_apps.common.models import TimeStampedModel
+from core_apps.users.services.new_business import NewAccountBusinessMixin
 
 
 class LeaseEligibleTenant(TimeStampedModel):
@@ -34,7 +35,9 @@ class LeaseEligibleTenant(TimeStampedModel):
         ]
 
 
-class Lease(TimeStampedModel):
+class Lease(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ('owner_id', 'tenant_id')
+
     class Status(models.TextChoices):
         DRAFT = "draft", "Draft"
         PENDING_SIGNATURES = "pending_signatures", "Pending signatures"

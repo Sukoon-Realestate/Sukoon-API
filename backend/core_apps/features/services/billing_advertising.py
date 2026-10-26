@@ -86,11 +86,13 @@ def activate_advertising_invoice(invoice, attempt, *, hosted=False):
             int(ad.plan_snapshot["duration_count"]),
         )
         ad.activated_at, ad.status = now, Advertisement.Status.ACTIVE
+        ad.expiration_processed_at = None
         ad.save(
             update_fields=[
                 "starts_at",
                 "ends_at",
                 "activated_at",
+                "expiration_processed_at",
                 "status",
                 "updated_at",
             ]

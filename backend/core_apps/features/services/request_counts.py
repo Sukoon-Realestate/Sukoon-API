@@ -21,6 +21,7 @@ def pending_request_counts(user, *, owner=False):
     if not user.is_active or not user.is_verified:
         return {}
     from .shared_housing.counts import pending_count
+    from .housing_request_reviews import LIVE
     shared_count = pending_count(user, owner=owner)
     interests = RentalInterest.objects.filter(
         Q(shared_allocation__isnull=True) | Q(shared_allocation__proposal__plan__status="handed_off")
@@ -33,6 +34,14 @@ def pending_request_counts(user, *, owner=False):
     )
     if owner:
         return {
+            "housing_offers": HousingOffer.objects.filter(
+                owner=user,
+                status__in=LIVE,
+                review_state__in=["pending_reconfirm", "incompatible"],
+                request__status="published",
+                request__expires_at__gt=timezone.now(),
+                tender_line__isnull=True,
+            ).count(),
             "shared_housing_plans": shared_count,
             "rental_interests": interests.filter(
                 Q(status__in=["submitted", "under_review"], waiting_for="owner")
@@ -68,10 +77,11 @@ def pending_request_counts(user, *, owner=False):
         ).count(),
         "housing_offers": HousingOffer.objects.filter(
             request__user=user,
-            status__in=["sent", "viewed"],
+            status__in=LIVE,
             request__status="published",
             request__expires_at__gt=now,
-            request_revision=F("request__revision"),
+            reviewed_content_revision=F("request__content_revision"),
+            review_state="current",
             tender_line__isnull=True,
         ).count(),
         "replacement_invitations": TenancyTransition.objects.filter(

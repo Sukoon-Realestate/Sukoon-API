@@ -1,27 +1,36 @@
-"""Revision-aware representative changes; never allocate rental inventory or money."""
+"""Revision-aware viewing responses and representative changes; no rental allocation."""
 
-from datetime import datetime
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from core_apps.features.company_models import CompanyMembership
-from core_apps.features.models import IdempotencyRecord
 from core_apps.features.services.rental_lifecycle.common import audit, require_revision
 from core_apps.features.services.rental_phase2 import RentalConflict
 from ..models import Property, PropertyVisit
-from .viewing_access import participant, can_read, group_process
+from .viewing_access import can_read, group_process
 
 
 def notify(visit, action, existing_notification=None):
     from core_apps.features.planning_models import PlanningEvent
+    from .viewing_notifications import recipient_scope
 
     recipients = {visit.property.owner_id, visit.tenant_id}
+    if visit.company_id:
+        recipients.update(
+            CompanyMembership.objects.filter(
+                company_id=visit.company_id,
+                is_active=True,
+                is_coordinator=True,
+                user__is_active=True,
+            ).values_list("user_id", flat=True)
+        )
     process = group_process(visit)
     if process:
         recipients.update(
             process.group.memberships.filter(
-                user__id__in=process.consented_ids, status="active"
+                user__id__in=process.consented_ids,
+                status="active",
+                joined_revision__lte=process.access_group_revision,
             ).values_list("user_id", flat=True)
         )
     for recipient in recipients:
@@ -34,9 +43,8 @@ def notify(visit, action, existing_notification=None):
                     "event_kind": "viewing_changed",
                     "target_id": str(visit.id),
                     "visit_id": str(visit.id),
-                    "workspace": (
-                        "owner" if recipient == visit.property.owner_id else "tenant"
-                    ),
+                    "workspace": recipient_scope(visit, recipient),
+                    "schema_version": "1",
                     "revision": visit.revision,
                     "change": action,
                 },
@@ -47,6 +55,13 @@ def notify(visit, action, existing_notification=None):
             and existing_notification.user_id == recipient
             and event.notification_id is None
         ):
+            existing_notification.data = {
+                **existing_notification.data,
+                **event.destination,
+                "presentation_workspace": event.destination["workspace"],
+            }
+            existing_notification.scope = event.destination["workspace"]
+            existing_notification.save(update_fields=["data", "scope", "updated_at"])
             event.notification = existing_notification
             event.save(update_fields=["notification", "updated_at"])
 
@@ -57,7 +72,7 @@ def command(actor, identity, data):
     # Same property locking order as the canonical booking engine.
     Property.objects.select_for_update().get(pk=found.property_id)
     visit = (
-        PropertyVisit.objects.select_for_update()
+        PropertyVisit.objects.select_for_update(of=("self",))
         .select_related("property", "property__owner", "tenant")
         .get(pk=found.pk)
     )
@@ -72,6 +87,14 @@ def command(actor, identity, data):
     if visit.status not in {"pending", "confirmed"}:
         raise RentalConflict("This viewing is no longer open.", code="visit_not_open")
     action = data["action"]
+    if action in {"accept", "reject", "cancel"}:
+        from .visit import PropertyVisitService
+
+        return PropertyVisitService.update_visit_status(
+            actor,
+            visit,
+            {"accept": "confirmed", "reject": "rejected", "cancel": "canceled"}[action],
+        )
     if action == "reassign":
         if (
             not visit.company_id

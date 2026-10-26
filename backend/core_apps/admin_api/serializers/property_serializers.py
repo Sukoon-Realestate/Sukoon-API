@@ -42,16 +42,30 @@ class AdminPropertyItemSerializer(serializers.ModelSerializer):
         return str(obj.owner.id)
 
     def get_type(self, obj):
-        return obj.property_type.name if obj.property_type else "شقة"
+        from django.utils.translation import get_language
+        from core_apps.properties.catalog_labels import property_type_label
+        from core_apps.common.locale_middleware import resolve_request_language
+
+        request = self.context.get("request")
+        language = resolve_request_language(request) if request else get_language()
+        return (
+            property_type_label(obj.property_type, language)
+            if obj.property_type
+            else "غير محدد"
+        )
 
     def get_status(self, obj):
         status_map = {
             Property.Status.VERIFIED: "مقبول",
             Property.Status.UNDER_REVIEW: "قيد المراجعة",
             Property.Status.NEEDS_REVISION: "تعديل",
-            Property.Status.HIDDEN: "مرفوض",
+            Property.Status.HIDDEN: "مخفي",
         }
-        return status_map.get(obj.status, "قيد المراجعة")
+        return (
+            "محظور"
+            if obj.moderation_blocked
+            else status_map.get(obj.status, "قيد المراجعة")
+        )
 
     def get_price(self, obj):
         return f"{int(obj.price):,} ج.م" if obj.price else "0 ج.م"
@@ -61,7 +75,7 @@ class AdminPropertyItemSerializer(serializers.ModelSerializer):
         views = ContentView.objects.filter(
             content_type=content_type, object_id=obj.pkid
         ).count()
-        return views if views > 0 else 12
+        return views
 
     def get_time(self, obj):
         delta = timezone.now() - obj.created_at
@@ -86,4 +100,10 @@ class AdminPropertyItemSerializer(serializers.ModelSerializer):
 
 
 class AdminPropertyActionSerializer(serializers.Serializer):
-    reason = serializers.CharField(required=False, allow_blank=True, default="")
+    expected_version = serializers.RegexField(r"^[a-f0-9]{64}$")
+    reason = serializers.CharField(
+        required=False, allow_blank=True, default="", max_length=2000
+    )
+    internal_note = serializers.CharField(
+        required=False, allow_blank=True, default="", max_length=4000
+    )

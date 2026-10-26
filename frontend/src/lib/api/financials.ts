@@ -1,8 +1,8 @@
 import { apiClient } from './client';
 import { FinancialSummary, TransactionItem, PaginatedResponse } from './types';
 
-export async function fetchFinancialSummary(): Promise<FinancialSummary> {
-  return apiClient<FinancialSummary>('/api/v1/admin/financials/summary/');
+export async function fetchFinancialSummary(signal?: AbortSignal): Promise<FinancialSummary> {
+  return apiClient<FinancialSummary>('/api/v1/admin/financials/summary/', { signal });
 }
 
 export async function fetchTransactions(params?: {

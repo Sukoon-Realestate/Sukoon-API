@@ -107,6 +107,9 @@ class Advertisement(TimeStampedModel):
     starts_at = models.DateTimeField(null=True, blank=True, db_index=True)
     ends_at = models.DateTimeField(null=True, blank=True, db_index=True)
     activated_at = models.DateTimeField(null=True, blank=True)
+    expiration_processed_at = models.DateTimeField(
+        null=True, blank=True, editable=False
+    )
 
     class Meta:
         ordering = ["-created_at", "-id"]

@@ -1,6 +1,7 @@
 """Immutable reviewed plan; appending decisions never signs for another person."""
 
 import json
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
@@ -17,6 +18,7 @@ POLICY = "advanced-partial-preserve-v1"
 MODES = {"independent_participants", "conditional_package"}
 
 
+@transaction.atomic
 def record_step(
     plan,
     leg,
@@ -27,7 +29,7 @@ def record_step(
     metadata=None,
     actor=None,
 ):
-    return AdvancedExecutionStep.objects.create(
+    step = AdvancedExecutionStep.objects.create(
         execution=plan,
         leg=leg,
         kind=kind,
@@ -37,6 +39,10 @@ def record_step(
         metadata=metadata or {},
         actor=actor,
     )
+    from .notifications import record
+
+    record(step)
+    return step
 
 
 def create_plan(
@@ -50,9 +56,9 @@ def create_plan(
     legs,
     context=None
 ):
-    from config.advanced_housing import require_mock_mode
+    from config.advanced_housing import require_execution_mode
 
-    require_mock_mode()
+    provider_mode = require_execution_mode()
     from ..planning import require_planning
 
     require_planning(actor, CAPABILITIES[source_kind])
@@ -104,6 +110,7 @@ def create_plan(
             "source_digest": source_digest,
             "mode": mode,
             "policy": POLICY,
+            "provider_mode": provider_mode,
             "legs": clean,
         }
     )
@@ -113,6 +120,31 @@ def create_plan(
     if existing:
         get_plan(actor, existing.id)
         return existing
+    company_ids = [
+        item["canonical_id"]
+        for item in clean
+        if item.get("canonical_kind") == "company"
+    ]
+    if company_ids:
+        from ...models import CompanyBookingItem
+
+        list(
+            CompanyBookingItem.objects.select_for_update()
+            .filter(id__in=company_ids)
+            .order_by("pk")
+        )
+        if (
+            AdvancedExecutionLeg.objects.filter(
+                canonical_kind="company",
+                canonical_id__in=company_ids,
+            )
+            .exclude(execution__state="closed_partial")
+            .exists()
+        ):
+            raise RentalConflict(
+                "This company package already belongs to an execution.",
+                code="commitment_exists",
+            )
     plan = AdvancedExecution.objects.create(
         source_kind=source_kind,
         source_id=source_id,
@@ -121,6 +153,7 @@ def create_plan(
         digest=digest,
         mode=mode,
         policy_version=POLICY,
+        provider_mode=provider_mode,
         created_by=actor,
         required_actor_ids=sorted(required),
         context=context or {},
@@ -142,7 +175,7 @@ def create_plan(
         "plan_created",
         "confirmed",
         actor=actor,
-        metadata={"provider_mode": "mock", "policy_version": POLICY},
+        metadata={"provider_mode": provider_mode, "policy_version": POLICY},
     )
     return plan
 
@@ -229,12 +262,13 @@ def consent(plan, actor, data):
 
 
 def enabled(plan):
-    from config.advanced_housing import mock_mode_available
+    from config.advanced_housing import execution_mode
     from ..planning import enabled_services
 
     services = enabled_services()
     return (
-        mock_mode_available()
+        execution_mode() == plan.provider_mode
+        and plan.provider_mode in {"mock", "test"}
         and CAPABILITIES[plan.source_kind] in services
         and (
             plan.mode != "conditional_package"
@@ -243,11 +277,11 @@ def enabled(plan):
     )
 
 
-def actions(user, capability, subject_id=""):
+def actions(user, capability, subject_id="", *, plan=None):
     if not subject_id:
         return []
     try:
-        plan = get_plan(user, subject_id)
+        plan = plan or get_plan(user, subject_id)
     except (NotFound, ValueError, Http404):
         return []
     if capability != CAPABILITIES[plan.source_kind]:
@@ -258,8 +292,17 @@ def actions(user, capability, subject_id=""):
     own = str(user.id) in plan.required_actor_ids
     if own and plan.state in {"awaiting_consents", "ready"}:
         result.append("consents")
-    if plan.state == "ready":
-        result.append("prepare")
+    if plan.state == "ready" and (
+        plan.source_kind != "company_scenario" or user.pk == plan.created_by_id
+    ):
+        from ..signwell_client import ready as signing_ready
+
+        if (
+            plan.provider_mode == "mock"
+            or plan.source_kind == "company_scenario"
+            or signing_ready()
+        ):
+            result.append("prepare")
     if plan.state in {
         "prepared",
         "executing",
@@ -270,7 +313,9 @@ def actions(user, capability, subject_id=""):
     }:
         result += ["reconcile"]
         if own:
-            result += ["advance", "withdraw"]
+            result += ["withdraw"]
+            if plan.provider_mode == "mock":
+                result += ["advance"]
     if own and plan.state in {"partial", "manual_resolution"}:
         result.append("resolve")
     return result

@@ -1,3 +1,4 @@
+from .viewing_support import response_body
 from core_apps.common.contract_testing import api_json
 import io
 import uuid
@@ -24,23 +25,26 @@ from core_apps.properties.models import (
 
 @pytest.fixture(autouse=True)
 def mock_cloudinary_upload():
-    mock_upload_response = lambda file, **kwargs: {
-        "public_id": f"mocked_{file.name}" if hasattr(file, "name") else "mocked_file",
-        "url": (
-            f"https://res.cloudinary.com/mocked/{file.name}"
-            if hasattr(file, "name")
-            else "https://res.cloudinary.com/mocked/file"
-        ),
-        "secure_url": (
-            f"https://res.cloudinary.com/mocked/{file.name}"
-            if hasattr(file, "name")
-            else "https://res.cloudinary.com/mocked/file"
-        ),
-        "format": "png",
-        "resource_type": "image",
-        "version": 123456,
-        "type": "upload",
-    }
+    def mock_upload_response(file, **kwargs):
+        return {
+            "public_id": kwargs.get("public_id")
+            or (f"mocked_{file.name}" if hasattr(file, "name") else "mocked_file"),
+            "url": (
+                f"https://res.cloudinary.com/mocked/{file.name}"
+                if hasattr(file, "name")
+                else "https://res.cloudinary.com/mocked/file"
+            ),
+            "secure_url": (
+                f"https://res.cloudinary.com/mocked/{file.name}"
+                if hasattr(file, "name")
+                else "https://res.cloudinary.com/mocked/file"
+            ),
+            "format": "png",
+            "resource_type": "image",
+            "version": 123456,
+            "type": "upload",
+        }
+
     with patch(
         "cloudinary.uploader.upload", side_effect=mock_upload_response
     ) as mocked:
@@ -90,6 +94,19 @@ def _create_property(**kwargs):
     return Property.objects.create(**defaults)
 
 
+def _create_published_property(*, images=0, **kwargs):
+    prop = _create_property(**kwargs)
+    for index in range(images):
+        PropertyImage.objects.create(property=prop, image=f"test{index}.png")
+    # These read tests start after approval of the current content and media.
+    # Media creation itself correctly invalidates any previous approval.
+    Property.objects.filter(pk=prop.pk).update(
+        status=Property.Status.VERIFIED, is_verified=True
+    )
+    prop.refresh_from_db()
+    return prop
+
+
 @pytest.mark.django_db
 class TestPropertyViews:
     def test_property_filter_options_allows_unauthenticated_guest(self, api_client):
@@ -99,7 +116,9 @@ class TestPropertyViews:
         assert "property_types" in data
 
     def test_property_filter_options_returns_all_supported_options(self, auth_client):
-        response = auth_client.get(reverse("property-filter-options"))
+        response = auth_client.get(
+            reverse("property-filter-options"), HTTP_ACCEPT_LANGUAGE="ar"
+        )
 
         assert response.status_code == status.HTTP_200_OK
         data = response.json()["data"]
@@ -119,8 +138,11 @@ class TestPropertyViews:
             if property_type["value"] == "apartment"
         )
         assert apartment["label"] == "شقة"
-        assert set(apartment) == {"id", "value", "label"}
-        assert data["ordering"][0] == {"value": "-created_at", "label": "الأحدث"}
+        assert set(apartment) == {"id", "value", "label", "revision"}
+        assert apartment["revision"] >= 1
+        ordering = {item["value"]: item["label"] for item in data["ordering"]}
+        assert ordering["-created_at"] == "الأحدث"
+        assert ordering["relevance"] == "الأكثر صلة"
         assert data["bedrooms"] == "number"
         assert data["bathrooms"] == "number"
         assert {amenity["query_parameter"] for amenity in data["amenities"]} == {
@@ -139,10 +161,9 @@ class TestPropertyViews:
 
     def test_homepage_properties_public_and_queries_optimized(self, auth_client, user):
         for i in range(5):
-            prop = _create_property(owner=user, title=f"Apartment {i}")
-            if i == 0:
-                PropertyImage.objects.create(property=prop, image="test1.png")
-                PropertyImage.objects.create(property=prop, image="test2.png")
+            _create_published_property(
+                owner=user, title=f"Apartment {i}", images=2 if i == 0 else 0
+            )
         url = reverse("property-homepage-list")
 
         with CaptureQueriesContext(connection) as ctx:
@@ -214,7 +235,7 @@ class TestPropertyViews:
         assert response.json()["data"]["banner"] is None
 
     def test_new_properties_unauthenticated_returns_200(self, api_client, user):
-        _create_property(owner=user, title="شقة معروضة للعامة")
+        _create_published_property(owner=user, title="شقة معروضة للعامة")
         url = reverse("property-list")
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
@@ -223,7 +244,8 @@ class TestPropertyViews:
         assert len(data["results"]) >= 1
 
     def test_new_properties_happy_path_card_shape(self, auth_client, user):
-        prop = _create_property(
+        _create_published_property(
+            images=2,
             owner=user,
             title="شقة مفروشة 3 غرف",
             bedrooms=3,
@@ -234,11 +256,9 @@ class TestPropertyViews:
             has_elevator=True,
             has_wifi=True,
         )
-        PropertyImage.objects.create(property=prop, image="test1.png")
-        PropertyImage.objects.create(property=prop, image="test2.png")
         url = reverse("property-list")
 
-        response = auth_client.get(url)
+        response = auth_client.get(url, HTTP_ACCEPT_LANGUAGE="ar")
 
         assert response.status_code == status.HTTP_200_OK
         json_data = api_json(response)
@@ -259,28 +279,28 @@ class TestPropertyViews:
         assert "price" in item
         assert "price_period" in item
 
-    def test_new_properties_queries_optimized(self, auth_client, user):
-        for i in range(5):
-            prop = _create_property(owner=user, title=f"New Apartment {i}")
-            PropertyImage.objects.create(property=prop, image="test.png")
+    @pytest.mark.parametrize("count", [1, 8])
+    def test_new_properties_queries_optimized(self, auth_client, user, count):
+        for i in range(count):
+            _create_published_property(owner=user, title=f"New Apartment {i}", images=1)
         url = reverse("property-list")
 
         with CaptureQueriesContext(connection) as ctx:
             response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert len(api_json(response)["data"]["results"]) == 5
+        assert len(api_json(response)["data"]["results"]) == count
         assert len(ctx.captured_queries) <= 4
 
     def test_new_properties_supports_search_and_filter(self, auth_client, user):
-        _create_property(
+        _create_published_property(
             owner=user,
             title="Apartment in Nasr City",
             city="Cairo",
             district="Nasr City",
             price=5000.00,
         )
-        _create_property(
+        _create_published_property(
             owner=user,
             title="Villa in Maadi",
             city="Cairo",
@@ -408,14 +428,14 @@ class TestPropertyViews:
         assert float(property_obj.longitude) == 31.2357
 
     def test_retrieve_property_happy_path(self, api_client, user):
-        property_obj = _create_property(owner=user)
+        property_obj = _create_published_property(owner=user)
         url = reverse("property-detail", kwargs={"id": property_obj.id})
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert response.json()["data"]["title"] == "Apartment in Nasr City"
 
     def test_retrieve_property_includes_latitude_longitude(self, api_client, user):
-        property_obj = _create_property(
+        property_obj = _create_published_property(
             owner=user,
             latitude=30.0444,
             longitude=31.2357,
@@ -451,7 +471,7 @@ class TestPropertyViews:
         assert views.count() == 1
 
     def test_retrieve_property_records_anonymous_view(self, api_client, user):
-        property_obj = _create_property(owner=user)
+        property_obj = _create_published_property(owner=user)
         url = reverse("property-detail", kwargs={"id": property_obj.id})
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
@@ -668,8 +688,11 @@ class TestMyPropertyListView:
 
         assert "data" in json_data
 
-    def test_my_properties_queries_optimized(self, auth_client, user, another_user):
-        for i in range(5):
+    @pytest.mark.parametrize("count", [1, 8])
+    def test_my_properties_queries_optimized(
+        self, auth_client, user, another_user, count
+    ):
+        for i in range(count):
             property_obj = _create_property(owner=user, title=f"Apartment {i}")
             PropertyVisit.objects.create(
                 property=property_obj,
@@ -684,7 +707,7 @@ class TestMyPropertyListView:
 
         assert response.status_code == status.HTTP_200_OK
         json_data = api_json(response)
-        assert len(json_data["data"]["results"]) == 5
+        assert len(json_data["data"]["results"]) == count
         assert len(ctx.captured_queries) <= 3
 
     def test_owner_cannot_set_status_via_api(
@@ -796,14 +819,14 @@ class TestPropertyVisitViews:
         property_obj = _create_property(
             owner=another_user, title="Apartment Heliopolis", price=20000.00
         )
-        PropertyVisit.objects.create(
+        visit = PropertyVisit.objects.create(
             property=property_obj,
             tenant=user,
             visit_date="2099-07-20",
             visit_time="14:00:00",
         )
         url = reverse("tenant-visit-list")
-        response = auth_client.get(url)
+        response = auth_client.get(url, HTTP_ACCEPT_LANGUAGE="ar")
         assert response.status_code == status.HTTP_200_OK
         json_data = api_json(response)
         assert "data" in json_data
@@ -812,8 +835,9 @@ class TestPropertyVisitViews:
         result = json_data["data"]["results"][0]
         assert set(result.keys()) == {"id", "title", "note", "created_at", "status"}
         assert result["title"] == "Apartment Heliopolis - Nasr City"
-        assert result["day"] == "الإثنين 20 يوليو"
-        assert result["time"] == "2:00 م"
+        assert result["id"] == str(visit.id)
+        assert result["note"] == visit.note
+        assert result["created_at"]
         assert result["status"] == "بانتظار رد المالك"
 
     def test_list_owner_received_visits(self, auth_client, user, another_user):
@@ -846,9 +870,6 @@ class TestPropertyVisitViews:
             "rental_continuation",
             "stay_preferences",
             "tenant",
-
-
-
             "status",
         }
         assert result["stay_preferences"] is None
@@ -883,7 +904,9 @@ class TestPropertyVisitViews:
             status=PropertyVisit.Status.CONFIRMED,
         )
         url = reverse("tenant-visit-list")
-        response = auth_client.get(url, {"status": "confirmed"})
+        response = auth_client.get(
+            url, {"status": "confirmed"}, HTTP_ACCEPT_LANGUAGE="ar"
+        )
 
         assert response.status_code == status.HTTP_200_OK
         results = api_json(response)["data"]["results"]
@@ -937,7 +960,9 @@ class TestPropertyVisitViews:
             status=PropertyVisit.Status.PENDING,
         )
         url = reverse("property-visit-update", kwargs={"id": visit.id})
-        response = auth_client.patch(url, {"status": "confirmed"}, format="json")
+        response = auth_client.patch(
+            url, response_body(visit.revision, status="confirmed"), format="json"
+        )
         assert response.status_code == status.HTTP_200_OK
         visit.refresh_from_db()
         assert visit.status == PropertyVisit.Status.CONFIRMED
@@ -958,9 +983,6 @@ class TestPropertyVisitViews:
             "rental_continuation",
             "stay_preferences",
             "tenant",
-
-
-
             "status",
         }
         assert results[0]["stay_preferences"] is None
@@ -997,9 +1019,6 @@ class TestPropertyVisitViews:
             "rental_continuation",
             "stay_preferences",
             "tenant",
-
-
-
             "status",
         }
         assert visit_data["stay_preferences"] is None
@@ -1052,7 +1071,9 @@ class TestPropertyVisitViews:
             status=PropertyVisit.Status.PENDING,
         )
         url = reverse("property-visit-update", kwargs={"id": visit.id})
-        response = auth_client.patch(url, {"status": "canceled"}, format="json")
+        response = auth_client.patch(
+            url, response_body(visit.revision, status="canceled"), format="json"
+        )
         assert response.status_code == status.HTTP_200_OK
         visit.refresh_from_db()
         assert visit.status == PropertyVisit.Status.CANCELED

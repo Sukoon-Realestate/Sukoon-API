@@ -1,15 +1,13 @@
+"""Legacy preference history remains stored; inert switches are not editable rules."""
+
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
-from core_apps.admin_api.models.platform_preferences import (
-    PlatformPreferences,
-    PlatformPreferenceAudit,
-    default_platform_preferences,
-)
 
 
 def get_platform_settings():
-    current, _ = PlatformPreferences.objects.get_or_create(pk=1)
-    return dict(current.values)
+    # Historical booleans have no runtime consumers. They cannot promise
+    # verification, privacy or inventory behavior to an administrator.
+    return {}
 
 
 @transaction.atomic
@@ -17,23 +15,8 @@ def update_platform_settings(payload, actor=None):
     from core_apps.admin_api.permissions import require_staff_actor
 
     require_staff_actor(actor, {"system_owner"}, lock=True)
-    if (
-        not isinstance(payload, dict)
-        or set(payload) - set(default_platform_preferences())
-        or any(type(value) is not bool for value in payload.values())
-    ):
+    if not isinstance(payload, dict) or payload:
         raise ValidationError(
-            {"detail": "Supply supported boolean platform preferences."}
+            "These settings have no operational effect and are not editable. Use the relevant published workflow."
         )
-    PlatformPreferences.objects.get_or_create(pk=1)
-    current = PlatformPreferences.objects.select_for_update().get(pk=1)
-    before = dict(current.values)
-    current.values = {**before, **payload}
-    if current.values != before:
-        current.revision += 1
-        current.full_clean()
-        current.save(update_fields=["values", "revision", "updated_at"])
-        PlatformPreferenceAudit.objects.create(
-            actor=actor, revision=current.revision, before=before, after=current.values
-        )
-    return dict(current.values)
+    return get_platform_settings()

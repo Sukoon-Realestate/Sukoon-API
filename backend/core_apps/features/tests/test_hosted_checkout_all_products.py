@@ -127,6 +127,76 @@ def test_capture_survives_delivery_failure_and_worker_fulfills_once(
     assert PaymentFulfillment.objects.get().status == "fulfilled"
 
 
+@pytest.mark.parametrize("change_before_quote", [True, False])
+def test_hosted_subscription_keeps_issued_price_and_duration(
+    client, buyer, plan, hosted, change_before_quote
+):
+    original_amount, original_months = plan.amount_minor, plan.period_months
+    invoice = body(issue(client, plan)[0], 201)
+    base = ROOT + f"billing/invoices/{invoice['id']}/"
+
+    def update_catalog():
+        plan.amount_minor += 7654
+        plan.period_months = 12
+        plan.revision += 1
+        plan.save()
+
+    if change_before_quote:
+        update_catalog()
+    quote = body(
+        client.post(
+            base + "quote/?projection=mobile_v1&platform=android",
+            {
+                "expected_revision": invoice["revision"],
+                "request_key": str(uuid.uuid4()),
+            },
+            format="json",
+        ),
+        201,
+    )
+    if not change_before_quote:
+        update_catalog()
+    review = body(client.get(base, {"projection": "mobile_v1", "platform": "android"}))
+    assert review["purchase_route"]["enabled"]
+    assert review["total_minor"] == original_amount
+    command = {
+        "expected_revision": invoice["revision"],
+        "quote_id": quote["id"],
+        "request_key": str(uuid.uuid4()),
+    }
+    with patch(
+        "core_apps.features.services.paymob_client.create_intention",
+        side_effect=intention,
+    ) as provider:
+        response = body(
+            client.post(
+                base + "checkout/?projection=mobile_v1&platform=android",
+                command,
+                format="json",
+            )
+        )
+        replay = body(
+            client.post(
+                base + "checkout/?projection=mobile_v1&platform=android",
+                command,
+                format="json",
+            )
+        )
+    assert response["id"] == replay["id"] and provider.call_count == 1
+    payment = PaymobPayment.objects.get(attempt__id=response["id"])
+    assert payment.attempt.amount_minor == original_amount
+    with patch(
+        "core_apps.features.services.paymob_client.inquiry",
+        return_value=snapshot(payment),
+    ):
+        reconcile(payment)
+        reconcile(payment)
+    subscription = AccountSubscription.objects.get(invoice__id=invoice["id"])
+    assert subscription.plan_snapshot["amount_minor"] == original_amount
+    assert subscription.plan_snapshot["period_months"] == original_months
+    assert PaymentReceipt.objects.count() == 1
+
+
 def test_no_card_submission_remains_pending_without_generic_provider_error(
     client, plan, hosted
 ):
@@ -203,6 +273,124 @@ def test_expired_session_resumes_same_intention_and_same_receipt(
         assert renew.call_count == 1 and create.call_count == 0
     assert PaymentAttempt.objects.count() == 1
     assert not PaymentReceipt.objects.exists()
+
+
+def test_crashed_renewal_is_read_before_any_further_provider_update(
+    client, buyer, plan, hosted
+):
+    from core_apps.features.models import IdempotencyRecord
+
+    payment = checkout(client, plan)
+    session = payment.attempt.checkout_session
+    session.expires_at = timezone.now() - timedelta(minutes=1)
+    session.save()
+
+    class WorkerStopped(BaseException):
+        pass
+
+    with patch.object(
+        paymob_client, "order_transactions", return_value=[]
+    ), patch.object(paymob_client, "renew_intention", side_effect=WorkerStopped):
+        with pytest.raises(WorkerStopped):
+            resume(buyer, payment.attempt, uuid.uuid4())
+    payment.refresh_from_db()
+    assert payment.status == "renewing"
+    claim_id = payment.renewal_request_id
+    with patch.object(paymob_client, "order_transactions") as lookup, patch.object(
+        paymob_client, "renew_intention"
+    ) as renew:
+        resume(buyer, payment.attempt, uuid.uuid4())
+    lookup.assert_not_called()
+    renew.assert_not_called()
+    PaymobPayment.objects.filter(pk=payment.pk).update(
+        renewal_claimed_at=timezone.now() - timedelta(minutes=3)
+    )
+    from urllib.parse import urlencode
+
+    redirect = (
+        session.navigation["return_url"]
+        + "?"
+        + urlencode(
+            {
+                "state": session.return_state,
+                "payment_attempt_id": str(payment.attempt.id),
+            }
+        )
+    )
+    with patch.object(
+        paymob_client, "order_transactions", return_value=[]
+    ), patch.object(
+        paymob_client,
+        "retrieve_intention",
+        side_effect=lambda value: renewal(value, redirect),
+    ) as retrieve, patch.object(
+        paymob_client, "renew_intention"
+    ) as renew, patch.object(
+        paymob_client, "create_intention"
+    ) as create:
+        recovered = resume(buyer, payment.attempt, uuid.uuid4())
+    assert recovered.checkout_session.expires_at > timezone.now()
+    retrieve.assert_called_once()
+    renew.assert_not_called()
+    create.assert_not_called()
+    assert IdempotencyRecord.objects.get(id=claim_id).recovery_status == "confirmed"
+    assert PaymentAttempt.objects.count() == 1
+    assert not PaymentReceipt.objects.exists()
+
+
+def test_late_renewal_result_cannot_overwrite_a_newer_claim(
+    client, buyer, plan, hosted
+):
+    from django.db import transaction
+    from core_apps.features.services.payment_resume import _start_renewal, _save_session
+
+    payment = checkout(client, plan)
+    session = payment.attempt.checkout_session
+    expiry_before = session.expires_at
+    with transaction.atomic():
+        old = _start_renewal(
+            buyer, payment.attempt, session, payment, str(uuid.uuid4())
+        )
+        newer = _start_renewal(
+            buyer, payment.attempt, session, payment, str(uuid.uuid4())
+        )
+    assert old.id != newer.id
+    assert not _save_session(
+        payment,
+        session,
+        {"client_secret": "synthetic-secret"},
+        timezone.now() + timedelta(minutes=5),
+        "renewing",
+        old.id,
+    )
+    session.refresh_from_db()
+    payment.refresh_from_db()
+    assert session.expires_at == expiry_before
+    assert payment.status == "renewing" and payment.renewal_request_id == newer.id
+
+
+def test_retired_renewal_worker_cannot_send_after_reading_the_order(
+    client, buyer, plan, hosted
+):
+    from django.db import transaction
+    from core_apps.features.services.payment_resume import _start_renewal, _renew
+
+    payment = checkout(client, plan)
+    session = payment.attempt.checkout_session
+    with transaction.atomic():
+        old = _start_renewal(
+            buyer, payment.attempt, session, payment, str(uuid.uuid4())
+        )
+
+    def lookup(_):
+        PaymobPayment.objects.filter(pk=payment.pk).update(status="renewal_unknown")
+        return []
+
+    with patch.object(
+        paymob_client, "order_transactions", side_effect=lookup
+    ), patch.object(paymob_client, "renew_intention") as renew:
+        _renew(payment, payment.attempt, session, "https://bound.example.test/", old)
+    renew.assert_not_called()
 
 
 def test_resume_rejects_unbound_provider_return_and_never_replays_unknown_put(
@@ -354,7 +542,28 @@ def test_banner_capture_activates_public_placement_without_mock_payment(
     from django.urls import reverse
     from core_apps.advertising.models import MockAdvertisementPayment
     from core_apps.advertising.services import is_publicly_eligible
+    from core_apps.advertising.models import AdvertisingPlan
+    from importlib import import_module
 
+    # Transaction tests flush migration seed rows. Reuse the existing catalog
+    # fixture explicitly so this test is independent of database/test order.
+    seeded = next(
+        row
+        for row in import_module(
+            "core_apps.advertising.migrations.0002_seed_advertising_plans"
+        ).PLANS
+        if row["id"] == "weekly"
+    )
+    AdvertisingPlan.objects.get_or_create(
+        id=seeded["id"],
+        defaults={
+            **{key: value for key, value in seeded.items() if key != "id"},
+            "currency": "EGP",
+            "exponent": 2,
+            "revision": "1",
+            "active": True,
+        },
+    )
     ad, _, _ = pending_ad(client)
     invoice = body(
         client.post(
@@ -403,6 +612,7 @@ def test_promotion_capture_activates_original_campaign(phase5_lease, hosted):
             {
                 "property_id": str(lease.property.id),
                 "option_id": option.id,
+                "option_revision": option.revision,
                 "request_key": str(uuid.uuid4()),
             },
             format="json",

@@ -82,6 +82,11 @@ def catalog_language(context):
 
 
 def property_type_label(item, language):
+    translated = getattr(
+        item, "name_ar" if language and language.startswith("ar") else "name_en", ""
+    )
+    if language and translated:
+        return translated
     names = PROPERTY_TYPES.get(item.slug)
     if names is None or language is None:
         return item.name
@@ -89,6 +94,14 @@ def property_type_label(item, language):
 
 
 def location_label(name, language):
+    if not isinstance(name, str):
+        item = name
+        translated = getattr(
+            item, "name_ar" if language and language.startswith("ar") else "name_en", ""
+        )
+        if language and translated:
+            return translated
+        name = item.name
     names = _LOCATION_LABELS.get(_normalized(name))
     if names is None or language is None:
         return name

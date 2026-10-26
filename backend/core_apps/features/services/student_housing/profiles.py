@@ -26,6 +26,8 @@ def enrollment(user, *, allow_admission=False, campus_id=None):
 
 
 def campus_payload(item, language="en"):
+    from core_apps.properties.catalog_labels import location_label
+
     return {
         "id": str(item.id),
         "name": item.name_ar if language.startswith("ar") else item.name_en,
@@ -36,7 +38,10 @@ def campus_payload(item, language="en"):
             else item.university.name_en
         ),
         "city_id": str(item.city.id),
-        "city": item.city.name,
+        "city": location_label(item.city, language),
+        "revision": item.revision,
+        "university_revision": item.university.revision,
+        "active": item.active and item.university.active,
         "latitude": float(item.latitude) if item.latitude is not None else None,
         "longitude": float(item.longitude) if item.longitude is not None else None,
         "checked_on": str(item.checked_on) if item.checked_on else None,
@@ -100,13 +105,15 @@ def save_profile(user, data):
         item.revision += 1
     else:
         item = StudentProfile(user=user)
+    previous_campus = item.campus if item.pk else None
     item.campus = (
-        get_object_or_404(
-            Campus, id=data["campus_id"], active=True, university__active=True
-        )
+        get_object_or_404(Campus, id=data["campus_id"])
         if data.get("campus_id")
         else None
     )
+    from core_apps.properties.catalog_access import require_current_selection
+
+    require_current_selection(item.campus, previous=previous_campus, field="campus_id")
     for key in (
         "institution_name",
         "academic_stage",

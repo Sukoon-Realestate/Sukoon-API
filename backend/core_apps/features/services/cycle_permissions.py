@@ -9,7 +9,7 @@ from ..models import (
     RentalDispute,
     RentalHandover,
 )
-from ..providers import fake_provider_available
+from ..providers import signing_available
 from .maintenance_access import access_window_current, appointment_reviewable
 from django.utils import timezone
 from .settlements_parts.prepare_settlement import settlement_precondition_error
@@ -47,27 +47,14 @@ def cycle_actions(user, subject):
         )
     )
     if (
-        lease.renter_company_id
+        lease is None
+        or lease.renter_company_id
         or lease.legacy_read_only
         or user.pk not in {lease.owner_id, lease.tenant_id}
     ):
         return []
-    if not fake_provider_available() and not isinstance(subject, MaintenanceRequest):
-        if not isinstance(subject, Lease):
-            return []
-        from .reputation.eligibility import can_review_lease
+    from .change_versions import EDITABLE, can_edit
 
-        actions = ["review_rental"] if can_review_lease(subject, user) else []
-        if lease.status in {
-            Lease.Status.ACTIVE,
-            Lease.Status.TERMINATION_PENDING,
-            Lease.Status.ENDED,
-        }:
-            actions.append("create_maintenance_request")
-            from .evidence_storage import available as evidence_available
-            if evidence_available():
-                actions.append("upload_evidence")
-        return actions
     if isinstance(subject, Lease):
         actions = ["request_statement", "create_rental_dispute"]
         if lease.status in {
@@ -77,13 +64,20 @@ def cycle_actions(user, subject):
         }:
             actions += [
                 "create_rental_handover",
-                "upload_evidence",
                 "create_maintenance_request",
                 "create_payment_extension",
                 "create_amendment",
                 "create_renewal",
                 "create_termination",
             ]
+        from .evidence_storage import available as evidence_available
+
+        if evidence_available() and lease.status in {
+            Lease.Status.ACTIVE,
+            Lease.Status.TERMINATION_PENDING,
+            Lease.Status.ENDED,
+        }:
+            actions.append("upload_evidence")
         if not settlement_precondition_error(lease):
             actions.append("propose_settlement")
         from .reputation.eligibility import can_review_lease
@@ -140,6 +134,13 @@ def cycle_actions(user, subject):
             return []  # Financial operations approval is not a participant action.
         from .change_terms import changed_terms_blocker
 
+        if (
+            subject.kind in EDITABLE
+            and subject.requester_id == user.pk
+            and subject.status in {"proposed", "changes_requested"}
+        ):
+            return ["edit_change"] if can_edit(subject, user) else []
+
         if changed_terms_blocker(subject):
             return (
                 ["reject", "request_changes"]
@@ -155,8 +156,13 @@ def cycle_actions(user, subject):
             RentalChange.Status.CHANGES_REQUESTED,
         }:
             return ["reject", "request_changes"] + (
-                ["accept"] if str(user.id) not in subject.approvals else []
+                ["accept"]
+                if (subject.status == "proposed" or subject.kind not in EDITABLE)
+                and str(user.id) not in subject.approvals
+                else []
             )
+        if not signing_available():
+            return []
         if subject.kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
             if (
                 subject.status == RentalChange.Status.ACCEPTED

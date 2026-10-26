@@ -9,7 +9,7 @@ export interface DashboardMetric {
   title: string;
   value: string;
   change: string;
-  isPositive: boolean;
+  isPositive: boolean | null;
   icon: 'users' | 'building' | 'clock' | 'alert' | 'calendar' | 'revenue';
 }
 
@@ -32,6 +32,7 @@ export interface ActivityItem {
 }
 
 export interface DashboardStatsResponse {
+  period: { from: string; through: string; measured_at: string };
   metrics: DashboardMetric[];
   user_distribution: UserDistribution;
   chart_data: Array<{ label: string; value: number }>;
@@ -39,9 +40,10 @@ export interface DashboardStatsResponse {
 }
 
 export interface ExecutiveDashboardStats {
+  period: { from: string; through: string; measured_at: string };
   executiveMetrics: DashboardMetric[];
-  monthlyUserChartData: Array<{ day: number; value: number; isCurrent?: boolean }>;
-  reportTrendData: Array<{ day: number; value: number; isCurrent?: boolean }>;
+  monthlyUserChartData: Array<{ day: number; label: string; date: string; value: number; isCurrent?: boolean }>;
+  reportTrendData: Array<{ day: number; label: string; date: string; value: number; isCurrent?: boolean }>;
   userDistribution: UserDistribution;
   executiveActivities: ActivityItem[];
 }
@@ -211,6 +213,7 @@ export interface PropertyItem {
 }
 
 export interface PropertyMetrics {
+  propertyTypes: { id: string; name: string; is_active: boolean; revision: number }[];
   total: number;
   active: number;
   pending: number;
@@ -221,6 +224,13 @@ export interface PropertyMetrics {
 }
 
 export interface PropertyDetail {
+  review_revision: number;
+  review_version: string;
+  review_snapshot: Record<string, unknown>;
+  moderation_blocked: boolean;
+  moderation_reason: string;
+  review_history: {id: string; revision: number; version: string; action: string; reason: string; internal_note: string; reviewer: string; created_at: string}[];
+  actions: Record<string, {enabled: boolean; reason: string}>;
   id: string;
   title: string;
   description: string;
@@ -303,6 +313,7 @@ export interface OverviewTicket {
 }
 
 export interface ReportsOverviewStats {
+  measured_at: string;
   metrics: {
     avgResolutionTime: string;
     activeDisputes: number;
@@ -330,7 +341,11 @@ export interface ReportMetrics {
   total: number;
 }
 
+export type AnalyticsPeriod = '7' | '30' | '90';
+
 export interface AnalyticsStats {
+  period: { days: number; from: string; through: string };
+  snapshot_measured_at: string;
   visitRequests: string;
   visitRequestsChange: string;
   completedVisits: string;
@@ -355,6 +370,8 @@ export interface AnalyticsStats {
     color: string;
   }>;
   dailyChart: Array<{
+    from: string;
+    through: string;
     label: string;
     value: number;
   }>;
@@ -399,6 +416,8 @@ export interface AuditLogItem {
 }
 
 export interface SystemHealth {
+  telemetry?: { state: string; measured_at: number; window_seconds: number; requests: number | null; server_errors: number | null; error_rate: number | null; average_ms: number | null; p95_upper_ms: number | null; p95_lower_ms?: number | null; release_sha: string; routes: Array<{route: string; requests: number; errors: number; duration_ms: number}>; memory: {ratio: number | null; used_bytes: number | null; limit_bytes: number | null; scope: string}; runtime: {failures: string[]} | null; queue?: {state: string; pending: number | null; oldest_seconds: number | null} };
+  incidents?: Array<{code: string; state: string; occurrences: number; opened_at: string | null; resolved_at: string | null}>;
   metrics: {
     uptime: string;
     uptimeSub: string;
@@ -423,7 +442,17 @@ export interface PushCampaign {
   title: string;
   timeAgo: string;
   body: string;
-  openRate: string;
-  recipientCount: string;
+  openRate: string | null;
+  recipientCount: string | number;
+  receiptCount?: number;
+  pushAccountCount?: number;
+  workspaceCounts?: Record<string, number>;
+  audience?: 'all' | 'tenants' | 'landlords' | 'verified' | 'students' | 'companies';
+  state?: string;
+  revision?: number;
+  preview_digest?: string;
+  request_key?: string;
+  deliveryCounts?: Record<string, number>;
+  can_confirm?: boolean;
 }
 

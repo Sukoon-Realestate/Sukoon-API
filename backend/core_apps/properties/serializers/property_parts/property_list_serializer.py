@@ -28,7 +28,7 @@ class PropertyTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PropertyType
-        fields = ["id", "name", "slug", "description"]
+        fields = ["id", "name", "slug", "description", "revision", "is_active", "sort_order"]
 
 
 class PropertyImageSerializer(serializers.ModelSerializer):

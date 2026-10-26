@@ -1,6 +1,6 @@
 from django.utils import timezone
 from rest_framework.exceptions import APIException
-from config.advanced_housing import POLICY_VERSION, mock_mode_available
+from config.advanced_housing import POLICY_VERSION, execution_available, execution_mode
 from .access import intent_actions
 from ..planning import money, criteria_payload, enabled_services
 
@@ -89,7 +89,7 @@ def candidate_stale(item, *, check_expiry=True, check_availability=True):
 
 def execution_enabled():
     return (
-        mock_mode_available() and "housing_transition_execution" in enabled_services()
+        execution_available() and "housing_transition_execution" in enabled_services()
     )
 
 
@@ -143,7 +143,7 @@ def candidate_payload(item, user):
         "inventory_reserved": False,
         "execution_available": execution_enabled(),
         "execution_id": str(execution.id) if execution else "",
-        "provider_mode": "mock" if execution_enabled() else "disabled",
+        "provider_mode": execution_mode() if execution_enabled() else "disabled",
         "rent_change": money(
             abs(destination["rent_minor"] - own.intent.lease.rent_amount_minor)
         ),

@@ -95,6 +95,16 @@ class MyPropertyListAPIView(generics.ListAPIView):
                 .filter(is_ownership_verified=True)
                 .values("pk")
             )
+        status_filter = self.request.query_params.get("status")
+        if status_filter == "blocked":
+            queryset = queryset.filter(moderation_blocked=True)
+        elif status_filter:
+            aliases = {"accepted": "verified", "rejected": "needs_revision", "pending": "under_review"}
+            selected = aliases.get(status_filter, status_filter)
+            if selected not in Property.Status.values:
+                from rest_framework.exceptions import ValidationError
+                raise ValidationError({"status": "Choose a supported property status."})
+            queryset = queryset.filter(status=selected, moderation_blocked=False)
         rental_scope = self.request.query_params.get("rental_scope")
         if rental_scope:
             if rental_scope not in {"entire_property", "room", "room_group", "bed"}:

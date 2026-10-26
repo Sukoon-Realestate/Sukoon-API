@@ -1,3 +1,4 @@
+from .viewing_support import response_body
 from core_apps.common.contract_testing import api_json
 from datetime import time, timedelta
 
@@ -24,6 +25,8 @@ def make_property(
         governorate=cairo_governorate,
         city=cairo_city,
         district="Nasr City",
+        status=Property.Status.VERIFIED,
+        is_verified=True,
     )
 
 
@@ -124,8 +127,9 @@ def test_acceptance_keeps_contacts_private_and_is_idempotent(
 
     api_client.force_authenticate(owner)
     accept_url = reverse("owner-visit-request-accept", kwargs={"id": visit.id})
-    accepted = api_client.post(accept_url, {}, format="json")
-    repeated = api_client.post(accept_url, {}, format="json")
+    body = response_body(visit.revision)
+    accepted = api_client.post(accept_url, body, format="json")
+    repeated = api_client.post(accept_url, body, format="json")
     assert accepted.status_code == repeated.status_code == 200
     visit.refresh_from_db()
     assert visit.accepted_at is not None
@@ -140,7 +144,7 @@ def test_acceptance_keeps_contacts_private_and_is_idempotent(
     )
     assert notification.data["visit_id"] == str(visit.id)
     assert notification.data["property_id"] == str(property_obj.id)
-    assert "conversation_id" not in notification.data
+    assert notification.data["conversation_id"] == str(conversation.id)
     assert "phone" not in str(notification.data).lower()
 
     owner_detail = api_client.get(
@@ -153,7 +157,7 @@ def test_acceptance_keeps_contacts_private_and_is_idempotent(
     owner_list = api_client.get(reverse("owner-visit-request-list")).json()["data"]
     assert owner_list["results"][0]["tenant"]["phone_number"] == ""
     legacy_owner_list = api_client.get(reverse("owner-visit-list")).json()["data"]
-    assert legacy_owner_list[0]["tenant"]["is_phone_revealed"] is False
+    assert legacy_owner_list["results"][0]["tenant"]["is_phone_revealed"] is False
 
     api_client.force_authenticate(tenant)
     tenant_detail = api_client.get(
@@ -181,7 +185,9 @@ def test_acceptance_keeps_contacts_private_and_is_idempotent(
     assert conversation_create["other_participant"]["is_phone_revealed"] is False
 
     cancelled = api_client.post(
-        reverse("property-visit-cancel", kwargs={"id": visit.id}), {}, format="json"
+        reverse("property-visit-cancel", kwargs={"id": visit.id}),
+        response_body(visit.revision),
+        format="json",
     )
     assert cancelled.status_code == 200
     visit.refresh_from_db()
@@ -307,7 +313,7 @@ def test_notices_localize_and_missing_granted_phone_stays_authorized(
     assert (
         api_client.post(
             reverse("owner-visit-request-accept", kwargs={"id": visit.id}),
-            {},
+            response_body(visit.revision),
             format="json",
         ).status_code
         == 200

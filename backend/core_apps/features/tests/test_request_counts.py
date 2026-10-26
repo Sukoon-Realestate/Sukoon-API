@@ -195,8 +195,9 @@ def test_offer_count_excludes_answered_expired_and_stale_request_versions(
             price_period="monthly",
             status=status,
             request_revision=revision,
+            reviewed_content_revision=revision,
         )
-    assert pending_request_counts(tenant)["housing_offers"] == 2
+    assert pending_request_counts(tenant)["housing_offers"] == 3
     assert pending_request_counts(stranger)["housing_offers"] == 0
     request.expires_at = timezone.now() - timedelta(seconds=1)
     request.save(update_fields=["expires_at"])

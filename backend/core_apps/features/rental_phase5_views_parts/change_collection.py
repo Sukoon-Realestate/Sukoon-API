@@ -6,13 +6,14 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.response import Response
 from ..models import RentalChange, RentInvoice
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from ..services.rental_phase3 import cairo_instant
 from .maintenance_payload import _lease, _safe_evidence
 from .maintenance_action import change_payload
+from ..services.change_versions import EDITABLE
 
 
 def change_collection(request, lease_id, kind):
@@ -26,7 +27,7 @@ def change_collection(request, lease_id, kind):
             purpose="rent",
         )
         return reject_external_claim(request, invoice)
-    lease = _lease(request, lease_id)
+    lease = _lease(request, lease_id, servicing=kind in EDITABLE)
     if request.method == "GET":
         results = [
             change_payload(x, request.user)
@@ -110,7 +111,7 @@ def change_collection(request, lease_id, kind):
             )
     evidence = _safe_evidence(lease, request.data.get("evidence_ids", []))
     with transaction.atomic():
-        lease = _lease(request, lease_id, lock=True)
+        lease = _lease(request, lease_id, lock=True, servicing=kind in EDITABLE)
         replay = replay_operation(
             request.user, operation, request.data["request_key"], request.data
         )
@@ -118,6 +119,15 @@ def change_collection(request, lease_id, kind):
             return Response(replay[0], status=replay[1])
         if int(request.data.get("lease_revision", 0)) != lease.revision:
             raise RentalConflict("Lease revision conflict.", code="stale_revision")
+        if kind in EDITABLE:
+            from ..services.cycle_permissions import cycle_actions
+            if f"create_{kind}" not in cycle_actions(request.user, lease):
+                raise PermissionDenied("This lease cannot receive this proposal in its current state.")
+        if kind == RentalChange.Kind.PAYMENT_EXTENSION:
+            invoice = RentInvoice.objects.select_for_update().get(pk=invoice.pk)
+            if invoice.status in {"paid", "settled", "cancelled", "written_off"}:
+                raise RentalConflict("This invoice no longer needs a payment extension.", code="invoice_changed")
+            original_due = invoice.due_at
         if kind == RentalChange.Kind.RENEWAL:
             from ..services.planning_transitions import require_no_departure
 
@@ -200,6 +210,10 @@ def change_collection(request, lease_id, kind):
             ),
         )
         item.evidence.set(evidence)
+        from ..services.change_versions import freeze, snapshot
+        from ..services.rental_lifecycle.consents import record_consent
+        freeze(item)
+        record_consent(item, request.user, "propose", snapshot(item))
         from ..services.planning_notifications import record_event
 
         record_event(item, request.user, operation)

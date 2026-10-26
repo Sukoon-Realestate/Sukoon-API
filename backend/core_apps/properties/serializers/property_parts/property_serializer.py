@@ -51,7 +51,7 @@ class PropertySerializer(PropertyValidationMixin, serializers.ModelSerializer):
     governorate = PublicUUIDRelatedField(queryset=Governorate.objects.all())
     city = PublicUUIDRelatedField(queryset=City.objects.all())
     district_catalog = PublicUUIDRelatedField(
-        queryset=District.objects.filter(is_active=True),
+        queryset=District.objects.all(),
         required=False,
         allow_null=True,
     )

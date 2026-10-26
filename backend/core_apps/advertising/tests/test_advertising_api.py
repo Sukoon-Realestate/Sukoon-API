@@ -352,7 +352,7 @@ def pending_ad(client, **overrides):
         create_payload(**overrides),
         format="multipart",
     )
-    assert response.status_code == 201
+    assert response.status_code == 201, response.data
     data = response.json()["data"]
     return (
         Advertisement.objects.get(id=data["id"]),

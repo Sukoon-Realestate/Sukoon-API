@@ -11,12 +11,12 @@ export interface FetchUsersParams {
   page_size?: number;
 }
 
-export async function fetchUsers(params?: FetchUsersParams): Promise<PaginatedResponse<UserItem>> {
-  return apiClient<PaginatedResponse<UserItem>>('/api/v1/admin/users/', { params });
+export async function fetchUsers(params?: FetchUsersParams, signal?: AbortSignal): Promise<PaginatedResponse<UserItem>> {
+  return apiClient<PaginatedResponse<UserItem>>('/api/v1/admin/users/', { params, signal });
 }
 
-export async function fetchUserDetail(userId: string): Promise<UserItem> {
-  return apiClient<UserItem>(`/api/v1/admin/users/${userId}/`);
+export async function fetchUserDetail(userId: string, signal?: AbortSignal): Promise<UserItem> {
+  return apiClient<UserItem>(`/api/v1/admin/users/${encodeURIComponent(userId)}/`, { signal });
 }
 
 export async function suspendUser(userId: string, reason?: string): Promise<{ message: string }> {

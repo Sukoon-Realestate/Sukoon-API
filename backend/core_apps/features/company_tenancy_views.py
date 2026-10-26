@@ -25,6 +25,8 @@ from .services.rental_lifecycle.common import require_revision, require_staff
 
 @company_api(["POST"])
 def create(request, preparation_id):
+    from .services.company.contract_preparation import existing_account_parties
+
     body = validated(CommandBody, request.data)
 
     def authorize():
@@ -45,6 +47,7 @@ def create(request, preparation_id):
         lambda _: contracts.create(request.user, preparation_id, body),
         receipt_resource,
         creating=True,
+        account_parties=lambda: existing_account_parties(preparation_id),
     )
 
 

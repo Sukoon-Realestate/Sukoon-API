@@ -74,10 +74,11 @@ class KYCSubmissionFilter(django_filters.FilterSet):
 
 
 class UserReportFilter(django_filters.FilterSet):
+    id = django_filters.UUIDFilter(field_name="id")
     status = django_filters.CharFilter(field_name="status")
     automation_level = django_filters.CharFilter(field_name="automation_level")
     reason_type = django_filters.CharFilter(field_name="reason_type")
 
     class Meta:
         model = UserReport
-        fields = ["status", "automation_level", "reason_type"]
+        fields = ["id", "status", "automation_level", "reason_type"]

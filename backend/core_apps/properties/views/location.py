@@ -23,21 +23,23 @@ class CityFilter(django_filters.FilterSet):
 class GovernorateListAPIView(generics.ListAPIView):
     """List governorates, with optional name/slug search."""
 
-    queryset = Governorate.objects.all()
+    queryset = Governorate.objects.filter(is_active=True)
     serializer_class = GovernorateSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter]
-    search_fields = ["name", "slug"]
+    search_fields = ["name", "name_ar", "name_en", "slug"]
 
 
 class CityListAPIView(generics.ListAPIView):
     """List cities; filter with ``?governorate=<governorate UUID>``."""
 
-    queryset = City.objects.select_related("governorate").all()
+    queryset = City.objects.select_related("governorate").filter(
+        is_active=True, governorate__is_active=True
+    )
     serializer_class = CitySerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = CityFilter
-    search_fields = ["name", "slug", "governorate__name"]
+    search_fields = ["name", "name_ar", "name_en", "slug", "governorate__name"]

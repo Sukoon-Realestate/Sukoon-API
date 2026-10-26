@@ -3,7 +3,7 @@
 from decimal import Decimal, InvalidOperation
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, ValidationError
-from core_apps.properties.models import City, Property
+from core_apps.properties.models import City, Property, PropertyType
 from ..commands import money_minor
 from ..rental_phase2 import RentalConflict
 from ..tenancy_invitations import resolve_offer_snapshot
@@ -106,13 +106,34 @@ def money(amount):
     return {"amount_minor": amount, "currency": "EGP", "exponent": 2}
 
 
-def criteria(raw, *, allow_existing_start=False):
+def criteria(raw, *, allow_existing_start=False, previous=None):
     if not isinstance(raw, dict):
         raise ValidationError({"criteria": "Supply housing criteria."})
     city = get_object_or_404(City, id=raw.get("city_id"))
     from .districts import validate_districts
 
-    district_ids, districts = validate_districts(city, raw.get("district_ids", []))
+    previous = previous or {}
+    from core_apps.properties.catalog_access import require_current_selection
+
+    property_type = raw.get("property_type", "")
+    if not isinstance(property_type, str) or len(property_type) > 50:
+        raise ValidationError({"property_type": "Choose a catalog property type."})
+    if property_type:
+        kind = PropertyType.objects.filter(slug=property_type).first()
+        if kind is None:
+            raise ValidationError({"property_type": "Choose a catalog property type."})
+        require_current_selection(
+            kind,
+            previous=kind if previous.get("property_type") == property_type else None,
+            field="property_type",
+        )
+    same_city = str(city.id) == previous.get("city_id")
+    district_ids, districts = validate_districts(
+        city,
+        raw.get("district_ids", []),
+        retained=previous.get("district_ids", []) if same_city else [],
+    )
+    require_current_selection(city, previous=city if same_city else None)
     scope = raw.get("rental_scope", "")
     period = raw.get("price_period", "monthly")
     if scope not in {
@@ -167,7 +188,7 @@ def criteria(raw, *, allow_existing_start=False):
         "districts": districts,
         "district_scope": "selected" if district_ids else "all_city",
         "rental_scope": scope,
-        "property_type": raw.get("property_type", ""),
+        "property_type": property_type,
         "budget_min": money(low) if low is not None else None,
         "budget_max": money(high) if high is not None else None,
         "price_period": period,

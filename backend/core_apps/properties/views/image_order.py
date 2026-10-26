@@ -49,15 +49,40 @@ def order_images(request, property_id):
             raise IdempotencyConflict(
                 "Property photos changed. Reload before reordering."
             )
+        if unchanged:
+            return Response(
+                PropertyDetailSerializer(prop, context={"request": request}).data
+            )
         for index, identity in enumerate(ordered):
             image = by_id[identity]
             if image.position != index:
                 image.position = index
                 image.save(update_fields=["position"])
-        prop.refresh_from_db(fields=["media_revision"])
+        prop.refresh_from_db(
+            fields=[
+                "media_revision",
+                "review_revision",
+                "status",
+                "is_verified",
+                "moderation_blocked",
+            ]
+        )
         prop.main_image = by_id[ordered[0]].image
         prop.media_revision += 1
-        prop.save(update_fields=["main_image", "media_revision", "updated_at"])
+        prop.review_revision += 1
+        prop.is_verified = False
+        if not prop.moderation_blocked and prop.status != Property.Status.HIDDEN:
+            prop.status = Property.Status.UNDER_REVIEW
+        prop.save(
+            update_fields=[
+                "main_image",
+                "media_revision",
+                "review_revision",
+                "is_verified",
+                "status",
+                "updated_at",
+            ]
+        )
         return Response(
             PropertyDetailSerializer(prop, context={"request": request}).data
         )

@@ -74,7 +74,8 @@ def format_arabic_time(dt) -> str:
 class _PresentationContextMixin:
     def get_data(self, obj):
         from core_apps.notifications.services.push_privacy import presentation_context
-        return presentation_context(obj.data)
+        from core_apps.notifications.services.inbox_scope import receipt_data
+        return presentation_context(receipt_data(obj))
 
 
 class NotificationListSerializer(_PresentationContextMixin, serializers.ModelSerializer):

@@ -31,7 +31,7 @@ def notify(item):
                     "target_id": str(item.company.id),
                     "mandate_id": str(item.id),
                     "schema_version": "1",
-                    "workspace": "tenant",
+                    "workspace": "company",
                 }
             },
         )

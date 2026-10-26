@@ -1,7 +1,5 @@
 """Views: boost campaigns."""
 
-from ..catalog_models import PromotionOption
-from datetime import timedelta
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -10,7 +8,6 @@ from rest_framework.decorators import api_view, permission_classes, renderer_cla
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from core_apps.properties.models import Property
 from ..models import BoostCampaign, SearchAlert
 from ..renderers import FeatureJsonRenderer
 from ..serializers import (
@@ -20,6 +17,19 @@ from ..serializers import (
     SearchAlertSerializer,
 )
 from .rental_operation_lookup import _replay, _remember, _paginate
+from ..services.rental_foundation import private_no_store
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def boost_campaign_detail(request, campaign_id):
+    campaign = get_object_or_404(
+        BoostCampaign.objects.select_related("property"),
+        id=campaign_id,
+        owner=request.user,
+    )
+    return private_no_store(Response(BoostCampaignSerializer(campaign).data))
 
 
 @api_view(["GET", "POST"])
@@ -33,67 +43,19 @@ def boost_campaigns(request):
             BoostCampaign.objects.filter(owner=request.user).select_related("property"),
             BoostCampaignSerializer,
         )
-    required = {"property_id", "option_id", "request_key"}
-    if not required.issubset(request.data):
-        raise ValidationError(
-            {key: "This field is required." for key in required - set(request.data)}
-        )
-    property_obj = get_object_or_404(
-        Property.objects.select_for_update(),
-        id=request.data["property_id"],
-        owner=request.user,
-    )
-    replay = _replay(
-        request.user, "boost.create", request.data["request_key"], request.data
-    )
-    if replay:
-        return replay
-    option = PromotionOption.objects.select_for_update().filter(
-        id=request.data["option_id"], active=True
-    ).first()
-    if not option:
-        raise ValidationError({"option_id": "Unsupported promotion option."})
-    property_obj = get_object_or_404(
-        Property, id=request.data["property_id"], owner=request.user
-    )
-    if property_obj.status != Property.Status.VERIFIED or not property_obj.is_verified:
-        raise ValidationError("Only published, verified properties can be promoted.")
-    now = timezone.now()
-    if BoostCampaign.objects.filter(
-        property=property_obj, status="pending"
-    ).exists() or BoostCampaign.objects.filter(
-        property=property_obj, status="active", ends_at__gt=now
-    ).exists():
-        raise ValidationError("This property already has an active campaign.")
-    with transaction.atomic():
-        campaign = BoostCampaign.objects.create(
-            owner=request.user,
-            property=property_obj,
-            option_id=request.data["option_id"],
-            duration_days=option.duration_days,
-            starts_at=now,
-            ends_at=now + timedelta(days=option.duration_days),
-            status=BoostCampaign.Status.PENDING if option.amount_minor else BoostCampaign.Status.ACTIVE,
-        )
-        from ..services.billing_sources import promotion_invoice, source_invoices
-        if option.amount_minor:
-            promotion_invoice(campaign, option)
-        data = {
-            "billing_invoices": source_invoices("promotion", campaign.id),
-            "id": str(campaign.id),
-            "subject_id": str(property_obj.id),
-            "status": campaign.status,
-            "message": "Awaiting promotion payment." if option.amount_minor else "Promotion activated.",
-        }
-        _remember(
-            request.user,
-            "boost.create",
-            request.data["request_key"],
-            request.data,
-            data,
-            201,
-        )
-    return Response(data, status=status.HTTP_201_CREATED)
+    from ..services.promotion_commands import create
+
+    data, code = create(request.user, request.data)
+    return Response(data, status=code)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def boost_campaign_resolve(request):
+    from ..services.promotion_commands import resolve
+
+    return private_no_store(Response(resolve(request.user, request.data)))
 
 
 @api_view(["GET", "POST"])
@@ -118,6 +80,7 @@ def search_alerts(request):
         return replay
     if payload["cadence"] == "instant":
         from ..services.entitlements import enforce
+
         enforce(request.user, "priority_alerts", "tenant")
     with transaction.atomic():
         alert = SearchAlert.objects.create(
@@ -129,9 +92,16 @@ def search_alerts(request):
         if alert.cadence == "instant":
             from ..models import CommerceFeature, FeatureUsage
             from ..services.rental_phase2 import fingerprint
+
             feature = CommerceFeature.objects.filter(code="priority_alerts").first()
             if feature:
-                FeatureUsage.objects.create(user=request.user, feature=feature, request_key=payload["request_key"], resource_id=alert.id, fingerprint=fingerprint(request.data))
+                FeatureUsage.objects.create(
+                    user=request.user,
+                    feature=feature,
+                    request_key=payload["request_key"],
+                    resource_id=alert.id,
+                    fingerprint=fingerprint(request.data),
+                )
         data = {"id": str(alert.id), "subject_id": str(alert.id), "status": "active"}
         _remember(
             request.user,
@@ -160,6 +130,7 @@ def search_alert_detail(request, alert_id):
     operation = "alert.delete" if request.method == "DELETE" else "alert.update"
     with transaction.atomic():
         from django.contrib.auth import get_user_model
+
         get_user_model().objects.select_for_update().get(pk=request.user.pk)
         alert = SearchAlert.objects.select_for_update().get(pk=alert.pk)
         replay = _replay(
@@ -187,8 +158,13 @@ def search_alert_detail(request, alert_id):
                 request.data["enabled"], bool
             ):
                 raise ValidationError({"enabled": "A boolean is required."})
-            if request.data["enabled"] and not alert.enabled and alert.cadence == "instant":
+            if (
+                request.data["enabled"]
+                and not alert.enabled
+                and alert.cadence == "instant"
+            ):
                 from ..services.entitlements import enforce
+
                 enforce(request.user, "priority_alerts", "tenant")
             alert.enabled = request.data["enabled"]
             action_status = "active" if alert.enabled else "paused"

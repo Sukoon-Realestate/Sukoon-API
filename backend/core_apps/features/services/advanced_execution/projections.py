@@ -8,7 +8,12 @@ from .registry import CAPABILITIES, adapter
 def payload(plan, actor):
     own = str(actor.id)
     latest = decisions(plan)
-    all_legs = list(plan.legs.select_related("lease"))
+    from .progress import refresh, outcome
+
+    all_legs = (
+        refresh(plan) if plan.provider_mode == "test"
+        else list(plan.legs.select_related("lease"))
+    )
     coordinator = own in plan.context.get("coordinator_ids", [])
     if coordinator:
         try:
@@ -47,6 +52,9 @@ def payload(plan, actor):
         unknown = RentalProviderInstruction.objects.filter(
             subject_id=leg.id, status="unknown"
         ).exists()
+        if plan.provider_mode == "test":
+            unknown |= outcome(leg, lease)[1]
+            steps = []
         row = {
             "id": str(leg.id),
             "key": leg.key,
@@ -84,6 +92,28 @@ def payload(plan, actor):
         leg_payload = getattr(adapter(plan.source_kind), "leg_payload", None)
         if leg_payload:
             row.update(leg_payload(plan, leg, actor))
+        if plan.provider_mode == "test" and leg.canonical_kind != "company":
+            from ..signing_documents import projection as signing_projection
+            from ..signing_documents import unresolved as unresolved_signature
+            from ..company.tenancy_access import commercial_read
+
+            permitted = lease and commercial_read(lease, actor)
+            row.update({
+                "available_steps": [],
+                "continuation_kind": "lease" if permitted else "",
+                "continuation_id": str(lease.id) if permitted else "",
+                "signing_document": signing_projection(lease, actor) if permitted else None,
+                "may_withdraw": own in leg.actor_ids and leg.state not in {"confirmed", "withdrawn", "expired"},
+                "can_withdraw": bool(
+                    own in leg.actor_ids and not unknown
+                    and not (lease and unresolved_signature(lease))
+                    and leg.state not in {"confirmed", "withdrawn", "expired"}
+                ),
+                "waiting_reason": (
+                    "reconciliation_required" if unknown
+                    else "canonical_agreement" if lease else "prepare_required"
+                ),
+            })
         # A source adapter can narrow actions; unknown outcomes always stop writes.
         if unknown:
             row["available_steps"] = []
@@ -111,8 +141,8 @@ def payload(plan, actor):
         "digest": plan.digest,
         "mode": plan.mode,
         "policy_version": plan.policy_version,
-        "provider_mode": "mock",
-        "simulated": True,
+        "provider_mode": plan.provider_mode,
+        "simulated": plan.provider_mode == "mock",
         "state": plan.state,
         "capability": CAPABILITIES[plan.source_kind],
         "required_count": len(plan.required_actor_ids),
@@ -127,7 +157,13 @@ def payload(plan, actor):
         "legs": result,
         "steps": journal,
         "case_id": str(plan.case.id) if plan.case_id else "",
-        "allowed_actions": actions(actor, CAPABILITIES[plan.source_kind], str(plan.id))[
+        "blocking_reasons": (
+            ["signing_provider_unavailable"] if plan.state == "ready"
+            and plan.provider_mode == "test" and plan.source_kind != "company_scenario"
+            and "prepare" not in actions(actor, CAPABILITIES[plan.source_kind], str(plan.id), plan=plan)
+            else []
+        ),
+        "allowed_actions": actions(actor, CAPABILITIES[plan.source_kind], str(plan.id), plan=plan)[
             1:
         ],
     }

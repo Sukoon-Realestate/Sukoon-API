@@ -7,8 +7,11 @@ from core_apps.common.models import TimeStampedModel
 
 class Ticket(TimeStampedModel):
     class Workspace(models.TextChoices):
+        ACCOUNT = "account", _("Account")
         TENANT = "tenant", _("Tenant")
         OWNER = "owner", _("Owner")
+        STUDENT = "student", _("Student")
+        COMPANY = "company", _("Company")
 
     class Category(models.TextChoices):
         VISIT = "visit", _("Visit")
@@ -61,6 +64,14 @@ class Ticket(TimeStampedModel):
     )
     rental_context = models.JSONField(default=dict, blank=True)
     revision = models.PositiveIntegerField(default=1)
+    assigned_to = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="assigned_support_tickets",
+    )
+    escalated = models.BooleanField(default=False, db_index=True)
+    resolved_at = models.DateTimeField(null=True)
 
     class Meta:
         verbose_name = _("Support Ticket")

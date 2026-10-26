@@ -15,3 +15,5 @@ export function adminRelativePath(pathname: string): string {
     ? pathname.slice(BASE_PATH.length)
     : pathname;
 }
+
+export const assetPath = (path: string) => path;

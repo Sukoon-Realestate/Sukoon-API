@@ -20,6 +20,7 @@ from .property_detail_serializer_operations.property_detail_media import (
 class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixin, serializers.ModelSerializer):
     """Public service dispatch with domain-specific responsibilities."""
 
+    moderation = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
     main_image = CloudinarySerializerField(read_only=True)
     main_image_id = serializers.SerializerMethodField()
@@ -35,6 +36,7 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
     )
     is_ownership_verified = serializers.BooleanField(read_only=True)
     property_type = serializers.SlugRelatedField(slug_field="slug", read_only=True)
+    property_type_catalog = serializers.SerializerMethodField()
     governorate = GovernorateSerializer(read_only=True)
     city = CitySerializer(read_only=True)
     district_catalog = serializers.UUIDField(
@@ -49,6 +51,11 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
         from core_apps.features.services.reputation.visibility import summary
 
         return summary("property_stay", obj.id)["average"]
+
+    def get_property_type_catalog(self, obj):
+        from .property_list_serializer import PropertyTypeSerializer
+
+        return PropertyTypeSerializer(obj.property_type, context=self.context).data
 
     price = serializers.SerializerMethodField()
     ownership_proof = serializers.SerializerMethodField()
@@ -80,6 +87,7 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
         model = Property
         fields = [
             "id",
+            "moderation",
             "owner",
             "owner_is_verified",
             "is_ownership_verified",
@@ -97,6 +105,7 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
             "price",
             "price_period",
             "property_type",
+            "property_type_catalog",
             "is_furnished",
             "is_verified",
             "status",
@@ -131,6 +140,14 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
             "virtual_tours",
         ]
         read_only_fields = fields
+
+    def get_moderation(self, obj):
+        request = self.context.get("request")
+        if not request or request.user.pk != obj.owner_id:
+            return None
+        from ...services.moderation import history
+        return {"revision": obj.review_revision, "blocked": obj.moderation_blocked,
+                "reason": obj.moderation_reason, "history": history(obj)}
 
     def get_price(self, obj: Property) -> str:
         return f"{obj.price:.2f}"

@@ -19,7 +19,7 @@ class TicketCreationReceiptAPIView(APIView):
 
     def post(self, request):
         workspace, key = request.data.get("workspace"), request_key(request)
-        if workspace not in {"tenant", "owner"} or not key:
+        if workspace not in {"tenant", "owner", "student", "company", "account"} or not key:
             raise ValidationError("Supply workspace and original Idempotency-Key.")
         record = resolve_or_close(
             user=request.user,
@@ -32,7 +32,7 @@ class TicketCreationReceiptAPIView(APIView):
     def get(self, request):
         workspace = request.query_params.get("workspace")
         key = request_key(request)
-        if workspace not in {"tenant", "owner"} or not key:
+        if workspace not in {"tenant", "owner", "student", "company", "account"} or not key:
             raise ValidationError(
                 "Supply a workspace and the original Idempotency-Key."
             )

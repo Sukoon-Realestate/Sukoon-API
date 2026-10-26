@@ -122,6 +122,7 @@ def _submit_process(request, group, action):
             else {}
         ),
         roster_revision=group.roster_revision,
+        access_group_revision=group.revision,
         selection=snapshot,
         participant_ids=members,
         consented_ids=(

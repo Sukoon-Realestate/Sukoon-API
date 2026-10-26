@@ -91,15 +91,22 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
 
     def get_actions(self, obj):
         request = self.context.get("request")
+        can_respond = bool(
+            request
+            and request.user == obj.tenant
+            and obj.status == TenancyInvitation.Status.PENDING
+            and not obj.lease_id
+            and not obj.consumed_at
+            and obj.expires_at > timezone.now()
+            and request.user.is_active
+            and request.user.is_verified
+        )
+        from ..services.tenancy_invitations import current_invitation_problem
+
         return {
-            "can_respond": bool(
-                request
-                and request.user == obj.tenant
-                and obj.status == TenancyInvitation.Status.PENDING
-                and obj.expires_at > timezone.now()
-                and request.user.is_active
-                and request.user.is_verified
-            )
+            "can_respond": can_respond,
+            "can_accept": can_respond and current_invitation_problem(obj) is None,
+            "can_reject": can_respond,
         }
 
     def get_allowed_actions(self, obj):
@@ -112,8 +119,34 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
         return actions
 
     def get_blocking_reasons(self, obj):
+        from ..services.tenancy_invitations import current_invitation_problem, localized
+
+        request = self.context.get("request")
         if obj.consumed_at or obj.lease_id:
-            return ["This invitation has already been consumed."]
+            return [
+                localized(
+                    request,
+                    "This invitation has already been consumed.",
+                    "استُخدمت هذه الدعوة بالفعل لإنشاء عقد.",
+                )
+            ]
         if obj.expires_at <= timezone.now():
-            return ["This invitation has expired."]
+            return [
+                localized(
+                    request, "This invitation has expired.", "انتهت صلاحية هذه الدعوة."
+                )
+            ]
+
+        if (
+            obj.status
+            in {TenancyInvitation.Status.PENDING, TenancyInvitation.Status.ACCEPTED}
+            and current_invitation_problem(obj) == "property_review_pending"
+        ):
+            return [
+                localized(
+                    request,
+                    "Acceptance and lease creation are paused while the property is reviewed. Refresh after approval and review the current terms. The invitation deadline is unchanged.",
+                    "القبول وإنشاء العقد متوقفان أثناء مراجعة العقار. حدّث الدعوة بعد الاعتماد وراجع الشروط الحالية. مهلة الدعوة لم تتغير.",
+                )
+            ]
         return []

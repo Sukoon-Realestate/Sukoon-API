@@ -234,6 +234,7 @@ def activate_replacement_interest(owner, candidate, interest):
         command(
             interest_id=str(interest.id),
             interest_revision=interest.revision,
+            expires_at=(timezone.now() + timedelta(days=2)).isoformat(),
             offer_id=interest.offer_id,
             offer_revision=interest.offer_revision,
             terms=terms,

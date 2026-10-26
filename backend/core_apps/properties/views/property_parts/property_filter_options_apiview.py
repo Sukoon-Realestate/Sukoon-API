@@ -56,13 +56,22 @@ class PropertyTypeListAPIView(generics.ListAPIView):
     """
     API view to list available property types (managed by admins).
 
-    Returns all PropertyType records: id, name, slug, description.
+    Returns active property types with stable IDs and current catalog revisions.
     """
 
-    queryset = PropertyType.objects.all()
+    queryset = PropertyType.objects.filter(is_active=True)
+    pagination_class = None
     serializer_class = PropertyTypeSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.AllowAny]
+
+    def list(self, request, *args, **kwargs):
+        # This is a selector catalog. Return all active choices in its existing
+        # results envelope, as filter-options already does, without hiding page 2.
+        values = self.get_serializer(self.get_queryset(), many=True).data
+        return Response(
+            {"count": len(values), "next": None, "previous": None, "results": values}
+        )
 
 
 class PropertyFilterOptionsAPIView(generics.GenericAPIView):
@@ -73,6 +82,7 @@ class PropertyFilterOptionsAPIView(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         from core_apps.common.locale_middleware import resolve_request_language
+
         return Response(
             PropertyService.get_filter_options(resolve_request_language(request))
         )

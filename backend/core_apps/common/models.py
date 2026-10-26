@@ -75,5 +75,6 @@ class ContentView(TimeStampedModel):
 
 from .content_models import PublicContentPage  # noqa: E402,F401
 from .content_models import ReleaseNote  # noqa: E402,F401
+from .content_models import ContentEditAudit  # noqa: E402,F401
 from .paymob_models import PaymobCallbackEvent  # noqa: E402,F401
 from .runtime_models import RuntimeIncident  # noqa: E402,F401

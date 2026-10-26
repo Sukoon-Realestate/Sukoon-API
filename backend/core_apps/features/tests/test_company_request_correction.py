@@ -91,7 +91,7 @@ def test_selected_and_withdrawn_packages_keep_original_terms(company_setup):
     package = proposed(company_setup)
     request.refresh_from_db()
     url = API + f"company-housing-requests/{request.id}/"
-    original = request.title
+    original_package = package.snapshot.copy()
     for withdrawn in (False, True):
         if withdrawn:
             bookings.withdraw_item(
@@ -101,7 +101,9 @@ def test_selected_and_withdrawn_packages_keep_original_terms(company_setup):
         result = authenticated(user).post(
             url, body(request, title="Changed"), format="json"
         )
-        assert result.status_code == 409
+        assert result.status_code == 200
         request.refresh_from_db()
-        assert request.title == original
-        assert bookings.request_payload(request, user)["can_edit"] is False
+        package.refresh_from_db()
+        assert request.title == "Changed"
+        assert package.snapshot == original_package
+        assert bookings.request_payload(request, user)["can_edit"] is True

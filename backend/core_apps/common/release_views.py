@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 from .content_models import ReleaseNote
 from .renderers import GenericJsonRenderer
+from .content_audience import workspace as normalize_workspace, audience
 
 
 class ReleaseNotesAPIView(APIView):
@@ -16,21 +17,21 @@ class ReleaseNotesAPIView(APIView):
     def get(self, request):
         version = request.query_params.get("version", "")
         workspace = request.query_params.get("workspace", "tenant")
-        if not re.fullmatch(
-            r"\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?", version
-        ) or workspace not in {"tenant", "owner"}:
+        target = normalize_workspace(workspace)
+        if not re.fullmatch(r"\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?", version):
             raise ValidationError("Supply a supported version and workspace.")
         language = (
             "ar" if getattr(request, "LANGUAGE_CODE", "en").startswith("ar") else "en"
         )
         rows = (
             ReleaseNote.objects.filter(version=version, active=True)
-            .filter(Q(workspace=workspace) | Q(workspace="both"))
+            .filter(audience(target))
             .filter(Q(publish_at__isnull=True) | Q(publish_at__lte=timezone.now()))
         )
         row = (
-            rows.filter(workspace=workspace).first()
+            rows.filter(workspace=target).first()
             or rows.filter(workspace="both").first()
+            or rows.filter(workspace="all").first()
         )
         response = Response(
             {

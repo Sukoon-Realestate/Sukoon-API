@@ -8,7 +8,6 @@ from ...student_models import (
     StudentOfferPolicy,
 )
 from ...planning_models import HousingGroup
-from ..planning import require_planning
 
 
 def plans_for(user):
@@ -136,8 +135,10 @@ def actions(user, capability, subject_id=""):
     if isinstance(item, StudentProfile):
         return ["read", "save_profile"] if capability == "student_planning" else []
     if isinstance(item, SharedLivingAgreement):
+        from .arrangements import payload
+
         return (
-            ["read", "approve", "discuss", "revise"]
+            ["read", *payload(item, user)["allowed_actions"]]
             if capability in {"shared_living", "exam_arrangements"}
             else []
         )
@@ -165,7 +166,9 @@ def actions(user, capability, subject_id=""):
             else []
         )
     if capability in {"shared_living", "exam_arrangements"}:
-        return ["read", "propose"]
+        from .arrangements import can_propose
+
+        return ["read"] + (["propose"] if can_propose(user, item) else [])
     if capability == "student_transitions":
         return ["read", "link_lease", "check_in"]
     return []

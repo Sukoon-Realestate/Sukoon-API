@@ -1,7 +1,8 @@
 """Independent accommodation commitments for explicitly consenting group members."""
 
 import json
-from datetime import date, timedelta
+from datetime import timedelta
+from types import SimpleNamespace
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, ValidationError
@@ -12,7 +13,6 @@ from ...models import (
     TermsProposal,
     TenancyInvitation,
 )
-from ...planning_models import GroupMembership
 from ..rental_phase2 import RentalConflict, fingerprint, assert_owner_ready
 from ..tenancy_invitations import resolve_offer_snapshot
 from .common import audit, lifecycle_policy, require_revision
@@ -37,7 +37,8 @@ def current_roster(proposal):
         for value in proposal.participants.values_list("tenant__id", flat=True)
     )
     return (
-        proposal.group.status == "active"
+        proposal.owner_id == proposal.property.owner_id
+        and proposal.group.status == "active"
         and process_current(proposal.application)
         and proposal.group.roster_revision == proposal.roster_revision
         and participants <= roster
@@ -80,7 +81,13 @@ def create_booking(application, actor, data):
         )
     if GroupBookingProposal.objects.filter(
         application=application,
-        status__in=["draft", "submitted", "awaiting_participants"],
+        status__in=[
+            "draft",
+            "negotiating",
+            "changes_requested",
+            "submitted",
+            "awaiting_participants",
+        ],
     ).exists():
         raise RentalConflict(
             "Review the existing booking proposal.", code="proposal_exists"
@@ -109,7 +116,9 @@ def create_booking(application, actor, data):
             {"participants": "At most 20 participants are supported."}
         )
     from core_apps.chat.moderation.policy import require_business_participants
+    from core_apps.users.services.new_business import require_new_business
 
+    require_new_business(actor.pk, *(roster[identity].pk for identity in proposed))
     require_business_participants(actor, *(roster[identity] for identity in proposed))
     expire_property_holds(application.property)
     used, rows, periods = set(), [], set()
@@ -133,9 +142,12 @@ def create_booking(application, actor, data):
             )
         used.update(keys)
         terms = json.loads(json.dumps(value["terms"], default=str))
-        from .terms import validate_terms_offer
+        from ..negotiation_terms import validate, with_physical_context
 
-        validate_terms_offer(terms, selection)
+        selection = with_physical_context(selection, application.property)
+        terms = validate(
+            SimpleNamespace(academic_plan_id=None), terms, selection, data["deadline"]
+        )
         start, end = value["terms"]["starts_on"], value["terms"]["ends_on_exclusive"]
         from ..student_housing.policies import validate_occupants
 
@@ -189,6 +201,7 @@ def create_booking(application, actor, data):
         group=application.group,
         property=application.property,
         owner=actor,
+        terms_author=actor,
         booking_model="independent",
         roster_revision=data["roster_revision"],
         policy_version=policy.version,
@@ -200,7 +213,10 @@ def create_booking(application, actor, data):
     )
     for row in rows:
         GroupBookingParticipant.objects.create(proposal=proposal, **row)
-    audit(proposal, actor, "group_booking.created")
+    from .group_terms import remember
+
+    remember(proposal)
+    audit(proposal, actor, "group_booking.created", metadata={"terms_revision": 1})
     return proposal
 
 
@@ -208,7 +224,32 @@ def booking_payload(proposal, actor):
     rows = list(proposal.participants.select_related("tenant", "invitation", "lease"))
     own = next((row for row in rows if row.tenant_id == actor.pk), None)
     current = current_roster(proposal) and proposal.deadline > timezone.now()
-    actions = []
+    from . import group_terms
+    from ..group_booking_listing_changes import blockers
+
+    source_blockers = blockers(proposal, rows)
+    from core_apps.users.services.new_business import restricted_accounts
+
+    closed = restricted_accounts(proposal.owner_id, *(row.tenant_id for row in rows))
+    for row in rows:
+        if (
+            not row.invitation_id
+            and not row.lease_id
+            and (proposal.owner_id in closed or row.tenant_id in closed)
+        ):
+            source_blockers.setdefault(row.pk, "account_closure_pending")
+
+    actions = group_terms.actions(proposal, actor, current)
+    available = group_terms.actions(proposal, actor, True)
+    if proposal.owner_id == actor.pk and proposal.status == "draft":
+        available.append("submit_group_booking")
+    if (
+        own
+        and own.consent_status == "pending"
+        and proposal.status == "awaiting_participants"
+    ):
+        available.append("consent_group_booking")
+    versions, changes = group_terms.history(proposal, actor)
     if current and proposal.owner_id == actor.pk and proposal.status == "draft":
         actions.append("submit_group_booking")
     if (
@@ -225,14 +266,43 @@ def booking_payload(proposal, actor):
         and proposal.status in {"awaiting_participants", "submitted"}
     ):
         actions.append("withdraw_group_booking")
+    if source_blockers:
+        actions = [
+            action
+            for action in actions
+            if action
+            not in {
+                "submit_group_booking",
+                "edit_group_terms",
+                "counter_group_terms",
+                "accept_group_terms",
+            }
+        ]
+    if own and own.pk in source_blockers:
+        actions = [action for action in actions if action != "consent_group_booking"]
+    visible_blockers = sorted(
+        {
+            reason
+            for row_id, reason in source_blockers.items()
+            if group_terms.can_negotiate(proposal, actor) or (own and own.pk == row_id)
+        }
+    )
     return {
         "id": str(proposal.id),
         "revision": proposal.revision,
+        "terms_revision": proposal.terms_revision,
+        "terms_versions": versions,
+        "history": changes,
         "group_id": str(proposal.group.id),
         "application_id": str(proposal.application.id),
         "property_id": str(proposal.property.id),
         "booking_model": proposal.booking_model,
-        "status": proposal.status,
+        "status": (
+            "expired"
+            if proposal.deadline <= timezone.now()
+            and proposal.status in group_terms.LIVE
+            else proposal.status
+        ),
         "terms_digest": proposal.terms_digest,
         "roster_revision": proposal.roster_revision,
         "deadline": proposal.deadline.isoformat(),
@@ -244,6 +314,7 @@ def booking_payload(proposal, actor):
                 "tenant_id": str(row.tenant.id),
                 "is_current_user": row.tenant_id == actor.pk,
                 "consent_status": row.consent_status,
+                "source_blocking_reason": source_blockers.get(row.pk, ""),
                 "rent_amount_minor": row.rent_amount_minor,
                 "selection": row.selection_snapshot,
                 "agreement_status": row.lease.status if row.lease else "not_created",
@@ -261,7 +332,8 @@ def booking_payload(proposal, actor):
                 ),
                 "terms": (
                     row.terms
-                    if row.tenant_id == actor.pk or proposal.owner_id == actor.pk
+                    if row.tenant_id == actor.pk
+                    or group_terms.can_negotiate(proposal, actor)
                     else {}
                 ),
             }
@@ -269,13 +341,43 @@ def booking_payload(proposal, actor):
         ],
         "incomplete_policy": proposal.incomplete_policy,
         "allowed_actions": actions,
-        "blocking_reasons": [] if current else ["roster_or_deadline_changed"],
+        "available_actions": list(dict.fromkeys([*available, *actions])),
+        "blocking_reasons": (["roster_or_deadline_changed"] if not current else [])
+        + visible_blockers,
     }
 
 
 def booking_action(proposal, actor, data, action):
     require_revision(proposal, data["expected_revision"])
-    if action not in booking_payload(proposal, actor)["allowed_actions"]:
+    current = booking_payload(proposal, actor)
+    if action in current["available_actions"]:
+        from core_apps.users.services.new_business import require_new_business
+
+        if action in {
+            "submit_group_booking",
+            "edit_group_terms",
+            "counter_group_terms",
+            "accept_group_terms",
+        }:
+            require_new_business(
+                proposal.owner_id,
+                *proposal.participants.values_list("tenant_id", flat=True),
+            )
+        elif action == "consent_group_booking" and data.get("decision") == "accept":
+            require_new_business(proposal.owner_id, actor.pk)
+    if action not in current["allowed_actions"]:
+        if action in current["available_actions"] and any(
+            reason.startswith("group_allocation_")
+            for reason in current["blocking_reasons"]
+        ):
+            raise RentalConflict(
+                "Review the affected allocation and its history before continuing. Existing invitations and contracts remain unchanged.",
+                code=next(
+                    reason
+                    for reason in current["blocking_reasons"]
+                    if reason.startswith("group_allocation_")
+                ),
+            )
         raise RentalConflict(
             "Review the current roster and proposal.", code="stale_revision"
         )
@@ -288,10 +390,26 @@ def booking_action(proposal, actor, data, action):
         )
     elif action != "withdraw_group_booking" and data.get("decision") == "accept":
         require_business_participants(proposal.owner, actor)
+    from . import group_terms
+
+    if action in group_terms.actions(proposal, actor, True):
+        if action not in {
+            "withdraw_group_terms",
+            "reject_group_terms",
+            "request_group_terms_changes",
+        }:
+            require_business_participants(
+                proposal.owner,
+                *(row.tenant for row in proposal.participants.select_related("tenant")),
+            )
+        return group_terms.act(proposal, actor, data, action)
     if action == "submit_group_booking":
         lifecycle_policy("independent_group_booking")
         assert_owner_ready(actor, proposal.property)
-        proposal.status = "awaiting_participants"
+        for row in proposal.participants.select_related("tenant"):
+            group_terms.validate_row(proposal, row, row.terms)
+        proposal.status = "negotiating"
+        proposal.terms_accepted_by = [str(actor.id)]
         record_consent(
             proposal,
             actor,
@@ -345,13 +463,9 @@ def booking_action(proposal, actor, data, action):
                 },
             )
             if data["decision"] == "accept":
-                _, current = resolve_offer_snapshot(
-                    proposal.property, participant.offer_id, participant.offer_revision
-                )
-                if current != participant.selection_snapshot:
-                    raise RentalConflict(
-                        "The offered accommodation changed.", code="offer_changed"
-                    )
+                assert_owner_ready(proposal.owner, proposal.property)
+                current = group_terms.selection(proposal, participant)
+                group_terms.validate_row(proposal, participant, participant.terms)
                 assert_available(
                     proposal.property,
                     current,
@@ -366,7 +480,7 @@ def booking_action(proposal, actor, data, action):
                     property=proposal.property,
                     tenant=actor,
                     offer_id=participant.offer_id,
-                    offer_revision=participant.offer_revision,
+                    offer_revision=current["offer_revision"],
                     offer_snapshot=current,
                     desired_start=proposal.starts_on,
                     months=max(
@@ -382,11 +496,16 @@ def booking_action(proposal, actor, data, action):
                 terms = TermsProposal.objects.create(
                     interest=interest,
                     owner=proposal.owner,
+                    author=proposal.owner,
+                    expires_at=proposal.deadline,
                     terms=participant.terms,
                     offer_snapshot=current,
                     accepted_by=[str(actor.id), str(proposal.owner.id)],
                     status="accepted",
                 )
+                from ..negotiation_terms import record_version
+
+                record_version(terms)
                 participant.invitation = TenancyInvitation.objects.create(
                     property=proposal.property,
                     owner=proposal.owner,
@@ -401,6 +520,7 @@ def booking_action(proposal, actor, data, action):
                     eligibility_snapshot={
                         "group_booking_id": str(proposal.id),
                         "terms_digest": proposal.terms_digest,
+                        "terms_revision": proposal.terms_revision,
                     },
                 )
         participant.save()
@@ -411,7 +531,12 @@ def booking_action(proposal, actor, data, action):
     ):
         proposal.status = "submitted"
     proposal.save()
-    audit(proposal, actor, action)
+    audit(proposal, actor, action, metadata={"terms_revision": proposal.terms_revision})
+    notify(proposal, action)
+    return proposal
+
+
+def notify(proposal, action):
     record_rental_event(
         proposal,
         {
@@ -421,4 +546,3 @@ def booking_action(proposal, actor, data, action):
         action,
         "open_group_booking",
     )
-    return proposal

@@ -35,6 +35,9 @@ def housing_group_action(request, group_id, action):
         if action not in group_actions(request.user, group):
             raise PermissionDenied("This group action is not available to you.")
         check_revision(group.roster_revision, request.data.get("roster_revision"))
+        if action in {"request_visit", "apply", "propose_costs"}:
+            from ..services.student_housing.groups import bind_housing_response
+            bind_housing_response(request.user, group, request.data)
         actor_id = str(request.user.id)
         if action == "edit":
             values = _group_values(request.data)
@@ -152,7 +155,7 @@ def housing_group_action(request, group_id, action):
                             process.selection["offer_id"]
                             == item["selection"]["offer_id"]
                         ):
-                            invalidate_process(process)
+                            invalidate_process(process, "accommodation_removed")
             elif action == "vote":
                 choice = request.data.get(
                     "vote",
@@ -216,7 +219,7 @@ def housing_group_action(request, group_id, action):
                 for process in group.processes.filter(
                     kind="application", academic_plan__id=item.get("academic_plan_id")
                 ).exclude(status__in=["withdrawn", "expired", "rejected", "completed"]):
-                    invalidate_process(process)
+                    invalidate_process(process, "costs_changed")
         elif action in {"request_visit", "apply"}:
             _submit_process(request, group, action)
         else:
@@ -226,16 +229,21 @@ def housing_group_action(request, group_id, action):
                 "group_visits" if kind == "visit" else "group_applications",
             )
             item = get_object_or_404(
-                group.processes.select_for_update(),
+                group.processes,
                 id=request.data.get("item_id"),
                 kind=kind,
             )
+            from core_apps.properties.models import Property
+
+            # Listing changes lock the physical property before the process.
+            Property.objects.select_for_update().get(pk=item.property_id)
+            item = group.processes.select_for_update().get(pk=item.pk)
             check_revision(item.revision, request.data.get("item_revision"))
             check_revision(group.roster_revision, item.roster_revision)
             if action not in process_payload(item, request.user)["allowed_actions"]:
                 raise PermissionDenied("This process consent action is unavailable.")
             if action.startswith("withdraw"):
-                invalidate_process(item)
+                invalidate_process(item, "consent_withdrawn")
             else:
                 if request.data.get("consent") is not True:
                     raise ValidationError(

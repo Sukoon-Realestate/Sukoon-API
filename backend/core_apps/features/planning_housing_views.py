@@ -37,6 +37,7 @@ from .planning_housing_views_parts.housing_requests import (
     housing_requests,
     housing_demand,
     housing_request_detail,
+    housing_request_changes,
 )
 from .planning_housing_views_parts.housing_request_action import (
     housing_request_action,
@@ -48,6 +49,7 @@ from .planning_housing_views_parts.housing_request_action import (
 from .planning_housing_views_parts.housing_offers import (
     housing_offers,
     housing_offer_action,
+    housing_offer_detail,
 )
 from .planning_housing_views_parts.owner_housing_offers import (
     owner_housing_offers,

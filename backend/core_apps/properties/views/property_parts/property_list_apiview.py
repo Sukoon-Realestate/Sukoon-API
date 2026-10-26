@@ -1,15 +1,16 @@
 from core_apps.properties.search import PropertySearchFilter
+
 """Property: property list apiview."""
 
 from django.db.models import Count, Exists, OuterRef
-from django.utils import timezone
+from django.db.models.functions import Now
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics, permissions
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.features.models import BoostCampaign
 from ...filters import PropertyFilter, PropertyOrderingFilter
-from ...models import Property, PropertyVisit
+from ...models import Property
 from ...serializers import PropertyListSerializer, PropertyNewListSerializer
 from .property_filter_options_apiview import PropertyPagination
 
@@ -17,6 +18,7 @@ from .property_filter_options_apiview import PropertyPagination
 class VisiblePropertyListMixin:
     def get_queryset(self):
         from ...services.public_access import public_properties
+
         return public_properties(super().get_queryset())
 
 
@@ -29,7 +31,9 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.filter(status=Property.Status.VERIFIED, retired_at__isnull=True)
+        Property.objects.filter(
+            status=Property.Status.VERIFIED, retired_at__isnull=True
+        )
         .select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .annotate(
@@ -37,8 +41,8 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
                 BoostCampaign.objects.filter(
                     property=OuterRef("pkid"),
                     status=BoostCampaign.Status.ACTIVE,
-                    starts_at__lte=timezone.now(),
-                    ends_at__gt=timezone.now(),
+                    starts_at__lte=Now(),
+                    ends_at__gt=Now(),
                 )
             )
         )
@@ -117,7 +121,9 @@ class PropertyNewListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.filter(status=Property.Status.VERIFIED, retired_at__isnull=True)
+        Property.objects.filter(
+            status=Property.Status.VERIFIED, retired_at__isnull=True
+        )
         .select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .annotate(
@@ -125,8 +131,8 @@ class PropertyNewListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
                 BoostCampaign.objects.filter(
                     property=OuterRef("pkid"),
                     status=BoostCampaign.Status.ACTIVE,
-                    starts_at__lte=timezone.now(),
-                    ends_at__gt=timezone.now(),
+                    starts_at__lte=Now(),
+                    ends_at__gt=Now(),
                 )
             )
         )

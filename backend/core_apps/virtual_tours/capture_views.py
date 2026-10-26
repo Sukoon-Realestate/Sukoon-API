@@ -30,28 +30,62 @@ def select_outputs(request, session_id, job_id):
     from .capture_delivery import validate
 
     fields(request.data, {"authoring", "expectedManifestHash"})
+
     def execute():
         session = owned(request, session_id, True)
-        job = get_object_or_404(CaptureProcessingJob.objects.select_for_update(), id=job_id, manifest__session=session)
-        require(request.data["expectedManifestHash"] == job.manifest.sha256,
-                "capture_source_changed", "Refresh the immutable input revision.", 409)
+        job = get_object_or_404(
+            CaptureProcessingJob.objects.select_for_update(),
+            id=job_id,
+            manifest__session=session,
+        )
+        require(
+            request.data["expectedManifestHash"] == job.manifest.sha256,
+            "capture_source_changed",
+            "Refresh the immutable input revision.",
+            409,
+        )
         document = request.data["authoring"]
-        require(isinstance(document, dict) and document.get("kind") in ("model_3d", "panorama_360"), "invalid_kind", "Choose a capture output kind.")
-        tour = PropertyVirtualTour.objects.select_for_update().filter(property=session.property, kind=document["kind"]).first()
+        require(
+            isinstance(document, dict)
+            and document.get("kind") in ("model_3d", "panorama_360"),
+            "invalid_kind",
+            "Choose a capture output kind.",
+        )
+        tour = (
+            PropertyVirtualTour.objects.select_for_update()
+            .filter(property=session.property, kind=document["kind"])
+            .first()
+        )
         if not tour:
             create_tour(session.property, {"kind": document["kind"]})
-            tour = PropertyVirtualTour.objects.get(property=session.property, kind=document["kind"])
-        require(not tour.deleted, "tour_deleted", "Restore authoring access before selecting outputs.", 409)
-        revision = tour.revisions.filter(review_state="not_submitted").order_by("-created_at").first()
+            tour = PropertyVirtualTour.objects.get(
+                property=session.property, kind=document["kind"]
+            )
+        require(
+            not tour.deleted,
+            "tour_deleted",
+            "Restore authoring access before selecting outputs.",
+            409,
+        )
+        revision = (
+            tour.revisions.filter(review_state="not_submitted")
+            .order_by("-created_at")
+            .first()
+        )
         if revision and revision.authoring:
-            require(revision.capture_job_id == job.pk and revision.authoring == document,
-                    "draft_exists", "Finish or discard the existing tour draft first.", 409)
+            require(
+                revision.capture_job_id == job.pk and revision.authoring == document,
+                "draft_exists",
+                "Finish or discard the existing tour draft first.",
+                409,
+            )
             return revision_payload(revision), 200
         revision = revision or TourRevision(tour=tour)
         revision.capture_job, revision.authoring = job, document
         validate(revision, document)
         revision.save()
         return queue_processing(revision, f'"draft-{revision.draft_version}"')
+
     return mutation(request, "capture.select_outputs", job_id, execute)
 
 
@@ -79,7 +113,13 @@ def capabilities(request):
             "outputs": list(MODES),
             "releaseReady": False,
             "coachConfigured": bool(settings.GEMINI_API_KEY),
-            "coachAvailable": bool(settings.PROPERTY_CAPTURE_ENABLED and settings.GEMINI_API_KEY and settings.GEMINI_COACH_MODEL and getattr(settings, "CAPTURE_COACH_ENABLED", True) and getattr(settings, "CAPTURE_COACH_PRIVATE_INPUTS_APPROVED", False)),
+            "coachAvailable": bool(
+                settings.PROPERTY_CAPTURE_ENABLED
+                and settings.GEMINI_API_KEY
+                and settings.GEMINI_COACH_MODEL
+                and getattr(settings, "CAPTURE_COACH_ENABLED", True)
+                and getattr(settings, "CAPTURE_COACH_PRIVATE_INPUTS_APPROVED", False)
+            ),
             "coachPolicyVersion": "coach-v2",
             "coachSessionSeconds": 180,
             "processingProfile": capture_reconstruction.profile_identity(),
@@ -290,11 +330,31 @@ def job(request, session_id, job_id):
     require(not request.data, "MANIFEST_INVALID", "Cancel accepts an empty body.")
 
     def execute():
-        value.cancel_requested = True
-        value.save(update_fields=["cancel_requested"])
-        return services.job_payload(value), 200
+        locked_session = owned(request, session_id, True)
+        current = get_object_or_404(
+            CaptureProcessingJob.objects.select_for_update(),
+            id=job_id,
+            manifest__session=locked_session,
+        )
+        current.cancel_requested = True
+        current.save(update_fields=["cancel_requested"])
+        return services.job_payload(current), 200
 
     return mutation(request, "capture.cancel_job", job_id, execute)
+
+
+@endpoint(["POST"])
+def retry_job(request, session_id, job_id):
+    def execute():
+        session = owned(request, session_id, True)
+        value = get_object_or_404(
+            CaptureProcessingJob.objects.select_for_update(),
+            id=job_id,
+            manifest__session=session,
+        )
+        return services.retry(value, request.data)
+
+    return mutation(request, "capture.retry_job", job_id, execute)
 
 
 @endpoint(["GET"])
@@ -340,20 +400,42 @@ def component_resource(request, session_id, job_id, component_id, resource):
         cancel_requested=False,
     )
     require(
-        resource in ("thumbnail", "preview", "preview_ply", "detail_ply", "cameras", "navigation"),
-        "resource_missing", "Capture preview unavailable.", 404,
+        resource
+        in (
+            "thumbnail",
+            "preview",
+            "preview_ply",
+            "detail_ply",
+            "cameras",
+            "navigation",
+        ),
+        "resource_missing",
+        "Capture preview unavailable.",
+        404,
     )
     component = next(
-        (value for value in job.outputs.get("walkthrough3d", {}).get("components", [])
-         if value.get("id") == str(component_id)), None,
+        (
+            value
+            for value in job.outputs.get("walkthrough3d", {}).get("components", [])
+            if value.get("id") == str(component_id)
+        ),
+        None,
     )
-    require(component is not None, "resource_missing", "Capture preview unavailable.", 404)
+    require(
+        component is not None, "resource_missing", "Capture preview unavailable.", 404
+    )
     value = component.get("resources", {}).get(resource)
     require(value is not None, "resource_missing", "Capture preview unavailable.", 404)
     content_type = value.get("mediaType", "application/octet-stream")
-    if content_type not in ("image/jpeg", "application/json", "application/octet-stream"):
+    if content_type not in (
+        "image/jpeg",
+        "application/json",
+        "application/octet-stream",
+    ):
         content_type = "application/octet-stream"
-    return FileResponse(storage.read_path(value["blob"]).open("rb"), content_type=content_type)
+    return FileResponse(
+        storage.read_path(value["blob"]).open("rb"), content_type=content_type
+    )
 
 
 @endpoint(["POST"])
@@ -363,7 +445,12 @@ def coach(request, session_id):
         "MANIFEST_INVALID",
         "Coach provisioning accepts an empty body.",
     )
-    require(getattr(settings, "CAPTURE_COACH_PRIVATE_INPUTS_APPROVED", False), "COACH_UNAVAILABLE", "Contextual coaching is not enabled for private images.", 503)
+    require(
+        getattr(settings, "CAPTURE_COACH_PRIVATE_INPUTS_APPROVED", False),
+        "COACH_UNAVAILABLE",
+        "Contextual coaching is not enabled for private images.",
+        503,
+    )
     now = timezone.now()
     with transaction.atomic():
         get_user_model().objects.select_for_update().get(pk=request.user.pk)

@@ -5,6 +5,7 @@ from config.student_housing import enabled_from_env as student_services_from_env
 from dotenv import load_dotenv
 from datetime import timedelta
 import ssl
+import json
 
 from config.planning import enabled_services_from_env
 from config.advanced_housing import (
@@ -141,12 +142,20 @@ SOKOUN_RELEASE_SHA = getenv("SOKOUN_RELEASE_SHA", "")
 RUNTIME_EVIDENCE_ENABLED = getenv("RUNTIME_EVIDENCE_ENABLED", "False").lower() == "true"
 RUNTIME_EVIDENCE_NAMESPACE = getenv("RUNTIME_EVIDENCE_NAMESPACE", "sukoon")
 CELERY_BEAT_SCHEDULE = {
+    "deliver-security-notices": {
+        "task": "core_apps.users.tasks.deliver_security_notices",
+        "schedule": 60.0,
+    },
     "rent-payment-notifications": {
         "task": "core_apps.features.tasks.process_rent_payment_notifications",
         "schedule": 300.0,
     },
     "expire-advertisements": {
         "task": "core_apps.advertising.tasks.expire_advertisements",
+        "schedule": 300.0,
+    },
+    "expire-purchase-services": {
+        "task": "core_apps.features.tasks.expire_purchase_services",
         "schedule": 300.0,
     },
     "expire-rental-sources-and-holds": {
@@ -184,6 +193,9 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 RENTAL_PROVIDER_BACKEND = getenv("RENTAL_PROVIDER_BACKEND", "disabled")
+SIGNWELL_TEST_ENABLED = getenv("SIGNWELL_TEST_ENABLED", "false").lower() == "true"
+SIGNWELL_API_KEY = getenv("SIGNWELL_API_KEY", "")
+SIGNWELL_WEBHOOK_ID = getenv("SIGNWELL_WEBHOOK_ID", "")
 RENTAL_RUNTIME_ENVIRONMENT = "production"
 RENTAL_FAKE_PROVIDER_ALLOWED = False
 OWNER_TENANT_QA_ENABLED = False
@@ -195,6 +207,14 @@ PLANNING_ENABLED_SERVICES = enabled_services_from_env(
 PLANNING_MOCK_DISCOVERY = False
 CELERY_BEAT_SCHEDULE["process-planning-jobs"] = {
     "task": "core_apps.features.tasks.process_planning_jobs",
+    "schedule": 30.0,
+}
+CELERY_BEAT_SCHEDULE["reconcile-signing-documents"] = {
+    "task": "core_apps.features.tasks.reconcile_signing_documents",
+    "schedule": 30.0,
+}
+CELERY_BEAT_SCHEDULE["reconcile-advanced-execution"] = {
+    "task": "core_apps.features.tasks.reconcile_advanced_execution",
     "schedule": 30.0,
 }
 CELERY_BEAT_SCHEDULE["recover-advanced-housing-jobs"] = {
@@ -651,6 +671,17 @@ PAYMOB_INVOICE_CHECKOUT_ENABLED = getenv("PAYMOB_INVOICE_CHECKOUT_ENABLED", "fal
 PAYMOB_CHECKOUT_EXTRA_ORIGINS = []
 
 PAYMOB_REFUNDS_ENABLED = getenv("PAYMOB_REFUNDS_ENABLED", "false").lower() in {"true", "1", "yes"}
+
+# Separate, explicitly provisioned Payouts staging account. Never reuse Accept
+# credentials, auto-fund its budget, or enable a production endpoint.
+PAYMOB_PAYOUTS_ENABLED = getenv("PAYMOB_PAYOUTS_ENABLED", "false").lower() in {"true", "1", "yes"}
+PAYMOB_PAYOUTS_CLIENT_ID = getenv("PAYMOB_PAYOUTS_CLIENT_ID", "").strip()
+PAYMOB_PAYOUTS_CLIENT_SECRET = getenv("PAYMOB_PAYOUTS_CLIENT_SECRET", "").strip()
+PAYMOB_PAYOUTS_USERNAME = getenv("PAYMOB_PAYOUTS_USERNAME", "").strip()
+PAYMOB_PAYOUTS_PASSWORD = getenv("PAYMOB_PAYOUTS_PASSWORD", "").strip()
+PAYMOB_PAYOUTS_STAGING_EVIDENCE = getenv("PAYMOB_PAYOUTS_STAGING_EVIDENCE", "").strip()
+PAYMOB_PAYOUTS_CHANNEL_EVIDENCE = json.loads(getenv("PAYMOB_PAYOUTS_CHANNEL_EVIDENCE", "{}"))
+PAYMOB_PAYOUTS_BENEFICIARIES = json.loads(getenv("PAYMOB_PAYOUTS_BENEFICIARIES", "{}"))
 
 # Hosted Sandbox checkout for all authorized accounts/products; never Live.
 COMMERCE_HOSTED_SANDBOX_ENABLED = getenv("COMMERCE_HOSTED_SANDBOX_ENABLED", "false").lower() in {"true", "1", "yes"}

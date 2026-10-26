@@ -73,8 +73,13 @@ def rental_interests(request):
     with transaction.atomic():
         from ..services.student_housing.applications import context
 
+        from django.contrib.auth import get_user_model
+        account_ids = {request.user.pk, property_obj.owner_id}
+        list(get_user_model().objects.select_for_update(no_key=True).filter(pk__in=account_ids).order_by("pk"))
         academic = context(request.user, data)
         property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        if property_obj.owner_id not in account_ids:
+            raise RentalConflict("Property ownership changed. Refresh before continuing.", code="participants_changed")
         replay = _replay_response(
             request.user, operation, data["request_key"], request.data
         )

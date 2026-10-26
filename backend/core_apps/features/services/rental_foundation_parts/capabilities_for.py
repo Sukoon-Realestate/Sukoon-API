@@ -16,7 +16,7 @@ from ...models import (
     TenancyInvitation,
     TermsProposal,
 )
-from ...providers import checkout_available, fake_provider_available
+from ...providers import checkout_available, fake_provider_available, signing_available
 from ..cycle_permissions import cycle_actions
 from ..lease_permissions import (
     agreement_actions,
@@ -38,7 +38,8 @@ def capabilities_for(user, subject, requested_action=""):
 
     from ..evidence_storage import available as evidence_available
 
-    phase2_ready = fake_provider_available()
+    # Provider availability gates only operations that actually use it.
+    # Local review, handover, settlement and dispute workflows remain usable.
     if isinstance(subject, Lease):
         if subject.renter_company_id:
             from ..company.tenancy_access import roles, commercial_read
@@ -46,12 +47,16 @@ def capabilities_for(user, subject, requested_action=""):
             corporate_roles = roles(subject.company_tenancy, user)
             corporate_actions = []
             if (
-                phase2_ready
+                signing_available()
                 and subject.status == "pending_signatures"
                 and corporate_roles & {"owner", "signer"}
             ):
                 corporate_actions.append("sign")
-            if evidence_available() and corporate_roles & {"owner", "coordinator", "payer"}:
+            if evidence_available() and corporate_roles & {
+                "owner",
+                "coordinator",
+                "payer",
+            }:
                 corporate_actions.append("upload_evidence")
             if commercial_read(subject, user):
                 corporate_actions.append("request_statement")
@@ -62,8 +67,6 @@ def capabilities_for(user, subject, requested_action=""):
                 "account_verified": bool(user.is_active and user.is_verified),
                 "enabled_capabilities": (
                     ["rental_agreements", "rental_handovers", "rental_settlement"]
-                    if phase2_ready
-                    else []
                 )
                 + (["rental_maintenance"] if evidence_available() else [])
                 + (
@@ -83,11 +86,11 @@ def capabilities_for(user, subject, requested_action=""):
         enabled.append("rental_center")
         if not subject.legacy_read_only:
             enabled.append("rental_maintenance")
-        if phase2_ready and not subject.legacy_read_only:
-            enabled.append("rental_agreements")
+            enabled.append("rental_changes")
+            enabled.extend(["rental_agreements", "signed_documents"])
         if checkout_available():
             enabled.append("rent_checkout")
-        if phase2_ready and not subject.legacy_read_only:
+        if not subject.legacy_read_only:
             enabled.extend(
                 [
                     "rental_handovers",
@@ -102,26 +105,24 @@ def capabilities_for(user, subject, requested_action=""):
             )
             if subject.owner_id == user.pk:
                 enabled.append("owner_payouts")
-            allowed.extend(cycle_actions(user, subject))
     elif isinstance(subject, MaintenanceRequest):
         if not subject.lease.legacy_read_only:
             enabled.append("rental_maintenance")
             allowed.extend(cycle_actions(user, subject))
-    elif phase2_ready and isinstance(subject, RentalHandover):
+    elif isinstance(subject, RentalHandover):
         enabled.append("rental_handovers")
         allowed.extend(handover_actions(user, subject))
-    elif phase2_ready and isinstance(
-        subject, (MaintenanceRequest, RentalChange, FinalSettlement, RentalDispute)
-    ):
+    elif isinstance(subject, RentalChange):
+        enabled.append("rental_changes")
+        allowed.extend(cycle_actions(user, subject))
+    elif isinstance(subject, (FinalSettlement, RentalDispute)):
         capability = {
-            MaintenanceRequest: "rental_maintenance",
-            RentalChange: "rental_changes",
             FinalSettlement: "rental_settlement",
             RentalDispute: "rental_disputes",
         }[type(subject)]
         enabled.extend([capability, "rental_disputes"])
         allowed.extend(cycle_actions(user, subject))
-        if not subject.lease.legacy_read_only:
+        if "create_rental_dispute" in cycle_actions(user, subject.lease):
             allowed.append("create_rental_dispute")
     elif isinstance(subject, RentInvoice):
         enabled.extend(["rental_center"])
@@ -138,48 +139,49 @@ def capabilities_for(user, subject, requested_action=""):
         enabled.extend(["rental_center", "rent_checkout"])
         if subject.payer_id == user.pk:
             allowed.append("reconcile")
-        if phase2_ready:
+        if subject.invoice.lease_id:
             enabled.append("rental_settlement")
             allowed.extend(cycle_actions(user, subject))
     elif isinstance(subject, (User, Property, RentalInterest)):
         # Interest requests only persist local state and notify participants.
         # Signing and payments must not control access to this workflow.
         enabled.append("rental_interests")
-        if phase2_ready:
-            enabled.append("rental_agreements")
+        enabled.append("rental_agreements")
         if isinstance(subject, RentalInterest):
             allowed.extend(interest_actions(user, subject))
         elif isinstance(subject, Property) and not interest_creation_blocker(
             user, subject
         ):
             allowed.append("create_rental_interest")
-    elif phase2_ready and isinstance(subject, (TermsProposal, OwnerPaymentProfile)):
+    elif isinstance(subject, TermsProposal):
         enabled.extend(["rental_interests", "rental_agreements"])
-        if isinstance(subject, OwnerPaymentProfile):
-            enabled.append("owner_payouts")
+        allowed.extend(proposal_actions(user, subject))
+    elif isinstance(subject, OwnerPaymentProfile):
+        from ..beneficiary_confirmation import can_confirm
+        from ..beneficiary_details import can_submit
+
+        enabled.append("owner_payouts")
+        enabled.extend(["rental_interests", "rental_agreements"])
+        if can_confirm(subject, user):
+            allowed.append("onboard_beneficiary")
+        if can_submit(subject, user):
+            allowed.append("submit_beneficiary_details")
     elif isinstance(subject, TenancyInvitation):
         can_revoke = can_revoke_invitation(user, subject)
         # Revocation only changes local invitation state; signing/payment
         # provider availability must not prevent an owner from withdrawing it.
-        if phase2_ready or can_revoke:
-            enabled.append("rental_agreements")
+        enabled.append("rental_agreements")
         if can_revoke:
             allowed.append("revoke_invitation")
-        if (
-            phase2_ready
-            and can_revoke
-            and subject.status == TenancyInvitation.Status.ACCEPTED
-        ):
+        if can_revoke and subject.status == TenancyInvitation.Status.ACCEPTED:
             allowed.append("create_lease")
 
-    if phase2_ready:
+    if fake_provider_available():
         if isinstance(subject, OwnerPaymentProfile):
             if subject.status != OwnerPaymentProfile.Status.READY:
                 allowed.append("onboard_beneficiary")
         elif isinstance(subject, User):
             allowed.append("onboard")
-        elif isinstance(subject, TermsProposal):
-            allowed.extend(proposal_actions(user, subject))
 
     if isinstance(subject, Lease):
         from ..reputation.eligibility import can_review_lease
@@ -193,6 +195,15 @@ def capabilities_for(user, subject, requested_action=""):
     extension_enabled, extension_actions = lifecycle_capabilities(user, subject)
     enabled.extend(extension_enabled)
     allowed.extend(extension_actions)
+    if isinstance(subject, OwnerPaymentProfile):
+        from core_apps.users.services import totp
+
+        if (
+            subject.owner_id != user.pk
+            or user.sensitive_actions_frozen
+            or totp.pending_recovery(user)
+        ):
+            allowed = []
     if not user.is_active or not user.is_verified:
         blocking.append("A verified active account is required.")
         enabled = []

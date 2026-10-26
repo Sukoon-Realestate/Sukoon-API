@@ -1,15 +1,26 @@
 """Serializers: lease serializer."""
 
 from rest_framework import serializers
+from django.utils import timezone
 from ..services.lease_permissions import can_cancel_draft, is_read_only
 from ..models import BoostCampaign, Lease, SearchAlert
 
 
 class BoostCampaignSerializer(serializers.ModelSerializer):
     billing_invoices = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        if (
+            obj.status in {BoostCampaign.Status.ACTIVE, BoostCampaign.Status.PAUSED}
+            and obj.ends_at <= timezone.now()
+        ):
+            return BoostCampaign.Status.EXPIRED
+        return obj.status
 
     def get_billing_invoices(self, obj):
         from ..services.billing_sources import source_invoices
+
         return source_invoices("promotion", obj.id)
 
     property_id = serializers.UUIDField(source="property.id", read_only=True)

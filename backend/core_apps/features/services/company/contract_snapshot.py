@@ -8,6 +8,7 @@ from ...company_models import CompanyMembership, CompanyBudgetReservation
 from ...company_contract_models import CompanyMandate
 from ..rental_phase2 import RentalConflict
 from . import approval_routing, offers, mandates
+from .request_versions import period, require_current
 
 
 def people_for(item):
@@ -56,6 +57,28 @@ def people_for(item):
 
 
 def source(item, signer_id, payer_id, placements, *, cycle, lock=False):
+    from core_apps.users.services.new_business import (
+        require_new_business,
+        restricted_accounts,
+    )
+    from .contract_preparation import account_parties
+
+    parties = account_parties(
+        item.id, {"signer_mandate_id": signer_id, "payer_mandate_id": payer_id}
+    )
+    if lock:
+        require_new_business(*parties)
+    elif restricted_accounts(*parties):
+        raise RentalConflict(
+            "New commitments are paused while account deletion is reviewed.",
+            code="account_closure_pending",
+        )
+    require_current(item)
+    from .negotiation_binding import refresh_offer, require_published
+
+    refresh_offer(item, lock=lock)
+    require_published(item)
+    starts_on, ends_on = period(item)
     company = item.request.company
     now = timezone.now()
     if item.lease_id or item.invitation_id or item.status not in {"approved", "held"}:
@@ -75,7 +98,7 @@ def source(item, signer_id, payer_id, placements, *, cycle, lock=False):
         raise RentalConflict(
             "Obtain a new quote and approval before continuing.", code="quote_expired"
         )
-    if item.request.starts_on < timezone.localdate():
+    if starts_on < timezone.localdate():
         raise RentalConflict(
             "Review current arrival dates before continuing.", code="dates_expired"
         )
@@ -114,13 +137,14 @@ def source(item, signer_id, payer_id, placements, *, cycle, lock=False):
         )
     props = offers.resolve_scope(item.offer, lock=lock)
     current = offers.scope_snapshot(item.offer, props)
-    if item.offer.status != "published" or any(
-        item.snapshot.get(k) != v for k, v in current.items()
-    ):
+    if item.offer.status != "published":
         raise RentalConflict(
             "Inventory or commercial terms changed. Review a new package.",
             code="offer_changed",
         )
+    from .negotiation_binding import inventory as agreed_inventory
+
+    current = agreed_inventory(item, current, props)
     people = people_for(item)
     normal = sorted(
         [
@@ -195,7 +219,7 @@ def source(item, signer_id, payer_id, placements, *, cycle, lock=False):
         "employees_are_debtors": False,
         "booking_id": str(item.id),
         "booking_digest": item.snapshot_digest,
-        "request_commercial_revision": item.request.commercial_revision,
+        "request_commercial_revision": item.request_version,
         "coordinator_id": str(item.request.coordinator.id),
         "approval_id": str(approval.id),
         "approver_id": str(approval.approver.id),
@@ -212,8 +236,8 @@ def source(item, signer_id, payer_id, placements, *, cycle, lock=False):
         "people": people,
         "placements": normal,
         "inventory": current,
-        "starts_on": str(item.request.starts_on),
-        "ends_on_exclusive": str(item.request.ends_on_exclusive),
+        "starts_on": str(starts_on),
+        "ends_on_exclusive": str(ends_on),
         "full_term_rent_minor": item.full_term_rent_minor,
         "deposit_minor": item.deposit_minor,
         "currency": "EGP",

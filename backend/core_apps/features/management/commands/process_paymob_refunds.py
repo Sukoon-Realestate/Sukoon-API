@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from rest_framework.exceptions import APIException
 from core_apps.features.models import PaymobRefund
-from core_apps.features.services.paymob_refunds import process
+from core_apps.features.services.paymob_refunds import process, verify_result
 
 
 class Command(BaseCommand):
@@ -20,7 +20,9 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        query = PaymobRefund.objects.exclude(refund__status="succeeded")
+        query = PaymobRefund.objects.filter(current=True).exclude(
+            refund__status="succeeded"
+        )
         if options.get("refund_id"):
             query = query.filter(refund__id=options["refund_id"])
         if options.get("provider_transaction_id"):
@@ -35,14 +37,13 @@ class Command(BaseCommand):
                 )
             # Supplying an ID never grants success; the provider inquiry must
             # verify parent capture, order, environment, amount and status.
-            query.filter(status__in=["unknown", "submitting"]).update(
-                provider_transaction_id=options["provider_transaction_id"],
-                status="processing",
-            )
         checked = pending = 0
         for item in query.order_by("pkid")[: max(1, min(options["limit"], 1000))]:
             try:
-                process(item)
+                if options.get("provider_transaction_id"):
+                    verify_result(item, candidate_id=options["provider_transaction_id"])
+                else:
+                    process(item)
                 checked += 1
             except APIException:
                 pending += 1

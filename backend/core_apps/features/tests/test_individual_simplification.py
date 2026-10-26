@@ -1,5 +1,7 @@
 """Ordinary rental guidance: real DB and authorization, without live providers."""
 
+# flake8: noqa: F811 -- imported pytest fixtures are injected by name.
+
 from datetime import timedelta
 import uuid
 import pytest
@@ -227,7 +229,7 @@ def test_revoked_private_access_cannot_reenter_through_housing_or_application(
 @pytest.mark.parametrize(
     "state,stage,actor",
     [
-        ("draft", "agreement", "provider"),
+        ("draft", "agreement", "self"),
         ("pending_signatures", "agreement", "provider"),
         ("signed", "activation", "provider"),
         ("expired", "expired", "operator"),
@@ -247,7 +249,10 @@ def test_provider_disabled_guidance_is_not_false_completion(
     for user in (owner, tenant):
         summary = lease_journey(lease, user)
         assert summary["stage"] == stage
-        assert summary["next_actor"] == actor
+        expected = (
+            ("owner" if user == owner else "tenant") if actor == "self" else actor
+        )
+        assert summary["next_actor"] == expected
         assert not summary["complete"]
         assert summary["next_action"]["kind"] in {"lease_review", "handovers"}
 

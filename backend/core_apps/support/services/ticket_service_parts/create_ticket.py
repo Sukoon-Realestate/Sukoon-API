@@ -1,3 +1,4 @@
+from core_apps.support.services.workspace import normalize_workspace
 """Ticket service: create ticket."""
 
 import logging
@@ -30,7 +31,7 @@ def list_user_tickets(user: Any, workspace: str = "tenant"):
     """
     Returns ordered queryset of support tickets belonging to the authenticated user and workspace.
     """
-    normalized_workspace = "owner" if workspace.lower() == "owner" else "tenant"
+    normalized_workspace = normalize_workspace(workspace)
     return Ticket.objects.filter(user=user, workspace=normalized_workspace).order_by(
         "-updated_at", "-id"
     )
@@ -57,7 +58,7 @@ def create_ticket(
     """
     Creates a new support ticket with initial user message and attachments.
     """
-    normalized_workspace = "owner" if workspace.lower() == "owner" else "tenant"
+    normalized_workspace = normalize_workspace(workspace)
     subject = subject.strip()
     description = description.strip()
     rental_context = rental_context or {}

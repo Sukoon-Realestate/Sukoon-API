@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Shared dashboard components live beside the standalone deployment. */
+@source "../../../../src/components";
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {

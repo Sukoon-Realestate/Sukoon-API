@@ -5,6 +5,7 @@ PUSH_BODY = "لديك تحديث جديد. افتح التطبيق لعرضه. /
 ROUTING_FIELDS = frozenset(
     {
         "action_type",
+        "scope",
         "message_id",
         "recipient_id",
         "membership_period",
@@ -47,14 +48,17 @@ ROUTING_FIELDS = frozenset(
 def presentation_context(data):
     data = dict(data or {})
     action = str(data.get('action_type', ''))
-    if action.startswith('open_company_'):
-        data['presentation_workspace'] = 'company'
-    elif data.get('workspace') == 'owner':
-        data['presentation_workspace'] = 'owner'
+    if data.get('scope') == 'account':
+        data.pop('workspace', None)
+        data.pop('presentation_workspace', None)
+        return data
+    explicit = data.get('workspace') or data.get('presentation_workspace')
+    if explicit in {'tenant', 'individual', 'owner', 'student', 'company'}:
+        data['presentation_workspace'] = 'individual' if explicit == 'tenant' else explicit
     elif data.get('academic_plan_id') or data.get('student_plan_id'):
         data['presentation_workspace'] = 'student'
-    elif data.get('workspace') == 'tenant':
-        data['presentation_workspace'] = 'individual'
+    elif action.startswith('open_company_'):
+        data['presentation_workspace'] = 'company'
     return data
 
 

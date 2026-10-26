@@ -1,6 +1,6 @@
 from .access import actions
 from .snapshots import freshness
-from config.advanced_housing import mock_mode_available
+from config.advanced_housing import execution_available, execution_mode
 
 
 def run_payload(run, user):
@@ -25,7 +25,7 @@ def payload(scenario, user, *, detailed=True):
     from ..planning import enabled_services
 
     enabled = enabled_services()
-    execution_ready = mock_mode_available() and {
+    execution_ready = execution_available() and {
         "corporate_housing_execution",
         "conditional_group_execution",
     } <= set(enabled)
@@ -61,7 +61,7 @@ def payload(scenario, user, *, detailed=True):
             else {}
         ),
         "execution_available": execution_ready,
-        "provider_mode": "mock" if mock_mode_available() else "disabled",
+        "provider_mode": execution_mode(),
         "decisions": [
             {
                 "id": str(row.id),

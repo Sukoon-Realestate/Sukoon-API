@@ -21,12 +21,17 @@ def json_value(value):
     return json.loads(json.dumps(value, default=str))
 
 
-def validate_destinations(requirements):
+def validate_destinations(requirements, previous=None):
     ids = requirements.get("campus_ids", [])
-    if len(set(map(str, ids))) != len(ids) or Campus.objects.filter(
-        id__in=ids, active=True, university__active=True
-    ).count() != len(ids):
+    rows = list(Campus.objects.filter(id__in=ids).order_by("pkid"))
+    if len(set(map(str, ids))) != len(ids) or len(rows) != len(ids):
         raise ValidationError({"campus_ids": "Select current campus catalog entries."})
+    from core_apps.properties.catalog_access import require_current_selections
+
+    retained = (previous or {}).get("campus_ids", [])
+    require_current_selections(
+        [row for row in rows if str(row.id) not in retained], field="campus_ids"
+    )
     return json_value(requirements)
 
 
@@ -126,7 +131,9 @@ def save_plan(user, data, plan=None):
         people=len(ids),
     )
     validated = criteria(
-        raw, allow_existing_start=bool(plan and data["starts_on"] == plan.starts_on)
+        raw,
+        allow_existing_start=bool(plan and data["starts_on"] == plan.starts_on),
+        previous=plan.criteria if plan else None,
     )
     if (
         validated["price_period"] != "monthly"
@@ -138,7 +145,9 @@ def save_plan(user, data, plan=None):
                 "criteria": "Supply both monthly EGP affordability bounds. Academic periods are dates, not invoice periods."
             }
         )
-    requirements = validate_destinations(data["requirements"])
+    requirements = validate_destinations(
+        data["requirements"], plan.requirements if plan else None
+    )
     previous = (
         plan_for(user, data["previous_plan_id"])
         if data.get("previous_plan_id")
@@ -171,6 +180,11 @@ def save_plan(user, data, plan=None):
     plan.roster_revision = group.roster_revision if group else 0
     plan.access_group_revision = group.revision if group else 0
     plan.save()
+    plan._student_removed_recipient_ids = set(
+        plan.participants.exclude(status="withdrawn")
+        .exclude(user__id__in=ids)
+        .values_list("user_id", flat=True)
+    )
     plan.participants.exclude(user__id__in=ids).update(
         status="withdrawn", reviewed_revision=0, reviewed_digest=""
     )
@@ -202,7 +216,7 @@ def save_requirements(user, plan, data):
     if low > high:
         raise ValidationError({"budget_max": "Maximum must be at least the minimum."})
     row.requirements = {
-        **validate_destinations(data["requirements"]),
+        **validate_destinations(data["requirements"], row.requirements),
         "budget_min": money(low),
         "budget_max": money(high),
     }
@@ -379,4 +393,8 @@ def payload(plan, user):
     from .progress import next_step
 
     value["next_step"] = next_step(plan, user, value)
+    from .arrangements import can_propose
+
+    if can_propose(user, plan):
+        value["allowed_actions"].append("propose_arrangement")
     return value

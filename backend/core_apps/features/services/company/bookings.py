@@ -28,7 +28,16 @@ from ..rental_phase2 import (
 )
 from ..rental_lifecycle.reservations import confirmation_current
 from .request_period import monthly_periods, validate_request_period
-from .access import company_for, request_for, member_for, require_new_business
+from .access import (
+    company_for,
+    request_for,
+    member_for,
+    require_new_business,
+    request_account_parties,
+    selection_account_parties,
+    booking_account_parties,
+    lock_account_parties,
+)
 from .offers import resolve_scope, scope_snapshot
 
 
@@ -62,9 +71,12 @@ def save_request(user, company, data):
         requester=user,
         coordinator=user,
         **source,
-        **{k: data[k] for k in REQUEST_FIELDS if k in data}
+        **{k: data[k] for k in REQUEST_FIELDS if k in data},
     )
     audit(item, user, "company_housing_request_created")
+    from .request_versions import record_initial
+
+    record_initial(item, user)
     from core_apps.chat.services.company_access import provision
 
     provision(item, user)
@@ -74,32 +86,73 @@ def save_request(user, company, data):
 @transaction.atomic
 def update_request(user, request_id, data):
     require_new_business()
+    lock_account_parties(user, request_account_parties(request_id))
     item = request_for(user, request_id, lock=True)
     require_revision(item, data["expected_revision"])
     if data.get("source_visit_id") and str(data["source_visit_id"]) != str(
         item.source_viewing_snapshot.get("visit_id", "")
     ):
         raise RentalConflict("A request's viewing provenance cannot be replaced.")
-    if item.items.exists():
-        raise RentalConflict(
-            "This request already has packages. Create a new request to change its terms.",
-            code="request_has_packages",
-        )
+    from . import request_versions
+    from core_apps.users.services.new_business import (
+        require_new_business as require_account_business,
+    )
+
+    require_account_business(user.pk, item.requester_id, item.coordinator_id)
     validate_request_period(data)
+    before = request_versions.content(item)
+    request_versions.record_initial(item, user, baseline=True)
     for key in REQUEST_FIELDS:
         if key in data:
             setattr(item, key, data[key])
-    item.revision += 1
-    item.save()
-    audit(item, user, "company_housing_request_updated")
+    request_versions.apply(item, user, before)
     return item
 
 
 @transaction.atomic
 def select_offer(user, request_id, data):
     require_new_business()
+    parties = lock_account_parties(user, selection_account_parties(request_id, data))
     request = request_for(user, request_id, lock=True)
+    if (selection_account_parties(request_id, data) | {user.pk}) != parties:
+        raise RentalConflict(
+            "The participants changed. Refresh before continuing.",
+            code="participants_changed",
+        )
+    from core_apps.users.services.new_business import (
+        require_new_business as require_account_business,
+    )
+
+    require_account_business(*parties)
     require_revision(request, data["expected_revision"])
+    replacement_source = None
+    if data.get("replaces_item_id"):
+        replacement_source = get_object_or_404(
+            request.items.select_for_update(), id=data["replaces_item_id"]
+        )
+        require_revision(replacement_source, data["replaces_item_revision"])
+        from .listing_changes import needs_review
+
+        if not needs_review(replacement_source) and replacement_source.status not in {
+            "request_changed",
+            "changes_requested",
+            "rejected",
+            "withdrawn",
+        }:
+            raise RentalConflict(
+                "Select an affected package to replace.", code="package_closed"
+            )
+        # Explicit replacement is one atomic operation: a failed new selection
+        # rolls back the release and keeps the original inventory hold intact.
+        if replacement_source.status != "withdrawn":
+            replacement_source = withdraw_item(
+                user,
+                replacement_source.id,
+                {
+                    "expected_revision": replacement_source.revision,
+                    "reason": "Replaced after reviewing the current housing need.",
+                },
+            )
     policy, rules = lifecycle_policy("reservations")
     if (
         request.starts_on < timezone.localdate()
@@ -186,7 +239,8 @@ def select_offer(user, request_id, data):
         and initial_places < snapshot["capacity"]
     ):
         raise RentalConflict(
-            "This offer requires named occupants. Choose an offer permitting reserve capacity or identify its occupants.",
+            "This offer requires named occupants. Choose an offer permitting "
+            "reserve capacity or identify its occupants.",
             code="occupants_required",
         )
     commercial = ensure_policy()
@@ -254,6 +308,8 @@ def select_offer(user, request_id, data):
     )
     item = CompanyBookingItem.objects.create(
         request=request,
+        request_version=request.commercial_revision,
+        replaces=replacement_source,
         offer=offer,
         snapshot=snapshot,
         snapshot_digest=fingerprint(snapshot),
@@ -263,6 +319,9 @@ def select_offer(user, request_id, data):
     )
     item.occupants.set(m.user for m in occupants)
     item.planned_staff.set(planned_staff)
+    if replacement_source:
+        replacement_source.status = "replaced"
+        replacement_source.save(update_fields=["status", "updated_at"])
     request.revision += 1
     request.save()
     audit(item, user, "company_package_proposed")
@@ -276,12 +335,17 @@ def _live_reservations(company):
         approval__expires_at__lte=timezone.now(),
         item__lease__isnull=True,
     ).update(status="released")
-    return company.budget_reservations.filter(status__in=["reserved", "committed"])
+    from .listing_changes import live_budget
+
+    return live_budget(
+        company.budget_reservations.filter(status__in=["reserved", "committed"])
+    )
 
 
 @transaction.atomic
 def decide(user, item_id, data):
     require_new_business()
+    parties = lock_account_parties(user, booking_account_parties(item_id))
     item = get_object_or_404(CompanyBookingItem, id=item_id)
     company = company_for(user, item.request.company.id, "approve", lock=True)
     item = (
@@ -290,6 +354,11 @@ def decide(user, item_id, data):
         .get(pk=item.pk)
     )
     require_revision(item, data["expected_revision"])
+    if (booking_account_parties(item_id) | {user.pk}) != parties:
+        raise RentalConflict(
+            "The participants changed. Refresh before continuing.",
+            code="participants_changed",
+        )
     if item.status != "approval_pending":
         raise RentalConflict(
             "Only a current proposed package can receive a decision.",
@@ -328,6 +397,17 @@ def decide(user, item_id, data):
         )
     reservations = _live_reservations(company)
     if data["decision"] == "approved":
+        from .negotiation_binding import require_accepted
+
+        require_accepted(item)
+        from core_apps.users.services.new_business import (
+            require_new_business as require_account_business,
+        )
+
+        require_account_business(
+            user.pk,
+            *booking_account_parties(item.id, include_preparation=False),
+        )
         for rows, rent_limit, deposit_limit in [
             (reservations, company.budget_limit_minor, company.deposit_limit_minor),
             (
@@ -361,12 +441,37 @@ def decide(user, item_id, data):
         reason=data.get("reason", ""),
     )
     if approval.decision == "approved":
-        CompanyBudgetReservation.objects.create(
-            company=company,
+        reservation = (
+            CompanyBudgetReservation.objects.select_for_update()
+            .filter(item=item)
+            .first()
+        )
+        if reservation and reservation.status != "released":
+            raise RentalConflict(
+                "Resolve the existing budget commitment first.", code="budget_reserved"
+            )
+        if reservation:
+            audit(
+                item,
+                user,
+                "company_budget_reservation_replaced",
+                metadata={
+                    "previous_approval_id": str(reservation.approval.id),
+                    "rent_minor": reservation.rent_minor,
+                    "deposit_minor": reservation.deposit_minor,
+                    "status": reservation.status,
+                    "new_approval_id": str(approval.id),
+                },
+            )
+        CompanyBudgetReservation.objects.update_or_create(
             item=item,
-            approval=approval,
-            rent_minor=item.full_term_rent_minor,
-            deposit_minor=item.deposit_minor,
+            defaults={
+                "company": company,
+                "approval": approval,
+                "rent_minor": item.full_term_rent_minor,
+                "deposit_minor": item.deposit_minor,
+                "status": "reserved",
+            },
         )
     item.status = approval.decision
     item.revision += 1  # Approval does not mutate the commercial revision/digest.
@@ -447,11 +552,9 @@ def hold_item(user, item_id, data):
     require_reviews_for_booking(item)
     props = resolve_scope(item.offer, lock=True)
     current = scope_snapshot(item.offer, props)
-    if any(item.snapshot.get(k) != value for k, value in current.items()):
-        raise RentalConflict(
-            "Inventory or terms changed. Obtain a fresh package and approval.",
-            code="offer_changed",
-        )
+    from .negotiation_binding import inventory as agreed_inventory
+
+    agreed_inventory(item, current, props)
     policy, rules = lifecycle_policy("reservations")
     if (
         item.snapshot.get("lifecycle_policy_version") != policy.version
@@ -461,8 +564,10 @@ def hold_item(user, item_id, data):
             "The reservation policy changed. Review a new package.",
             code="policy_changed",
         )
-    starts = item.request.starts_on
-    ends = item.request.ends_on_exclusive
+    from .request_versions import period, require_current
+
+    require_current(item)
+    starts, ends = period(item)
     blocked_until = ends + timedelta(days=rules["turnover_days"])
     if (
         starts < timezone.localdate()
@@ -471,7 +576,10 @@ def hold_item(user, item_id, data):
         raise ValidationError(
             {"ends_on_exclusive": "Choose a supported future rental interval."}
         )
-    from core_apps.chat.moderation.policy import require_new_business as require_unrestricted_actor
+    from core_apps.chat.moderation.policy import (
+        require_new_business as require_unrestricted_actor,
+    )
+
     require_unrestricted_actor(user)
     for prop in props:
         require_unrestricted_actor(prop.owner)
@@ -528,7 +636,9 @@ def hold_item(user, item_id, data):
     item.revision += 1
     item.save()
     from .contract_preparation import hold_recorded
+    from .negotiation_binding import follow
 
+    follow(item)
     hold_recorded(item, user)
     audit(
         item,
@@ -582,6 +692,23 @@ def item_payload(item):
 
     hold = item.hold
     status = item.status
+    from .listing_changes import (
+        needs_review,
+        history as source_history,
+        publication_blocked,
+    )
+
+    source_review = needs_review(item)
+    unpublished = publication_blocked(item)
+    from core_apps.users.services.new_business import restricted_accounts
+
+    closure_blocked = bool(
+        not item.lease_id
+        and not item.invitation_id
+        and restricted_accounts(
+            *booking_account_parties(item.id, include_preparation=False)
+        )
+    )
     if (
         hold
         and (
@@ -589,14 +716,60 @@ def item_payload(item):
             or (hold.expires_at and hold.expires_at <= timezone.now())
         )
         and not item.lease_id
-        and status != "withdrawn"
+        and status not in {"withdrawn", "replaced", "request_changed"}
     ):
         status = "hold_expired"
     return {
+        "source_review_required": source_review,
+        "publication_blocked": unpublished,
+        "account_closure_blocked": closure_blocked,
+        "source_changes": source_history(item),
+        "negotiation_id": (
+            str(item.negotiation.id) if hasattr(item, "negotiation") else None
+        ),
+        "negotiated_terms": bool(item.snapshot.get("negotiation")),
+        "can_negotiate": bool(
+            not source_review
+            and not unpublished
+            and not closure_blocked
+            and not hasattr(item, "negotiation")
+            and not item.hold_id
+            and not item.invitation_id
+            and not item.lease_id
+            and item.request_review_version is None
+            and item.status
+            in {
+                "proposed",
+                "approval_pending",
+                "approved",
+                "changes_requested",
+                "rejected",
+            }
+            and item.quote_expires_at > timezone.now()
+        ),
         "id": str(item.id),
         "request_id": str(item.request.id),
         "revision": item.revision,
         "commercial_revision": item.commercial_revision,
+        "request_version": item.request_version,
+        "request_review_version": item.request_review_version,
+        "replaces_item_id": str(item.replaces.id) if item.replaces_id else None,
+        "replacement_item_id": (
+            str(item.replacement.id) if hasattr(item, "replacement") else None
+        ),
+        "can_replace": bool(
+            (
+                source_review
+                or item.status
+                in {"request_changed", "changes_requested", "rejected", "withdrawn"}
+            )
+            and not item.lease_id
+            and not item.invitation_id
+            and not hasattr(item, "replacement")
+            and not (
+                hold and hold.status == "active" and hold.expires_at > timezone.now()
+            )
+        ),
         "status": status,
         "assigned_approver_id": (
             str(item.assigned_approver.id) if item.assigned_approver_id else None
@@ -623,7 +796,10 @@ def item_payload(item):
         "deposit_minor": item.deposit_minor,
         "lease_id": str(item.lease.id) if item.lease_id else None,
         "contract_progression_available": False,
-        "contract_preparation_available": item.status in {"approved", "held"},
+        "contract_preparation_available": not source_review
+        and not unpublished
+        and not closure_blocked
+        and item.status in {"approved", "held"},
         "contract_preparation_id": (
             str(item.contract_preparation.id)
             if hasattr(item, "contract_preparation")
@@ -634,6 +810,7 @@ def item_payload(item):
 
 def request_payload(request, viewer=None):
     from django.conf import settings
+    from .request_versions import history
 
     items = list(request.items.select_related("hold", "lease", "request"))
     confirmed = [i for i in items if i.lease_id and i.lease.status == "active"]
@@ -667,6 +844,24 @@ def request_payload(request, viewer=None):
             else []
         ),
         "revision": request.revision,
+        "content_version": request.commercial_revision,
+        "history": (
+            history(
+                request,
+                (
+                    None
+                    if request.coordinator_id == viewer.pk
+                    else {
+                        str(i.id)
+                        for i in items
+                        if i.assigned_approver_id
+                        and i.assigned_approver.user_id == viewer.pk
+                    }
+                ),
+            )
+            if viewer
+            else []
+        ),
         "can_coordinate": bool(
             viewer
             and viewer.is_active
@@ -681,7 +876,6 @@ def request_payload(request, viewer=None):
         "can_edit": bool(
             viewer
             and viewer.is_active
-            and not items
             and request.coordinator_id == viewer.pk
             and getattr(settings, "COMPANY_HOUSING_ENABLED", False)
             and CompanyMembership.objects.filter(
@@ -713,7 +907,9 @@ def request_payload(request, viewer=None):
         "commitment_ceiling_minor": request.commitment_ceiling_minor,
         "deposit_limit_minor": request.deposit_limit_minor,
         "confirmed_items": len(confirmed),
-        "total_items": len(items),
+        "total_items": sum(
+            i.status not in {"withdrawn", "replaced", "rejected"} for i in items
+        ),
         "uncovered_headcount": max(0, request.headcount - covered),
         "items": [
             item_payload(i)

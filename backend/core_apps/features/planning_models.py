@@ -26,3 +26,4 @@ from .planning_models_parts.tenancy_transition import (
     GroupJoinRequest,
     PlanningEvent,
 )
+from .planning_models_parts.housing_request_change import HousingRequestChange

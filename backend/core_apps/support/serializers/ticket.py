@@ -80,7 +80,7 @@ class TicketCreateSerializer(serializers.Serializer):
     )
     rental_context = serializers.JSONField(required=False, default=dict)
     workspace = serializers.ChoiceField(
-        choices=["tenant", "owner"],
+        choices=Ticket.Workspace.values,
         default="tenant",
     )
     category = serializers.ChoiceField(

@@ -107,65 +107,13 @@ class TestUserDeleteView:
         res = api_client.post(DELETE_ACCOUNT_URL)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_delete_account_success_deletes_user_and_clears_cookies(
-        self, auth_client, user
+    @pytest.mark.parametrize("url", [DELETE_ACCOUNT_URL, PROFILE_DELETE_ACCOUNT_URL])
+    @pytest.mark.parametrize("method", ["delete", "post"])
+    def test_direct_delete_requires_review_without_revoking_session(
+        self, auth_client, user, url, method
     ):
-        user_id = user.id
-        res = auth_client.delete(DELETE_ACCOUNT_URL)
-        assert res.status_code == status.HTTP_200_OK
-
-        # Cookies cleared
-        assert res.cookies["access"].value == ""
-        assert res.cookies["refresh"].value == ""
-        assert res.cookies["logged_in"].value == ""
-
-        # User is deleted from database
-        from django.contrib.auth import get_user_model
-
-        assert not get_user_model().objects.filter(id=user_id).exists()
-
-    def test_post_delete_account_success(self, auth_client, user):
-        user_id = user.id
-        res = auth_client.post(DELETE_ACCOUNT_URL, {}, format="json")
-        assert res.status_code == status.HTTP_200_OK
-        assert res.cookies["access"].value == ""
-
-        from django.contrib.auth import get_user_model
-
-        assert not get_user_model().objects.filter(id=user_id).exists()
-
-    def test_delete_account_alias_url_success(self, auth_client, user):
-        user_id = user.id
-        res = auth_client.delete(PROFILE_DELETE_ACCOUNT_URL)
-        assert res.status_code == status.HTTP_200_OK
-
-        from django.contrib.auth import get_user_model
-
-        assert not get_user_model().objects.filter(id=user_id).exists()
-
-    def test_delete_account_with_correct_password(self, auth_client, user):
-        user_id = user.id
-        res = auth_client.delete(
-            DELETE_ACCOUNT_URL,
-            {"password": "Testpass123!"},
-            format="json",
-        )
-        assert res.status_code == status.HTTP_200_OK
-
-        from django.contrib.auth import get_user_model
-
-        assert not get_user_model().objects.filter(id=user_id).exists()
-
-    def test_delete_account_with_wrong_password_returns_400(self, auth_client, user):
-        user_id = user.id
-        res = auth_client.delete(
-            DELETE_ACCOUNT_URL,
-            {"password": "WrongPassword123!"},
-            format="json",
-        )
-        assert res.status_code == status.HTTP_400_BAD_REQUEST
-
-        from django.contrib.auth import get_user_model
-
-        # User should NOT be deleted
-        assert get_user_model().objects.filter(id=user_id).exists()
+        res = getattr(auth_client, method)(url, {}, format="json")
+        assert res.status_code == status.HTTP_409_CONFLICT
+        user.refresh_from_db()
+        assert user.is_active
+        assert "access" not in res.cookies

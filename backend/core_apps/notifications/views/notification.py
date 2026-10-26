@@ -9,6 +9,7 @@ from core_apps.notifications.serializers import (
     NotificationListSerializer,
 )
 from core_apps.notifications.services import NotificationService
+from core_apps.notifications.services.inbox_scope import request_scope
 from core_apps.profiles.serializers import UserSettingsSerializer
 from core_apps.profiles.services import ProfileService
 
@@ -28,9 +29,16 @@ class NotificationListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        unread_only = self.request.query_params.get("unread", "").lower() in ("true", "1")
+        from core_apps.notifications.services.preferences import touch
+        touch(self.request.user, request_scope(self.request))
+        unread_only = self.request.query_params.get("unread", "").lower() in (
+            "true",
+            "1",
+        )
         return NotificationService.get_user_notifications(
-            user=self.request.user, unread_only=unread_only
+            user=self.request.user,
+            unread_only=unread_only,
+            scope=request_scope(self.request),
         )
 
     def list(self, request, *args, **kwargs):
@@ -41,14 +49,16 @@ class NotificationListAPIView(generics.ListAPIView):
             response = self.get_paginated_response(serializer.data)
             # * Include unread count in response data
             response.data["unread_count"] = NotificationService.get_unread_count(
-                request.user
+                request.user, scope=request_scope(request)
             )
             return response
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(
             {
-                "unread_count": NotificationService.get_unread_count(request.user),
+                "unread_count": NotificationService.get_unread_count(
+                    request.user, scope=request_scope(request)
+                ),
                 "results": serializer.data,
             }
         )
@@ -100,9 +110,14 @@ class NotificationMarkAllReadAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        count = NotificationService.mark_all_as_read(request.user)
+        count = NotificationService.mark_all_as_read(
+            request.user, scope=request_scope(request)
+        )
         return Response(
-            {"marked_count": count, "message": f"Marked {count} notifications as read."},
+            {
+                "marked_count": count,
+                "message": f"Marked {count} notifications as read.",
+            },
             status=status.HTTP_200_OK,
         )
 
@@ -116,7 +131,9 @@ class NotificationUnreadCountAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        count = NotificationService.get_unread_count(request.user)
+        count = NotificationService.get_unread_count(
+            request.user, scope=request_scope(request)
+        )
         return Response({"unread_count": count}, status=status.HTTP_200_OK)
 
 
@@ -135,15 +152,16 @@ class NotificationSettingsAPIView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return ProfileService.get_user_settings(self.request.user)
 
+    def retrieve(self, request, *args, **kwargs):
+        from core_apps.notifications.services import preferences
+        scope = request_scope(request)
+        return Response(preferences.projection(
+            preferences.get(request.user, scope), request.headers.get("Accept-Language", "ar")
+        ))
+
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop("partial", False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-
-        settings_obj = ProfileService.update_user_settings(
-            user=request.user, validated_data=serializer.validated_data
-        )
-
-        response_serializer = self.get_serializer(settings_obj)
-        return Response(response_serializer.data, status=status.HTTP_200_OK)
+        from core_apps.notifications.services import preferences
+        return Response(preferences.projection(
+            preferences.update(request, request_scope(request)),
+            request.headers.get("Accept-Language", "ar"),
+        ))

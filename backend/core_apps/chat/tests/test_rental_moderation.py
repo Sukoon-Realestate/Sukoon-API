@@ -295,11 +295,19 @@ def test_property_visibility_new_business_and_original_publication_survive(
         require_new_business,
     )
     from core_apps.properties.models import Property
-    from core_apps.properties.serializers import PropertyDetailSerializer
+    from core_apps.properties.serializers import (
+        MyPropertyListSerializer,
+        PropertyDetailSerializer,
+        PropertyListSerializer,
+        PropertyNewListSerializer,
+    )
     from types import SimpleNamespace
 
     chat, user, other = rental_chat
     prop = fixture.__wrapped__(user)
+    # This case starts with an approved listing, independently of moderation.
+    prop.status, prop.is_verified = Property.Status.VERIFIED, True
+    prop.save(update_fields=["status", "is_verified"])
     send(chat, user)
     run()
     notice = ChatPolicyNotice.objects.get(kind="warning")
@@ -313,10 +321,45 @@ def test_property_visibility_new_business_and_original_publication_survive(
     ).data
     assert payload["status"] == "policy_blocked"
     assert "owner" not in payload and "rental_inventory" not in payload
+    collections = (
+        PropertyListSerializer,
+        PropertyNewListSerializer,
+        MyPropertyListSerializer,
+    )
+    for serializer in collections:
+        public = serializer(
+            [prop], many=True, context={"request": SimpleNamespace(user=other)}
+        ).data[0]
+        assert public["status"] == "policy_blocked"
+        assert "price" not in public and "rental_summary" not in public
+        own = serializer(
+            [prop], many=True, context={"request": SimpleNamespace(user=user)}
+        ).data[0]
+        assert own["policy_disposition"] == "under_review"
+        assert own["title"] == prop.title
     prop.refresh_from_db()
     assert prop.status == "verified"
     with pytest.raises(APIException):
         require_new_business(user)
+    from core_apps.features.catalog_models import PromotionOption
+    from core_apps.features.services.promotion_commands import create as promote
+
+    option = PromotionOption.objects.create(
+        id="moderation-promotion",
+        title_en="Promotion",
+        title_ar="ترويج",
+        duration_days=7,
+    )
+    with pytest.raises(APIException):
+        promote(
+            user,
+            {
+                "property_id": str(prop.id),
+                "option_id": option.id,
+                "option_revision": option.revision,
+                "request_key": str(uuid.uuid4()),
+            },
+        )
     require_new_business(other)
     review(
         superuser,
@@ -328,6 +371,12 @@ def test_property_visibility_new_business_and_original_publication_survive(
     )
     assert visible_properties(Property.objects.all()).filter(pk=prop.pk).exists()
     assert prop.status == "verified"
+    for serializer in collections:
+        current = serializer(
+            [prop], many=True, context={"request": SimpleNamespace(user=other)}
+        ).data[0]
+        assert "policy_disposition" not in current
+        assert current["title"] == prop.title
 
 
 def test_notice_is_durable_without_chat_unread_inflation(rental_chat):

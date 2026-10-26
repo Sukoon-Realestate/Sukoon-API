@@ -11,7 +11,15 @@ from core_apps.support.models import Ticket, TicketMessage
 
 
 def can_service_tickets(user):
-    return staff_role(user, {"support"})
+    from .operations import actor
+
+    if not user or not getattr(user, "is_authenticated", False):
+        return False
+    try:
+        actor(user)
+        return True
+    except PermissionDenied:
+        return False
 
 
 def can_resolve_inquiry(ticket):
@@ -42,6 +50,9 @@ def reply_as_staff(
     StaffProfile.objects.select_for_update().filter(user=user).first()
     if not can_service_tickets(user):
         raise PermissionDenied("An active support operator is required.")
+    from .operations import actor, own_for_reply, record_transition
+
+    actor(user, write=True)
     ticket = Ticket.objects.select_for_update().filter(id=ticket_id).first()
     if not ticket:
         raise NotFound()
@@ -70,6 +81,7 @@ def reply_as_staff(
                 "resolution. Only an unlinked general inquiry can be resolved here.",
                 code="domain_resolution_required",
             )
+        own_for_reply(ticket, user)
         message = TicketMessage.objects.create(
             ticket=ticket,
             sender="support",
@@ -83,7 +95,15 @@ def reply_as_staff(
         ticket.status = (
             Ticket.Status.RESOLVED if resolve_inquiry else Ticket.Status.IN_PROGRESS
         )
-        ticket.save(update_fields=["revision", "status", "updated_at"])
+        if resolve_inquiry:
+            from django.utils import timezone
+
+            ticket.resolved_at = timezone.now()
+        ticket.save(update_fields=["revision", "status", "resolved_at", "updated_at"])
+        if resolve_inquiry:
+            record_transition(
+                ticket, user, "resolve", clean[:1000], ticket.assigned_to_id
+            )
         PlanningEvent.objects.get_or_create(
             recipient=ticket.user,
             event_key=f"support.{action}:{message.id}",
@@ -92,6 +112,7 @@ def reply_as_staff(
                     "action_type": "open_support_ticket",
                     "target_id": str(ticket.id),
                     "workspace": ticket.workspace,
+                    **({"scope": "account"} if ticket.workspace == "account" else {}),
                     "schema_version": "1",
                 }
             },

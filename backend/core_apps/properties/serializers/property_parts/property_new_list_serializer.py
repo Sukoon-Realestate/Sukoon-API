@@ -1,10 +1,14 @@
-from core_apps.chat.moderation.property_projection import PropertyPolicyProjection
 """Property: property new list serializer."""
 
+from core_apps.chat.moderation.property_projection import (
+    PropertyPolicyCollectionSerializer,
+    PropertyPolicyProjection,
+)
 from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
 from ...models import Property
 from .property_list_serializer import build_rental_summary
+from .property_collection import PropertyCollectionSerializer
 
 
 class PropertyNewListSerializer(PropertyPolicyProjection, serializers.ModelSerializer):
@@ -26,6 +30,7 @@ class PropertyNewListSerializer(PropertyPolicyProjection, serializers.ModelSeria
 
     class Meta:
         model = Property
+        list_serializer_class = PropertyCollectionSerializer
         fields = [
             "id",
             "main_image",
@@ -81,6 +86,7 @@ class PropertyNewListSerializer(PropertyPolicyProjection, serializers.ModelSeria
         request = self.context.get("request")
         from core_apps.common.locale_middleware import resolve_request_language
         from core_apps.common.translation import translate_tag
+
         language = resolve_request_language(request)
         return [translate_tag(tag, language) for tag in tags]
 
@@ -106,6 +112,7 @@ class MyPropertyListSerializer(PropertyPolicyProjection, serializers.ModelSerial
 
     class Meta:
         model = Property
+        list_serializer_class = PropertyPolicyCollectionSerializer
         fields = [
             "id",
             "title",
@@ -113,6 +120,9 @@ class MyPropertyListSerializer(PropertyPolicyProjection, serializers.ModelSerial
             "price",
             "price_period",
             "status",
+            "review_revision",
+            "moderation_blocked",
+            "moderation_reason",
             "is_verified",
             "views_count",
             "visits_count",

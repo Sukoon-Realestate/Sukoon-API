@@ -17,6 +17,7 @@ from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from ..services.rental_notes import record_response_note, validated_note
 from ..services.rental_phase3 import post_ledger_transaction
+from ..services.lease_permissions import handover_actions
 from .handover_payload import _money, _lease, handover_payload, _handover
 from .lease_handovers import deposit_payload
 
@@ -124,10 +125,15 @@ def handover_respond(request, handover_id):
     note = validated_note(request.data)
     with transaction.atomic():
         handover = _handover(request, handover_id, lock=True)
+        replay = replay_operation(
+            request.user, operation, request.data["request_key"], request.data
+        )
+        if replay:
+            return Response(replay[0], status=replay[1])
         if int(request.data.get("expected_revision", 0)) != handover.revision:
             raise RentalConflict("Handover revision conflict.", code="stale_revision")
-        if handover.status == RentalHandover.Status.ACCEPTED:
-            raise RentalConflict("This handover is already accepted.")
+        if action not in handover_actions(request.user, handover):
+            raise RentalConflict("This handover action is no longer available.")
         approvals = set(handover.approvals)
         if action == "dispute":
             handover.status = RentalHandover.Status.DISPUTED
@@ -180,19 +186,45 @@ def handover_respond(request, handover_id):
 
 
 def payout_payload(item):
+    from ..rental_serializers import OwnerPaymentProfileSerializer
+
+    instruction = item.paymob_instructions.filter(current=True).first()
     return {
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "revision": item.revision,
         "status": item.status,
         "amount": _money(item.amount_minor),
-        "masked_beneficiary": item.masked_beneficiary,
-        "reason": item.hold_reason or item.failure_code,
-        "submitted_at": item.created_at.isoformat(),
-        "succeeded_at": (
-            item.updated_at.isoformat()
-            if item.status == RentalPayout.Status.PAID
-            else None
+        "masked_beneficiary": OwnerPaymentProfileSerializer().get_masked_beneficiary(
+            item
         ),
+        "reason": item.hold_reason or item.failure_code,
+        "submitted_at": (
+            instruction.submitted_at.isoformat()
+            if instruction and instruction.submitted_at
+            else None if instruction else item.created_at.isoformat()
+        ),
+        "succeeded_at": (
+            instruction.confirmed_at.isoformat()
+            if instruction and instruction.confirmed_at
+            else (
+                item.updated_at.isoformat()
+                if item.status == RentalPayout.Status.PAID
+                else None
+            )
+        ),
+        "history": [
+            {"action": value.action, "occurred_at": value.created_at.isoformat()}
+            for value in item.audit_events.filter(
+                action__in=[
+                    "approved",
+                    "submitted",
+                    "reauthorized",
+                    "retry_approved",
+                    "paid",
+                    "held",
+                ]
+            ).order_by("pk")
+        ],
         "payable_ids": [str(x.id) for x in item.payables.all()],
     }

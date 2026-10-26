@@ -563,29 +563,42 @@ def test_home_preview_is_private_bounded_and_capability_scoped(current_lease):
 
 @pytest.mark.django_db(transaction=True)
 def test_reminders_and_event_delivery_deduplicate_and_recheck_access(current_lease):
+    from core_apps.notifications.models import DeviceToken
+    from core_apps.notifications.services.push_delivery import dispatch
     from core_apps.features.services.planning_notifications import (
         record_lease_reminders,
         deliver_planning_events,
     )
 
     owner, tenant, _, lease = current_lease
+    for recipient in [owner, tenant]:
+        DeviceToken.objects.create(
+            user=recipient, token=f"synthetic-reminder-{recipient.pk}"
+        )
     PlanningEvent.objects.all().delete()
     lease.end_date = timezone.localdate() + timedelta(days=7)
     lease.save()
     assert record_lease_reminders() == 2
     assert record_lease_reminders() == 0
 
+    sent = []
+
     def push(**kwargs):
         assert connection.in_atomic_block is False
         assert "lease_id" in kwargs["data"]
+        sent.append(kwargs["token"])
         return 1
 
     with patch(
-        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_user",
+        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_device",
         push,
     ):
         assert deliver_planning_events() == 2
         assert deliver_planning_events() == 0
+        assert sent == []
+        assert dispatch() == 2
+        assert dispatch() == 0
+        assert len(sent) == 2
     assert PlanningEvent.objects.exclude(notification=None).count() == 2
     group = create_group(tenant, lease.property)
     event = PlanningEvent.objects.create(
@@ -613,24 +626,32 @@ def test_notification_retry_does_not_duplicate_in_app_record(current_lease):
         deliver_planning_events,
     )
 
-    _, _, _, lease = current_lease
+    from core_apps.notifications.models import DeviceToken, PushDelivery
+    from core_apps.notifications.services.push_delivery import dispatch
+
+    owner, tenant, _, lease = current_lease
+    for recipient in [owner, tenant]:
+        DeviceToken.objects.create(user=recipient, token=f"synthetic-{recipient.pk}")
     PlanningEvent.objects.all().delete()
     lease.end_date = timezone.localdate() + timedelta(days=7)
     lease.save()
     record_lease_reminders()
     with patch(
-        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_user",
+        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_device",
         side_effect=OSError(),
     ):
-        assert deliver_planning_events() == 0
+        assert deliver_planning_events() == 2
+        assert dispatch() == 0
     original = set(PlanningEvent.objects.values_list("notification_id", flat=True))
     assert len(original) == 2 and None not in original
-    PlanningEvent.objects.update(updated_at=timezone.now() - timedelta(minutes=3))
+    PushDelivery.objects.update(next_attempt_at=timezone.now() - timedelta(minutes=3))
     with patch(
-        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_user",
+        "core_apps.notifications.services.fcm_service.FCMService.send_push_to_device",
         return_value=1,
     ):
-        assert deliver_planning_events() == 2
+        assert deliver_planning_events() == 0
+        assert dispatch() == 2
+        assert dispatch() == 0
     assert (
         set(PlanningEvent.objects.values_list("notification_id", flat=True)) == original
     )

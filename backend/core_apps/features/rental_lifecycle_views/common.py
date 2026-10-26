@@ -24,13 +24,14 @@ def validated(serializer, data):
     return body.validated_data
 
 
-def mutate(request, operation, authorize, execute):
+def mutate(request, operation, authorize, execute, *, account_parties=None):
     payload, status = command(
         user=request.user,
         operation=operation,
         data=request.data,
         authorize=authorize,
         execute=execute,
+        account_parties=account_parties,
     )
     return Response(payload, status=status)
 

@@ -1,145 +1,65 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { Bell, User, Menu, LogOut, Settings, Shield } from 'lucide-react';
-import { useSidebar } from './AppLayout';
+import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { Bell, Search, Menu, LogOut, ChevronDown } from 'lucide-react';
+import Link from '@/components/ui/AdminLink';
+import { useSidebar } from '@/components/layout/AppLayout';
 import { useAuth } from '@/context/AuthContext';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { NotificationsModal } from '@/components/ui/NotificationsModal';
+import { ThemeToggle } from '../ui/ThemeToggle';
+import { NotificationsModal } from '../ui/NotificationsModal';
+import { CommandMenu } from './CommandMenu';
+import { adminRelativePath } from '@/lib/basePath';
+import { findAdminSection } from '../../lib/admin-navigation';
+import { canOpenAdminPath } from '../../lib/admin-access';
 
-interface HeaderProps {
-  title: string;
-  subtitle?: string;
-  lastUpdated?: string;
-}
-
-export const Header: React.FC<HeaderProps> = ({
-  title,
-  subtitle,
-  lastUpdated = '9:41 ص',
-}) => {
+interface HeaderProps { title: string; subtitle?: string; lastUpdated?: string }
+const iconButton = 'flex min-h-12 min-w-12 items-center justify-center rounded-lg hover:bg-[var(--card-hover)]';
+export function Header({ title, subtitle, lastUpdated }: HeaderProps) {
   const { toggleMobileMenu } = useSidebar();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-
-  return (
-    <header className="min-h-20 py-3 bg-[var(--header-bg)] border-b border-[var(--header-border)] px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30  backdrop-blur-sm animate-fadeIn">
-      {/* User profile & Mobile Menu button (Left in RTL layout) */}
-      <div className="relative flex items-center gap-2">
-        <button
-          type="button"
-          onClick={toggleMobileMenu}
-          className="lg:hidden p-1.5 rounded-lg text-[var(--text-muted)] hover:bg-[var(--card-hover)] transition-colors cursor-pointer"
-          aria-label="Toggle Menu"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        <button
-          onClick={() => {
-            setShowProfileMenu(!showProfileMenu);
-            setShowNotifications(false);
-          }}
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer group text-right"
-        >
-          <div className="w-8 h-8 rounded-full bg-[var(--primary-subtle)] flex items-center justify-center text-[var(--primary)] border border-[var(--primary)]/20 group-hover:scale-105 transition-transform">
-            <User className="w-4 h-4" />
-          </div>
-          <span className="hidden sm:inline-block px-3 py-1 bg-[var(--primary)] text-white text-xs font-bold rounded-full shadow-xs">
-            Admin
-          </span>
-        </button>
-
-        {/* Profile Dropdown Menu */}
-        {showProfileMenu && (
-          <div className="absolute top-12 right-0 w-56 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-xl p-2 z-50 animate-fadeInUp">
-            <div className="p-3 border-b border-[var(--divider)] mb-1">
-              <p className="font-extrabold text-sm text-[var(--foreground)]">أحمد العدل</p>
-              <p className="text-xs text-[var(--text-subtle)] font-medium">مشرف رئيسي (System Admin)</p>
-            </div>
-            <Link
-              href="/settings"
-              onClick={() => setShowProfileMenu(false)}
-              className="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] rounded-xl transition-colors"
-            >
-              <Settings className="w-4 h-4 text-teal-600" />
-              <span>إعدادات الحساب والنظام</span>
-            </Link>
-            <Link
-              href="/roles"
-              onClick={() => setShowProfileMenu(false)}
-              className="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] rounded-xl transition-colors"
-            >
-              <Shield className="w-4 h-4 text-teal-600" />
-              <span>إدارة الأدوار والصلاحيات</span>
-            </Link>
-            <div className="border-t border-[var(--divider)] mt-1 pt-1">
-              <button
-                onClick={logout}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-500/10 rounded-xl transition-colors cursor-pointer"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>تسجيل الخروج</span>
-              </button>
-            </div>
-          </div>
-        )}
+  const [showSearch, setShowSearch] = useState(false);
+  const profile = useRef<HTMLDivElement>(null);
+  const section = findAdminSection(adminRelativePath(usePathname()));
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); setShowSearch(value => !value); }
+      if (event.key === 'Escape') { setShowProfileMenu(false); setShowNotifications(false); }
+    };
+    const onPointerDown = (event: PointerEvent) => { if (!profile.current?.contains(event.target as Node)) setShowProfileMenu(false); };
+    window.addEventListener('keydown', onKeyDown); window.addEventListener('pointerdown', onPointerDown);
+    return () => { window.removeEventListener('keydown', onKeyDown); window.removeEventListener('pointerdown', onPointerDown); };
+  }, []);
+  return <>
+    <header className="flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-[var(--header-border)] bg-[var(--header-bg)] px-4 py-2 text-sm sm:px-6" dir="rtl">
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <button type="button" onClick={toggleMobileMenu} className={`${iconButton} lg:hidden`} aria-label="فتح قائمة الأقسام"><Menu size={21} /></button>
+        <nav aria-label="مسار القسم" className="flex min-w-0 flex-wrap gap-2"><Link href={user?.allowedPaths.includes('/') ? '/' : '/security'}>الإدارة</Link><span aria-hidden>/</span><span>{section?.title || 'سكون'}</span></nav>
       </div>
-
-      {/* Main title (Centered) */}
-      <div className="text-center flex-1 mx-2 sm:mx-4 min-w-0 flex flex-col items-center">
-        <h2 className="text-sm sm:text-base font-black text-[var(--foreground)] tracking-tight truncate flex items-center justify-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-teal-500"></span>
-          <span>{title}</span>
-        </h2>
-        {subtitle && (
-          <p className="hidden md:block text-[11px] text-[var(--text-muted)] font-bold truncate">
-            {subtitle}
-          </p>
-        )}
-      </div>
-
-      {/* Timestamp & Notification bell & Theme toggle & Logout (Right in RTL layout) */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0 relative">
-        <span className="hidden sm:inline text-xs text-[var(--text-subtle)] font-semibold">
-          آخر تحديث: {lastUpdated}
-        </span>
-
-        {/* Bell Button */}
-        <div className="relative">
-          <button
-            onClick={() => {
-              setShowNotifications(true);
-              setShowProfileMenu(false);
-            }}
-            className="relative p-2 rounded-xl hover:bg-[var(--card-hover)] text-[var(--text-muted)] transition-colors cursor-pointer border border-[var(--card-border)] bg-[var(--card-bg)] shadow-xs"
-            aria-label="Notifications"
-          >
-            <Bell className="w-5 h-5 text-[var(--foreground)]" />
-            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-rose-500 ring-2 ring-[var(--header-bg)] animate-pulseDot"></span>
-          </button>
-
-          {/* Interactive Rich Notifications Modal */}
-          <NotificationsModal
-            isOpen={showNotifications}
-            onClose={() => setShowNotifications(false)}
-          />
-        </div>
-
+      <div className="flex flex-wrap items-center gap-1">
+        <button type="button" className={iconButton} onClick={() => setShowSearch(true)} aria-label="البحث في أقسام الإدارة"><Search size={20} /></button>
         <ThemeToggle />
-
-        <button
-          type="button"
-          onClick={logout}
-          title="تسجيل الخروج"
-          className="p-1.5 rounded-full text-[var(--text-subtle)] hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
-        >
-          <LogOut className="w-5 h-5" />
-        </button>
+        {user?.role !== 'security_recovery_reviewer' && <button className={iconButton} aria-label="متابعات الإدارة" aria-expanded={showNotifications} onClick={() => { setShowNotifications(true); setShowProfileMenu(false); }}><Bell size={20} /></button>}
+        <div ref={profile} className="relative">
+          <button type="button" className={`${iconButton} gap-2 px-2`} aria-label="قائمة الحساب" aria-expanded={showProfileMenu} aria-controls="admin-profile-menu" onClick={() => { setShowProfileMenu(value => !value); setShowNotifications(false); }}>
+            <span className="flex size-9 items-center justify-center rounded-full bg-[var(--primary-subtle)]">{user?.name?.slice(0, 1) || 'س'}</span><ChevronDown size={14} />
+          </button>
+          {showProfileMenu && <div id="admin-profile-menu" className="absolute end-0 top-full z-40 w-60 max-w-[80vw] space-y-2 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-3 shadow-lg [overflow-wrap:anywhere]">
+            <p>{user?.name}</p><p className="text-xs">{user?.email}</p><p className="text-xs">{user?.role}</p>
+            {[
+              ['/security', 'أمان الحساب وعامل التحقق'], ['/settings', 'إعدادات الحساب والنظام'], ['/roles', 'الفريق والصلاحيات'],
+            ].filter(([path]) => canOpenAdminPath(user?.allowedPaths, path)).map(([path, label]) => <Link key={path} href={path} className="block min-h-12 rounded-lg px-2 py-3 hover:bg-[var(--card-hover)]" onClick={() => setShowProfileMenu(false)}>{label}</Link>)}
+            <button className="flex min-h-12 w-full items-center gap-2 border-t px-2 py-3" onClick={() => void logout()}><LogOut size={18} />تسجيل الخروج</button>
+          </div>}
+        </div>
       </div>
     </header>
-  );
-};
-
+    <div dir="rtl" className="space-y-2 px-4 pt-6 pb-3 sm:px-6 lg:px-8 [overflow-wrap:anywhere]"><h1 className="text-xl font-bold sm:text-2xl">{title}</h1>
+      {subtitle && <p className="text-sm text-[var(--text-muted)]">{subtitle}</p>}{lastUpdated && <p className="text-xs text-[var(--text-subtle)]">آخر قراءة: {lastUpdated}</p>}
+    </div>
+    <NotificationsModal isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
+    {showSearch && <CommandMenu open onClose={() => setShowSearch(false)} />}
+  </>;
+}

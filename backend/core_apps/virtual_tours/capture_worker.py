@@ -1,6 +1,7 @@
 """Durable polling worker; attempt ownership fences late or cancelled results."""
 
 import time
+import copy
 import uuid
 from datetime import timedelta
 from django.db import transaction
@@ -9,25 +10,32 @@ from django.utils import timezone
 from .capture_models import CaptureProcessingJob, CaptureAsset
 from .capture_validation import MODES
 from . import capture_panorama, capture_reconstruction
+from .notifications import record_capture
 
 
 def claim():
     now = timezone.now()
     with transaction.atomic():
         # A repeatedly crashing worker must not spend an unbounded job budget.
-        exhausted = CaptureProcessingJob.objects.filter(
-            state="processing", lease_until__lt=now, attempt__gte=3
+        exhausted = (
+            CaptureProcessingJob.objects.select_for_update(skip_locked=True)
+            .filter(state="processing", lease_until__lt=now, attempt__gte=3)
+            .order_by("created_at")[:100]
         )
-        exhausted.update(
-            state="failed",
-            stage="attempts_exhausted",
-            lease_token=None,
-            lease_until=None,
-            outputs={
-                mode: {"status": "failed", "code": "PROCESSING_RETRY_EXHAUSTED"}
+        for previous in exhausted:
+            previous.state, previous.stage = "failed", "attempts_exhausted"
+            previous.lease_token = previous.lease_until = None
+            previous.outputs = {
+                mode: (
+                    {"status": "failed", "code": "PROCESSING_RETRY_EXHAUSTED"}
+                    if previous.outputs.get(mode, {}).get("status")
+                    in {None, "pending", "processing"}
+                    else previous.outputs[mode]
+                )
                 for mode in MODES
-            },
-        )
+            }
+            previous.save()
+            record_capture(previous)
         job = (
             CaptureProcessingJob.objects.select_for_update(skip_locked=True)
             .filter(Q(state="queued") | Q(state="processing", lease_until__lt=now))
@@ -74,9 +82,13 @@ def run(job):
                 current.save(update_fields=["lease_until"])
             return stopped
 
-    outputs = {
-        mode: {"status": "cancelled", "code": "PROCESSING_CANCELLED"} for mode in MODES
-    }
+    outputs = copy.deepcopy(job.outputs)
+
+    def checkpoint():
+        CaptureProcessingJob.objects.filter(pk=job.pk, lease_token=token).update(
+            outputs=outputs
+        )
+
     if not cancelled():
         assets = list(
             CaptureAsset.objects.filter(
@@ -85,17 +97,22 @@ def run(job):
                 state="verified",
             )
         )
-        CaptureProcessingJob.objects.filter(pk=job.pk, lease_token=token).update(
-            stage="building_panorama"
-        )
-        try:
-            outputs["panorama360"] = capture_panorama.process(assets, cancelled)
-        except Exception:
-            outputs["panorama360"] = {
-                "status": "failed",
-                "code": "PANORAMA_STITCH_FAILED",
-            }
-        if not cancelled():
+        if outputs.get("panorama360", {}).get("status") in {"pending", "processing"}:
+            CaptureProcessingJob.objects.filter(pk=job.pk, lease_token=token).update(
+                stage="building_panorama"
+            )
+            try:
+                outputs["panorama360"] = capture_panorama.process(assets, cancelled)
+            except Exception:
+                outputs["panorama360"] = {
+                    "status": "failed",
+                    "code": "PANORAMA_STITCH_FAILED",
+                }
+            checkpoint()
+        if not cancelled() and outputs.get("walkthrough3d", {}).get("status") in {
+            "pending",
+            "processing",
+        }:
             CaptureProcessingJob.objects.filter(pk=job.pk, lease_token=token).update(
                 stage="building_3d"
             )
@@ -112,6 +129,7 @@ def run(job):
                         "previewAvailable": False,
                     }
                 else:
+
                     def progress(stage):
                         CaptureProcessingJob.objects.filter(
                             pk=job.pk, lease_token=token
@@ -130,6 +148,7 @@ def run(job):
                             "code": "RECONSTRUCTION_RUNTIME_FAILED",
                             "previewAvailable": False,
                         }
+            checkpoint()
     stopped = cancelled()
     if stopped:
         outputs = {
@@ -138,14 +157,38 @@ def run(job):
         }
     # No selected/public artifact is overwritten, including when a newer input
     # revision exists. Results always remain attached to their immutable input.
-    CaptureProcessingJob.objects.filter(pk=job.pk, lease_token=token).update(
-        state="cancelled" if stopped else "needs_capture",
-        stage="cancelled" if stopped else "review_results",
-        outputs=outputs,
-        lease_until=None,
-        diagnostics={
+    with transaction.atomic():
+        current = (
+            CaptureProcessingJob.objects.select_for_update()
+            .filter(pk=job.pk, lease_token=token, state="processing")
+            .first()
+        )
+        if current is None:
+            return
+        # A cancellation may have committed after the last heartbeat.
+        stopped = (
+            stopped
+            or current.cancel_requested
+            or (
+                current.manifest.session.deleted_at is not None
+                or current.manifest.session.property.retired_at is not None
+                or current.manifest.session.owner_id
+                != current.manifest.session.property.owner_id
+            )
+        )
+        if stopped:
+            outputs = {
+                mode: {"status": "cancelled", "code": "PROCESSING_CANCELLED"}
+                for mode in MODES
+            }
+        current.state = "cancelled" if stopped else "needs_capture"
+        current.stage = "cancelled" if stopped else "review_results"
+        current.outputs = outputs
+        current.lease_until = current.lease_token = None
+        current.diagnostics = {
             "elapsedSeconds": round(time.monotonic() - started, 3),
             "engine": "calibrated-panorama-and-colmap-gsplat-v2",
             "releaseValidated": False,
-        },
-    )
+        }
+        current.save()
+        record_capture(current)

@@ -42,6 +42,11 @@ def execute_local_instruction(*, kind, subject, request_key, payload):
         and PaymobPayment.objects.filter(attempt_id=subject.payment_attempt_id).exists()
     )
     if kind == "payout":
+        if subject.beneficiary_provider == "paymob_payouts":
+            raise RentalConflict(
+                "Reconcile the original Payouts instruction outside this transaction.",
+                code="provider_execution_required",
+            )
         from ..chargebacks.projection import payable_funding_sources
 
         source_ids = {
@@ -126,27 +131,39 @@ def hold_payout_for_review(payout, error):
     if case.payout_id is None:
         case.payout = payout
         case.save(update_fields=["payout", "updated_at"])
+    from ...models import PayoutAuditEvent
+    from ..payout_notifications import record
+
+    PayoutAuditEvent.objects.create(
+        payout=payout,
+        actor=payout.batch.approved_by,
+        action="held",
+        metadata={"failure_code": code},
+    )
+    record(payout, "held")
     return payout
 
 
-def validate_payout_instruction(payout):
+def validate_payout_instruction(payout, *, profile_revision=None, lock=True):
     """Recheck before dispatch; a later profile edit cannot silently redirect funds."""
     from ...models import OwnerPaymentProfile, RefundRequest
     from django.db.models import Q
     from ..chargebacks.projection import payable_funding_ready, payable_funding_sources
 
-    profile = (
-        OwnerPaymentProfile.objects.select_for_update()
-        .filter(owner=payout.owner)
-        .first()
-    )
+    profiles = OwnerPaymentProfile.objects.filter(owner=payout.owner)
+    profile = (profiles.select_for_update() if lock else profiles).first()
     if (
         not profile
         or not profile.payout_ready
         or profile.status != "ready"
         or not payout.beneficiary_profile_revision
         or (
-            profile.revision != payout.beneficiary_profile_revision
+            profile.revision
+            != (
+                profile_revision
+                if profile_revision is not None
+                else payout.beneficiary_profile_revision
+            )
             or profile.provider_account_id != payout.beneficiary_account_id
             or profile.provider != payout.beneficiary_provider
         )
@@ -155,10 +172,9 @@ def validate_payout_instruction(payout):
             "Review the changed or restricted beneficiary before payout.",
             code="beneficiary_changed",
         )
+    payables_query = payout.payables.select_related("payment_attempt")
     payables = list(
-        payout.payables.select_for_update(of=("self",)).select_related(
-            "payment_attempt"
-        )
+        payables_query.select_for_update(of=("self",)) if lock else payables_query
     )
     if (
         not payables

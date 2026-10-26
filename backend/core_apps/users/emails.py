@@ -31,6 +31,13 @@ class RecoveryPasswordResetEmail(PasswordResetEmail):
         context = super().get_context_data()
         context["token"] = recovery_token_generator.make_token(context["user"])
         context["url"] = djoser_settings.PASSWORD_RESET_CONFIRM_URL.format(**context)
+        from core_apps.admin_api.models import StaffProfile
+
+        user = context["user"]
+        if user.is_superuser or StaffProfile.objects.filter(user=user).exists():
+            # Both administrative deployment entries expose this shared route.
+            # Ordinary users retain their existing password-recovery destination.
+            context["url"] = "admin/password-reset/{uid}/{token}".format(**context)
         return context
 
 

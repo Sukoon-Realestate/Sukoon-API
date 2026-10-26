@@ -13,15 +13,12 @@ def get_dashboard_overview_stats():
     30-day user growth chart, and recent admin activities.
     """
     now = timezone.now()
-    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     month_ago = now - timedelta(days=30)
-    last_month_start = now - timedelta(days=60)
 
     # User counts
     total_users = User.objects.count()
     verified_users = User.objects.filter(is_verified=True).count()
     suspended_users = User.objects.filter(is_active=False).count()
-    active_users = User.objects.filter(is_active=True).count()
 
     # Landlords are users who have at least one property
     landlords_count = User.objects.filter(properties__isnull=False).distinct().count()
@@ -29,17 +26,11 @@ def get_dashboard_overview_stats():
 
     # Pending KYC users
     pending_kyc_count = KYCSubmission.objects.filter(
-        status=KYCSubmission.Status.PENDING
+        status=KYCSubmission.Status.PENDING, superseded_at__isnull=True
     ).count()
 
     # Properties stats
     total_properties = Property.objects.count()
-    under_review_properties = Property.objects.filter(
-        status=Property.Status.UNDER_REVIEW
-    ).count()
-    verified_properties = Property.objects.filter(
-        status=Property.Status.VERIFIED
-    ).count()
 
     # Reports stats
     active_reports_count = UserReport.objects.filter(
@@ -56,35 +47,39 @@ def get_dashboard_overview_stats():
             date_joined__gte=start_date, date_joined__lt=end_date
         ).count()
         day_label = start_date.strftime("%d %b")
-        chart_data.append(
-            {"label": day_label, "value": count if count > 0 else (i + 1) * 8}
-        )
+        chart_data.append({"label": day_label, "value": count})
 
     # Recent activities (composite feed)
     recent_activities = []
 
     # 1. Recent registered users
-    recent_users = User.objects.order_by("-date_joined")[:4]
+    recent_users = User.objects.filter(date_joined__lt=now).order_by("-date_joined")[:4]
     for u in recent_users:
         recent_activities.append(
             {
                 "id": f"user-{u.id}",
                 "title": f"تسجيل مستخدم جديد: {u.get_full_name or u.email}",
                 "time": _format_time_ago(u.date_joined),
-                "role": "مستأجر" if not u.properties.exists() else "مالك",
+                "occurred_at": u.date_joined.isoformat(),
+                "role": "مستخدم" if not u.properties.exists() else "صاحب عقار مدرج",
                 "roleType": "tenant" if not u.properties.exists() else "landlord",
                 "iconType": "user",
             }
         )
 
     # 2. Recent properties
-    recent_props = Property.objects.select_related("owner").order_by("-created_at")[:3]
+    recent_props = (
+        Property.objects.filter(created_at__lt=now)
+        .select_related("owner")
+        .order_by("-created_at")[:3]
+    )
     for p in recent_props:
         recent_activities.append(
             {
                 "id": f"prop-{p.id}",
                 "title": f"إضافة عقار جديد: {p.title}",
                 "time": _format_time_ago(p.created_at),
+                "occurred_at": p.created_at.isoformat(),
                 "role": p.owner.get_full_name or p.owner.email,
                 "roleType": "property",
                 "iconType": "building",
@@ -92,9 +87,11 @@ def get_dashboard_overview_stats():
         )
 
     # 3. Recent KYC submissions
-    recent_kycs = KYCSubmission.objects.select_related("profile__user").order_by(
-        "-created_at"
-    )[:3]
+    recent_kycs = (
+        KYCSubmission.objects.filter(created_at__lt=now)
+        .select_related("profile__user")
+        .order_by("-created_at")[:3]
+    )
     for k in recent_kycs:
         user_name = k.profile.user.get_full_name or k.profile.user.email
         recent_activities.append(
@@ -102,6 +99,7 @@ def get_dashboard_overview_stats():
                 "id": f"kyc-{k.id}",
                 "title": f"طلب توثيق جديد من {user_name}",
                 "time": _format_time_ago(k.created_at),
+                "occurred_at": k.created_at.isoformat(),
                 "role": "توثيق KYC",
                 "roleType": "admin",
                 "iconType": "shield",
@@ -109,33 +107,38 @@ def get_dashboard_overview_stats():
         )
 
     return {
+        "period": {
+            "from": month_ago.isoformat(),
+            "through": now.isoformat(),
+            "measured_at": now.isoformat(),
+        },
         "metrics": [
             {
                 "title": "إجمالي المستخدمين",
                 "value": f"{total_users:,}",
-                "change": "+12%",
-                "isPositive": True,
+                "change": "غير متاح",
+                "isPositive": None,
                 "icon": "users",
             },
             {
-                "title": "العقارات المعروضة",
+                "title": "إجمالي العقارات",
                 "value": f"{total_properties:,}",
-                "change": "+8%",
-                "isPositive": True,
+                "change": "غير متاح",
+                "isPositive": None,
                 "icon": "building",
             },
             {
                 "title": "طلبات KYC المعلقة",
                 "value": str(pending_kyc_count),
-                "change": "-3%",
-                "isPositive": False,
+                "change": "غير متاح",
+                "isPositive": None,
                 "icon": "clock",
             },
             {
                 "title": "البلاغات النشطة",
                 "value": str(active_reports_count),
-                "change": "-5%",
-                "isPositive": True,
+                "change": "غير متاح",
+                "isPositive": None,
                 "icon": "alert",
             },
         ],
@@ -148,5 +151,7 @@ def get_dashboard_overview_stats():
             "suspended": suspended_users,
         },
         "chart_data": chart_data,
-        "recent_activities": recent_activities[:8],
+        "recent_activities": sorted(
+            recent_activities, key=lambda item: item["occurred_at"], reverse=True
+        )[:8],
     }

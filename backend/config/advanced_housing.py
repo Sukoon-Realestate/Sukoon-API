@@ -11,14 +11,12 @@ PLANNING_SERVICES = (
     "collective_tender_planning",
     "shared_living_lab",
     "corporate_housing_simulation",
-    "asset_passport",
     "housing_transition_planning",
 )
 PROVIDER_SERVICES = (
     "collective_tender_execution",
     "conditional_group_execution",
     "corporate_housing_execution",
-    "asset_assisted_analysis",
     "housing_transition_execution",
 )
 SERVICES = PLANNING_SERVICES + PROVIDER_SERVICES
@@ -49,25 +47,47 @@ def require_mock_mode():
         )
 
 
-def manual_review_available():
+def test_mode_available():
     from django.conf import settings
 
-    return getattr(settings, "ADVANCED_HOUSING_PROVIDER_MODE", "disabled") == "manual"
+    return (
+        getattr(settings, "ADVANCED_HOUSING_PROVIDER_MODE", "disabled") == "test"
+        and getattr(settings, "RENTAL_RUNTIME_ENVIRONMENT", "production")
+        in {"test", "development", "staging"}
+    )
+
+
+def execution_mode():
+    if test_mode_available():
+        return "test"
+    return "mock" if mock_mode_available() else "disabled"
+
+
+def execution_available():
+    return execution_mode() != "disabled"
+
+
+def require_execution_mode(mode=None):
+    from rest_framework.exceptions import PermissionDenied
+
+    current = execution_mode()
+    if current == "disabled" or (mode is not None and mode != current):
+        raise PermissionDenied({
+            "code": "capability_unavailable",
+            "message": "This execution provider mode is not currently enabled.",
+        })
+    return current
 
 
 def provider_configuration():
-    available = mock_mode_available()
-    manual = manual_review_available()
+    mode = execution_mode()
+    available = mode != "disabled"
     return {
         "policy_version": POLICY_VERSION,
-        "provider_mode": "mock" if available else "disabled",
-        "simulated": available,
+        "provider_mode": mode,
+        "simulated": mode == "mock",
         "planning_only": not available,
         **{service: available for service in PROVIDER_SERVICES},
-        "asset_assisted_analysis": available or manual,
-        "asset_analysis_mode": (
-            "manual" if manual else "mock" if available else "disabled"
-        ),
         "individual_consent_required": True,
         "automatic_liability": False,
         "conditional_policy": "all_consents_before_holds_then_independent_obligations",

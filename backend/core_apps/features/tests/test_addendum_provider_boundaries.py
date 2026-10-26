@@ -11,20 +11,13 @@ from core_apps.features.models import (
     RentalOperationalCase,
     LedgerTransaction,
 )
-from core_apps.features.asset_passport_models import AssetItem
 from core_apps.features.services.rental_phase2 import RentalConflict
 from core_apps.features.services.purchase_routing import (
     routing,
     require_legacy_checkout,
 )
 from core_apps.features.services.housing_scenarios import routes
-from core_apps.features.services.asset_passport import analysis, investigations
 from core_apps.features.tests.test_rental_phase2 import rental_participants
-from core_apps.features.tests.test_advanced_company_passport import (
-    passport,
-    advanced_enabled,
-)
-from core_apps.features.tests.test_advanced_company_passport_v2 import add_observations
 
 pytestmark = pytest.mark.django_db
 
@@ -168,80 +161,3 @@ def test_no_route_or_fallback_is_never_zero_minutes(user, settings, monkeypatch,
         user, SimpleNamespace(latitude=30.0, longitude=31.0), route_args()
     )
     assert result["minutes"] is None and result["status"] == "unknown"
-
-
-def test_manual_visual_review_needs_exact_safe_images_and_human_attestation(
-    passport, settings
-):
-    settings.ADVANCED_HOUSING_PROVIDER_MODE = "manual"
-    owner, _, _, _, _, _, asset = passport
-    observations = add_observations(passport)
-    job = analysis.create(
-        owner,
-        AssetItem.objects.get(id=asset["id"]),
-        {"observation_ids": [str(row.id) for row in observations]},
-    )
-    assert job.provider == "manual_visual_review" and job.state == "ready_for_review"
-    finding = job.suggestions.get()
-    data = {
-        "decision": "accepted_as_observation",
-        "reason": "Synthetic human observation",
-        "human_inspection_attested": True,
-        "comparison_quality": "comparable",
-        "identity_confirmed": True,
-        "inspected_evidence_ids": [
-            str(media.id) for row in observations for media in row.evidence.all()
-        ],
-    }
-    with pytest.raises(ValidationError):
-        analysis.review(owner, finding, {**data, "human_inspection_attested": False})
-    with pytest.raises(ValidationError):
-        analysis.review(owner, finding, {**data, "inspected_evidence_ids": []})
-    with pytest.raises(ValidationError):
-        analysis.review(owner, finding, {**data, "inspected_evidence_ids": [{}]})
-    with pytest.raises(ValidationError):
-        analysis.review(owner, finding, {**data, "comparison_quality": "low_light"})
-    settings.ADVANCED_HOUSING_PROVIDER_MODE = "disabled"
-    finding = analysis.review(owner, finding, data)
-    assert (
-        not finding.output["liability_determined"]
-        and not finding.output["pixels_analyzed_by_model"]
-    )
-    with pytest.raises(RentalConflict):
-        analysis.review(owner, finding, data)
-    assert not LedgerTransaction.objects.exists()
-
-
-def test_manual_warranty_is_one_internal_case_not_external_acceptance(
-    passport, settings
-):
-    settings.ADVANCED_HOUSING_PROVIDER_MODE = "manual"
-    owner, _, _, _, _, report, asset = passport
-    row = investigations.warranty(
-        owner,
-        AssetItem.objects.get(id=asset["id"]),
-        {
-            "source_kind": "condition_report",
-            "source_id": str(report.id),
-            "source_revision": report.revision,
-            "issuer": "Synthetic recorded issuer",
-            "reference": "synthetic-reference",
-            "starts_on": str(report.inspected_on),
-            "ends_on_exclusive": str(report.inspected_on + timedelta(days=365)),
-        },
-    )
-    result = investigations.claim(
-        owner, row, {"reason": "Review the recorded warranty"}
-    )
-    assert result.service_case_id and RentalOperationalCase.objects.count() == 1
-    assert (
-        result.status == "manual_review_pending"
-        and not result.provider_result["externally_submitted"]
-        and not result.provider_result["acknowledged"]
-    )
-    with pytest.raises(RentalConflict):
-        investigations.claim(owner, row, {"reason": "Do not duplicate"})
-    assert (
-        RentalOperationalCase.objects.count() == 1
-        and not LedgerTransaction.objects.exists()
-    )

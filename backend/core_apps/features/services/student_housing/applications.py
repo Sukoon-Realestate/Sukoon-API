@@ -43,7 +43,7 @@ def context(user, data):
         check_revision(source.revision, data.get("source_housing_offer_revision"))
         if (
             source.request.academic_plan_id != plan.pk
-            or offer_status(source) != "selected_to_proceed"
+            or offer_status(source) not in {"sent", "viewed"}
             or str(source.property.id) != str(data["property_id"])
             or source.selection["offer_id"] != data["offer_id"]
             or source.selection["offer_revision"] != data["offer_revision"]

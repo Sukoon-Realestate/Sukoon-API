@@ -7,7 +7,23 @@ from ...planning_models import PlanningEvent
 
 
 def record_event(item, actor, operation):
-    from ...models import RentalChange
+    from ..advanced_planning_notifications import handles, record
+
+    if handles(item):
+        return record(item, actor, operation)
+    from ...living_lab_models import SharedLivingLab
+
+    if isinstance(item, SharedLivingLab):
+        from ..living_lab.notifications import record
+
+        return record(item, actor, operation)
+    from ...student_models import AcademicHousingPlan, SharedLivingAgreement
+
+    if isinstance(item, (AcademicHousingPlan, SharedLivingAgreement)):
+        from ..student_housing.notifications import record
+
+        return record(item, actor, operation)
+    from ...models import RentalChange, AcademicPlanParticipant
     from ...planning_models import (
         RoommateConnection,
         HousingGroup,
@@ -20,9 +36,13 @@ def record_event(item, actor, operation):
     )
 
     from ...shared_housing_models import SharedHousingPlan
+
     if isinstance(item, SharedHousingPlan):
         from ..shared_housing.projections import record_event as shared_event
+
         return shared_event(item, actor, operation)
+    if getattr(item, "_housing_no_change", False):
+        return
     recipients, action, target, workspace = [], "", item.id, "tenant"
     if isinstance(item, RoommateConnection):
         recipients, action = [item.first, item.second], "open_roommate_connections"
@@ -54,7 +74,14 @@ def record_event(item, actor, operation):
         )
     elif isinstance(item, HousingRequest):
         # Editing a request notifies only owners with an existing consented offer relationship.
-        recipients = [x.owner for x in item.offers.select_related("owner")]
+        from ..housing_request_reviews import LIVE
+
+        recipients = [
+            x.owner
+            for x in item.offers.filter(
+                status__in=LIVE, tender_line__isnull=True
+            ).select_related("owner")
+        ]
         action = "open_housing_request"
     elif isinstance(item, (ConditionReport, TenancyTransition, RentalChange)):
         recipients = [item.lease.owner, item.lease.tenant]
@@ -91,9 +118,59 @@ def record_event(item, actor, operation):
                 lease_id=str(item.lease.id),
                 change_id=str(item.id),
                 change_kind=item.kind,
+                content_version=item.content_revision,
+                event_kind="rental_change_updated",
+                workspace=(
+                    "owner"
+                    if recipient.pk == item.lease.owner_id
+                    else (
+                        "student"
+                        if AcademicPlanParticipant.objects.filter(
+                            lease__tenancy_root_id=item.lease.tenancy_root_id,
+                            user=recipient,
+                        ).exists()
+                        else "individual"
+                    )
+                ),
             )
         if isinstance(item, HousingOffer):
-            data["workspace"] = "owner" if recipient.pk == item.owner_id else "tenant"
+            from ..housing_request_reviews import offer_bucket
+
+            data["workspace"] = (
+                "owner"
+                if recipient.pk == item.owner_id
+                else ("student" if item.request.academic_plan_id else "tenant")
+            )
+            data["housing_offer_id"] = str(item.id)
+            data["housing_section"] = offer_bucket(item)
+            data["event_kind"] = (
+                "housing_offer_reconfirmed"
+                if ".reconfirm." in operation
+                else (
+                    "housing_offer_withdrawn"
+                    if ".withdraw." in operation
+                    else (
+                        "housing_offer_declined"
+                        if ".decline." in operation
+                        else (
+                            "housing_offer_replaced"
+                            if item.replaces_id
+                            else "housing_offer_received"
+                        )
+                    )
+                )
+            )
+        if isinstance(item, HousingRequest):
+            data["workspace"] = "owner"
+            change = getattr(item, "_housing_change", None)
+            data["event_kind"] = (
+                "housing_request_changed" if change else "housing_request_status"
+            )
+            data["housing_section"] = "changes" if change else "history"
+            data["request_status"] = item.status
+            if change:
+                data["housing_change_id"] = str(change.id)
+                data["request_content_revision"] = item.content_revision
         PlanningEvent.objects.get_or_create(
             recipient=recipient,
             event_key=f"{operation}:{item.id}:{item.revision}",

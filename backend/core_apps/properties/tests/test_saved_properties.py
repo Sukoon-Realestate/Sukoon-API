@@ -40,6 +40,8 @@ def create_property(owner, **kwargs):
         "governorate": governorate,
         "city": city,
         "property_type": property_type,
+        "status": Property.Status.VERIFIED,
+        "is_verified": True,
     }
     defaults.update(kwargs)
     return Property.objects.create(owner=owner, **defaults)
@@ -158,6 +160,24 @@ class TestSavedPropertyAPI:
         assert data["count"] == 1
         assert data["results"][0]["id"] == str(apartment.id)
 
+    def test_review_pause_hides_card_without_deleting_saved_identity(
+        self, auth_client, user, another_user
+    ):
+        property_obj = create_property(another_user)
+        saved = SavedProperty.objects.create(user=user, property=property_obj)
+        Property.objects.filter(pk=property_obj.pk).update(
+            status=Property.Status.UNDER_REVIEW, is_verified=False
+        )
+        paused = auth_client.get(reverse("saved-property-list"))
+        assert api_json(paused)["data"]["count"] == 0
+        assert SavedProperty.objects.filter(pk=saved.pk).exists()
+        Property.objects.filter(pk=property_obj.pk).update(
+            status=Property.Status.VERIFIED, is_verified=True
+        )
+        resumed = auth_client.get(reverse("saved-property-list"))
+        assert api_json(resumed)["data"]["results"][0]["id"] == str(property_obj.id)
+        assert SavedProperty.objects.get(pk=saved.pk).property_id == property_obj.pk
+
     def test_list_query_count_is_bounded(self, auth_client, user, another_user):
         for index in range(5):
             property_obj = create_property(another_user, title=f"Saved {index}")
@@ -167,8 +187,9 @@ class TestSavedPropertyAPI:
             response = auth_client.get(reverse("saved-property-list"))
 
         assert response.status_code == status.HTTP_200_OK
-        # One batched current F66 query replaces a query for every card.
-        assert len(queries.captured_queries) <= 4
+        # Count, page, saves, restrictions and current verified stay ratings
+        # remain batched even when the page contains actual published cards.
+        assert len(queries.captured_queries) <= 5
         for index in range(5, 10):
             property_obj = create_property(another_user, title=f"Saved {index}")
             SavedProperty.objects.create(user=user, property=property_obj)

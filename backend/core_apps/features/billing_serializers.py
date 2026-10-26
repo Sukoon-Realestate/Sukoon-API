@@ -15,6 +15,9 @@ class IssueInvoiceSerializer(StrictBillingSerializer):
     organization_id = serializers.UUIDField(required=False)
     purpose = serializers.ChoiceField(choices=["subscription", "advertising"])
     workspace = serializers.ChoiceField(choices=["tenant", "owner"])
+    notification_workspace = serializers.ChoiceField(
+        choices=["individual", "owner", "student", "company"], required=False
+    )
     plan_id = serializers.UUIDField(required=False)
     plan_revision = serializers.IntegerField(min_value=1, required=False)
     advertisement_id = serializers.UUIDField(required=False)

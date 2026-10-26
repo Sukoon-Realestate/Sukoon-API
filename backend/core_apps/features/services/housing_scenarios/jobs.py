@@ -126,12 +126,22 @@ def calculate(identifier):
             current.save()
             scenario.revision += 1
             scenario.save(update_fields=["revision", "updated_at"])
+            from ..advanced_planning_notifications import record
+
+            record(current, None, "scenario.result")
     except Exception:
-        HousingScenarioRun.objects.filter(
-            pk=run.pk, state="running", revision=claim_revision
-        ).update(
-            state="failed",
-            failure_code="inputs_or_worker_unavailable",
-            completed_at=timezone.now(),
-            revision=claim_revision + 1,
-        )
+        with transaction.atomic():
+            current = (
+                HousingScenarioRun.objects.select_for_update()
+                .filter(pk=run.pk, state="running", revision=claim_revision)
+                .first()
+            )
+            if current:
+                current.state = "failed"
+                current.failure_code = "inputs_or_worker_unavailable"
+                current.completed_at = timezone.now()
+                current.revision += 1
+                current.save()
+                from ..advanced_planning_notifications import record
+
+                record(current, None, "scenario.failed")

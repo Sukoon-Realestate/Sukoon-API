@@ -255,8 +255,8 @@ def can_pay(lease, user):
         return False
 
 
-def notify(item):
-    from ...planning_models import PlanningEvent
+def notify(item, action="company_tenancy_updated"):
+    from .tenancy_events import record
 
     booking = item.preparation.booking
     people = {
@@ -277,21 +277,7 @@ def notify(item):
                 id__in=change.snapshot["required"].values()
             ).values_list("pk", flat=True)
         )
-    for identity in people:
-        PlanningEvent.objects.get_or_create(
-            recipient_id=identity,
-            event_key=f"company.tenancy:{item.id}:{item.revision}",
-            defaults={
-                "destination": {
-                    "action_type": "open_company_tenancy",
-                    "target_id": str(item.id),
-                    "schema_version": "1",
-                    "workspace": (
-                        "owner" if identity == item.lease.owner_id else "tenant"
-                    ),
-                }
-            },
-        )
+    record(item, people, action)
 
 
 def changed(item, actor, action, reason="", metadata=None):
@@ -300,5 +286,5 @@ def changed(item, actor, action, reason="", metadata=None):
     item.lease.revision += 1
     item.lease.save()
     audit(item.lease, actor, action, reason, metadata or {})
-    notify(item)
+    notify(item, action)
     return item

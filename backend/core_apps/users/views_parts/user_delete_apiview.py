@@ -1,11 +1,9 @@
 """Views: user delete apiview."""
 
 from django.conf import settings
-from django.db.models.deletion import ProtectedError
 from django.shortcuts import render
 from django.views import View
-from rest_framework import generics, permissions, status
-from rest_framework.request import Request
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -15,14 +13,12 @@ from core_apps.users.serializers import (
     GoogleAuthSerializer,
     AppleAuthSerializer,
     FacebookAuthSerializer,
-    UserDeleteSerializer,
 )
 from core_apps.users.services.social_auth_service import (
     authenticate_google,
     authenticate_apple,
     authenticate_facebook,
 )
-from core_apps.users.services.user_service import delete_user_account
 from .set_auth_cookies import logger, set_auth_cookies, _issue_jwt, _user_payload
 
 
@@ -140,61 +136,16 @@ class PasswordResetConfirmView(View):
         return render(request, "password_reset_confirm.html", context)
 
 
-class UserDeleteAPIView(generics.DestroyAPIView):
-    """
-    Delete the authenticated user's account permanently.
+class UserDeleteAPIView(APIView):
+    """Retired destructive route: clients must use the reviewed account request."""
 
-    Cascades deletion to Profile, UserSettings, SocialAccount,
-    Properties, Visits, Reviews, Saved Properties, Favorites, and Ratings.
-    Also clears authentication cookies.
-
-    Supports both DELETE and POST methods.
-    Optional payload:
-    {
-        "password": "current_password",
-        "reason": "optional reason for deletion"
-    }
-    """
-
-    serializer_class = UserDeleteSerializer
-    renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
 
-    def get_object(self):
-        return self.request.user
+    def delete(self, request):
+        return Response({
+            "message": "راجع طلب حذف الحساب من إعدادات الحساب. / Use the account closure review in account settings.",
+            "code": "account_closure_review_required",
+        }, status=status.HTTP_409_CONFLICT)
 
-    def perform_destroy(self, instance):
-        delete_user_account(instance)
-
-    def destroy(self, request: Request, *args, **kwargs) -> Response:
-        # * Validate serializer input if payload is provided
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        instance = self.get_object()
-        try:
-            self.perform_destroy(instance)
-        except ProtectedError:
-            from core_apps.users.services.account_closure import retain_closure_request
-            ticket = retain_closure_request(instance)
-            response = Response({
-                "message": f"تعذر حذف الحساب لوجود سجلات والتزامات يجب الحفاظ عليها. تم تسجيل طلب مراجعة الخصوصية في الدعم برقم {ticket.reference}. لم يُحذف حسابك أو تُلغَ التزاماتك.",
-                "ticket_id": str(ticket.id),
-                "status": "awaiting_policy",
-                "workspace": ticket.workspace,
-            }, status=status.HTTP_409_CONFLICT)
-            response["Cache-Control"] = "private, no-store"
-            return response
-
-        response = Response(status=status.HTTP_200_OK)
-
-        # * Clear authentication cookies
-        response.delete_cookie("access", path=settings.COOKIE_PATH)
-        response.delete_cookie("refresh", path=settings.COOKIE_PATH)
-        response.delete_cookie("logged_in", path=settings.COOKIE_PATH)
-
-        return response
-
-    def post(self, request: Request, *args, **kwargs) -> Response:
-        """Allow POST method as an alternative to DELETE for mobile/web clients."""
-        return self.destroy(request, *args, **kwargs)
+    post = delete

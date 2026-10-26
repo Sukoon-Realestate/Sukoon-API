@@ -181,4 +181,5 @@ def activate_promotion(invoice):
     campaign.ends_at = campaign.starts_at + timedelta(
         days=invoice.purchase_snapshot["duration_days"]
     )
-    campaign.save(update_fields=["status", "starts_at", "ends_at", "updated_at"])
+    campaign.expiration_processed_at = None
+    campaign.save(update_fields=["status", "starts_at", "ends_at", "expiration_processed_at", "updated_at"])

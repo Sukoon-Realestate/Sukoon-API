@@ -155,11 +155,18 @@ class ClaimBody(CommandBody):
     expires_at = s.DateTimeField(required=False, allow_null=True)
 
 
+class GroupRentalTermsSerializer(RentalTermsSerializer):
+    def to_internal_value(self, data):
+        if not isinstance(data, dict) or set(data) - set(self.fields):
+            raise s.ValidationError({"terms": "Unsupported negotiation fields."})
+        return super().to_internal_value(data)
+
+
 class BookingParticipantBody(StrictSerializer):
     tenant_id = s.UUIDField()
     offer_id = s.CharField(max_length=64)
     offer_revision = s.IntegerField(min_value=1)
-    terms = RentalTermsSerializer()
+    terms = GroupRentalTermsSerializer()
 
 
 class BookingBody(CommandBody):
@@ -174,6 +181,35 @@ class BookingBody(CommandBody):
 class ConsentBody(CommandBody):
     decision = s.ChoiceField(choices=["accept", "decline"])
     terms_digest = s.RegexField(r"^[0-9a-f]{64}$")
+
+
+class GroupTermsDecisionBody(CommandBody):
+    terms_digest = s.RegexField(r"^[0-9a-f]{64}$")
+    reason = s.CharField(max_length=2000, required=False, allow_blank=True)
+
+
+class GroupTermsAllocationBody(StrictSerializer):
+    tenant_id = s.UUIDField()
+    terms = GroupRentalTermsSerializer()
+
+
+class GroupTermsRevisionBody(GroupTermsDecisionBody):
+    participants = GroupTermsAllocationBody(many=True, allow_empty=False)
+
+
+class GroupBookingFilters(s.Serializer):
+    group_id = s.UUIDField(required=False)
+    property_id = s.UUIDField(required=False)
+    offer_id = s.CharField(max_length=64, required=False)
+    academic_plan_id = s.UUIDField(required=False)
+    active_agreements = s.BooleanField(default=False)
+
+    def validate(self, values):
+        if values["active_agreements"] and not (
+            values.get("property_id") and values.get("offer_id")
+        ):
+            raise s.ValidationError("Specify the exact property and allocated offer.")
+        return values
 
 
 class AnswerBody(CommandBody):

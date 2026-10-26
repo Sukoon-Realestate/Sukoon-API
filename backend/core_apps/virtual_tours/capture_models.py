@@ -82,6 +82,13 @@ class CaptureManifestRevision(TimeStampedModel):
 
 
 class CaptureProcessingJob(TimeStampedModel):
+    retry_of = models.OneToOneField(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="retry_job",
+    )
     manifest = models.ForeignKey(
         CaptureManifestRevision, on_delete=models.PROTECT, related_name="jobs"
     )

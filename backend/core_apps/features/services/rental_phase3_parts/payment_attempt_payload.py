@@ -17,6 +17,7 @@ def invoice_payment_allowed(user, invoice):
     lease = invoice.lease
     from ..company.tenancy_access import can_pay
     from ..chargebacks.funding import checkout_allowed
+    from ..advanced_execution.progress import initial_payment_allowed
 
     if (
         lease.terms.get("deposit_holder") == "owner"
@@ -32,6 +33,7 @@ def invoice_payment_allowed(user, invoice):
         and can_pay(lease, user)
         and checkout_available()
         and checkout_allowed(invoice)
+        and initial_payment_allowed(invoice)
         and not lease.legacy_read_only
         and (
             lease.status

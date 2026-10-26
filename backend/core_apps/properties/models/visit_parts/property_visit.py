@@ -4,13 +4,17 @@ import builtins
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from core_apps.common.models import TimeStampedModel
+from core_apps.users.services.new_business import NewAccountBusinessMixin
 
 
 User = get_user_model()
 
 
-class PropertyVisit(TimeStampedModel):
+class PropertyVisit(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ("tenant_id", "requested_by_id", "property.owner_id")
+
     class Status(models.TextChoices):
         PENDING = ("pending", _("Pending"))
         CONFIRMED = ("confirmed", _("Confirmed"))
@@ -50,7 +54,11 @@ class PropertyVisit(TimeStampedModel):
         blank=True,
         related_name="viewings",
     )
-    renter_workspace = models.CharField(max_length=16, choices=[("individual", "individual"), ("student", "student")], default="individual")
+    renter_workspace = models.CharField(
+        max_length=16,
+        choices=[("individual", "individual"), ("student", "student")],
+        default="individual",
+    )
     context_kind = models.CharField(max_length=24, default="personal")
     visit_date = models.DateField(_("Visit Date"), null=True, blank=True)
     visit_time = models.TimeField(_("Visit Time"), null=True, blank=True)
@@ -66,12 +74,22 @@ class PropertyVisit(TimeStampedModel):
     offer_snapshot = models.JSONField(null=True, blank=True)
     stay_preferences = models.JSONField(null=True, blank=True)
     revision = models.PositiveIntegerField(default=1)
+    change_history = models.JSONField(default=list, blank=True, editable=False)
 
     def save(self, *args, **kwargs):
         # All ordinary ORM appointment changes share the decision's row lock.
         # There is no reschedule API today; admin/service edits still invalidate
         # an already-open decision form instead of accepting a stale schedule.
         if self._state.adding:
+            self.change_history = [
+                {
+                    "at": timezone.now().isoformat(),
+                    "revision": self.revision,
+                    "changed_fields": ["created"],
+                    "from_status": "",
+                    "to_status": self.status,
+                }
+            ]
             return super().save(*args, **kwargs)
         with transaction.atomic():
             old = type(self).objects.select_for_update().get(pk=self.pk)
@@ -84,16 +102,24 @@ class PropertyVisit(TimeStampedModel):
                 "offer_id",
                 "offer_snapshot",
                 "stay_preferences",
+                "company_id",
+                "academic_plan_id",
+                "context_kind",
+                "renter_workspace",
             }
             updated = kwargs.get("update_fields")
-            changed = any(
-                getattr(old, field) != getattr(self, field)
+            changed_fields = sorted(
+                field
                 for field in fields
-                if updated is None
-                or field in updated
-                or field.removesuffix("_id") in updated
+                if getattr(old, field) != getattr(self, field)
+                and (
+                    updated is None
+                    or field in updated
+                    or field.removesuffix("_id") in updated
+                )
             )
-            if changed:
+            self.change_history = list(old.change_history)
+            if changed_fields:
                 if PropertyVisitDecision.objects.filter(visit=old).exists():
                     from core_apps.properties.services.post_visit_decision import (
                         DecisionConflict,
@@ -104,8 +130,40 @@ class PropertyVisit(TimeStampedModel):
                         "decision_already_recorded",
                     )
                 self.revision = old.revision + 1
+
+                def current(name):
+                    return getattr(self if name in changed_fields else old, name)
+
+                self.change_history.append(
+                    {
+                        "at": timezone.now().isoformat(),
+                        "revision": self.revision,
+                        "changed_fields": changed_fields,
+                        "from_status": old.status,
+                        "to_status": current("status"),
+                        "previous_date": (
+                            old.visit_date.isoformat() if old.visit_date else None
+                        ),
+                        "date": (
+                            current("visit_date").isoformat()
+                            if current("visit_date")
+                            else None
+                        ),
+                        "previous_time": (
+                            old.visit_time.isoformat() if old.visit_time else None
+                        ),
+                        "time": (
+                            current("visit_time").isoformat()
+                            if current("visit_time")
+                            else None
+                        ),
+                    }
+                )
                 if updated is not None:
-                    kwargs["update_fields"] = set(updated) | {"revision"}
+                    kwargs["update_fields"] = set(updated) | {
+                        "revision",
+                        "change_history",
+                    }
             else:
                 self.revision = max(self.revision, old.revision)
             return super().save(*args, **kwargs)
@@ -122,7 +180,6 @@ class PropertyVisit(TimeStampedModel):
         verbose_name = _("Property Visit")
         verbose_name_plural = _("Property Visits")
         ordering = ["-created_at"]
-
 
     def __str__(self):
         return f"Visit request for {self.property.title} by {self.tenant.email}"

@@ -59,15 +59,84 @@ def request_for(user, identity, action="coordinate", lock=False):
     return request
 
 
+def request_account_parties(identity, offer_id=None):
+    request = get_object_or_404(CompanyHousingRequest, id=identity)
+    parties = {request.requester_id, request.coordinator_id}
+    if offer_id:
+        from ...company_models import PortfolioOffer
+
+        parties.add(get_object_or_404(PortfolioOffer, id=offer_id).owner_id)
+    return parties
+
+
+def selection_account_parties(identity, data):
+    from ...company_staff_models import CompanyStaffRecord
+
+    request = get_object_or_404(CompanyHousingRequest, id=identity)
+    parties = request_account_parties(identity, data["offer_id"])
+    parties.update(
+        CompanyMembership.objects.filter(
+            company=request.company, user__id__in=data.get("occupant_ids", [])
+        ).values_list("user_id", flat=True)
+    )
+    parties.update(
+        CompanyStaffRecord.objects.filter(
+            company=request.company,
+            id__in=data.get("staff_ids", []),
+            membership__isnull=False,
+        ).values_list("membership__user_id", flat=True)
+    )
+    return parties
+
+
+def booking_account_parties(identity, *, include_preparation=True):
+    from ...company_models import CompanyBookingItem
+
+    item = get_object_or_404(CompanyBookingItem, id=identity)
+    parties = request_account_parties(item.request.id, item.offer.id)
+    parties.update(item.occupants.values_list("pk", flat=True))
+    parties.update(
+        item.planned_staff.exclude(membership__isnull=True).values_list(
+            "membership__user_id", flat=True
+        )
+    )
+    if include_preparation:
+        from ...company_contract_models import CompanyContractPreparation
+
+        current = CompanyContractPreparation.objects.filter(booking=item).first()
+        if current:
+            parties.update(
+                {
+                    current.signer_mandate.membership.user_id,
+                    current.payer_mandate.membership.user_id,
+                }
+            )
+    return parties
+
+
+def lock_account_parties(actor, parties):
+    from core_apps.users.models import User
+
+    parties = set(parties) | {actor.pk}
+    list(
+        User.objects.select_for_update(no_key=True)
+        .filter(pk__in=parties)
+        .order_by("pk")
+    )
+    return parties
+
+
 def company_subject(user, identifier):
     from django.db.models import Q
 
     from .tenancy_access import visible
 
     from ...company_saved_models import CompanySavedList
+
     saved = CompanySavedList.objects.filter(id=identifier).first()
     if saved:
         from .saved_lists import authorize
+
         authorize(user, saved.company.id)
         return saved
     tenancy = visible(user).filter(id=identifier).first()
@@ -89,6 +158,12 @@ def company_subject(user, identifier):
         .exists()
     ):
         return mandate
+    from ...models import CompanyTermsNegotiation
+    from .negotiation_access import role as negotiation_role
+
+    negotiation = CompanyTermsNegotiation.objects.filter(id=identifier).first()
+    if negotiation and negotiation_role(negotiation, user):
+        return negotiation
     from ...company_models import CompanyBookingItem, CompanyInvitation, PortfolioOffer
     from core_apps.properties.models import (
         ResidentialBuilding,
@@ -241,6 +316,12 @@ def actions(user, capability, identifier=""):
     item = company_subject(user, identifier)
     if item is None:
         return []
+    from ...models import CompanyTermsNegotiation
+
+    if isinstance(item, CompanyTermsNegotiation):
+        from .negotiation_projection import actions as negotiation_actions
+
+        return ["read"] + ["terms_" + v for v in negotiation_actions(item, user)[1]]
     from ...models import CompanyTenancy
 
     if isinstance(item, CompanyTenancy):
@@ -322,6 +403,7 @@ def actions(user, capability, identifier=""):
                 "hold",
                 "submit",
                 "prepare_contract",
+                "negotiate",
             ]
         if member.is_approver:
             if (

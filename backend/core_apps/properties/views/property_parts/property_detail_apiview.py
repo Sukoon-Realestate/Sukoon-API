@@ -201,7 +201,9 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
 
         def update_property():
             with transaction.atomic():
-                current = Property.objects.select_for_update().get(pk=instance.pk)
+                from ...services.listing_lock import lock_listing
+
+                current = lock_listing(instance.pk)
                 if current.owner_id != request.user.pk:
                     raise permissions.exceptions.PermissionDenied(
                         "Only the current owner can edit a listing."

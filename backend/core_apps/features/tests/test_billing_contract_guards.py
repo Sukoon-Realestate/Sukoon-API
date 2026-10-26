@@ -150,6 +150,14 @@ def test_plan_and_promotion_admin_edit_reaches_api_with_immutable_history(
         ][0]
         == result
     )
+    # Transaction suites may have flushed data migrations in a reused test DB.
+    # Restore only the existing catalog definitions for this isolated test.
+    from django.apps import apps
+    from importlib import import_module
+
+    import_module(
+        "core_apps.features.migrations.0019_dashboard_promotion_catalog"
+    ).seed_options(apps, None)
     option = PromotionOption.objects.get(id="week")
     option.duration_days = 9
     admin.site._registry[PromotionOption].save_model(request, option, None, True)

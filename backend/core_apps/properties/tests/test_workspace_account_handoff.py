@@ -1,3 +1,4 @@
+from .viewing_support import response_body
 from core_apps.common.contract_testing import api_json
 import pytest
 from django.urls import reverse
@@ -112,6 +113,12 @@ class TestWorkspaceAccountContract:
         edit_res = auth_client.patch(edit_url, edit_payload, format="json")
         assert edit_res.status_code == status.HTTP_200_OK
 
+        # Real authentication reloads the account between requests; force_authenticate
+        # deliberately retains the supplied object until refreshed by this fixture.
+        user.refresh_from_db()
+        assert user.get_full_name == "سامي يوسف"
+        auth_client.force_authenticate(user=user)
+
         # 2. Verify /api/v1/profiles/my-account/
         my_acc_res = auth_client.get(reverse("my-account"))
         assert my_acc_res.status_code == status.HTTP_200_OK
@@ -170,7 +177,9 @@ class TestWorkspaceAccountContract:
         # Owner accepts visit
         auth_client.force_authenticate(user=user)
         accept_url = reverse("owner-visit-request-accept", kwargs={"id": visit_id})
-        accept_res = auth_client.post(accept_url, {}, format="json")
+        accept_res = auth_client.post(
+            accept_url, response_body(res.json()["data"]["revision"]), format="json"
+        )
         assert accept_res.status_code == status.HTTP_200_OK
 
         # Check notification for tenant

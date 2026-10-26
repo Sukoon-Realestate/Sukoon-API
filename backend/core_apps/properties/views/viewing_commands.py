@@ -6,10 +6,13 @@ from rest_framework.decorators import api_view, permission_classes, renderer_cla
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
-from core_apps.common.idempotency import execute_idempotent
+from core_apps.common.idempotency import execute_idempotent, resolve_or_close
 from core_apps.features.models import IdempotencyRecord
 from ..models import PropertyVisit
-from ..serializers import TenantVisitRequestDetailSerializer
+from ..serializers import (
+    TenantVisitRequestDetailSerializer,
+    OwnerVisitRequestDetailSerializer,
+)
 from ..services.viewing_access import can_read
 from ..services.viewing_commands import command
 from .post_visit_decision import PostVisitJsonRenderer
@@ -18,10 +21,39 @@ from .post_visit_decision import PostVisitJsonRenderer
 class ViewingCommandBody(serializers.Serializer):
     request_key = serializers.UUIDField()
     expected_revision = serializers.IntegerField(min_value=1)
-    action = serializers.ChoiceField(choices=["reassign"])
-    representative_membership_id = serializers.UUIDField()
+    action = serializers.ChoiceField(choices=["reassign", "accept", "reject", "cancel"])
+    representative_membership_id = serializers.UUIDField(required=False)
     note = serializers.CharField(required=False, allow_blank=True, max_length=1000)
+    reason = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    custom_reason = serializers.CharField(
+        required=False, allow_blank=True, max_length=1000
+    )
 
+    def validate(self, data):
+        if data["action"] == "reassign" and not data.get(
+            "representative_membership_id"
+        ):
+            raise ValidationError(
+                {
+                    "representative_membership_id": "Choose the current company representative."
+                }
+            )
+        if data["action"] != "reassign" and data.get("representative_membership_id"):
+            raise ValidationError(
+                {
+                    "representative_membership_id": "Only reassignment changes the representative."
+                }
+            )
+        return data
+
+
+def visit_projection(visit, request):
+    serializer = (
+        OwnerVisitRequestDetailSerializer
+        if visit.property.owner_id == request.user.pk
+        else TenantVisitRequestDetailSerializer
+    )
+    return serializer(visit, context={"request": request}).data
 
 
 @api_view(["GET", "POST"])
@@ -42,17 +74,16 @@ def viewing_command(request, id):
         return Response(
             {
                 "request_key": key,
-                "status": "confirmed" if record else "not_found",
-                "visit": (
-                    TenantVisitRequestDetailSerializer(
-                        visit, context={"request": request}
-                    ).data
-                    if record
-                    else None
-                ),
+                "status": record.recovery_status if record else "not_found",
+                "action": record.response_data.get("action", "") if record else "",
+                "visit": (visit_projection(visit, request) if record else None),
             }
         )
-    body = ViewingCommandBody(data=request.data)
+    return execute_viewing_command(request, id, request.data)
+
+
+def execute_viewing_command(request, id, payload):
+    body = ViewingCommandBody(data=payload)
     body.is_valid(raise_exception=True)
     visit = get_object_or_404(PropertyVisit, id=id)
     if not can_read(visit, request.user):
@@ -65,6 +96,8 @@ def viewing_command(request, id):
                 "id": str(result.id),
                 "revision": result.revision,
                 "request_key": str(body.validated_data["request_key"]),
+                "action": body.validated_data["action"],
+                "status": "confirmed",
             },
             200,
             result.id,
@@ -77,6 +110,7 @@ def viewing_command(request, id):
         payload=body.validated_data,
         action=apply,
         request_subject_id=id,
+        auth_claims=request.auth,
     )
     visit.refresh_from_db()
     if not can_read(visit, request.user):
@@ -84,12 +118,52 @@ def viewing_command(request, id):
     return Response(
         {
             **data,
-            "visit": TenantVisitRequestDetailSerializer(
-                visit, context={"request": request}
-            ).data,
+            "visit": visit_projection(visit, request),
         },
         status=status,
     )
+
+
+def execute_visit_response(request, id, action):
+    result = execute_viewing_command(request, id, {**request.data, "action": action})
+    return Response(
+        {
+            **result.data["visit"],
+            "operation": {
+                key: result.data[key] for key in ("request_key", "action", "status")
+            },
+        },
+        status=result.status_code,
+    )
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([PostVisitJsonRenderer])
+def resolve_viewing_command(request, id):
+    visit = get_object_or_404(PropertyVisit, id=id)
+    if not can_read(visit, request.user):
+        raise NotFound()
+    field = serializers.UUIDField()
+    key = str(field.run_validation(request.data.get("request_key")))
+    with transaction.atomic():
+        record = resolve_or_close(
+            user=request.user,
+            operation=f"viewing.command:{id}",
+            key=key,
+            auth_claims=request.auth,
+        )
+        visit.refresh_from_db()
+        if not can_read(visit, request.user):
+            raise NotFound()
+        return Response(
+            {
+                "request_key": key,
+                "status": record.recovery_status,
+                "action": record.response_data.get("action", ""),
+                "visit": visit_projection(visit, request),
+            }
+        )
 
 
 @api_view(["GET"])

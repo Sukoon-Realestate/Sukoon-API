@@ -69,3 +69,30 @@ class OwnerOnboardingSession(TimeStampedModel):
                 name="unique_owner_onboarding_request",
             )
         ]
+
+
+class OwnerBeneficiarySubmission(TimeStampedModel):
+    """Versioned private input; saving it never enables payouts."""
+
+    profile = models.ForeignKey(
+        OwnerPaymentProfile,
+        on_delete=models.PROTECT,
+        related_name="beneficiary_submissions",
+    )
+    revision = models.PositiveIntegerField()
+    status = models.CharField(max_length=30, default="pending_verification")
+    recipient_ciphertext = models.TextField()
+    recipient_digest = models.CharField(max_length=64)
+    channel = models.CharField(max_length=30)
+    beneficiary_name = models.CharField(max_length=200)
+    bank_name = models.CharField(max_length=200, blank=True)
+    account_last4 = models.CharField(max_length=4)
+    accepted_policy_versions = models.JSONField(default=list)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["profile", "revision"],
+                name="unique_owner_beneficiary_submission_revision",
+            )
+        ]

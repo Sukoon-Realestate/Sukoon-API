@@ -7,6 +7,7 @@ from . import planning_group_views as groups
 from . import planning_housing_views as housing
 from . import planning_roommate_views as roommates
 from . import planning_transition_views as transitions
+from . import decision_views
 from .planning_home_views import planning_home
 from .planning_housing_views_parts.housing_offer_inventory import (
     housing_offer_inventory,
@@ -14,6 +15,8 @@ from .planning_housing_views_parts.housing_offer_inventory import (
 
 
 urlpatterns = [
+    path("decision-notebook/", decision_views.notebook),
+    path("decision-notebook/resolve/", decision_views.resolve),
     path("housing-groups/<uuid:group_id>/chat/", GroupChatSummaryAPIView.as_view()),
     path("planning-home/", planning_home),
     path("open-housing-groups/", groups.open_groups),
@@ -54,6 +57,8 @@ urlpatterns = [
     path("housing-demand/", housing.housing_demand),
     path("owner-housing-offers/", housing.owner_housing_offers),
     path("housing-requests/<uuid:request_id>/", housing.housing_request_detail),
+    path("housing-requests/<uuid:request_id>/changes/", housing.housing_request_changes),
+    path("housing-offers/<uuid:offer_id>/", housing.housing_offer_detail),
     path("housing-requests/<uuid:request_id>/offers/", housing.housing_offers),
     path(
         "housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from core_apps.properties.models import Property
 from ...advanced_execution_models import AdvancedExecutionConsent
-from ...models import Lease, RentalProviderInstruction
+from ...models import RentalProviderInstruction
 from ..rental_phase2 import RentalConflict
 from ..rental_lifecycle.inventory import unresolved_payment
 from ..rental_lifecycle.cases import open_system_case
@@ -22,6 +22,11 @@ def own_leg(plan, actor, identifier):
 
 
 def sync(plan):
+    if plan.provider_mode == "test":
+        from .progress import refresh
+
+        refresh(plan, persist=True)
+        return plan
     if plan.legs.filter(canonical_kind="company").exists():
         return adapter(plan.source_kind).sync(plan)
     states = []
@@ -90,6 +95,8 @@ def prepare(plan, actor):
 
 
 def advance(plan, actor, data):
+    if plan.provider_mode != "mock":
+        raise PermissionDenied("Continue through the original agreement or invoice.")
     leg = own_leg(plan, actor, data.get("leg_id"))
     adapter(plan.source_kind).revalidate(plan, action="advance")
     if leg.canonical_kind == "company":
@@ -164,9 +171,14 @@ def reconcile(plan, actor):
     if any(x.canonical_kind == "company" for x in plan.legs.all()):
         adapter(plan.source_kind).reconcile(plan, actor)
     for leg in plan.legs.all():
-        if str(actor.id) in leg.actor_ids:
+        if plan.provider_mode == "mock" and str(actor.id) in leg.actor_ids:
             reconcile_instructions(plan, leg, actor)
         if leg.lease_id:
+            if leg.lease.renter_company_id:
+                from ..company.tenancy_expiry import expire
+
+                expire(leg.lease.company_tenancy)
+                continue
             from ..rental_lifecycle.inventory import expire_property_holds
 
             prop = Property.objects.select_for_update().get(pk=leg.lease.property_id)
@@ -179,10 +191,18 @@ def withdraw(plan, actor, data):
     if leg.canonical_kind == "company":
         adapter(plan.source_kind).withdraw(plan, actor, data)
         return plan
+    return withdraw_canonical(plan, leg, actor)
+
+
+def withdraw_canonical(plan, leg, actor):
     if leg.lease_id:
-        lease = Lease.objects.select_for_update().get(pk=leg.lease_id)
+        from ..signing_documents import unresolved as unresolved_signature
+        from ..rental_lifecycle.locks import lock_financial_lease
+
+        lease = lock_financial_lease(leg.lease)
         if (
             unresolved_payment(lease)
+            or unresolved_signature(lease)
             or RentalProviderInstruction.objects.filter(
                 subject_id=leg.id, status="unknown"
             ).exists()
@@ -217,10 +237,17 @@ def withdraw(plan, actor, data):
                 actor=actor,
             )
             return plan
-        lease.inventory_day_locks.filter(kind="hold").delete()
-        lease.status = "cancelled"
-        lease.revision += 1
-        lease.save()
+        if lease.renter_company_id:
+            from ..company.tenancy_contracts import cancel
+
+            cancel(lease.company_tenancy, actor, {
+                "reason": "Explicit withdrawal of an uncommitted execution package.",
+            })
+        else:
+            lease.inventory_day_locks.filter(kind="hold").delete()
+            lease.status = "cancelled"
+            lease.revision += 1
+            lease.save()
     leg.state = "withdrawn"
     leg.save()
     record_step(plan, leg, "release_uncommitted", "confirmed", actor=actor)
@@ -285,10 +312,12 @@ def resolve(plan, actor, data):
 
 
 def command(plan, actor, action, data):
-    from config.advanced_housing import require_mock_mode
+    from config.advanced_housing import require_execution_mode
 
-    require_mock_mode()
-    if action not in actions(actor, CAPABILITIES[plan.source_kind], str(plan.id)):
+    require_execution_mode(plan.provider_mode)
+    if plan.provider_mode == "test":
+        sync(plan)
+    if action not in actions(actor, CAPABILITIES[plan.source_kind], str(plan.id), plan=plan):
         raise PermissionDenied("This execution action is not currently authorized.")
     if data.get("digest") != plan.digest:
         raise RentalConflict("The execution snapshot changed.", code="document_changed")

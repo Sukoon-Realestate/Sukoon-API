@@ -30,7 +30,11 @@ def mutate(request, action, resource, execute):
         }
     )
     with transaction.atomic():
-        get_user_model().objects.select_for_update().get(pk=request.user.pk)
+        current = get_user_model().objects.select_for_update().get(pk=request.user.pk)
+        from core_apps.users.services.sessions import validate_session
+
+        validate_session(current, request.auth or {})
+        request.user = current
         previous = TourOperation.objects.filter(user=request.user, key=key).first()
         if previous:
             require(

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q, F
 from core_apps.common.models import TimeStampedModel
+from core_apps.users.services.new_business import NewAccountBusinessMixin
 
 
 class Company(TimeStampedModel):
@@ -39,7 +40,9 @@ class Company(TimeStampedModel):
     )
 
 
-class CompanyMembership(TimeStampedModel):
+class CompanyMembership(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ("user_id",)
+
     company = models.ForeignKey(
         Company, on_delete=models.PROTECT, related_name="memberships"
     )
@@ -126,7 +129,9 @@ class PortfolioOffer(TimeStampedModel):
     status = models.CharField(max_length=20, default="draft")
 
 
-class CompanyHousingRequest(TimeStampedModel):
+class CompanyHousingRequest(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ("requester_id", "coordinator_id")
+
     source_visit = models.OneToOneField(
         "properties.PropertyVisit",
         null=True,
@@ -176,13 +181,48 @@ class CompanyHousingRequest(TimeStampedModel):
         ]
 
 
-class CompanyBookingItem(TimeStampedModel):
+class CompanyRequestVersion(TimeStampedModel):
+    request = models.ForeignKey(
+        CompanyHousingRequest, on_delete=models.PROTECT, related_name="versions"
+    )
+    version = models.PositiveIntegerField()
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    content = models.JSONField()
+    changes = models.JSONField(default=dict)
+    affected_item_ids = models.JSONField(default=list)
+    preserved_item_ids = models.JSONField(default=list)
+    baseline = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["request", "version"], name="unique_company_request_version"
+            )
+        ]
+
+
+class CompanyBookingItem(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = (
+        "request.requester_id",
+        "request.coordinator_id",
+        "offer.owner_id",
+    )
+
     request = models.ForeignKey(
         CompanyHousingRequest, on_delete=models.PROTECT, related_name="items"
     )
     offer = models.ForeignKey(PortfolioOffer, on_delete=models.PROTECT)
     revision = models.PositiveIntegerField(default=1)
     commercial_revision = models.PositiveIntegerField(default=1)
+    request_version = models.PositiveIntegerField(default=1)
+    request_review_version = models.PositiveIntegerField(null=True, blank=True)
+    replaces = models.OneToOneField(
+        "self",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="replacement",
+    )
     snapshot = models.JSONField()
     snapshot_digest = models.CharField(max_length=64)
     quote_expires_at = models.DateTimeField()
@@ -253,7 +293,9 @@ class CompanyBudgetReservation(TimeStampedModel):
     status = models.CharField(max_length=12, default="reserved")
 
 
-class EmployeeAssignment(TimeStampedModel):
+class EmployeeAssignment(NewAccountBusinessMixin, TimeStampedModel):
+    account_party_paths = ("employee_id", "property.owner_id")
+
     item = models.ForeignKey(
         CompanyBookingItem, on_delete=models.PROTECT, related_name="assignments"
     )

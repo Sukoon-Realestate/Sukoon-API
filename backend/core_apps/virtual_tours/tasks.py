@@ -14,7 +14,7 @@ from .models import (
     TourViewerSession,
 )
 from .processing import process_revision
-from .storage import root, path
+from .storage import root
 from . import remote_storage
 
 logger = logging.getLogger(__name__)
@@ -42,19 +42,35 @@ def recover_interrupted_tours():
         processing_state="processing",
         updated_at__lt=timezone.now() - timedelta(minutes=20),
     )
-    for revision in stale:
-        attempts = revision.report.get("worker_recoveries", 0) + 1
-        TourRevision.objects.filter(
-            pk=revision.pk,
-            processing_state="processing",
-            updated_at=revision.updated_at,
-        ).update(
-            processing_state="queued" if attempts <= 3 else "failed",
-            processing_token=None,
-            stage="queued" if attempts <= 3 else "failed",
-            report={"worker_recoveries": attempts, "code": "worker_interrupted"},
-            updated_at=timezone.now(),
-        )
+    for identity in stale.values_list("pk", flat=True)[:100]:
+        with transaction.atomic():
+            revision = (
+                stale.select_for_update(skip_locked=True).filter(pk=identity).first()
+            )
+            if revision is None:
+                continue
+            token = revision.processing_token
+            attempts = revision.report.get("worker_recoveries", 0) + 1
+            revision.processing_state = "queued" if attempts <= 3 else "failed"
+            revision.processing_token = None
+            revision.stage = revision.processing_state
+            revision.report = {
+                "worker_recoveries": attempts,
+                "code": "worker_interrupted",
+            }
+            revision.save(
+                update_fields=[
+                    "processing_state",
+                    "processing_token",
+                    "stage",
+                    "report",
+                    "updated_at",
+                ]
+            )
+            if attempts > 3:
+                from .notifications import record_tour
+
+                record_tour(revision, "failed", token)
 
 
 @shared_task
@@ -95,7 +111,9 @@ def cleanup_tours():
     PropertyCaptureSession.objects.filter(
         deleted_at=None,
         updated_at__lt=now - timedelta(days=settings.CAPTURE_RETENTION_DAYS),
-    ).exclude(manifests__jobs__tour_revisions__isnull=False).update(deleted_at=now, state="cancelled")
+    ).exclude(manifests__jobs__tour_revisions__isnull=False).update(
+        deleted_at=now, state="cancelled"
+    )
     CaptureProcessingJob.objects.filter(
         manifest__session__deleted_at__isnull=False
     ).update(cancel_requested=True)
@@ -109,7 +127,9 @@ def cleanup_tours():
         for station in outputs.get("panorama360", {}).get("stations", []):
             referenced.update(r["blob"] for r in station.get("resources", {}).values())
         for component in outputs.get("walkthrough3d", {}).get("components", []):
-            referenced.update(r["blob"] for r in component.get("resources", {}).values())
+            referenced.update(
+                r["blob"] for r in component.get("resources", {}).values()
+            )
     for resources in TourVariant.objects.values_list("resources", flat=True):
         referenced.update(r["blob"] for r in resources.values())
     for parts in TourUploadSession.objects.filter(

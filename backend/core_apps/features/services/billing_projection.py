@@ -3,6 +3,9 @@ from ..providers import checkout_available, fake_provider_available
 
 
 def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unknown"):
+    from .billing_notifications import PURPOSES, invoice_workspace
+    from .purchase_service_state import service_state
+
     is_rent = invoice.purpose == "rent"
     # Rental settlement credits reduce the obligation without rewriting its
     # original amount or treating the credit as a cash payment.
@@ -34,10 +37,11 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
         user=user,
         organization=bool(invoice.organization_id),
     )
-    if plan and (invoice.amount_minor, invoice.currency, invoice.exponent) != (
-        plan.amount_minor,
-        plan.currency,
-        plan.exponent,
+    if (
+        plan
+        and route.get("route") in {"storekit", "play_billing"}
+        and (invoice.amount_minor, invoice.currency, invoice.exponent)
+        != (plan.amount_minor, plan.currency, plan.exponent)
     ):
         route.update(
             enabled=False,
@@ -95,6 +99,11 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
             str(invoice.organization.id) if invoice.organization_id else ""
         ),
         "fulfillment_status": fulfillment_status(invoice),
+        "service_state": service_state(invoice),
+        "presentation_workspace": (
+            invoice_workspace(invoice) if invoice.purpose in PURPOSES else None
+        ),
+        "activation_case_id": activation_case_id(invoice),
         "id": str(invoice.id),
         "reference": invoice.reference,
         "purpose": invoice.purpose,
@@ -189,6 +198,7 @@ def purchase_attempt_payload(attempt, *, include_checkout=True):
     paymob = getattr(attempt, "paymob_payment", None)
     payload = {
         "fulfillment_status": fulfillment_status(attempt.invoice),
+        "activation_case_id": activation_case_id(attempt.invoice),
         "retry_allowed": False,
         "id": str(attempt.id),
         "invoice_id": str(attempt.invoice.id),
@@ -250,3 +260,8 @@ def purchase_quote_payload(quote):
             else {}
         ),
     }
+
+
+def activation_case_id(invoice):
+    job = getattr(invoice, "fulfillment", None)
+    return str(job.case.id) if job and job.case_id else None

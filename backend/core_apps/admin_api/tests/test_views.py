@@ -193,12 +193,10 @@ class TestAdminViews:
         # GET
         get_res = api_client.get(url)
         assert get_res.status_code == status.HTTP_200_OK
-        assert "maxReviewHours" in get_res.data
+        assert get_res.data == {}
 
         # POST
         post_res = api_client.post(
             url, {"maxReviewHours": False, "tenantDocsRequired": True}, format="json"
         )
-        assert post_res.status_code == status.HTTP_200_OK
-        assert post_res.data["maxReviewHours"] is False
-        assert post_res.data["tenantDocsRequired"] is True
+        assert post_res.status_code == status.HTTP_400_BAD_REQUEST

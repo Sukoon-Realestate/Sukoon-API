@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import F, Q
 from core_apps.common.models import TimeStampedModel
+from core_apps.users.services.new_business import NewAccountBusinessMixin
 
 
 class RentalInventoryUnit(TimeStampedModel):
@@ -22,7 +23,11 @@ class RentalInventoryUnit(TimeStampedModel):
         ]
 
 
-class ReservationHold(TimeStampedModel):
+class ReservationHold(NewAccountBusinessMixin, TimeStampedModel):
+    @property
+    def account_party_paths(self):
+        return () if self.kind == "operational" else ("actor_id", "property.owner_id")
+
     class Status(models.TextChoices):
         ACTIVE = "active", "Active"
         RECONCILIATION = "reconciliation_pending", "Reconciliation pending"

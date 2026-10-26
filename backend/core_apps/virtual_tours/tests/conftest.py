@@ -38,4 +38,8 @@ def property_obj(user):
     )
     for i in range(9):
         PropertyImage.objects.create(property=prop, image=f"photo-{i}.jpg")
+    # The fixture represents an approved listing after its media submission.
+    # Media changes correctly invalidate approval in the live workflow.
+    Property.objects.filter(pk=prop.pk).update(status="verified", is_verified=True)
+    prop.refresh_from_db()
     return prop

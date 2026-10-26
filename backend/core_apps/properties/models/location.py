@@ -82,14 +82,25 @@ def get_unique_slug(model, base_slug, exclude_pkid=None, **filters):
     return candidate
 
 
-class Governorate(TimeStampedModel):
+class LocationCatalog(TimeStampedModel):
+    name_en = models.CharField(max_length=100, blank=True, default="")
+    name_ar = models.CharField(max_length=100, blank=True, default="")
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    revision = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        abstract = True
+
+
+class Governorate(LocationCatalog):
     name = models.CharField(_("Name"), max_length=100, unique=True)
     slug = models.SlugField(_("Slug"), max_length=100, unique=True, blank=True)
 
     class Meta:
         verbose_name = _("Governorate")
         verbose_name_plural = _("Governorates")
-        ordering = ["name"]
+        ordering = ["sort_order", "name", "id"]
 
     def __str__(self):
         return self.name
@@ -101,7 +112,7 @@ class Governorate(TimeStampedModel):
         super().save(*args, **kwargs)
 
 
-class City(TimeStampedModel):
+class City(LocationCatalog):
     governorate = models.ForeignKey(
         Governorate,
         on_delete=models.PROTECT,
@@ -114,7 +125,7 @@ class City(TimeStampedModel):
     class Meta:
         verbose_name = _("City")
         verbose_name_plural = _("Cities")
-        ordering = ["name"]
+        ordering = ["sort_order", "name", "id"]
         constraints = [
             models.UniqueConstraint(
                 fields=["governorate", "name"], name="unique_city_name_per_governorate"
@@ -137,15 +148,14 @@ class City(TimeStampedModel):
         super().save(*args, **kwargs)
 
 
-class District(TimeStampedModel):
+class District(LocationCatalog):
     """Maintained city catalog; never inferred from a property's free text."""
 
     city = models.ForeignKey(City, on_delete=models.PROTECT, related_name="districts")
     name = models.CharField(max_length=100)
-    is_active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ["name", "id"]
+        ordering = ["sort_order", "name", "id"]
         constraints = [
             models.UniqueConstraint(
                 fields=["city", "name"], name="unique_district_name_per_city"

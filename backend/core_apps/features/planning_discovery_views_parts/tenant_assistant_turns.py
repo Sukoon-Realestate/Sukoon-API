@@ -55,7 +55,9 @@ def tenant_assistant_turns(request):
             catalog = {
                 "cities": [
                     {"id": str(x.id), "name": x.name}
-                    for x in City.objects.order_by("pkid")
+                    for x in City.objects.filter(
+                        is_active=True, governorate__is_active=True
+                    ).order_by("pkid")
                 ],
                 "amenities": [
                     "wifi",
@@ -74,7 +76,10 @@ def tenant_assistant_turns(request):
                 text, language, catalog, {"filters": context.get("filters", {})}
             )
             # Reject unsupported typed operators and invalid prices before using model output.
-            next(catalog_matches(extracted["filters"]), None)
+            next(
+                catalog_matches({**context.get("filters", {}), **extracted["filters"]}),
+                None,
+            )
         except Exception:
             cache.delete(lock_key)
             raise

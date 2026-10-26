@@ -307,31 +307,23 @@ def test_logout_deactivates_current_device_but_not_another_session(user):
         )
 
 
-def test_compromise_report_creates_support_case_and_freezes_without_financial_mutation(
-    user,
-):
+def test_removed_compromise_command_has_no_side_effect(user):
     from core_apps.support.models import Ticket
-    from core_apps.features.models import LedgerTransaction, RentalProviderInstruction
+    from core_apps.users.models import SecurityEvent
 
     request = request_for(user)
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION="Bearer " + str(request.auth))
     response = client.post(
         "/api/v1/auth/security/sessions/",
-        {"action": "report_compromise"},
-        format="json",
+        {"action": "report_compromise"}, format="json",
     )
-    assert response.status_code == 200, response.data
+    assert response.status_code == 400
     user.refresh_from_db()
-    assert user.sensitive_actions_frozen and user.security_epoch == 1
-    assert Ticket.objects.filter(
-        id=response.data["support_ticket_id"], user=user
-    ).exists()
-    assert (
-        not LedgerTransaction.objects.exists()
-        and not RentalProviderInstruction.objects.exists()
-    )
-    assert client.get("/api/v1/auth/security/sessions/").status_code == 401
+    assert not user.sensitive_actions_frozen and user.security_epoch == 0
+    assert not Ticket.objects.exists()
+    assert not SecurityEvent.objects.exists()
+    assert client.get("/api/v1/auth/security/sessions/").status_code == 200
 
 
 def test_profile_cannot_change_contact_in_ordinary_patch(user):

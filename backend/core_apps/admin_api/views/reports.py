@@ -1,3 +1,4 @@
+from core_apps.admin_api.permissions import IsSupportStaff
 import logging
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -47,7 +48,7 @@ class AdminReportActionAPIView(APIView):
         action = serializer.validated_data["action"]
         notes = serializer.validated_data.get("notes", "")
 
-        report = take_report_action(
+        take_report_action(
             report_id=report_id, action=action, reviewer=request.user, notes=notes
         )
         return Response(
@@ -77,7 +78,7 @@ class AdminSupportTicketsListAPIView(generics.ListAPIView):
     - tab: all | high | landlord | tenant
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSupportStaff]
     serializer_class = None
 
     def get_serializer_class(self):
@@ -86,16 +87,15 @@ class AdminSupportTicketsListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         from core_apps.admin_api.services.report_service import get_support_tickets_queryset
-        from core_apps.admin_api.models import UserReport
         qs = get_support_tickets_queryset()
         
         tab = self.request.query_params.get("tab")
         if tab == "high":
-            qs = qs.filter(automation_level="high")
+            qs = qs.filter(escalated=True, status__in=["open", "in_progress"])
         elif tab == "landlord":
-            qs = qs.filter(reported_user__properties__isnull=False).distinct()
+            qs = qs.filter(workspace="owner")
         elif tab == "tenant":
-            qs = qs.filter(reported_user__properties__isnull=True)
+            qs = qs.exclude(workspace__in=["owner", "account"])
             
         return qs
 
@@ -105,7 +105,7 @@ class AdminSupportMetricsAPIView(APIView):
     Returns live operational metrics for support tickets.
     """
 
-    permission_classes = [IsAdminStaff]
+    permission_classes = [IsSupportStaff]
 
     def get(self, request):
         from core_apps.admin_api.services.report_service import get_support_metrics
@@ -136,6 +136,7 @@ class AdminReportsOverviewAPIView(APIView):
         
         return Response(
             {
+                "measured_at": stats["measured_at"],
                 "metrics": {
                     "avgResolutionTime": stats["avgResolutionTime"],
                     "activeDisputes": stats["activeDisputes"],

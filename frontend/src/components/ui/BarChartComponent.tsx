@@ -21,16 +21,16 @@ export const BarChartComponent: React.FC<BarChartProps> = ({
   color = 'teal',
   periodLabel = '30 يوم',
 }) => {
-  const maxValue = Math.max(...data.map((d) => d.value), 100);
+  const maxValue = Math.max(...data.map((d) => d.value), 1);
   const totalValue = data.reduce((acc, curr) => acc + curr.value, 0);
-  const avgValue = Math.round(totalValue / (data.length || 1));
+  const avgValue = (totalValue / (data.length || 1)).toLocaleString('ar-EG', { maximumFractionDigits: 2 });
 
   return (
     <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] animate-fadeInUp flex flex-col justify-between">
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center border border-teal-500/20">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div className="flex min-w-0 items-center gap-2">
+            <div className="w-8 h-8 shrink-0 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center border border-teal-500/20">
               <BarChart3 className="w-4 h-4" />
             </div>
             <div>
@@ -38,7 +38,7 @@ export const BarChartComponent: React.FC<BarChartProps> = ({
                 {title}
               </h3>
               <p className="text-[11px] text-[var(--text-muted)] font-medium">
-                متوسط: <span className="font-bold text-[var(--foreground)]">{avgValue}</span>/يوم
+                متوسط لكل عمود: <span className="font-bold text-[var(--foreground)]">{avgValue}</span>
               </p>
             </div>
           </div>
@@ -57,7 +57,7 @@ export const BarChartComponent: React.FC<BarChartProps> = ({
         </div>
 
         {/* Bars visualization */}
-        <div className="h-40 flex items-end justify-between gap-2 pt-6 pb-2 px-1">
+        <div className="h-40 flex items-end justify-between gap-0.5 pt-6 pb-2 px-1">
           {data.map((item, idx) => {
             const heightPercent = (item.value / maxValue) * 100;
 
@@ -73,16 +73,19 @@ export const BarChartComponent: React.FC<BarChartProps> = ({
             }
 
             return (
-              <div key={idx} className="flex-1 flex flex-col items-center gap-1 group relative h-full justify-end">
+              <div key={idx} className="min-w-0 flex-1 flex flex-col items-center gap-1 group relative h-full justify-end">
                 {/* Tooltip */}
                 <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 absolute -top-9 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-lg pointer-events-none z-20 whitespace-nowrap transform -translate-y-1 group-hover:translate-y-0">
                   {item.value}
                 </div>
 
                 <div
+                  role="img"
+                  aria-label={`${item.label ?? item.day ?? idx + 1}: ${item.value}`}
+                  title={`${item.label ?? item.day ?? idx + 1}: ${item.value}`}
                   className={`w-full rounded-t-lg transition-all duration-300 animate-barGrow ${barBg}`}
                   style={{
-                    height: `${Math.max(heightPercent, 10)}%`,
+                    height: `${heightPercent}%`,
                     animationDelay: `${idx * 25}ms`,
                   }}
                 ></div>
@@ -92,16 +95,16 @@ export const BarChartComponent: React.FC<BarChartProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-[11px] font-semibold text-[var(--text-subtle)] border-t border-[var(--divider)] pt-2.5 px-1">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-semibold text-[var(--text-subtle)] border-t border-[var(--divider)] pt-2.5 px-1">
         <span className="flex items-center gap-1">
           <span className="w-2 h-2 rounded-full bg-teal-500"></span>
-          اليوم
+          {data[0]?.label ?? data[0]?.day ?? ''}
         </span>
         <span className="flex items-center gap-1">
           <TrendingUp className="w-3 h-3 text-teal-600" />
           الإجمالي: {totalValue.toLocaleString()}
         </span>
-        <span>منذ 30 يوم</span>
+        <span>{data[data.length - 1]?.label ?? data[data.length - 1]?.day ?? ''}</span>
       </div>
     </div>
   );

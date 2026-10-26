@@ -51,11 +51,10 @@ def lifecycle_capabilities(user, subject):
         actions = ["create_rental_case"]
     elif (
         isinstance(subject, TermsProposal)
-        and subject.owner_id == user.pk
-        and not subject.invitations.filter(lease__isnull=False).exists()
-        and subject.status not in {"rejected", "superseded"}
     ):
-        actions = ["propose_answer"]
+        from ..negotiation_terms import actions as proposal_actions
+        if subject.owner_id == user.pk and "edit_terms" in proposal_actions(user, subject):
+            actions = ["propose_answer"]
     elif (
         isinstance(subject, GroupProcess)
         and subject.property.owner_id == user.pk

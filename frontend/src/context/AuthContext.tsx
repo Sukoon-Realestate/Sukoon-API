@@ -4,23 +4,24 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import { useRouter, usePathname } from 'next/navigation';
 import { apiClient, ApiError } from '@/lib/api/client';
 import { isBackendEnabled } from '@/lib/api/config';
-const adminPath = (path: string) => path;
-const adminRelativePath = (path: string) => path;
+import { adminPath, adminRelativePath } from '@/lib/basePath';
+import { ADMIN_ROUTE_PATHS, canOpenAdminPath } from '../lib/admin-access';
 
-interface UserProfile { id: string; name: string; email: string; role: string; canManageStaff: boolean; }
+interface UserProfile { id: string; name: string; email: string; role: string; canManageStaff: boolean; allowedPaths: string[]; }
 interface AuthContextType {
   isAuthenticated: boolean; user: UserProfile | null; isLoading: boolean;
   login: (email: string, pass: string) => Promise<boolean>; loginDemo: () => void; logout: () => void;
 }
 const AuthContext = createContext<AuthContextType>({ isAuthenticated: false, user: null, isLoading: true, login: async () => false, loginDemo: () => {}, logout: () => {} });
 export const useAuth = () => useContext(AuthContext);
-const demoProfile: UserProfile = { id: 'demo', name: 'Demo administrator', email: 'admin@sukoon.com', role: 'system_owner', canManageStaff: true };
+const demoProfile: UserProfile = { id: 'demo', name: 'Demo administrator', email: 'admin@sukoon.com', role: 'system_owner', canManageStaff: true, allowedPaths: [...ADMIN_ROUTE_PATHS] };
 function confirmedProfile(value: UserProfile): UserProfile {
-  const roles = new Set(['system_owner', 'main_admin', 'kyc_reviewer', 'property_reviewer', 'support', 'financial_approver', 'psp_reconciliation', 'payout_operator', 'refund_operator', 'dispute_resolver', 'staff']);
+  const roles = new Set(['system_owner', 'main_admin', 'kyc_reviewer', 'property_reviewer', 'support', 'financial_approver', 'psp_reconciliation', 'payout_operator', 'refund_operator', 'dispute_resolver', 'support_supervisor', 'account_closure_reviewer', 'security_recovery_reviewer', 'staff']);
   if (!value || typeof value.id !== 'string' || !value.id.trim() ||
       typeof value.name !== 'string' || typeof value.email !== 'string' ||
       !roles.has(value.role) || typeof value.canManageStaff !== 'boolean' ||
-      value.canManageStaff !== (value.role === 'system_owner')) throw new Error('Invalid administrative session');
+      value.canManageStaff !== (value.role === 'system_owner') || !Array.isArray(value.allowedPaths) ||
+      value.allowedPaths.some(path => !ADMIN_ROUTE_PATHS.includes(path as typeof ADMIN_ROUTE_PATHS[number]))) throw new Error('Invalid administrative session');
   return value;
 }
 function clearStoredAuth() {
@@ -35,12 +36,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const generation = useRef(0);
   const router = useRouter();
   const pathname = adminRelativePath(usePathname());
+  const isPasswordReset = pathname.startsWith('/password-reset/');
   const isAuthenticated = user !== null;
 
   useEffect(() => {
     const epoch = ++generation.current;
-    setIsLoading(true);
-    setRestoreError(false);
     const restore = async () => {
       try {
         const mode = isBackendEnabled() ? 'live' : 'demo';
@@ -57,7 +57,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       finally { if (epoch === generation.current) setIsLoading(false); }
     };
     void restore();
-    return () => { generation.current++; };
+    const sessionGeneration = generation;
+    return () => { sessionGeneration.current++; };
   }, [restoreAttempt]);
 
   const loginDemo = () => {
@@ -80,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (epoch !== generation.current) return false;
       localStorage.setItem('sukoon_admin_mode', 'live');
       setUser(profile);
-      router.push(adminPath('/'));
+      router.push(adminPath(profile.role === 'security_recovery_reviewer' ? '/security' : '/'));
       return true;
     } catch {
       if (epoch === generation.current) { clearStoredAuth(); setUser(null); }
@@ -101,17 +102,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => window.removeEventListener('auth:unauthorized', unauthorized);
   }, []);
   useEffect(() => {
-    if (isLoading || restoreError) return;
+    if (isLoading || restoreError || isPasswordReset) return;
     if (!isAuthenticated && pathname !== '/login') router.push(adminPath('/login'));
+    else if (isAuthenticated && user?.role === 'security_recovery_reviewer' && pathname !== '/security') router.push(adminPath('/security'));
     else if (isAuthenticated && pathname === '/login') router.push(adminPath('/'));
-  }, [isLoading, restoreError, isAuthenticated, pathname, router]);
+  }, [isLoading, restoreError, isAuthenticated, pathname, router, user?.role, isPasswordReset]);
   return <AuthContext.Provider value={{ isAuthenticated, user, login, loginDemo, logout, isLoading }}>
     {!isBackendEnabled() && <div role="status">DEMO — simulated records; no live commands.</div>}
-    {restoreError ? <div role="alert" className="m-auto p-6">
+    {isPasswordReset ? children : restoreError ? <div role="alert" className="m-auto p-6">
       <p>تعذّر تأكيد جلسة الإدارة. أعد المحاولة عند عودة الاتصال.</p>
-      <button type="button" onClick={() => setRestoreAttempt(value => value + 1)}>إعادة المحاولة</button>
+      <button type="button" onClick={() => { setIsLoading(true); setRestoreError(false); setRestoreAttempt(value => value + 1); }}>إعادة المحاولة</button>
       <button type="button" onClick={() => { clearStoredAuth(); setRestoreError(false); setUser(null); router.push(adminPath('/login')); }}>العودة لتسجيل الدخول</button>
-    </div> : !isLoading && (isAuthenticated || pathname === '/login') ? children
+    </div> : !isLoading && isAuthenticated && pathname !== '/login' && !canOpenAdminPath(user?.allowedPaths, pathname)
+      ? <div role="alert" className="m-auto max-w-xl space-y-4 p-6" dir="rtl">
+        <p>هذا القسم غير متاح لصلاحيات حسابك الحالية.</p>
+        <button className="rounded border px-4 py-3" onClick={() => router.push(adminPath(user?.allowedPaths.includes('/') ? '/' : '/security'))}>العودة إلى المساحة المخولة</button>
+        <button className="rounded border px-4 py-3" onClick={() => void logout()}>تسجيل الخروج</button>
+      </div> : !isLoading && (isAuthenticated || pathname === '/login') ? children
       : <div role="status" className="m-auto p-6">جاري التحقق من جلسة الإدارة…</div>}
   </AuthContext.Provider>;
 };

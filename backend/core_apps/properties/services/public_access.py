@@ -11,5 +11,6 @@ def public_properties(queryset=None):
         queryset.filter(
             status=Property.Status.VERIFIED,
             retired_at__isnull=True,
+            moderation_blocked=False,
         )
     )

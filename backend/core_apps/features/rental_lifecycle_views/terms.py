@@ -33,4 +33,6 @@ def propose_answer(request, proposal_id):
             200,
         )
 
-    return mutate(request, f"terms_proposal.answer.{proposal_id}", authorize, execute)
+    from ..rental_phase2_views_parts.terms_proposals import proposal_parties
+    return mutate(request, f"terms_proposal.answer.{proposal_id}", authorize, execute,
+                  account_parties=lambda: proposal_parties(request, proposal_id))

@@ -5,6 +5,9 @@ from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 from ..planning_models import TenantAssistantTurn
 from ..services.planning import public_properties
+from ..services.rental_phase2 import RentalConflict
+from ..services.tenancy_invitations import resolve_offer_snapshot
+from .catalog_matches import catalog_matches
 
 
 def assistant_context(request, session_id):
@@ -48,4 +51,21 @@ def assistant_context(request, session_id):
             expires_at__gt=timezone.now(),
         )
         context = {"filters": previous.reply.get("filters", {}), **context}
+    # Validate the reviewed draft and exact offer before any provider request.
+    next(catalog_matches(context.get("filters", {})), None)
+    if context.get("offer_id"):
+        prop = selected_properties[0]
+        raw = next(
+            (
+                offer
+                for offer in (prop.rental_inventory or {}).get("offers", [])
+                if offer.get("id") == context["offer_id"]
+            ),
+            None,
+        )
+        if not raw or raw.get("archived") or raw.get("availability") != "available":
+            raise RentalConflict(
+                "The selected offer is unavailable.", code="offer_unavailable"
+            )
+        resolve_offer_snapshot(prop, raw["id"], raw["revision"])
     return context, comparison_ids, selected_properties

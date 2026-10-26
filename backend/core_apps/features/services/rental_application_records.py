@@ -13,15 +13,23 @@ def create_interest(**values):
     return RentalInterest.objects.create(**values)
 
 
-def create_terms(*, interest, owner, terms, snapshot):
+def create_terms(*, interest, owner, terms, snapshot, author=None, expires_at=None):
     proposal = TermsProposal.objects.create(
         interest=interest,
         owner=owner,
         terms=terms,
         offer_snapshot=snapshot,
-        accepted_by=[str(owner.id)],
+        accepted_by=[str((author or owner).id)],
+        author=author,
+        expires_at=expires_at,
     )
-    record_consent(proposal, owner, "propose")
+    record_consent(proposal, author or owner, "propose", {
+        "selection": snapshot, "terms": terms, "content_version": proposal.content_revision,
+        "expires_at": expires_at.isoformat() if expires_at else None,
+    })
+    if author is not None:
+        from .negotiation_terms import record_version
+        record_version(proposal)
     interest.status = RentalInterest.Status.PROPOSED
     interest.revision += 1
     interest.save(update_fields=["status", "revision", "updated_at"])

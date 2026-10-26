@@ -8,6 +8,7 @@ from core_apps.common.models import TimeStampedModel
 
 
 class CommerceFeature(TimeStampedModel):
+    revision = models.PositiveIntegerField(default=1, editable=False)
     code = models.SlugField(unique=True)
     workspace = models.CharField(
         max_length=10, choices=[("tenant", "Tenant"), ("owner", "Owner")]
@@ -26,6 +27,7 @@ class CommerceFeature(TimeStampedModel):
 
 
 class PlanBenefit(TimeStampedModel):
+    revision = models.PositiveIntegerField(default=1, editable=False)
     plan = models.ForeignKey(
         "features.SubscriptionPlan", on_delete=models.CASCADE, related_name="benefits"
     )

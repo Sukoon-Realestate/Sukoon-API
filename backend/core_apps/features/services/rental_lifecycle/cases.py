@@ -19,6 +19,7 @@ ROLES = {
     "payout_operator",
 }
 CASE_KINDS = {
+    "service_activation",
     "off_platform_payment_report",
     "company_service_request",
     "chargeback",
@@ -61,6 +62,7 @@ def open_system_case(
     actor=None,
     evidence=None,
     housing_request=None,
+    notify=True,
 ):
     prop = lease.property if lease else (hold.property if hold else None)
     from .common import lifecycle_policy
@@ -165,11 +167,15 @@ def open_system_case(
         if evidence:
             item.evidence.set(evidence)
         audit(item, actor, "case.opened", reason)
-        notify_case_participants(item, "case.opened")
+        if notify:
+            notify_case_participants(item, "case.opened")
     return item
 
 
 def notify_case_participants(item, action):
+    from ..fulfillment_cases import KIND, notify as notify_activation
+    if item.kind == KIND:
+        return notify_activation(item, action)
     from .notifications import record_rental_event
 
     recipients = {
@@ -200,12 +206,14 @@ def notify_case_participants(item, action):
 
 
 def case_queryset(user):
+    from ..fulfillment_cases import visible_company_cases, restrict_visibility
     own = RentalOperationalCase.objects.filter(
         Q(opened_by=user)
         | Q(lease__owner=user)
         | Q(lease__tenant=user)
         | Q(hold__actor=user)
     ).filter(housing_request__isnull=True)
+    own = own | visible_company_cases(user)
     from ..company.sourcing import visible_requests
 
     own = own | RentalOperationalCase.objects.filter(visible_requests(user))
@@ -232,11 +240,14 @@ def case_queryset(user):
             if not independent_case_operator(item, user)
         ]
         qs = qs.exclude(pk__in=excluded_reports)
-        return qs | own
-    return own
+        return restrict_visibility(qs | own, user)
+    return restrict_visibility(own, user)
 
 
 def agreement_case_blocker(item):
+    from ..fulfillment_cases import KIND, blocker as activation_blocker
+    if item.kind == KIND:
+        return activation_blocker(item)
     from ..company.service_requests import blocker
 
     service_blocker = blocker(item)
@@ -316,6 +327,7 @@ def case_payload(item, user):
     from .habitability import projection
     from ..chargebacks.projection import payload as chargeback_payload
     from ...models import RentalChargeback
+    from ..fulfillment_cases import context as activation_context
 
     chargeback = (
         RentalChargeback.objects.filter(
@@ -360,6 +372,7 @@ def case_payload(item, user):
         "habitability": projection(item),
         "status": item.status,
         "lease_id": str(item.lease.id) if item.lease else None,
+        **activation_context(item, user),
         "reason": item.reason,
         "next_action": (
             "The canonical proposal is complete. The assigned operator must record its actual outcome and close the service request."
@@ -427,6 +440,8 @@ def case_payload(item, user):
             if item.kind == sourcing.KIND
             else {}
         ),
+        **({"allowed_actions": [], "blocking_reasons": ["A verified active account is required."]}
+           if item.kind == "service_activation" and not user.is_verified else {}),
     }
 
 
@@ -438,6 +453,11 @@ def independent_case_operator(item, user):
         and item.housing_request.company.memberships.filter(user=user).exists()
     ):
         return False
+    from ..fulfillment_cases import KIND
+    if item.kind == KIND and item.payment_attempt_id:
+        company = item.payment_attempt.invoice.organization
+        if company and company.memberships.filter(user=user).exists():
+            return False
     interested = {item.opened_by_id}
     if item.lease_id:
         interested.update({item.lease.owner_id, item.lease.tenant_id})

@@ -184,7 +184,7 @@ def package_quotes_current(package):
 
 def actions(user, capability, subject_id=""):
     if capability in {"collective_tender_execution", "conditional_group_execution"}:
-        from config.advanced_housing import mock_mode_available
+        from config.advanced_housing import execution_available
 
         if not subject_id:
             return ["read"]
@@ -194,7 +194,7 @@ def actions(user, capability, subject_id=""):
             return []
         return ["read"] + (
             ["prepare"]
-            if mock_mode_available()
+            if execution_available()
             and capability in enabled_services()
             and admin(user, item.tender)
             and current(item.tender)

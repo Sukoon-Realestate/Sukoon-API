@@ -24,6 +24,7 @@ def lease_configuration(request):
     from ..services.rental_phase2 import ensure_policy
 
     policy = ensure_policy()
+    from ..services.negotiation_terms import FIXED_TEMPLATE_TERMS
     # This contract configures template/invitation drafts. Structured agreement
     # creation continues to enforce its own onboarding and provider policy.
     can_create = bool(request.user.is_active and request.user.is_verified)
@@ -31,6 +32,7 @@ def lease_configuration(request):
         {
             "can_create": can_create,
             "templates": LEASE_TEMPLATES,
+            "fixed_terms": FIXED_TEMPLATE_TERMS,
             "policy": {
                 "version": policy.version,
                 "commission_rate_bps": policy.commission_rate_bps,

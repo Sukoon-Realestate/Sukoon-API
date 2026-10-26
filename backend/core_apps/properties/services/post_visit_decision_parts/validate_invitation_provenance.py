@@ -10,6 +10,7 @@ def validate_invitation_provenance(invitation):
         from core_apps.features.services.rental_lifecycle.group_bookings import (
             current_roster,
         )
+        from core_apps.features.services.negotiation_terms import material_selection
 
         participant = (
             GroupBookingParticipant.objects.filter(invitation=invitation)
@@ -22,7 +23,15 @@ def validate_invitation_provenance(invitation):
             or participant.tenant_id != invitation.tenant_id
             or participant.proposal.owner_id != invitation.owner_id
             or participant.proposal.property_id != invitation.property_id
-            or participant.selection_snapshot != invitation.offer_snapshot
+            or material_selection(participant.selection_snapshot)
+            != material_selection(invitation.offer_snapshot)
+            or not invitation.terms_proposal_id
+            or participant.terms != invitation.terms_proposal.terms
+            or (
+                invitation.eligibility_snapshot.get("terms_revision") is not None
+                and participant.proposal.terms_revision
+                != invitation.eligibility_snapshot["terms_revision"]
+            )
             or not current_roster(participant.proposal)
             or participant.proposal.terms_digest
             != invitation.eligibility_snapshot.get("terms_digest")

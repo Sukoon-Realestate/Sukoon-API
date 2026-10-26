@@ -133,6 +133,7 @@ class VisitBookingMixin:
                 category="حجز زيارة",
                 icon_type="calendar",
                 data={
+                    "workspace": "owner",
                     "visit_id": str(visit.id),
                     "property_id": str(property_obj.id),
                     "address": (

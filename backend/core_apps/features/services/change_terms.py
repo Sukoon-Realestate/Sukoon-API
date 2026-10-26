@@ -10,6 +10,7 @@ def validate_changed_terms(terms):
     if not serializer.is_valid():
         raise ValidationError({"terms": serializer.errors})
     # Validate without rewriting the reviewed JSON or any signed document.
+    return serializer.validated_data
 
 
 def changed_terms_blocker(item):
@@ -17,6 +18,8 @@ def changed_terms_blocker(item):
 
     if item.kind not in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
         return None
+    if item.previous_terms and item.previous_terms != item.lease.terms and item.status in {"proposed", "changes_requested", "accepted"}:
+        return "The lease terms changed. The author must review and submit an updated proposal."
     try:
         validate_changed_terms(item.terms)
     except ValidationError:

@@ -19,7 +19,9 @@ def revision_payload(revision):
         "source_hash": revision.source_hash,
         "stage": revision.stage,
         "report": revision.report,
-        "capture_job_id": str(revision.capture_job.id) if revision.capture_job_id else None,
+        "capture_job_id": (
+            str(revision.capture_job.id) if revision.capture_job_id else None
+        ),
         "assets": [
             {
                 "id": str(a.id),
@@ -162,8 +164,12 @@ def clone_revision(tour, body):
             "Resume this editable draft.",
             409,
         )
-        require(not source.capture_job_id, "capture_reselection_required",
-                "Select the immutable capture outputs again to prepare a new revision.", 409)
+        require(
+            not source.capture_job_id,
+            "capture_reselection_required",
+            "Select the immutable capture outputs again to prepare a new revision.",
+            409,
+        )
     revision = TourRevision.objects.create(tour=tour)
     if source:
         mapping = {}
@@ -255,6 +261,7 @@ def submit_review(revision, body, etag):
     expected, _ = validate_authoring(revision, revision.authoring)
     if revision.capture_job_id:
         from .capture_delivery import publishable
+
         publishable(revision)
     require(
         set(body) == {"source_hash"}
@@ -275,10 +282,13 @@ def submit_review(revision, body, etag):
 
 
 def review(revision, user, body):
+    from .review_access import reviewer, independent
+
+    user = reviewer(user, write=True, lock=True)
     require(
-        user.is_staff and user.has_perm("virtual_tours.change_tourrevision"),
-        "review_forbidden",
-        "Tour review permission is required.",
+        independent(revision, user),
+        "independent_review_required",
+        "A different authorized reviewer must review these property outputs.",
         403,
     )
     if revision.capture_job_id:
@@ -308,6 +318,7 @@ def review(revision, user, body):
     current_hash, _ = validate_authoring(revision, revision.authoring)
     if revision.capture_job_id and body["decision"] == "approved":
         from .capture_delivery import publishable
+
         publishable(revision)
     require(
         body["expected_source_hash"] == revision.source_hash == current_hash
@@ -335,4 +346,7 @@ def review(revision, user, body):
         )
         tour.active_revision, tour.disabled = revision, False
         tour.save(update_fields=["active_revision", "disabled", "updated_at"])
+    from .notifications import record_tour
+
+    record_tour(revision, body["decision"])
     return revision_payload(revision), 200

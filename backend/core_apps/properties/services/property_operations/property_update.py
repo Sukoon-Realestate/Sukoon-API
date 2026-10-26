@@ -19,7 +19,32 @@ class PropertyUpdateMixin:
         )
         from core_apps.features.services.rental_phase2 import RentalConflict
 
-        property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        from ..listing_lock import lock_listing
+
+        property_obj = lock_listing(property_obj.pk)
+        from ..viewing_listing_changes import snapshot, propagate
+
+        viewing_sources = snapshot(property_obj)
+        from core_apps.features.services import housing_offer_source_changes
+
+        housing_sources = housing_offer_source_changes.source(property_obj)
+        from core_apps.features.services import group_application_listing_changes
+
+        application_sources = group_application_listing_changes.snapshot(property_obj)
+        from core_apps.features.services import group_visit_listing_changes
+
+        group_visit_sources = group_visit_listing_changes.snapshot(property_obj)
+        from core_apps.features.services import group_booking_listing_changes
+
+        group_booking_sources = group_booking_listing_changes.snapshot(property_obj)
+        from core_apps.features.services.company import (
+            listing_changes as company_sources,
+        )
+
+        company_source = company_sources.source(property_obj)
+        from ...catalog_access import validate_property_locations
+
+        validate_property_locations(data, property_obj)
         was_hidden = property_obj.status == Property.Status.HIDDEN
         if property_obj.retired_at:
             raise RentalConflict(
@@ -169,11 +194,23 @@ class PropertyUpdateMixin:
         # Approval applies to the reviewed content, not to every future edit.
         # Preserve an owner's deliberate unlisting while invalidating approval;
         # an explicit later unhide must return this revision to review.
+        property_obj.refresh_from_db(
+            fields=["media_revision", "review_revision", "moderation_blocked"]
+        )
+        property_obj.review_revision += 1
         property_obj.is_verified = False
         property_obj.status = (
-            Property.Status.HIDDEN if was_hidden else Property.Status.UNDER_REVIEW
+            Property.Status.HIDDEN
+            if was_hidden or property_obj.moderation_blocked
+            else Property.Status.UNDER_REVIEW
         )
         property_obj.save()
+        propagate(property_obj, viewing_sources)
+        housing_offer_source_changes.propagate(property_obj, housing_sources)
+        group_application_listing_changes.propagate(property_obj, application_sources)
+        group_visit_listing_changes.propagate(property_obj, group_visit_sources)
+        group_booking_listing_changes.propagate(property_obj, group_booking_sources)
+        company_sources.propagate(property_obj, company_source)
         if hasattr(property_obj, "_prefetched_objects_cache"):
             property_obj._prefetched_objects_cache.clear()
         return property_obj

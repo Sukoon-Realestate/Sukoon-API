@@ -1,6 +1,8 @@
 """Planning group views: process payload."""
 
 from django.shortcuts import get_object_or_404
+from django.db import transaction
+from django.utils import timezone
 from rest_framework.exceptions import NotFound, ValidationError
 from ..planning_models import HousingGroup
 from ..services.planning import check_revision, criteria, text_field
@@ -61,6 +63,26 @@ def active_ids(group):
     )
 
 
+def process_history(item):
+    return [
+        {
+            key: row[key]
+            for key in (
+                "action",
+                "reason_code",
+                "at",
+                "revision",
+                "from_status",
+                "to_status",
+                "source_revision",
+                "listing_changes",
+            )
+            if key in row
+        }
+        for row in item.history
+    ]
+
+
 def process_payload(item, user):
     status = item.status
     if item.visit_id and status in {"submitted", "scheduled"}:
@@ -114,6 +136,7 @@ def process_payload(item, user):
         "allowed_actions": actions,
         "proposal_snapshot": item.proposal_snapshot,
         "owner_note": item.owner_note,
+        "history": process_history(item),
         "request_note": (
             item.proposal_snapshot.get("visit_note", "") if item.kind == "visit" else ""
         ),
@@ -140,13 +163,46 @@ def _group_values(data):
     }
 
 
-def invalidate_process(item):
+@transaction.atomic
+def invalidate_process(
+    item, reason_code="consent_or_source_changed", *, source_change=None
+):
+    from ..planning_models import GroupProcess
+    from core_apps.properties.models import PropertyVisit
+
+    GroupProcess.objects.select_for_update().get(pk=item.pk)
+    item.refresh_from_db()
+    if item.status in {"withdrawn", "expired", "rejected", "completed"}:
+        return
+    previous_status = item.status
+    previous_consents = list(item.consented_ids)
+    if item.visit_id:
+        item.visit = PropertyVisit.objects.select_for_update().get(pk=item.visit_id)
+
+    def record():
+        item.history.append(
+            {
+                "action": "source_changed",
+                "reason_code": reason_code,
+                "at": timezone.now().isoformat(),
+                "revision": item.revision,
+                "from_status": previous_status,
+                "to_status": item.status,
+                "previous_consented_ids": previous_consents,
+                **(source_change or {}),
+            }
+        )
+        item.save()
+        from ..services.group_process_events import record_change
+
+        record_change(item, previous_status)
+
     if item.visit_id and item.visit.participant_decisions.exists():
         # A later membership change cannot erase other attendees' statements or
         # committed invitations. Fresh participant checks still revoke leavers.
         item.status = "completed"
         item.revision += 1
-        item.save(update_fields=["status", "revision", "updated_at"])
+        record()
         return
     if (
         item.visit_id
@@ -171,7 +227,7 @@ def invalidate_process(item):
     item.consented_ids = []
     item.status = "withdrawn"
     item.revision += 1
-    item.save()
+    record()
 
 
 def invalidate_roster(group):
@@ -182,7 +238,7 @@ def invalidate_roster(group):
     for item in group.processes.exclude(
         status__in=["withdrawn", "expired", "rejected", "completed"]
     ):
-        invalidate_process(item)
+        invalidate_process(item, "roster_changed")
 
 
 def _shortlist_item(group, data):

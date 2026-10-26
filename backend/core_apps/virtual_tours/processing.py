@@ -2,7 +2,6 @@ import copy
 import logging
 import uuid
 from django.db import transaction
-from django.utils import timezone
 from .errors import require
 from .models import TourRevision, TourVariant
 from .panorama import process_panorama
@@ -19,6 +18,7 @@ def build_variants(revision, heartbeat=lambda: None):
     heartbeat()
     if revision.capture_job_id:
         from .capture_delivery import build_variants as build_capture_variants
+
         return build_capture_variants(revision)
     document = copy.deepcopy(revision.authoring)
     source_hash, scopes = validate_authoring(revision, document)
@@ -159,9 +159,15 @@ def process_revision(revision_id, expected_hash):
         revision.processing_token = uuid.uuid4()
         recoveries = revision.report.get("worker_recoveries", 0)
         revision.report = {"worker_recoveries": recoveries} if recoveries else {}
-        revision.save(update_fields=[
-            "processing_state", "processing_token", "stage", "report", "updated_at"
-        ])
+        revision.save(
+            update_fields=[
+                "processing_state",
+                "processing_token",
+                "stage",
+                "report",
+                "updated_at",
+            ]
+        )
     lease = ProcessingLease(revision)
     try:
         variants = build_variants(revision, heartbeat=lease.heartbeat)
@@ -177,19 +183,38 @@ def process_revision(revision_id, expected_hash):
             if isinstance(exc, TourError)
             else "Processing failed. Retry processing or contact support."
         )
-        TourRevision.objects.filter(
-            id=revision_id, source_hash=expected_hash, processing_state="processing",
-            processing_token=lease.token,
-        ).update(
-            processing_state="failed",
-            processing_token=None,
-            stage="failed",
-            report={**revision.report, "code": code, "message": message},
-            updated_at=timezone.now(),
-        )
+        with transaction.atomic():
+            current = (
+                TourRevision.objects.select_for_update()
+                .filter(
+                    id=revision_id,
+                    source_hash=expected_hash,
+                    processing_state="processing",
+                    processing_token=lease.token,
+                )
+                .first()
+            )
+            if current:
+                current.processing_state, current.stage = "failed", "failed"
+                current.processing_token = None
+                current.report = {**current.report, "code": code, "message": message}
+                current.save(
+                    update_fields=[
+                        "processing_state",
+                        "processing_token",
+                        "stage",
+                        "report",
+                        "updated_at",
+                    ]
+                )
+                from .notifications import record_tour
+
+                record_tour(current, "failed", lease.token)
         logger.warning(
             "tour_processing_failed revision=%s error_type=%s code=%s",
-            revision_id, type(exc).__name__, code,
+            revision_id,
+            type(exc).__name__,
+            code,
         )
         return
     with transaction.atomic():
@@ -220,3 +245,6 @@ def process_revision(revision_id, expected_hash):
                 "updated_at",
             ]
         )
+        from .notifications import record_tour
+
+        record_tour(current, "ready", lease.token)

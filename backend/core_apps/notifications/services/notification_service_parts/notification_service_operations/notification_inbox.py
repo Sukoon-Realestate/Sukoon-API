@@ -8,6 +8,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 from core_apps.notifications.models import Notification
 from core_apps.notifications.services.fcm_service import FCMService
 from ..logger import logger
+from core_apps.notifications.services.inbox_scope import filter_scope
 
 
 class NotificationInboxMixin:
@@ -41,19 +42,22 @@ class NotificationInboxMixin:
         )
 
         if send_push:
-            from core_apps.notifications.services.push_delivery import queue_notification
+            from core_apps.notifications.services.push_delivery import (
+                queue_notification,
+            )
+
             queue_notification(notification)
 
         return notification
 
     @classmethod
     def get_user_notifications(
-        cls, user: Any, unread_only: bool = False
+        cls, user: Any, unread_only: bool = False, *, scope=None
     ) -> QuerySet[Notification]:
         """
         Returns notifications belonging to the user.
         """
-        queryset = Notification.objects.filter(user=user)
+        queryset = filter_scope(Notification.objects.filter(user=user), scope)
         if unread_only:
             queryset = queryset.filter(is_read=False)
         return queryset.order_by("-created_at", "-pkid")
@@ -93,19 +97,21 @@ class NotificationInboxMixin:
         return notification
 
     @classmethod
-    def mark_all_as_read(cls, user: Any) -> int:
+    def mark_all_as_read(cls, user: Any, *, scope=None) -> int:
         """
         Marks all unread notifications for the user as read ("تحديد الكل كمقروء").
         """
         now = timezone.now()
-        count = Notification.objects.filter(user=user, is_read=False).update(
-            is_read=True, read_at=now, updated_at=now
-        )
+        count = filter_scope(
+            Notification.objects.filter(user=user, is_read=False), scope
+        ).update(is_read=True, read_at=now, updated_at=now)
         return count
 
     @classmethod
-    def get_unread_count(cls, user: Any) -> int:
+    def get_unread_count(cls, user: Any, *, scope=None) -> int:
         """
         Returns the count of unread notifications for the user.
         """
-        return Notification.objects.filter(user=user, is_read=False).count()
+        return filter_scope(
+            Notification.objects.filter(user=user, is_read=False), scope
+        ).count()

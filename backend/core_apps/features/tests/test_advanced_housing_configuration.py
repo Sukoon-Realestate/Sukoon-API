@@ -6,6 +6,7 @@ from config.advanced_housing import (
     SERVICES,
     mock_mode_available,
     enabled_services_from_env,
+    execution_mode,
 )
 from core_apps.features.services.planning import enabled_services
 from core_apps.features.services.planning_providers import ready_services
@@ -26,6 +27,17 @@ def test_advanced_execution_requires_explicit_mock_and_existing_provider(setting
     settings.RENTAL_RUNTIME_ENVIRONMENT = "production"
     assert not mock_mode_available()
     assert not set(PROVIDER_SERVICES) & set(ready_services(enabled_services()))
+
+
+def test_connected_execution_mode_requires_nonproduction_opt_in(settings):
+    settings.ADVANCED_HOUSING_PROVIDER_MODE = "test"
+    settings.RENTAL_RUNTIME_ENVIRONMENT = "staging"
+    assert execution_mode() == "test"
+    settings.RENTAL_RUNTIME_ENVIRONMENT = "production"
+    assert execution_mode() == "disabled"
+    settings.ADVANCED_HOUSING_PROVIDER_MODE = "live"
+    settings.RENTAL_RUNTIME_ENVIRONMENT = "test"
+    assert execution_mode() == "disabled"
 
 
 @pytest.mark.parametrize(

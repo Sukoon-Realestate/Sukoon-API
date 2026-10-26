@@ -139,12 +139,9 @@ def prepare(user, invoice_id, body, *, rental):
                     "Subscription sandbox checkout is unavailable.",
                     code="purchase_route_unavailable",
                 )
-            if (invoice.amount_minor, invoice.currency, invoice.exponent) != (
-                plan.amount_minor,
-                plan.currency,
-                plan.exponent,
-            ):
-                raise RentalConflict("The plan price changed.", code="invoice_changed")
+            # Hosted checkout collects the issued invoice's immutable price.
+            # Store SKU matching belongs only to the native-store route; the
+            # quote/invoice checks below still fence altered or stale amounts.
         validate_payable(
             invoice,
             user,

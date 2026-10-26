@@ -1,6 +1,7 @@
 from django.urls import path
 from . import company_rental_value_views as value
 from . import company_views as v
+from . import company_negotiation_views as terms
 from . import company_admin_views as a
 from . import company_staff_views as s
 from . import company_work_views as w
@@ -13,11 +14,24 @@ from . import company_saved_views as saved
 from . import workspace_views
 
 urlpatterns = [
+    path("company-terms-negotiations/", terms.negotiations),
+    path("company-terms-negotiations/<uuid:negotiation_id>/", terms.detail),
+    path(
+        "company-terms-negotiations/<uuid:negotiation_id>/<slug:action>/", terms.detail
+    ),
+    path("company-booking-items/<uuid:item_id>/negotiation/", terms.start),
     path("workspace-summary/", workspace_views.summary),
     path("companies/<uuid:company_id>/saved-lists/", saved.collection),
     path("company-saved-lists/<uuid:list_id>/", saved.detail),
     path("company-saved-lists/<uuid:list_id>/items/", saved.items),
-    *[path("company-saved-lists/<uuid:list_id>/" + action + "/", saved.action, {"action": action}) for action in ("rename", "archive", "add", "remove")],
+    *[
+        path(
+            "company-saved-lists/<uuid:list_id>/" + action + "/",
+            saved.action,
+            {"action": action},
+        )
+        for action in ("rename", "archive", "add", "remove")
+    ],
     path("companies/<uuid:company_id>/rental-summary/", value.rental_summary),
     path("companies/<uuid:company_id>/housing-report/", value.housing_report),
     path("company-requirements/", value.catalog),

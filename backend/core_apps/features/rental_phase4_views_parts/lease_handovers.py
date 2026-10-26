@@ -131,6 +131,9 @@ def handover_detail(request, handover_id):
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
         handover = _handover(request, handover_id, lock=True)
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
         if handover.revision != expected:
             raise RentalConflict("Handover revision conflict.", code="stale_revision")
         if "edit_handover" not in handover_actions(request.user, handover):
