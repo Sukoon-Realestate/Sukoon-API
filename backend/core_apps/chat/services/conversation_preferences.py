@@ -6,7 +6,16 @@ from django.db import transaction
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db.models import Q
 from rest_framework.exceptions import PermissionDenied, ValidationError
-from core_apps.chat.models import Conversation, ConversationParticipant, ConversationWorkspace, ChatBlock, ChatList
+from core_apps.chat.models import (
+    Conversation,
+    ConversationParticipant,
+    ConversationWorkspace,
+    ChatBlock,
+    ChatList,
+)
+
+from .inbox_preferences import inbox_payload, apply_inbox_preferences
+from . import group_notification_preferences
 
 WORKSPACES = {"individual", "student", "owner"}
 
@@ -84,20 +93,41 @@ def contextual_conversation(user, other, workspace, context=None):
 
 def preferences_payload(conversation, user, participant=None):
     participant = participant or conversation.participant_set.get(user=user)
-    other = conversation.participants.exclude(pk=user.pk).first() if conversation.kind == "direct" else None
-    own = bool(other and ChatBlock.objects.filter(user=user, blocked_user=other).exists())
-    blocked = bool(other and ChatBlock.objects.filter(Q(user=user, blocked_user=other) | Q(user=other, blocked_user=user)).exists())
+    other = (
+        conversation.participants.exclude(pk=user.pk).first()
+        if conversation.kind == "direct"
+        else None
+    )
+    own = bool(
+        other and ChatBlock.objects.filter(user=user, blocked_user=other).exists()
+    )
+    blocked = bool(
+        other
+        and ChatBlock.objects.filter(
+            Q(user=user, blocked_user=other) | Q(user=other, blocked_user=user)
+        ).exists()
+    )
     return {
         "workspace": viewer_workspace(conversation, user),
-        "company_id": str(conversation.company_request.company.id) if conversation.kind == "company_request" else "",
+        "company_id": (
+            str(conversation.company_request.company.id)
+            if conversation.kind == "company_request"
+            else ""
+        ),
         "can_block": conversation.kind == "direct",
         "consent_revision": conversation.consent_revision,
         "delete_through_sequence": conversation.last_sequence,
         "is_favorite": participant.is_favorite,
-        "is_muted": participant.is_muted,
+        **inbox_payload(participant),
+        **group_notification_preferences.payload(conversation, participant),
         "blocked_by_me": own,
         "is_blocked": blocked,
-        "list_ids": [str(x) for x in conversation.private_lists.filter(user=user).values_list("id", flat=True)],
+        "list_ids": [
+            str(x)
+            for x in conversation.private_lists.filter(user=user).values_list(
+                "id", flat=True
+            )
+        ],
     }
 
 
@@ -105,6 +135,7 @@ def preferences_payload(conversation, user, participant=None):
 def update_preferences(conversation, user, data):
     from .group_access import authorize
     from .group_events import record_event
+
     if not isinstance(data, dict):
         raise ValidationError("Supply a conversation preference object.")
     # Pair locks have the same order as conversation creation. Acquiring them
@@ -112,11 +143,27 @@ def update_preferences(conversation, user, data):
     authorize(conversation, user)
     if "blocked" in data:
         from django.contrib.auth import get_user_model
-        list(get_user_model().objects.select_for_update().filter(
-            pk__in=conversation.participants.values_list("pk", flat=True)
-        ).order_by("pk"))
+
+        list(
+            get_user_model()
+            .objects.select_for_update()
+            .filter(pk__in=conversation.participants.values_list("pk", flat=True))
+            .order_by("pk")
+        )
     conversation, participant, _ = authorize(conversation, user, lock=True)
-    allowed = {"is_favorite", "is_muted", "blocked", "delete_for_me", "list_ids", "delete_through_sequence"}
+    allowed = {
+        "is_favorite",
+        "is_muted",
+        "blocked",
+        "delete_for_me",
+        "list_ids",
+        "delete_through_sequence",
+        "is_pinned",
+        "is_marked_unread",
+        "mute_duration",
+        "notification_mode",
+        "notify_all_mentions",
+    }
     if set(data) - allowed:
         raise ValidationError("Unsupported conversation preference.")
     for field in ("is_favorite", "is_muted", "blocked", "delete_for_me"):
@@ -125,15 +172,23 @@ def update_preferences(conversation, user, data):
     for field in ("is_favorite", "is_muted"):
         if field in data:
             setattr(participant, field, data[field])
+    apply_inbox_preferences(participant, conversation, data)
+    group_notification_preferences.apply(conversation, participant, data)
     if data.get("delete_for_me"):
+        participant.unread_reminder_sequence = None
         cutoff = data.get("delete_through_sequence")
         if type(cutoff) is not int or not 0 <= cutoff <= conversation.last_sequence:
-            raise ValidationError({"delete_through_sequence": "Refresh the conversation before clearing history."})
+            raise ValidationError(
+                {
+                    "delete_through_sequence": "Refresh the conversation before clearing history."
+                }
+            )
         cutoff = max(cutoff, participant.hidden_through_sequence or 0)
         participant.hidden_through_sequence = cutoff
         participant.visible_from_sequence = cutoff + 1
         participant.last_read_sequence = max(participant.last_read_sequence, cutoff)
         from .group_access import unread_count
+
         participant.unread_count = unread_count(conversation, participant)
     if "blocked" in data:
         if conversation.kind != "direct":
@@ -142,12 +197,20 @@ def update_preferences(conversation, user, data):
         if data["blocked"]:
             _, changed = ChatBlock.objects.get_or_create(user=user, blocked_user=other)
         else:
-            changed = ChatBlock.objects.filter(user=user, blocked_user=other).delete()[0] > 0
+            changed = (
+                ChatBlock.objects.filter(user=user, blocked_user=other).delete()[0] > 0
+            )
         if changed:
             conversation.consent_revision += 1
             conversation.save(update_fields=["consent_revision"])
         # Invalidate every open thread between these people, across workspaces.
-        for thread in Conversation.objects.select_for_update().filter(kind="direct", participant_set__user=user).filter(participant_set__user=other).exclude(pk=conversation.pk).order_by("pk"):
+        for thread in (
+            Conversation.objects.select_for_update()
+            .filter(kind="direct", participant_set__user=user)
+            .filter(participant_set__user=other)
+            .exclude(pk=conversation.pk)
+            .order_by("pk")
+        ):
             if changed:
                 thread.consent_revision += 1
                 thread.save(update_fields=["consent_revision"])
@@ -157,8 +220,19 @@ def update_preferences(conversation, user, data):
         if not isinstance(ids, list) or any(not isinstance(x, str) for x in ids):
             raise ValidationError({"list_ids": "Supply your list identities."})
         try:
-            organization = str(conversation.company_request.company.id) if conversation.kind == "company_request" else ""
-            rows = list(ChatList.objects.filter(user=user, workspace=viewer_workspace(conversation, user), organization=organization, id__in=ids))
+            organization = (
+                str(conversation.company_request.company.id)
+                if conversation.kind == "company_request"
+                else ""
+            )
+            rows = list(
+                ChatList.objects.filter(
+                    user=user,
+                    workspace=viewer_workspace(conversation, user),
+                    organization=organization,
+                    id__in=ids,
+                )
+            )
         except (ValueError, TypeError, DjangoValidationError):
             raise ValidationError({"list_ids": "Invalid list identity."})
         if len(rows) != len(set(ids)):

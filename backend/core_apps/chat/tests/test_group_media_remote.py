@@ -206,6 +206,10 @@ def test_remote_cleanup_is_scoped_to_revoked_attachment(chat_group, durable):
         remote.cloud.cloudinary.api, "resources", side_effect=listed
     ), patch.object(remote.cloud.cloudinary.uploader, "destroy", side_effect=destroy):
         remove_files(item)
+        assert len(objects) == 8  # Active references must never be destroyed.
+        item.state = "revoked"
+        item.save(update_fields=["state"])
+        remove_files(item)
     assert len(objects) == 4
     assert all(
         other.storage_key[:32] in k or other.thumbnail_key[:32] in k for k in objects

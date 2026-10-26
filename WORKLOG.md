@@ -1,5 +1,12 @@
 # Worklog
 
+## 2026-10-26
+
+### Personal chat inbox and authenticated notification actions
+- **What:** Added per-participant conversation pins, unread reminders without rewinding receipts, unread filtering before pagination, and timed mute expiry. Added authenticated notification reply/read actions scoped to the delivered message, recipient and current membership; replies reuse message idempotency.
+- **Compatibility:** Nullable chat and device capability migrations preserve rolling deploys. Only capable registrations receive Android data notifications or the iOS action category. Push content remains private and older clients retain ordinary visible alerts.
+- **Validation:** 390 PostgreSQL chat/notification tests passed, two native-media tests skipped; 28 focused tests passed after the final legacy mute-path cleanup. Django checks and migration drift checks passed. Samsung QA confirmed one inline reply, exact read cutoffs, and later messages remaining unread against the isolated API. Production delivery and physical iOS are separate checks in the sibling verification artifact.
+
 ## 2026-10-23
 
 ### Add property moderation cycle to Django admin
@@ -1080,3 +1087,32 @@
 - **Behavior:** Broadcast recipients are the current eligible members at send time, excluding the sender. Each receives the existing exact-message mention notification. Opening the conversation and advancing its normal read cursor does not consume the mention queue; only the displayed mention is acknowledged. Receipts are scoped to the current membership period and exclude removed messages. Edits can remove recipients but cannot add notifications.
 - **Validation:** Clean-release PostgreSQL chat suite: 301 passed, 2 skipped; company discussion suite: 7 passed; no pending model changes. Real Android cycle sent `@all`, received it on two authenticated peer sockets with individual notifications, and navigated five exact mentions across old history pages, retaining consumed progress after reopening. Provider push delivery to a physical recipient device remains unverified.
 - **Files:** Chat models/migration 0023, mention services, group send/events/edit handling, authenticated routes, and focused chat tests. Flutter integration and its video are maintained in darak-app.
+
+
+### Forward existing chat messages with independent recipient access
+
+- **What:** Added authenticated forwarding destinations and a forward action, with a server-owned `is_forwarded` label in rich and legacy message projections.
+- **Why:** Let a member forward an existing text, image, voice note, video, file, location or permitted property card to another existing conversation.
+- **Details:** The service rechecks current source visibility, reviewed revision, destination send permission and both membership periods. It creates a new sender/message identity, omits original author/conversation references, replies, mentions and reactions, and replays the same client operation without duplicates. Forwarded media receives independent conversation attachment records; immutable stored bytes remain while any active attachment references them. Cleanup now explicitly preserves active references. Opposite-direction forwards acquire shared roots in a stable order.
+- **Validation:** Clean-release PostgreSQL chat suite: 313 passed, 2 skipped, including duplicate/concurrent forwards, permission revocation, pagination, blocked direct messages and original-media deletion. Django checks, migration drift check and focused Flake8 passed. Flutter includes protected pending-operation recovery and a searchable destination picker; its device/deployment evidence is tracked separately in darak-app.
+- **Final checks:** 29 focused PostgreSQL tests passed after a sequential rollback/reapply of migration 0024, including old-instance inserts during rolling deployment. Flutter: 378 chat tests passed and no analyzer issues. A real Samsung cycle forwarded text and image from a group to an outside direct-chat recipient, checked independent socket delivery/private image access and persistence after reopening.
+- **Files:** Chat migration 0024, message flag/projections, forwarding service/views/routes, private-media cleanup, translations and forwarding/cleanup tests.
+
+
+### Add shared chat productivity tools and private saved replies
+
+- **What:** Added personal starred messages, timed shared pins, honest per-message read timestamps, ordered multi-message/multi-destination forwarding, personal quick replies, and group/company polls.
+- **Authority and recovery:** Every action rechecks current conversation visibility and membership period. Stars are private and event delivery is fenced to the owning membership. Group pins require an administrator, company pins require the coordinator, and direct pins require send permission. Polls accept 2–10 unique choices and only count current eligible memberships. Read timestamps are captured on the first real read from this release onward; old reads retain an unavailable time. Quick replies use revision checks and deletion tombstones. Batch forwarding is atomic, ordered, bounded to 20 messages/5 destinations, and replayed by the original operation identity.
+- **Concurrency:** A concurrent group-send/forward test exposed conflicting foreign-key locks on direct-chat users. The shared direct/forward user locks now use NO KEY UPDATE so unrelated group inserts can complete without weakening authorization. One batch operation identity is serialized separately; existing sorted conversation/root locking remains authoritative.
+- **Validation:** Isolated PostgreSQL chat/company regression: 335 passed, 2 skipped; an additional company-tool authorization test passed. Django system and migration drift checks passed; new services/models/views/tests passed focused Flake8. Flutter/device/deployment evidence is maintained separately in darak-app.
+- **Files:** Chat migration 0025, productivity models/services/views/routes, message projections/read handling/send/event support, direct lock compatibility, translations, and focused group/direct/company tests.
+
+
+## 2026-10-26
+
+### Respect group notification choices at creation and delivery
+
+- **What:** Added private per-membership choices for all messages, mentions only, or mute, plus an independent receive-`@all` setting for housing groups and company discussions.
+- **Behavior:** Personal mentions remain eligible when broadcast mentions are disabled; full mute suppresses every message alert. Timed mute resumes the member's previous all/mentions mode. Mention navigation remains independent of notification delivery. Both chat outbox and durable push dispatch recheck the current preference, membership, message visibility and read cursor before delivery.
+- **Compatibility:** Direct chat keeps its existing mute controls. Migration 0027 preserves PostgreSQL insert defaults for prior application instances during rolling deployment. Existing participants retain all-message notifications and `@all` unless already muted.
+- **Validation:** Isolated PostgreSQL chat/notification regression: 406 passed, 2 skipped before adding the rolling-default assertion; 17 focused policy and migration-default tests then passed on a newly created test database. Django system and model-drift checks passed. Flutter media controls are device-local and do not delete messages or server attachments. Device and deployed evidence are reported separately in darak-app.

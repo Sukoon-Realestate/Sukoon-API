@@ -43,8 +43,11 @@ class ConversationListAPIView(ListAPIView):
         conversation_type = self.request.query_params.get("conversation_type")
         if conversation_type is not None:
             from rest_framework.exceptions import ValidationError
+
             if conversation_type not in {"housing_group", "direct", "company_request"}:
-                raise ValidationError({"conversation_type": "Unknown conversation type."})
+                raise ValidationError(
+                    {"conversation_type": "Unknown conversation type."}
+                )
             queryset = queryset.filter(kind=conversation_type)
         if "q" in self.request.query_params:
             from core_apps.chat.services.search import filter_conversations, query_text
@@ -53,12 +56,24 @@ class ConversationListAPIView(ListAPIView):
                 queryset, query_text(self.request.query_params), self.request.user
             )
         if self.request.query_params.get("favorite") == "true":
-            queryset = queryset.filter(participant_set__user=self.request.user, participant_set__is_favorite=True)
+            queryset = queryset.filter(
+                participant_set__user=self.request.user,
+                participant_set__is_favorite=True,
+            )
         if self.request.query_params.get("list_id"):
             from rest_framework.serializers import UUIDField
+
             list_id = UUIDField().run_validation(self.request.query_params["list_id"])
-            queryset = queryset.filter(private_lists__user=self.request.user, private_lists__id=list_id)
-        return queryset.distinct()
+            queryset = queryset.filter(
+                private_lists__user=self.request.user, private_lists__id=list_id
+            )
+        from core_apps.chat.services.inbox_preferences import organize_inbox
+
+        return organize_inbox(
+            queryset.distinct(),
+            self.request.user,
+            unread_only=self.request.query_params.get("unread_only") == "true",
+        )
 
     def _base_queryset(self):
         if "workspace" in self.request.query_params:
@@ -74,6 +89,7 @@ class ConversationListAPIView(ListAPIView):
                 .order_by("-last_message_at", "-id")
             )
         from core_apps.chat.services.workspace_inbox import scoped
+
         return (
             scoped(self.request.user, "individual")
             .prefetch_related("participants__profile", "participant_set")

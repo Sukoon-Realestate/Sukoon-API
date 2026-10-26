@@ -36,6 +36,8 @@ def provision_group(group):
             participant.visible_from_sequence = conversation.last_sequence + 1
             participant.last_read_sequence = conversation.last_sequence
             participant.unread_count = 0
+            participant.unread_reminder_sequence = None
+            participant.pinned_at = None
             participant.save()
     return conversation
 

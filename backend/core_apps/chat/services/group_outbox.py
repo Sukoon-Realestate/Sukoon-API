@@ -7,6 +7,7 @@ from core_apps.chat.models import ChatEvent, ChatNotificationDelivery
 from .group_access import authorize, lock_conversation_root
 from .group_events import event_payload
 from .mentions import is_mentioned
+from .group_notification_preferences import allows_message
 
 
 def drain_outbox(limit=100):
@@ -65,7 +66,7 @@ def _notify(event, user):
     except APIException:
         return
     mentioned = is_mentioned(event.message, participant)
-    if (participant.is_muted and not mentioned) or participant.last_read_sequence >= event.message.sequence:
+    if not allows_message(participant, event.message):
         return
     delivery, _ = ChatNotificationDelivery.objects.get_or_create(event=event, user=user)
     if delivery.notification_id:
@@ -78,6 +79,7 @@ def _notify(event, user):
     direct = conversation.kind == "direct"
     group_id = "" if company or direct else str(conversation.housing_group.id)
     from .conversation_preferences import viewer_workspace
+
     destination = (
         {
             "type": "new_message",
@@ -110,21 +112,35 @@ def _notify(event, user):
             }
         )
     )
+    destination.update(
+        {
+            "chat_actions_version": "1",
+            "recipient_id": str(user.id),
+            "membership_period": str(participant.membership_period),
+        }
+    )
     if mentioned:
         destination["is_mention"] = "true"
     notification = NotificationService.create_notification(
         user=user,
         title=(
-            "تمت الإشارة إليك في الشات" if mentioned else
-            "رسالة جديدة"
-            if direct
+            "تمت الإشارة إليك في الشات"
+            if mentioned
             else (
-                "رسالة جديدة في مناقشة الشركة"
-                if company
-                else "رسالة جديدة في شات الجروب"
+                "رسالة جديدة"
+                if direct
+                else (
+                    "رسالة جديدة في مناقشة الشركة"
+                    if company
+                    else "رسالة جديدة في شات الجروب"
+                )
             )
         ),
-        body="افتح سكون لقراءة الرسالة التي تمت الإشارة إليك فيها" if mentioned else "افتح سكون لقراءة الرسالة",
+        body=(
+            "افتح سكون لقراءة الرسالة التي تمت الإشارة إليك فيها"
+            if mentioned
+            else "افتح سكون لقراءة الرسالة"
+        ),
         notification_type="new_message",
         category=(
             "chat"
@@ -135,6 +151,8 @@ def _notify(event, user):
         data=destination,
         send_push=False,
     )
+    notification.data = {**notification.data, "notification_id": str(notification.id)}
+    notification.save(update_fields=["data", "updated_at"])
     delivery.notification = notification
     delivery.save(update_fields=["notification", "updated_at"])
 
@@ -179,8 +197,7 @@ def deliver_pushes(limit=100, *, event_pk=None):
                 continue
             delivery.event.message.refresh_from_db()
             if (
-                (participant.is_muted and not is_mentioned(delivery.event.message, participant))
-                or participant.last_read_sequence >= delivery.event.message.sequence
+                not allows_message(participant, delivery.event.message)
                 or event_payload(delivery.event, delivery.user) is None
                 or delivery.event.message.deleted_at
             ):

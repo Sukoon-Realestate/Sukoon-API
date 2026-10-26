@@ -136,6 +136,8 @@ def provision(request, actor):
             participant.company_membership = member
             participant.membership_revision = member.revision
             participant.membership_period = uuid.uuid4()
+            participant.pinned_at = None
+            participant.unread_reminder_sequence = None
             participant.save()
     record_event(conversation, "conversation.updated", actor=actor)
     return conversation

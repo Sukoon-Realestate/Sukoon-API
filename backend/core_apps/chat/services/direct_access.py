@@ -20,9 +20,10 @@ class DirectConversationGrant:
 
 
 def lock_root(conversation):
-    # Match direct conversation creation: users, relationship, conversation.
+    # Match direct creation order. NO KEY UPDATE also lets ordinary group
+    # messages reference these users while a multi-chat forward waits on a group.
     people = list(
-        User.objects.select_for_update()
+        User.objects.select_for_update(no_key=True)
         .filter(
             conversation_participants__conversation=conversation,
         )

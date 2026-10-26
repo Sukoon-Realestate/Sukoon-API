@@ -104,6 +104,17 @@ class ConversationParticipant(TimeStampedModel):
     membership_period = models.UUIDField(null=True, blank=True)
     visible_from_sequence = models.PositiveBigIntegerField(default=1)
     last_read_sequence = models.PositiveBigIntegerField(default=0)
+    pinned_at = models.DateTimeField(null=True, blank=True)
+    unread_reminder_sequence = models.PositiveBigIntegerField(null=True, blank=True)
+    muted_until = models.DateTimeField(null=True, blank=True)
+    class NotificationMode(models.TextChoices):
+        ALL = "all", _("All messages")
+        MENTIONS = "mentions", _("Mentions only")
+        MUTED = "muted", _("Muted")
+
+    # The unmuted preference survives a temporary mute.
+    notification_mode = models.CharField(max_length=12, choices=NotificationMode.choices, default=NotificationMode.ALL)
+    notify_all_mentions = models.BooleanField(default=True)
     is_muted = models.BooleanField(default=False)
     is_favorite = models.BooleanField(default=False)
     hidden_through_sequence = models.PositiveBigIntegerField(null=True, blank=True)

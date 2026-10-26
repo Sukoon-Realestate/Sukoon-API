@@ -16,7 +16,7 @@ DEFAULTS = {
     "file_max_bytes": 25 * 1024 * 1024,
     "video_max_bytes": 50 * 1024 * 1024,
     "video_max_duration_ms": 300000,
-    "message_kinds": ["text", "image", "voice", "file", "video", "location"],
+    "message_kinds": ["text", "image", "voice", "file", "video", "location", "poll"],
     "history_page_size": 30,
     "history_max_page_size": 100,
     "upload_concurrency": 2,
@@ -26,9 +26,9 @@ DEFAULTS = {
 }
 
 
-def limits(*, property_sharing=False):
+def limits(*, property_sharing=False, polls=True):
     result = {**DEFAULTS, **getattr(settings, "CHAT_MEDIA_LIMITS", {})}
-    kinds = [kind for kind in result["message_kinds"] if kind != "property"]
+    kinds = [kind for kind in result["message_kinds"] if kind != "property" and (polls or kind != "poll")]
     if property_sharing:
         kinds.append("property")
     return {**result, "message_kinds": kinds}

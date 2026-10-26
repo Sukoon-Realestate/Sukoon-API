@@ -64,8 +64,19 @@ def allowed(item):
             Http404,
         ):
             return False
-        if participant.is_muted:
+        from core_apps.chat.services.inbox_preferences import notifications_muted
+
+        if notifications_muted(participant):
             return False
+        if chat.kind != "direct" or data.get("message_id"):
+            from core_apps.chat.models import Message
+            from core_apps.chat.services.group_notification_preferences import allows_message
+            try:
+                message = Message.objects.get(id=UUID(str(data.get("message_id"))), conversation=chat)
+            except (ValueError, TypeError, Message.DoesNotExist):
+                return False
+            if not allows_message(participant, message):
+                return False
         peers = (
             ConversationParticipant.objects.filter(conversation__id=conversation)
             .exclude(user=user)
@@ -123,6 +134,8 @@ def dispatch(limit=100):
             body=notice.body,
             data={**(notice.data or {}), "notification_id": str(notice.id)},
             language=item.device.language,
+            device_type=item.device.device_type,
+            chat_actions_version=item.device.chat_actions_version or 0,
         )
         PushDelivery.objects.filter(pk=identity).update(
             claimed_until=None,

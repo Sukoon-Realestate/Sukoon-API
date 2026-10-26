@@ -5,6 +5,10 @@ PUSH_BODY = "لديك تحديث جديد. افتح التطبيق لعرضه. /
 ROUTING_FIELDS = frozenset(
     {
         "action_type",
+        "message_id",
+        "recipient_id",
+        "membership_period",
+        "chat_actions_version",
         "target_id",
         "workspace",
         "presentation_workspace",
