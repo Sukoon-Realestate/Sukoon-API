@@ -1,0 +1,1368 @@
+[
+  {
+    "id": "S161",
+    "name": "طلبات الصيانة",
+    "english": "Rental maintenance list",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/screens/maintenance_request_list_screen.dart",
+    "sha256": "64e1b0abb260ebc9c02ba413c4ecc7299cb2d350da7a13fed8f0a7c342146e10",
+    "localeKeys": [
+      "rentalMaintenance"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/widgets/maintenance_request_list.dart",
+        "sha256": "9061f9ddc3293f1e803bfcca9b2a723028135f826b8324f6462819d27ee69ed7",
+        "localeKeys": [
+          "rentalMaintenance"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/data/models/maintenance_request.dart",
+        "sha256": "8f9c73b2f08a7a75bd10048ec3019108a8460f350d26400bb5d9f6533120d1a9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/widgets/maintenance_request_empty_state.dart",
+        "sha256": "355cb11a6476bbf6977db41651cea3cb6862a344c6bf70140fd58f42785fbe71",
+        "localeKeys": [
+          "rentalMaintenance",
+          "rentalMaintenanceEmpty"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/widgets/maintenance_request_card.dart",
+        "sha256": "59fcb2cd73e554104aab9fdc10cf921940b7123206241b808fa14a384ff2f6be",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S140",
+    "behavior": "Lease/workspace-scoped paginated maintenance list. Refresh after changed detail/create returns. Appointment, proposed cost and completed work are separate states; empty success is valid.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S162",
+    "name": "تفاصيل الاعتراض",
+    "english": "Rental dispute detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/screens/rental_dispute_detail_screen.dart",
+    "sha256": "1c6b55c58a41b7a021c01bc5b49ec9e55c3dfd027218ab767642753ac8cd292c",
+    "localeKeys": [
+      "rentalDisputes"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/cubits/rental_dispute_details_cubit.dart",
+        "sha256": "31c6ee4f052c53c1f53d1955f69ddea6cac197cf00dacd9a4580bb5ffa7cc6ae",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/data/models/rental_dispute.dart",
+        "sha256": "7401a80d190765fb9dda86e168a38c93380a3a10d0ef179c269367b0d02c15d1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/widgets/rental_dispute_details.dart",
+        "sha256": "571d483b940d8fd174ef5934c61471d666ad4d32e7c7e902593ad432202f32f8",
+        "localeKeys": [
+          "rentalReply"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S164",
+    "behavior": "Reason/resolution, response history and lease-bound evidence. Only reply permission plus fresh detail allows a response; expected revision and original request identity preserved. No automatic adjudication.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "resolved",
+      "evidence-missing"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "resolved",
+      "stale",
+      "evidence-missing",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S163",
+    "name": "اعتراض جديد",
+    "english": "Rental dispute creation",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/screens/rental_dispute_form_screen.dart",
+    "sha256": "dffefe475d1817c1738e36db33d1e50fd5c0b3b047c6b3008cdefcb487e8f5ef",
+    "localeKeys": [
+      "rentalDispute"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/widgets/rental_dispute_form.dart",
+        "sha256": "27cb55be85d732a3b73f3e7a9e5eae2978df5858e5a47b827cd2bdf48f6c8922",
+        "localeKeys": [
+          "rentalSubmit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/data/models/dispute_body.dart",
+        "sha256": "f44949a4b0ac58a31c543fad66b32f8e1d9ab56cd01326452778c7d701541ca7",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S164",
+    "behavior": "Subject defaults to lease only when subjectId empty; preserve subjectKind/id and capability. Required reason, evidence IDs and recoverable evidence draft. Submission creates a dispute, not a liability ruling.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "evidence-missing"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "evidence-missing",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S164",
+    "name": "الاعتراضات",
+    "english": "Rental disputes list",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/screens/rental_dispute_list_screen.dart",
+    "sha256": "285305827a0e6f78acbd5e87359bb07546bd3b6854ba455d0a20f284b288eb4a",
+    "localeKeys": [
+      "rentalDisputes"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/widgets/rental_dispute_list.dart",
+        "sha256": "352d852ea29104232966e67b3c6af8fb4bad143a380f26a6bcbc93518699c494",
+        "localeKeys": [
+          "rentalDisputes"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/data/models/rental_dispute.dart",
+        "sha256": "7401a80d190765fb9dda86e168a38c93380a3a10d0ef179c269367b0d02c15d1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/widgets/rental_dispute_empty_state.dart",
+        "sha256": "38c9464881525f2cb7e2089da5b93aa8b4fd08e22423d9113ac67dc0bbd948b3",
+        "localeKeys": [
+          "rentalDisputes",
+          "rentalEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/widgets/rental_dispute_card.dart",
+        "sha256": "0e4e3fe355e88c63f6c29d81c4199c397ce7d35b784670ac2047d6056dfd5bf4",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S140",
+    "behavior": "Paginated lease/workspace disputes with valid empty data. Detail returns refresh; status/resolution from server. No implied financial hold or settlement from list state.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S165",
+    "name": "تفاصيل تغيير الإيجار",
+    "english": "Rental change detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_change_detail_screen.dart",
+    "sha256": "956725bc0119187bfe370024594aecca251111630538812e7214f03b4d1a58c1",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/enums/rental_change_kind.dart",
+        "sha256": "a755f3ffcb2b7a56125826fb9f9c98bb876e06d4152559bdeda98e182271f841",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/cubits/rental_change_cubit.dart",
+        "sha256": "5cbc007c2ba062826d338c1b8c216dfd5de6bc64d1548e0a9410c7b0e30da050",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/rental_change.dart",
+        "sha256": "7ef444949899b1d609cfe1dce5332d0f307cb337e185f69b9d13381e4877f05a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/rental_change_details.dart",
+        "sha256": "163b82bfdf7c189ae352276f21106b51cde4e2094334549e45f95652e57bf006",
+        "localeKeys": [
+          "rentalApprove",
+          "rentalDeferredUntil",
+          "rentalDocuments",
+          "rentalEffectiveDate",
+          "rentalExternalPaymentBody",
+          "rentalOriginalDue",
+          "rentalProposeExitDate",
+          "rentalReject",
+          "rentalRequestChanges",
+          "rentalRequestedDate",
+          "rentalSignature",
+          "rentalSubmitSignature"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S168",
+    "behavior": "Kind-specific requested/original/deferred/effective dates and known amount. Amendment/renewal show before/after terms. Sign requires document ID/hash, permission and freshness; accept/reject/request_changes/submit_for_signature/propose_end are separate commands.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "amendment",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S166",
+    "name": "طلب تغيير الإيجار",
+    "english": "Rental change request",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_change_form_screen.dart",
+    "sha256": "45ffb5df32dae7b935ec18c0342332080802ed50cbd99f5097f9539540809766",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/enums/rental_change_kind.dart",
+        "sha256": "a755f3ffcb2b7a56125826fb9f9c98bb876e06d4152559bdeda98e182271f841",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/rental_change_form.dart",
+        "sha256": "4c1a22cb59f970b65324d08f8705a0e7c07fa62a2b78f52e813f103741fcf705",
+        "localeKeys": [
+          "rentalChangesBody",
+          "rentalExternalPaymentBody",
+          "rentalInvalidInput",
+          "rentalSelectInvoice",
+          "rentalTerminationBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/rental_change_body.dart",
+        "sha256": "257529c401a7885261f26b71100f8d335b60f6555caeb43d0a3649a26d1d81fd",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S168",
+    "behavior": "Read current rental center except externalPayment which routes directly to SupportNewTicketScreen with offPlatformPayment lease/invoice context. Extension requires invoice; termination/amendment effective date; renewal uses exclusive current end as next start; terms validate periods/rent/deposit and included/excluded services. Evidence/revision/recovery retained.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "renewal",
+      "termination",
+      "external-payment",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S167",
+    "name": "توقيع ملحق الإيجار",
+    "english": "Rental change signing",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_change_signing_screen.dart",
+    "sha256": "56468ebf1fb4925e14c3f8930d13407bb31bf3d254f296cae315cb792748a003",
+    "localeKeys": [
+      "rentalSignature"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/rental_change.dart",
+        "sha256": "7ef444949899b1d609cfe1dce5332d0f307cb337e185f69b9d13381e4877f05a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/enums/rental_change_kind.dart",
+        "sha256": "a755f3ffcb2b7a56125826fb9f9c98bb876e06d4152559bdeda98e182271f841",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/rental_change_signing_form.dart",
+        "sha256": "146e5cb009690c92e37565837c17622cf1f2cc630a614ace7517ef5a5824b90e",
+        "localeKeys": [
+          "paidLeaseRefreshNotice",
+          "rentalContractReadAck",
+          "rentalSignature",
+          "rentalVersion"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S165",
+    "behavior": "Read acknowledgment is mandatory; preserve kind, revision, document hash and signature session. Resume original provider session before creating another, sensitive authorization and expiry apply. Returning from hosted signing requires authoritative refresh.",
+    "kind": "signing",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "expired",
+      "signed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "expired",
+      "signed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S168",
+    "name": "تغييرات الإيجار",
+    "english": "Rental changes collection",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_changes_screen.dart",
+    "sha256": "af556dae155db73985dc5cc3c67cd20aaa028caa4ef0fcd975dc8e96dd7f9707",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/enums/rental_change_kind.dart",
+        "sha256": "a755f3ffcb2b7a56125826fb9f9c98bb876e06d4152559bdeda98e182271f841",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/rental_changes_list.dart",
+        "sha256": "112318306b5b47e20b42bd70258da6b17a8cd33c47ac74fc38c5f78a450ec784",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/rental_change.dart",
+        "sha256": "7ef444949899b1d609cfe1dce5332d0f307cb337e185f69b9d13381e4877f05a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/rental_changes_empty_state.dart",
+        "sha256": "2a4d8fda2798665ac3cec69c5d4b8f380ff73f93861c59b83c6269c6749b186c",
+        "localeKeys": [
+          "rentalEmptyBody"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S140",
+    "behavior": "One reusable collection for supplied RentalChangeKind, not separate screen counts. List and creation preserve lease/workspace/kind and refresh on return; do not blend renewal, termination or invoice-extension contexts.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S169",
+    "name": "التخطيط للانتقال",
+    "english": "Tenancy transition planning",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/tenancy_planning_screen.dart",
+    "sha256": "fb3a8ef3e5799f74c2f0773d0ae6daf0cd99f234ea0cbafaafd23fdfdaaeefea",
+    "localeKeys": [
+      "departureNotice",
+      "departureReplacement",
+      "departureTitle",
+      "rentalRenewal"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_changes_screen.dart",
+        "sha256": "af556dae155db73985dc5cc3c67cd20aaa028caa4ef0fcd975dc8e96dd7f9707",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/enums/rental_change_kind.dart",
+        "sha256": "a755f3ffcb2b7a56125826fb9f9c98bb876e06d4152559bdeda98e182271f841",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/tenancy_transitions_list.dart",
+        "sha256": "4005c18865865e0d45c0bbe6db46dc3065d401f14617113dbfbd08015f0c4797",
+        "localeKeys": [
+          "departureNoRelease",
+          "departureNotice",
+          "departureReplacement",
+          "departureRequestReplacement",
+          "departureSendNotice"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/tenancy_transition.dart",
+        "sha256": "bb10f13be83f0a064f2e22c870acd8dfa28450ea52ba8036f10e9bcd373b4c80",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/rental_changes_list.dart",
+        "sha256": "112318306b5b47e20b42bd70258da6b17a8cd33c47ac74fc38c5f78a450ec784",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/tenancy_transitions_empty_state.dart",
+        "sha256": "f5649e8e5f5d6e431ee9273a2c9524e42f0bf900cda15a836d60d2622eeae837",
+        "localeKeys": [
+          "departureEmpty",
+          "departureEmptyHelp"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S140",
+    "behavior": "Two tabs for move-out notices/replacements, separate renewal route, history and execution entries; move network tenant-only. Capability gates creation; preserve tenancy selection and future-only transition semantics.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S170",
+    "name": "إعداد إشعار انتقال",
+    "english": "Tenancy transition editor",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/tenancy_transition_edit_screen.dart",
+    "sha256": "aa95566f387ac0e88eb6a3df1903d438a34c0d9830ecf5d7aec29703b8f19652",
+    "localeKeys": [
+      "departureNotice",
+      "departureReplacement"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/tenancy_transition.dart",
+        "sha256": "bb10f13be83f0a064f2e22c870acd8dfa28450ea52ba8036f10e9bcd373b4c80",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/tenancy_transition_editor.dart",
+        "sha256": "672211b3e41d0bea62738c4e993814f5ce2dce335319f587685349f1d7ef85b1",
+        "localeKeys": [
+          "departureChooseCandidate",
+          "departureNoRelease",
+          "departureNotice",
+          "departureNoticeHelp",
+          "departureReplacement",
+          "departureReplacementHelp",
+          "departureRequestReplacement",
+          "departureSendNotice",
+          "planningConsent",
+          "planningConsentRequired"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/replacement_candidate_picker.dart",
+        "sha256": "7a9b45b6466692074b50474fb13b95723dcb39ac2ecb7156eb3550877afcafdc",
+        "localeKeys": [
+          "departureCandidateConsented",
+          "departureCandidatePending",
+          "departureCandidatesEmpty",
+          "departureChooseCandidate",
+          "departureConsentHelp"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S169",
+    "behavior": "Move-out/replacement and supplied action/previous revision control fields and draft. Replacement requires eligible candidate selection and explicit consent. Preserve requested/effective dates; nomination and candidate consent do not activate replacement or release prior tenant.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "replacement",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S171",
+    "name": "تفاصيل الانتقال",
+    "english": "Tenancy transition detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/tenancy_transition_screen.dart",
+    "sha256": "b794a585453cb1d3bdba82b3b6b8f850ec54807103b4c568bc41c7b2ba8bc060",
+    "localeKeys": [
+      "departureTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/tenancy_transition.dart",
+        "sha256": "bb10f13be83f0a064f2e22c870acd8dfa28450ea52ba8036f10e9bcd373b4c80",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/cubits/tenancy_transition_cubit.dart",
+        "sha256": "29329ae6edbea7f81b4a47a86deb040e610ade12fb763820d00b56db95986195",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/widgets/tenancy_transition_details.dart",
+        "sha256": "ba0629d5c78ffb925d2f4d635706bed4179d57c6d669eafb6dcc08a4d267b930",
+        "localeKeys": [
+          "cancel",
+          "departureAcknowledge",
+          "departureApproveAvailability",
+          "departureApproveCandidate",
+          "departureChooseCandidate",
+          "departureEffectiveOn",
+          "departureFutureOnly",
+          "departureIncoming",
+          "departureNoRelease",
+          "departureNotEffective",
+          "departureNotice",
+          "departureOutgoing",
+          "departureReceived",
+          "departureReplacement",
+          "departureRequestedOn",
+          "planningDecline",
+          "planningWithdraw"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S169",
+    "behavior": "Current details distinguish requested, received, effective, outgoing/incoming and nominated candidate. permissions gates acknowledge/withdraw/approve_availability/nominate/approve_candidate/decline/cancel. Each action uses editor and refreshed state; future-only and no-release notices retained.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S172",
+    "name": "موافقة البديل المرشح",
+    "english": "Replacement candidate consent",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/presentation/screens/replacement_consent_screen.dart",
+    "sha256": "91f2cf2c9bedfb506c6a62284236dba40eae3ff772ef7c223367735a958a5f48",
+    "localeKeys": [
+      "rentalReject",
+      "replacementConsentAccept",
+      "replacementInvitesHelp",
+      "replacementInvitesTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/data/models/replacement_invitation.dart",
+        "sha256": "f91dc0e7bde62753606668dd588267ea7e04eb4aa2dcfba6de87409460b325fe",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/data/replacement_invitations_data.dart",
+        "sha256": "e320031b0449a866661b6b9a11c88d15b3c56a7e6f271142b612d6bcc99d2a9c",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S173",
+    "behavior": "Accept/decline are invitation-revision-bound commands with replacement planning capability, expectedRevision/requestKey and optional note. Identity/expiry/current permission determine availability. Consent is not effective replacement.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "expired",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "expired",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S173",
+    "name": "دعوات ترشيح البديل",
+    "english": "Replacement invitations inbox",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/presentation/screens/replacement_invitations_screen.dart",
+    "sha256": "0aed7eec54198f16fa8c084f523a1ff33972d70309d65f23a06fcf828be9879a",
+    "localeKeys": [
+      "replacementInvitesTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/presentation/widgets/replacement_invitations_list.dart",
+        "sha256": "6041224c5b84a2904132e07eb13228c7ae2f8f4a0ff05c060b962b6dc3b62385",
+        "localeKeys": [
+          "rentalReject",
+          "replacementConsentAccept",
+          "replacementInvitesEmpty",
+          "replacementInvitesHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/data/models/replacement_invitation.dart",
+        "sha256": "f91dc0e7bde62753606668dd588267ea7e04eb4aa2dcfba6de87409460b325fe",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S26",
+    "behavior": "Unread-count scope and paginated invitation list, capability disposal and action permissions. Refresh after response; accept/decline keep invitation revision and recovery flow. Expired invitations cannot be accepted.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "expired"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "expired"
+    ]
+  },
+  {
+    "id": "S174",
+    "name": "التسوية النهائية",
+    "english": "Final rental settlement",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/final_settlement_screen.dart",
+    "sha256": "530c27a1a8696436ad4a250dba99ea78fa15aef5265c2ff4896ecde2902eba55",
+    "localeKeys": [
+      "rentalSettlement"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/cubits/final_settlement_cubit.dart",
+        "sha256": "4cc2c606db192d952a0cb2a2060eeb502558adf5b32913a9cb201608708e8e11",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/final_settlement.dart",
+        "sha256": "29718161a2415e826fd981ce3a10f2adcd2a5c267a6917b9da08d92dfe4fae3f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/final_settlement_details.dart",
+        "sha256": "ef0131d94c3686c71620bd69d0bdcb82d61be2b35ff02a2d2b705495b742c119",
+        "localeKeys": [
+          "rentalAmount",
+          "rentalApprove",
+          "rentalBalance",
+          "rentalDepositReturned",
+          "rentalDispute",
+          "rentalProposeSettlement",
+          "rentalRefunds",
+          "rentalSettlementBody",
+          "rentalVersion"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/settlement_line.dart",
+        "sha256": "ee2274102bcc5b449b9335538d997ef934b0acda4984407b478646c5718c1069",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/settlement_note.dart",
+        "sha256": "b4ec059464e418509de90017e8f71c23aa1e335584ea49c43ce1e4b86f0663d0",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/settlement_notes.dart",
+        "sha256": "e6bbbd699ff456f790d088991f2d28d421af344c18007d3ddd9e4cb0ed202c8f",
+        "localeKeys": [
+          "rentalApprove",
+          "rentalDispute",
+          "rentalNote",
+          "rentalProposeSettlement",
+          "workspaceOwner",
+          "workspaceTenant"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S140",
+    "behavior": "Revision-bound item lines, signed money direction, rent/deposit/refund/total and linked invoices. Per-line disputes preserve item IDs. Fresh permissions gate propose/accept/dispute; notes/history shown. Agreement does not confirm refund or payout.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "disputed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "disputed",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S175",
+    "name": "مستندات الإيجار",
+    "english": "Rental documents",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_documents_screen.dart",
+    "sha256": "328149f36cf9a0c90e15c7d442e5edee1f5bd42ea812e2d3330ff64978e29322",
+    "localeKeys": [
+      "rentalDocuments"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/rental_documents_list.dart",
+        "sha256": "cb0f7497705f717d60ac1f0333f576e14d295b9af9890622534e4c18f8323808",
+        "localeKeys": [
+          "rentalDocumentPreparing",
+          "rentalDocumentUnavailable",
+          "rentalInvalidDate",
+          "rentalStatement",
+          "uxRefreshBeforeAction"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/rental_document.dart",
+        "sha256": "b2f3a95657d6f91ae09596501832dce90aae13b9d0a437ba871136a10fa1195f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/rental_documents_empty_state.dart",
+        "sha256": "b04802210701a3adbf5ebc7a490cf1687c3f1575a1e5eb5dce9d42b6f9bda94d",
+        "localeKeys": [
+          "rentalDocuments",
+          "rentalDocumentsEmpty"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/rental_statement_body.dart",
+        "sha256": "59677c16bf6a7acf7177705650b1bc06dea57861a454d500c66e19d341690a0b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/private_document_link.dart",
+        "sha256": "737f1fe6eb8e3dcfb9dee7f075fbab2f53d9100f5eb49f79f2b0e79f107f5532",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S140",
+    "behavior": "Lease/currentRevision callback plus fresh revision required for statement generation and document access. Link requests require sensitive authorization; preparing/unavailable and invalid date states distinct. No unsafe or arbitrary external URL opened.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "processing",
+      "unavailable",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "processing",
+      "unavailable",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S176",
+    "name": "تفاصيل المبلغ المرتجع",
+    "english": "Rental refund detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_refund_detail_screen.dart",
+    "sha256": "90d12a1fa39d2ecbe650b0269afc3f46c5b287e5845274b165972feb542c3c15",
+    "localeKeys": [
+      "rentalRefunds"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/cubits/rental_refund_details_cubit.dart",
+        "sha256": "818c5a8ddcaf661773b49420356c6bf86c00e16c9382f6dadf45c03f0c553a2b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/rental_refund.dart",
+        "sha256": "a234ff611f18326f0261bc880ab064d3034564e72d1daac8cb086946fbd44a98",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/rental_refund_details.dart",
+        "sha256": "461753ca21070f528fe6beb044debfeea72082d93584fc7af73d3a805ecb282a",
+        "localeKeys": [
+          "paidVerifyRent",
+          "rentalMethod",
+          "rentalRefundableBalance"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S177",
+    "behavior": "Read-only refund amount/reason/method/refundable balance/status/permissions; refresh verifies status. Keep receipt allocations, lease/workspace and unknown status. No retry-transfer or direct refund command on this screen.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "processing",
+      "paid"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "processing",
+      "paid"
+    ]
+  },
+  {
+    "id": "S177",
+    "name": "المبالغ المرتجعة",
+    "english": "Rental refunds list",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/rental_refund_list_screen.dart",
+    "sha256": "a42fe644dc7fa57ce5a266726e326dcfb218ddb741367ad1ae294bdc87158946",
+    "localeKeys": [
+      "rentalRefunds"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/rental_refund_list.dart",
+        "sha256": "0f1bced333e1ad8c823f6cfc8fc78c344ffc3cb63ef0558bccd20b797af0e75c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/rental_refund.dart",
+        "sha256": "a234ff611f18326f0261bc880ab064d3034564e72d1daac8cb086946fbd44a98",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/rental_refund_empty_state.dart",
+        "sha256": "69e6eaf4f54292f93ad2c79fa84e5116bfe658766ec0267b7a0243a521f1633b",
+        "localeKeys": [
+          "rentalEmptyBody",
+          "rentalRefunds"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/rental_refund_card.dart",
+        "sha256": "621adcce957c53ba2e62ba9c24f38e68aeb37c76f3bcdbca55799bb06fe08d6b",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S174",
+    "behavior": "Paginated lease/workspace refunds, confirmed statuses and per-record allocations remain authoritative. Unknown amounts stay unknown; history does not imply new payout capability.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S178",
+    "name": "مقترح التسوية",
+    "english": "Settlement proposal editor",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/screens/settlement_proposal_screen.dart",
+    "sha256": "aa89a98b75824edb1b5c2c0ff375f41c2bd376c45851b2d6fe31de19dc22e7fc",
+    "localeKeys": [
+      "rentalProposeSettlement"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/final_settlement.dart",
+        "sha256": "29718161a2415e826fd981ce3a10f2adcd2a5c267a6917b9da08d92dfe4fae3f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/settlement_proposal_form.dart",
+        "sha256": "b0d3947aeef35c68c469a2f4cb28483afecde2538b44f6d936ded075f9a23a3f",
+        "localeKeys": [
+          "rentalProposeSettlement",
+          "rentalRemoveLine",
+          "rentalSettlementBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/settlement_line.dart",
+        "sha256": "ee2274102bcc5b449b9335538d997ef934b0acda4984407b478646c5718c1069",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/settlement_note.dart",
+        "sha256": "b4ec059464e418509de90017e8f71c23aa1e335584ea49c43ce1e4b86f0663d0",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/settlement_line_editor.dart",
+        "sha256": "1df095e70dafbf3ec21397b8a83b2876722c92040f4b191972577a634cd0129c",
+        "localeKeys": [
+          "rentalAddLine",
+          "rentalAmount",
+          "rentalClaimLine",
+          "rentalDepositDeductionLine",
+          "rentalInvalidAmount",
+          "rentalInvalidInput",
+          "rentalLineDescription",
+          "rentalLineType",
+          "rentalRefundLine",
+          "rentalRentLine",
+          "rentalUtilityLine"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/settlement_body.dart",
+        "sha256": "5dc6f8bc8e959a4a88bff3169555e224cf4335d5caa146b51ac1aa21c3bfebd6",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S174",
+    "behavior": "Editable typed settlement lines and recoverable line draft. Line editor validates signed financial meaning by type, amount, description and lease context; remove by line identity. Submit expected settlement revision/requestKey and note, not a refund execution.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S179",
+    "name": "إعداد مستفيد المالك",
+    "english": "Owner beneficiary setup",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_onboarding_screen.dart",
+    "sha256": "45dc4169b69fe3e15f515453813bb877af4c7125bb84365ac34ece84b3ee6ed2",
+    "localeKeys": [
+      "rentalSetupBeneficiary"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/data/models/owner_payment_profile.dart",
+        "sha256": "ecf92624f6c8ca73a90bb0a8a5f41a4e203a408888fad03a32baebd373f39495",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/widgets/owner_onboarding_form.dart",
+        "sha256": "25340a3fb94fb17ef553921d944c36dd0de86d75a4f2f3a9bf6b1badcfefe5a9",
+        "localeKeys": [
+          "ownerAcceptPolicies",
+          "ownerPolicyConsentRequired",
+          "rentalBeneficiaryBody",
+          "rentalSetupBeneficiary"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/widgets/owner_payment_summary.dart",
+        "sha256": "2b46e0186d66144a2048dee123b1e399728965757082a5455b8ab4c5b9281f8f",
+        "localeKeys": [
+          "ownerBeneficiaryRequirement",
+          "ownerIdentityRequirement",
+          "ownerOnboardingFailed",
+          "ownerOnboardingUnknown",
+          "ownerPoliciesAccepted",
+          "ownerPoliciesReviewRequired",
+          "rentalNotStarted",
+          "rentalPending",
+          "rentalReady"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/data/models/owner_onboarding_body.dart",
+        "sha256": "c9020c2cef1a1e91ebc75d3c93e11b3e15c3ba8abec382a0f04bad39a6e37610",
+        "localeKeys": []
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S181",
+    "behavior": "OwnerPaymentData.onboardingEnabled=false in current source: prototype must not activate onboarding. Retained design explains masked beneficiary and identity/policy summary. If enabled later: versioned policy consent, profile revision, sensitive proof, resume session first, provider expiry and uncertain recovery mandatory.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "unavailable"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "unavailable"
+    ]
+  },
+  {
+    "id": "S180",
+    "name": "مستحقات المالك",
+    "english": "Owner payables",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/screens/owner_payables_screen.dart",
+    "sha256": "4fd95dc3d02e79c21b455d386e59f71456f45323d4523868b11e555c21f57c97",
+    "localeKeys": [
+      "rentalOwnerPayables"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/widgets/owner_payables_list.dart",
+        "sha256": "b838019b46f092a93cfdc740928572764a67dadcb23eb9e6b3edd7d777ad3735",
+        "localeKeys": [
+          "rentalCommission",
+          "rentalGross",
+          "rentalNet",
+          "rentalPayoutExplanation",
+          "rentalPayoutState",
+          "rentalSettlement"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/data/models/owner_payable.dart",
+        "sha256": "6da29e44264eca85664f06796f71111d8181b3fc5c4ead18c496e2c97d7570fa",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/widgets/owner_payables_empty_state.dart",
+        "sha256": "9e863533a4da69bab1f6c9d0f1f8e52259caeb73aa394a548499a14972cbf95f",
+        "localeKeys": [
+          "rentalOwnerPayables",
+          "rentalPayoutsEmpty"
+        ]
+      }
+    ],
+    "group": "التغيير والتسوية",
+    "back": "S41",
+    "behavior": "Protected private paginated payables; period/gross/commission/net, settlement and payout states plus blocking reasons. Open payout detail only when payoutId exists. No manual transfer initiation; current bank transfer scope deferred.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 8,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  }
+]

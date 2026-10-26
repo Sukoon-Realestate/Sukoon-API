@@ -1,6 +1,6 @@
 # Sprint 1 — source and behavior audit
 
-S21–S40. Audited against the sibling `sokoun` code on 2026-10-25. The original S01–S20 and foundation remain unchanged. All names, statuses, notification content and device data are illustrative. No external operations occur.
+S21–S40. Audited against the sibling `sokoun` code on 2026-10-26. The original S01–S20 and foundation remain unchanged. All names, statuses, notification content and device data are illustrative. No external operations occur.
 
 ## Material source findings
 

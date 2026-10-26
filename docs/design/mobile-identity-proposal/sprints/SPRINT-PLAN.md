@@ -1,14 +1,16 @@
-# Remaining mobile proposal — sprint plan
+# Mobile proposal — completed sprint plan
 
-Audited 2026-10-25 against `sokoun/apps/sokoun_app/lib`. 304 screen/page source files: 20 existing proposals, 9 reconciled hosts/components, **275 remaining destinations across 14 sprints**. Each sprint contains 20; the final sprint contains the remainder.
+Audited 2026-10-26 against `sokoun/apps/sokoun_app/lib`. 304 screen/page source files: 20 existing proposals, 9 reconciled hosts/components, **275 continuation destinations across 14 sprints**. Each sprint contains 20; the final sprint contains the remainder.
 
-The existing S01–S20 stay intact. Sprint 1 starts at S21. Sprint 1 was approved to continue. Sprints 1–7 were approved to continue. Sprints 8–10 form the current authorized review batch; stop before Sprint 11. No production Flutter implementation is authorized.
+The existing S01–S20 stay intact. Sprint 1 starts at S21. Sprint 1 was approved to continue. Sprints 1–10 were approved to continue. The final authorized batch covers Sprints 11–14 and all remaining destinations; stop for complete design review. No production Flutter implementation is authorized.
+
+Completed primary mockups: **295**. Unbuilt destinations: **0**. The final batch awaits complete design review.
 
 ## Counting and audit scope
 
 Concrete classes ending in Screen or Page in app lib; wrappers/components explicitly reconciled. Presentation states and parameter variants are not separate screen counts. Other Dart helpers are not screens.
 
-This is a source inventory and scheduling audit for later sprints, not a completed behavioral audit of every later destination. Each future sprint must inspect its screens and dependencies before mockups. Shared generic screens count once; role, public-page, challenge, document and runtime variants must be covered as states during their sprint. Screens need not be public routes to be counted.
+The inventory reconciles source destinations; each completed sprint has its own behavioral audit and source/dependency hashes in its manifest and AUDIT.md. Shared generic screens count once; role, public-page, challenge, document and runtime variants must be covered as states during their sprint. Screens need not be public routes to be counted.
 
 ## Sprint 1 — shared/auth, tenant/profile, shared/profile, shared/notifications, shared/support
 
@@ -201,7 +203,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 8 — shared/rental_maintenance, shared/rental_disputes, shared/rental_changes, tenant/rental_changes, shared/rental_settlement, owner/rental_payouts
 
-**In progress.**
+**Approved to continue.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -228,7 +230,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 9 — owner/rental_payouts, owner/advanced_analytics, shared/reviews, tenant/housing_groups
 
-**In progress.**
+**Approved to continue.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -255,7 +257,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 10 — tenant/housing_groups, owner/housing_groups, shared/student_housing
 
-**In progress.**
+**Approved to continue.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -282,7 +284,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 11 — shared/student_housing, shared/company_housing
 
-**Planned only. Await confirmation of the preceding sprint.**
+**Built in the final authorized Sprints 11–14 batch; ready for complete design review.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -309,7 +311,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 12 — shared/company_housing, shared/housing_tenders
 
-**Planned only. Await confirmation of the preceding sprint.**
+**Built in the final authorized Sprints 11–14 batch; ready for complete design review.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -336,7 +338,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 13 — shared/housing_tenders, shared/living_lab, shared/housing_simulator
 
-**Planned only. Await confirmation of the preceding sprint.**
+**Built in the final authorized Sprints 11–14 batch; ready for complete design review.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -363,7 +365,7 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Sprint 14 — shared/housing_simulator, shared/transition_network, shared/advanced_execution
 
-**Planned only. Await confirmation of the preceding sprint.**
+**Built in the final authorized Sprints 11–14 batch; ready for complete design review.**
 
 | ID | Screen | Current Flutter source |
 | --- | --- | --- |
@@ -399,6 +401,6 @@ This is a source inventory and scheduling audit for later sprints, not a complet
 
 ## Delivery gate
 
-After each sprint: 20 distinct mockups (or the final remainder), Light/Dark/System, source-linked behavior notes, explicit important states, visual review, and local interaction checks. The current authorization covers Sprints 8–10 together. Stop for user review before Sprint 11.
+After each sprint: 20 distinct mockups (or the final remainder), Light/Dark/System, source-linked behavior notes, explicit important states, visual review, and local interaction checks. The current authorization covers every remaining destination in Sprints 11–14. Stop for design review after the final batch; production Flutter implementation requires a separate request.
 
 Sprint 2: [Open mockups](sprint-02/index.html) · [Behavior audit](sprint-02/AUDIT.md). Sprint 1: [Open mockups](sprint-01/index.html) · [Behavior audit](sprint-01/AUDIT.md). Existing foundation: [Design Map](../design-map.html).

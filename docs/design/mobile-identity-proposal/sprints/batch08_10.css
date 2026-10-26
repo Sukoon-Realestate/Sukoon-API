@@ -1,0 +1,4 @@
+.phone .rating-total{display:flex;gap:12px;align-items:center;margin-bottom:8px}.phone .rating-total>b{font:600 36px/1.4 Readex,sans-serif;color:var(--accent)}.phone .rating-total>span{font-size:12px;max-width:150px}
+.phone .rating-distribution{display:flex;gap:12px;align-items:center;margin:8px 0;font-size:11px}.phone .rating-distribution>div{height:6px;border-radius:6px;background:var(--line);flex:1;overflow:hidden}.phone .rating-distribution i{height:100%;display:block;background:var(--accent);border-radius:6px}.phone .rating-distribution>b{min-width:18px;text-align:left}
+.phone .settlement-line{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding-block:8px;font-size:12px}.phone .settlement-line .textbtn{font-size:11px;min-height:40px;padding:5px}
+.phone [data-local-error]{font-size:12px;color:var(--error);padding:10px 0}

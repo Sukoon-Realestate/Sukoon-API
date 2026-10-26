@@ -1,0 +1,5 @@
+.phone .move-path{display:flex;align-items:center;gap:10px;margin:18px 0}.phone .move-path span{flex:1;text-align:center;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px 8px;font-size:12px}.phone .move-path>b{color:var(--accent)}
+.phone .csv-row{border-bottom:1px solid var(--line);padding:9px 0;font-size:12px;overflow-wrap:anywhere}.phone .csv-feedback{padding-top:12px;font-size:12px;color:var(--accent)}.phone .csv-feedback.error{color:var(--error)}
+.phone [data-final-error]{font-size:12px;color:var(--error);margin-top:10px}.phone .coverage-meter{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:16px 0}.phone .coverage-meter span{display:block;height:100%;background:var(--accent)}
+
+.phone .tier-fields{border:0;padding:0;margin:0;min-width:0}

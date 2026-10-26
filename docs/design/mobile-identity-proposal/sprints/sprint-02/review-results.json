@@ -1058,7 +1058,7 @@
     "Public-page variants and missing historical policy does not fall back to current",
     "Guide preference/replay confirmation and release-version selection",
     "Operation recovery does not resend; startup retry and fixed launch/media surfaces",
-    "Workspace preview does not grant company authority",
+    "Company workspace opens represented prototype without changing real authority",
     "Map marker/detail selection and loaded-only viewport scope",
     "Photo viewer previous/next bounds and thumbnail synchronization",
     "Recent search populates search draft",
@@ -1073,7 +1073,7 @@
   "limitations": [
     "Browser prototype only; no Flutter/device/API tests.",
     "Maps are schematic offline illustrations; gallery and launch have fixed source-defined surfaces.",
-    "Later sprints have source inventory only; behavioral audit happens within each sprint."
+    "All final batches are represented; browser prototypes still require native implementation checks."
   ],
   "originalStyleParity": [
     {

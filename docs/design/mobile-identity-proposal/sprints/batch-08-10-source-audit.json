@@ -14,7 +14,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S161",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_maintenance/presentation/widgets/maintenance_request_list.dart",
@@ -67,7 +67,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S162",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/cubits/rental_dispute_details_cubit.dart",
@@ -117,7 +117,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S163",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/widgets/rental_dispute_form.dart",
@@ -158,7 +158,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S164",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_disputes/presentation/widgets/rental_dispute_list.dart",
@@ -209,7 +209,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S165",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/enums/rental_change_kind.dart",
@@ -295,7 +295,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S166",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/enums/rental_change_kind.dart",
@@ -355,7 +355,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S167",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/rental_change.dart",
@@ -408,7 +408,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S168",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/enums/rental_change_kind.dart",
@@ -463,7 +463,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S169",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/presentation/screens/rental_changes_screen.dart",
@@ -543,7 +543,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S170",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/tenancy_transition.dart",
@@ -621,7 +621,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S171",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_changes/data/models/tenancy_transition.dart",
@@ -707,7 +707,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S172",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/data/models/replacement_invitation.dart",
@@ -757,7 +757,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S173",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/rental_changes/presentation/widgets/replacement_invitations_list.dart",
@@ -806,7 +806,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S174",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/cubits/final_settlement_cubit.dart",
@@ -903,7 +903,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S175",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/rental_documents_list.dart",
@@ -975,7 +975,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S176",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/cubits/rental_refund_details_cubit.dart",
@@ -1027,7 +1027,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S177",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/presentation/widgets/rental_refund_list.dart",
@@ -1078,7 +1078,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S178",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/rental_settlement/data/models/final_settlement.dart",
@@ -1172,7 +1172,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S179",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/data/models/owner_payment_profile.dart",
@@ -1256,7 +1256,7 @@
     "status": "planned",
     "sprint": 8,
     "proposalId": "S180",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/widgets/owner_payables_list.dart",
@@ -1313,7 +1313,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S181",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/cubits/owner_payment_profile_cubit.dart",
@@ -1395,7 +1395,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S182",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/cubits/rental_payout_details_cubit.dart",
@@ -1443,7 +1443,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S183",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/owner/rental_payouts/presentation/widgets/rental_payout_list.dart",
@@ -1492,7 +1492,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S184",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/premium/presentation/widgets/shared/feature_workspace_guard.dart",
@@ -1570,7 +1570,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S185",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/data/models/review_experience.dart",
@@ -1687,7 +1687,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S186",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/data/models/review_experience.dart",
@@ -1756,7 +1756,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S187",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/widgets/reputation_summary_panel.dart",
@@ -1862,7 +1862,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S188",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/widgets/property_portfolio_reviews.dart",
@@ -1981,7 +1981,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S189",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/cubits/reputation_detail_cubit.dart",
@@ -2137,7 +2137,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S190",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/cubits/reputation_grant_summary_cubit.dart",
@@ -2200,7 +2200,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S191",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/widgets/reputation_grants_list.dart",
@@ -2314,7 +2314,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S192",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/data/models/reputation_grant.dart",
@@ -2380,7 +2380,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S193",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/cubits/review_case_cubit.dart",
@@ -2447,7 +2447,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S194",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/widgets/review_cases_list.dart",
@@ -2511,7 +2511,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S195",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/data/models/review_experience.dart",
@@ -2683,7 +2683,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S196",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/widgets/review_experience_form.dart",
@@ -2830,7 +2830,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S197",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/cubits/review_opportunity_cubit.dart",
@@ -3003,7 +3003,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S198",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/reviews/presentation/widgets/review_eligibility_button.dart",
@@ -3339,7 +3339,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S199",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/housing_group_cubit.dart",
@@ -3427,7 +3427,7 @@
     "status": "planned",
     "sprint": 9,
     "proposalId": "S200",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/group_invite_cubit.dart",
@@ -3495,7 +3495,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S201",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/group_invite_cubit.dart",
@@ -3547,7 +3547,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S202",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/group_invites_list.dart",
@@ -3609,7 +3609,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S203",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/group_join_cubit.dart",
@@ -3655,7 +3655,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S204",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/group_join_cubit.dart",
@@ -3699,7 +3699,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S205",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/housing_group_cubit.dart",
@@ -3776,7 +3776,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S206",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_editor.dart",
@@ -3829,7 +3829,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S207",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/housing_group_cubit.dart",
@@ -3999,7 +3999,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S208",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_groups_list.dart",
@@ -4070,7 +4070,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S209",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_review_screen.dart",
@@ -4124,7 +4124,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S210",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/cubits/group_application_cubit.dart",
@@ -4194,7 +4194,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S211",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/cubits/group_application_cubit.dart",
@@ -4240,7 +4240,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S212",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/rental_summary.dart",
@@ -4527,7 +4527,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S213",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/cubits/student_cubits.dart",
@@ -4621,7 +4621,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S214",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
@@ -4853,7 +4853,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S215",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
@@ -5135,7 +5135,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S216",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
@@ -5396,7 +5396,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S217",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
@@ -5695,7 +5695,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S218",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_history.dart",
@@ -5939,7 +5939,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S219",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_search_form.dart",
@@ -6046,7 +6046,7 @@
     "status": "planned",
     "sprint": 10,
     "proposalId": "S220",
-    "reviewStatus": "in-progress",
+    "reviewStatus": "awaiting-review",
     "dependencies": [
       {
         "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_rental_entry.dart",

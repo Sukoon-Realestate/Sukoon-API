@@ -22,11 +22,11 @@
     send({type:'modal',open:!!document.querySelector('dialog[open]')});
   }
   document.querySelectorAll('dialog').forEach(dialog=>new MutationObserver(positionDialogs).observe(dialog,{attributes:true,attributeFilter:['open']}));
-  const routes={"media-next":"S61","visit-chat":"S99","subscriptions":"S88","invoices":"S86","chat-policy":"S92","owner-revenue":"S65","my-housing":"S137",'register':'S21','forgot':'S22','upload':'S23','account-summary':'S42','support-new':'S44','support-tickets':'S46','legal':'S47','business-policies':'S48','guide-settings':'S49','feedback':'S44'};
+  const routes={"contract-document":"S175","my-reviews":"S198","media-next":"S61","visit-chat":"S99","subscriptions":"S88","invoices":"S86","chat-policy":"S92","owner-revenue":"S65","my-housing":"S137",'register':'S21','forgot':'S22','upload':'S23','account-summary':'S42','support-new':'S44','support-tickets':'S46','legal':'S47','business-policies':'S48','guide-settings':'S49','feedback':'S44'};
   document.addEventListener('click',event=>{
     const button=event.target.closest('button');
     if(button?.dataset.mode&&!applying)send({type:'theme',mode:button.dataset.mode});
-    let target=button?.dataset.go||routes[button?.dataset.action];
+    let target=button?.dataset.go||((button?.dataset.action==='workspace'&&['student','company'].includes(button?.dataset.value))?(button.dataset.value==='student'?'S219':'S249'):routes[button?.dataset.action]);
     if(target&&!String(target).startsWith('S'))target='S'+String(target).padStart(2,'0');
     if(target&&!document.getElementById(target)){event.preventDefault();event.stopImmediatePropagation();send({type:'focus',id:target});return}
     const anchor=event.target.closest('a');if(anchor){anchor.target='_blank';anchor.rel='noopener'}

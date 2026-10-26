@@ -1,0 +1,1573 @@
+{
+  "sprint": 8,
+  "screens": 20,
+  "sourceHashes": [
+    "S161",
+    "S162",
+    "S163",
+    "S164",
+    "S165",
+    "S166",
+    "S167",
+    "S168",
+    "S169",
+    "S170",
+    "S171",
+    "S172",
+    "S173",
+    "S174",
+    "S175",
+    "S176",
+    "S177",
+    "S178",
+    "S179",
+    "S180"
+  ],
+  "themes": [
+    {
+      "theme": "light",
+      "individuals": 20,
+      "size": [
+        720,
+        1600
+      ]
+    },
+    {
+      "theme": "dark",
+      "individuals": 20,
+      "size": [
+        720,
+        1600
+      ]
+    }
+  ],
+  "widths": [
+    {
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1680,
+      "overflow": false
+    }
+  ],
+  "variants": [
+    {
+      "id": "S161",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S161",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S161",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S161",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S161",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S161",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "resolved"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "evidence-missing"
+    },
+    {
+      "id": "S162",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S163",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S163",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S163",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S163",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S163",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S163",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S163",
+      "theme": "light",
+      "state": "evidence-missing"
+    },
+    {
+      "id": "S163",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S164",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S164",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S164",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S164",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S164",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S164",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S165",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S165",
+      "theme": "light",
+      "state": "amendment"
+    },
+    {
+      "id": "S165",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S165",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S165",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S165",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S165",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "renewal"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "termination"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "external-payment"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S166",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "expired"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "signed"
+    },
+    {
+      "id": "S167",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S168",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S168",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S168",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S168",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S168",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S168",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S169",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S169",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S169",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S169",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S169",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S169",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "replacement"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S170",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S171",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S171",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S171",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S171",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S171",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S171",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "expired"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S172",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S173",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S173",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S173",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S173",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S173",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S173",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S173",
+      "theme": "light",
+      "state": "expired"
+    },
+    {
+      "id": "S174",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S174",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S174",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S174",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S174",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S174",
+      "theme": "light",
+      "state": "disputed"
+    },
+    {
+      "id": "S174",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "processing"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "unavailable"
+    },
+    {
+      "id": "S175",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S176",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S176",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S176",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S176",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S176",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S176",
+      "theme": "light",
+      "state": "processing"
+    },
+    {
+      "id": "S176",
+      "theme": "light",
+      "state": "paid"
+    },
+    {
+      "id": "S177",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S177",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S177",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S177",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S177",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S177",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S178",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S178",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S178",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S178",
+      "theme": "light",
+      "state": "saving"
+    },
+    {
+      "id": "S178",
+      "theme": "light",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S178",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S178",
+      "theme": "light",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S178",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S179",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S179",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S179",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S179",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S179",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S179",
+      "theme": "light",
+      "state": "unavailable"
+    },
+    {
+      "id": "S180",
+      "theme": "light",
+      "state": "default"
+    },
+    {
+      "id": "S180",
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "id": "S180",
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "id": "S180",
+      "theme": "light",
+      "state": "stale"
+    },
+    {
+      "id": "S180",
+      "theme": "light",
+      "state": "restricted"
+    },
+    {
+      "id": "S180",
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "id": "S161",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S161",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S161",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S161",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S161",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S161",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "resolved"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "evidence-missing"
+    },
+    {
+      "id": "S162",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S163",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S163",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S163",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S163",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S163",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S163",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S163",
+      "theme": "dark",
+      "state": "evidence-missing"
+    },
+    {
+      "id": "S163",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S164",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S164",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S164",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S164",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S164",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S164",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S165",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S165",
+      "theme": "dark",
+      "state": "amendment"
+    },
+    {
+      "id": "S165",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S165",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S165",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S165",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S165",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "renewal"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "termination"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "external-payment"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S166",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "expired"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "signed"
+    },
+    {
+      "id": "S167",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S168",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S168",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S168",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S168",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S168",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S168",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S169",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S169",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S169",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S169",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S169",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S169",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "replacement"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S170",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S171",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S171",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S171",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S171",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S171",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S171",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "expired"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S172",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S173",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S173",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S173",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S173",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S173",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S173",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S173",
+      "theme": "dark",
+      "state": "expired"
+    },
+    {
+      "id": "S174",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S174",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S174",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S174",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S174",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S174",
+      "theme": "dark",
+      "state": "disputed"
+    },
+    {
+      "id": "S174",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "processing"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "unavailable"
+    },
+    {
+      "id": "S175",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S176",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S176",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S176",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S176",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S176",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S176",
+      "theme": "dark",
+      "state": "processing"
+    },
+    {
+      "id": "S176",
+      "theme": "dark",
+      "state": "paid"
+    },
+    {
+      "id": "S177",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S177",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S177",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S177",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S177",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S177",
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "id": "S178",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S178",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S178",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S178",
+      "theme": "dark",
+      "state": "saving"
+    },
+    {
+      "id": "S178",
+      "theme": "dark",
+      "state": "unknown-outcome"
+    },
+    {
+      "id": "S178",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S178",
+      "theme": "dark",
+      "state": "revision-changed"
+    },
+    {
+      "id": "S178",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S179",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S179",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S179",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S179",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S179",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S179",
+      "theme": "dark",
+      "state": "unavailable"
+    },
+    {
+      "id": "S180",
+      "theme": "dark",
+      "state": "default"
+    },
+    {
+      "id": "S180",
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "id": "S180",
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "id": "S180",
+      "theme": "dark",
+      "state": "stale"
+    },
+    {
+      "id": "S180",
+      "theme": "dark",
+      "state": "restricted"
+    },
+    {
+      "id": "S180",
+      "theme": "dark",
+      "state": "empty"
+    }
+  ],
+  "interactions": [
+    "Multiline/input draft survives error and return",
+    "Theme change preserves form",
+    "Live System theme",
+    "Review confirmation, cancel and local-only result",
+    "Unknown outcome blocks re-submit and checks original attempt",
+    "Focused preview restores original screen",
+    "Sensitive action has explicit confirmation",
+    "Settlement line add/remove treats typed evidence as text",
+    "Deferred beneficiary onboarding stays disabled",
+    "Off-platform payment report routes to support, not collection"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "limitations": [
+    "Browser mockups only; no native device/API/provider tests.",
+    "Financial, signature, publication, evidence and AI outcomes are illustrative."
+  ],
+  "result": "pass"
+}

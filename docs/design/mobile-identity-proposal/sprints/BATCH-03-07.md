@@ -14,7 +14,7 @@
 
 The sibling `sokoun/apps/sokoun_app/lib` is the behavioral authority. Each mockup records its exact primary source hash, relevant dependency hashes, required states, rendered review variants and behavioral notes in its sprint manifest and AUDIT.md. This is a browser design proposal; Flutter production code is unchanged.
 
-The audit reconciles `PromotionsScreen` as a direct wrapper for `CreateBannerAdScreen`, avoiding a duplicate screen. The inventory now covers 304 source screen/page files: 20 original destinations, seven reconciled hosts/components/aliases, and 277 continuation destinations across 14 sprints. Seven sprints are built; 137 destinations remain across Sprints 8–14 (the last has 17).
+The audit reconciles `PromotionsScreen` as a direct wrapper for `CreateBannerAdScreen`, avoiding a duplicate screen. At that delivery, the inventory covered 304 source screen/page files: 20 original destinations, seven reconciled hosts/components/aliases, and 277 continuation destinations across 14 sprints. At that delivery, seven sprints were built; the newer [Sprints 8–10 audit](BATCH-08-10.md) updates the remaining count and aliases.
 
 The layouts reuse the original embedded Readex/Plex typography, actual calligraphic mark, forest green actions, warm paper surfaces, restrained cards, dividers, forms and status layouts. The immersive viewers retain their own dark palette in either theme.
 
@@ -44,4 +44,4 @@ Review scripts accept `PLAYWRIGHT_MODULE` and `CHROME_EXECUTABLE` for local inst
 
 ## Review gate
 
-Sprints 3–7 are awaiting user review. **Stop before Sprint 8.** Continue five sprints at a time only after confirmation. The gate is recorded in `review-policy.json` and `sprint-status.json`.
+Sprints 3–7 were approved to continue. Sprints 8–10 were also approved to continue. The final authorized batch is [Sprints 11–14](BATCH-11-14.md), now built and awaiting complete design review. `review-policy.json` and `sprint-status.json` record the current gate.

@@ -1,5 +1,5 @@
 {
-  "screens": 160,
+  "screens": 295,
   "sections": [
     {
       "key": "original",
@@ -32,6 +32,34 @@
     {
       "key": "sprint-07",
       "screens": 20
+    },
+    {
+      "key": "sprint-08",
+      "screens": 20
+    },
+    {
+      "key": "sprint-09",
+      "screens": 20
+    },
+    {
+      "key": "sprint-10",
+      "screens": 20
+    },
+    {
+      "key": "sprint-11",
+      "screens": 20
+    },
+    {
+      "key": "sprint-12",
+      "screens": 20
+    },
+    {
+      "key": "sprint-13",
+      "screens": 20
+    },
+    {
+      "key": "sprint-14",
+      "screens": 15
     }
   ],
   "widths": [
@@ -53,12 +81,15 @@
     }
   ],
   "checks": [
-    "All 160 screens visible by default in eight titled sections",
+    "All 295 screens visible by default in fifteen titled sections",
     "Global appearance syncs all batches and S20; System follows OS; draft preserved",
     "Section filter and restore-all",
     "Enlarged preview stays inside visible parent viewport and closes cleanly",
     "Cross-section action opens the existing destination without losing a section",
-    "Sprint 2 media-to-pricing and Sprint 7-to-6 billing routes retain all 160 screens"
+    "Sprint 2 media-to-pricing and Sprint 7-to-6 billing routes retain all 295 screens",
+    "Student workspace opens the represented student home without granting any account authority",
+    "Sprints 8-to-9 payouts and 9-to-10 group navigation retain sections; new batch draft survives global theme change",
+    "Final corporate/tender/execution routes keep all sections; final remainder contains exactly 15 screens"
   ],
   "errors": [],
   "externalRequests": [],

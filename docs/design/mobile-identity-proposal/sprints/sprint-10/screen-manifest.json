@@ -1,0 +1,2246 @@
+[
+  {
+    "id": "S201",
+    "name": "معاينة دعوة المجموعة",
+    "english": "Group invitation preview",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invite_screen.dart",
+    "sha256": "993e74eb421b073219f38ceb02d6171d1973468ff2d598634b4dd9966826709a",
+    "localeKeys": [
+      "groupsCopyInvite",
+      "groupsInviteExpired",
+      "groupsInviteHelp",
+      "groupsInvitePreview",
+      "groupsJoin"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/group_invite_cubit.dart",
+        "sha256": "205a7aac3e490abcaddc9af99abd61d187b1afe8aac54e28f460b7ae972269d4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_screen.dart",
+        "sha256": "58d9a399e68a9cd216b3b40f29d9566f17e9e602e4ebbc0e75b0b1a2ca3818cc",
+        "localeKeys": [
+          "groupsInviteExpired",
+          "groupsInviteHelp",
+          "groupsJoin"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S208",
+    "behavior": "ID read vs token preview distinct. Token + canJoin permits join; owner ID mode only copies validated link, never joins as invitee. Expired/full/revoked disables joining; native clipboard not used in prototype.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "expired"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "owner-link",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "expired"
+    ]
+  },
+  {
+    "id": "S202",
+    "name": "روابط دعوة المجموعة",
+    "english": "Group invitation links",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_invites_screen.dart",
+    "sha256": "0b232e066a2ec84209f663c6622b2a49ab0a74f00f5b2921bae5336ebd078229",
+    "localeKeys": [
+      "groupsInvitationLinks"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/group_invites_list.dart",
+        "sha256": "13e4c54e887fc249e9aeb49453bf99c9872917469183cccf0283d22a5f38c69f",
+        "localeKeys": [
+          "groupsInvite",
+          "groupsInviteHelp",
+          "groupsNoInvites",
+          "groupsRevoke"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/group_invite_card.dart",
+        "sha256": "a84c1d974d968f41daecab4684ad13d2fa00da4f2576d4556c6c323337228aa1",
+        "localeKeys": [
+          "groupsCopyInvite",
+          "groupsInviteActive",
+          "groupsInviteExpired",
+          "groupsInviteExpires",
+          "groupsInvitePreview"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S207",
+    "behavior": "Group-scoped invite list; revision/capability permissions gate create/revoke and refresh. Never expose real invite tokens in a screenshot; expiry/full capacity and revoked states prevent joining.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "expired"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "expired"
+    ]
+  },
+  {
+    "id": "S203",
+    "name": "تفاصيل طلب الانضمام",
+    "english": "Group join request detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_detail_screen.dart",
+    "sha256": "17fbc5eb3b976ba015e0a87dd536c35950a76b5f894628014e0578f918999eac",
+    "localeKeys": [
+      "groupsJoinRequests"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/group_join_cubit.dart",
+        "sha256": "ab304f24725aa9b44d16590c7bcfb7c2606a9538b8db99bdd8fba15ce700558e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/group_join_card.dart",
+        "sha256": "df47c8b9643fd673ea9a472904a103bfcca1a7d414fd1ac1882b7bbfda815fd9",
+        "localeKeys": [
+          "planningDecline",
+          "planningWithdraw",
+          "rentalApprove"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S209",
+    "behavior": "Load by request ID, display current card/permissions; approve/decline/withdraw routes separate review action. Refresh after result; cannot approve using stale request revision.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S204",
+    "name": "مراجعة طلب الانضمام",
+    "english": "Group join review decision",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_review_screen.dart",
+    "sha256": "9e22f06143004aa73c8294249e2e52ff75c79d50def9c8bf0663015e0b313e07",
+    "localeKeys": [],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/group_join_cubit.dart",
+        "sha256": "ab304f24725aa9b44d16590c7bcfb7c2606a9538b8db99bdd8fba15ce700558e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S203",
+    "behavior": "Request_join uses group context/revision; review uses requestId/expectedRevision. Optional note, capability/recovery action suffix and confirmation. Refresh on return; not direct membership change before confirmed response.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S205",
+    "name": "الانضمام بدعوة",
+    "english": "Group join by invitation",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_screen.dart",
+    "sha256": "58d9a399e68a9cd216b3b40f29d9566f17e9e602e4ebbc0e75b0b1a2ca3818cc",
+    "localeKeys": [
+      "groupsInviteExpired",
+      "groupsInviteHelp",
+      "groupsJoin"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/housing_group_cubit.dart",
+        "sha256": "66553165cf5583b21e824de972d60183034d11f0b4cd06a5dd242afb1cfea661",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_screen.dart",
+        "sha256": "5435d734ce7a78f6dc3e6d3935f6e5cdad0acbdf24cecc1dbc9c3e75c2871fa4",
+        "localeKeys": [
+          "groupsTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_board.dart",
+        "sha256": "3000c6859e9fbc478fc588421fb4a22974d55eb7ec118738cefaf7a3496bb222",
+        "localeKeys": [
+          "groupsApplications",
+          "groupsDecisions",
+          "groupsMembers",
+          "groupsOverview",
+          "groupsShortlist",
+          "groupsViewings",
+          "rentalGroupBooking",
+          "studentPlanAction"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S201",
+    "behavior": "Validate canJoin before token-bound join using group revision/requestKey. Native fields empty, only review. After confirmed resource ID replace with group screen; expiry/capacity/revocation invalidates join and uncertain attempts recover same identity.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "expired",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "expired",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S206",
+    "name": "إنشاء مجموعة سكن",
+    "english": "Housing group create or edit",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_create_screen.dart",
+    "sha256": "d69dde66b671555b44223666c94a327a87140cbc510dbb0332c05de1a74fed5a",
+    "localeKeys": [
+      "groupsCreate",
+      "housingEdit"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_editor.dart",
+        "sha256": "b7041bbb4fb264e1acc5bbb699c982665382d765b6ef9b1ef167b82cb04b8dab",
+        "localeKeys": [
+          "fillField",
+          "groupsCapacity",
+          "groupsCapacityInvalid",
+          "groupsCreate",
+          "groupsInviteOnly",
+          "groupsName",
+          "groupsOpen",
+          "housingEdit",
+          "rentalInvalidInput"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S208",
+    "behavior": "HousingGroupEditor create/edit with required name up to 80 characters, integer capacity at least two, open/invite-only plus city/rental-scope/budget-period/people/date criteria. Existing group revision and active member count constrain edit. Draft recovery/leave guard; no silent creation of academic plan or rental contract.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S207",
+    "name": "مساحة المجموعة",
+    "english": "Housing group workspace",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_group_screen.dart",
+    "sha256": "5435d734ce7a78f6dc3e6d3935f6e5cdad0acbdf24cecc1dbc9c3e75c2871fa4",
+    "localeKeys": [
+      "groupsTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/cubits/housing_group_cubit.dart",
+        "sha256": "66553165cf5583b21e824de972d60183034d11f0b4cd06a5dd242afb1cfea661",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_board.dart",
+        "sha256": "3000c6859e9fbc478fc588421fb4a22974d55eb7ec118738cefaf7a3496bb222",
+        "localeKeys": [
+          "groupsApplications",
+          "groupsDecisions",
+          "groupsMembers",
+          "groupsOverview",
+          "groupsShortlist",
+          "groupsViewings",
+          "rentalGroupBooking",
+          "studentPlanAction"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/group_chat_button.dart",
+        "sha256": "25d61a25a7e3aef246b2b05e4a3d49be23585d2c7fdf15ad4c5d87eeed8f9abc",
+        "localeKeys": [
+          "groupChatTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_overview_tab.dart",
+        "sha256": "35c260e49bb296b871dd68af756cc3e7b3217909b29b7633d9009b0989a6a7f1",
+        "localeKeys": [
+          "groupsInvitationLinks",
+          "groupsTransfer",
+          "housingEdit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_members_tab.dart",
+        "sha256": "7cee8cdb2cc44efd948f6e814b0d23eb9a7fb6721ece01b4eb378b1d6632d28d",
+        "localeKeys": [
+          "groupsAdmin",
+          "groupsMember",
+          "groupsRemove"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_shortlist_tab.dart",
+        "sha256": "f88de818ece99f6a5c8131f861824491f75ea9028c396ba15d07b19483a14c0d",
+        "localeKeys": [
+          "groupsAbstain",
+          "groupsComment",
+          "groupsInterested",
+          "groupsMaybe",
+          "groupsNotSuitable",
+          "groupsProposeCosts",
+          "groupsRemove",
+          "groupsShortlistEmpty",
+          "groupsShortlistHelp",
+          "groupsVote",
+          "housingReviewVisit",
+          "studentHistory",
+          "studentRevision",
+          "studentUseOffer"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_proposals_tab.dart",
+        "sha256": "30b9d84a9d8471fb5ce0c6a8c861b4f4ec5a4c3c6a231289f66de1621c937f00",
+        "localeKeys": [
+          "groupsApproveCosts",
+          "groupsCostsHelp",
+          "groupsDecisionsEmpty",
+          "groupsEditCosts"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_viewings_tab.dart",
+        "sha256": "72ed3f25bdd482a63de2347452f76faed476553d634dfc75c6854b8c3a65c934",
+        "localeKeys": [
+          "groupsRequestVisit",
+          "groupsViewings",
+          "groupsVisitHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_group_applications_tab.dart",
+        "sha256": "257fbea855d7ac36321b29c9d57aee98cc3ac34a9f29a271c08505ec6de12dbb",
+        "localeKeys": [
+          "groupsApplicationHelp",
+          "groupsApplications",
+          "groupsApply"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S208",
+    "behavior": "Group board includes overview/members/shortlist/viewings/applications/decisions and chat unread, not all mutated from one approval. Archived state readonly; item/group/academic revisions and permissions gate management, cost proposals, votes and participant consent. Separate group booking preserves individual allocations.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "archived"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "archived",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S208",
+    "name": "مجموعات السكن",
+    "english": "My housing groups",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/housing_groups_screen.dart",
+    "sha256": "54c252b04bd2a3c1d60126b6223f57ab5591a92bbfd9bfcc015f75086c725b1f",
+    "localeKeys": [
+      "groupsTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_groups_list.dart",
+        "sha256": "245b51e94e0ad0cbe5dbf7860511547ebd1efd2bf91984e8a96742af4813ae4c",
+        "localeKeys": [
+          "groupsAddShortlist",
+          "groupsBrowseOpen",
+          "groupsCreate",
+          "groupsIntro",
+          "groupsOpenDetails",
+          "groupsTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/housing_groups_empty_state.dart",
+        "sha256": "89579d91d6ead67e238ccdfab8e3212c753edb838531f433e3c9a9b112853054",
+        "localeKeys": [
+          "groupsEmpty",
+          "groupsEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/group_chat_button.dart",
+        "sha256": "25d61a25a7e3aef246b2b05e4a3d49be23585d2c7fdf15ad4c5d87eeed8f9abc",
+        "localeKeys": [
+          "groupChatTitle"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S26",
+    "behavior": "Private paginated groups with pending join/chat unread counts. Optional rental selection permits add-shortlist only in chosen group context; refresh after changed return. Capability gates creation; valid empty state preserved.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S209",
+    "name": "استكشاف المجموعات",
+    "english": "Open housing groups",
+    "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/open_groups_screen.dart",
+    "sha256": "c46462834ea8dc6f39654a1b6ef7018a6c4d9aea4aa06c7dfa2a861711297afa",
+    "localeKeys": [
+      "groupsBrowseOpen",
+      "groupsInviteOnly",
+      "groupsJoinRequests",
+      "groupsRequestJoin",
+      "groupsShortlistEmpty"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/screens/group_join_review_screen.dart",
+        "sha256": "9e22f06143004aa73c8294249e2e52ff75c79d50def9c8bf0663015e0b313e07",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/tenant/housing_groups/presentation/widgets/group_join_card.dart",
+        "sha256": "df47c8b9643fd673ea9a472904a103bfcca1a7d414fd1ac1882b7bbfda815fd9",
+        "localeKeys": [
+          "planningDecline",
+          "planningWithdraw",
+          "rentalApprove"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S208",
+    "behavior": "Paginated discoverable groups; request join requires separate group-specific review. Existing requests retain approve/decline/withdraw permissions in cards; invitation-only group is labelled, not made joinable by browsing.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S210",
+    "name": "طلب إيجار المجموعة",
+    "english": "Group rental application detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_detail_screen.dart",
+    "sha256": "99c80d61f2a1aeca7c08da3a7a69801e23d36f9e2ac2f1ed241c44f295e7b098",
+    "localeKeys": [
+      "groupsApplications"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/cubits/group_application_cubit.dart",
+        "sha256": "bc1ac74812eb124f89ebf63f2d972387ab6b26db51e28cfe12650fd932bd27b0",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/widgets/owner_group_applications.dart",
+        "sha256": "ca018316ecc52f8bff11dc1e5fe0e580ce6edf9b8f15015d1edc39236b35e7a5",
+        "localeKeys": [
+          "groupsApplications",
+          "groupsApplicationsEmpty",
+          "groupsConsentProgress",
+          "groupsJointUnavailable",
+          "groupsMember",
+          "groupsRequestChanges",
+          "housingStart",
+          "planningDecline",
+          "rentalApprove",
+          "rentalCreateGroupBooking",
+          "rentalGroupBooking"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S58",
+    "behavior": "Owner reads group process selection/proposal/consent count and owner note. Action permissions gate accept/decline/request_changes. Confirmed eligible application may start group booking allocation; no automatic joint lease and no approval on behalf of tenants.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S211",
+    "name": "مراجعة طلب المجموعة",
+    "english": "Owner group application review",
+    "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/screens/group_application_review_screen.dart",
+    "sha256": "9b326470c3559e0b99c7ddf347203d775089aa56a36a68e3e787cec1b647be98",
+    "localeKeys": [
+      "groupsJointUnavailable"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/owner/housing_groups/presentation/cubits/group_application_cubit.dart",
+        "sha256": "bc1ac74812eb124f89ebf63f2d972387ab6b26db51e28cfe12650fd932bd27b0",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S210",
+    "behavior": "Parameterized accept/decline/request_changes. Required note only for request_changes, optional otherwise. Historical selection, no joint lease disclaimer, application revision/capability/requestKey and uncertain-command recovery retained.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S212",
+    "name": "مشاركات ملخص الإيجار",
+    "english": "Rental summary shares",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summaries_screen.dart",
+    "sha256": "e304493b2a2b92401a99d6c5b5e7690305960784c2f1c1b1e2f80ce2f30983be",
+    "localeKeys": [
+      "studentFamilySharing",
+      "studentGrantSummary",
+      "studentRevokeSummary",
+      "studentShareLimits"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/rental_summary.dart",
+        "sha256": "f07e54aa8f20eb6651dd505e9d9b1e1a02e0ed382dc98842f66a113c6efa8809",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/student_housing_data.dart",
+        "sha256": "e3209eaaecb7e6c616ea90bb355f5d91a9440a19a48af12af4b1f6e43f10340f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_empty_state.dart",
+        "sha256": "55433174fb2d3acf67a5e2c8af20853a8a31460b537f73617e84936204fd7708",
+        "localeKeys": [
+          "studentCampusEmpty",
+          "studentEmpty",
+          "studentEmptyBody",
+          "studentInstitution"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summary_grant_screen.dart",
+        "sha256": "817e2f8798fd60c2e6ce5d5efaf31614970982022847caa51050c6c5bf824840",
+        "localeKeys": [
+          "studentGrantSummary"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/rental_summary_card.dart",
+        "sha256": "6c59a1e7525f2e8daf38a6cdefe0b498551c07441d438901eb44039f0b4cb823",
+        "localeKeys": [
+          "studentMonthly",
+          "studentShareExpiry",
+          "studentShareInvoice",
+          "studentShareLimits"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/cubits/student_cubits.dart",
+        "sha256": "0665c918adb64d0d4df283e8fe3d7f105e781338dc6953c7e8b6a5b5f6004317",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_history.dart",
+        "sha256": "2faa2b5f031aaff74d7d0334bde624c30ef1b8242335882f2fab3275f7000940",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_offer_policy.dart",
+        "sha256": "cb7498ddf0c189f36ec7fe38fe63083aa40c561a555c89d3781ecd4a3aa6003b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
+        "sha256": "42c776dec8241ff10ad878ab17d66815e8e912138bca8f9a0ea1f696f9944847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_profile.dart",
+        "sha256": "2208d7159dbb5e572216e5c38cf1111e5f5d34587c4caaaf65ef040a72495c24",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_campus.dart",
+        "sha256": "ab6085301a5237b74a65f2063408baef9874e07b87d2814d482dff288d60547a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_bodies.dart",
+        "sha256": "7356c420e4a8eb94e89a002f7a04047f7d04fcee01ca0aefed1b45610fd5fccd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_arrangement.dart",
+        "sha256": "83a0fe2dc71568acef94ba338ad82b3f83d0001594aa9912d0a54ca65dc0ecab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/rental_summary_grant_form.dart",
+        "sha256": "0fa94fd4c2144da1289e611667f80af8c64ec1ed6283dd8fd7417788d885d6d6",
+        "localeKeys": [
+          "rentalInvalidInput",
+          "studentConsent",
+          "studentDoNotShare",
+          "studentGrantSummary",
+          "studentRecipientEmail",
+          "studentShareBooking",
+          "studentShareConsent",
+          "studentShareExpiry",
+          "studentShareInvoice",
+          "studentShareLimits",
+          "studentShareReceipt"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_labels.dart",
+        "sha256": "987dcadc16678247a1c4112cdff4534dcf347cdc492c952fa5c7f47571f99e3d",
+        "localeKeys": [
+          "housingBudgetMax",
+          "housingBudgetMin",
+          "rentalUnknown",
+          "studentAcademicYear",
+          "studentAccessibility",
+          "studentAdmissionEligibility",
+          "studentAdmissionPending",
+          "studentAdmitted",
+          "studentChanged",
+          "studentCleaning",
+          "studentCommonSpaces",
+          "studentCommunication",
+          "studentCompleted",
+          "studentCooking",
+          "studentCycling",
+          "studentDriving",
+          "studentEnrolled",
+          "studentEnrollmentEligibility",
+          "studentExamQuiet",
+          "studentGraduated",
+          "studentGroceries",
+          "studentGuests",
+          "studentInternship",
+          "studentIssueAccess",
+          "studentIssueAdmission",
+          "studentIssueFacility",
+          "studentIssueMaintenance",
+          "studentIssueRoommate",
+          "studentIssueSpace",
+          "studentIssueTransition",
+          "studentKeepPaying",
+          "studentMaintenanceQuiet",
+          "studentMissing",
+          "studentNotEnrolled",
+          "studentOpenEligibility",
+          "studentOtherPeriod",
+          "studentPerPerson",
+          "studentPeriodEnd",
+          "studentPeriodStart",
+          "studentPurchases",
+          "studentQuietHours",
+          "studentRenew",
+          "studentReturnRequest",
+          "studentSemester",
+          "studentSharedRoom",
+          "studentSleep",
+          "studentSmoking",
+          "studentStorageRequest",
+          "studentStudyTimes",
+          "studentSummer",
+          "studentTransit",
+          "studentUndecided",
+          "studentVacate",
+          "studentWaiting",
+          "studentWalking",
+          "studentWeekends",
+          "studentWholeGroup",
+          "studentYearSummer"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S220",
+    "behavior": "Lease/group scoped summary options and grants. Only explicitly selected booking/invoice/receipt projections; recipientName/accommodation and record statuses shown if supplied. Revoke permission and expiry apply; not a broad family account or payment authority.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "expired",
+      "revoked"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "revoked",
+      "expired"
+    ]
+  },
+  {
+    "id": "S213",
+    "name": "مشاركة ملخص الإيجار",
+    "english": "Rental summary sharing consent",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/rental_summary_grant_screen.dart",
+    "sha256": "817e2f8798fd60c2e6ce5d5efaf31614970982022847caa51050c6c5bf824840",
+    "localeKeys": [
+      "studentGrantSummary"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/cubits/student_cubits.dart",
+        "sha256": "0665c918adb64d0d4df283e8fe3d7f105e781338dc6953c7e8b6a5b5f6004317",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/rental_summary.dart",
+        "sha256": "f07e54aa8f20eb6651dd505e9d9b1e1a02e0ed382dc98842f66a113c6efa8809",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/rental_summary_grant_form.dart",
+        "sha256": "0fa94fd4c2144da1289e611667f80af8c64ec1ed6283dd8fd7417788d885d6d6",
+        "localeKeys": [
+          "rentalInvalidInput",
+          "studentConsent",
+          "studentDoNotShare",
+          "studentGrantSummary",
+          "studentRecipientEmail",
+          "studentShareBooking",
+          "studentShareConsent",
+          "studentShareExpiry",
+          "studentShareInvoice",
+          "studentShareLimits",
+          "studentShareReceipt"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
+        "sha256": "42c776dec8241ff10ad878ab17d66815e8e912138bca8f9a0ea1f696f9944847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_profile.dart",
+        "sha256": "2208d7159dbb5e572216e5c38cf1111e5f5d34587c4caaaf65ef040a72495c24",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_arrangement.dart",
+        "sha256": "83a0fe2dc71568acef94ba338ad82b3f83d0001594aa9912d0a54ca65dc0ecab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_offer_policy.dart",
+        "sha256": "cb7498ddf0c189f36ec7fe38fe63083aa40c561a555c89d3781ecd4a3aa6003b",
+        "localeKeys": []
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S212",
+    "behavior": "Read sharing options first; recipient email/expiry/explicit own consent plus allowed selected booking/invoice/receipt. Selected IDs must belong to loaded options, at least allowed projection. No arbitrary full rental/financial access. Revision and command recovery retained.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "expired"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "expired",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S214",
+    "name": "ترتيبات السكن والدراسة",
+    "english": "Student arrangement editor",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangement_edit_screen.dart",
+    "sha256": "fc9f0e11ef9e2a39539faa805c611d447399f7e803e414e9d219e92ded405f30",
+    "localeKeys": [
+      "studentExam",
+      "studentSharedLiving"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
+        "sha256": "42c776dec8241ff10ad878ab17d66815e8e912138bca8f9a0ea1f696f9944847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_arrangement.dart",
+        "sha256": "83a0fe2dc71568acef94ba338ad82b3f83d0001594aa9912d0a54ca65dc0ecab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_arrangement_editor.dart",
+        "sha256": "44c04bce986692aa25ebff25805152560a5164c181d11185039e0ab64207aa6e",
+        "localeKeys": [
+          "housingEnd",
+          "housingStart",
+          "studentConsent",
+          "studentDiscuss",
+          "studentExam",
+          "studentLivingHelp",
+          "studentSharedLiving"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_next_step.dart",
+        "sha256": "fb955be237958c26a3803a564a1572456a9628a9e86b4d5cf793640ebab5d02f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/study_requirements.dart",
+        "sha256": "ef24056b78bfecbd567fa0725f83575e9a21a55bc50b29ca5f2c562e53499f38",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_publication.dart",
+        "sha256": "579a4de3db87b3585bf35056928d9806e8625c5df00a45e2819831987a677d96",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_campus.dart",
+        "sha256": "ab6085301a5237b74a65f2063408baef9874e07b87d2814d482dff288d60547a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_search_context.dart",
+        "sha256": "dd484779651014479b48ffa7ba0199a95690fc402d37940ea593f8827ff254fc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_participant.dart",
+        "sha256": "535b5045f14b0415b04f9458bc8d2b5ae96be03ae883b6a0617243ecc66f9ecf",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_bodies.dart",
+        "sha256": "7356c420e4a8eb94e89a002f7a04047f7d04fcee01ca0aefed1b45610fd5fccd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_labels.dart",
+        "sha256": "987dcadc16678247a1c4112cdff4534dcf347cdc492c952fa5c7f47571f99e3d",
+        "localeKeys": [
+          "housingBudgetMax",
+          "housingBudgetMin",
+          "rentalUnknown",
+          "studentAcademicYear",
+          "studentAccessibility",
+          "studentAdmissionEligibility",
+          "studentAdmissionPending",
+          "studentAdmitted",
+          "studentChanged",
+          "studentCleaning",
+          "studentCommonSpaces",
+          "studentCommunication",
+          "studentCompleted",
+          "studentCooking",
+          "studentCycling",
+          "studentDriving",
+          "studentEnrolled",
+          "studentEnrollmentEligibility",
+          "studentExamQuiet",
+          "studentGraduated",
+          "studentGroceries",
+          "studentGuests",
+          "studentInternship",
+          "studentIssueAccess",
+          "studentIssueAdmission",
+          "studentIssueFacility",
+          "studentIssueMaintenance",
+          "studentIssueRoommate",
+          "studentIssueSpace",
+          "studentIssueTransition",
+          "studentKeepPaying",
+          "studentMaintenanceQuiet",
+          "studentMissing",
+          "studentNotEnrolled",
+          "studentOpenEligibility",
+          "studentOtherPeriod",
+          "studentPerPerson",
+          "studentPeriodEnd",
+          "studentPeriodStart",
+          "studentPurchases",
+          "studentQuietHours",
+          "studentRenew",
+          "studentReturnRequest",
+          "studentSemester",
+          "studentSharedRoom",
+          "studentSleep",
+          "studentSmoking",
+          "studentStorageRequest",
+          "studentStudyTimes",
+          "studentSummer",
+          "studentTransit",
+          "studentUndecided",
+          "studentVacate",
+          "studentWaiting",
+          "studentWalking",
+          "studentWeekends",
+          "studentWholeGroup",
+          "studentYearSummer"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S215",
+    "behavior": "Shared-living/exam kinds have distinct capabilities/rules, dates and plan revision. Edit captures full arrangement draft; approve/discuss reads current rules/digest and requires own checkbox, not editable rule inputs. Revised arrangements invalidate earlier consent.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "decision",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S215",
+    "name": "ترتيبات المعيشة",
+    "english": "Student living arrangements",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangements_screen.dart",
+    "sha256": "e763e28677d337d923bfb1c6787a4e74bf878020437b0052e974ff7f9a84d8e9",
+    "localeKeys": [
+      "studentChanged",
+      "studentDiscuss",
+      "studentExam",
+      "studentLivingHelp",
+      "studentNewVersion",
+      "studentReview",
+      "studentReviewed",
+      "studentSharedLiving",
+      "studentWaiting"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
+        "sha256": "42c776dec8241ff10ad878ab17d66815e8e912138bca8f9a0ea1f696f9944847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_arrangement.dart",
+        "sha256": "83a0fe2dc71568acef94ba338ad82b3f83d0001594aa9912d0a54ca65dc0ecab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_arrangement_edit_screen.dart",
+        "sha256": "fc9f0e11ef9e2a39539faa805c611d447399f7e803e414e9d219e92ded405f30",
+        "localeKeys": [
+          "studentExam",
+          "studentSharedLiving"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/student_housing_data.dart",
+        "sha256": "e3209eaaecb7e6c616ea90bb355f5d91a9440a19a48af12af4b1f6e43f10340f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_empty_state.dart",
+        "sha256": "55433174fb2d3acf67a5e2c8af20853a8a31460b537f73617e84936204fd7708",
+        "localeKeys": [
+          "studentCampusEmpty",
+          "studentEmpty",
+          "studentEmptyBody",
+          "studentInstitution"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_labels.dart",
+        "sha256": "987dcadc16678247a1c4112cdff4534dcf347cdc492c952fa5c7f47571f99e3d",
+        "localeKeys": [
+          "housingBudgetMax",
+          "housingBudgetMin",
+          "rentalUnknown",
+          "studentAcademicYear",
+          "studentAccessibility",
+          "studentAdmissionEligibility",
+          "studentAdmissionPending",
+          "studentAdmitted",
+          "studentChanged",
+          "studentCleaning",
+          "studentCommonSpaces",
+          "studentCommunication",
+          "studentCompleted",
+          "studentCooking",
+          "studentCycling",
+          "studentDriving",
+          "studentEnrolled",
+          "studentEnrollmentEligibility",
+          "studentExamQuiet",
+          "studentGraduated",
+          "studentGroceries",
+          "studentGuests",
+          "studentInternship",
+          "studentIssueAccess",
+          "studentIssueAdmission",
+          "studentIssueFacility",
+          "studentIssueMaintenance",
+          "studentIssueRoommate",
+          "studentIssueSpace",
+          "studentIssueTransition",
+          "studentKeepPaying",
+          "studentMaintenanceQuiet",
+          "studentMissing",
+          "studentNotEnrolled",
+          "studentOpenEligibility",
+          "studentOtherPeriod",
+          "studentPerPerson",
+          "studentPeriodEnd",
+          "studentPeriodStart",
+          "studentPurchases",
+          "studentQuietHours",
+          "studentRenew",
+          "studentReturnRequest",
+          "studentSemester",
+          "studentSharedRoom",
+          "studentSleep",
+          "studentSmoking",
+          "studentStorageRequest",
+          "studentStudyTimes",
+          "studentSummer",
+          "studentTransit",
+          "studentUndecided",
+          "studentVacate",
+          "studentWaiting",
+          "studentWalking",
+          "studentWeekends",
+          "studentWholeGroup",
+          "studentYearSummer"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_next_step.dart",
+        "sha256": "fb955be237958c26a3803a564a1572456a9628a9e86b4d5cf793640ebab5d02f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/study_requirements.dart",
+        "sha256": "ef24056b78bfecbd567fa0725f83575e9a21a55bc50b29ca5f2c562e53499f38",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_publication.dart",
+        "sha256": "579a4de3db87b3585bf35056928d9806e8625c5df00a45e2819831987a677d96",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_campus.dart",
+        "sha256": "ab6085301a5237b74a65f2063408baef9874e07b87d2814d482dff288d60547a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_search_context.dart",
+        "sha256": "dd484779651014479b48ffa7ba0199a95690fc402d37940ea593f8827ff254fc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_participant.dart",
+        "sha256": "535b5045f14b0415b04f9458bc8d2b5ae96be03ae883b6a0617243ecc66f9ecf",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_arrangement_editor.dart",
+        "sha256": "44c04bce986692aa25ebff25805152560a5164c181d11185039e0ab64207aa6e",
+        "localeKeys": [
+          "housingEnd",
+          "housingStart",
+          "studentConsent",
+          "studentDiscuss",
+          "studentExam",
+          "studentLivingHelp",
+          "studentSharedLiving"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/rental_summary.dart",
+        "sha256": "f07e54aa8f20eb6651dd505e9d9b1e1a02e0ed382dc98842f66a113c6efa8809",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_history.dart",
+        "sha256": "2faa2b5f031aaff74d7d0334bde624c30ef1b8242335882f2fab3275f7000940",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_offer_policy.dart",
+        "sha256": "cb7498ddf0c189f36ec7fe38fe63083aa40c561a555c89d3781ecd4a3aa6003b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_profile.dart",
+        "sha256": "2208d7159dbb5e572216e5c38cf1111e5f5d34587c4caaaf65ef040a72495c24",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_bodies.dart",
+        "sha256": "7356c420e4a8eb94e89a002f7a04047f7d04fcee01ca0aefed1b45610fd5fccd",
+        "localeKeys": []
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S220",
+    "behavior": "Plan-scoped paginated shared_living/exam versions with dates/rules/status. Actions approve/discuss/revise only when supplied, refresh on return. accepted/review_required/waiting separate; no claim that personal acceptance binds others.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S216",
+    "name": "مشكلة عند بداية السكن",
+    "english": "Student check-in issue report",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_check_in_screen.dart",
+    "sha256": "056230806b5e8b77cb26f481281c21db1d3e469e564dd06120062df48cf52fdd",
+    "localeKeys": [
+      "studentCheckIn",
+      "studentCheckInHelp",
+      "studentReportIssue"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
+        "sha256": "42c776dec8241ff10ad878ab17d66815e8e912138bca8f9a0ea1f696f9944847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/cubits/student_cubits.dart",
+        "sha256": "0665c918adb64d0d4df283e8fe3d7f105e781338dc6953c7e8b6a5b5f6004317",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_labels.dart",
+        "sha256": "987dcadc16678247a1c4112cdff4534dcf347cdc492c952fa5c7f47571f99e3d",
+        "localeKeys": [
+          "housingBudgetMax",
+          "housingBudgetMin",
+          "rentalUnknown",
+          "studentAcademicYear",
+          "studentAccessibility",
+          "studentAdmissionEligibility",
+          "studentAdmissionPending",
+          "studentAdmitted",
+          "studentChanged",
+          "studentCleaning",
+          "studentCommonSpaces",
+          "studentCommunication",
+          "studentCompleted",
+          "studentCooking",
+          "studentCycling",
+          "studentDriving",
+          "studentEnrolled",
+          "studentEnrollmentEligibility",
+          "studentExamQuiet",
+          "studentGraduated",
+          "studentGroceries",
+          "studentGuests",
+          "studentInternship",
+          "studentIssueAccess",
+          "studentIssueAdmission",
+          "studentIssueFacility",
+          "studentIssueMaintenance",
+          "studentIssueRoommate",
+          "studentIssueSpace",
+          "studentIssueTransition",
+          "studentKeepPaying",
+          "studentMaintenanceQuiet",
+          "studentMissing",
+          "studentNotEnrolled",
+          "studentOpenEligibility",
+          "studentOtherPeriod",
+          "studentPerPerson",
+          "studentPeriodEnd",
+          "studentPeriodStart",
+          "studentPurchases",
+          "studentQuietHours",
+          "studentRenew",
+          "studentReturnRequest",
+          "studentSemester",
+          "studentSharedRoom",
+          "studentSleep",
+          "studentSmoking",
+          "studentStorageRequest",
+          "studentStudyTimes",
+          "studentSummer",
+          "studentTransit",
+          "studentUndecided",
+          "studentVacate",
+          "studentWaiting",
+          "studentWalking",
+          "studentWeekends",
+          "studentWholeGroup",
+          "studentYearSummer"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_choice_field.dart",
+        "sha256": "8a2bfb806ba772412672104719c679ec3eaa31ba314dfc9172e018d500ae8df7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/student_housing_data.dart",
+        "sha256": "e3209eaaecb7e6c616ea90bb355f5d91a9440a19a48af12af4b1f6e43f10340f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_bodies.dart",
+        "sha256": "7356c420e4a8eb94e89a002f7a04047f7d04fcee01ca0aefed1b45610fd5fccd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_next_step.dart",
+        "sha256": "fb955be237958c26a3803a564a1572456a9628a9e86b4d5cf793640ebab5d02f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/study_requirements.dart",
+        "sha256": "ef24056b78bfecbd567fa0725f83575e9a21a55bc50b29ca5f2c562e53499f38",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_publication.dart",
+        "sha256": "579a4de3db87b3585bf35056928d9806e8625c5df00a45e2819831987a677d96",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_campus.dart",
+        "sha256": "ab6085301a5237b74a65f2063408baef9874e07b87d2814d482dff288d60547a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_search_context.dart",
+        "sha256": "dd484779651014479b48ffa7ba0199a95690fc402d37940ea593f8827ff254fc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_participant.dart",
+        "sha256": "535b5045f14b0415b04f9458bc8d2b5ae96be03ae883b6a0617243ecc66f9ecf",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/rental_summary.dart",
+        "sha256": "f07e54aa8f20eb6651dd505e9d9b1e1a02e0ed382dc98842f66a113c6efa8809",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_profile.dart",
+        "sha256": "2208d7159dbb5e572216e5c38cf1111e5f5d34587c4caaaf65ef040a72495c24",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_arrangement.dart",
+        "sha256": "83a0fe2dc71568acef94ba338ad82b3f83d0001594aa9912d0a54ca65dc0ecab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_offer_policy.dart",
+        "sha256": "cb7498ddf0c189f36ec7fe38fe63083aa40c561a555c89d3781ecd4a3aa6003b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_history.dart",
+        "sha256": "2faa2b5f031aaff74d7d0334bde624c30ef1b8242335882f2fab3275f7000940",
+        "localeKeys": []
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S220",
+    "behavior": "This check-in screen reports an issue, not an arrival/occupancy confirmation. Required note and StudentLabels issue kind tied to plan+lease with studentTransitions capability, expected plan revision/requestKey and recoverable kind.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S217",
+    "name": "مراجعة موافقتي الدراسية",
+    "english": "Student plan consent",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_consent_screen.dart",
+    "sha256": "c58489858cfef350a42796f2b91c2a95879805c52f8888ec6b0c9c7c06217011",
+    "localeKeys": [
+      "rentalUnknown",
+      "studentConsent",
+      "studentDisclosureBudget",
+      "studentDisclosureCampus",
+      "studentDisclosureStudy",
+      "studentMyRequirements",
+      "studentOwnDisclosures",
+      "studentPreview",
+      "studentPublicationHelp",
+      "studentPublish",
+      "studentReview",
+      "studentSharedRequirements"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
+        "sha256": "42c776dec8241ff10ad878ab17d66815e8e912138bca8f9a0ea1f696f9944847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/cubits/student_cubits.dart",
+        "sha256": "0665c918adb64d0d4df283e8fe3d7f105e781338dc6953c7e8b6a5b5f6004317",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_publication_summary.dart",
+        "sha256": "258199c3d8abf3fa85fb78af661ae26356fc58ab2bc86525df5b3e478896fe6c",
+        "localeKeys": [
+          "studentCommuteLimit",
+          "studentInternet",
+          "studentMonthly",
+          "studentParticipant",
+          "studentParticipants",
+          "studentPublicationHelp",
+          "studentStudySpace"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_labels.dart",
+        "sha256": "987dcadc16678247a1c4112cdff4534dcf347cdc492c952fa5c7f47571f99e3d",
+        "localeKeys": [
+          "housingBudgetMax",
+          "housingBudgetMin",
+          "rentalUnknown",
+          "studentAcademicYear",
+          "studentAccessibility",
+          "studentAdmissionEligibility",
+          "studentAdmissionPending",
+          "studentAdmitted",
+          "studentChanged",
+          "studentCleaning",
+          "studentCommonSpaces",
+          "studentCommunication",
+          "studentCompleted",
+          "studentCooking",
+          "studentCycling",
+          "studentDriving",
+          "studentEnrolled",
+          "studentEnrollmentEligibility",
+          "studentExamQuiet",
+          "studentGraduated",
+          "studentGroceries",
+          "studentGuests",
+          "studentInternship",
+          "studentIssueAccess",
+          "studentIssueAdmission",
+          "studentIssueFacility",
+          "studentIssueMaintenance",
+          "studentIssueRoommate",
+          "studentIssueSpace",
+          "studentIssueTransition",
+          "studentKeepPaying",
+          "studentMaintenanceQuiet",
+          "studentMissing",
+          "studentNotEnrolled",
+          "studentOpenEligibility",
+          "studentOtherPeriod",
+          "studentPerPerson",
+          "studentPeriodEnd",
+          "studentPeriodStart",
+          "studentPurchases",
+          "studentQuietHours",
+          "studentRenew",
+          "studentReturnRequest",
+          "studentSemester",
+          "studentSharedRoom",
+          "studentSleep",
+          "studentSmoking",
+          "studentStorageRequest",
+          "studentStudyTimes",
+          "studentSummer",
+          "studentTransit",
+          "studentUndecided",
+          "studentVacate",
+          "studentWaiting",
+          "studentWalking",
+          "studentWeekends",
+          "studentWholeGroup",
+          "studentYearSummer"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_requirement_summary.dart",
+        "sha256": "79f208922e659ebd95d46e79ddd47c01144b9080ae9d27ec7976ffe0ce13c26e",
+        "localeKeys": [
+          "rentalUnknown",
+          "studentAdmissionHelp",
+          "studentCommuteLimit",
+          "studentInternet",
+          "studentStudySpace"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/student_housing_data.dart",
+        "sha256": "e3209eaaecb7e6c616ea90bb355f5d91a9440a19a48af12af4b1f6e43f10340f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_bodies.dart",
+        "sha256": "7356c420e4a8eb94e89a002f7a04047f7d04fcee01ca0aefed1b45610fd5fccd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_next_step.dart",
+        "sha256": "fb955be237958c26a3803a564a1572456a9628a9e86b4d5cf793640ebab5d02f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/study_requirements.dart",
+        "sha256": "ef24056b78bfecbd567fa0725f83575e9a21a55bc50b29ca5f2c562e53499f38",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_publication.dart",
+        "sha256": "579a4de3db87b3585bf35056928d9806e8625c5df00a45e2819831987a677d96",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_campus.dart",
+        "sha256": "ab6085301a5237b74a65f2063408baef9874e07b87d2814d482dff288d60547a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_search_context.dart",
+        "sha256": "dd484779651014479b48ffa7ba0199a95690fc402d37940ea593f8827ff254fc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_participant.dart",
+        "sha256": "535b5045f14b0415b04f9458bc8d2b5ae96be03ae883b6a0617243ecc66f9ecf",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/rental_summary.dart",
+        "sha256": "f07e54aa8f20eb6651dd505e9d9b1e1a02e0ed382dc98842f66a113c6efa8809",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_profile.dart",
+        "sha256": "2208d7159dbb5e572216e5c38cf1111e5f5d34587c4caaaf65ef040a72495c24",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_arrangement.dart",
+        "sha256": "83a0fe2dc71568acef94ba338ad82b3f83d0001594aa9912d0a54ca65dc0ecab",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_offer_policy.dart",
+        "sha256": "cb7498ddf0c189f36ec7fe38fe63083aa40c561a555c89d3781ecd4a3aa6003b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_history.dart",
+        "sha256": "2faa2b5f031aaff74d7d0334bde624c30ef1b8242335882f2fab3275f7000940",
+        "localeKeys": []
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S220",
+    "behavior": "review vs publish explicit modes; own requirements/disclosures and shared participants differ. Review uses plan digest; publish uses previewDigest/publication projection and studentDemand capability. Mandatory checkbox and revision. No implicit disclosure of all student data or consent for another member.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "publication",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S218",
+    "name": "سجل الخطة الدراسية",
+    "english": "Student plan history",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_history_screen.dart",
+    "sha256": "a8f9795192deff2191baab5e22b07cd0c4e93d02d8c77e7e63617c6116e0726f",
+    "localeKeys": [
+      "studentHistory",
+      "studentParticipants",
+      "studentVersion"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_history.dart",
+        "sha256": "2faa2b5f031aaff74d7d0334bde624c30ef1b8242335882f2fab3275f7000940",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/student_housing_data.dart",
+        "sha256": "e3209eaaecb7e6c616ea90bb355f5d91a9440a19a48af12af4b1f6e43f10340f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_empty_state.dart",
+        "sha256": "55433174fb2d3acf67a5e2c8af20853a8a31460b537f73617e84936204fd7708",
+        "localeKeys": [
+          "studentCampusEmpty",
+          "studentEmpty",
+          "studentEmptyBody",
+          "studentInstitution"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_labels.dart",
+        "sha256": "987dcadc16678247a1c4112cdff4534dcf347cdc492c952fa5c7f47571f99e3d",
+        "localeKeys": [
+          "housingBudgetMax",
+          "housingBudgetMin",
+          "rentalUnknown",
+          "studentAcademicYear",
+          "studentAccessibility",
+          "studentAdmissionEligibility",
+          "studentAdmissionPending",
+          "studentAdmitted",
+          "studentChanged",
+          "studentCleaning",
+          "studentCommonSpaces",
+          "studentCommunication",
+          "studentCompleted",
+          "studentCooking",
+          "studentCycling",
+          "studentDriving",
+          "studentEnrolled",
+          "studentEnrollmentEligibility",
+          "studentExamQuiet",
+          "studentGraduated",
+          "studentGroceries",
+          "studentGuests",
+          "studentInternship",
+          "studentIssueAccess",
+          "studentIssueAdmission",
+          "studentIssueFacility",
+          "studentIssueMaintenance",
+          "studentIssueRoommate",
+          "studentIssueSpace",
+          "studentIssueTransition",
+          "studentKeepPaying",
+          "studentMaintenanceQuiet",
+          "studentMissing",
+          "studentNotEnrolled",
+          "studentOpenEligibility",
+          "studentOtherPeriod",
+          "studentPerPerson",
+          "studentPeriodEnd",
+          "studentPeriodStart",
+          "studentPurchases",
+          "studentQuietHours",
+          "studentRenew",
+          "studentReturnRequest",
+          "studentSemester",
+          "studentSharedRoom",
+          "studentSleep",
+          "studentSmoking",
+          "studentStorageRequest",
+          "studentStudyTimes",
+          "studentSummer",
+          "studentTransit",
+          "studentUndecided",
+          "studentVacate",
+          "studentWaiting",
+          "studentWalking",
+          "studentWeekends",
+          "studentWholeGroup",
+          "studentYearSummer"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_requirement_summary.dart",
+        "sha256": "79f208922e659ebd95d46e79ddd47c01144b9080ae9d27ec7976ffe0ce13c26e",
+        "localeKeys": [
+          "rentalUnknown",
+          "studentAdmissionHelp",
+          "studentCommuteLimit",
+          "studentInternet",
+          "studentStudySpace"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/study_requirements.dart",
+        "sha256": "ef24056b78bfecbd567fa0725f83575e9a21a55bc50b29ca5f2c562e53499f38",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/rental_summary.dart",
+        "sha256": "f07e54aa8f20eb6651dd505e9d9b1e1a02e0ed382dc98842f66a113c6efa8809",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_offer_policy.dart",
+        "sha256": "cb7498ddf0c189f36ec7fe38fe63083aa40c561a555c89d3781ecd4a3aa6003b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
+        "sha256": "42c776dec8241ff10ad878ab17d66815e8e912138bca8f9a0ea1f696f9944847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_profile.dart",
+        "sha256": "2208d7159dbb5e572216e5c38cf1111e5f5d34587c4caaaf65ef040a72495c24",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_campus.dart",
+        "sha256": "ab6085301a5237b74a65f2063408baef9874e07b87d2814d482dff288d60547a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_bodies.dart",
+        "sha256": "7356c420e4a8eb94e89a002f7a04047f7d04fcee01ca0aefed1b45610fd5fccd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_arrangement.dart",
+        "sha256": "83a0fe2dc71568acef94ba338ad82b3f83d0001594aa9912d0a54ca65dc0ecab",
+        "localeKeys": []
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S220",
+    "behavior": "PlanId private paginated historical revisions, label/dates/budget basis/min-max/occupants and own requirements. Historical read-only snapshots never current writable plan; unknown values remain unknown.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S219",
+    "name": "الرئيسية · سكن الطلاب",
+    "english": "Student housing home",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_home_screen.dart",
+    "sha256": "1053da11058992e21392084ecaa6fe7e479934af8d2585c2a88066cfd3f0000e",
+    "localeKeys": [
+      "workspaceStudents"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_search_form.dart",
+        "sha256": "67cc54032af9f9a1b6915d8fc7487696047cf39bd7f6d6db6f76a608db9e70c6",
+        "localeKeys": [
+          "freeLocalSaveFailed",
+          "freeRemove",
+          "housingBudgetMax",
+          "housingBudgetMin",
+          "housingEnd",
+          "housingPeople",
+          "housingStart",
+          "rentalScopeFilter",
+          "search",
+          "studentBudgetBasis",
+          "studentChooseCampus",
+          "studentIndependentSearchHelp",
+          "studentMonthly",
+          "studentPerPerson",
+          "studentSearchDatesHelp",
+          "studentSearchHelp",
+          "studentWholeGroup"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_home_actions.dart",
+        "sha256": "bb3b16166eb6385ae2f31d8848b354a1059d7b5e25ab6a23a9e53a5841fdac7f",
+        "localeKeys": [
+          "groupsTitle",
+          "workspaceAcademicTools"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_search_context.dart",
+        "sha256": "dd484779651014479b48ffa7ba0199a95690fc402d37940ea593f8827ff254fc",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/student_campus.dart",
+        "sha256": "ab6085301a5237b74a65f2063408baef9874e07b87d2814d482dff288d60547a",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_choice_field.dart",
+        "sha256": "8a2bfb806ba772412672104719c679ec3eaa31ba314dfc9172e018d500ae8df7",
+        "localeKeys": []
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S05",
+    "behavior": "Independent student search works without academic plan/group. Student context, campus, city, rental scope, monthly budget and optional dates preserved; group variant adds people and per-person/whole-group basis. Existing continuation/session draft and visit banner retained; valid availability searches still recheck server.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S05",
+      "S07"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "group-search",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S220",
+    "name": "أدوات السكن الدراسي",
+    "english": "Student planning hub",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/screens/student_hub_screen.dart",
+    "sha256": "c8d8660b90e4f7b6e6dfde66bdd3876910dc21e43f5d9d846a3761579071fd90",
+    "localeKeys": [
+      "studentHub"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_rental_entry.dart",
+        "sha256": "c4ea982a16b6eff8afec5ccad0588ab413ba416d1b582acfb04e984d9de3493e",
+        "localeKeys": [
+          "studentFindHousing",
+          "studentOwnRental",
+          "studentRentalWithoutPlan"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_hub_body.dart",
+        "sha256": "cb9eb6f7198bcd25085275d634f45a3a13f4506a3f89da0307205ca2a61dea23",
+        "localeKeys": [
+          "groupsOpenDetails",
+          "studentExistingGroup",
+          "studentGroupSame",
+          "studentIntro",
+          "studentIntroBody",
+          "studentOptionalFamily",
+          "studentOptionalFamilyHelp",
+          "studentOptionalPlan",
+          "studentOtherPeriod",
+          "studentPlans",
+          "studentProfile",
+          "studentSharedWithMe"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_plan.dart",
+        "sha256": "42c776dec8241ff10ad878ab17d66815e8e912138bca8f9a0ea1f696f9944847",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/data/models/academic_participant.dart",
+        "sha256": "535b5045f14b0415b04f9458bc8d2b5ae96be03ae883b6a0617243ecc66f9ecf",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_empty_state.dart",
+        "sha256": "55433174fb2d3acf67a5e2c8af20853a8a31460b537f73617e84936204fd7708",
+        "localeKeys": [
+          "studentCampusEmpty",
+          "studentEmpty",
+          "studentEmptyBody",
+          "studentInstitution"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/student_housing/presentation/widgets/student_labels.dart",
+        "sha256": "987dcadc16678247a1c4112cdff4534dcf347cdc492c952fa5c7f47571f99e3d",
+        "localeKeys": [
+          "housingBudgetMax",
+          "housingBudgetMin",
+          "rentalUnknown",
+          "studentAcademicYear",
+          "studentAccessibility",
+          "studentAdmissionEligibility",
+          "studentAdmissionPending",
+          "studentAdmitted",
+          "studentChanged",
+          "studentCleaning",
+          "studentCommonSpaces",
+          "studentCommunication",
+          "studentCompleted",
+          "studentCooking",
+          "studentCycling",
+          "studentDriving",
+          "studentEnrolled",
+          "studentEnrollmentEligibility",
+          "studentExamQuiet",
+          "studentGraduated",
+          "studentGroceries",
+          "studentGuests",
+          "studentInternship",
+          "studentIssueAccess",
+          "studentIssueAdmission",
+          "studentIssueFacility",
+          "studentIssueMaintenance",
+          "studentIssueRoommate",
+          "studentIssueSpace",
+          "studentIssueTransition",
+          "studentKeepPaying",
+          "studentMaintenanceQuiet",
+          "studentMissing",
+          "studentNotEnrolled",
+          "studentOpenEligibility",
+          "studentOtherPeriod",
+          "studentPerPerson",
+          "studentPeriodEnd",
+          "studentPeriodStart",
+          "studentPurchases",
+          "studentQuietHours",
+          "studentRenew",
+          "studentReturnRequest",
+          "studentSemester",
+          "studentSharedRoom",
+          "studentSleep",
+          "studentSmoking",
+          "studentStorageRequest",
+          "studentStudyTimes",
+          "studentSummer",
+          "studentTransit",
+          "studentUndecided",
+          "studentVacate",
+          "studentWaiting",
+          "studentWalking",
+          "studentWeekends",
+          "studentWholeGroup",
+          "studentYearSummer"
+        ]
+      }
+    ],
+    "group": "المجموعات وسكن الطلاب",
+    "back": "S219",
+    "behavior": "StudentRentalEntry remains usable independently of planning gate. Optional personal/family planning, group-context plans and shared-with-me separated. Plans have blockers/revisions; planning unavailable must not hide independent rental/search. No compulsory family sharing.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "unavailable"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 10,
+    "chrome": "standard",
+    "reviewGate": "هذه الدفعة تشمل سبرينت ٨ و٩ و١٠ معًا. نتوقف قبل سبرينت ١١ لمراجعتك. كل التفاعلات محلية فقط.",
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "unavailable",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  }
+]

@@ -6,7 +6,11 @@
   "5": "approved-to-continue",
   "6": "approved-to-continue",
   "7": "approved-to-continue",
-  "8": "in-progress",
-  "9": "in-progress",
-  "10": "in-progress"
+  "8": "approved-to-continue",
+  "9": "approved-to-continue",
+  "10": "approved-to-continue",
+  "11": "awaiting-review",
+  "12": "awaiting-review",
+  "13": "awaiting-review",
+  "14": "awaiting-review"
 }

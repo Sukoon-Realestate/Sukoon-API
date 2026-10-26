@@ -1,8 +1,8 @@
-# Sukoon mobile identity — all 160 completed screens
+# Sukoon mobile identity — all 295 completed screens
 
-Open **[index.html](index.html)** for the combined interactive atlas with all 160 completed screens in eight titled sections (the original proposal and Sprints 1–7) and **[design-map.html](design-map.html)** for the visual UI design map. Both files embed their fonts, photos, CSS and JavaScript and work offline.
+Open **[index.html](index.html)** for the combined interactive atlas with all 295 completed screens in fifteen titled sections (the original proposal and Sprints 1–14) and **[design-map.html](design-map.html)** for the visual UI design map. Both files embed their fonts, photos, CSS and JavaScript and work offline.
 
-There are **160 completed screens in Light and Dark**, plus System mode. The global switch and S20 stay synchronized. The preference persists, follows OS changes in System mode, and carries into the design-map page. Switching theme preserves the current fields, scroll and preview state.
+There are **295 completed screens in Light and Dark**, plus System mode. The global switch and S20 stay synchronized. The preference persists, follows OS changes in System mode, and carries into the design-map page. Switching theme preserves the current fields, scroll and preview state.
 
 The main page shows every completed section by default. Use the jump links or section filter to focus your review. Theme changes apply across all sections and preserve inputs. The original atlas is preserved separately at [original-twenty.html](original-twenty.html); individual sprint atlases remain under [sprints/](sprints/README.md).
 
@@ -46,4 +46,8 @@ Checks cover desktop and 360/390/768px presentation widths, both themes, System 
 
 ## Combined gallery verification
 
-[gallery-review-results.json](gallery-review-results.json) records the 160-screen count, eight section titles, shared theme/S20 synchronization, draft preservation, enlarged previews, cross-section navigation and responsive checks. `review_gallery.cjs` uses Playwright and a Chromium executable to repeat those checks.
+[gallery-review-results.json](gallery-review-results.json) records the 295-screen count, fifteen section titles, shared theme/S20 synchronization, draft preservation, enlarged previews, cross-section navigation and responsive checks. `review_gallery.cjs` uses Playwright and a Chromium executable to repeat those checks.
+
+## Current review batch
+
+[Sprints 11–14](sprints/BATCH-11-14.md) complete the remaining 75 primary mockups (S221–S295), with 13 additional native subpages available as variants. All 295 inventoried destinations are built; the complete proposal awaits design review. Sprints 1–10 were approved to continue. The last sprint contains 15 screens; no destinations remain unbuilt.

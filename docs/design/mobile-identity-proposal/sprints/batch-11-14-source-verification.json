@@ -1,0 +1,50 @@
+{
+  "result": "pass",
+  "primaryScreens": 75,
+  "nativeClasses": 89,
+  "dependencyReferences": 809,
+  "uniqueDependencies": 259,
+  "sourceHashes": "all match",
+  "nativeSubpageVariants": 13,
+  "primaryExports": 150,
+  "nativeSubpageExports": 26,
+  "pngs": 222,
+  "individualDimensions": [
+    720,
+    1600
+  ],
+  "sprints": [
+    {
+      "sprint": 11,
+      "primaryScreens": 20,
+      "pngs": 62,
+      "sheets": 10,
+      "overviews": 2
+    },
+    {
+      "sprint": 12,
+      "primaryScreens": 20,
+      "pngs": 68,
+      "sheets": 10,
+      "overviews": 2
+    },
+    {
+      "sprint": 13,
+      "primaryScreens": 20,
+      "pngs": 52,
+      "sheets": 10,
+      "overviews": 2
+    },
+    {
+      "sprint": 14,
+      "primaryScreens": 15,
+      "pngs": 40,
+      "sheets": 8,
+      "overviews": 2
+    }
+  ],
+  "galleryPrimaryScreens": 295,
+  "gallerySections": 15,
+  "unbuiltDestinations": 0,
+  "nativeChanges": false
+}

@@ -1,0 +1,4598 @@
+[
+  {
+    "id": "S241",
+    "name": "حفظ عرض للشركة",
+    "english": "Save offer to company list",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_save_offer_screen.dart",
+    "sha256": "3131669271085cbad98f5bc576dafbdf94842ebd35f972999b7c1c2c3b58f12e",
+    "localeKeys": [
+      "workspaceSaveForCompany"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_cubits.dart",
+        "sha256": "1f644b5c6cf4a99a8d6942c9497bdd02562527b4e3bb52ec8e983196f10445c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_saved_lists_view.dart",
+        "sha256": "150b13a39a02b6fd88e4390633d55d4a4844a310eaf9bc39bf775c77de6bee57",
+        "localeKeys": [
+          "workspaceListCreate",
+          "workspaceListEmpty",
+          "workspaceListEmptyHelp",
+          "workspaceListsTeamOnly"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff.dart",
+        "sha256": "c01ccef2005def53ad03a13b2583e799171046f8661dffec6fa4cd825ef10ff7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_activation.dart",
+        "sha256": "09da9bcc0fcb70565419de10876560f1bccc7ea24f060cbcc82e88b1e05906d9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contact_proof.dart",
+        "sha256": "41984ea7ce49cc779158e3a5b245d17514318b11ba1d7c7fd1fb0592bb199d61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/account_contexts.dart",
+        "sha256": "ba11f08811954f2c72cb0720c736a80152720cd515a061e8a3a965c6eb021d33",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_invitation.dart",
+        "sha256": "46fda1f790de3910e081c85261cd144476f8a1e99abd077734084e62c77e5db8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_housing_request.dart",
+        "sha256": "e838405c27579786733e852471686450105a0f2af0b40cc7b3751937e0ceda17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_batch.dart",
+        "sha256": "b368fabbd9637694e23b3a2ab33424e6ebfef1572eab8485c0749b9e01ca583e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_change.dart",
+        "sha256": "76b81a6c9b50701b5524314a1498bd2a2c602c928d91472e174d1a342b1656b1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_media.dart",
+        "sha256": "c25502079a861eda8eff134b5c932e39a6699d39c69215173f3845fc194c5c31",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_member.dart",
+        "sha256": "edba81f3665e172cae39b3c34eb20a4bd97bab802fd5c6aeb970f4d3fc49a2f5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_budget.dart",
+        "sha256": "bf4029262d9472bad186185319b42029f28e41e455d69aa4df614dfff487bf25",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_saved_list.dart",
+        "sha256": "66f409f14fded441fadd72bc14b1babdcd5f7ecad617410bedd61f77362dbd47",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S249",
+    "behavior": "Reload company, preserve portfolioOfferId or property/offer identity, then choose authorized company list. Saved-list write permission separate from coordinating a request. Canonical offer availability rechecked at later request/booking step.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanySaveOfferScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S242",
+    "name": "إدارة قائمة الشركة",
+    "english": "Company saved-list action",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_action_screen.dart",
+    "sha256": "9cdb9a50db6aa501e7c306cba6848890bef61138889864a2ef94cfb0441d096d",
+    "localeKeys": [
+      "rentalInvalidInput",
+      "workspaceCompanyLists",
+      "workspaceListArchive",
+      "workspaceListCreate",
+      "workspaceListRemove",
+      "workspaceListRename",
+      "workspaceSaveForCompany"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_saved_list.dart",
+        "sha256": "66f409f14fded441fadd72bc14b1babdcd5f7ecad617410bedd61f77362dbd47",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/company_saved_data.dart",
+        "sha256": "66bbcfeac457f7c97dc2d3b6bda4275740a713320469be28d54b6817ad8f2438",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S241",
+    "behavior": "Create/rename title required <=120; archive/remove/add do not require title. Draft entity scopes company/list/action/item/offer; expected list revision/requestKey and current permission govern every mutation. Archiving returns and refreshes list.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanySavedActionScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "archive-list",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S243",
+    "name": "عروض قائمة الشركة",
+    "english": "Company saved-list detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_detail_screen.dart",
+    "sha256": "dc54f827cdb99f44de7edaab44ed7b93aebe195af0b5fcc25e193cf23dceb439",
+    "localeKeys": [
+      "workspaceListArchive",
+      "workspaceListEmptyHelp",
+      "workspaceListItemsEmpty",
+      "workspaceListRemove",
+      "workspaceListRename",
+      "workspaceListUnavailable"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_saved_list.dart",
+        "sha256": "66f409f14fded441fadd72bc14b1babdcd5f7ecad617410bedd61f77362dbd47",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_saved_list_cubit.dart",
+        "sha256": "86aef65b194975bfe8b49f95eca12bd9883e3e000303c70ef860fdcb47c3550f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_saved_action_screen.dart",
+        "sha256": "9cdb9a50db6aa501e7c306cba6848890bef61138889864a2ef94cfb0441d096d",
+        "localeKeys": [
+          "rentalInvalidInput",
+          "workspaceCompanyLists",
+          "workspaceListArchive",
+          "workspaceListCreate",
+          "workspaceListRemove",
+          "workspaceListRename",
+          "workspaceSaveForCompany"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/company_saved_data.dart",
+        "sha256": "66bbcfeac457f7c97dc2d3b6bda4275740a713320469be28d54b6817ad8f2438",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_labels.dart",
+        "sha256": "17e8880aa51de96ac000370d82031387798c8d23c023cb862ce6cd089a6551fd",
+        "localeKeys": [
+          "companyAccessActive",
+          "companyAccessDeclined",
+          "companyActivationExpired",
+          "companyActivationRevoked",
+          "companyAdmin",
+          "companyApproved",
+          "companyApprover",
+          "companyAwaitingApproval",
+          "companyCairoTime",
+          "companyChangesRequested",
+          "companyCoordinator",
+          "companyDeliveryCancelled",
+          "companyDeliveryFailed",
+          "companyDeliveryNotRequested",
+          "companyDeliveryQueued",
+          "companyDeliverySending",
+          "companyDeliverySent",
+          "companyDeliveryUnknown",
+          "companyEmployee",
+          "companyHeld",
+          "companyHoldExpired",
+          "companyOffboarded",
+          "companyPendingActivation",
+          "companyPendingReview",
+          "companyPrepared",
+          "companyReadyToSubmit",
+          "companyRejected",
+          "companyReviewed",
+          "companyTenancyCompleted",
+          "companyTenancyNeedsReview",
+          "companyTenancyPendingSignatures",
+          "companyUnknownAmount",
+          "companyWithdrawn",
+          "egyptianPoundShort",
+          "portfolioBuilding",
+          "portfolioComplex",
+          "portfolioDraft",
+          "portfolioEntireBuilding",
+          "portfolioEntireComplex",
+          "portfolioMultipleUnits",
+          "portfolioPaused",
+          "portfolioPublished",
+          "portfolioSelectedBuildings",
+          "portfolioSelectedUnits",
+          "portfolioSingleUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_viewing_entry.dart",
+        "sha256": "610dfd0a815e85048240858b67a3f6624d4a5f4eb295b2ece7bbae761314cfe5",
+        "localeKeys": [
+          "viewingCompanyScope",
+          "viewingCompanySearch"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_member.dart",
+        "sha256": "edba81f3665e172cae39b3c34eb20a4bd97bab802fd5c6aeb970f4d3fc49a2f5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_budget.dart",
+        "sha256": "bf4029262d9472bad186185319b42029f28e41e455d69aa4df614dfff487bf25",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S241",
+    "behavior": "Read fresh list independently of item pagination. Rename/archive/remove only when canWrite and successful list read. Unavailable items do not expose viewing actions; current company scope/offer identity retained. Refresh read and pages after action.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanySavedDetailScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "revision-changed"
+    ]
+  },
+  {
+    "id": "S244",
+    "name": "نتيجة تجهيز الموظفين",
+    "english": "Company staff batch results",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_batch_screen.dart",
+    "sha256": "972ea5777682302023da6a54c549b221b673ff9fe05d5bb372a55cf9d042bd76",
+    "localeKeys": [
+      "companyStaffBatch"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_cubits.dart",
+        "sha256": "1f644b5c6cf4a99a8d6942c9497bdd02562527b4e3bb52ec8e983196f10445c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_staff_batch_results.dart",
+        "sha256": "1603e07990d4fd0faaa8981aa012d33a2db914ad2c1df4825ca73e97482f720f",
+        "localeKeys": [
+          "companyBatchIdentityConflict",
+          "companyBatchPartial",
+          "companyBatchPrepared",
+          "companyPeople",
+          "companyPrepared",
+          "companyStaffBatch",
+          "portfolioRetryFailed"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_member.dart",
+        "sha256": "edba81f3665e172cae39b3c34eb20a4bd97bab802fd5c6aeb970f4d3fc49a2f5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_budget.dart",
+        "sha256": "bf4029262d9472bad186185319b42029f28e41e455d69aa4df614dfff487bf25",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff.dart",
+        "sha256": "c01ccef2005def53ad03a13b2583e799171046f8661dffec6fa4cd825ef10ff7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_activation.dart",
+        "sha256": "09da9bcc0fcb70565419de10876560f1bccc7ea24f060cbcc82e88b1e05906d9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contact_proof.dart",
+        "sha256": "41984ea7ce49cc779158e3a5b245d17514318b11ba1d7c7fd1fb0592bb199d61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/account_contexts.dart",
+        "sha256": "ba11f08811954f2c72cb0720c736a80152720cd515a061e8a3a965c6eb021d33",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_invitation.dart",
+        "sha256": "46fda1f790de3910e081c85261cd144476f8a1e99abd077734084e62c77e5db8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_housing_request.dart",
+        "sha256": "e838405c27579786733e852471686450105a0f2af0b40cc7b3751937e0ceda17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_batch.dart",
+        "sha256": "b368fabbd9637694e23b3a2ab33424e6ebfef1572eab8485c0749b9e01ca583e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_change.dart",
+        "sha256": "76b81a6c9b50701b5524314a1498bd2a2c602c928d91472e174d1a342b1656b1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_media.dart",
+        "sha256": "c25502079a861eda8eff134b5c932e39a6699d39c69215173f3845fc194c5c31",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_body.dart",
+        "sha256": "aa26b2ed5a91666d33882df083de3f935aadc1b4551f901d99d4801a78e15705",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_staff_batch_form.dart",
+        "sha256": "9fc8d9570945c7ef35dbad70a4e5ae3ffbcf1427676aa2e242753d1495ceb36d",
+        "localeKeys": [
+          "companyAddStaff",
+          "companyStaffBatch",
+          "companyStaffBatchHelp",
+          "companyStaffBatchInvalid"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S246",
+    "behavior": "Batch ID/company read, per-row created/conflict outcome. Partial success must remain visible and retries only failed rows with original identity. Prepared staff records are not active company membership or confirmed rental allocations.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "partial-error"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanyStaffBatchScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "retry-form",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "partial-error"
+    ]
+  },
+  {
+    "id": "S245",
+    "name": "استيراد موظفين من CSV",
+    "english": "Company staff CSV import",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_import_screen.dart",
+    "sha256": "81b00f6a947fbe09a70b301215031a05721b8b6c1b7760d2ecc16d3ccaabc4bc",
+    "localeKeys": [
+      "companyImportCsv"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_staff_import.dart",
+        "sha256": "78899b0775c6c2e95793cbff7cd145531932754180722377196d4ffd55e3f164",
+        "localeKeys": [
+          "companyCsvHelp",
+          "companyCsvTooLarge",
+          "companyImportCsv",
+          "companyImportErrors",
+          "companyImportRows"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_member.dart",
+        "sha256": "edba81f3665e172cae39b3c34eb20a4bd97bab802fd5c6aeb970f4d3fc49a2f5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_budget.dart",
+        "sha256": "bf4029262d9472bad186185319b42029f28e41e455d69aa4df614dfff487bf25",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_import.dart",
+        "sha256": "c4236999fe49323c90492f43f52ea002dbe53a89da8f07f05f85fec14ed8a0d7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_staff_batch_form.dart",
+        "sha256": "9fc8d9570945c7ef35dbad70a4e5ae3ffbcf1427676aa2e242753d1495ceb36d",
+        "localeKeys": [
+          "companyAddStaff",
+          "companyStaffBatch",
+          "companyStaffBatchHelp",
+          "companyStaffBatchInvalid"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S246",
+    "behavior": "CSV parser/preview feed CompanyStaffBatchForm; headers, row identities, validation and duplicate/conflict handling precede command. Confirmation does not imply account invitations; partial results preserve successful rows. No real staff import in prototype.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "partial-error"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanyStaffImportScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "partial-error",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S246",
+    "name": "الموظفون وتخصيصاتهم",
+    "english": "Company staff list and detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_staff_screen.dart",
+    "sha256": "3a07a6fbdc529455ad080929bb56915ef7130f9d6349a8e375620983c865b901",
+    "localeKeys": [
+      "companyPeople"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_staff_list.dart",
+        "sha256": "551bac0c1192106387467f7050de13bb2a4cbbaa4e884bf6177e55e927e9d86a",
+        "localeKeys": [
+          "companyAddStaff",
+          "companyImportCsv",
+          "companyManageMemberships",
+          "companyStaffBatch",
+          "companyStaffPreparedHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_cubits.dart",
+        "sha256": "1f644b5c6cf4a99a8d6942c9497bdd02562527b4e3bb52ec8e983196f10445c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff.dart",
+        "sha256": "c01ccef2005def53ad03a13b2583e799171046f8661dffec6fa4cd825ef10ff7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_staff_details.dart",
+        "sha256": "a945090f5d204b9b11ece09bd0d453ee0ddb77ce7d68b4b4f08c1f4c7c35d705",
+        "localeKeys": [
+          "companyActivationDelivery",
+          "companyActivationDeliveryHelp",
+          "companyActivationUnavailable",
+          "companyEditStaff",
+          "companyRevokeActivation",
+          "companySendActivation",
+          "companyStaffPreparedHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_member.dart",
+        "sha256": "edba81f3665e172cae39b3c34eb20a4bd97bab802fd5c6aeb970f4d3fc49a2f5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_budget.dart",
+        "sha256": "bf4029262d9472bad186185319b42029f28e41e455d69aa4df614dfff487bf25",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_empty_state.dart",
+        "sha256": "ccbb16c4f55576cff4f314f428eb18501a3bd95c79841275412b717e81f43323",
+        "localeKeys": [
+          "companyEmpty",
+          "companyEmptyBody",
+          "companyStaffEmpty",
+          "companyStaffEmptyHelp",
+          "companyWorkEmpty",
+          "companyWorkEmptyHelp",
+          "portfolioEmpty",
+          "portfolioEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_staff_form.dart",
+        "sha256": "7fee02b05d6ff503e24db57047debad6dd375a33e7a61f50c08ff8790dec1c3f",
+        "localeKeys": [
+          "companyAuthoritySeparation",
+          "companyDepartment",
+          "companyEmployeeCode",
+          "companyJobTitle",
+          "companySaveStaff",
+          "companyStaffName",
+          "companyStaffPreparedHelp",
+          "companyWorkEmail",
+          "fillField"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_staff_batch_form.dart",
+        "sha256": "9fc8d9570945c7ef35dbad70a4e5ae3ffbcf1427676aa2e242753d1495ceb36d",
+        "localeKeys": [
+          "companyAddStaff",
+          "companyStaffBatch",
+          "companyStaffBatchHelp",
+          "companyStaffBatchInvalid"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_labels.dart",
+        "sha256": "17e8880aa51de96ac000370d82031387798c8d23c023cb862ce6cd089a6551fd",
+        "localeKeys": [
+          "companyAccessActive",
+          "companyAccessDeclined",
+          "companyActivationExpired",
+          "companyActivationRevoked",
+          "companyAdmin",
+          "companyApproved",
+          "companyApprover",
+          "companyAwaitingApproval",
+          "companyCairoTime",
+          "companyChangesRequested",
+          "companyCoordinator",
+          "companyDeliveryCancelled",
+          "companyDeliveryFailed",
+          "companyDeliveryNotRequested",
+          "companyDeliveryQueued",
+          "companyDeliverySending",
+          "companyDeliverySent",
+          "companyDeliveryUnknown",
+          "companyEmployee",
+          "companyHeld",
+          "companyHoldExpired",
+          "companyOffboarded",
+          "companyPendingActivation",
+          "companyPendingReview",
+          "companyPrepared",
+          "companyReadyToSubmit",
+          "companyRejected",
+          "companyReviewed",
+          "companyTenancyCompleted",
+          "companyTenancyNeedsReview",
+          "companyTenancyPendingSignatures",
+          "companyUnknownAmount",
+          "companyWithdrawn",
+          "egyptianPoundShort",
+          "portfolioBuilding",
+          "portfolioComplex",
+          "portfolioDraft",
+          "portfolioEntireBuilding",
+          "portfolioEntireComplex",
+          "portfolioMultipleUnits",
+          "portfolioPaused",
+          "portfolioPublished",
+          "portfolioSelectedBuildings",
+          "portfolioSelectedUnits",
+          "portfolioSingleUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_activation.dart",
+        "sha256": "09da9bcc0fcb70565419de10876560f1bccc7ea24f060cbcc82e88b1e05906d9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contact_proof.dart",
+        "sha256": "41984ea7ce49cc779158e3a5b245d17514318b11ba1d7c7fd1fb0592bb199d61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/account_contexts.dart",
+        "sha256": "ba11f08811954f2c72cb0720c736a80152720cd515a061e8a3a965c6eb021d33",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_invitation.dart",
+        "sha256": "46fda1f790de3910e081c85261cd144476f8a1e99abd077734084e62c77e5db8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_housing_request.dart",
+        "sha256": "e838405c27579786733e852471686450105a0f2af0b40cc7b3751937e0ceda17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_batch.dart",
+        "sha256": "b368fabbd9637694e23b3a2ab33424e6ebfef1572eab8485c0749b9e01ca583e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_change.dart",
+        "sha256": "76b81a6c9b50701b5524314a1498bd2a2c602c928d91472e174d1a342b1656b1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_media.dart",
+        "sha256": "c25502079a861eda8eff134b5c932e39a6699d39c69215173f3845fc194c5c31",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_command_body.dart",
+        "sha256": "fc4d741a05fb3be261d58f57459aaac271d957c33ea2f510b71d317186c3f62b",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S249",
+    "behavior": "CompanyStaffScreen list + CompanyStaffDetailScreen native route. Employee code/contact/membership link and eligibility; placements and record updates/offboarding require scoped company permission, revisions and refresh. Staff records do not grant coordinator/admin access.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanyStaffScreen": "default",
+      "CompanyStaffDetailScreen": "staff-detail"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "staff-detail",
+      "staff-form",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S247",
+    "name": "تفاصيل إيجار الشركة",
+    "english": "Company tenancy lifecycle",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_tenancy_screen.dart",
+    "sha256": "20935907fbadfbae719f62e6beff1b2741078ac8c265e4e9d02ad76f2d3bc6b3",
+    "localeKeys": [
+      "companyTenancies"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_tenancy_cubit.dart",
+        "sha256": "24cb63e74da21084db47742611c78e8df9defcabfd589be9d09c420820234e36",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_tenancy.dart",
+        "sha256": "84b046b66a7af6b0fea4c0e1a48df30d49df2dcb47f890b7e6be0fda75a5fd5f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_tenancy_details.dart",
+        "sha256": "73930426d16568cbb027c3666c5c1154a8e46d4566c00846ff5709c1eb6a4862",
+        "localeKeys": [
+          "companyAgreementReleaseHelp",
+          "companyContinuationReleaseHelp",
+          "companyContractRefresh",
+          "companyExceptionalChanges",
+          "companyExceptionalChangesHelp",
+          "companyMandatePay",
+          "companyMandateSign",
+          "companyOwnershipHelp",
+          "companyTenancyClosure",
+          "companyTenancyCoordinator",
+          "companyTenancyDepositReturn",
+          "companyTenancyIndependentReviewer",
+          "companyTenancyPartyHelp",
+          "companyTenancyPossession",
+          "companyTenancyRefreshToAct",
+          "companyTenancyRefund",
+          "companyTenancyRentBalance",
+          "companyTenancyReviewHelp",
+          "companyTenancySignatureHelp",
+          "companyTenancySimulation",
+          "companyTenancySupport",
+          "companyTenancyTotalDue",
+          "rentalDocuments"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_booking_item.dart",
+        "sha256": "97314470657bd6c83c983745677b8a974fbd65e63be1efdf3fd0569bcf612321",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contract_preparation.dart",
+        "sha256": "488391c0461f03037d3f7d24638828a45a11833ed936fbef62652cd4d6eb1117",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_tenancy_body.dart",
+        "sha256": "ba85c11aced282c651b74214b9eb95b1348366842a4cedd38bb81bb6c11fa1d1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_tenancy_labels.dart",
+        "sha256": "d42ab4ec10165e0504b3ab8fb542a95d0a850b56b51fed90c9bc97a97628de73",
+        "localeKeys": [
+          "companyAdjustment",
+          "companyAgreementRelease",
+          "companyAgreementReleasePending",
+          "companyAmendment",
+          "companyApproved",
+          "companyContinuationRelease",
+          "companyContinuationResolutionPending",
+          "companyContinuationResolved",
+          "companyContractAccept",
+          "companyContractDecline",
+          "companyContractReview",
+          "companyContractWaiting",
+          "companyEmployee",
+          "companyHousing",
+          "companyIncomingOwner",
+          "companyMandatePay",
+          "companyMandateSign",
+          "companyOwnership",
+          "companyPriorSigner",
+          "companyRejected",
+          "companyRenewal",
+          "companyRequestCorrectionHelp",
+          "companyRequestOwnershipHelp",
+          "companyTenancyAcknowledge",
+          "companyTenancyAcknowledged",
+          "companyTenancyActive",
+          "companyTenancyAllowAccess",
+          "companyTenancyAppointment",
+          "companyTenancyAppointmentProposed",
+          "companyTenancyApproveCost",
+          "companyTenancyArrival",
+          "companyTenancyAuthority",
+          "companyTenancyCancel",
+          "companyTenancyCancelled",
+          "companyTenancyCompleted",
+          "companyTenancyConfirmResolved",
+          "companyTenancyCoordinator",
+          "companyTenancyDeparture",
+          "companyTenancyDraft",
+          "companyTenancyEnded",
+          "companyTenancyEnding",
+          "companyTenancyExpired",
+          "companyTenancyInProgress",
+          "companyTenancyIndependentReviewer",
+          "companyTenancyMaintenance",
+          "companyTenancyMissed",
+          "companyTenancyMoveIn",
+          "companyTenancyMoveOut",
+          "companyTenancyNeedsReview",
+          "companyTenancyNotArrived",
+          "companyTenancyOccupied",
+          "companyTenancyOpen",
+          "companyTenancyPendingSignatures",
+          "companyTenancyProposeCost",
+          "companyTenancyProviderBoundary",
+          "companyTenancyReconcile",
+          "companyTenancyRejectCost",
+          "companyTenancyReopen",
+          "companyTenancyReplace",
+          "companyTenancyReply",
+          "companyTenancyReportResolved",
+          "companyTenancyResolutionReported",
+          "companyTenancyResume",
+          "companyTenancyReturnPending",
+          "companyTenancyReturned",
+          "companyTenancyReview",
+          "companyTenancyRevokeAccess",
+          "companyTenancyScheduled",
+          "companyTenancySettlement",
+          "companyTenancySign",
+          "companyTenancySigned",
+          "companyTenancyStartWork",
+          "companyTenancySubmitSignature",
+          "companyTenancySupport",
+          "companyTenancyTerminate",
+          "companyTenancyWaitingDeparture",
+          "companyWithdraw"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_tenancy_form.dart",
+        "sha256": "1359c71d6c16e6e395913170d9f72982b57d836deaf13d20f27ed5ecec4d8a77",
+        "localeKeys": [
+          "companyAdjustmentHelp",
+          "companyAgreementReleaseHelp",
+          "companyContinuationHelp",
+          "companyContinuationReleaseHelp",
+          "companyHousing",
+          "companyMandatePay",
+          "companyMandateSign",
+          "companyMandateUnavailable",
+          "companyOwnershipHelp",
+          "companyServiceRequestHelp",
+          "companyTenancyAuthorityHelp",
+          "companyTenancyCoordinator",
+          "companyTenancyCreate",
+          "companyTenancyEvidenceWait",
+          "companyTenancyIncomingEmployee",
+          "companyTenancyIndependentReviewer",
+          "companyTenancyPartyHelp",
+          "companyTenancyRemoveLine",
+          "companyTenancyReplacementHelp",
+          "companyTenancyReviewHelp",
+          "companyTenancySettlementHelp",
+          "companyTenancyTerminationHelp",
+          "companyTenancyUnit",
+          "fillField"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_labels.dart",
+        "sha256": "17e8880aa51de96ac000370d82031387798c8d23c023cb862ce6cd089a6551fd",
+        "localeKeys": [
+          "companyAccessActive",
+          "companyAccessDeclined",
+          "companyActivationExpired",
+          "companyActivationRevoked",
+          "companyAdmin",
+          "companyApproved",
+          "companyApprover",
+          "companyAwaitingApproval",
+          "companyCairoTime",
+          "companyChangesRequested",
+          "companyCoordinator",
+          "companyDeliveryCancelled",
+          "companyDeliveryFailed",
+          "companyDeliveryNotRequested",
+          "companyDeliveryQueued",
+          "companyDeliverySending",
+          "companyDeliverySent",
+          "companyDeliveryUnknown",
+          "companyEmployee",
+          "companyHeld",
+          "companyHoldExpired",
+          "companyOffboarded",
+          "companyPendingActivation",
+          "companyPendingReview",
+          "companyPrepared",
+          "companyReadyToSubmit",
+          "companyRejected",
+          "companyReviewed",
+          "companyTenancyCompleted",
+          "companyTenancyNeedsReview",
+          "companyTenancyPendingSignatures",
+          "companyUnknownAmount",
+          "companyWithdrawn",
+          "egyptianPoundShort",
+          "portfolioBuilding",
+          "portfolioComplex",
+          "portfolioDraft",
+          "portfolioEntireBuilding",
+          "portfolioEntireComplex",
+          "portfolioMultipleUnits",
+          "portfolioPaused",
+          "portfolioPublished",
+          "portfolioSelectedBuildings",
+          "portfolioSelectedUnits",
+          "portfolioSingleUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_continuation_controls.dart",
+        "sha256": "477041fb8218e5a8f037cfae2b8936cad745c4b178d77ddf2f91a5b75dfd2471",
+        "localeKeys": [
+          "companyIncomingOwner",
+          "companyTenancyIndependentReviewer",
+          "companyTenancySignatureHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_package_summary.dart",
+        "sha256": "a5525758edc74704cdf91774ff7dd25b02a06f5080b9ff9aba372f1d72053903",
+        "localeKeys": [
+          "companyEndsOnExclusive",
+          "companyFullTermRent",
+          "companyInitialOccupants",
+          "companyPendingActivation",
+          "companyPlannedOccupantsHelp",
+          "companyQuoteExpiry",
+          "companyRequestedBy",
+          "companyReservePlaces",
+          "companyStartsOn",
+          "companyUnknownCapacity"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S249",
+    "behavior": "Fresh company tenancy, revision and quote/package identity. Signature release, occupancy, payments, adjustments, deposits, exit/handover and financial closure remain separate permission-gated actions. Continuations reconcile original request; no editable server fact from aggregate status.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "unknown-outcome"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanyTenancyScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "tenancy-action",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "unknown-outcome"
+    ]
+  },
+  {
+    "id": "S248",
+    "name": "معاينة باسم الشركة",
+    "english": "Company viewing request",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_viewing_request_screen.dart",
+    "sha256": "945d784e4f9f5ce457e23bd66a3f98e69ef3328a6f6792e055352295eff65bc0",
+    "localeKeys": [
+      "companyContinueViewing",
+      "companyViewingCoordinatorRequired"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_viewing_source.dart",
+        "sha256": "3d58a4cee5339ef314d5f3dcab981cfc9ad0dbbd1ac0978864f904ded8066d32",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_cubits.dart",
+        "sha256": "1f644b5c6cf4a99a8d6942c9497bdd02562527b4e3bb52ec8e983196f10445c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_request_form.dart",
+        "sha256": "772ff19ce58de6ebbdf52ba9210aff3fd6c2bb5cc2071d9928a452a6a59fb623",
+        "localeKeys": [
+          "companyEditRequest",
+          "companyMonthlyPeriodRequired",
+          "companyNewRequest",
+          "companyNextStep",
+          "companyPreviousStep",
+          "companyRepeatHelp",
+          "companyRequestHelp",
+          "companyRequirementsLoading",
+          "companyStepPeople",
+          "companyStepReview",
+          "companyStepWhere",
+          "companyViewingPackageReview",
+          "fillField"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff.dart",
+        "sha256": "c01ccef2005def53ad03a13b2583e799171046f8661dffec6fa4cd825ef10ff7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_activation.dart",
+        "sha256": "09da9bcc0fcb70565419de10876560f1bccc7ea24f060cbcc82e88b1e05906d9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contact_proof.dart",
+        "sha256": "41984ea7ce49cc779158e3a5b245d17514318b11ba1d7c7fd1fb0592bb199d61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/account_contexts.dart",
+        "sha256": "ba11f08811954f2c72cb0720c736a80152720cd515a061e8a3a965c6eb021d33",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_invitation.dart",
+        "sha256": "46fda1f790de3910e081c85261cd144476f8a1e99abd077734084e62c77e5db8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_housing_request.dart",
+        "sha256": "e838405c27579786733e852471686450105a0f2af0b40cc7b3751937e0ceda17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_batch.dart",
+        "sha256": "b368fabbd9637694e23b3a2ab33424e6ebfef1572eab8485c0749b9e01ca583e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_change.dart",
+        "sha256": "76b81a6c9b50701b5524314a1498bd2a2c602c928d91472e174d1a342b1656b1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_media.dart",
+        "sha256": "c25502079a861eda8eff134b5c932e39a6699d39c69215173f3845fc194c5c31",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_member.dart",
+        "sha256": "edba81f3665e172cae39b3c34eb20a4bd97bab802fd5c6aeb970f4d3fc49a2f5",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_budget.dart",
+        "sha256": "bf4029262d9472bad186185319b42029f28e41e455d69aa4df614dfff487bf25",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_request_body.dart",
+        "sha256": "3dcdb2e4f1cb71703eaccf2f0f50e37bb00d1010370b98c5620264057c922075",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_request_review.dart",
+        "sha256": "072bcdb3a6dca831bbfdccc2324e19996fdf1896a3ded40428af1f4340ae6a44",
+        "localeKeys": [
+          "companyDepositLimit",
+          "companyHeadcount",
+          "companyProjectCode",
+          "companyRentTotalReview",
+          "companyStepReview"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_request_steps.dart",
+        "sha256": "787e691d0a485f3b08f9a0b4d25b1a645bb3f141532d0d7b1449e040c53e35e6",
+        "localeKeys": [
+          "companyCommitmentCeiling",
+          "companyCostCenter",
+          "companyDepositLimit",
+          "companyEndsOnExclusive",
+          "companyHeadcount",
+          "companyLocation",
+          "companyMonthlyBudget",
+          "companyMonthlyBudgetEntry",
+          "companyMonthlyPeriodRequired",
+          "companyPlannedOccupantsHelp",
+          "companyPricePeriodHelp",
+          "companyProjectCode",
+          "companyPurpose",
+          "companyRequestTitle",
+          "companyRequirementUnconfirmed",
+          "companyRequirements",
+          "companyStartsOn",
+          "companyWithdraw",
+          "companyWorksiteHelp",
+          "companyWorksiteLatitude",
+          "companyWorksiteLongitude"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S243",
+    "behavior": "Read company and require canCoordinate. CompanyViewingSource with current property/offer/package context enters shared location/people/review wizard; monthly interval, coordinates/source, headcount/cost-center/requirements loaded before confirmation. Source unavailable or changed blocks submission.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "source-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanyViewingRequestScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "source-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S249",
+    "name": "مساحة عمل الشركة",
+    "english": "Company workspace",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_workspace_screen.dart",
+    "sha256": "a292176a55796d41bd4f57450b2b11a2f42c149f4458f95c5a6b074d98eaa50d",
+    "localeKeys": [
+      "searchRetry",
+      "uxViewWork",
+      "workspaceCompanies",
+      "workspaceCompanyAccessLost",
+      "workspaceCompanySelect"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_workspace_cubit.dart",
+        "sha256": "39a2432f8ca69544ce86e9fabf8b3b81fb7ad6f138302fed05045b36a6f57273",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_workspace_state.dart",
+        "sha256": "a1cb1ace6c32c6c6055dc98cc05e144a2ae19f260ddcaca84b09493a67f62787",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_list.dart",
+        "sha256": "67461666ccc02d0060a9926599af0df2ca97ae55c90ac8f1d0658f8bc3b6f73a",
+        "localeKeys": [
+          "companyAccountContexts",
+          "companyActivateAccess",
+          "companyCreate",
+          "companyHousing",
+          "companyIntro"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_workspace_tab_body.dart",
+        "sha256": "24caa0d4a0e56ee2fef10a3cbfeba4ee79825d9fe28369b4bf680a40d4f6c4c3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_saved_lists_view.dart",
+        "sha256": "150b13a39a02b6fd88e4390633d55d4a4844a310eaf9bc39bf775c77de6bee57",
+        "localeKeys": [
+          "workspaceListCreate",
+          "workspaceListEmpty",
+          "workspaceListEmptyHelp",
+          "workspaceListsTeamOnly"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/company_rental_summary_screen.dart",
+        "sha256": "58fc1876113025e0d98cebb0dcc0e1a1246f9d1385b142dcb0360c996a8bf091",
+        "localeKeys": [
+          "companyHousingAndPeople",
+          "companyToday"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_overview.dart",
+        "sha256": "de911257a377e29b3302f483e2aabe8c0c47103f946d75a4e8030cccdb3152e0",
+        "localeKeys": [
+          "commerceCompanyPlans",
+          "companyAccountContexts",
+          "companyApproverMissing",
+          "companyCompanyOnlyData",
+          "companyCosts",
+          "companyHousingAndPeople",
+          "companyMyWork",
+          "companyRequests",
+          "companySetup",
+          "companyToday"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_empty_state.dart",
+        "sha256": "ccbb16c4f55576cff4f314f428eb18501a3bd95c79841275412b717e81f43323",
+        "localeKeys": [
+          "companyEmpty",
+          "companyEmptyBody",
+          "companyStaffEmpty",
+          "companyStaffEmptyHelp",
+          "companyWorkEmpty",
+          "companyWorkEmptyHelp",
+          "portfolioEmpty",
+          "portfolioEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_contract_list.dart",
+        "sha256": "c46876d0c6bd930dfedb5d3df7135e577351c85c2b1762b3469b69b5476360f7",
+        "localeKeys": [
+          "companyContractEmpty",
+          "companyContractEmptyHelp",
+          "companyContractEntryHelp",
+          "companyContractPreparations"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_tenancy_list.dart",
+        "sha256": "7f755a93a7b73f4fb73971872992e5037be65d20bd23d7a96e9c4cd6d45a8e41",
+        "localeKeys": [
+          "companyTenancies",
+          "companyTenanciesHelp",
+          "companyTenancyEmpty",
+          "companyTenancyEmptyHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_labels.dart",
+        "sha256": "17e8880aa51de96ac000370d82031387798c8d23c023cb862ce6cd089a6551fd",
+        "localeKeys": [
+          "companyAccessActive",
+          "companyAccessDeclined",
+          "companyActivationExpired",
+          "companyActivationRevoked",
+          "companyAdmin",
+          "companyApproved",
+          "companyApprover",
+          "companyAwaitingApproval",
+          "companyCairoTime",
+          "companyChangesRequested",
+          "companyCoordinator",
+          "companyDeliveryCancelled",
+          "companyDeliveryFailed",
+          "companyDeliveryNotRequested",
+          "companyDeliveryQueued",
+          "companyDeliverySending",
+          "companyDeliverySent",
+          "companyDeliveryUnknown",
+          "companyEmployee",
+          "companyHeld",
+          "companyHoldExpired",
+          "companyOffboarded",
+          "companyPendingActivation",
+          "companyPendingReview",
+          "companyPrepared",
+          "companyReadyToSubmit",
+          "companyRejected",
+          "companyReviewed",
+          "companyTenancyCompleted",
+          "companyTenancyNeedsReview",
+          "companyTenancyPendingSignatures",
+          "companyUnknownAmount",
+          "companyWithdrawn",
+          "egyptianPoundShort",
+          "portfolioBuilding",
+          "portfolioComplex",
+          "portfolioDraft",
+          "portfolioEntireBuilding",
+          "portfolioEntireComplex",
+          "portfolioMultipleUnits",
+          "portfolioPaused",
+          "portfolioPublished",
+          "portfolioSelectedBuildings",
+          "portfolioSelectedUnits",
+          "portfolioSingleUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_saved_list.dart",
+        "sha256": "66f409f14fded441fadd72bc14b1babdcd5f7ecad617410bedd61f77362dbd47",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_rental_summary.dart",
+        "sha256": "1d91b2b04ce3de50e81cf138eee7076dfb3918c6339e12d967b4fdbcc0e1b3fd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_housing_overview.dart",
+        "sha256": "2b0420c03c2e84be3d0a1df9b4ae981e0a4e2ff9275082595e124d724a382a55",
+        "localeKeys": [
+          "companyArrivalHelp",
+          "companyArrivals",
+          "companyAssigned",
+          "companyAwaitingAddress",
+          "companyCapacity",
+          "companyCapacityNotPublic",
+          "companyContractRefresh",
+          "companyCoordinatorContact",
+          "companyDepartures",
+          "companyEndingSoon",
+          "companyOccupied",
+          "companyPeople",
+          "companyProjectCode",
+          "companyServiceOpenTenancy",
+          "companyUnassigned",
+          "companyUnknownCapacity"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_dashboard.dart",
+        "sha256": "cb2ecbfee3e3f027505472751e5f76a88dcbf06e513394c59fc37487d9d78e4c",
+        "localeKeys": [
+          "companyArrivals",
+          "companyCheckedAt",
+          "companyCompanyOnlyData",
+          "companyContractRefresh",
+          "companyDepartures",
+          "companyEndingSoon",
+          "companyMyWork",
+          "companyNothingDue",
+          "companyReadyForOffers"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_settings.dart",
+        "sha256": "f7a408fd8f092a72e3c4fb084a65b9e8729d82f99e8b4321d2b1dc37d2401fc6",
+        "localeKeys": [
+          "companyAccountContexts",
+          "companyAuthoritySeparation",
+          "ratingCompanyLeases",
+          "ratingCompanyReviews",
+          "scenarioDecisionInbox"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S230",
+    "behavior": "Workspace shell restores selected company and tabs, refreshes on resume; authorization/scope key resets child subscriptions. Missing selection shows company list; inactive membership blocks work. Switching company clears scoped context without granting permission. Current work/recovery entry preserved.",
+    "kind": "hub",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "inactive-membership"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "CompanyWorkspaceScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "inactive-membership",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S250",
+    "name": "إضافة وحدات أو مبنى",
+    "english": "Owner property creation choices",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/owner_creation_screen.dart",
+    "sha256": "034898c10fe984e8f13e22df665a3fcf5dbbac442c720a1778fc6c290b12a5e0",
+    "localeKeys": [
+      "ownerAddPropertyTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/owner_creation_seed.dart",
+        "sha256": "03a9753ffe5cc6ae8b9c156c4470b14eed485c85dee807cf4821b5fe3d0ea56f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/enums/property_creation_mode.dart",
+        "sha256": "1133f5ffb10830023a3c8776a61bd3158389ce02a9ce52e4cbf847fafc29abbd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/property_creation_choices.dart",
+        "sha256": "2383dbf7ade5c54df8a770cdb4da60690d90f1f8af92d44acb8c93bfa7a920b9",
+        "localeKeys": [
+          "portfolioBatchHelp",
+          "portfolioBuildingHelp",
+          "portfolioComplexHelp",
+          "portfolioCreationHelp",
+          "portfolioManageBuildings",
+          "portfolioManageComplexes",
+          "portfolioOffers",
+          "portfolioSingleHelp",
+          "portfolioSwitchPreserve"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_labels.dart",
+        "sha256": "17e8880aa51de96ac000370d82031387798c8d23c023cb862ce6cd089a6551fd",
+        "localeKeys": [
+          "companyAccessActive",
+          "companyAccessDeclined",
+          "companyActivationExpired",
+          "companyActivationRevoked",
+          "companyAdmin",
+          "companyApproved",
+          "companyApprover",
+          "companyAwaitingApproval",
+          "companyCairoTime",
+          "companyChangesRequested",
+          "companyCoordinator",
+          "companyDeliveryCancelled",
+          "companyDeliveryFailed",
+          "companyDeliveryNotRequested",
+          "companyDeliveryQueued",
+          "companyDeliverySending",
+          "companyDeliverySent",
+          "companyDeliveryUnknown",
+          "companyEmployee",
+          "companyHeld",
+          "companyHoldExpired",
+          "companyOffboarded",
+          "companyPendingActivation",
+          "companyPendingReview",
+          "companyPrepared",
+          "companyReadyToSubmit",
+          "companyRejected",
+          "companyReviewed",
+          "companyTenancyCompleted",
+          "companyTenancyNeedsReview",
+          "companyTenancyPendingSignatures",
+          "companyUnknownAmount",
+          "companyWithdrawn",
+          "egyptianPoundShort",
+          "portfolioBuilding",
+          "portfolioComplex",
+          "portfolioDraft",
+          "portfolioEntireBuilding",
+          "portfolioEntireComplex",
+          "portfolioMultipleUnits",
+          "portfolioPaused",
+          "portfolioPublished",
+          "portfolioSelectedBuildings",
+          "portfolioSelectedUnits",
+          "portfolioSingleUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/residential_asset_form.dart",
+        "sha256": "293c71b7834735e157199c8e1b8c6b770a9b29b305f2a77df9c990999bac5930",
+        "localeKeys": [
+          "fillField",
+          "portfolioAddress",
+          "portfolioCode",
+          "portfolioCreateDraft",
+          "portfolioCreationMode",
+          "portfolioDeclaredBuildings",
+          "portfolioDeclaredStandalone",
+          "portfolioDeclaredUnits",
+          "portfolioDescription",
+          "portfolioDraftHelp",
+          "portfolioFacilities",
+          "portfolioFloors",
+          "portfolioName",
+          "portfolioSwitchMode",
+          "portfolioSwitchPreserve"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_body.dart",
+        "sha256": "b358de64dc5469c17a2f98ef966c857eef48c9d549bf20ee40fd6876012dbd47",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_facts.dart",
+        "sha256": "1ea399dcd6e560dc9cb736adf3b869ec95bdf09aec9a6800d210ec9f0cad8e0d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_offers_list.dart",
+        "sha256": "d93da90b0ca2c47a85c38da4d7da9b158f1b227a1449fd757fdb764d8b852798",
+        "localeKeys": [
+          "portfolioOffers",
+          "portfolioPauseOffer",
+          "portfolioPublishHelp",
+          "portfolioPublishOffer"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/residential_asset_facts_editor.dart",
+        "sha256": "54b0c35f6a1cdcf7ffef6da1390b44c589e3c9d00085185763894389a8e9b831",
+        "localeKeys": [
+          "companyIncludedServices",
+          "portfolioAccessibility",
+          "portfolioContactName",
+          "portfolioDefaultsHelp",
+          "portfolioElectricity",
+          "portfolioElevators",
+          "portfolioInternet",
+          "portfolioLatitude",
+          "portfolioLaundry",
+          "portfolioLocationAccess",
+          "portfolioLongitude",
+          "portfolioParkingSpaces",
+          "portfolioPrivateAccess",
+          "portfolioPublicAccess",
+          "portfolioServicesHelp",
+          "portfolioSharedServices",
+          "portfolioUnitDefaults",
+          "portfolioWater"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S16",
+    "behavior": "OwnerCreationScreen choices preserve seed and excluded mode. ResidentialAssetCreateScreen handles building/complex forms under owner portfolio capability; geometry, hierarchy and public-property flow differ. No fake publication when creating inventory.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "OwnerCreationScreen": "default",
+      "ResidentialAssetCreateScreen": "asset-create"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "asset-create",
+      "loading",
+      "error",
+      "stale",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S251",
+    "name": "تعديل مخزون العقار",
+    "english": "Portfolio change proposal",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/portfolio_change_screen.dart",
+    "sha256": "92620a2e55777330c6eeb0a36a1bd5936c361cbf38656a37917c07d103fe254b",
+    "localeKeys": [
+      "portfolioBulkEdit",
+      "portfolioChangeReview",
+      "portfolioDestination",
+      "portfolioInventoryChange"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_change.dart",
+        "sha256": "76b81a6c9b50701b5524314a1498bd2a2c602c928d91472e174d1a342b1656b1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_change_form.dart",
+        "sha256": "51d1dd655922e36e34c053dc29eaa40f51747dc6f2c208d21523dd06c72c365f",
+        "localeKeys": [
+          "companyCapacity",
+          "fillField",
+          "portfolioBulkEdit",
+          "portfolioChangeHelp",
+          "portfolioChangeReason",
+          "portfolioChooseBuilding",
+          "portfolioChooseComplex",
+          "portfolioDefaultsHelp",
+          "portfolioDestination",
+          "portfolioExactUnits",
+          "portfolioFieldsToChange",
+          "portfolioInheritDefaults",
+          "portfolioInventoryChange",
+          "portfolioMergeUnits",
+          "portfolioMoveBuilding",
+          "portfolioMoveUnits",
+          "portfolioPreviewChanges",
+          "portfolioResetOverrides",
+          "portfolioResetOverridesHelp",
+          "portfolioSplitUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_cubits.dart",
+        "sha256": "1f644b5c6cf4a99a8d6942c9497bdd02562527b4e3bb52ec8e983196f10445c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_change_review.dart",
+        "sha256": "8c8bd2cc90ae9c63c0cfdafae4cb95ddbc293eff92b9556b6a341459c25f9360",
+        "localeKeys": [
+          "companyCapacity",
+          "companyUnknownCapacity",
+          "portfolioAfterValue",
+          "portfolioApplyChanges",
+          "portfolioApplyHelp",
+          "portfolioBeforeValue",
+          "portfolioChangeResults",
+          "portfolioChangeReview",
+          "portfolioDestination",
+          "portfolioExplicitOverride",
+          "portfolioInheritedFrom",
+          "portfolioInventory",
+          "portfolioNewIdentity",
+          "portfolioOverridePreserved",
+          "portfolioPartialResultsHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_destination_list.dart",
+        "sha256": "9fde0bf82009a8c3777f265d7e999ed31287411f8531d92984331eab15a59225",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_unit.dart",
+        "sha256": "d1818c161b41f03635054667226e6a1d15e5bee02753d3c63641a6d9ea7e5118",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_field.dart",
+        "sha256": "36532532b24795037bdcf298f443e2ffd39e9517f578abef00e1ed92f1b9d84c",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_facts.dart",
+        "sha256": "1ea399dcd6e560dc9cb736adf3b869ec95bdf09aec9a6800d210ec9f0cad8e0d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_body.dart",
+        "sha256": "b358de64dc5469c17a2f98ef966c857eef48c9d549bf20ee40fd6876012dbd47",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_fields_editor.dart",
+        "sha256": "de2d18bdd9f2aac7e676e167440130da8045510f58357db33c2f57edf797ad72",
+        "localeKeys": [
+          "companyCapacity",
+          "companyUnknownCapacity",
+          "fillField",
+          "portfolioAirConditioning",
+          "portfolioArea",
+          "portfolioBathrooms",
+          "portfolioBedrooms",
+          "portfolioChangeApplied",
+          "portfolioChangeFailed",
+          "portfolioCommitmentBlocked",
+          "portfolioCountry",
+          "portfolioDistrict",
+          "portfolioElectricityMeter",
+          "portfolioElevators",
+          "portfolioFloor",
+          "portfolioFurnished",
+          "portfolioGas",
+          "portfolioLeaveUnchanged",
+          "portfolioNo",
+          "portfolioNoChanges",
+          "portfolioParkingSpaces",
+          "portfolioReadyToApply",
+          "portfolioRetired",
+          "portfolioReviewRequired",
+          "portfolioSecurity",
+          "portfolioSmoking",
+          "portfolioStalePreview",
+          "portfolioStreet",
+          "portfolioWaterMeter",
+          "portfolioWifi",
+          "portfolioYes"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_replacement_editor.dart",
+        "sha256": "e08d80507b57d8d9875fd12c684f9fcab071dc681567a34c34a33e75f18095a2",
+        "localeKeys": [
+          "portfolioAddReplacement",
+          "portfolioCapacityFact",
+          "portfolioName",
+          "portfolioRemoveLastReplacement",
+          "portfolioReplacementHelp",
+          "portfolioReplacementUnits",
+          "portfolioSingleUnit",
+          "portfolioUnitCode"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff.dart",
+        "sha256": "c01ccef2005def53ad03a13b2583e799171046f8661dffec6fa4cd825ef10ff7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_activation.dart",
+        "sha256": "09da9bcc0fcb70565419de10876560f1bccc7ea24f060cbcc82e88b1e05906d9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contact_proof.dart",
+        "sha256": "41984ea7ce49cc779158e3a5b245d17514318b11ba1d7c7fd1fb0592bb199d61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/account_contexts.dart",
+        "sha256": "ba11f08811954f2c72cb0720c736a80152720cd515a061e8a3a965c6eb021d33",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_invitation.dart",
+        "sha256": "46fda1f790de3910e081c85261cd144476f8a1e99abd077734084e62c77e5db8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_housing_request.dart",
+        "sha256": "e838405c27579786733e852471686450105a0f2af0b40cc7b3751937e0ceda17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_batch.dart",
+        "sha256": "b368fabbd9637694e23b3a2ab33424e6ebfef1572eab8485c0749b9e01ca583e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_media.dart",
+        "sha256": "c25502079a861eda8eff134b5c932e39a6699d39c69215173f3845fc194c5c31",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_command_body.dart",
+        "sha256": "fc4d741a05fb3be261d58f57459aaac271d957c33ea2f510b71d317186c3f62b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_empty_state.dart",
+        "sha256": "ccbb16c4f55576cff4f314f428eb18501a3bd95c79841275412b717e81f43323",
+        "localeKeys": [
+          "companyEmpty",
+          "companyEmptyBody",
+          "companyStaffEmpty",
+          "companyStaffEmptyHelp",
+          "companyWorkEmpty",
+          "companyWorkEmptyHelp",
+          "portfolioEmpty",
+          "portfolioEmptyBody"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S253",
+    "behavior": "Three native destinations: create proposal, change review and destination picker. Explicit unit IDs/revisions, destination exclusion, move/split/merge/bulk semantics and inheritance/reset-overrides. Preview before commit; optimistic expected revisions/conflicts never silently replace inventory.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "PortfolioChangeCreateScreen": "default",
+      "PortfolioChangeScreen": "change-review",
+      "PortfolioDestinationScreen": "destination-picker"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "change-review",
+      "destination-picker",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S252",
+    "name": "مرفقات مخزون العقار",
+    "english": "Portfolio media evidence",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/portfolio_media_screen.dart",
+    "sha256": "1d90e9f93e463405d27d41e5ac598f6ca960030dabbe4a1870f7816d0cc24b97",
+    "localeKeys": [
+      "portfolioAddMedia",
+      "portfolioMediaEvidence",
+      "portfolioViewMedia"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_cubits.dart",
+        "sha256": "1f644b5c6cf4a99a8d6942c9497bdd02562527b4e3bb52ec8e983196f10445c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_media_create_form.dart",
+        "sha256": "637281519f03e3812f4a9ac43e1ce279ea0806c5115a5a6fc3be0f1d6fb4935f",
+        "localeKeys": [
+          "portfolioAuthorityEvidence",
+          "portfolioMediaCaption",
+          "portfolioMediaPrivacyHelp",
+          "portfolioMediaPurpose",
+          "portfolioOriginalFileRequired",
+          "portfolioPhotos",
+          "portfolioPrepareUpload",
+          "portfolioRepresentative",
+          "portfolioSelectImage"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_media.dart",
+        "sha256": "c25502079a861eda8eff134b5c932e39a6699d39c69215173f3845fc194c5c31",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_media_list.dart",
+        "sha256": "9dda9162a9698ef5b2bd7bf97aac9e6be86d0698a4202553fd6496f2c377cfc9",
+        "localeKeys": [
+          "portfolioAuthorityEvidence",
+          "portfolioMediaPrivacyHelp",
+          "portfolioNoMedia",
+          "portfolioNoMediaHelp",
+          "portfolioPhotos",
+          "portfolioRepresentative",
+          "portfolioUploadPending"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_media_details.dart",
+        "sha256": "a80487e1d58491357b98a636f63305479e9f9b988b39fbc6e758cadea4d30cce",
+        "localeKeys": [
+          "portfolioMediaPrivacyHelp",
+          "portfolioOriginalFileRequired",
+          "portfolioRemoveMedia",
+          "portfolioRemoveMediaHelp",
+          "portfolioRepresentative",
+          "portfolioUploadComplete",
+          "portfolioUploadImage",
+          "portfolioUploadPending",
+          "portfolioUploadRecover",
+          "portfolioViewMedia",
+          "professionalCheckDelivery"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_facts.dart",
+        "sha256": "1ea399dcd6e560dc9cb736adf3b869ec95bdf09aec9a6800d210ec9f0cad8e0d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_body.dart",
+        "sha256": "b358de64dc5469c17a2f98ef966c857eef48c9d549bf20ee40fd6876012dbd47",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_unit.dart",
+        "sha256": "d1818c161b41f03635054667226e6a1d15e5bee02753d3c63641a6d9ea7e5118",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff.dart",
+        "sha256": "c01ccef2005def53ad03a13b2583e799171046f8661dffec6fa4cd825ef10ff7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_activation.dart",
+        "sha256": "09da9bcc0fcb70565419de10876560f1bccc7ea24f060cbcc82e88b1e05906d9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contact_proof.dart",
+        "sha256": "41984ea7ce49cc779158e3a5b245d17514318b11ba1d7c7fd1fb0592bb199d61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/account_contexts.dart",
+        "sha256": "ba11f08811954f2c72cb0720c736a80152720cd515a061e8a3a965c6eb021d33",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_invitation.dart",
+        "sha256": "46fda1f790de3910e081c85261cd144476f8a1e99abd077734084e62c77e5db8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_housing_request.dart",
+        "sha256": "e838405c27579786733e852471686450105a0f2af0b40cc7b3751937e0ceda17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_batch.dart",
+        "sha256": "b368fabbd9637694e23b3a2ab33424e6ebfef1572eab8485c0749b9e01ca583e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_change.dart",
+        "sha256": "76b81a6c9b50701b5524314a1498bd2a2c602c928d91472e174d1a342b1656b1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_labels.dart",
+        "sha256": "17e8880aa51de96ac000370d82031387798c8d23c023cb862ce6cd089a6551fd",
+        "localeKeys": [
+          "companyAccessActive",
+          "companyAccessDeclined",
+          "companyActivationExpired",
+          "companyActivationRevoked",
+          "companyAdmin",
+          "companyApproved",
+          "companyApprover",
+          "companyAwaitingApproval",
+          "companyCairoTime",
+          "companyChangesRequested",
+          "companyCoordinator",
+          "companyDeliveryCancelled",
+          "companyDeliveryFailed",
+          "companyDeliveryNotRequested",
+          "companyDeliveryQueued",
+          "companyDeliverySending",
+          "companyDeliverySent",
+          "companyDeliveryUnknown",
+          "companyEmployee",
+          "companyHeld",
+          "companyHoldExpired",
+          "companyOffboarded",
+          "companyPendingActivation",
+          "companyPendingReview",
+          "companyPrepared",
+          "companyReadyToSubmit",
+          "companyRejected",
+          "companyReviewed",
+          "companyTenancyCompleted",
+          "companyTenancyNeedsReview",
+          "companyTenancyPendingSignatures",
+          "companyUnknownAmount",
+          "companyWithdrawn",
+          "egyptianPoundShort",
+          "portfolioBuilding",
+          "portfolioComplex",
+          "portfolioDraft",
+          "portfolioEntireBuilding",
+          "portfolioEntireComplex",
+          "portfolioMultipleUnits",
+          "portfolioPaused",
+          "portfolioPublished",
+          "portfolioSelectedBuildings",
+          "portfolioSelectedUnits",
+          "portfolioSingleUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_command_body.dart",
+        "sha256": "fc4d741a05fb3be261d58f57459aaac271d957c33ea2f510b71d317186c3f62b",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S253",
+    "behavior": "List/create/item/byte-preview preserve asset scope and file identity; upload/scan/ready states differ. Authenticated bytes only, no unsafe public links; evict image bytes on account cleanup/dispose. Retry/resume/remove only with permissions and acknowledged upload identity.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "processing",
+      "unsafe"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "PortfolioMediaScreen": "default",
+      "PortfolioMediaItemScreen": "media-item",
+      "PortfolioMediaPreviewScreen": "media-preview"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "media-item",
+      "media-preview",
+      "media-create",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty",
+      "processing",
+      "unsafe"
+    ]
+  },
+  {
+    "id": "S253",
+    "name": "المباني والمجمعات",
+    "english": "Residential portfolio assets",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/residential_assets_screen.dart",
+    "sha256": "ff8ab29be762ca406221d66ab56016281789acafeba0f9ec5317a8c3e6a4e009",
+    "localeKeys": [
+      "portfolioInventory",
+      "portfolioManageBuildings",
+      "portfolioManageComplexes",
+      "virtualTourRefresh"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/residential_assets_list.dart",
+        "sha256": "fc2f87801fdcec457f00b595a973fe79b3dc7bd6ba99a0e68c7a7391e72df5a0",
+        "localeKeys": [
+          "portfolioRegistered"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_cubits.dart",
+        "sha256": "1f644b5c6cf4a99a8d6942c9497bdd02562527b4e3bb52ec8e983196f10445c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/residential_asset_details.dart",
+        "sha256": "802e3ef16bc7d4f22bf275fa2a0694753c6011b45ac48cb24ee415c06bdce16d",
+        "localeKeys": [
+          "companyCapacity",
+          "companyUnknownCapacity",
+          "portfolioAddBuilding",
+          "portfolioAdvancedTools",
+          "portfolioAttachUnit",
+          "portfolioAuthority",
+          "portfolioBulkEdit",
+          "portfolioChangeHistory",
+          "portfolioCreateOffer",
+          "portfolioDraftHelp",
+          "portfolioEditAsset",
+          "portfolioExplicitOverride",
+          "portfolioFloor",
+          "portfolioGenerateUnits",
+          "portfolioInheritedFrom",
+          "portfolioInventoryChange",
+          "portfolioMediaEvidence",
+          "portfolioRegistered",
+          "ratingPortfolioReviews",
+          "virtualTourManage"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_empty_state.dart",
+        "sha256": "ccbb16c4f55576cff4f314f428eb18501a3bd95c79841275412b717e81f43323",
+        "localeKeys": [
+          "companyEmpty",
+          "companyEmptyBody",
+          "companyStaffEmpty",
+          "companyStaffEmptyHelp",
+          "companyWorkEmpty",
+          "companyWorkEmptyHelp",
+          "portfolioEmpty",
+          "portfolioEmptyBody"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff.dart",
+        "sha256": "c01ccef2005def53ad03a13b2583e799171046f8661dffec6fa4cd825ef10ff7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_activation.dart",
+        "sha256": "09da9bcc0fcb70565419de10876560f1bccc7ea24f060cbcc82e88b1e05906d9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contact_proof.dart",
+        "sha256": "41984ea7ce49cc779158e3a5b245d17514318b11ba1d7c7fd1fb0592bb199d61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/account_contexts.dart",
+        "sha256": "ba11f08811954f2c72cb0720c736a80152720cd515a061e8a3a965c6eb021d33",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_invitation.dart",
+        "sha256": "46fda1f790de3910e081c85261cd144476f8a1e99abd077734084e62c77e5db8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_housing_request.dart",
+        "sha256": "e838405c27579786733e852471686450105a0f2af0b40cc7b3751937e0ceda17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_batch.dart",
+        "sha256": "b368fabbd9637694e23b3a2ab33424e6ebfef1572eab8485c0749b9e01ca583e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_change.dart",
+        "sha256": "76b81a6c9b50701b5524314a1498bd2a2c602c928d91472e174d1a342b1656b1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_media.dart",
+        "sha256": "c25502079a861eda8eff134b5c932e39a6699d39c69215173f3845fc194c5c31",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_facts.dart",
+        "sha256": "1ea399dcd6e560dc9cb736adf3b869ec95bdf09aec9a6800d210ec9f0cad8e0d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_body.dart",
+        "sha256": "b358de64dc5469c17a2f98ef966c857eef48c9d549bf20ee40fd6876012dbd47",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_unit.dart",
+        "sha256": "d1818c161b41f03635054667226e6a1d15e5bee02753d3c63641a6d9ea7e5118",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_labels.dart",
+        "sha256": "17e8880aa51de96ac000370d82031387798c8d23c023cb862ce6cd089a6551fd",
+        "localeKeys": [
+          "companyAccessActive",
+          "companyAccessDeclined",
+          "companyActivationExpired",
+          "companyActivationRevoked",
+          "companyAdmin",
+          "companyApproved",
+          "companyApprover",
+          "companyAwaitingApproval",
+          "companyCairoTime",
+          "companyChangesRequested",
+          "companyCoordinator",
+          "companyDeliveryCancelled",
+          "companyDeliveryFailed",
+          "companyDeliveryNotRequested",
+          "companyDeliveryQueued",
+          "companyDeliverySending",
+          "companyDeliverySent",
+          "companyDeliveryUnknown",
+          "companyEmployee",
+          "companyHeld",
+          "companyHoldExpired",
+          "companyOffboarded",
+          "companyPendingActivation",
+          "companyPendingReview",
+          "companyPrepared",
+          "companyReadyToSubmit",
+          "companyRejected",
+          "companyReviewed",
+          "companyTenancyCompleted",
+          "companyTenancyNeedsReview",
+          "companyTenancyPendingSignatures",
+          "companyUnknownAmount",
+          "companyWithdrawn",
+          "egyptianPoundShort",
+          "portfolioBuilding",
+          "portfolioComplex",
+          "portfolioDraft",
+          "portfolioEntireBuilding",
+          "portfolioEntireComplex",
+          "portfolioMultipleUnits",
+          "portfolioPaused",
+          "portfolioPublished",
+          "portfolioSelectedBuildings",
+          "portfolioSelectedUnits",
+          "portfolioSingleUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_changes_list.dart",
+        "sha256": "7ee21db24e2e1593c88a32862cf4b2fc6837ec6bbe14f17cd657d3e35887b618",
+        "localeKeys": [
+          "portfolioBulkEdit",
+          "portfolioChangeResults",
+          "portfolioChangeReview",
+          "portfolioHistoryHelp",
+          "portfolioInventoryChange",
+          "portfolioNoChanges"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/residential_asset_form.dart",
+        "sha256": "293c71b7834735e157199c8e1b8c6b770a9b29b305f2a77df9c990999bac5930",
+        "localeKeys": [
+          "fillField",
+          "portfolioAddress",
+          "portfolioCode",
+          "portfolioCreateDraft",
+          "portfolioCreationMode",
+          "portfolioDeclaredBuildings",
+          "portfolioDeclaredStandalone",
+          "portfolioDeclaredUnits",
+          "portfolioDescription",
+          "portfolioDraftHelp",
+          "portfolioFacilities",
+          "portfolioFloors",
+          "portfolioName",
+          "portfolioSwitchMode",
+          "portfolioSwitchPreserve"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_attach_form.dart",
+        "sha256": "462791fd57b9024773a4b133f51ea8b7984c850d04786031400d13adb193e807",
+        "localeKeys": [
+          "fillField",
+          "portfolioAttachHelp",
+          "portfolioAttachUnit",
+          "portfolioCapacityFact",
+          "portfolioChooseExistingUnit",
+          "portfolioUnitCode"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_offer_form.dart",
+        "sha256": "e6ac7413ccb4418ea1edca2f4aab444bd2be2ddb5e86f4d509f7ba65b3940d15",
+        "localeKeys": [
+          "fillField",
+          "portfolioAllowReserveCapacity",
+          "portfolioCreateOffer",
+          "portfolioOfferPriceHelp",
+          "portfolioPublishHelp",
+          "portfolioPublishOffer"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/portfolio_fields_editor.dart",
+        "sha256": "de2d18bdd9f2aac7e676e167440130da8045510f58357db33c2f57edf797ad72",
+        "localeKeys": [
+          "companyCapacity",
+          "companyUnknownCapacity",
+          "fillField",
+          "portfolioAirConditioning",
+          "portfolioArea",
+          "portfolioBathrooms",
+          "portfolioBedrooms",
+          "portfolioChangeApplied",
+          "portfolioChangeFailed",
+          "portfolioCommitmentBlocked",
+          "portfolioCountry",
+          "portfolioDistrict",
+          "portfolioElectricityMeter",
+          "portfolioElevators",
+          "portfolioFloor",
+          "portfolioFurnished",
+          "portfolioGas",
+          "portfolioLeaveUnchanged",
+          "portfolioNo",
+          "portfolioNoChanges",
+          "portfolioParkingSpaces",
+          "portfolioReadyToApply",
+          "portfolioRetired",
+          "portfolioReviewRequired",
+          "portfolioSecurity",
+          "portfolioSmoking",
+          "portfolioStalePreview",
+          "portfolioStreet",
+          "portfolioWaterMeter",
+          "portfolioWifi",
+          "portfolioYes"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S41",
+    "behavior": "List kind building/complex, distinct ResidentialAssetScreen detail. Route-aware refresh after child/batch returns only same account generation; fresh asset actions. Subtree facts/capacity and inherited defaults differ from public offers; attach/media/change/listing workflows scoped.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "ResidentialAssetsScreen": "default",
+      "ResidentialAssetScreen": "asset-detail"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "asset-detail",
+      "complex-list",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S254",
+    "name": "تجهيز عدة وحدات",
+    "english": "Create multiple units batch",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/unit_batch_screen.dart",
+    "sha256": "9f9091dc7388958fcfec7f741dbd65f55f973acce9b9deb3ccc00baff698352b",
+    "localeKeys": [
+      "portfolioBatchResults",
+      "portfolioMultipleUnits",
+      "portfolioSwitchMode"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset.dart",
+        "sha256": "a82e5b20c502c55cf51bd147079b8587d4af7108f1a5af504a1854a4d7d533c6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_batch.dart",
+        "sha256": "b368fabbd9637694e23b3a2ab33424e6ebfef1572eab8485c0749b9e01ca583e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/screens/owner_creation_screen.dart",
+        "sha256": "034898c10fe984e8f13e22df665a3fcf5dbbac442c720a1778fc6c290b12a5e0",
+        "localeKeys": [
+          "ownerAddPropertyTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/enums/property_creation_mode.dart",
+        "sha256": "1133f5ffb10830023a3c8776a61bd3158389ce02a9ce52e4cbf847fafc29abbd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/unit_batch_form.dart",
+        "sha256": "e1564dae4299e5e31d92d5bb6619da4e784f4cae61233e6252fa19e30a6a6a2c",
+        "localeKeys": [
+          "portfolioArea",
+          "portfolioBathrooms",
+          "portfolioBedrooms",
+          "portfolioCapacityFact",
+          "portfolioChooseTemplate",
+          "portfolioCloneHelp",
+          "portfolioCodePrefix",
+          "portfolioGenerateUnits",
+          "portfolioParent",
+          "portfolioSubmitBatch",
+          "portfolioTemplateSelected",
+          "portfolioUniqueCodes",
+          "portfolioUnitCount"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/cubits/company_cubits.dart",
+        "sha256": "1f644b5c6cf4a99a8d6942c9497bdd02562527b4e3bb52ec8e983196f10445c7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/unit_batch_results.dart",
+        "sha256": "dbb325111463f21470ce50e4fbdddf6d55203eab6aa0ecc7c6c27816c2508f9f",
+        "localeKeys": [
+          "portfolioBatchComplete",
+          "portfolioBatchPartial",
+          "portfolioCreatedUnderReview",
+          "portfolioRetryFailed"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_facts.dart",
+        "sha256": "1ea399dcd6e560dc9cb736adf3b869ec95bdf09aec9a6800d210ec9f0cad8e0d",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_asset_body.dart",
+        "sha256": "b358de64dc5469c17a2f98ef966c857eef48c9d549bf20ee40fd6876012dbd47",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/residential_unit.dart",
+        "sha256": "d1818c161b41f03635054667226e6a1d15e5bee02753d3c63641a6d9ea7e5118",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_unit_draft.dart",
+        "sha256": "e3bc01771ebb8f880cde73e80768faec95c564ad3e164e00c6e2929d85ae7b94",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/owner_creation_seed.dart",
+        "sha256": "03a9753ffe5cc6ae8b9c156c4470b14eed485c85dee807cf4821b5fe3d0ea56f",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/property_creation_choices.dart",
+        "sha256": "2383dbf7ade5c54df8a770cdb4da60690d90f1f8af92d44acb8c93bfa7a920b9",
+        "localeKeys": [
+          "portfolioBatchHelp",
+          "portfolioBuildingHelp",
+          "portfolioComplexHelp",
+          "portfolioCreationHelp",
+          "portfolioManageBuildings",
+          "portfolioManageComplexes",
+          "portfolioOffers",
+          "portfolioSingleHelp",
+          "portfolioSwitchPreserve"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/company_labels.dart",
+        "sha256": "17e8880aa51de96ac000370d82031387798c8d23c023cb862ce6cd089a6551fd",
+        "localeKeys": [
+          "companyAccessActive",
+          "companyAccessDeclined",
+          "companyActivationExpired",
+          "companyActivationRevoked",
+          "companyAdmin",
+          "companyApproved",
+          "companyApprover",
+          "companyAwaitingApproval",
+          "companyCairoTime",
+          "companyChangesRequested",
+          "companyCoordinator",
+          "companyDeliveryCancelled",
+          "companyDeliveryFailed",
+          "companyDeliveryNotRequested",
+          "companyDeliveryQueued",
+          "companyDeliverySending",
+          "companyDeliverySent",
+          "companyDeliveryUnknown",
+          "companyEmployee",
+          "companyHeld",
+          "companyHoldExpired",
+          "companyOffboarded",
+          "companyPendingActivation",
+          "companyPendingReview",
+          "companyPrepared",
+          "companyReadyToSubmit",
+          "companyRejected",
+          "companyReviewed",
+          "companyTenancyCompleted",
+          "companyTenancyNeedsReview",
+          "companyTenancyPendingSignatures",
+          "companyUnknownAmount",
+          "companyWithdrawn",
+          "egyptianPoundShort",
+          "portfolioBuilding",
+          "portfolioComplex",
+          "portfolioDraft",
+          "portfolioEntireBuilding",
+          "portfolioEntireComplex",
+          "portfolioMultipleUnits",
+          "portfolioPaused",
+          "portfolioPublished",
+          "portfolioSelectedBuildings",
+          "portfolioSelectedUnits",
+          "portfolioSingleUnit"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/residential_asset_form.dart",
+        "sha256": "293c71b7834735e157199c8e1b8c6b770a9b29b305f2a77df9c990999bac5930",
+        "localeKeys": [
+          "fillField",
+          "portfolioAddress",
+          "portfolioCode",
+          "portfolioCreateDraft",
+          "portfolioCreationMode",
+          "portfolioDeclaredBuildings",
+          "portfolioDeclaredStandalone",
+          "portfolioDeclaredUnits",
+          "portfolioDescription",
+          "portfolioDraftHelp",
+          "portfolioFacilities",
+          "portfolioFloors",
+          "portfolioName",
+          "portfolioSwitchMode",
+          "portfolioSwitchPreserve"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/presentation/widgets/unit_draft_editor.dart",
+        "sha256": "71909e21db5a5a52f6470a709b443013174bc61902c2347990338cdb7b4184a9",
+        "localeKeys": [
+          "companyCapacity",
+          "companyUnknownCapacity",
+          "portfolioArea",
+          "portfolioBathrooms",
+          "portfolioBedrooms",
+          "portfolioCapacityFact",
+          "portfolioChooseExistingUnit",
+          "portfolioChooseTemplate",
+          "portfolioFloor",
+          "portfolioFurnished",
+          "portfolioSingleUnit",
+          "portfolioUnitCode",
+          "portfolioUnitTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_account.dart",
+        "sha256": "0105a1128557d811f776bbdb686723e3b69b892bda1a26fd74d7c5634ccf3a00",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff.dart",
+        "sha256": "c01ccef2005def53ad03a13b2583e799171046f8661dffec6fa4cd825ef10ff7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_staff_batch.dart",
+        "sha256": "0e4bf9589a2f50c8c08239f16af0e129a6d4b5bd54850e5f540756fa01972afd",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_activation.dart",
+        "sha256": "09da9bcc0fcb70565419de10876560f1bccc7ea24f060cbcc82e88b1e05906d9",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_contact_proof.dart",
+        "sha256": "41984ea7ce49cc779158e3a5b245d17514318b11ba1d7c7fd1fb0592bb199d61",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/account_contexts.dart",
+        "sha256": "ba11f08811954f2c72cb0720c736a80152720cd515a061e8a3a965c6eb021d33",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_invitation.dart",
+        "sha256": "46fda1f790de3910e081c85261cd144476f8a1e99abd077734084e62c77e5db8",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/company_housing_request.dart",
+        "sha256": "e838405c27579786733e852471686450105a0f2af0b40cc7b3751937e0ceda17",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_change.dart",
+        "sha256": "76b81a6c9b50701b5524314a1498bd2a2c602c928d91472e174d1a342b1656b1",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/company_housing/data/models/portfolio_media.dart",
+        "sha256": "c25502079a861eda8eff134b5c932e39a6699d39c69215173f3845fc194c5c31",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S253",
+    "behavior": "UnitBatchScreen + UnitBatchResultScreen. Required template, nonempty units, unique per-unit codes and metadata, count/prefix generation. Partial successes retained; retry only failed units with previous acknowledgement. No duplicate creation/publication on unknown outcome.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "partial-error"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "UnitBatchScreen": "default",
+      "UnitBatchResultScreen": "unit-batch-result"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "unit-batch-result",
+      "unit-batch-retry",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "partial-error",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S255",
+    "name": "تفاصيل منافسة السكن",
+    "english": "Housing tender detail",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/housing_tender_screen.dart",
+    "sha256": "3a6fa362ccbd47caf79b5156080ca7caea21bc44e0c29cadb083c9825cbb9a29",
+    "localeKeys": [
+      "tenderTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/cubits/housing_tender_cubit.dart",
+        "sha256": "f2defc3d62b2dfea4a1f044d7d7d0e56364ba28f95dc863cd81b774e9d380c1b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/housing_tender.dart",
+        "sha256": "69ada93b715346c65f37cdc66d8d0c111add7357c8a069bf64a73c986b7af4d3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/housing_tender_details.dart",
+        "sha256": "fe6a06056db3f788ccb16310cb0ea4b804dc11119639e64aeec451ff2f5a8e5e",
+        "localeKeys": [
+          "executionPlanningNotice",
+          "tenderBids",
+          "tenderBuildPackage",
+          "tenderCloses",
+          "tenderConstructTitle",
+          "tenderIndependentHelp",
+          "tenderMissing",
+          "tenderPackages",
+          "tenderPublishedDemand",
+          "tenderSubmitBid"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_package.dart",
+        "sha256": "e9dd2dd7ccdba36e72a98049c4cf389a8a2780a3dc7db94844164a093a6f3fb6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_requirement.dart",
+        "sha256": "49deec14228836ec7f7782fd8d7cf7fec843c7fc6f1b92ee1b96eec578ce4cb4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_labels.dart",
+        "sha256": "e3befb92d12d7faf24a010b21f888ef442a0e67912ce392bc6037191ddeb94e4",
+        "localeKeys": [
+          "rentalUnknownScope",
+          "tenderAccepted",
+          "tenderAcceptedPlanning",
+          "tenderAllUnits",
+          "tenderCanonicalPrices",
+          "tenderClosed",
+          "tenderCollecting",
+          "tenderDeclined",
+          "tenderExpired",
+          "tenderMarginal",
+          "tenderPending",
+          "tenderPublished",
+          "tenderReviewRequired",
+          "tenderReviewing",
+          "tenderSubmitted",
+          "tenderWithdrawn"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S256",
+    "behavior": "Fresh tender snapshot/group/source/dates and own requirement, phase-specific actions. Sealed bids only released to authorized viewers/phase, no competitor disclosure. Amendments invalidate dependent snapshots/consent; planning separate from execution.",
+    "kind": "detail",
+    "requiredStates": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "closed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "HousingTenderScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "closed"
+    ]
+  },
+  {
+    "id": "S256",
+    "name": "منافسات السكن",
+    "english": "Housing tenders collection",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/housing_tenders_screen.dart",
+    "sha256": "290a04dcef60b8312090367e6a8a4e2d18675a4f515f757da172e5dec0fdd2b7",
+    "localeKeys": [
+      "tenderTitle"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/housing_tenders_list.dart",
+        "sha256": "3034d2a6ef551a008dc86ea4781193d6baf5c43566d2eebaa10d9c96505e0ac0",
+        "localeKeys": [
+          "tenderCreate",
+          "tenderHelp",
+          "tenderOpen",
+          "tenderOwnerHelp",
+          "tenderTitle"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/housing_tender.dart",
+        "sha256": "69ada93b715346c65f37cdc66d8d0c111add7357c8a069bf64a73c986b7af4d3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_empty_state.dart",
+        "sha256": "4716ae86629cefe2d05d14519bcd15e56c2abdebea5b16a8a4f84cfec6bd751a",
+        "localeKeys": [
+          "tenderBidsEmpty",
+          "tenderBidsEmptyHelp",
+          "tenderEmpty",
+          "tenderEmptyHelp",
+          "tenderPackagesEmpty",
+          "tenderPackagesEmptyHelp",
+          "tenderSourcesEmpty",
+          "tenderSourcesEmptyHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_labels.dart",
+        "sha256": "e3befb92d12d7faf24a010b21f888ef442a0e67912ce392bc6037191ddeb94e4",
+        "localeKeys": [
+          "rentalUnknownScope",
+          "tenderAccepted",
+          "tenderAcceptedPlanning",
+          "tenderAllUnits",
+          "tenderCanonicalPrices",
+          "tenderClosed",
+          "tenderCollecting",
+          "tenderDeclined",
+          "tenderExpired",
+          "tenderMarginal",
+          "tenderPending",
+          "tenderPublished",
+          "tenderReviewRequired",
+          "tenderReviewing",
+          "tenderSubmitted",
+          "tenderWithdrawn"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S207",
+    "behavior": "GroupId vs owner collection filters and planning capability are resource-scoped. Owner bid opportunity and organizer create routes differ; pagination/empty/read-only context valid. No arbitrary tender visibility outside current account.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "HousingTendersScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  },
+  {
+    "id": "S257",
+    "name": "متطلباتي في المنافسة",
+    "english": "Tender participant action",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_action_screen.dart",
+    "sha256": "0707206519f1013affd0e647d96084cee1779dffb90171abf6149a2af574a6e8",
+    "localeKeys": [
+      "planningConsentRequired",
+      "studentDatesHelp",
+      "tenderAmend",
+      "tenderAmendHelp",
+      "tenderDisclose",
+      "tenderIndependentHelp",
+      "tenderMyRequirements",
+      "tenderPublish",
+      "tenderRequirementsHelp",
+      "tenderWithdraw"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/housing_tender.dart",
+        "sha256": "69ada93b715346c65f37cdc66d8d0c111add7357c8a069bf64a73c986b7af4d3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/cubits/housing_tender_cubit.dart",
+        "sha256": "f2defc3d62b2dfea4a1f044d7d7d0e56364ba28f95dc863cd81b774e9d380c1b",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_requirement.dart",
+        "sha256": "49deec14228836ec7f7782fd8d7cf7fec843c7fc6f1b92ee1b96eec578ce4cb4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/housing_tenders_data.dart",
+        "sha256": "272e3ad8f30e7602d673b484bd91bd4e95e6b096587c05c50f138e68fb769d08",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_requirement_options.dart",
+        "sha256": "13a2c40b853128c5d6985a15029ca836921c7543b01d817298a994a64691b322",
+        "localeKeys": [
+          "tenderDisclose",
+          "tenderIndependentHelp",
+          "tenderMinimumCompletion",
+          "tenderMultiProperty",
+          "tenderScope"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_command.dart",
+        "sha256": "cf4c004ea8de9fa46de4044a40b8ab0d4f0e1d48f2f8fbe342dc9e4c82d240f7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_package.dart",
+        "sha256": "e9dd2dd7ccdba36e72a98049c4cf389a8a2780a3dc7db94844164a093a6f3fb6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_execution_body.dart",
+        "sha256": "bb9774f58914dd91a0f43b23c82f3d99ae12a96ad690bb27ca64a453cfa2d931",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_bid.dart",
+        "sha256": "6c079288ac8c999a6de4518edebb6d4c95548ae3ae9d4ba7f464b14c889b94a4",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S255",
+    "behavior": "Action requirements/publish/amend/withdraw. Required dates/rent/deposit and scope/minimum 1..participantCount, multi-property choice, disclosure and independent ack reset on draft restore. Publish/amend bind tender revision; amend makes prior dependent consent obsolete.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "TenderActionScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "tender-lifecycle",
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S258",
+    "name": "إعداد عرض للمنافسة",
+    "english": "Tender sealed bid editor",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bid_edit_screen.dart",
+    "sha256": "3a41abd331bb91faa91f35e8cfe515e8b7b3ddf14704ee1fbd567ed697ea039c",
+    "localeKeys": [
+      "studentDatesHelp",
+      "tenderBidInvalid",
+      "tenderQuoteExpiry",
+      "tenderQuoteOnly",
+      "tenderReviseHelp",
+      "tenderSealedHelp",
+      "tenderSubmitBid"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_bid.dart",
+        "sha256": "6c079288ac8c999a6de4518edebb6d4c95548ae3ae9d4ba7f464b14c889b94a4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/housing_tender.dart",
+        "sha256": "69ada93b715346c65f37cdc66d8d0c111add7357c8a069bf64a73c986b7af4d3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_pricing_input.dart",
+        "sha256": "c9d168308b2d896d27df65402f3bbe3d09922dfb6e5c48ed0eeee45e7222471e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/housing_tenders_data.dart",
+        "sha256": "272e3ad8f30e7602d673b484bd91bd4e95e6b096587c05c50f138e68fb769d08",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_bid_selections.dart",
+        "sha256": "88725f3ff7527206ccaedc205f33e717933d1b0eb65033269a58e471c806083f",
+        "localeKeys": [
+          "tenderAddLine",
+          "tenderRemoveLine"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_pricing_fields.dart",
+        "sha256": "f1bd0ae37f0a3cf72f7d053c0ebc23303c7add622d4f797017ef115e4cb0297a",
+        "localeKeys": [
+          "tenderCombines",
+          "tenderMinimumQuantity",
+          "tenderPricing",
+          "tenderQuoteOnly",
+          "tenderTierHelp",
+          "tenderTierRate",
+          "tenderTierStarts"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_labels.dart",
+        "sha256": "e3befb92d12d7faf24a010b21f888ef442a0e67912ce392bc6037191ddeb94e4",
+        "localeKeys": [
+          "rentalUnknownScope",
+          "tenderAccepted",
+          "tenderAcceptedPlanning",
+          "tenderAllUnits",
+          "tenderCanonicalPrices",
+          "tenderClosed",
+          "tenderCollecting",
+          "tenderDeclined",
+          "tenderExpired",
+          "tenderMarginal",
+          "tenderPending",
+          "tenderPublished",
+          "tenderReviewRequired",
+          "tenderReviewing",
+          "tenderSubmitted",
+          "tenderWithdrawn"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_command.dart",
+        "sha256": "cf4c004ea8de9fa46de4044a40b8ab0d4f0e1d48f2f8fbe342dc9e4c82d240f7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_requirement.dart",
+        "sha256": "49deec14228836ec7f7782fd8d7cf7fec843c7fc6f1b92ee1b96eec578ce4cb4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_execution_body.dart",
+        "sha256": "bb9774f58914dd91a0f43b23c82f3d99ae12a96ad690bb27ca64a453cfa2d931",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_package.dart",
+        "sha256": "e9dd2dd7ccdba36e72a98049c4cf389a8a2780a3dc7db94844164a093a6f3fb6",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S260",
+    "behavior": "Selections nonempty, canonical terms and owner inventory; future expiry, min quantity within selection count, pricing ack. Tier rule canonical/all_units/marginal with threshold 2..count and rate <= base, optional combines. Supersedes identity for revision, sealed visibility and same-intent recovery retained.",
+    "kind": "form",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed",
+      "expired"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "TenderBidEditScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "expired",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S259",
+    "name": "سحب عرض المنافسة",
+    "english": "Withdraw tender bid",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bid_withdraw_screen.dart",
+    "sha256": "7077e537597ec38ed3983fac2b9de640e2fc059d7db036941672d23e9df29429",
+    "localeKeys": [
+      "tenderWithdraw",
+      "tenderWithdrawHelp"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_bid.dart",
+        "sha256": "6c079288ac8c999a6de4518edebb6d4c95548ae3ae9d4ba7f464b14c889b94a4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/recovery/data/enums/recovery_flow.dart",
+        "sha256": "b908528080413cbefdbb1e65a4a150db366788d49f8b5fc776560b8e7727b74e",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/housing_tenders_data.dart",
+        "sha256": "272e3ad8f30e7602d673b484bd91bd4e95e6b096587c05c50f138e68fb769d08",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_command.dart",
+        "sha256": "cf4c004ea8de9fa46de4044a40b8ab0d4f0e1d48f2f8fbe342dc9e4c82d240f7",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_execution_body.dart",
+        "sha256": "bb9774f58914dd91a0f43b23c82f3d99ae12a96ad690bb27ca64a453cfa2d931",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/housing_tender.dart",
+        "sha256": "69ada93b715346c65f37cdc66d8d0c111add7357c8a069bf64a73c986b7af4d3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_package.dart",
+        "sha256": "e9dd2dd7ccdba36e72a98049c4cf389a8a2780a3dc7db94844164a093a6f3fb6",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_requirement.dart",
+        "sha256": "49deec14228836ec7f7782fd8d7cf7fec843c7fc6f1b92ee1b96eec578ce4cb4",
+        "localeKeys": []
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S260",
+    "behavior": "Withdraw uses bid expectedRevision/requestKey, allowed phase and recovery identity. It is not package cancellation or reversal of confirmed execution. No arbitrary bid editing after submission through withdrawal.",
+    "kind": "action",
+    "requiredStates": [
+      "loading",
+      "error",
+      "invalid",
+      "dirty",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "restricted",
+      "revision-changed"
+    ],
+    "visualReference": [
+      "S17",
+      "S20"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "TenderBidWithdrawScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "loading",
+      "error",
+      "saving",
+      "unknown-outcome",
+      "stale",
+      "revision-changed",
+      "restricted"
+    ]
+  },
+  {
+    "id": "S260",
+    "name": "عروض المنافسة",
+    "english": "Tender bids list and picking",
+    "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/screens/tender_bids_screen.dart",
+    "sha256": "fc369f303b78bbcf924d97a6783c5ce0ec4e115ab34c6b706743ef6a08eb9b75",
+    "localeKeys": [
+      "tenderBids"
+    ],
+    "dependencies": [
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/housing_tender.dart",
+        "sha256": "69ada93b715346c65f37cdc66d8d0c111add7357c8a069bf64a73c986b7af4d3",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_bids_list.dart",
+        "sha256": "97a3d5272bf1679e8ef963b14a6985876fed4515cbf4c52cae5072ea73aa2a9f",
+        "localeKeys": [
+          "tenderChooseAllocation",
+          "tenderClarifications",
+          "tenderDeposit",
+          "tenderMinimumQuantity",
+          "tenderMonthlyRent",
+          "tenderQuoteExpiry",
+          "tenderRevise",
+          "tenderSealedHelp",
+          "tenderWithdraw"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_requirement.dart",
+        "sha256": "49deec14228836ec7f7782fd8d7cf7fec843c7fc6f1b92ee1b96eec578ce4cb4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/data/models/tender_bid.dart",
+        "sha256": "6c079288ac8c999a6de4518edebb6d4c95548ae3ae9d4ba7f464b14c889b94a4",
+        "localeKeys": []
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_empty_state.dart",
+        "sha256": "4716ae86629cefe2d05d14519bcd15e56c2abdebea5b16a8a4f84cfec6bd751a",
+        "localeKeys": [
+          "tenderBidsEmpty",
+          "tenderBidsEmptyHelp",
+          "tenderEmpty",
+          "tenderEmptyHelp",
+          "tenderPackagesEmpty",
+          "tenderPackagesEmptyHelp",
+          "tenderSourcesEmpty",
+          "tenderSourcesEmptyHelp"
+        ]
+      },
+      {
+        "source": "sokoun/apps/sokoun_app/lib/features/shared/housing_tenders/presentation/widgets/tender_labels.dart",
+        "sha256": "e3befb92d12d7faf24a010b21f888ef442a0e67912ce392bc6037191ddeb94e4",
+        "localeKeys": [
+          "rentalUnknownScope",
+          "tenderAccepted",
+          "tenderAcceptedPlanning",
+          "tenderAllUnits",
+          "tenderCanonicalPrices",
+          "tenderClosed",
+          "tenderCollecting",
+          "tenderDeclined",
+          "tenderExpired",
+          "tenderMarginal",
+          "tenderPending",
+          "tenderPublished",
+          "tenderReviewRequired",
+          "tenderReviewing",
+          "tenderSubmitted",
+          "tenderWithdrawn"
+        ]
+      }
+    ],
+    "group": "تشغيل الشركات والمنافسات",
+    "back": "S255",
+    "behavior": "Tender-scoped list; picking mode returns selected eligible bid to allocator, not submit/award. Sealed content and owner own-bid visibility respect phase/permissions. Expired/superseded bids cannot be allocated as fresh.",
+    "kind": "list",
+    "requiredStates": [
+      "loading",
+      "error",
+      "empty",
+      "stale",
+      "restricted",
+      "sealed"
+    ],
+    "visualReference": [
+      "S18",
+      "S19"
+    ],
+    "sprint": 12,
+    "chrome": "standard",
+    "reviewGate": "هذه هي الدفعة الأخيرة من المقترح. كل التفاعلات محلية، والمقترح كامل جاهز لمراجعتك.",
+    "coveredNativeClasses": {
+      "TenderBidsScreen": "default"
+    },
+    "stateLabels": {
+      "activation-review": "مراجعة التفعيل",
+      "wrong-account": "حساب آخر",
+      "verified": "تم التحقق · مثال",
+      "contract-form": "إعداد العقد",
+      "filters": "فلاتر التقرير",
+      "join-company": "انضمام لشركة",
+      "company-overview": "نظرة عامة للشركة",
+      "company-work": "الأعمال والتفويضات",
+      "housing-overview": "السكن والأفراد",
+      "request-list": "قائمة الطلبات",
+      "request-form": "إعداد طلب",
+      "archive-list": "أرشفة القائمة",
+      "retry-form": "مراجعة الصف المتعثر",
+      "staff-detail": "تفاصيل الموظف",
+      "staff-form": "إضافة موظف",
+      "inactive-membership": "عضوية غير نشطة",
+      "asset-create": "إضافة مبنى أو مجمع",
+      "change-review": "مراجعة التغيير",
+      "destination-picker": "اختيار الوجهة",
+      "media-item": "تفاصيل المرفق",
+      "media-preview": "معاينة المرفق",
+      "media-create": "إضافة مرفق",
+      "asset-detail": "تفاصيل المخزون",
+      "complex-list": "قائمة المجمعات",
+      "unit-batch-result": "نتائج الوحدات",
+      "unit-batch-retry": "مراجعة الوحدة المتعثرة",
+      "sealed": "محتوى مختوم",
+      "decline-package": "رفض التخصيص",
+      "dispatch-run": "متابعة محاولة موجودة",
+      "run-lab": "بدء مقارنة",
+      "living-scenario": "تغيير افتراضي",
+      "living-tender": "إحالة متطلبات",
+      "living-candidate": "اقتراح توزيع",
+      "omitted-inputs": "امتناع عن الإدخال",
+      "living-disclosure": "اختيار الإفصاح",
+      "scenario-inputs": "مدخلات السيناريو",
+      "scenario-create": "إنشاء سيناريو",
+      "comparison": "مقارنة",
+      "prepare-booking": "تهيئة الحجز",
+      "start-matching": "بدء مطابقة",
+      "no-source": "بلا مصدر مؤهل",
+      "reconcile-step": "مراجعة أصل العملية",
+      "partial-completion": "اكتمال جزئي",
+      "owner-editor": "سياسة المالك",
+      "withdraw": "سحب مشاركتي",
+      "independent-search": "بحث مستقل",
+      "tender-lifecycle": "نشر أو سحب",
+      "closed": "مغلقة",
+      "infeasible": "بلا حل مناسب",
+      "source-changed": "تغيّر المصدر",
+      "inventory-changed": "تغيّر المخزون",
+      "conflict": "تعارض",
+      "partial-error": "نتيجة جزئية"
+    },
+    "renderedStatePolicy": "Primary mockup plus explicitly labelled local review variants. Native dirty/invalid validation uses the form, not a separate counted screen.",
+    "renderedVariants": [
+      "sealed",
+      "loading",
+      "error",
+      "stale",
+      "restricted",
+      "empty"
+    ]
+  }
+]

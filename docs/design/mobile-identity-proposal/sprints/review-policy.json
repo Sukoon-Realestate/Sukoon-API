@@ -1,11 +1,12 @@
 {
-  "batchSizeSprints": 3,
   "authorizedSprints": [
-    8,
-    9,
-    10
+    11,
+    12,
+    13,
+    14
   ],
-  "stopAfterSprint": 10,
-  "nextSprint": 11,
+  "scope": "All remaining audited destinations; final sprint may contain fewer than 20.",
+  "stopAfterSprint": 14,
+  "nextSprint": null,
   "requiresUserReview": true
 }

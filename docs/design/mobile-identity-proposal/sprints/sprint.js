@@ -19,19 +19,19 @@
   }
   media.addEventListener('change',()=>{if(mode==='system')sync()});sync();
   function phone(id){return focusId===id?focusPhone:document.querySelector(`#${id} .phone`)}
-  function stash(id){const p=phone(id);drafts.set(id+'|'+renderedState[id],{html:p.querySelector('main').innerHTML,values:[...p.querySelectorAll('input,select,textarea')].map(el=>({value:el.value,checked:el.checked})),scroll:p.querySelector('main').scrollTop,footer:p.querySelector('.phone-footer').innerHTML})}
+  function stash(id){const p=phone(id);drafts.set(id+'|'+renderedState[id],{html:p.querySelector('main').innerHTML,values:[...p.querySelectorAll('input,select,textarea')].map(el=>({value:el.value,checked:el.checked})),toggles:[...p.querySelectorAll('[data-switch]')].map(el=>({key:el.dataset.switch,value:el.getAttribute('aria-checked')})),scroll:p.querySelector('main').scrollTop,footer:p.querySelector('.phone-footer').innerHTML})}
   function state(id,name){
     const previous=renderedState[id];stash(id);const previousDraft=drafts.get(id+'|'+previous);const p=phone(id);renderedState[id]=name;
     const saved=drafts.get(id+'|'+name);const retained=((['server-error','error','unknown-outcome','saving'].includes(name)&&previous==='default')||(name==='default'&&['server-error','error','unknown-outcome','saving'].includes(previous)))?previousDraft:null;
     const variant=data[id].variants[name];const variantBody=typeof variant==='object'?variant.content:variant;
     p.querySelector('main').innerHTML=saved?.html||(name==='default'?data[id].content:variantBody)||data[id].content;
     p.querySelector('.phone-footer').innerHTML=saved?.footer??(typeof variant==='object'?variant.footer??'':(name==='default'||(name==='server-error'&&['S21','S22','S23','S27','S30','S31','S32','S35','S39'].includes(id))?data[id].footer:''));
-    const restoreDraft=retained||saved;if(restoreDraft){p.querySelectorAll('input,select,textarea').forEach((el,i)=>{if(restoreDraft.values[i]){el.value=restoreDraft.values[i].value;el.checked=restoreDraft.values[i].checked}});p.querySelector('main').scrollTop=restoreDraft.scroll}
+    const restoreDraft=retained||saved;if(restoreDraft){p.querySelectorAll('input,select,textarea').forEach((el,i)=>{if(restoreDraft.values[i]){el.value=restoreDraft.values[i].value;el.checked=restoreDraft.values[i].checked}});for(const toggle of restoreDraft.toggles||[]){p.querySelector('[data-switch="'+toggle.key+'"]')?.setAttribute('aria-checked',toggle.value)}p.querySelector('main').scrollTop=restoreDraft.scroll}
     document.querySelector(`[data-state="${id}"]`).value=name;
   }
   function restore(){if(focusPhone&&placeholder){placeholder.replaceWith(focusPhone)}focusPhone=null;placeholder=null;focusId=null}
   function show(id){
-    if(!data[id]){const n=Number(id.slice(1));const destination=n>=21&&n<=160?'../sprint-'+String(Math.floor((n-21)/20)+1).padStart(2,'0')+'/index.html':'../../index.html';const u=new URL(destination,location.href);u.searchParams.set('theme',mode);u.hash=id;location.href=u.href;return}
+    if(!data[id]){const n=Number(id.slice(1));const destination=n>=21&&n<=295?'../sprint-'+String(Math.floor((n-21)/20)+1).padStart(2,'0')+'/index.html':'../../index.html';const u=new URL(destination,location.href);u.searchParams.set('theme',mode);u.hash=id;location.href=u.href;return}
     if(focusPhone)restore();
     const p=document.querySelector(`#${id} .phone`);placeholder=document.createElement('div');placeholder.style.height=p.offsetHeight+'px';p.replaceWith(placeholder);focusPhone=p;focusId=id;
     document.querySelector('.focus-body').replaceChildren(p);
@@ -42,7 +42,7 @@
   focus.addEventListener('close',restore);
   function ask(title,copy,fn){document.querySelector('[data-confirm-title]').textContent=title;document.querySelector('[data-confirm-copy]').textContent=copy;confirmAction=fn;confirm.showModal()}
   confirm.addEventListener('close',()=>confirmAction=null);
-  const represented={"subscriptions":"S88","invoices":"S86","chat-policy":"S92","owner-revenue":"S65","my-housing":"S137",'account-summary':'S42','support-new':'S44','support-tickets':'S46','legal':'S47','business-policies':'S48','guide-settings':'S49','feedback':'S44'};
+  const represented={"contract-document":"S175","my-reviews":"S198","subscriptions":"S88","invoices":"S86","chat-policy":"S92","owner-revenue":"S65","my-housing":"S137",'account-summary':'S42','support-new':'S44','support-tickets':'S46','legal':'S47','business-policies':'S48','guide-settings':'S49','feedback':'S44'};
   const next={
     'my-reviews':'تقييماتي','account-summary':'ملخص حساب المستأجر','subscriptions':'الاشتراكات','invoices':'الفواتير','chat-policy':'مراجعات سياسة المحادثات','legal':'الشروط وسياسة الخصوصية','business-policies':'سياسات الاستخدام','guide-settings':'إرشادات التجربة','contract-document':'مستند العقد','my-housing':'مسكني','support-new':'إنشاء طلب دعم','support-tickets':'طلبات الدعم','feedback':'اقتراح تحسين'
   };
@@ -50,7 +50,7 @@
     const el=ev.target;
     if(el.matches('[data-state]'))state(el.dataset.state,el.value);
     if(el.id==='group-filter')document.querySelectorAll('.sprint-screen').forEach(s=>s.hidden=el.value!=='all'&&s.dataset.group!==el.value);
-    if(el.name==='ack'){const p=el.closest('.phone');p.querySelector('[data-action="delete-account"]').disabled=!el.checked}
+    if(el.name==='ack'){const p=el.closest('.phone');const button=p.querySelector('[data-action="delete-account"]');if(button)button.disabled=!el.checked}
   });
   document.addEventListener('input',ev=>{
     if(ev.target.matches('input[name=password],input[name=confirm]'))ev.target.closest('form')?.elements.confirm?.setCustomValidity('');
@@ -71,7 +71,7 @@
         if(fields.start&&fields.end&&fields.end.value<=fields.start.value){notify('تاريخ النهاية يجب أن يكون بعد البداية.');break}
         if(['months','duration','occupants','minutes','keys'].some(k=>fields[k]&&!/^[0-9]+$/.test(fields[k].value))){notify('استخدم أعدادًا صحيحة للقيم المطلوبة.');break}
         const kind=f.dataset.kind;const label=f.querySelector('[type=submit]').dataset.label||'مراجعة الخطوة';
-        ask(label,'معاينة محلية فقط. لا يتم إرسال بيانات أو نشر إعلان أو تنفيذ دفع أو توقيع.',()=>{
+        ask(label,f.dataset.reviewCopy||'معاينة محلية فقط. لا يتم إرسال بيانات أو نشر إعلان أو تنفيذ دفع أو توقيع.',()=>{
           let feedback=f.querySelector('.batch-form-feedback');if(!feedback){feedback=document.createElement('div');feedback.className='batch-form-feedback';feedback.setAttribute('role','status');f.append(feedback)}
           feedback.textContent='تمت مراجعة الخطوة محليًا في المعاينة.';
           if(['chat','assistant','case-reply','maintenance-reply'].includes(kind)){
@@ -113,7 +113,7 @@
     if(b.dataset.switch){const old=b.getAttribute('aria-checked');b.setAttribute('aria-checked',String(old!=='true'));notify('اختيار محلي للمعاينة. التطبيق يستعيد القيمة السابقة إذا فشل الحفظ.');return}
     const action=b.dataset.action,p=b.closest('.phone'),id=p?.dataset.screen;if(!action)return;
     if(represented[action]){show(represented[action]);return}
-    if(next[action]){notify('الخطوة التالية في التطبيق: '+next[action]+'. مجدولة في خطة السبرنتات، ولم تُصمّم هنا.');return}
+    if(next[action]){notify('الخطوة التالية في التطبيق: '+next[action]+'. راجع سياق الخطوة والصلاحيات في المعاينة.');return}
     if(action==='batch-confirm'){ask(b.dataset.label||b.textContent,'تأكيد محلي للمعاينة فقط. التطبيق يراجع الصلاحية والنسخة ونتيجة الخادم قبل أي تغيير.',()=>notify('تم عرض تأكيد محلي. لم تتغير أي بيانات فعلية.'));return}
     if(action==='batch-recover'){notify('مراجعة المحاولة الأصلية فقط؛ لا يتم تكرار الدفع أو الإرسال.');return}
     if(action==='batch-preview'||action==='batch-next'){notify((b.dataset.label||b.textContent)+' · خطوة توضيحية مرتبطة بصلاحيات وسياق التطبيق.');return}
@@ -133,7 +133,7 @@
     if(action.startsWith('guide-')){ask('إعادة الشرح؟','عرض توضيحي للإرشادات. التطبيق يراجع صلاحية الوجهة وينتقل للشاشة المناسبة أولًا.',()=>notify('الخطوة ١: اختار الجزء اللي محتاجه، ثم تابع من الإجراء الرئيسي.'));return}
     if(action==='release-version'){state(id,b.dataset.value==='older'?'older-version':'default');return}
     if(action==='retry-startup'){state(id,'default');return}
-    if(action==='workspace'){if(['individual','owner'].includes(b.dataset.value)){show(b.dataset.value==='owner'?'S15':'S05')}else notify('مساحة '+(b.dataset.value==='student'?'الطلاب':'الشركات')+' مجدولة لاحقًا؛ اختيارها لا يمنح صلاحيات الحساب.');return}
+    if(action==='workspace'){if(b.dataset.value==='company'){show('S249');return}if(b.dataset.value==='student'){show('S219');return}if(['individual','owner'].includes(b.dataset.value)){show(b.dataset.value==='owner'?'S15':'S05')}else notify('مساحة '+(b.dataset.value==='student'?'الطلاب':'الشركات')+' مجدولة لاحقًا؛ اختيارها لا يمنح صلاحيات الحساب.');return}
     if(action==='map-marker'){p.querySelectorAll('[data-marker]').forEach(el=>el.classList.toggle('selected',el===b));const selected=p.querySelector('[data-map-selection]');const template=data[id].content;const doc=new DOMParser().parseFromString(template,'text/html');const photos=[...document.querySelectorAll('#S55 .photo-thumb img')].map(el=>el.src);if(b.dataset.marker==='1'){selected.querySelector('h3').textContent='استوديو مفروش';selected.querySelector('.price').firstChild.textContent='٦٬٠٠٠';if(photos[1])selected.querySelector('img').src=photos[1]}else{selected.innerHTML=doc.querySelector('[data-map-selection]').innerHTML}return}
     if(action==='map-area'){notify('يُفلتر التطبيق النتائج المحمّلة فقط داخل الجزء الظاهر.');return}
     if(action==='map-all'){p.querySelectorAll('[data-marker]').forEach((el,i)=>el.classList.toggle('selected',i===0));notify('معاينة إظهار كل المواقع المحمّلة.');return}
