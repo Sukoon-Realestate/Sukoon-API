@@ -94,6 +94,7 @@ def capabilities_for(user, subject, requested_action=""):
             enabled.extend(
                 [
                     "rental_handovers",
+                    "condition_reports",
                     "rental_deposits",
                     "rental_maintenance",
                     "rental_changes",

@@ -12,6 +12,34 @@ from .test_rental_phase4 import phase4_lease, upload_evidence, client_for
 pytestmark = pytest.mark.django_db
 
 
+def test_condition_report_attachment_capability_matches_authorized_upload(
+    phase4_lease, settings
+):
+    owner, tenant, lease = phase4_lease
+    endpoint = (
+        "/api/v1/features/v1/rental-capabilities/"
+        f"?subject_id={lease.id}&action=upload_evidence"
+    )
+    for actor in (owner, tenant):
+        response = client_for(actor).get(endpoint)
+        assert response.status_code == 200
+        assert "condition_reports" in response.data["enabled_capabilities"]
+        assert "upload_evidence" in response.data["allowed_actions"]
+
+    # Text reports remain supported when media infrastructure is unavailable;
+    # fresh authorization still prevents the separate upload action.
+    settings.EVIDENCE_STORAGE_PROVIDER = "disabled"
+    response = client_for(tenant).get(endpoint)
+    assert "condition_reports" in response.data["enabled_capabilities"]
+    assert "upload_evidence" not in response.data["allowed_actions"]
+
+    lease.legacy_read_only = True
+    lease.save(update_fields=["legacy_read_only"])
+    response = client_for(tenant).get(endpoint)
+    assert "condition_reports" not in response.data["enabled_capabilities"]
+    assert "upload_evidence" not in response.data["allowed_actions"]
+
+
 def test_evidence_upload_scan_and_read_without_payment_provider(phase4_lease, settings):
     settings.RENTAL_PROVIDER_BACKEND = "disabled"
     owner, tenant, lease = phase4_lease
