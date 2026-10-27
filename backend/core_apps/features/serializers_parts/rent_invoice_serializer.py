@@ -1,6 +1,8 @@
 """Serializers: rent invoice serializer."""
 
 from rest_framework import serializers
+from core_apps.common.locale_middleware import resolve_request_language
+from core_apps.common.translation import translate_message
 from ..models import RentInvoice
 
 
@@ -136,11 +138,20 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
         return ["quote", "checkout"] if self.get_can_pay(obj) else []
 
     def get_lines(self, obj):
+        language = resolve_request_language(self.context.get("request"))
+        generated_descriptions = {
+            "base_rent": "Base rent",
+            "security_deposit": "Security deposit",
+        }
         return [
             {
                 "id": str(line.id),
                 "type": line.line_type,
-                "description": line.description,
+                "description": (
+                    translate_message(line.description, language)
+                    if generated_descriptions.get(line.line_type) == line.description
+                    else line.description
+                ),
                 "amount": {
                     "amount_minor": line.amount_minor,
                     "currency": line.currency,

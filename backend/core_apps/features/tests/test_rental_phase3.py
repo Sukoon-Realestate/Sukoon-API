@@ -7,6 +7,7 @@ from rest_framework.test import APIClient
 
 from core_apps.features.models import (
     Lease,
+    InvoiceLine,
     LedgerEntry,
     OwnerPayable,
     PaymentAttempt,
@@ -79,6 +80,41 @@ def test_billing_anchor_preserves_month_end_and_issues_first_invoice(phase3_leas
     ]
     assert periods[0].invoice.lines.get().amount_minor == 1_000_000
     assert periods[0].invoice.charges_minor == 1_000_000
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "language, rent_label, deposit_label",
+    [("ar", "الإيجار الأساسي", "التأمين"), ("en", "Base rent", "Security deposit")],
+)
+def test_invoice_localizes_generated_labels_without_rewriting_user_text(
+    phase3_lease, language, rent_label, deposit_label
+):
+    _, tenant, lease = phase3_lease
+    invoice = list(generate_billing_schedule(lease))[0].invoice
+    deposit = InvoiceLine.objects.create(
+        invoice=invoice, line_type="security_deposit",
+        description="Security deposit", amount_minor=0,
+    )
+    custom = InvoiceLine.objects.create(
+        invoice=invoice, line_type="adjustment",
+        description="Base rent", amount_minor=0,
+    )
+    response = client_for(tenant).get(
+        f"/api/v1/features/v1/rent-invoices/{invoice.id}/",
+        HTTP_ACCEPT_LANGUAGE=language,
+    )
+    assert response.status_code == 200
+    assert response["Content-Language"] == language
+    assert response.data["invoice_type"] == "rent"
+    lines = {row["id"]: row for row in response.data["lines"]}
+    base = invoice.lines.get(line_type="base_rent")
+    assert lines[str(base.id)]["description"] == rent_label
+    assert lines[str(base.id)]["amount"]["amount_minor"] == 1_000_000
+    assert lines[str(deposit.id)]["description"] == deposit_label
+    assert lines[str(custom.id)]["description"] == "Base rent"
+    base.refresh_from_db()
+    assert base.description == "Base rent"
 
 
 @pytest.mark.django_db
