@@ -128,13 +128,23 @@ def condition_report_action(request, report_id, action):
             item.status = "changes_requested"
         elif action == "acknowledge":
             # Full client bodies cannot edit inspected facts while acknowledging.
+            expected_selection = selection_payload(item.selection)
+            acknowledged_selection = selection_payload(
+                request.data.get("selection") or {}
+            )
+            # Ancestry is server-owned provenance, absent from the mobile
+            # accommodation model. Omission must not invalidate an unchanged
+            # report; a supplied conflicting value is still rejected below.
+            if "reputation_ancestry" in expected_selection:
+                acknowledged_selection.setdefault(
+                    "reputation_ancestry", expected_selection["reputation_ancestry"]
+                )
             if (
                 request.data.get("items") != item.items
                 or sorted(request.data.get("evidence_ids", []))
                 != sorted(str(x) for x in item.evidence.values_list("id", flat=True))
                 or request.data.get("inspected_on") != str(item.inspected_on)
-                or selection_payload(request.data.get("selection") or {})
-                != selection_payload(item.selection)
+                or acknowledged_selection != expected_selection
             ):
                 raise RentalConflict(
                     "Acknowledgement must refer to the persisted report content.",

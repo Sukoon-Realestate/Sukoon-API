@@ -412,6 +412,37 @@ def test_report_objections_versions_addendum_and_exact_evidence(current_lease):
 
 
 @pytest.mark.django_db
+def test_report_mobile_acknowledgement_preserves_server_ancestry(current_lease):
+    owner, tenant, _, lease = current_lease
+    ancestry = {"basis": "confirmed_occupancy", "property_id": str(lease.property.id)}
+    lease.offer_snapshot = {**lease.offer_snapshot, "reputation_ancestry": ancestry}
+    lease.save(update_fields=["offer_snapshot"])
+    draft = authenticated(owner).get(
+        API + f"leases/{lease.id}/condition-report-context/?kind=move_in"
+    ).data
+    item = post(
+        owner, f"leases/{lease.id}/condition-reports/", report_body(draft), 201
+    ).data["resource"]
+    path = f"condition-reports/{item['id']}/acknowledge/"
+    mobile = deepcopy(item)
+    mobile["selection"].pop("reputation_ancestry")
+
+    changed_terms = deepcopy(mobile)
+    changed_terms["selection"]["terms"]["description"] = "Unreviewed terms"
+    post(tenant, path, report_body(changed_terms, "acknowledge"), 409)
+    changed_provenance = deepcopy(mobile)
+    changed_provenance["selection"]["reputation_ancestry"] = {"basis": "invented"}
+    post(tenant, path, report_body(changed_provenance, "acknowledge"), 409)
+    post(owner, path, report_body(mobile, "acknowledge"), 403)
+
+    accepted = post(tenant, path, report_body(mobile, "acknowledge")).data["resource"]
+    assert accepted["status"] == "acknowledged"
+    persisted = ConditionReport.objects.get(id=item["id"])
+    assert persisted.selection["reputation_ancestry"] == ancestry
+    assert persisted.items == item["items"]
+
+
+@pytest.mark.django_db
 def test_renewal_blocks_competing_departure(current_lease):
     owner, tenant, _, lease = current_lease
     RentalChange.objects.create(

@@ -3,6 +3,7 @@
 EN_TO_AR_MESSAGES = {
     "Walls and floors": "الجدران والأرضيات",
     "Report submitted.": "تم إرسال التقرير.",
+    "Acknowledgement must refer to the persisted report content.": "يجب أن يطابق الاعتماد محتوى نسخة التقرير المحفوظة. حدّث التقرير وراجعه قبل الاعتماد.",
     "Base rent": "الإيجار الأساسي",
     "Security deposit": "التأمين",
     "The legal agreement has not ended.": "لم ينتهِ العقد بعد.",
