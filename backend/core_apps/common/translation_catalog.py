@@ -1,6 +1,20 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "The legal agreement has not ended.": "لم ينتهِ العقد بعد.",
+    "The final settlement is not accepted.": "لم يعتمد الطرفان التسوية النهائية بعد.",
+    "A payment is still awaiting reconciliation.": "لا تزال إحدى عمليات الدفع قيد التحقق من النتيجة.",
+    "Occupancy has not been returned.": "لم يتم تأكيد إخلاء السكن وتسليمه بعد.",
+    "An invoice balance remains.": "لا يزال هناك رصيد مستحق على إحدى الفواتير.",
+    "The deposit is unresolved.": "لم تتم تسوية مبلغ التأمين بعد.",
+    "A refund is pending.": "لا يزال أحد طلبات الاسترداد قيد المتابعة.",
+    "A dispute is unresolved.": "لا يزال هناك نزاع لم يُحسم.",
+    "An owner payable or payout is unresolved.": "لا تزال هناك مستحقات للمالك أو عملية صرف قيد المتابعة.",
+    "Owner funds must be recovered after a refunded payout.": "يلزم استرداد المبلغ المصروف للمالك بعد رد الدفعة.",
+    "Rental inventory has not been returned.": "لم تُحرر الوحدة المؤجرة بعد التسليم.",
+    "Settlement execution is incomplete.": "لم يكتمل تنفيذ التسوية بعد.",
+    "Financial processing remains open.": "لا تزال المعالجة المالية قيد المتابعة.",
+    "An independently reviewed settlement correction remains open.": "لا يزال تصحيح التسوية الخاضع لمراجعة مستقلة قيد المتابعة.",
     'Payment confirmed. Service activation requires follow-up.': 'تأكد الدفع. يحتاج تفعيل الخدمة إلى متابعة.',
     'Review the original invoice and activation attempt. Retry activation only; do not collect payment again.': 'راجع الفاتورة الأصلية ومحاولة التفعيل. أعد محاولة التفعيل فقط دون تحصيل جديد.',
     'The service is active. Review the original receipt and record the follow-up outcome.': 'الخدمة مفعلة. راجع إيصال الدفع الأصلي وسجل نتيجة المتابعة.',

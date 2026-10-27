@@ -144,6 +144,49 @@ def test_journey_get_does_not_create_settlement_or_close_lease(phase6_lease):
     assert response["Cache-Control"] == "private, no-store"
 
 
+@pytest.mark.parametrize(
+    "language, agreement_reason, settlement_reason",
+    [
+        ("ar", "لم ينتهِ العقد بعد.", "لم يعتمد الطرفان التسوية النهائية بعد."),
+        ("en", "The legal agreement has not ended.", "The final settlement is not accepted."),
+    ],
+)
+@pytest.mark.parametrize("lease_status", ["draft", "ended"])
+def test_center_localizes_guidance_without_changing_closure_policy(
+    phase6_lease, language, agreement_reason, settlement_reason, lease_status
+):
+    _, tenant, lease = phase6_lease
+    lease.status = lease_status
+    lease.save(update_fields=["status"])
+    before = lease.revision
+    response = client_for(tenant).get(
+        f"/api/v1/features/v1/leases/{lease.id}/rental-center/",
+        HTTP_ACCEPT_LANGUAGE=language,
+    )
+    assert response.status_code == 200
+    assert response["Content-Language"] == language
+    assert "Accept-Language" in response["Vary"]
+    assert response["Cache-Control"] == "private, no-store"
+    for field in ("blocking_reasons", "closure_blocking_reasons"):
+        assert (agreement_reason in response.data[field]) == (lease_status == "draft")
+        assert settlement_reason in response.data[field]
+    summary = response.data["journey_summary"]
+    assert not summary["complete"]
+    expected_journey = lease_journey(lease, tenant)
+    presentation_fields = {"generated_at", "blocking_reasons"}
+    assert {k: v for k, v in summary.items() if k not in presentation_fields} == {
+        k: v for k, v in expected_journey.items() if k not in presentation_fields
+    }
+    if lease_status == "ended":
+        assert settlement_reason in summary["blocking_reasons"]
+    assert ("The legal agreement has not ended." in participant_reasons(lease, tenant)) == (
+        lease_status == "draft"
+    )
+    lease.refresh_from_db()
+    assert lease.revision == before
+    assert not FinalSettlement.objects.filter(lease=lease).exists()
+
+
 def test_unknown_payment_precedes_signing_and_owner_gets_no_pay_action(phase6_lease):
     owner, tenant, lease = phase6_lease
     _, attempt, _ = captured_payment(lease, tenant)
@@ -233,7 +276,8 @@ def test_revoked_private_access_cannot_reenter_through_housing_or_application(
         ("pending_signatures", "agreement", "provider"),
         ("signed", "activation", "provider"),
         ("expired", "expired", "operator"),
-        ("active", "handover", "provider"),
+        # Handover is an internal participant action independent of signing providers.
+        ("active", "handover", "both"),
     ],
 )
 def test_provider_disabled_guidance_is_not_false_completion(
@@ -352,7 +396,7 @@ def test_proposal_and_invitation_guidance_uses_effective_state_without_mutation(
     for user in (owner, tenant):
         assert (
             application_journey(interest, proposal, None, user)["next_actor"]
-            == "provider"
+            == "owner"
         )
     proposal.status = "rejected"
     proposal.save(update_fields=["status"])

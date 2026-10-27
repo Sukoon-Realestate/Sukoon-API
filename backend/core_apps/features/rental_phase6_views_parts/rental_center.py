@@ -1,6 +1,7 @@
 """Rental phase6 views: rental center."""
 
 from core_apps.common.locale_middleware import resolve_request_language
+from core_apps.common.translation import translate_message
 
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import IsAuthenticated
@@ -20,7 +21,18 @@ def rental_center(request, lease_id):
     from ..services.rental_lifecycle.journey import lease_journey, participant_reasons
 
     journey = lease_journey(lease, request.user)
-    reasons = participant_reasons(lease, request.user)
+    language = resolve_request_language(request)
+    reasons = [
+        translate_message(reason, language)
+        for reason in participant_reasons(lease, request.user)
+    ]
+    journey = {
+        **journey,
+        "blocking_reasons": [
+            translate_message(reason, language)
+            for reason in journey["blocking_reasons"]
+        ],
+    }
     balance = sum(
         max(x.charges_minor - x.credits_minor - x.applied_minor, 0)
         for x in lease.invoices.exclude(
