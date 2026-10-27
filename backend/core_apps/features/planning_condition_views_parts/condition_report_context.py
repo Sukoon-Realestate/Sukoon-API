@@ -1,11 +1,14 @@
 """Planning condition views: condition report context."""
 
+import re
 import uuid
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.utils.translation import get_language
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
+from core_apps.common.translation import translate_message
 from ..models import Lease, PrivateAccessRevocation
 from ..planning_models import ConditionReport
 from ..rental_phase4_views import evidence_payload
@@ -40,6 +43,26 @@ def report_actions(user, report):
     return []
 
 
+def report_history_label(value):
+    # Localize generated audit text on read; preserve stored history and names.
+    if (get_language() or "en").startswith("ar"):
+        match = re.fullmatch(
+            r"(submit|object|acknowledge|finalize) by (.+) at revision ([0-9]+)\.",
+            value,
+            flags=re.DOTALL,
+        )
+        if match:
+            action, name, revision = match.groups()
+            labels = {
+                "submit": "إرسال التقرير",
+                "object": "تسجيل اعتراض",
+                "acknowledge": "قبول التقرير",
+                "finalize": "اعتماد التقرير النهائي",
+            }
+            return f"{labels[action]} بواسطة {name} في النسخة {revision}."
+    return translate_message(value)
+
+
 def report_payload(item, user):
     return {
         "id": str(item.id),
@@ -61,7 +84,7 @@ def report_payload(item, user):
         "versions": item.versions,
         "objections": item.objections,
         "supersedes_id": str(item.supersedes.id) if item.supersedes_id else "",
-        "history": item.history,
+        "history": [report_history_label(value) for value in item.history],
         "allowed_actions": report_actions(user, item),
         "blocking_reasons": [],
     }
@@ -123,7 +146,7 @@ def condition_report_context(request, lease_id):
         {
             "id": str(uuid.uuid5(lease.id, f"surface:{identifier}")),
             "space": name,
-            "label": "Walls and floors",
+            "label": translate_message("Walls and floors"),
             "kind": "surface",
             "condition": "notInspected",
             "note": "",

@@ -1,6 +1,8 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "Walls and floors": "الجدران والأرضيات",
+    "Report submitted.": "تم إرسال التقرير.",
     "Base rent": "الإيجار الأساسي",
     "Security deposit": "التأمين",
     "The legal agreement has not ended.": "لم ينتهِ العقد بعد.",
