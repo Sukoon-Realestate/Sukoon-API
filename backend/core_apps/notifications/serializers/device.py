@@ -21,6 +21,9 @@ class DeviceTokenSerializer(serializers.ModelSerializer):
             "created_at",
         ]
         read_only_fields = ["id", "is_active", "created_at"]
+        # Registration is an authenticated upsert. The service and database
+        # preserve one row per token, including reactivation/account changes.
+        extra_kwargs = {"token": {"validators": []}}
 
 
 class DeviceTokenUnregisterSerializer(serializers.Serializer):

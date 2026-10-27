@@ -235,3 +235,45 @@ class TestDeviceTokenViews:
 
         token_obj = DeviceToken.objects.get(token="fcm_test_token_to_remove")
         assert token_obj.is_active is False
+
+    def test_device_reregistration_updates_locale_and_reactivates_one_row(
+        self, auth_client, user
+    ):
+        payload = {"token": "fcm_repeat_device", "device_type": "android", "language": "ar"}
+        first = auth_client.post(DEVICE_TOKEN_CREATE_URL, payload, format="json")
+        assert first.status_code == status.HTTP_201_CREATED
+        device = DeviceToken.objects.get(token=payload["token"])
+        auth_client.post(DEVICE_TOKEN_DELETE_URL, {"token": payload["token"]}, format="json")
+        updated = auth_client.post(
+            DEVICE_TOKEN_CREATE_URL,
+            {**payload, "language": "en", "chat_actions_version": 1},
+            format="json",
+        )
+        assert updated.status_code == status.HTTP_201_CREATED
+        device.refresh_from_db()
+        assert str(device.id) == first.data["id"]
+        assert device.user == user
+        assert device.language == "en"
+        assert device.chat_actions_version == 1
+        assert device.is_active is True
+        assert DeviceToken.objects.filter(token=payload["token"]).count() == 1
+
+    def test_device_reregistration_moves_ownership_and_old_logout_cannot_revoke(
+        self, auth_client, user, another_user
+    ):
+        device = DeviceToken.objects.create(user=user, token="fcm_shared_installation")
+        auth_client.force_authenticate(user=another_user)
+        response = auth_client.post(
+            DEVICE_TOKEN_CREATE_URL,
+            {"token": device.token, "device_type": "android", "language": "en"},
+            format="json",
+        )
+        assert response.status_code == status.HTTP_201_CREATED
+        device.refresh_from_db()
+        assert device.user == another_user
+        assert DeviceToken.objects.filter(token=device.token).count() == 1
+        auth_client.force_authenticate(user=user)
+        auth_client.post(DEVICE_TOKEN_DELETE_URL, {"token": device.token}, format="json")
+        device.refresh_from_db()
+        assert device.user == another_user
+        assert device.is_active is True
