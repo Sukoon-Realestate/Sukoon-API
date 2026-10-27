@@ -454,6 +454,14 @@ EVIDENCE_STORAGE_PROVIDER = getenv("EVIDENCE_STORAGE_PROVIDER", "disabled")
 EVIDENCE_PRIVATE_ROOT = getenv("EVIDENCE_PRIVATE_ROOT", str(BASE_DIR / "private_evidence"))
 EVIDENCE_CLOUDINARY_PREFIX = getenv("EVIDENCE_CLOUDINARY_PREFIX", "sokoun-evidence-private")
 EVIDENCE_SCANNER_BACKEND = getenv("EVIDENCE_SCANNER_BACKEND", "disabled")
+# Optional staging-run scope. An explicitly empty list admits no fake scans;
+# real scanners and the existing runtime/production guards are unchanged.
+_evidence_fake_uploaders = getenv("EVIDENCE_FAKE_SCANNER_UPLOADER_IDS")
+EVIDENCE_FAKE_SCANNER_UPLOADER_IDS = (
+    None
+    if _evidence_fake_uploaders is None
+    else tuple(value.strip() for value in _evidence_fake_uploaders.split(",") if value.strip())
+)
 EVIDENCE_CLAMSCAN_PATH = getenv("EVIDENCE_CLAMSCAN_PATH", "clamscan")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

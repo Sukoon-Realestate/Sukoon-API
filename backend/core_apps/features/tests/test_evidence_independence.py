@@ -45,6 +45,25 @@ def test_png_header_is_not_accepted_as_decodable_evidence(phase4_lease):
     assert not RentalEvidence.objects.exists()
 
 
+def test_fake_scanner_run_scope_preserves_other_uploaders(phase4_lease, settings):
+    owner, tenant, lease = phase4_lease
+    assert upload_evidence(owner, lease).status_code == 201
+    assert upload_evidence(tenant, lease).status_code == 201
+    other = RentalEvidence.objects.get(uploader=owner)
+    original = bytes(other.private_content)
+    settings.EVIDENCE_FAKE_SCANNER_UPLOADER_IDS = (str(tenant.id),)
+    assert scan_rental_evidence()["safe"] == 1
+    other.refresh_from_db()
+    assert other.malware_status == "pending"
+    assert other.scan_token is None and other.scan_until is None
+    assert bytes(other.private_content) == original
+    assert RentalEvidence.objects.get(uploader=tenant).scan_engine == "synthetic-test-only"
+    settings.EVIDENCE_FAKE_SCANNER_UPLOADER_IDS = ()
+    assert scan_rental_evidence()["safe"] == 0
+    other.refresh_from_db()
+    assert other.malware_status == "pending"
+
+
 def test_scan_lease_prevents_duplicate_inspection_and_failures_preserve_bytes(
     phase4_lease,
 ):

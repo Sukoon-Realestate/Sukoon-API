@@ -2,6 +2,7 @@
 
 from celery import shared_task
 from datetime import timedelta
+from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 from ..models import (
@@ -34,9 +35,14 @@ def scan_rental_evidence(self):
         return {"safe": 0, "unsafe": 0, "unavailable": 1}
     safe = unsafe = failed = 0
     now = timezone.now()
+    pending = RentalEvidence.objects.filter(
+        malware_status="pending", deleted_at__isnull=True
+    )
+    fake_uploaders = getattr(settings, "EVIDENCE_FAKE_SCANNER_UPLOADER_IDS", None)
+    if settings.EVIDENCE_SCANNER_BACKEND == "fake" and fake_uploaders is not None:
+        pending = pending.filter(uploader__id__in=fake_uploaders)
     ids = list(
-        RentalEvidence.objects.filter(malware_status="pending", deleted_at__isnull=True)
-        .filter(Q(scan_until__isnull=True) | Q(scan_until__lte=now))
+        pending.filter(Q(scan_until__isnull=True) | Q(scan_until__lte=now))
         .order_by("created_at")
         .values_list("pk", flat=True)[:100]
     )
