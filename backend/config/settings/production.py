@@ -16,6 +16,17 @@ SECRET_KEY = getenv("SECRET_KEY")
 
 ADMIN_URL = getenv("DJANGO_ADMIN_URL", "admin/")
 
+# OTPs, resend limits and API throttles must survive routing to another worker.
+# Reuse the deployed Redis service; test settings keep their isolated cache.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": getenv("CACHE_URL", REDIS_URL),
+        "KEY_PREFIX": "sukoon-cache",
+        "OPTIONS": {"socket_connect_timeout": 3, "socket_timeout": 3},
+    }
+}
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = getenv("EMAIL_HOST")

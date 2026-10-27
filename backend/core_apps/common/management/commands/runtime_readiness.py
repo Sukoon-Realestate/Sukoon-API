@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 
 from django.conf import settings
+from django.core.cache import cache
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
@@ -98,6 +99,8 @@ class Command(BaseCommand):
             "runtime_evidence_enabled": settings.RUNTIME_EVIDENCE_ENABLED,
             "redis_channels": settings.CHANNEL_LAYERS["default"]["BACKEND"]
             == "channels_redis.core.RedisChannelLayer",
+            "shared_security_cache": settings.CACHES["default"]["BACKEND"]
+            == "django.core.cache.backends.redis.RedisCache",
         }.items():
             report["checks"][name] = passed
             if not passed:
@@ -124,6 +127,14 @@ class Command(BaseCommand):
             report.update(scheduled)
         except Exception as error:
             failures.append(f"runtime_evidence_unavailable:{type(error).__name__}")
+        try:
+            # A read checks the configured cache connection without creating an
+            # OTP, resetting a limit, or flushing shared Redis data.
+            cache.get("runtime-readiness:cache-connectivity")
+            report["checks"]["security_cache_reachable"] = True
+        except Exception as error:
+            report["checks"]["security_cache_reachable"] = False
+            failures.append(f"security_cache_unavailable:{type(error).__name__}")
         report["ready"] = not failures
         self.stdout.write(json.dumps(report, indent=2, sort_keys=True))
         if failures:
