@@ -72,13 +72,9 @@ class ProfileAccountMixin:
         saved_count = SavedProperty.objects.filter(user=user).count()
         visits_count = PropertyVisit.objects.filter(tenant=user).count()
         reviews_count = PropertyVisitReview.objects.filter(visit__tenant=user).count()
-        active_contracts_count = Contract.objects.filter(
+        contracts_count = Contract.objects.filter(
             tenant=user, status=Contract.Status.ACTIVE
         ).count()
-        if Contract.objects.filter(tenant=user).exists():
-            contracts_count = active_contracts_count
-        else:
-            contracts_count = 1 if visits_count > 0 else 0
 
         verification_label = "موثّق ✓" if user.is_verified else "غير موثّق"
 

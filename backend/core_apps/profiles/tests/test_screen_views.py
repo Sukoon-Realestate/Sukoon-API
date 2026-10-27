@@ -3,7 +3,7 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from core_apps.profiles.models import Profile
+from core_apps.profiles.models import Contract, Profile
 from core_apps.properties.models import (
     City,
     Governorate,
@@ -121,7 +121,34 @@ class TestMyAccountScreenAPI:
         assert data["stats"]["saved_count"] == 1
         assert data["stats"]["visits_count"] == 1
         assert data["stats"]["reviews_count"] == 1
-        assert data["menu_items"]["contracts"]["count"] == 1
+        # A confirmed visit and its review do not establish a tenancy contract.
+        assert data["menu_items"]["contracts"]["count"] == 0
+        assert data["menu_items"]["contracts"]["subtitle"] == "0 عقد نشط"
+
+    def test_contract_count_includes_only_own_active_contracts(
+        self, auth_client, user, another_user
+    ):
+        for tenant, contract_status in [
+            (user, Contract.Status.ACTIVE),
+            (user, Contract.Status.ACTIVE),
+            (user, Contract.Status.EXPIRED),
+            (user, Contract.Status.CANCELLED),
+            (another_user, Contract.Status.ACTIVE),
+        ]:
+            Contract.objects.create(
+                tenant=tenant,
+                property_title="QA contract count",
+                status=contract_status,
+                start_date=date(2026, 1, 1),
+                end_date=date(2026, 12, 31),
+            )
+
+        res = auth_client.get(MY_ACCOUNT_URL)
+
+        assert res.status_code == status.HTTP_200_OK
+        contracts = res.json()["data"]["menu_items"]["contracts"]
+        assert contracts["count"] == 2
+        assert contracts["subtitle"] == "2 عقد نشط"
 
 
 @pytest.mark.django_db
