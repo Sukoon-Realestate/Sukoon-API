@@ -1,5 +1,7 @@
-import pytest
+import time
 from unittest.mock import patch
+
+import pytest
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.cache import cache
@@ -96,6 +98,43 @@ class TestOtpService:
             verify_email_otp(user.email, "123456")
 
         assert "expired or is invalid" in str(exc_info.value)
+
+    def test_wrong_attempt_does_not_extend_original_deadline(self, user):
+        started = time.time()
+        with patch("time.time", return_value=started):
+            otp = create_and_send_otp(user)
+        wrong = "000000" if otp != "000000" else "111111"
+        with patch("time.time", return_value=started + 590):
+            with pytest.raises(ValidationError):
+                verify_email_otp(user.email, wrong)
+        with patch("time.time", return_value=started + 601):
+            with pytest.raises(ValidationError) as error:
+                verify_email_otp(user.email, otp)
+        assert "expired or is invalid" in str(error.value)
+        user.refresh_from_db()
+        assert user.is_email_verified is False
+
+    def test_wrong_attempt_keeps_code_valid_within_original_deadline(self, user):
+        started = time.time()
+        with patch("time.time", return_value=started):
+            otp = create_and_send_otp(user)
+        wrong = "000000" if otp != "000000" else "111111"
+        with patch("time.time", return_value=started + 590):
+            with pytest.raises(ValidationError):
+                verify_email_otp(user.email, wrong)
+        with patch("time.time", return_value=started + 599):
+            assert verify_email_otp(user.email, otp).is_email_verified is True
+
+    def test_legacy_code_without_deadline_requires_resend(self, user):
+        otp = create_and_send_otp(user)
+        key = f"otp:{user.email.lower()}"
+        record = cache.get(key)
+        record.pop("expires_at")
+        cache.set(key, record, timeout=600)
+        with pytest.raises(ValidationError) as error:
+            verify_email_otp(user.email, otp)
+        assert "expired or is invalid" in str(error.value)
+        assert cache.get(key) is None
 
     def test_verify_email_otp_brute_force_lockout(self, user):
         create_and_send_otp(user)

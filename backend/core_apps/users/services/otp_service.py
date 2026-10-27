@@ -1,6 +1,8 @@
 import logging
 import secrets
 import string
+import time
+from math import ceil
 from typing import Any
 
 from django.conf import settings
@@ -54,11 +56,14 @@ def send_otp_email(email: str, otp: str, user_name: str = "") -> bool:
     )
 
     from django.utils.translation import get_language
-    if (get_language() or '').startswith('ar'):
+
+    if (get_language() or "").startswith("ar"):
         subject = f"[{site_name}] رمز التحقق من البريد الإلكتروني"
-        message = (f"رمز التحقق الخاص بك: {otp}\n\n"
-                   f"تنتهي صلاحيته خلال {OTP_EXPIRATION_SECONDS // 60} دقائق.\n"
-                   "إذا لم تطلب هذا الرمز، تجاهل الرسالة.")
+        message = (
+            f"رمز التحقق الخاص بك: {otp}\n\n"
+            f"تنتهي صلاحيته خلال {OTP_EXPIRATION_SECONDS // 60} دقائق.\n"
+            "إذا لم تطلب هذا الرمز، تجاهل الرسالة."
+        )
 
     from_email = getattr(settings, "DEFAULT_FROM_EMAIL", None)
 
@@ -95,6 +100,7 @@ def create_and_send_otp(user: Any) -> str:
         "attempts": 0,
         "security_epoch": user.security_epoch,
         "user_id": str(getattr(user, "id", "")),
+        "expires_at": time.time() + OTP_EXPIRATION_SECONDS,
     }
 
     cache.set(cache_key, cache_data, timeout=OTP_EXPIRATION_SECONDS)
@@ -123,7 +129,11 @@ def verify_email_otp(email: str, otp: str) -> Any:
     cache_key = f"otp:{normalized_email}"
     record = cache.get(cache_key)
 
-    if not record:
+    deadline = record.get("expires_at", 0) if record else 0
+    if not record or deadline <= time.time():
+        # Legacy records have no trustworthy original deadline. Require a new
+        # code rather than extending their unknown lifetime during rollout.
+        cache.delete(cache_key)
         raise ValidationError(
             {
                 "otp": _(
@@ -149,7 +159,7 @@ def verify_email_otp(email: str, otp: str) -> Any:
 
     if not secrets.compare_digest(cached_otp, submitted_otp):
         record["attempts"] = attempts + 1
-        cache.set(cache_key, record, timeout=OTP_EXPIRATION_SECONDS)
+        cache.set(cache_key, record, timeout=max(1, ceil(deadline - time.time())))
         raise ValidationError({"otp": _("Invalid verification code.")})
 
     # * OTP is valid: verify user in the database
