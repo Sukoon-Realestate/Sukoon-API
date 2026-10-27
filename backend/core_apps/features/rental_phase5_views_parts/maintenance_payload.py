@@ -2,6 +2,7 @@
 
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
+from core_apps.common.translation import translate_message
 from ..models import Lease, MaintenanceRequest, RentalEvidence, PrivateAccessRevocation
 from ..providers import require_verified_rental_account
 from ..services.cycle_permissions import cycle_actions
@@ -21,6 +22,23 @@ MAINTENANCE_ACTIONS = {
     "propose_cost",
     "approve_cost",
     "reject_cost",
+}
+
+MAINTENANCE_EVENT_LABELS = {
+    "created": "Maintenance request submitted.",
+    "acknowledge": "Maintenance request acknowledged.",
+    "reply": "Maintenance reply added.",
+    "propose_appointment": "Maintenance appointment proposed.",
+    "accept_appointment": "Maintenance appointment accepted.",
+    "start_work": "Maintenance work started.",
+    "report_missed": "Missed maintenance appointment reported.",
+    "report_resolved": "Maintenance resolution reported.",
+    "confirm_resolved": "Maintenance resolution confirmed.",
+    "reopen": "Maintenance request reopened.",
+    "cancel": "Maintenance request cancelled.",
+    "propose_cost": "Maintenance cost proposed.",
+    "approve_cost": "Maintenance cost approved.",
+    "reject_cost": "Maintenance cost rejected.",
 }
 
 
@@ -107,7 +125,10 @@ def maintenance_payload(item, user=None):
         "events": [
             {
                 "id": str(x.id),
-                "label": x.action,
+                "action": x.action,
+                "label": translate_message(
+                    MAINTENANCE_EVENT_LABELS.get(x.action, x.action)
+                ),
                 "note": x.note,
                 "at": x.created_at.isoformat(),
                 "appointment_at": (

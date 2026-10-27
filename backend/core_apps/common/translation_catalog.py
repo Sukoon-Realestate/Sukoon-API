@@ -1,6 +1,20 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "Maintenance request submitted.": "تم إرسال طلب الصيانة.",
+    "Maintenance request acknowledged.": "تم استلام طلب الصيانة.",
+    "Maintenance reply added.": "تمت إضافة رد على طلب الصيانة.",
+    "Maintenance appointment proposed.": "تم اقتراح موعد الصيانة.",
+    "Maintenance appointment accepted.": "تمت الموافقة على موعد الصيانة.",
+    "Maintenance work started.": "بدأ تنفيذ أعمال الصيانة.",
+    "Missed maintenance appointment reported.": "تم الإبلاغ عن تعذر تنفيذ موعد الصيانة.",
+    "Maintenance resolution reported.": "تم الإبلاغ عن إتمام الإصلاح.",
+    "Maintenance resolution confirmed.": "تم تأكيد إتمام الإصلاح.",
+    "Maintenance request reopened.": "تمت إعادة فتح طلب الصيانة.",
+    "Maintenance request cancelled.": "تم إلغاء طلب الصيانة.",
+    "Maintenance cost proposed.": "تم اقتراح تكلفة الإصلاح.",
+    "Maintenance cost approved.": "تم اعتماد تكلفة الإصلاح.",
+    "Maintenance cost rejected.": "تم رفض تكلفة الإصلاح.",
     "Walls and floors": "الجدران والأرضيات",
     "Report submitted.": "تم إرسال التقرير.",
     "Acknowledgement must refer to the persisted report content.": "يجب أن يطابق الاعتماد محتوى نسخة التقرير المحفوظة. حدّث التقرير وراجعه قبل الاعتماد.",
