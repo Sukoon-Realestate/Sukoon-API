@@ -39,6 +39,7 @@ def response_note_label(event, language):
                 "dispute": "اعتراض",
                 "reject": "رفض",
                 "request_changes": "طلب تعديلات",
+                "submit_for_signature": "إرسال للتوقيع",
             }.get(action)
             if label:
                 return f"{subject}: {label}"

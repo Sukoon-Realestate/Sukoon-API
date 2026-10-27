@@ -13,6 +13,7 @@ from ..models import ChangeSigningSession, RentalChange
 from ..providers import mock_completion_metadata, get_rental_provider
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
+from ..services.rental_notes import record_response_note, validated_note
 from .maintenance_action import change_payload, _change
 
 
@@ -27,6 +28,7 @@ def submit_change_for_signature(request, change_id, kind):
     if request.user != item.lease.owner:
         raise PermissionDenied("Only the owner can submit the change.")
     operation = f"rental_change.submit.{item.id}"
+    note = validated_note(request.data)
     with transaction.atomic():
         item = _change(request, change_id, kind, lock=True)
         if request.user != item.lease.owner:
@@ -54,6 +56,21 @@ def submit_change_for_signature(request, change_id, kind):
         item.signed_by = []
         item.revision += 1
         item.save()
+        from ..services.change_versions import snapshot
+        from ..services.rental_lifecycle.consents import record_consent
+
+        record_consent(
+            item,
+            request.user,
+            "submit_for_signature",
+            {
+                **snapshot(item),
+                "note": note,
+                "document_id": str(item.document_id),
+                "document_hash": item.document_hash,
+            },
+        )
+        record_response_note(item, request.user, "change", "submit_for_signature", note)
         from ..services.planning_notifications import record_event
 
         record_event(item, request.user, operation)
