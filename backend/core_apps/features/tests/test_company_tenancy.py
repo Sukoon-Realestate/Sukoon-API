@@ -366,6 +366,59 @@ def presence(cycle, item, row, kind, day):
 
 
 @pytest.mark.django_db
+def test_termination_choices_follow_current_date_and_command_boundaries(
+    active_agreement,
+):
+    from unittest.mock import patch
+
+    cycle, item = active_agreement
+    start, end = item.lease.start_date, item.lease.end_date
+    path = API + f"company-tenancies/{item.id}/"
+    for today, expected in [
+        (start - timedelta(days=1), [str(start), str(end)]),
+        (start, [str(start), str(end)]),
+        (start + timedelta(days=1), [str(end)]),
+        (end, [str(end)]),
+        (end + timedelta(days=1), []),
+    ]:
+        with patch("django.utils.timezone.localdate", return_value=today):
+            for role in ["owner", "signer"]:
+                response = authenticated(cycle[role]).get(path)
+                assert response.status_code == 200, response.data
+                assert response.data["termination_dates"] == expected
+            for role in ["coordinator", "payer", "employee"]:
+                response = authenticated(cycle[role]).get(path)
+                assert response.status_code == 200, response.data
+                assert "termination_dates" not in response.data
+
+    with patch(
+        "django.utils.timezone.localdate", return_value=start + timedelta(days=1)
+    ):
+        past = act(
+            item,
+            cycle["owner"],
+            "terminate",
+            effective_on=str(start),
+            reason="Past boundary",
+        )
+        assert past.status_code == 409, past.data
+        assert not item.changes.filter(kind="termination").exists()
+        future = act(
+            item,
+            cycle["owner"],
+            "terminate",
+            effective_on=str(end),
+            reason="Current valid boundary",
+        )
+        assert future.status_code == 200, future.data
+        change = item.changes.get(kind="termination")
+        assert change.state == "pending"
+        assert change.snapshot["content"]["effective_on"] == str(end)
+    item.lease.refresh_from_db()
+    assert item.lease.end_date == end and item.lease.status == "active"
+
+
+@pytest.mark.django_db
 def test_possession_employee_departure_and_return_are_independent(active_agreement):
     from unittest.mock import patch
 

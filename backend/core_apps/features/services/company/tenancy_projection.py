@@ -505,8 +505,14 @@ def payload(item, user):
             )
         ],
         "termination_dates": (
-            list(map(str, lease.billing_periods.values_list("start", flat=True)))
-            + [str(lease.end_date)]
+            [
+                str(day)
+                for day in sorted(
+                    set(lease.billing_periods.values_list("start", flat=True))
+                    | {lease.end_date}
+                )
+                if max(timezone.localdate(), lease.start_date) <= day <= lease.end_date
+            ]
             if roles & {"owner", "signer"}
             else []
         ),
