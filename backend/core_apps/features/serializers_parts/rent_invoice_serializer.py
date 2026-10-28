@@ -135,7 +135,27 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
         }
 
     def get_allowed_actions(self, obj):
-        return ["quote", "checkout"] if self.get_can_pay(obj) else []
+        from ..services.cycle_permissions import cycle_actions
+        from ..services.rental_phase3 import invoice_balance_minor
+
+        actions = ["quote", "checkout"] if self.get_can_pay(obj) else []
+        request = self.context.get("request")
+        user = request.user if request else None
+        # Reviewing a deadline is independent of PSP checkout availability.
+        # The existing command rechecks the lease and invoice under its locks.
+        if (
+            obj.lease_id
+            and obj.purpose == "rent"
+            and obj.due_at is not None
+            and obj.status not in {
+                RentInvoice.Status.PAID, RentInvoice.Status.SETTLED,
+                RentInvoice.Status.CANCELLED, RentInvoice.Status.WRITTEN_OFF,
+            }
+            and invoice_balance_minor(obj) > 0
+            and "create_payment_extension" in cycle_actions(user, obj.lease)
+        ):
+            actions.append("request_extension")
+        return actions
 
     def get_lines(self, obj):
         language = resolve_request_language(self.context.get("request"))
