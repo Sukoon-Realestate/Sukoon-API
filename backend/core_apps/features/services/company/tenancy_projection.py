@@ -1,6 +1,7 @@
 """Company tenancy projections disclose only the viewer's actual responsibility."""
 
 from django.utils import timezone
+from core_apps.common.translation import translate_message
 from ...models import (
     CompanyMembership,
     RentalOperationalCase,
@@ -361,7 +362,9 @@ def payload(item, user):
         ),
         "blocking_reasons": blockers,
         "closure_blocking_reasons": (
-            closure_blocking_reasons(lease) if commercial else []
+            [translate_message(reason) for reason in closure_blocking_reasons(lease)]
+            if commercial
+            else []
         ),
         "package": (
             {
