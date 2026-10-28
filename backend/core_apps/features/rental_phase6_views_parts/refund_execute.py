@@ -137,6 +137,8 @@ def refund_execute(request, refund_id):
 
 
 def dispute_payload(item, user=None):
+    from ..rental_phase4_views_parts.handover_payload import evidence_payload
+
     return {
         "allowed_actions": cycle_actions(user, item),
         "blocking_reasons": [],
@@ -150,8 +152,7 @@ def dispute_payload(item, user=None):
         "resolution": item.resolution,
         "responses": item.responses,
         "evidence": [
-            {"id": str(x.id), "sha256": x.sha256, "status": "ready"}
-            for x in item.evidence.all()
+            evidence_payload(x) for x in item.evidence.all() if not x.deleted_at
         ],
     }
 

@@ -84,7 +84,8 @@ def _lease(request, lease_id, lock=False, servicing=False):
 def _safe_evidence(lease, ids):
     items = list(
         RentalEvidence.objects.filter(
-            id__in=ids, lease=lease, malware_status=RentalEvidence.MalwareStatus.SAFE
+            id__in=ids, lease=lease, malware_status=RentalEvidence.MalwareStatus.SAFE,
+            deleted_at__isnull=True,
         )
     )
     if len(items) != len(set(map(str, ids))):
@@ -96,6 +97,7 @@ def _safe_evidence(lease, ids):
 
 def maintenance_payload(item, user=None):
     from ..services.billing_sources import source_invoices
+    from ..rental_phase4_views_parts.handover_payload import evidence_payload
 
     return {
         "billing_invoices": source_invoices("maintenance", item.id),
@@ -139,8 +141,7 @@ def maintenance_payload(item, user=None):
             for x in item.events.all()
         ],
         "evidence": [
-            {"id": str(x.id), "sha256": x.sha256, "status": "ready"}
-            for x in item.evidence.all()
+            evidence_payload(x) for x in item.evidence.all() if not x.deleted_at
         ],
     }
 
