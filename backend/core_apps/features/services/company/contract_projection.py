@@ -131,7 +131,9 @@ def payload(item, user):
         "ends_on_exclusive": source["ends_on_exclusive"],
         "quote_expires_at": source["quote_expires_at"],
         "hold_expires_at": (
-            item.booking.hold.expires_at.isoformat() if item.booking.hold_id else None
+            item.booking.hold.expires_at.isoformat()
+            if item.booking.hold_id and item.booking.hold.expires_at
+            else None
         ),
         "blocking_reasons": blocking
         + (

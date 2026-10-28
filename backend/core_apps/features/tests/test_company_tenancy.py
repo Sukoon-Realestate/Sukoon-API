@@ -226,6 +226,29 @@ def test_signing_and_capture_activate_exact_company_inventory(active_agreement):
 
 
 @pytest.mark.django_db
+def test_paid_company_preparation_remains_readable_after_hold_commit(active_agreement):
+    cycle, item = active_agreement
+    preparation = item.preparation
+    preparation.booking.hold.refresh_from_db()
+    assert preparation.booking.hold.status == "committed"
+    assert preparation.booking.hold.expires_at is None
+    for role in ["coordinator", "owner", "signer", "payer", "employee"]:
+        response = authenticated(cycle[role]).get(
+            API + f"company-contract-preparations/{preparation.id}/"
+        )
+        assert response.status_code == 200, response.data
+        assert response.data["hold_expires_at"] is None
+        assert response.data["tenancy_id"] == str(item.id)
+        assert response.data["state"] == "agreement_created"
+        assert response.data["responses"] == []
+        if role == "employee":
+            assert response.data["package"] == {}
+    assert authenticated(person("unrelated-after-capture")).get(
+        API + f"company-contract-preparations/{preparation.id}/"
+    ).status_code == 404
+
+
+@pytest.mark.django_db
 def test_employees_and_coordinators_cannot_pay_company_invoice(signed_agreement):
     cycle, item = signed_agreement
     invoice = item.lease.invoices.get()
