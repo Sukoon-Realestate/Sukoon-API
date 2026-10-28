@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes, renderer_cla
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ..models import ChangeSigningSession, RentalChange
+from ..models import ChangeSigningSession, Lease, RentalChange
 from ..providers import mock_completion_metadata, get_rental_provider
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
@@ -44,8 +44,9 @@ def submit_change_for_signature(request, change_id, kind):
             require_no_departure(item.lease)
         if int(request.data.get("expected_revision", 0)) != item.revision:
             raise RentalConflict("Change revision conflict.", code="stale_revision")
-        from ..services.change_terms import validate_changed_terms
+        from ..services.change_terms import require_current_change_base, validate_changed_terms
 
+        require_current_change_base(item)
         validate_changed_terms(item.terms)
         generated = get_rental_provider().generate_agreement(
             item.id, item.revision, item.terms
@@ -105,8 +106,9 @@ def change_signing_session(request, change_id, kind):
             raise RentalConflict("Change is not awaiting signatures.")
         if str(request.user.id) in item.signed_by:
             raise RentalConflict("You already signed this change document.")
-        from ..services.change_terms import validate_changed_terms
+        from ..services.change_terms import require_current_change_base, validate_changed_terms
 
+        require_current_change_base(item)
         validate_changed_terms(item.terms)
         if (
             int(request.data.get("expected_revision", 0)) != item.revision
@@ -166,10 +168,16 @@ def complete_change_signature(provider_session_id):
             from ..services.company.tenancy_continuation_signing import complete
 
             return complete(session)
+        # Match participant commands and the worker: lease, change, then session.
+        lease = Lease.objects.select_for_update().get(pk=session.change.lease_id)
         item = RentalChange.objects.select_for_update().get(pk=session.change_id)
+        item.lease = lease
         session = ChangeSigningSession.objects.select_for_update().get(pk=session.pk)
         if session.status == "completed":
             return item
+        from ..services.change_terms import require_current_change_base
+
+        require_current_change_base(item)
         if (
             item.status != RentalChange.Status.PENDING_SIGNATURES
             or session.expires_at <= timezone.now()

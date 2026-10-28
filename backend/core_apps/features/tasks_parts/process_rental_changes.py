@@ -247,10 +247,19 @@ def process_rental_changes(self):
             change.lease = lease
             if change.kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
                 from rest_framework.exceptions import ValidationError
-                from ..services.change_terms import validate_changed_terms
+                from ..services.change_terms import change_base_conflicts, validate_changed_terms
                 from ..services.rental_lifecycle.cases import open_system_case
 
                 if change.status != RentalChange.Status.SIGNED:
+                    continue
+                if change_base_conflicts(change):
+                    open_system_case(
+                        kind="agreement_terms_review",
+                        source_key=f"change-terms:{change.id}:{change.revision}",
+                        lease=lease,
+                        reason="The signed change refers to lease terms replaced by another agreement.",
+                        next_action="Preserve both signed documents and review the current terms with both parties. Do not overwrite the current agreement or infer new consent.",
+                    )
                     continue
                 try:
                     validate_changed_terms(change.terms)

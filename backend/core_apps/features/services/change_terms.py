@@ -13,13 +13,29 @@ def validate_changed_terms(terms):
     return serializer.validated_data
 
 
+def change_base_conflicts(item):
+    return bool(item.previous_terms and item.previous_terms != item.lease.terms)
+
+
+def require_current_change_base(item):
+    from .rental_phase2 import RentalConflict
+
+    if change_base_conflicts(item):
+        raise RentalConflict(
+            "The lease terms changed. Review the current agreement before signing a new proposal.",
+            code="lease_terms_changed",
+        )
+
+
 def changed_terms_blocker(item):
     from ..models import RentalChange
 
     if item.kind not in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
         return None
-    if item.previous_terms and item.previous_terms != item.lease.terms and item.status in {"proposed", "changes_requested", "accepted"}:
-        return "The lease terms changed. The author must review and submit an updated proposal."
+    if change_base_conflicts(item) and item.status in {
+        "proposed", "changes_requested", "accepted", "pending_signatures", "signed",
+    }:
+        return "The lease terms changed. Review the current agreement before signing a new proposal."
     try:
         validate_changed_terms(item.terms)
     except ValidationError:
