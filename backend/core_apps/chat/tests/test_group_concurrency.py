@@ -1,3 +1,4 @@
+import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
 from unittest.mock import patch
@@ -84,6 +85,42 @@ def test_outbox_crash_retry_and_muted_delayed_push(chat_group):
         deliver_pushes()
         deliver_pushes()
         push.assert_not_called()
+
+
+def test_stalled_fanout_preserves_committed_message_and_releases_transaction(
+    chat_group, monkeypatch,
+):
+    from core_apps.chat.services import group_outbox
+
+    _, conversation, user, _ = chat_group
+    cancelled = []
+
+    async def stalled(*args, **kwargs):
+        try:
+            await asyncio.Future()
+        finally:
+            cancelled.append(True)
+
+    monkeypatch.setattr(group_outbox, "FANOUT_TIMEOUT_SECONDS", 0.05)
+    with patch.object(group_outbox, "get_channel_layer") as layer:
+        layer.return_value.group_send = stalled
+        # The real post-commit callback times out without rejecting or replaying
+        # the already stored command. Its separate delivery transaction closes.
+        message = send_group_message(conversation, user, message_request())
+        event = ChatEvent.objects.get(conversation=conversation, kind="message.new")
+        assert cancelled
+        assert not connection.in_atomic_block
+        assert Message.objects.filter(pk=message.pk).exists()
+        assert event.delivered_at is None
+        with pytest.raises(TimeoutError):
+            deliver_event(event.pk)
+        assert not connection.in_atomic_block
+
+    event.refresh_from_db()
+    assert event.delivered_at is None
+    assert deliver_event(event.pk)
+    assert not deliver_event(event.pk)
+    assert ChatNotificationDelivery.objects.filter(event=event).count() == 1
 
 
 def test_committed_removal_blocks_queued_outbound_content(chat_group):

@@ -1,3 +1,6 @@
+import asyncio
+from time import monotonic
+
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.db import transaction
@@ -8,6 +11,16 @@ from .group_access import authorize, lock_conversation_root
 from .group_events import event_payload
 from .mentions import is_mentioned
 from .group_notification_preferences import allows_message
+
+
+FANOUT_TIMEOUT_SECONDS = 5
+
+
+async def _send_before_deadline(channel, group, payload, deadline):
+    remaining = deadline - monotonic()
+    if remaining <= 0:
+        raise TimeoutError("Chat event fanout deadline expired")
+    await asyncio.wait_for(channel.group_send(group, payload), timeout=remaining)
 
 
 def drain_outbox(limit=100):
@@ -36,15 +49,22 @@ def deliver_event(identity):
             return False
         event.attempts += 1
         channel = get_channel_layer()
+        # This transaction also locks the owning company/group. A stalled
+        # channel layer must not retain that business lock indefinitely after
+        # the original command has committed. Timeout rolls this delivery back;
+        # the durable event remains pending for the existing retry worker.
+        deadline = monotonic() + FANOUT_TIMEOUT_SECONDS
         for participant in event.conversation.participant_set.select_related("user"):
             user = participant.user
             if event_payload(event, user) is None:
                 continue
             if channel:
                 # Consumers recheck access and serialize at delivery, never forward stale content.
-                async_to_sync(channel.group_send)(
+                async_to_sync(_send_before_deadline)(
+                    channel,
                     f"chat_user_{user.id}",
                     {"type": "chat.group_event", "event_id": str(event.id)},
+                    deadline,
                 )
             _notify(event, user)
         event.delivered_at = timezone.now()
