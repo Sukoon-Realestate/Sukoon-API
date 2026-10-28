@@ -57,6 +57,10 @@ urlpatterns = [
     ),
     path("company-tenancies/", tenancies.collection),
     path("company-tenancies/<uuid:tenancy_id>/", tenancies.detail),
+    path(
+        "company-tenancies/<uuid:tenancy_id>/resolve-operation/",
+        tenancies.resolve_operation,
+    ),
     path("company-tenancies/<uuid:tenancy_id>/<slug:action>/", tenancies.action),
     path(
         "company-contract-preparations/<uuid:preparation_id>/agreement/",

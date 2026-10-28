@@ -74,6 +74,15 @@ def detail(request, tenancy_id):
     )
 
 
+@company_api(["POST"])
+def resolve_operation(request, tenancy_id):
+    from .services.company.tenancy_operation_recovery import RecoveryBody, resolve
+    from .services.rental_foundation import private_no_store
+
+    body = validated(RecoveryBody, request.data)
+    return private_no_store(Response(resolve(request.user, tenancy_id, body)))
+
+
 def open_case(item, user, data):
     from .services.rental_lifecycle.cases import open_system_case
     from .services.company.role_context import selected
