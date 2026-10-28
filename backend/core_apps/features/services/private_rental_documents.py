@@ -243,10 +243,21 @@ def content_response(document_id, token):
         )
         if document.lease.renter_company_id:
             from .company.tenancy_access import commercial_read, financial_read
-            from .company.role_context import bound_role
+            from .company.role_context import bound_role, http_context
 
             if claims.get("company_id") != str(document.lease.renter_company.id):
                 raise ValueError()
+            context = http_context()
+            if context is not None:
+                requested_role = context.headers.get("X-Sukoon-Company-Role", "")
+                requested_company = context.headers.get("X-Sukoon-Company-Id", "")
+                if (requested_role or requested_company) and (
+                    requested_role != claims.get("company_role", "")
+                    or requested_company != claims.get("company_id")
+                ):
+                    # A browser link carries its signed role binding. An API
+                    # caller cannot override a conflicting active context with it.
+                    raise ValueError()
             with bound_role(user, claims["company_id"], claims.get("company_role", "")):
                 allowed = (
                     financial_read

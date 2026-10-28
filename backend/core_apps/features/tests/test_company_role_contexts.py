@@ -472,6 +472,15 @@ def test_document_collection_and_signed_download_are_role_bound(tenancy):
 
     url = urlsplit(response.data["url"])
     assert client(actors["signer"]).get(url.path + "?" + url.query).status_code == 200
+    assert signer.get(url.path + "?" + url.query).status_code == 200
+    assert payer.get(url.path + "?" + url.query).status_code == 404
+    switched = client(actors["signer"], actors["company"], "payer")
+    assert switched.get(url.path + "?" + url.query).status_code == 404
+    switched.credentials(
+        HTTP_X_SUKOON_COMPANY_ROLE="signer",
+        HTTP_X_SUKOON_COMPANY_ID="00000000-0000-0000-0000-000000000000",
+    )
+    assert switched.get(url.path + "?" + url.query).status_code == 404
     item.signer_mandate.state = "revoked"
     item.signer_mandate.save()
     assert client(actors["signer"]).get(url.path + "?" + url.query).status_code == 404
