@@ -666,6 +666,35 @@ def test_employee_housing_does_not_disclose_colleague_unit_or_commerce(tenancy):
 
 
 @pytest.mark.django_db
+def test_employee_heading_and_possession_follow_own_assignment(tenancy):
+    actors, item = tenancy
+    request = item.preparation.booking.request
+    request.title = "PRIVATE commercial budget and contract negotiation"
+    request.save(update_fields=["title"])
+    item.lease.occupancy_status = "occupied"
+    item.lease.save(update_fields=["occupancy_status"])
+    own = item.preparation.booking.assignments.get(employee=actors["employee"])
+    actor = client(actors["employee"], actors["company"], "employee")
+    for state in ["arrival_pending", "occupied", "returned"]:
+        own.occupancy_status = state
+        own.save(update_fields=["occupancy_status"])
+        response = actor.get(API + f"company-tenancies/{item.id}/")
+        assert response.status_code == 200, response.data
+        assert request.title not in str(response.data)
+        assert response.data["title"] == own.property.title
+        assert response.data["state"] == state
+        assert response.data["occupancy_status"] == state
+        assert response.data["assignments"][0]["state"] == state
+    prepared = actor.get(API + f"company-contract-preparations/{item.preparation.id}/")
+    assert prepared.status_code == 200, prepared.data
+    assert request.title not in str(prepared.data)
+    assert prepared.data["title"] == prepared.data["units"][0]["title"]
+    # A presentation projection cannot rewrite the canonical company possession.
+    item.lease.refresh_from_db()
+    assert item.lease.occupancy_status == "occupied"
+
+
+@pytest.mark.django_db
 def test_case_links_cannot_restore_mixed_role_discussions(tenancy):
     from core_apps.features.services.rental_lifecycle.cases import (
         open_system_case,

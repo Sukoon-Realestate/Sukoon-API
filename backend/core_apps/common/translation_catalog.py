@@ -1,6 +1,7 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "Your housing": "سكني",
     "Maintenance request submitted.": "تم إرسال طلب الصيانة.",
     "Maintenance request acknowledged.": "تم استلام طلب الصيانة.",
     "Maintenance reply added.": "تمت إضافة رد على طلب الصيانة.",

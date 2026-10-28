@@ -304,14 +304,14 @@ def tenancy(value, item, user):
         if e.get("company_role") == role and e.get("actor_id") == str(user.id)
     ]
     if role == "employee":
-        from .role_housing import assigned_housing
+        from .role_housing import assigned_housing, housing_title, resident_state
 
         result["housing"] = assigned_housing(item, user)
-        result["state"] = (
-            "housing_preparing"
-            if item.lease.occupancy_status == "not_started"
-            else item.lease.occupancy_status
+        result["title"] = housing_title(result["housing"])
+        result["state"] = resident_state(
+            result.get("assignments", []), item.lease.occupancy_status
         )
+        result["occupancy_status"] = result["state"]
         own_requests = set(
             map(
                 str,
@@ -380,6 +380,9 @@ def preparation(value, item, user):
         value.pop("signer_name", None)
         value.pop("payer_name", None)
     if role == "employee":
+        from .role_housing import housing_title
+
+        value["title"] = housing_title(value.get("units", []))
         for key in (
             "package",
             "full_term_rent_minor",

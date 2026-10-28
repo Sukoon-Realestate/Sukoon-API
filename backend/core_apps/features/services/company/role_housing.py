@@ -1,6 +1,32 @@
 """Physical housing information for the exact assigned resident, without commerce."""
 
 from django.utils.translation import get_language
+from core_apps.common.translation import translate_message
+
+
+def housing_title(rows):
+    """Headings use only already authorized physical accommodation labels."""
+    return " / ".join(
+        dict.fromkeys(row["title"] for row in rows if row.get("title"))
+    ) or translate_message("Your housing")
+
+
+def resident_state(assignments, company_possession):
+    """Company possession never proves that this employee has arrived."""
+    states = {row["state"] for row in assignments}
+    if "occupied" in states:
+        return "occupied"
+    if "arrival_pending" in states:
+        return (
+            "housing_preparing"
+            if company_possession == "not_started"
+            else "arrival_pending"
+        )
+    if "returned" in states:
+        return "returned"
+    if states == {"cancelled"}:
+        return "cancelled"
+    return "housing_preparing"
 
 
 def assigned_housing(item, user):
