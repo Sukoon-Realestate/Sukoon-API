@@ -7,6 +7,7 @@ from ...models import MaintenanceRequest, MaintenanceEvent, CompanyMaintenanceSc
 from ..rental_phase2 import RentalConflict
 from ..cycle_permissions import MAINTENANCE_TRANSITIONS
 from . import tenancy_access as access
+from .role_context import system_context
 
 
 def occupants(item, prop):
@@ -38,7 +39,10 @@ def access_reviewers(item, scope):
 
 def actions(item, scope, user):
     request, roles = scope.request, access.roles(item, user)
-    resident = occupants(item, scope.property).filter(employee=user).exists()
+    resident = (
+        "employee" in roles
+        and occupants(item, scope.property).filter(employee=user).exists()
+    )
     if not roles & {"owner", "coordinator", "payer"} and not resident:
         return []
     if request.status == "cancelled":
@@ -53,11 +57,13 @@ def actions(item, scope, user):
         }
         if request.status not in {"resolved", "resolution_reported"}:
             available.add("propose_cost")
-    if resident or "coordinator" in roles:
+    if resident and user.pk == request.reporter_id or "coordinator" in roles:
         available |= {"confirm_resolved", "reopen", "report_missed"}
-    if user.pk == request.reporter_id or "coordinator" in roles:
+    if resident and user.pk == request.reporter_id or "coordinator" in roles:
         available.add("cancel")
-    if str(user.id) in access_reviewers(item, scope):
+    if (resident or "coordinator" in roles) and str(user.id) in access_reviewers(
+        item, scope
+    ):
         available.add("revoke_access")
         if request.appointment_ends_at and timezone.now() < request.appointment_ends_at:
             available.add("accept_appointment")
@@ -66,6 +72,8 @@ def actions(item, scope, user):
         or (request.cost_payer == "company" and access.can_pay(item.lease, user))
     ):
         available |= {"approve_cost", "reject_cost"}
+    if resident and user.pk != request.reporter_id:
+        available &= {"accept_appointment", "revoke_access"}
     return sorted(
         a
         for a in available
@@ -88,9 +96,9 @@ def create(item, user, data):
     )
     if prop is None:
         raise ValidationError("Choose a unit of this company contract.")
-    if (
-        not access.roles(item, user) & {"owner", "coordinator"}
-        and not occupants(item, prop).filter(employee=user).exists()
+    if not access.roles(item, user) & {"owner", "coordinator"} and not (
+        "employee" in access.roles(item, user)
+        and occupants(item, prop).filter(employee=user).exists()
     ):
         raise PermissionDenied(
             "Report maintenance only for your assigned occupied unit."
@@ -107,7 +115,12 @@ def create(item, user, data):
     MaintenanceEvent.objects.create(
         maintenance_request=request, actor=user, action="created"
     )
-    return access.changed(item, user, "company_maintenance_reported")
+    return access.changed(
+        item,
+        user,
+        "company_maintenance_reported",
+        metadata={"maintenance_id": str(request.id)},
+    )
 
 
 def act(item, user, data):
@@ -169,10 +182,16 @@ def act(item, user, data):
             request.revision += 1
             request.save()
             scope.save()
-            return access.changed(item, user, "company_maintenance_access_reviewed")
+            return access.changed(
+                item,
+                user,
+                "company_maintenance_access_reviewed",
+                metadata={"maintenance_id": str(request.id)},
+            )
         request.access_approved_version = request.appointment_version
     elif action == "propose_cost":
         from ..billing_sources import invalidate_maintenance_cost
+
         invalidate_maintenance_cost(request)
         if data.get("cost_minor", 0) <= 0 or data.get("cost_payer") not in {
             "owner",
@@ -248,7 +267,10 @@ def act(item, user, data):
                     "The payer authority changed. Review the cost again."
                 )
             if request.cost_payer == "company":
-                access.require_delegate(item, payer, "pay")
+                # Revalidate the recorded consent's actor independently of the
+                # owner's active request; the caller was authorized above.
+                with system_context():
+                    access.require_delegate(item, payer, "pay")
                 if scope.cost_consent.get(
                     "mandate_revision"
                 ) != item.payer_mandate.revision or scope.cost_consent.get(
@@ -287,14 +309,22 @@ def act(item, user, data):
         request.status = MAINTENANCE_TRANSITIONS[action][1]
     if action in {"cancel", "reject_cost"}:
         from ..billing_sources import invalidate_maintenance_cost
+
         invalidate_maintenance_cost(request)
     request.revision += 1
     request.save()
     if action == "approve_cost":
         from ..billing_sources import maintenance_invoice
+
         maintenance_invoice(request, user)
     scope.save()
     MaintenanceEvent.objects.create(
         maintenance_request=request, actor=user, action=action, note=data["reason"]
     )
-    return access.changed(item, user, "company_maintenance_" + action, data["reason"])
+    return access.changed(
+        item,
+        user,
+        "company_maintenance_" + action,
+        data["reason"],
+        metadata={"maintenance_id": str(request.id)},
+    )

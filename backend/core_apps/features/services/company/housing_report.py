@@ -88,7 +88,14 @@ def payload(user, company, params):
     from .listing_changes import live_budget
 
     budgets = live_budget(budgets)
-    if not (member.is_admin or member.is_approver):
+    from .role_context import selected
+
+    role = selected(user, company)
+    if role is not None:
+        # The payment report contains only this delegate's canonical tenancies.
+        # Other memberships never add uncontracted approval-budget records.
+        budgets = budgets.none()
+    elif not (member.is_admin or member.is_approver):
         budgets = (
             budgets.filter(item__request__coordinator=user)
             if member.is_coordinator

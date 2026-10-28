@@ -86,9 +86,13 @@ def get_authorized_rental_subject(user, subject_id):
                 )
             )
             if lease and lease.renter_company_id:
-                from ..company.tenancy_access import commercial_read
+                from ..company.tenancy_access import commercial_read, financial_read
 
-                if not commercial_read(lease, user):
+                if not (
+                    financial_read(lease, user)
+                    if isinstance(item, (CheckoutSession, PaymentQuote))
+                    else commercial_read(lease, user)
+                ):
                     raise NotFound()
             return item
 
@@ -96,9 +100,9 @@ def get_authorized_rental_subject(user, subject_id):
         id=subject_id, invoice__lease__renter_company__isnull=False
     ).first()
     if quote:
-        from ..company.tenancy_access import commercial_read
+        from ..company.tenancy_access import commercial_read, financial_read
 
-        if commercial_read(quote.invoice.lease, user):
+        if financial_read(quote.invoice.lease, user):
             return quote
         raise NotFound()
 
@@ -132,9 +136,15 @@ def get_authorized_rental_subject(user, subject_id):
         Lease.objects.filter(id=subject_id).select_related("owner", "tenant").first()
     )
     if lease:
-        from ..company.tenancy_access import commercial_read
+        from ..company.tenancy_access import commercial_read, financial_read
 
-        if commercial_read(lease, user):
+        from ..company.tenancy_access import roles
+
+        if (
+            commercial_read(lease, user)
+            or lease.renter_company_id
+            and roles(lease.company_tenancy, user) & {"coordinator", "payer"}
+        ):
             return lease
         raise NotFound()
 
@@ -144,9 +154,9 @@ def get_authorized_rental_subject(user, subject_id):
         .first()
     )
     if invoice:
-        from ..company.tenancy_access import commercial_read
+        from ..company.tenancy_access import commercial_read, financial_read
 
-        if invoice.beneficiary_id == user.pk or commercial_read(invoice.lease, user):
+        if invoice.beneficiary_id == user.pk or financial_read(invoice.lease, user):
             return invoice
         raise NotFound()
 
@@ -156,9 +166,9 @@ def get_authorized_rental_subject(user, subject_id):
         .first()
     )
     if attempt:
-        from ..company.tenancy_access import commercial_read
+        from ..company.tenancy_access import commercial_read, financial_read
 
-        if attempt.invoice.beneficiary_id == user.pk or commercial_read(
+        if attempt.invoice.beneficiary_id == user.pk or financial_read(
             attempt.invoice.lease, user
         ):
             return attempt
@@ -187,10 +197,41 @@ def get_authorized_rental_subject(user, subject_id):
                 if item.uploader_id == user.pk and not item.deleted_at:
                     return item
                 raise NotFound()
-            from ..company.tenancy_access import commercial_read
+            from ..company.tenancy_access import commercial_read, financial_read
 
             if item.lease.renter_company_id and isinstance(item, RentalEvidence):
-                if commercial_read(item.lease, user):
+                from ..company.role_evidence import can_read
+
+                if can_read(item, user):
+                    return item
+                raise NotFound()
+            if item.lease.renter_company_id:
+                from ..company.tenancy_access import roles
+
+                current = roles(item.lease.company_tenancy, user)
+                if isinstance(item, RentalDocument):
+                    finance = item.document_type in {
+                        "receipt",
+                        "settlement",
+                        "statement",
+                    }
+                    if (
+                        financial_read(item.lease, user)
+                        if finance
+                        else commercial_read(item.lease, user)
+                    ):
+                        return item
+                elif isinstance(
+                    item, (FinalSettlement, RefundRequest, DepositAgreement)
+                ):
+                    if financial_read(item.lease, user):
+                        return item
+                elif isinstance(item, RentalChange):
+                    # Company continuation signatures use the canonical rental
+                    # change ID. Recovery reveals identity only to its signer.
+                    if current & {"owner", "signer"}:
+                        return item
+                elif "owner" in current:
                     return item
                 raise NotFound()
             if user in (item.lease.owner, item.lease.tenant):

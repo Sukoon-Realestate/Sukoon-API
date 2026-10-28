@@ -22,9 +22,11 @@ def pending_request_counts(user, *, owner=False):
         return {}
     from .shared_housing.counts import pending_count
     from .housing_request_reviews import LIVE
+
     shared_count = pending_count(user, owner=owner)
     interests = RentalInterest.objects.filter(
-        Q(shared_allocation__isnull=True) | Q(shared_allocation__proposal__plan__status="handed_off")
+        Q(shared_allocation__isnull=True)
+        | Q(shared_allocation__proposal__plan__status="handed_off")
     ).annotate(
         latest_proposal_status=Subquery(
             TermsProposal.objects.filter(interest_id=OuterRef("pk"))
@@ -109,4 +111,17 @@ def company_approval_counts(user):
         .values("request__company__id")
         .annotate(total=Count("pk"))
     )
+    from .company.role_context import http_context
+    from .company.role_notifications import audience_current
+
+    request = http_context(user)
+    if request is not None:
+        company_id = request.headers.get("X-Sukoon-Company-Id", "")
+        if request.headers.get(
+            "X-Sukoon-Company-Role"
+        ) != "approver" or not audience_current(
+            user, {"company_id": company_id, "company_role": "approver"}
+        ):
+            return {}
+        rows = rows.filter(request__company__id=company_id)
     return {str(row["request__company__id"]): row["total"] for row in rows}

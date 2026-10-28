@@ -3,6 +3,10 @@
 from ..models import PrivateAccessRevocation
 
 
+from .company.role_context import system_context
+
+
+@system_context()
 def recipients(invoice):
     lease = invoice.lease
     denied = set(
@@ -20,19 +24,6 @@ def recipients(invoice):
 
     item = lease.company_tenancy
     payer = item.payer_mandate.membership.user
-    coordinator = item.coordinator
-    selected = {}
-    if eligible(payer) and can_pay(lease, payer):
-        selected[payer.pk] = (payer, "payer")
-    if eligible(coordinator) and "coordinator" in roles(item, coordinator):
-        selected.setdefault(
-            coordinator.pk,
-            (coordinator, "coordinator" if selected else "authority_required"),
-        )
-    if not selected:
-        for membership in lease.renter_company.memberships.filter(
-            is_active=True, is_admin=True
-        ).select_related("user"):
-            if eligible(membership.user):
-                selected[membership.user_id] = (membership.user, "authority_required")
-    return list(selected.values())
+    # Invoice notices belong only to the current delegated payer. An admin or
+    # coordinator must never receive a financial destination as a fallback.
+    return [(payer, "payer")] if eligible(payer) and can_pay(lease, payer) else []

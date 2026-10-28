@@ -76,10 +76,13 @@ def detail(request, tenancy_id):
 
 def open_case(item, user, data):
     from .services.rental_lifecycle.cases import open_system_case
+    from .services.company.role_context import selected
+
+    role = selected(user, item.lease.renter_company, required=False) or "owner"
 
     open_system_case(
         kind="company_tenancy_review",
-        source_key=f"company-tenancy:{item.id}:{user.id}",
+        source_key=f"company-tenancy:{item.id}:{user.id}:{role}",
         actor=user,
         lease=item.lease,
         reason=data["reason"],

@@ -7,6 +7,11 @@ from ..planning_access import planning_subject
 def event_copy(event):
     if not isinstance(event.destination, dict):
         raise NotFound()
+    if event.destination.get("workspace") == "company":
+        from ..company.role_notifications import audience_current
+
+        if not audience_current(event.recipient, event.destination):
+            raise NotFound()
     from ..rent_payment_reminders import (
         EVENT_KINDS,
         authorize,
@@ -27,7 +32,21 @@ def event_copy(event):
 
     purchase_event = event.destination.get("event_kind") == PURCHASE_EVENT_KIND
     copy = {}
-    if event.destination.get("event_kind") == "commerce_service_expired":
+    if event.destination.get("event_kind") == "company_responsibility_updated":
+        from ..company.responsibility_management import get
+
+        if event.destination.get("company_role") != "admin":
+            raise NotFound()
+        get(
+            event.recipient,
+            event.destination.get("company_id"),
+            event.destination.get("target_id"),
+        )
+        copy = {
+            "title": "مراجعة مسؤوليات السكن / Housing responsibility review",
+            "body": "راجع التكليف المسند إليك / Review your assigned responsibility",
+        }
+    elif event.destination.get("event_kind") == "commerce_service_expired":
         from ..commerce_expiration_notifications import authorize as authorize_expiry
 
         copy = authorize_expiry(event.recipient, event.destination)

@@ -521,7 +521,12 @@ def hold_item(user, item_id, data):
             "A current independent approval and quote are required.",
             code="approval_required",
         )
-    member_for(approval.approver, company, "approve")
+    # Check the recorded approver's eligibility independently of the caller's
+    # active workspace. request_for already authorized the coordinator.
+    from .role_context import system_context
+
+    with system_context():
+        member_for(approval.approver, company, "approve")
     from .approval_routing import require_independent, validate_staff_plan
 
     require_independent(item.assigned_approver, item)
@@ -813,6 +818,16 @@ def request_payload(request, viewer=None):
     from .request_versions import history
 
     items = list(request.items.select_related("hold", "lease", "request"))
+    from .role_context import selected
+
+    active_role = selected(viewer, request.company) if viewer else None
+    if active_role == "approver":
+        items = [
+            i
+            for i in items
+            if i.assigned_approver_id and i.assigned_approver.user_id == viewer.pk
+        ]
+
     confirmed = [i for i in items if i.lease_id and i.lease.status == "active"]
     covered = sum(i.snapshot.get("capacity") or 0 for i in confirmed)
     return {
@@ -865,6 +880,7 @@ def request_payload(request, viewer=None):
         "can_coordinate": bool(
             viewer
             and viewer.is_active
+            and active_role in {None, "coordinator"}
             and request.coordinator_id == viewer.pk
             and CompanyMembership.objects.filter(
                 company=request.company,
@@ -876,6 +892,7 @@ def request_payload(request, viewer=None):
         "can_edit": bool(
             viewer
             and viewer.is_active
+            and active_role in {None, "coordinator"}
             and request.coordinator_id == viewer.pk
             and getattr(settings, "COMPANY_HOUSING_ENABLED", False)
             and CompanyMembership.objects.filter(

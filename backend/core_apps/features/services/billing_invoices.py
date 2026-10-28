@@ -69,10 +69,10 @@ def authorized_invoice(user, invoice_id, lock=False):
         organization_for(user, invoice.organization.id)
         return invoice
     if invoice.lease_id and invoice.lease.renter_company_id:
-        from .company.tenancy_access import commercial_read
+        from .company.tenancy_access import financial_read
         from rest_framework.exceptions import NotFound
 
-        if not commercial_read(invoice.lease, user):
+        if not financial_read(invoice.lease, user):
             raise NotFound()
         return invoice
     payer_id = (

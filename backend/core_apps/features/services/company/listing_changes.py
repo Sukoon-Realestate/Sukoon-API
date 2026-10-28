@@ -123,6 +123,11 @@ def notify(item, event):
                     "event_kind": event.action,
                     "target_id": str(item.request.id),
                     "company_id": str(item.request.company.id),
+                    "company_role": (
+                        "coordinator"
+                        if recipient_id == item.request.coordinator_id
+                        else "approver"
+                    ),
                     "item_id": str(item.id),
                     "source_event_id": str(event.id),
                     "workspace": "company",

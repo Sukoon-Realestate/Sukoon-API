@@ -13,26 +13,22 @@ from .access import company_for, member_for
 
 
 def notify(item):
-    from ...planning_models import PlanningEvent
+    from .role_notifications import record
 
-    users = list(
-        item.company.memberships.filter(
-            is_active=True, is_admin=True, user__is_active=True
-        ).values_list("user_id", flat=True)
-    )
-    users.append(item.membership.user_id)
-    for identity in set(users):
-        PlanningEvent.objects.get_or_create(
-            recipient_id=identity,
-            event_key=f"company.mandate:{item.id}:{item.revision}",
-            defaults={
-                "destination": {
-                    "action_type": "open_company_mandates",
-                    "target_id": str(item.company.id),
-                    "mandate_id": str(item.id),
-                    "schema_version": "1",
-                    "workspace": "company",
-                }
+    for member in item.company.memberships.filter(
+        is_active=True, is_admin=True
+    ).select_related("user"):
+        record(
+            user=member.user,
+            company=item.company,
+            role="admin",
+            key=f"company.mandate:{item.id}:{item.revision}",
+            destination={
+                "action_type": "open_company_mandates",
+                "target_id": str(item.company.id),
+                "mandate_id": str(item.id),
+                "schema_version": "1",
+                "workspace": "company",
             },
         )
 
@@ -70,6 +66,19 @@ def authorize(user, identity, *, lock=False, admin=False):
         query.select_related("membership__user", "company"), pk=initial.pk
     )
     member = member_for(user, company)
+    from .role_context import selected
+
+    role = selected(user, company)
+    if (
+        role not in {None, "admin", "coordinator"}
+        and result.membership.user_id != user.pk
+    ):
+        raise PermissionDenied("This mandate belongs to another delegate.")
+    if (
+        role in {"signer", "payer"}
+        and result.kind != {"signer": "sign", "payer": "pay"}[role]
+    ):
+        raise PermissionDenied("Switch to this mandate's delegated responsibility.")
     if not (
         member.is_admin or member.is_coordinator or result.membership.user_id == user.pk
     ):
@@ -146,9 +155,13 @@ def propose(user, company_id, data):
 def decide(user, identity, action, data):
     item = authorize(user, identity, lock=True, admin=action != "revoke")
     member = member_for(user, item.company)
+    from .role_context import selected
+
+    role = selected(user, item.company)
+    admin = member.is_admin and role in {None, "admin"}
     require_revision(item, data["expected_revision"])
     if action == "revoke":
-        if not member.is_admin and item.membership.user_id != user.pk:
+        if not admin and item.membership.user_id != user.pk:
             raise PermissionDenied(
                 "Only an administrator or the delegate can revoke this mandate."
             )
@@ -186,11 +199,29 @@ def decide(user, identity, action, data):
     return item
 
 
+def decision_payload(item, user, action):
+    # Self-revocation removes the role before response projection. Confirm only
+    # the command result without re-authorizing or rolling back the revocation.
+    if action == "revoke" and item.membership.user_id == user.pk:
+        return {
+            "id": str(item.id),
+            "revision": item.revision,
+            "state": item.state,
+            "effective": False,
+            "actions": [],
+        }
+    return payload(item, user)
+
+
 def payload(item, user):
     from .tenancy_access import execution_mandate
 
     member = member_for(user, item.company)
-    independent = member.is_admin and user.pk not in {
+    from .role_context import selected
+
+    role = selected(user, item.company)
+    admin = member.is_admin and role in {None, "admin"}
+    independent = admin and user.pk not in {
         item.proposed_by_id,
         item.membership.user_id,
     }
@@ -208,7 +239,9 @@ def payload(item, user):
         else []
     )
     if item.state in {"pending", "approved"} and (
-        member.is_admin or item.membership.user_id == user.pk
+        admin
+        or item.membership.user_id == user.pk
+        and role in {None, "signer", "payer"}
     ):
         actions += ["revoke"]
     return {
@@ -227,10 +260,8 @@ def payload(item, user):
         "limit_minor": item.limit_minor,
         "currency": item.currency,
         "exponent": 2,
-        "evidence_reference": item.evidence_reference if member.is_admin else "",
-        "reason": (
-            item.reason if member.is_admin or item.membership.user_id == user.pk else ""
-        ),
+        "evidence_reference": item.evidence_reference if admin else "",
+        "reason": (item.reason if admin or item.membership.user_id == user.pk else ""),
         "binding_execution_authorized": execution_mandate(item),
         "execution_verified_until": (
             item.execution_verified_until.isoformat()

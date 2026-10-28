@@ -68,7 +68,9 @@ class NotificationInboxMixin:
         Retrieves a single notification and marks it as read.
         """
         try:
-            notification = Notification.objects.get(id=notification_id, user=user)
+            notification = filter_scope(
+                Notification.objects.filter(user=user), None
+            ).get(id=notification_id)
         except Notification.DoesNotExist:
             raise NotFound("Notification not found.")
 
@@ -85,7 +87,9 @@ class NotificationInboxMixin:
         Marks a specific notification as read.
         """
         try:
-            notification = Notification.objects.get(id=notification_id, user=user)
+            notification = filter_scope(
+                Notification.objects.filter(user=user), None
+            ).get(id=notification_id)
         except Notification.DoesNotExist:
             raise NotFound("Notification not found.")
 

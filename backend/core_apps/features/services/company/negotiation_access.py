@@ -11,6 +11,15 @@ from ...models import (
 
 
 def role(item, user):
+    from .role_context import narrow
+
+    result = _role(item, user)
+    return (
+        result if result in narrow(user, item.booking.request.company, {result}) else ""
+    )
+
+
+def _role(item, user):
     booking = item.booking
     if not user.is_active:
         return ""

@@ -41,13 +41,15 @@ def test_exact_context_history_and_removed_role_on_old_notification(active_agree
             "Private internal note",
         )
     event = PlanningEvent.objects.get(
-        recipient=data["payer"], event_key=f"company.tenancy:{item.id}:{item.revision}"
+        recipient=data["payer"],
+        event_key=f"company.tenancy:{item.id}:{item.revision}:payer",
     )
     assert event.destination["workspace"] == "company"
     assert event.destination["company_id"] == str(data["company"].id)
     assert event.destination["lease_id"] == str(item.lease.id)
     owner = PlanningEvent.objects.get(
-        recipient=data["owner"], event_key=event.event_key
+        recipient=data["owner"],
+        event_key=f"company.tenancy:{item.id}:{item.revision}:owner",
     )
     assert owner.destination["workspace"] == "owner"
     with transaction.atomic():
@@ -72,7 +74,8 @@ def test_revocation_and_mismatched_company_prevent_future_notice(active_agreemen
     with transaction.atomic():
         tenancy_access.changed(item, data["coordinator"], "company_tenancy_reconciled")
     event = PlanningEvent.objects.get(
-        recipient=data["owner"], event_key=f"company.tenancy:{item.id}:{item.revision}"
+        recipient=data["owner"],
+        event_key=f"company.tenancy:{item.id}:{item.revision}:owner",
     )
     event.destination["company_id"] = str(data["owner"].id)
     with pytest.raises(NotFound):
@@ -83,7 +86,8 @@ def test_revocation_and_mismatched_company_prevent_future_notice(active_agreemen
     with transaction.atomic():
         tenancy_access.changed(item, data["coordinator"], "company_tenancy_reconciled")
     assert not PlanningEvent.objects.filter(
-        recipient=data["payer"], event_key=f"company.tenancy:{item.id}:{item.revision}"
+        recipient=data["payer"],
+        event_key=f"company.tenancy:{item.id}:{item.revision}:payer",
     ).exists()
 
 
@@ -117,7 +121,6 @@ def test_company_refund_history_is_commercial_only_and_retains_pending_state(
     employee = (
         authenticated(data["employee"]).get(API + f"company-tenancies/{item.id}/").data
     )
-    assert employee["refunds"] == []
-    assert "Private operational note" not in str(manager) and "submitted" not in str(
-        employee["refunds"]
-    )
+    assert "refunds" not in employee
+    assert "Private operational note" not in str(manager)
+    assert "submitted" not in str(employee)

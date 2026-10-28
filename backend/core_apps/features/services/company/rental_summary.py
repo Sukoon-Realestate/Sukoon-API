@@ -48,7 +48,7 @@ def housing_row(item, user):
         for a in active
     )
     today = timezone.localdate()
-    return {
+    result = {
         "id": str(item.id),
         "lease_id": str(lease.id),
         "title": requirement.title,
@@ -113,12 +113,53 @@ def housing_row(item, user):
         ],
     }
 
+    from .role_context import selected
+    from .role_projections import keep
+
+    role = selected(user, lease.renter_company, required=False)
+    if role is None or role == "":
+        return result
+    fields = {
+        "id",
+        "title",
+        "state",
+        "starts_on",
+        "ends_on_exclusive",
+        "days_until_end",
+        "end_attention",
+    }
+    if role in {"coordinator", "employee"}:
+        fields |= {
+            "occupancy_status",
+            "assignments",
+            "assigned_count",
+            "arrival_pending_count",
+            "departure_pending_count",
+            "occupied_count",
+        }
+    if role == "coordinator":
+        fields |= {
+            "project_code",
+            "cost_center",
+            "contracted_capacity",
+            "unassigned_capacity",
+        }
+    if role == "payer":
+        fields |= {"financial_closure_status", "lease_id"}
+    return {
+        **keep(result, fields),
+        "commercial_access": role in {"coordinator", "signer", "payer", "approver"},
+    }
+
 
 def payload(user, company):
     member = member_for(user, company)
+    from .role_context import permits
+
+    coordinate = permits(member, "coordinator")
     housing = [housing_row(item, user) for item in tenancies(user, company)]
     requests = company.housing_requests.filter(
-        Q(coordinator=user) if member.is_coordinator else Q(pk__in=[])
+        Q(coordinator=user) if coordinate else Q(pk__in=[])
     ).order_by("-created_at")
     cases = (
         case_queryset(user)
@@ -149,12 +190,11 @@ def payload(user, company):
                 "overdue": row.due_at <= timezone.now(),
                 "assigned": row.assigned_to_id is not None,
             }
-            for row in cases
+            for row in (cases if coordinate else [])
         ],
         "housing": housing,
         "can_view_costs": any(row["commercial_access"] for row in housing)
-        or member.is_admin
-        or member.is_approver
-        or member.is_coordinator,
+        or permits(member, "approver")
+        or coordinate,
         "notice_basis": "read_time_30_days_not_contractual_deadline",
     }

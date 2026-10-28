@@ -146,6 +146,10 @@ def test_company_viewing_command_replay_and_real_package_handoff(viewed):
     setup, visit, decision, body = viewed
     owner, coordinator, representative, company, _, _, offer, _ = setup
     client = authenticated(coordinator)
+    client.credentials(
+        HTTP_X_SUKOON_COMPANY_ROLE="coordinator",
+        HTTP_X_SUKOON_COMPANY_ID=str(company.id),
+    )
     endpoint = API + f"companies/{company.id}/housing-requests/"
     body = command(**body)
     response = client.post(endpoint, body, format="json")

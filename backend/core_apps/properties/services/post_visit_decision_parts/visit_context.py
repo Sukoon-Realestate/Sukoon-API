@@ -100,11 +100,13 @@ def record_event(visit, decision):
             is_active=True,
             is_coordinator=True,
             user__is_active=True,
+            user_id=visit.requested_by_id,
         ).select_related("user"):
             destination = {
                 **data,
-                "workspace": "tenant",
+                "workspace": "company",
                 "company_id": str(visit.company.id),
+                "company_role": "coordinator",
                 "event_kind": "company_viewing_decision",
             }
             destination.pop("event_id", None)

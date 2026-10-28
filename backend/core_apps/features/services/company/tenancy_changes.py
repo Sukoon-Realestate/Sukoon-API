@@ -8,6 +8,7 @@ from ...models import CompanyTenancyChange, CompanyMembership
 from ..rental_phase2 import RentalConflict, fingerprint
 from ..rental_lifecycle.common import audit
 from . import tenancy_access as access
+from .role_context import system_context
 
 
 def current_roles(item):
@@ -20,6 +21,19 @@ def current_roles(item):
 
 
 def propose(item, user, kind, content, required, reason):
+    from ...models import RentalEvidence
+    from .role_evidence import can_read
+
+    evidence_ids = set(map(str, content.get("evidence_ids", [])))
+    for line in content.get("lines", []):
+        evidence_ids.update(map(str, line.get("evidence_ids", [])))
+    for evidence in RentalEvidence.objects.filter(
+        lease=item.lease, id__in=evidence_ids
+    ):
+        if not can_read(evidence, user):
+            raise PermissionDenied(
+                "This attachment belongs to another company responsibility."
+            )
     if item.changes.filter(
         kind=kind, state__in=["pending", "waiting_departure"]
     ).exists():
@@ -53,11 +67,20 @@ def propose(item, user, kind, content, required, reason):
         reason=reason,
     )
     audit(change, user, "company_tenancy_change_proposed", reason)
-    return access.changed(item, user, "company_tenancy_change_opened", reason)
+    return access.changed(
+        item,
+        user,
+        "company_tenancy_change_opened",
+        reason,
+        metadata={"change_id": str(change.id)},
+    )
 
 
 def authorize_role(item, change, user, role, *, positive):
     from .tenancy_commercial import exposure as current_exposure
+
+    if role not in access.change_roles(item, change, user, {role}):
+        raise PermissionDenied("Switch to the assigned role before responding.")
 
     if not user.is_active or (positive and not user.is_verified):
         raise PermissionDenied("Current verified account access is required.")
@@ -180,7 +203,10 @@ def respond(item, user, data):
                 raise RentalConflict(
                     "A required participant no longer has active verified access."
                 )
-            authorize_role(item, change, actor, name, positive=True)
+            # Revalidate previously recorded decisions against each person's
+            # current authority, independently of the final responder's role.
+            with system_context():
+                authorize_role(item, change, actor, name, positive=True)
         change.state = "accepted"
     change.revision += 1
     change.save()
@@ -188,16 +214,42 @@ def respond(item, user, data):
         apply(item, change)
     audit(change, user, "company_tenancy_change_" + decision, data["reason"])
     return access.changed(
-        item, user, "company_tenancy_decision_recorded", data["reason"]
+        item,
+        user,
+        "company_tenancy_decision_recorded",
+        data["reason"],
+        metadata={"change_id": str(change.id)},
     )
 
 
 def can_withdraw(item, change, user):
     from .service_requests import requester_can_withdraw
+    from .role_context import selected
+
+    current = access.roles(item, user)
+    if not current & {"owner", "coordinator", "signer", "payer"}:
+        return False
+    if "owner" not in current:
+        role = selected(user, item.lease.renter_company)
+        if role is not None:
+            allowed = {
+                "move_in": {"coordinator"},
+                "move_out": {"coordinator"},
+                "replacement": {"coordinator"},
+                "renewal": {"signer"},
+                "amendment": {"signer"},
+                "termination": {"signer"},
+                "agreement_release": {"signer"},
+                "continuation_release": {"signer"},
+                "settlement": {"payer"},
+                "settlement_adjustment": {"payer"},
+            }.get(change.kind, set())
+            if role not in allowed:
+                return False
 
     return (
         user.pk == change.proposed_by_id
-        or "coordinator" in access.roles(item, user)
+        or "coordinator" in current
         or requester_can_withdraw(item, change, user)
     )
 
@@ -235,10 +287,15 @@ def withdraw(item, user, data):
     change.save()
     audit(change, user, "company_tenancy_change_withdrawn", data["reason"])
     return access.changed(
-        item, user, "company_tenancy_change_withdrawn", data["reason"]
+        item,
+        user,
+        "company_tenancy_change_withdrawn",
+        data["reason"],
+        metadata={"change_id": str(change.id)},
     )
 
 
+@system_context()
 def apply(item, change):
     from . import tenancy_occupancy, tenancy_closure
 
@@ -295,6 +352,14 @@ def resume(item, user, data):
             "Only a reviewed replacement awaiting departure can resume."
         )
     for name, identity in change.snapshot["required"].items():
-        authorize_role(item, change, User.objects.get(id=identity), name, positive=True)
+        with system_context():
+            authorize_role(
+                item, change, User.objects.get(id=identity), name, positive=True
+            )
     apply(item, change)
-    return access.changed(item, user, "company_tenancy_change_resumed")
+    return access.changed(
+        item,
+        user,
+        "company_tenancy_change_resumed",
+        metadata={"change_id": str(change.id)},
+    )

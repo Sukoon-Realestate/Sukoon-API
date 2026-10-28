@@ -69,6 +69,7 @@ def record_fulfilled(invoice, attempt):
     }
     if invoice.organization_id:
         destination["company_id"] = str(invoice.organization.id)
+        destination["company_role"] = "payer"
     for identity in set(recipients):
         PlanningEvent.objects.get_or_create(
             recipient_id=identity,

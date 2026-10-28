@@ -64,7 +64,9 @@ def company_api(methods, throttles=None):
         @renderer_classes([FeatureJsonRenderer])
         @wraps(fn)
         def endpoint(request, *args, **kwargs):
+            from .services.company.role_routes import authorize as authorize_role
 
+            authorize_role(request, fn)
             try:
                 return fn(request, *args, **kwargs)
             except IntegrityError:
@@ -140,7 +142,7 @@ def companies(request):
             Company.objects.filter(
                 memberships__user=request.user, memberships__is_active=True
             ).order_by("name", "id"),
-            lambda c: company_payload(c, request.user),
+            lambda c: company_payload(c, request.user, discovery_only=True),
         )
     data = validated(CompanyBody, request.data)
     return mutate(
@@ -148,7 +150,7 @@ def companies(request):
         "company.create",
         lambda: request.user,
         lambda _: membership.create_company(request.user, data),
-        lambda c: company_payload(c, request.user),
+        lambda c: company_payload(c, request.user, discovery_only=True),
         creating=True,
     )
 
@@ -157,6 +159,27 @@ def companies(request):
 def company_detail(request, company_id):
     return Response(
         company_payload(company_for(request.user, company_id), request.user)
+    )
+
+
+@company_api(["GET"])
+def role_contexts(request, company_id):
+    from .services.company.role_context import context_payload
+
+    return Response(
+        context_payload(get_object_or_404(Company, id=company_id), request.user)
+    )
+
+
+@company_api(["GET"])
+def role_work(request, company_id):
+    from .services.company.role_work import rows
+
+    company = company_for(request.user, company_id)
+    return page(
+        request,
+        rows(request.user, company, request.query_params.get("section", "tasks")),
+        lambda row: row,
     )
 
 
@@ -256,7 +279,7 @@ def accept_invitation(request):
         "company.invitation.accept",
         lambda: request.user,
         lambda _: membership.accept_invitation(request.user, data["token"]),
-        lambda c: company_payload(c, request.user),
+        lambda c: company_payload(c, request.user, discovery_only=True),
     )
 
 
@@ -264,6 +287,9 @@ def accept_invitation(request):
 def housing_requests(request, company_id):
     company = company_for(request.user, company_id)
     member = member_for(request.user, company)
+    from .services.company.role_context import selected
+
+    active_role = selected(request.user, company)
     if not (member.is_coordinator or member.is_approver):
         raise PermissionDenied(
             "Housing requests are visible to coordinators and expense approvers."
@@ -272,8 +298,11 @@ def housing_requests(request, company_id):
         return page(
             request,
             company.housing_requests.filter(
-                Q(coordinator=request.user)
-                | Q(items__assigned_approver__user=request.user)
+                (
+                    Q(coordinator=request.user)
+                    if active_role == "coordinator"
+                    else Q(items__assigned_approver__user=request.user)
+                )
             )
             .distinct()
             .order_by("-created_at", "id"),
@@ -306,10 +335,18 @@ def housing_request(request, request_id):
         )
     item = get_object_or_404(CompanyHousingRequest, id=request_id)
     member = member_for(request.user, item.company)
+    from .services.company.role_context import selected
+
+    active_role = selected(request.user, item.company)
     if not (
-        (member.is_coordinator and item.coordinator_id == request.user.pk)
+        (
+            active_role in {None, "coordinator"}
+            and member.is_coordinator
+            and item.coordinator_id == request.user.pk
+        )
         or (
-            member.is_approver
+            active_role in {None, "approver"}
+            and member.is_approver
             and item.items.filter(assigned_approver__user=request.user).exists()
         )
     ):

@@ -283,7 +283,7 @@ def test_release_requires_current_named_actors_and_exact_document(
         role="signer",
         decision="accept",
     )
-    assert wrong.status_code == 403, wrong.data
+    assert wrong.status_code == 404, wrong.data  # The forged role has no resource.
     employee = tenancy_projection.payload(item, cycle["employee"])
     assert employee["changes"] == []
 

@@ -122,7 +122,10 @@ def prepare(case, user, data):
     item = tenancy(case)
     require_revision(item.lease, data.get("tenancy_revision"))
     # A removed requester cannot leave authority behind in a queue.
-    authorize_request(item, case.opened_by, case.baseline["service_kind"])
+    from .role_context import system_context
+
+    with system_context():
+        authorize_request(item, case.opened_by, case.baseline["service_kind"])
     kind = case.baseline["service_kind"]
     body = command_body(
         kind,

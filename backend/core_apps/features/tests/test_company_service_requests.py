@@ -103,7 +103,7 @@ def test_reason_only_request_deduplicates_and_withdraws_without_domain_effect(
     assert not item.changes.exists()
     assert (
         case_action(case, cycle["signer"], "withdraw_company_request").status_code
-        == 403
+        == 404  # An owner's discussion is not disclosed to the company signer.
     )
     result = case_action(case, cycle["owner"], "withdraw_company_request")
     assert result.status_code == 200, result.data

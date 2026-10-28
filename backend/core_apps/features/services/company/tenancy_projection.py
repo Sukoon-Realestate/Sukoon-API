@@ -119,7 +119,8 @@ def payload(item, user):
             allowed += ["presence", "presence_respond"]
         if lease.occupancy_status != "returned" and (
             roles & {"owner", "coordinator"}
-            or any(r.occupancy_status == "occupied" for r in visible_assignments)
+            or "employee" in roles
+            and any(r.occupancy_status == "occupied" for r in visible_assignments)
         ):
             allowed += ["maintenance"]
     if lease.status == "active":
@@ -167,6 +168,7 @@ def payload(item, user):
             for role, identity in row.snapshot["required"].items()
             if identity == str(user.id)
         ]
+        own_roles = sorted(access.change_roles(item, row, user, own_roles))
         change_rows.append(
             {
                 "id": str(row.id),
@@ -312,7 +314,7 @@ def payload(item, user):
     unit_rows = access.properties(item)
     from ..rental_phase2 import add_months
 
-    return {
+    result = {
         "current_rent_minor": lease.rent_amount_minor if commercial else None,
         "suggested_renewal_end": (
             str(add_months(lease.end_date, 1)) if commercial else ""
@@ -545,6 +547,10 @@ def payload(item, user):
         ),
     }
 
+    from .role_projections import tenancy as project_role
+
+    return project_role(result, item, user)
+
 
 def review_content(content, lease, *, redact_people=False):
     from ...rental_phase4_views_parts.handover_payload import evidence_payload
@@ -582,7 +588,7 @@ def review_content(content, lease, *, redact_people=False):
 def assignment_actions(item, row, user):
     current = access.roles(item, user)
     actions = []
-    if user.pk in {row.employee_id, item.lease.owner_id}:
+    if "owner" in current or "employee" in current and user.pk == row.employee_id:
         for kind, state in [("arrival", "arrival_pending"), ("departure", "occupied")]:
             if (
                 row.occupancy_status == state

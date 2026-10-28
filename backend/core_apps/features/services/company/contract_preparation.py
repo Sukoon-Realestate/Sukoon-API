@@ -51,26 +51,21 @@ def booking_for(user, identity, *, lock=False):
 
 
 def notify(item, *, coordinator_only=False):
-    from ...planning_models import PlanningEvent
+    from .role_notifications import record
 
-    actors = (
-        set()
-        if coordinator_only
-        else {actor for actor, _ in snapshots.required(item.snapshot)}
-    ) | {str(item.booking.request.coordinator.id)}
-    for actor in actors:
-        PlanningEvent.objects.get_or_create(
-            recipient=User.objects.get(id=actor),
-            event_key=f"company.contract:{item.id}:{item.revision}",
-            defaults={
-                "destination": {
-                    "action_type": "open_company_contract",
-                    "target_id": str(item.id),
-                    "schema_version": "1",
-                    "workspace": (
-                        "owner" if actor == item.snapshot.get("owner_id") else "company"
-                    ),
-                }
+    required = [] if coordinator_only else list(snapshots.required(item.snapshot))
+    required.append((str(item.booking.request.coordinator.id), "coordinator"))
+    for actor, role in set(required):
+        record(
+            user=User.objects.get(id=actor),
+            company=item.booking.request.company,
+            role=role,
+            key=f"company.contract:{item.id}:{item.revision}",
+            destination={
+                "action_type": "open_company_contract",
+                "target_id": str(item.id),
+                "schema_version": "1",
+                "workspace": "owner" if role == "owner" else "company",
             },
         )
 

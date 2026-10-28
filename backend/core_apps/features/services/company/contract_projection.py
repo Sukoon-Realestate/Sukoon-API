@@ -104,7 +104,7 @@ def payload(item, user):
         for p in source["inventory"]["units"]
         if not employee_only or p["id"] in unit_ids
     ]
-    return {
+    result = {
         "id": str(item.id),
         "booking_id": str(item.booking.id),
         "company_id": source["company_id"],
@@ -184,6 +184,10 @@ def payload(item, user):
             else sum(r.decision == "pending" for r in shown)
         ),
     }
+
+    from .role_projections import preparation as project_role
+
+    return project_role(result, item, user)
 
 
 def context(booking, user):

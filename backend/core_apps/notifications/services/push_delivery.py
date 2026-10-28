@@ -42,6 +42,15 @@ def allowed(item):
     ):
         return False
     data = notification.data or {}
+    if notification.scope == "company" or (
+        data.get("company_id") and notification.scope != "owner"
+    ):
+        from core_apps.features.services.company.role_notifications import (
+            audience_current,
+        )
+
+        if not audience_current(user, data):
+            return False
     if notification.category == "account_policy" and data.get("case_id"):
         from django.core.exceptions import ValidationError as DjangoValidationError
         from core_apps.chat.models import ChatModerationCase
@@ -233,13 +242,27 @@ def dispatch(limit=100):
             continue
         notice = item.notification
         from .inbox_scope import receipt_data
+        from core_apps.features.services.company.role_notifications import push_content
+
+        title, body, push_data = push_content(notice)
 
         try:
             success = FCMService.send_push_to_device(
                 token=item.device.token,
-                title=notice.title,
-                body=notice.body,
-                data={**receipt_data(notice), "notification_id": str(notice.id)},
+                title=title,
+                body=body,
+                data={
+                    **(
+                        push_data
+                        if notice.scope == "company"
+                        or (
+                            (notice.data or {}).get("company_id")
+                            and notice.scope != "owner"
+                        )
+                        else receipt_data(notice)
+                    ),
+                    "notification_id": str(notice.id),
+                },
                 language=item.device.language,
                 device_type=item.device.device_type,
                 chat_actions_version=item.device.chat_actions_version or 0,

@@ -79,7 +79,8 @@ def event_data(invoice, kind, due, role):
             else ""
         ),
         "schema_version": "1",
-        "workspace": "tenant",
+        "workspace": "company" if invoice.lease.renter_company_id else "tenant",
+        **({"company_role": "payer"} if invoice.lease.renter_company_id else {}),
         "event_kind": kind,
         "effective_due_at": due.isoformat(),
         "recipient_role": role,

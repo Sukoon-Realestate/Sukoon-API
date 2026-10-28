@@ -25,7 +25,17 @@ def membership_payload(member):
     }
 
 
-def company_payload(company, user):
+def company_payload(company, user, *, discovery_only=False):
+    from .role_context import http_context, discovery, selected
+    from ...company_models import CompanyMembership
+
+    if http_context(user) is not None:
+        current = CompanyMembership.objects.get(
+            company=company, user=user, is_active=True
+        )
+        role = "" if discovery_only else selected(user, company, required=False)
+        if not role:
+            return discovery(company, current)
     member = member_for(user, company)
     from ...models import CompanyTenancy
     from django.db.models import Q
@@ -126,4 +136,6 @@ def company_payload(company, user):
             deposit_exposure_minor=rows.aggregate(value=Sum("deposit_minor"))["value"]
             or 0,
         )
-    return result
+    from .role_projections import company as project_company
+
+    return project_company(result, company, user)

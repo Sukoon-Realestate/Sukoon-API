@@ -279,7 +279,16 @@ def test_company_counts_are_assigned_to_active_approvers_and_company(
     assert company_approval_counts(tenant) == expected
     assert company_approval_counts(stranger) == {}
     response = authenticated(tenant).get("/api/v1/features/v1/workspace-summary/")
-    assert response.json()["data"]["company_approval_counts"] == expected
+    assert response.json()["data"]["company_approval_counts"] == {}
+    for company, _ in companies:
+        response = authenticated(tenant).get(
+            "/api/v1/features/v1/workspace-summary/",
+            HTTP_X_SUKOON_COMPANY_ID=str(company.id),
+            HTTP_X_SUKOON_COMPANY_ROLE="approver",
+        )
+        assert response.json()["data"]["company_approval_counts"] == {
+            str(company.id): expected[str(company.id)]
+        }
     companies[0][1].is_active = False
     companies[0][1].save(update_fields=["is_active"])
     assert company_approval_counts(tenant) == {str(companies[1][0].id): 3}

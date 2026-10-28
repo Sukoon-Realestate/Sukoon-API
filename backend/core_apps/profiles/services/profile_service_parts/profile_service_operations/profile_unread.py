@@ -17,7 +17,9 @@ class ProfileUnreadMixin:
         visit_requests_count = PropertyVisit.objects.filter(
             property__owner=user, status=PropertyVisit.Status.PENDING
         ).count()
-        unread_notifications_count = NotificationService.get_unread_count(user, scope="owner")
+        unread_notifications_count = NotificationService.get_unread_count(
+            user, scope="owner"
+        )
         unread_chat_messages_count = total_unread_count(user)
         return {
             "request_counts": pending_request_counts(user, owner=True),
@@ -27,7 +29,9 @@ class ProfileUnreadMixin:
         }
 
     @classmethod
-    def get_tenant_unread_counts(cls, user: Any, *, scope="individual") -> Dict[str, Any]:
+    def get_tenant_unread_counts(
+        cls, user: Any, *, scope="individual"
+    ) -> Dict[str, Any]:
         """
         Calculates badge / unread counts for a tenant account.
         """
@@ -39,6 +43,39 @@ class ProfileUnreadMixin:
             pending_request_counts,
             company_approval_counts,
         )
+
+        if scope == "company":
+            from core_apps.properties.services.viewing_access import for_user
+            from core_apps.features.services.company.role_context import http_context
+
+            context = http_context(user)
+            visits = 0
+            if (
+                context
+                and context.headers.get("X-Sukoon-Company-Role") == "coordinator"
+            ):
+                visits = (
+                    for_user(user)
+                    .filter(
+                        company__isnull=False,
+                        status__in=[
+                            PropertyVisit.Status.PENDING,
+                            PropertyVisit.Status.CONFIRMED,
+                        ],
+                    )
+                    .count()
+                )
+            return {
+                "request_counts": {},
+                "company_approval_counts": company_approval_counts(user),
+                "favorites_count": 0,
+                "group_join_requests_count": 0,
+                "unread_chat_messages_count": 0,
+                "unread_notifications_count": NotificationService.get_unread_count(
+                    user, scope="company"
+                ),
+                "visit_requests_count": visits,
+            }
 
         favorites_count = SavedProperty.objects.filter(user=user).count()
         group_join_requests_count = (
@@ -56,7 +93,9 @@ class ProfileUnreadMixin:
             tenant=user,
             status__in=[PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED],
         ).count()
-        unread_notifications_count = NotificationService.get_unread_count(user, scope=scope)
+        unread_notifications_count = NotificationService.get_unread_count(
+            user, scope=scope
+        )
         unread_chat_messages_count = total_unread_count(user)
         return {
             "request_counts": pending_request_counts(user),

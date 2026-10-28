@@ -14,12 +14,12 @@ def reviewed_terms(terms):
 
 def reject_external_claim(request, invoice):
     from ..models import PrivateAccessRevocation
-    from .company.tenancy_access import commercial_read
+    from .company.tenancy_access import financial_read
 
     user = request.user
     if (
         not user.is_active
-        or not commercial_read(invoice.lease, user)
+        or not financial_read(invoice.lease, user)
         or PrivateAccessRevocation.objects.filter(
             lease=invoice.lease, user=user
         ).exists()

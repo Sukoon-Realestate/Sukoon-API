@@ -56,7 +56,7 @@ def mandate_action(request, mandate_id, action):
             request.user, mandate_id, lock=True, admin=action != "revoke"
         ),
         lambda _: m.decide(request.user, mandate_id, action, body),
-        lambda item: m.payload(item, request.user),
+        lambda item: m.decision_payload(item, request.user, action),
     )
 
 

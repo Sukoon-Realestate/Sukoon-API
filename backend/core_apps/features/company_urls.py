@@ -9,11 +9,26 @@ from . import company_chat_views as c
 from . import portfolio_views as p
 from . import company_contract_views as contracts
 from . import company_tenancy_views as tenancies
+from . import company_responsibility_views as responsibilities
 
 from . import company_saved_views as saved
 from . import workspace_views
 
 urlpatterns = [
+    path(
+        "companies/<uuid:company_id>/responsibility-assignments/",
+        responsibilities.collection,
+    ),
+    path(
+        "companies/<uuid:company_id>/responsibility-assignments/<uuid:tenancy_id>/",
+        responsibilities.detail,
+    ),
+    path(
+        "companies/<uuid:company_id>/responsibility-assignments/<uuid:tenancy_id>/<slug:action>/",
+        responsibilities.action,
+    ),
+    path("companies/<uuid:company_id>/role-work/", v.role_work),
+    path("companies/<uuid:company_id>/role-contexts/", v.role_contexts),
     path("company-terms-negotiations/", terms.negotiations),
     path("company-terms-negotiations/<uuid:negotiation_id>/", terms.detail),
     path(

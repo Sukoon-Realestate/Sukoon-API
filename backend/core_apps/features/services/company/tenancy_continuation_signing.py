@@ -16,8 +16,10 @@ from . import (
     tenancy_commercial as commercial,
 )
 from .tenancy_resolution import signing_role
+from .role_context import system_context
 
 
+@system_context()
 def validate_review(item, change):
     commercial.revalidate(item, change)
     for role, identity in change.snapshot["required"].items():
@@ -81,12 +83,15 @@ def sign(item, user, data):
     prior = event.signing_sessions.filter(signer=user).first()
     if prior:
         from ..signing_documents import renewable_session, hosted_session
+
         if renewable_session(event, user):
             hosted = hosted_session(event.id, user.id, data["request_key"])
             prior.hosted_url = hosted.hosted_url
             prior.expires_at = timezone.now() + timedelta(minutes=30)
             prior.save(update_fields=["hosted_url", "expires_at", "updated_at"])
-            return access.changed(item, user, "company_original_continuation_session_resumed")
+            return access.changed(
+                item, user, "company_original_continuation_session_resumed"
+            )
         if prior.status != "completed" and prior.expires_at <= timezone.now():
             open_system_case(
                 kind="company_continuation_signing",

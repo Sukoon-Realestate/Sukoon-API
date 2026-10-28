@@ -21,6 +21,20 @@ def member_for(user, company, action="read"):
     member = get_object_or_404(
         CompanyMembership, company=company, user=user, is_active=True
     )
+    from .role_context import require
+
+    require(
+        user,
+        company,
+        {
+            "read": {"admin", "coordinator", "approver", "signer", "payer", "employee"},
+            "admin": {"admin"},
+            "coordinate": {"coordinator"},
+            "approve": {"approver"},
+            "pay": {"payer"},
+            "sign": {"signer"},
+        }.get(action, set()),
+    )
     allowed = {
         "read": True,
         "admin": member.is_admin,
@@ -127,6 +141,55 @@ def lock_account_parties(actor, parties):
 
 
 def company_subject(user, identifier):
+    item = _company_subject(user, identifier)
+    if item is None:
+        return None
+    from .role_context import http_context, selected
+
+    if http_context(user) is None:
+        return item
+    kind = item._meta.model_name
+    company = getattr(item, "company", None)
+    if kind == "company":
+        company = item
+    if kind == "companybookingitem":
+        company = item.request.company
+    if company is None:
+        # Tenancies/preparations/negotiations already perform resource checks;
+        # owner portfolios and personal activation proofs have separate scope.
+        return item
+    role = selected(user, company)
+    if kind in {"companyhousingrequest", "companybookingitem"}:
+        request = item if kind == "companyhousingrequest" else item.request
+        assigned = (
+            request.items.filter(assigned_approver__user=user).exists()
+            if kind == "companyhousingrequest"
+            else item.assigned_approver_id and item.assigned_approver.user_id == user.pk
+        )
+        if not (
+            role == "coordinator"
+            and request.coordinator_id == user.pk
+            or role == "approver"
+            and assigned
+        ):
+            raise PermissionDenied("This work belongs to another company role.")
+    elif (
+        kind in {"companystaffrecord", "companystaffbatch", "companyinvitation"}
+        and role != "admin"
+    ):
+        raise PermissionDenied("Company administration is required.")
+    elif kind == "companymandate" and not (
+        role in {"admin", "coordinator"}
+        or item.membership.user_id == user.pk
+        and role == {"sign": "signer", "pay": "payer"}.get(item.kind)
+    ):
+        raise PermissionDenied("This mandate belongs to another company role.")
+    elif kind == "companymembership" and role != "admin" and item.user_id != user.pk:
+        raise PermissionDenied("Company administration is required.")
+    return item
+
+
+def _company_subject(user, identifier):
     from django.db.models import Q
 
     from .tenancy_access import visible
@@ -416,4 +479,40 @@ def actions(user, capability, identifier=""):
 
                 if eligible(item.assigned_approver, item):
                     result += ["decide"]
+    from .role_context import selected
+
+    role = selected(user, company)
+    allowed = {
+        "admin": {
+            "read",
+            "mandate_propose",
+            "invite",
+            "update_member",
+            "budget",
+            "reassign",
+            "staff",
+            "activation",
+            "revoke",
+            "approval_route",
+        },
+        "coordinator": {
+            "read",
+            "saved_lists",
+            "withdraw",
+            "create_request",
+            "edit_request",
+            "select",
+            "hold",
+            "submit",
+            "prepare_contract",
+            "negotiate",
+        },
+        "approver": {"read", "decide"},
+        "signer": {"read"},
+        "payer": {"read"},
+        "employee": {"read"},
+    }
+    if role is not None:
+        result = [action for action in result if action in allowed[role]]
+
     return result

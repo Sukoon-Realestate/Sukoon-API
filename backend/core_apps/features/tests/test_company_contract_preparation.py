@@ -30,10 +30,22 @@ from core_apps.features.tests.test_company_housing import (
     rental_participants,
     policy,
     command,
-    authenticated,
+    authenticated as rental_authenticated,
     API,
 )
 from core_apps.features.tests.test_cycle_concurrency import parallel_calls
+
+
+def authenticated(user, *, role=None, company=None):
+    client = rental_authenticated(user)
+    company = company or getattr(user, "_test_company", None)
+    selected = role or getattr(user, "_test_role", None)
+    if company is not None and selected:
+        client.credentials(
+            HTTP_X_SUKOON_COMPANY_ROLE=selected,
+            HTTP_X_SUKOON_COMPANY_ID=str(company.id),
+        )
+    return client
 
 
 def person(name):
@@ -112,6 +124,17 @@ def cycle(company_setup):
             {"employee_id": str(colleague.id), "property_id": str(units[1].id)},
         ],
     )
+    for actor, selected in [
+        (coordinator, "coordinator"),
+        (approver, "approver"),
+        (reviewer, "admin"),
+        (signer, "signer"),
+        (payer, "payer"),
+        (employee, "employee"),
+        (colleague, "employee"),
+    ]:
+        actor._test_company = company
+        actor._test_role = selected
     return dict(
         owner=owner,
         coordinator=coordinator,
@@ -203,9 +226,9 @@ def test_employee_privacy_and_no_proxy_consent(cycle):
     item = create(cycle)
     client = authenticated(cycle["employee"])
     view = client.get(API + f"company-contract-preparations/{item.id}/").data
-    assert view["full_term_rent_minor"] is None and view["deposit_minor"] is None
+    assert "full_term_rent_minor" not in view and "deposit_minor" not in view
     assert len(view["placements"]) == len(view["reviews"]) == 1
-    assert view["package"] == {}
+    assert "package" not in view
     commercial = (
         authenticated(cycle["signer"])
         .get(API + f"company-contract-preparations/{item.id}/")
@@ -540,7 +563,7 @@ def test_booking_withdrawal_cancels_preparation_and_notifies_participants(cycle)
     item.refresh_from_db()
     assert item.state == "withdrawn"
     events = PlanningEvent.objects.filter(
-        event_key=f"company.contract:{item.id}:{item.revision}"
+        event_key__startswith=f"company.contract:{item.id}:{item.revision}:"
     )
     assert events.count() == 6
     assert all(e.destination["target_id"] == str(item.id) for e in events)
@@ -574,7 +597,7 @@ def test_reserve_cannot_skip_reviews_and_replay_keeps_one_hold(cycle):
 @pytest.mark.django_db
 def test_mandate_http_permissions_and_bounded_duration(cycle):
     company = cycle["company"]
-    client = authenticated(cycle["coordinator"])
+    client = authenticated(cycle["coordinator"], role="admin")
     body = command(
         expected_revision=company.revision,
         membership_id=str(company.memberships.get(user=cycle["employee"]).id),
@@ -612,7 +635,7 @@ def test_mandate_http_permissions_and_bounded_duration(cycle):
     )
     assert approved.status_code == 200 and approved.data["resource"]["effective"]
     assert not approved.data["resource"]["binding_execution_authorized"]
-    revoked = authenticated(cycle["employee"]).post(
+    revoked = authenticated(cycle["employee"], role="signer").post(
         API + f"company-mandates/{identity}/revoke/",
         command(
             expected_revision=approved.data["resource"]["revision"],
@@ -621,10 +644,12 @@ def test_mandate_http_permissions_and_bounded_duration(cycle):
         format="json",
     )
     assert revoked.status_code == 200 and not revoked.data["resource"]["effective"]
-    assert (
-        "evidence_reference" in result.data["resource"]
-        and revoked.data["resource"]["evidence_reference"] == ""
+    assert "evidence_reference" in result.data["resource"]
+    assert "evidence_reference" not in revoked.data["resource"]
+    context = authenticated(cycle["employee"]).get(
+        API + f"companies/{company.id}/role-contexts/"
     )
+    assert "signer" not in {row["role"] for row in context.data["roles"]}
 
 
 @pytest.mark.django_db
@@ -779,7 +804,7 @@ def test_notification_rechecks_removed_employee_and_deduplicates(cycle):
     member.is_active = False
     member.save()
     event = PlanningEvent.objects.get(
-        event_key=f"company.contract:{item.id}:{item.revision}",
+        event_key__startswith=f"company.contract:{item.id}:{item.revision}:",
         recipient=cycle["employee"],
     )
     # Only external push transport is replaced; records and access checks are real.
@@ -826,9 +851,12 @@ def test_independent_mandate_review_and_delegate_revocation_serialize(cycle):
         )
 
     results = parallel_calls(call)
-    assert sorted(r.status_code for r in results) == [200, 409]
+    # A pending mandate grants no signing role. If approval wins the lock first,
+    # the now-valid delegate still has a stale revision; otherwise access fails.
+    assert results[0].status_code == 200
+    assert results[1].status_code in {403, 409}
     mandate.refresh_from_db()
-    assert mandate.state in {"approved", "revoked"} and mandate.revision == 3
+    assert mandate.state == "approved" and mandate.revision == 3
 
 
 @pytest.mark.django_db

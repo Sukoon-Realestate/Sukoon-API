@@ -11,8 +11,8 @@ from core_apps.features.services.company import bookings, contract_snapshot
 from core_apps.features.services.rental_phase2 import RentalConflict
 from .test_company_housing import company_setup, proposed, approved, API, command
 from .test_company_request_correction import body
-from .test_company_contract_preparation import cycle, create
-from .test_rental_phase2 import rental_participants, authenticated
+from .test_company_contract_preparation import cycle, create, authenticated
+from .test_rental_phase2 import rental_participants
 from .test_rental_lifecycle import policy
 from .test_cycle_concurrency import parallel_calls
 
@@ -206,7 +206,9 @@ def test_two_edits_share_one_current_revision_and_history(company_setup):
     request = company_setup[-1]
     data = [body(request, purpose=f"revision {i}") for i in range(2)]
     results = parallel_calls(
-        lambda index: authenticated(company_setup[1]).post(
+        lambda index: authenticated(
+            company_setup[1], role="coordinator", company=company_setup[3]
+        ).post(
             API + f"company-housing-requests/{request.id}/", data[index], format="json"
         )
     )
@@ -228,7 +230,9 @@ def test_concurrent_approval_cannot_survive_material_request_edit(company_setup)
     )
     responses = parallel_calls(
         lambda index: authenticated(
-            company_setup[1] if index == 0 else company_setup[2]
+            company_setup[1] if index == 0 else company_setup[2],
+            role="coordinator" if index == 0 else "approver",
+            company=company_setup[3],
         ).post(
             API
             + (

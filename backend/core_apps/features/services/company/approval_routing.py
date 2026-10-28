@@ -162,6 +162,12 @@ def notify(item, recipient):
                 "action_type": "open_company_work",
                 "target_id": str(item.request.company.id),
                 "item_id": str(item.id),
+                "company_id": str(item.request.company.id),
+                "company_role": (
+                    "approver"
+                    if recipient.pk == item.assigned_approver.user_id
+                    else "coordinator"
+                ),
                 "revision": item.revision,
                 "schema_version": "1",
                 "workspace": "company",
@@ -209,15 +215,16 @@ def work_items(user, company):
 
     # Derived from current canonical business state. No generic completion API.
     member = member_for(user, company)
-    admin = company.memberships.filter(
-        user=user, is_active=True, is_admin=True
-    ).exists()
-    administrative = Q(status="approval_pending") if admin else Q(pk__in=[])
+    from .role_context import permits
+
+    administrative = Q(pk__in=[])
     coordinator = (
-        Q(request__coordinator=user) if member.is_coordinator else Q(pk__in=[])
+        Q(request__coordinator=user) if permits(member, "coordinator") else Q(pk__in=[])
     )
+    if not (permits(member, "coordinator") or permits(member, "approver")):
+        return CompanyBookingItem.objects.none()
     affected = Q(id__in=invalidated_ids()) & ~Q(status__in=["withdrawn", "replaced"])
-    return (
+    result = (
         CompanyBookingItem.objects.filter(request__company=company)
         .filter(
             administrative
@@ -250,6 +257,10 @@ def work_items(user, company):
         .select_related("request", "hold", "assigned_approver__user")
         .order_by("quote_expires_at", "id")
     )
+
+    if permits(member, "approver"):
+        return result.filter(assigned_approver__user=user)
+    return result.filter(request__coordinator=user)
 
 
 def work_payload(item, user):

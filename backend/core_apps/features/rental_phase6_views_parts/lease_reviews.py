@@ -22,17 +22,27 @@ from .final_settlement_propose import _lease
 from .disputes import document_payload
 
 
-def document_lease(request, lease_id, *, lock=False, provider_required=False):
+def document_lease(
+    request, lease_id, *, lock=False, provider_required=False, document_type=None
+):
     from ..models import Lease
 
     lease = get_object_or_404(Lease, id=lease_id)
     if not lease.renter_company_id:
         return _lease(request, lease_id, lock=lock, provider_required=provider_required)
-    from ..services.company.tenancy_access import get, commercial_read
+    from ..services.company.tenancy_access import get, commercial_read, financial_read
     from rest_framework.exceptions import NotFound
 
     item = get(request.user, lease.company_tenancy.id, lock=lock)
-    if not commercial_read(item.lease, request.user):
+    financial = document_type in {"receipt", "settlement", "statement"}
+    allowed = (
+        financial_read(item.lease, request.user)
+        if financial
+        else commercial_read(item.lease, request.user)
+    )
+    if document_type is None:
+        allowed = allowed or financial_read(item.lease, request.user)
+    if not allowed:
         raise NotFound()
     return item.lease
 
@@ -71,7 +81,17 @@ def lease_documents(request, lease_id):
                 "title": f"{change.get_kind_display()} {change.id}",
             },
         )
-    results = [document_payload(x) for x in lease.private_documents.all()]
+    documents = lease.private_documents.all()
+    if lease.renter_company_id:
+        from ..services.company.tenancy_access import financial_read, commercial_read
+
+        types = []
+        if commercial_read(lease, request.user):
+            types += ["contract", "change"]
+        if financial_read(lease, request.user):
+            types += ["receipt", "settlement", "statement"]
+        documents = documents.filter(document_type__in=types)
+    results = [document_payload(x) for x in documents]
     return Response(
         {"count": len(results), "next": None, "previous": None, "results": results}
     )
@@ -85,7 +105,7 @@ def document_download(request, document_id):
     document = get_object_or_404(
         RentalDocument.objects.select_related("lease"), id=document_id
     )
-    document_lease(request, document.lease.id)
+    document_lease(request, document.lease.id, document_type=document.document_type)
     if document.status != RentalDocument.Status.READY:
         raise RentalConflict("Document is not ready.")
     if not document.private_content:
@@ -121,7 +141,9 @@ def rental_statement_create(request):
     from core_apps.users.models import User
 
     User.objects.select_for_update().get(pk=request.user.pk)
-    lease = document_lease(request, request.data.get("lease_id"), lock=True)
+    lease = document_lease(
+        request, request.data.get("lease_id"), lock=True, document_type="statement"
+    )
     from django.utils.dateparse import parse_date
 
     starts, ends = request.data.get("starts_on"), request.data.get("ends_on_exclusive")

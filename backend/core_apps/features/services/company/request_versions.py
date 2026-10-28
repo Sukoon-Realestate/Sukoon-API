@@ -78,6 +78,9 @@ def notify(request, user, version):
                 "action_type": "open_company_request",
                 "target_id": str(request.id),
                 "company_id": str(request.company.id),
+                "company_role": (
+                    "coordinator" if user.pk == request.coordinator_id else "approver"
+                ),
                 "revision": request.revision,
                 "content_version": version,
                 "schema_version": "1",

@@ -42,7 +42,7 @@ def capabilities_for(user, subject, requested_action=""):
     # Local review, handover, settlement and dispute workflows remain usable.
     if isinstance(subject, Lease):
         if subject.renter_company_id:
-            from ..company.tenancy_access import roles, commercial_read
+            from ..company.tenancy_access import roles, commercial_read, financial_read
 
             corporate_roles = roles(subject.company_tenancy, user)
             corporate_actions = []
@@ -58,7 +58,7 @@ def capabilities_for(user, subject, requested_action=""):
                 "payer",
             }:
                 corporate_actions.append("upload_evidence")
-            if commercial_read(subject, user):
+            if financial_read(subject, user):
                 corporate_actions.append("request_statement")
             if not user.is_verified or not user.is_active:
                 corporate_actions = []
@@ -71,7 +71,7 @@ def capabilities_for(user, subject, requested_action=""):
                 + (["rental_maintenance"] if evidence_available() else [])
                 + (
                     ["signed_documents"]
-                    if "request_statement" in corporate_actions
+                    if commercial_read(subject, user) or financial_read(subject, user)
                     else []
                 ),
                 "allowed_actions": corporate_actions,

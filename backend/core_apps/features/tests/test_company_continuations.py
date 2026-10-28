@@ -175,7 +175,7 @@ def test_wrong_actor_and_changed_approver_cannot_supply_consent(active_agreement
         role="signer",
         decision="accept",
     )
-    assert result.status_code == 403, result.data
+    assert result.status_code in {403, 404}, result.data
     member = cycle["company"].default_approver
     member.is_approver = False
     member.save()

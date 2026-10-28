@@ -10,7 +10,7 @@ from ..company.access import member_for
 def company_for(user, identifier, *, write=False, lock=False):
     query = Company.objects.select_for_update() if lock else Company.objects
     company = get_object_or_404(query, id=identifier)
-    member = member_for(user, company)
+    member = member_for(user, company, "coordinate")
     # Phase-one scenarios contain the complete request's private staff snapshot.
     # A package approver's narrower item authority does not authorize that roster.
     if not member.is_coordinator:

@@ -21,7 +21,7 @@ from ..services.rental_phase3 import (
     invoice_payment_allowed,
     quote_fingerprint,
 )
-from ..services.company.tenancy_access import commercial_read, can_pay
+from ..services.company.tenancy_access import financial_read, can_pay
 from ..services.rental_lifecycle.locks import lock_financial_lease as _lock_lease
 
 
@@ -49,7 +49,7 @@ def _invoice(request, invoice_id, lock=False):
     invoice = get_object_or_404(queryset, id=invoice_id)
     if invoice.lease_id is None or (
         invoice.beneficiary_id != request.user.pk
-        and not commercial_read(invoice.lease, request.user)
+        and not financial_read(invoice.lease, request.user)
     ):
         raise NotFound()
     return invoice
@@ -68,7 +68,7 @@ def _attempt(request, attempt_id, lock=False):
 
         authorized_invoice(request.user, attempt.invoice.id)
         return attempt
-    if attempt.invoice.beneficiary_id != request.user.pk and not commercial_read(
+    if attempt.invoice.beneficiary_id != request.user.pk and not financial_read(
         attempt.invoice.lease, request.user
     ):
         raise NotFound()

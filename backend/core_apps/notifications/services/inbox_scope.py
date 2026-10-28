@@ -13,6 +13,8 @@ def canonical_scope(data, notification_type="general"):
         "account_verification",
     }:
         return "account"
+    if data.get("company_id") and data.get("workspace") != "owner":
+        return "company"
     for key in ("workspace", "presentation_workspace", "scope"):
         value = data.get(key)
         if value == "tenant":
@@ -50,7 +52,42 @@ def request_scope(request):
 
 
 def filter_scope(queryset, scope):
-    return queryset.filter(scope=scope) if scope else queryset
+    from django.db.models import Q
+    from core_apps.features.services.company.role_context import http_context, selected
+    from core_apps.features.services.company.role_notifications import audience_current
+    from core_apps.features.company_models import Company
+    from django.core.exceptions import ValidationError as ModelValidationError
+    from rest_framework.exceptions import APIException
+
+    queryset = queryset.filter(scope=scope) if scope else queryset
+    request = http_context()
+    if request is None:
+        return queryset
+    data = {
+        "company_id": request.headers.get("X-Sukoon-Company-Id"),
+        "company_role": request.headers.get("X-Sukoon-Company-Role"),
+    }
+    audience = Q(pk__in=[])
+    try:
+        if audience_current(request.user, data):
+            company = Company.objects.get(id=data["company_id"])
+            selected(request.user, company)
+            audience = Q(
+                data__company_id=data["company_id"],
+                data__company_role=data["company_role"],
+            )
+    except (
+        Company.DoesNotExist,
+        ModelValidationError,
+        APIException,
+        ValueError,
+        TypeError,
+    ):
+        pass
+    company_notice = Q(scope="company") | (
+        Q(data__company_id__isnull=False) & ~Q(data__company_id="") & ~Q(scope="owner")
+    )
+    return queryset.filter(~company_notice | audience)
 
 
 def is_account_event(notification):

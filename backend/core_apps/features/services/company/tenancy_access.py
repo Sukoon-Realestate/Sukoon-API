@@ -65,6 +65,41 @@ OPEN_REVIEW = [
 ]
 
 
+def prior_owner_roles(item, change, user):
+    """A named original owner retains only their exact mutual-release task."""
+    if change.kind != "continuation_release" or change.state not in OPEN_REVIEW:
+        return set()
+    content = change.snapshot.get("content", {})
+    original = item.changes.filter(
+        id=content.get("original_change_id"),
+        snapshot_digest=content.get("original_digest"),
+        state="resolution_pending",
+        applied_at__isnull=True,
+        rental_change__document_id=content.get("original_document_id"),
+        rental_change__document_hash=content.get("original_document_hash"),
+    ).first()
+    if not original or str(user.id) not in {
+        original.snapshot["required"].get("owner"),
+        original.snapshot["required"].get("new_owner"),
+    }:
+        return set()
+    return {
+        role
+        for role, identity in change.snapshot["required"].items()
+        if identity == str(user.id) and role.startswith("prior_signer_")
+    }
+
+
+def change_roles(item, change, user, roles):
+    from .role_context import http_context, narrow
+
+    allowed = narrow(user, item.lease.renter_company, roles)
+    request = http_context(user)
+    if request is not None and not request.headers.get("X-Sukoon-Company-Role"):
+        allowed |= set(roles) & prior_owner_roles(item, change, user)
+    return allowed
+
+
 def roles(item, user):
     if not user or not user.is_active:
         return set()
@@ -75,15 +110,25 @@ def roles(item, user):
     result = {"owner"} if user.pk == item.lease.owner_id else set()
     membership = member(item, user)
     if membership:
-        if membership.is_admin:
+        from .role_context import http_context
+
+        if membership.is_admin and http_context(user) is None:
             result.add("administrator")
         if membership.is_coordinator and item.coordinator_id == user.pk:
             result.add("coordinator")
-        if item.signer_mandate.membership_id == membership.pk:
+        if item.signer_mandate.membership_id == membership.pk and mandates.current(
+            item.signer_mandate
+        ):
             result.add("signer")
-        if item.payer_mandate.membership_id == membership.pk:
+        if item.payer_mandate.membership_id == membership.pk and mandates.current(
+            item.payer_mandate
+        ):
             result.add("payer")
-    if item.preparation.booking.assignments.filter(employee=user).exists():
+    if (
+        membership
+        and membership.is_employee
+        and item.preparation.booking.assignments.filter(employee=user).exists()
+    ):
         result.add("employee")
     for change in item.changes.filter(state__in=OPEN_REVIEW):
         for role, identity in change.snapshot["required"].items():
@@ -116,7 +161,23 @@ def roles(item, user):
                 ):
                     continue
                 result.add(role)
-    return result
+    from .role_context import http_context, narrow
+
+    narrowed = narrow(user, item.lease.renter_company, result)
+    request = http_context(user)
+    if (
+        "prior_signer" in result
+        and request is not None
+        and not request.headers.get("X-Sukoon-Company-Role")
+        and any(
+            prior_owner_roles(item, change, user)
+            for change in item.changes.filter(
+                kind="continuation_release", state__in=OPEN_REVIEW
+            )
+        )
+    ):
+        narrowed.add("prior_signer")
+    return narrowed
 
 
 def get(user, identity, *, lock=False):
@@ -205,12 +266,21 @@ def visible(user):
             item.pk for item in ownership_candidates if "new_owner" in roles(item, user)
         ]
     )
-    return (
+    candidates = (
         (ordinary | invited | external | incoming_owner)
         .exclude(lease__private_access_revocations__user=user)
         .distinct()
         .order_by("-created_at", "id")
     )
+
+    # Filter before pagination/counts; an administrator is not a tenancy viewer.
+    from .role_context import http_context
+
+    if http_context(user) is not None:
+        return candidates.filter(
+            pk__in=[row.pk for row in candidates if roles(row, user)]
+        )
+    return candidates
 
 
 def require_role(item, user, allowed, *, sensitive=False):
@@ -242,7 +312,13 @@ def require_delegate(item, user, kind):
 def commercial_read(lease, user):
     if not lease.renter_company_id:
         return user.pk in {lease.owner_id, lease.tenant_id}
-    return bool(roles(lease.company_tenancy, user) - PRIVATE_ONLY)
+    return bool(roles(lease.company_tenancy, user) & {"owner", "new_owner", "signer"})
+
+
+def financial_read(lease, user):
+    if not lease.renter_company_id:
+        return user.pk in {lease.owner_id, lease.tenant_id}
+    return bool(roles(lease.company_tenancy, user) & {"owner", "payer"})
 
 
 def can_pay(lease, user):
@@ -255,7 +331,7 @@ def can_pay(lease, user):
         return False
 
 
-def notify(item, action="company_tenancy_updated"):
+def notify(item, action="company_tenancy_updated", actor=None, metadata=None):
     from .tenancy_events import record
 
     booking = item.preparation.booking
@@ -277,7 +353,7 @@ def notify(item, action="company_tenancy_updated"):
                 id__in=change.snapshot["required"].values()
             ).values_list("pk", flat=True)
         )
-    record(item, people, action)
+    record(item, people, action, actor=actor, metadata=metadata)
 
 
 def changed(item, actor, action, reason="", metadata=None):
@@ -286,5 +362,5 @@ def changed(item, actor, action, reason="", metadata=None):
     item.lease.revision += 1
     item.lease.save()
     audit(item.lease, actor, action, reason, metadata or {})
-    notify(item, action)
+    notify(item, action, actor=actor, metadata=metadata)
     return item

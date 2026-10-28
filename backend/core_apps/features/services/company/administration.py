@@ -93,7 +93,10 @@ def reassign_coordinator(user, request_id, data):
         is_active=True,
         is_coordinator=True,
     )
-    member_for(target.user, item.company, "coordinate")
+    from .role_context import system_context
+
+    with system_context():
+        member_for(target.user, item.company, "coordinate")
     item.coordinator = target.user
     item.revision += 1
     item.save()

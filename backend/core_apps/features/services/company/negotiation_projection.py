@@ -1,3 +1,4 @@
+from .role_context import system_context
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, APIException
 from ...models import CompanyTermsNegotiation, RentalAuditEvent
@@ -105,6 +106,7 @@ def payload(item, user):
     }
 
 
+@system_context()
 def notify(item, action):
     users = [item.owner, item.coordinator]
     if item.booking.assigned_approver_id:
@@ -122,6 +124,7 @@ def notify(item, action):
                     "target_id": str(item.id),
                     "company_id": str(item.booking.request.company.id),
                     "booking_id": str(item.booking.id),
+                    "company_role": role,
                     "workspace": "owner" if role == "owner" else "company",
                     "schema_version": "1",
                     "revision": item.revision,

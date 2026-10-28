@@ -123,11 +123,11 @@ def current(item, *, lock=False):
         raise RentalConflict(
             "Review the changed accommodation or owner.", code="offer_changed"
         )
-    from .negotiation_access import role
+    from .negotiation_access import _role
 
     if (
-        role(item, item.coordinator) != "coordinator"
-        or role(item, item.owner) != "owner"
+        _role(item, item.coordinator) != "coordinator"
+        or _role(item, item.owner) != "owner"
     ):
         raise RentalConflict(
             "The negotiation parties changed.", code="participants_changed"

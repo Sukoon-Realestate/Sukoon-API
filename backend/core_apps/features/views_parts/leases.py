@@ -219,6 +219,11 @@ def _get_authorized_lease(request, lease_id):
     )
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()
+    if lease.renter_company_id:
+        from ..services.company.tenancy_access import roles
+
+        if "owner" not in roles(lease.company_tenancy, request.user):
+            raise NotFound()
     return lease
 
 

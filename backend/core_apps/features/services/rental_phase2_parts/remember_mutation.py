@@ -38,7 +38,27 @@ def replay_operation(user, operation, request_key, payload):
             "This request_key was already used for a different intention.",
             code="idempotency_conflict",
         )
-    return record.response_data, record.response_status
+    response = record.response_data
+    if operation.startswith("company."):
+        from ..company.role_context import http_context
+
+        if http_context(user) is not None and isinstance(response, dict):
+            # The original receipt confirms the operation; fresh GETs supply
+            # today's role projection. Never replay an old broad projection.
+            resource = response.get("resource", {})
+            request = http_context(user)
+            if resource.get("role_projection_version") != 1 or resource.get(
+                "active_role"
+            ) != request.headers.get("X-Sukoon-Company-Role"):
+                response = {
+                    **response,
+                    "resource": {
+                        key: resource[key]
+                        for key in ("id", "revision")
+                        if key in resource
+                    },
+                }
+    return response, record.response_status
 
 
 def remember_mutation(

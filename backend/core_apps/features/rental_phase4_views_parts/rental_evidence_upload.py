@@ -124,6 +124,14 @@ def rental_evidence_upload(request):
             storage_provider="pending",
             private_content=content,
         )
+        if lease.renter_company_id:
+            from ..services.company.role_context import selected
+
+            role = selected(request.user, lease.renter_company, required=False)
+            evidence.media_metadata = {
+                **(metadata or {}),
+                "company_role": role or "owner",
+            }
         evidence.storage_key = f"evidence-pending/{evidence.id}"
         evidence.save()
         resource = evidence_payload(evidence)
@@ -148,9 +156,9 @@ def _evidence(request, evidence_id):
         deleted_at__isnull=True,
         purpose="rental",
     )
-    from ..services.company.tenancy_access import commercial_read
+    from ..services.company.role_evidence import can_read
 
-    if not commercial_read(item.lease, request.user):
+    if not can_read(item, request.user):
         raise NotFound()
     if not request.user.is_active:
         raise NotFound()

@@ -7,7 +7,7 @@ from .company_views import company_api, mutate, page
 from .company_serializers import AuthorityReviewBody, CompanyBudgetBody, CoordinatorBody
 from .company_models import Company, CompanyHousingRequest
 from .rental_lifecycle_views.common import validated
-from .services.company import administration, portfolio, bookings
+from .services.company import administration, portfolio
 from .services.company.access import company_for
 from .services.company.projections import company_payload
 from .services.rental_lifecycle.common import require_staff
@@ -73,7 +73,7 @@ def reassign_coordinator(request, request_id):
         "company.coordinator.reassign",
         authorize,
         lambda _: administration.reassign_coordinator(request.user, request_id, data),
-        bookings.request_payload,
+        lambda item: {"id": str(item.id), "revision": item.revision},
     )
 
 

@@ -20,6 +20,10 @@ def participant(visit, user):
     if not user or not user.is_active:
         return False
     if visit.company_id:
+        from core_apps.features.services.company.role_context import narrow
+
+        if not narrow(user, visit.company, {"coordinator"}):
+            return False
         return (
             visit.tenant_id == user.pk
             and CompanyMembership.objects.filter(
@@ -49,6 +53,12 @@ def participant(visit, user):
 def can_read(visit, user):
     if not user or not user.is_active:
         return False
+    if visit.company_id:
+        from core_apps.features.services.company.role_context import narrow
+
+        allowed = {"owner"} if visit.property.owner_id == user.pk else {"coordinator"}
+        if not narrow(user, visit.company, allowed):
+            return False
     if visit.property.owner_id == user.pk or participant(visit, user):
         return True
     return bool(
@@ -56,6 +66,7 @@ def can_read(visit, user):
         and CompanyMembership.objects.filter(
             company_id=visit.company_id, user=user, is_active=True, is_coordinator=True
         ).exists()
+        and visit.requested_by_id == user.pk
     )
 
 
@@ -88,6 +99,32 @@ def for_user(user):
         )
         | Q(groupprocess__in=processes)
     ).distinct()
+    from core_apps.features.services.company.role_context import http_context
+
+    if http_context(user) is not None:
+        request = http_context(user)
+        if request.headers.get("X-Sukoon-Company-Role"):
+            from core_apps.features.services.company.role_notifications import (
+                audience_current,
+            )
+
+            context = {
+                "company_id": request.headers.get("X-Sukoon-Company-Id"),
+                "company_role": request.headers.get("X-Sukoon-Company-Role"),
+            }
+            if context["company_role"] != "coordinator" or not audience_current(
+                user, context
+            ):
+                return result.none()
+            result = result.filter(company__id=context["company_id"])
+        blocked = [
+            visit.pk
+            for visit in result.filter(company__isnull=False).select_related(
+                "company", "property"
+            )
+            if not can_read(visit, user)
+        ]
+        result = result.exclude(pk__in=blocked)
     return result
 
 

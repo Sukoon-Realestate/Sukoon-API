@@ -87,7 +87,12 @@ THIRD_PARTY_APPS = [
     "cloudinary",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS + ["channels", "django.contrib.postgres"]
+INSTALLED_APPS = (
+    DJANGO_APPS
+    + LOCAL_APPS
+    + THIRD_PARTY_APPS
+    + ["channels", "django.contrib.postgres"]
+)
 
 MIDDLEWARE = [
     "core_apps.common.runtime_metrics.RuntimeMetricsMiddleware",
@@ -98,6 +103,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "core_apps.features.services.company.role_context.CompanyRoleMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -260,7 +266,9 @@ VIRTUAL_TOUR_VIEWER_ROOT = getenv(
 )
 VIRTUAL_TOUR_PROCESSOR_MODE = getenv("VIRTUAL_TOUR_PROCESSOR_MODE", "celery")
 PROPERTY_CAPTURE_ENABLED = getenv("PROPERTY_CAPTURE_ENABLED", "false").lower() == "true"
-CAPTURE_RECONSTRUCTION_ENABLED = getenv("CAPTURE_RECONSTRUCTION_ENABLED", "false").lower() == "true"
+CAPTURE_RECONSTRUCTION_ENABLED = (
+    getenv("CAPTURE_RECONSTRUCTION_ENABLED", "false").lower() == "true"
+)
 CAPTURE_RECONSTRUCTION_PYTHON = getenv("CAPTURE_RECONSTRUCTION_PYTHON", "").strip()
 CAPTURE_RECONSTRUCTION_COLMAP = getenv("CAPTURE_RECONSTRUCTION_COLMAP", "").strip()
 GEMINI_API_KEY = getenv("GEMINI_API_KEY", "").strip()
@@ -449,10 +457,16 @@ SUPPORT_PRIVATE_STORAGE_PROVIDER = getenv(
     "SUPPORT_PRIVATE_STORAGE_PROVIDER",
     "cloudinary" if VIRTUAL_TOUR_STORAGE_PROVIDER == "cloudinary" else "local",
 )
-SUPPORT_CLOUDINARY_PREFIX = getenv("SUPPORT_CLOUDINARY_PREFIX", "sokoun-support-private")
+SUPPORT_CLOUDINARY_PREFIX = getenv(
+    "SUPPORT_CLOUDINARY_PREFIX", "sokoun-support-private"
+)
 EVIDENCE_STORAGE_PROVIDER = getenv("EVIDENCE_STORAGE_PROVIDER", "disabled")
-EVIDENCE_PRIVATE_ROOT = getenv("EVIDENCE_PRIVATE_ROOT", str(BASE_DIR / "private_evidence"))
-EVIDENCE_CLOUDINARY_PREFIX = getenv("EVIDENCE_CLOUDINARY_PREFIX", "sokoun-evidence-private")
+EVIDENCE_PRIVATE_ROOT = getenv(
+    "EVIDENCE_PRIVATE_ROOT", str(BASE_DIR / "private_evidence")
+)
+EVIDENCE_CLOUDINARY_PREFIX = getenv(
+    "EVIDENCE_CLOUDINARY_PREFIX", "sokoun-evidence-private"
+)
 EVIDENCE_SCANNER_BACKEND = getenv("EVIDENCE_SCANNER_BACKEND", "disabled")
 # Optional staging-run scope. An explicitly empty list admits no fake scans;
 # real scanners and the existing runtime/production guards are unchanged.
@@ -460,7 +474,9 @@ _evidence_fake_uploaders = getenv("EVIDENCE_FAKE_SCANNER_UPLOADER_IDS")
 EVIDENCE_FAKE_SCANNER_UPLOADER_IDS = (
     None
     if _evidence_fake_uploaders is None
-    else tuple(value.strip() for value in _evidence_fake_uploaders.split(",") if value.strip())
+    else tuple(
+        value.strip() for value in _evidence_fake_uploaders.split(",") if value.strip()
+    )
 )
 EVIDENCE_CLAMSCAN_PATH = getenv("EVIDENCE_CLAMSCAN_PATH", "clamscan")
 
@@ -648,11 +664,15 @@ SECURITY_ASSURANCE_PROVIDER = getenv("SECURITY_ASSURANCE_PROVIDER", "")
 # synthetic evaluation have been verified. No billing/subscription changes.
 CHAT_MODERATION_MODE = getenv("CHAT_MODERATION_MODE", "off")
 CHAT_MODERATION_MODEL = getenv("CHAT_MODERATION_MODEL", "gemini-3.8-flash")
-CHAT_MODERATION_PRIVATE_INPUTS_APPROVED = getenv("CHAT_MODERATION_PRIVATE_INPUTS_APPROVED", "false").lower() == "true"
+CHAT_MODERATION_PRIVATE_INPUTS_APPROVED = (
+    getenv("CHAT_MODERATION_PRIVATE_INPUTS_APPROVED", "false").lower() == "true"
+)
 CHAT_MODERATION_DAILY_REQUESTS = int(getenv("CHAT_MODERATION_DAILY_REQUESTS", "100"))
 CAPTURE_COACH_ENABLED = getenv("CAPTURE_COACH_ENABLED", "true").lower() == "true"
 
-CAPTURE_COACH_PRIVATE_INPUTS_APPROVED = getenv("CAPTURE_COACH_PRIVATE_INPUTS_APPROVED", "false").lower() == "true"
+CAPTURE_COACH_PRIVATE_INPUTS_APPROVED = (
+    getenv("CAPTURE_COACH_PRIVATE_INPUTS_APPROVED", "false").lower() == "true"
+)
 
 ADMIN_CAMPAIGNS_ENABLED = getenv("ADMIN_CAMPAIGNS_ENABLED", "false").lower() == "true"
 
@@ -675,24 +695,38 @@ COMMERCE_SUBSCRIPTION_SANDBOX_USER_IDS = [
 ]
 
 # Invoice-linked Paymob collection is separate from the public landing test.
-PAYMOB_INVOICE_CHECKOUT_ENABLED = getenv("PAYMOB_INVOICE_CHECKOUT_ENABLED", "false").lower() in {"true", "1", "yes"}
+PAYMOB_INVOICE_CHECKOUT_ENABLED = getenv(
+    "PAYMOB_INVOICE_CHECKOUT_ENABLED", "false"
+).lower() in {"true", "1", "yes"}
 PAYMOB_CHECKOUT_EXTRA_ORIGINS = []
 
-PAYMOB_REFUNDS_ENABLED = getenv("PAYMOB_REFUNDS_ENABLED", "false").lower() in {"true", "1", "yes"}
+PAYMOB_REFUNDS_ENABLED = getenv("PAYMOB_REFUNDS_ENABLED", "false").lower() in {
+    "true",
+    "1",
+    "yes",
+}
 
 # Separate, explicitly provisioned Payouts staging account. Never reuse Accept
 # credentials, auto-fund its budget, or enable a production endpoint.
-PAYMOB_PAYOUTS_ENABLED = getenv("PAYMOB_PAYOUTS_ENABLED", "false").lower() in {"true", "1", "yes"}
+PAYMOB_PAYOUTS_ENABLED = getenv("PAYMOB_PAYOUTS_ENABLED", "false").lower() in {
+    "true",
+    "1",
+    "yes",
+}
 PAYMOB_PAYOUTS_CLIENT_ID = getenv("PAYMOB_PAYOUTS_CLIENT_ID", "").strip()
 PAYMOB_PAYOUTS_CLIENT_SECRET = getenv("PAYMOB_PAYOUTS_CLIENT_SECRET", "").strip()
 PAYMOB_PAYOUTS_USERNAME = getenv("PAYMOB_PAYOUTS_USERNAME", "").strip()
 PAYMOB_PAYOUTS_PASSWORD = getenv("PAYMOB_PAYOUTS_PASSWORD", "").strip()
 PAYMOB_PAYOUTS_STAGING_EVIDENCE = getenv("PAYMOB_PAYOUTS_STAGING_EVIDENCE", "").strip()
-PAYMOB_PAYOUTS_CHANNEL_EVIDENCE = json.loads(getenv("PAYMOB_PAYOUTS_CHANNEL_EVIDENCE", "{}"))
+PAYMOB_PAYOUTS_CHANNEL_EVIDENCE = json.loads(
+    getenv("PAYMOB_PAYOUTS_CHANNEL_EVIDENCE", "{}")
+)
 PAYMOB_PAYOUTS_BENEFICIARIES = json.loads(getenv("PAYMOB_PAYOUTS_BENEFICIARIES", "{}"))
 
 # Hosted Sandbox checkout for all authorized accounts/products; never Live.
-COMMERCE_HOSTED_SANDBOX_ENABLED = getenv("COMMERCE_HOSTED_SANDBOX_ENABLED", "false").lower() in {"true", "1", "yes"}
+COMMERCE_HOSTED_SANDBOX_ENABLED = getenv(
+    "COMMERCE_HOSTED_SANDBOX_ENABLED", "false"
+).lower() in {"true", "1", "yes"}
 
 CELERY_BEAT_SCHEDULE["reconcile-hosted-checkout"] = {
     "task": "core_apps.features.tasks.reconcile_hosted_checkout",
@@ -701,4 +735,5 @@ CELERY_BEAT_SCHEDULE["reconcile-hosted-checkout"] = {
 
 # Finalize after every domain has registered its schedule, including checkout.
 from config.background import configure as configure_background
+
 configure_background(globals())

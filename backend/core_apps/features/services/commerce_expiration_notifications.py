@@ -30,6 +30,7 @@ def record(kind, item, invoice):
         )
         if invoice.organization_id:
             destination["company_id"] = str(invoice.organization.id)
+            destination["company_role"] = "payer"
             recipients = (
                 invoice.organization.memberships.filter(
                     is_active=True, user__is_active=True

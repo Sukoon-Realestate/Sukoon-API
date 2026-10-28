@@ -132,6 +132,7 @@ def assignment(item, identity):
 
 
 def propose_presence(item, user, data):
+    access.require_role(item, user, {"owner", "employee"}, sensitive=True)
     row = assignment(item, data["assignment_id"])
     if user.pk not in {row.employee_id, item.lease.owner_id}:
         raise PermissionDenied(
@@ -216,10 +217,18 @@ def propose_presence(item, user, data):
             assignment_revision=row.revision,
             source_snapshot=source,
         )
-    return access.changed(item, user, "company_employee_possession_proposed")
+    return access.changed(
+        item,
+        user,
+        "company_employee_possession_proposed",
+        metadata={"assignment_id": str(row.id)},
+    )
 
 
 def confirm_presence(item, user, data):
+    access.require_role(
+        item, user, {data["role"]}, sensitive=data["decision"] == "accept"
+    )
     record = get_object_or_404(
         EmployeeOccupancyConfirmation.objects.select_for_update(),
         id=data["confirmation_id"],
@@ -287,7 +296,11 @@ def confirm_presence(item, user, data):
     record.revision += 1
     record.save()
     return access.changed(
-        item, user, "company_employee_possession_decided", data["reason"]
+        item,
+        user,
+        "company_employee_possession_decided",
+        data["reason"],
+        metadata={"assignment_id": str(row.id)},
     )
 
 

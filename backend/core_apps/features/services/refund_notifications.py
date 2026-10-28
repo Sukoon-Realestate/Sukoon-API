@@ -76,6 +76,7 @@ def record(refund, action, actor=None):
                         else ""
                     ),
                     "workspace": workspace,
+                    **({"company_role": "payer"} if workspace == "company" else {}),
                     "revision": refund.revision,
                     "change": action,
                 }

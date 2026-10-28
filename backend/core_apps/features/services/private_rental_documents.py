@@ -44,12 +44,21 @@ def generate(document):
         from django.db import transaction
         from .signing_jobs import persist_original
 
-        lookup = {"id": document.source_reference} if document.document_type == "contract" else {"change__id": document.source_reference}
+        lookup = (
+            {"id": document.source_reference}
+            if document.document_type == "contract"
+            else {"change__id": document.source_reference}
+        )
         try:
             uuid.UUID(document.source_reference)
         except (ValueError, TypeError):
             return fail(document, "signed_source_artifact_unavailable")
-        source = RentalSigningDocument.objects.filter(lease=lease, **lookup).exclude(completed_hash="").order_by("-source_revision").first()
+        source = (
+            RentalSigningDocument.objects.filter(lease=lease, **lookup)
+            .exclude(completed_hash="")
+            .order_by("-source_revision")
+            .first()
+        )
         if source is None or not source.completed_content:
             return fail(document, "signed_source_artifact_unavailable")
         with transaction.atomic():
@@ -174,6 +183,13 @@ def generate(document):
 
 
 def download_url(request, document):
+    from .company.role_context import selected
+
+    role = (
+        selected(request.user, document.lease.renter_company, required=False)
+        if document.lease.renter_company_id
+        else ""
+    )
     token = signing.dumps(
         {
             "document": str(document.id),
@@ -182,6 +198,12 @@ def download_url(request, document):
             "revision": document.revision,
             "digest": document.sha256,
             "session": (request.auth or {}).get("session_id"),
+            "company_id": (
+                str(document.lease.renter_company.id)
+                if document.lease.renter_company_id
+                else ""
+            ),
+            "company_role": role or "",
         },
         salt=SALT,
     )
@@ -220,10 +242,19 @@ def content_response(document_id, token):
             sha256=claims["digest"],
         )
         if document.lease.renter_company_id:
-            from .company.tenancy_access import commercial_read
+            from .company.tenancy_access import commercial_read, financial_read
+            from .company.role_context import bound_role
 
-            if not commercial_read(document.lease, user):
+            if claims.get("company_id") != str(document.lease.renter_company.id):
                 raise ValueError()
+            with bound_role(user, claims["company_id"], claims.get("company_role", "")):
+                allowed = (
+                    financial_read
+                    if document.document_type in {"receipt", "settlement", "statement"}
+                    else commercial_read
+                )
+                if not allowed(document.lease, user):
+                    raise ValueError()
         elif user.pk not in {document.lease.owner_id, document.lease.tenant_id}:
             raise ValueError()
         if PrivateAccessRevocation.objects.filter(

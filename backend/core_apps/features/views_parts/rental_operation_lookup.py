@@ -5,7 +5,7 @@ import json
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
-from rest_framework.exceptions import APIException, ValidationError
+from rest_framework.exceptions import APIException, ValidationError, NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import IdempotencyRecord
@@ -128,10 +128,16 @@ def rental_operation_lookup(request, request_key):
         and operation.operation == f"group.leave.{subject_id}"
         and str(operation.result_subject_id) == str(subject_id)
     )
-    if not departure_receipt:
+    from ..services.company.responsibility_management import recovery_subject
+
+    administrative_subject = recovery_subject(request.user, subject_id, operation)
+    if not departure_receipt and administrative_subject is None:
         get_authorized_rental_subject(request.user, subject_id)
     if operation:
-        if not departure_receipt:
+        if administrative_subject is not None:
+            if str(operation.result_subject_id) != str(administrative_subject.id):
+                raise NotFound()
+        elif not departure_receipt:
             get_authorized_rental_subject(request.user, operation.result_subject_id)
         receipt = {
             "id": str(operation.id),

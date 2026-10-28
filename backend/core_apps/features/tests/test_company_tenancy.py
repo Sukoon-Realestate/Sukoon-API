@@ -31,7 +31,40 @@ def expose_unexpected_exceptions(settings):
 
 def act(item, user, action, **values):
     item.lease.refresh_from_db()
-    return authenticated(user).post(
+    from core_apps.features.services.company.role_context import resource_role
+
+    selected = (
+        resource_role(values.get("role", ""))
+        if user.pk != item.lease.owner_id
+        and item.lease.renter_company.memberships.filter(user=user).exists()
+        else ""
+    )
+    if not selected and user.pk != item.lease.owner_id:
+        selected = next(
+            (
+                role
+                for role, identity in [
+                    ("coordinator", item.coordinator_id),
+                    ("signer", item.signer_mandate.membership.user_id),
+                    ("payer", item.payer_mandate.membership.user_id),
+                ]
+                if identity == user.pk
+            ),
+            (
+                "employee"
+                if item.lease.renter_company.memberships.filter(
+                    user=user, is_employee=True
+                ).exists()
+                else ""
+            ),
+        )
+    actor = authenticated(user)
+    if selected:
+        actor.credentials(
+            HTTP_X_SUKOON_COMPANY_ROLE=selected,
+            HTTP_X_SUKOON_COMPANY_ID=str(item.lease.renter_company.id),
+        )
+    return actor.post(
         API + f"company-tenancies/{item.id}/{action}/",
         command(expected_revision=item.lease.revision, **values),
         format="json",
@@ -95,8 +128,8 @@ def test_company_private_projection_and_preparation_handoff(agreement):
         API + f"company-tenancies/{item.id}/"
     )
     assert employee.status_code == 200, employee.data
-    assert employee.data["terms"] == {} and employee.data["invoices"] == []
-    assert len(employee.data["assignments"]) == 1 and employee.data["package"] == {}
+    assert not {"terms", "invoices", "package"} & employee.data.keys()
+    assert len(employee.data["assignments"]) == 1
     stranger = person("stranger")
     assert (
         authenticated(stranger).get(API + f"company-tenancies/{item.id}/").status_code
@@ -237,15 +270,21 @@ def test_paid_company_preparation_remains_readable_after_hold_commit(active_agre
             API + f"company-contract-preparations/{preparation.id}/"
         )
         assert response.status_code == 200, response.data
-        assert response.data["hold_expires_at"] is None
+        if role == "employee":
+            assert "hold_expires_at" not in response.data
+        else:
+            assert response.data["hold_expires_at"] is None
         assert response.data["tenancy_id"] == str(item.id)
         assert response.data["state"] == "agreement_created"
         assert response.data["responses"] == []
         if role == "employee":
-            assert response.data["package"] == {}
-    assert authenticated(person("unrelated-after-capture")).get(
-        API + f"company-contract-preparations/{preparation.id}/"
-    ).status_code == 404
+            assert "package" not in response.data
+    assert (
+        authenticated(person("unrelated-after-capture"))
+        .get(API + f"company-contract-preparations/{preparation.id}/")
+        .status_code
+        == 404
+    )
 
 
 @pytest.mark.django_db
@@ -419,9 +458,13 @@ def test_replacement_requires_all_people_then_actual_departure(occupied_agreemen
         )
         assert response.status_code == 200, response.data
         change = item.changes.get(kind="replacement")
-        view = authenticated(newcomer).get(API + f"company-tenancies/{item.id}/").data
+        view = (
+            authenticated(newcomer, company=cycle["company"], role="employee")
+            .get(API + f"company-tenancies/{item.id}/")
+            .data
+        )
         assert view["changes"][0]["roles_to_decide"] == ["incoming_employee"]
-        assert view["terms"] == {} and view["invoices"] == []
+        assert "terms" not in view and "invoices" not in view
         decide_change(
             cycle,
             item,
@@ -778,7 +821,7 @@ def test_termination_at_billing_boundary_and_full_original_capture_refund(
 
 
 @pytest.mark.django_db
-def test_company_can_replace_absent_coordinator_without_rewriting_contract(
+def test_admin_cannot_operate_legacy_contract_authority_endpoint(
     active_agreement,
 ):
     from core_apps.features.models import CompanyMembership
@@ -806,32 +849,12 @@ def test_company_can_replace_absent_coordinator_without_rewriting_contract(
         coordinator_membership_id=str(member.id),
         reason="Assign a current servicing coordinator",
     )
-    assert response.status_code == 200, response.data
-    change = item.changes.get(kind="authority")
-    assert (
-        authenticated(newcomer).get(API + f"company-tenancies/{item.id}/").status_code
-        == 200
-    )
-    decide_change(
-        cycle,
-        item,
-        change,
-        [
-            ("administrator", cycle["reviewer"]),
-            ("new_signer", cycle["signer"]),
-            ("new_payer", cycle["payer"]),
-            ("new_coordinator", newcomer),
-        ],
-    )
-    item.refresh_from_db()
-    assert item.coordinator_id == newcomer.pk
-    assert item.preparation.booking.request.coordinator_id == cycle["coordinator"].pk
+    assert response.status_code in {403, 404}, response.data
+    assert not item.changes.filter(kind="authority").exists()
     assert (
         list(item.lease.signing_sessions.values_list("signer_id", "document_hash"))
         == original_signatures
     )
-    assert act(item, cycle["coordinator"], "reconcile").status_code == 403
-    assert act(item, newcomer, "reconcile").status_code == 200
 
 
 @pytest.mark.django_db
@@ -845,7 +868,7 @@ def test_revoked_payer_cannot_replay_quote_or_checkout(signed_agreement):
     assert response.status_code == 201
     item.payer_mandate.state = "revoked"
     item.payer_mandate.save()
-    assert client.post(path, body, format="json").status_code == 403
+    assert client.post(path, body, format="json").status_code == 404
     result = client.post(
         API + f"rent-invoices/{invoice.id}/checkout/",
         command(
@@ -855,7 +878,7 @@ def test_revoked_payer_cannot_replay_quote_or_checkout(signed_agreement):
         ),
         format="json",
     )
-    assert result.status_code == 403
+    assert result.status_code == 404
     assert not invoice.payment_attempts.exists()
 
 
@@ -881,7 +904,7 @@ def test_checkout_recovery_requires_current_company_payer(signed_agreement):
             format="json",
         )
         .status_code
-        == 403
+        == 404
     )
     assert not invoice.payment_attempts.exists()
 
@@ -1020,7 +1043,7 @@ def test_final_approval_and_payer_revocation_share_company_lock(active_agreement
 
         results = parallel_calls(call)
     assert results[1].status_code == 200, results[1].data
-    assert results[0].status_code in {200, 403, 409}, results[0].data
+    assert results[0].status_code in {200, 403, 404, 409}, results[0].data
     change.refresh_from_db()
     item.lease.refresh_from_db()
     assert (change.state == "applied") == (results[0].status_code == 200)

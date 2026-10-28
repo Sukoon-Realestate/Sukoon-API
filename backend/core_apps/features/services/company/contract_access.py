@@ -2,7 +2,8 @@
 
 from django.db.models import Q, F
 from django.shortcuts import get_object_or_404
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
+from django.http import Http404
 from ...company_models import Company, CompanyMembership
 from ...company_contract_models import CompanyContractPreparation
 from ..rental_lifecycle.common import require_actor
@@ -21,9 +22,11 @@ def roles_for(item, user):
         if ids and Property.objects.filter(id__in=ids, owner=user).count() == len(ids):
             roles.append("owner")
     if member:
-        if str(user.id) == snapshot["signer_id"]:
+        from .mandates import current
+
+        if str(user.id) == snapshot["signer_id"] and current(item.signer_mandate):
             roles.append("signer")
-        if str(user.id) == snapshot["payer_id"]:
+        if str(user.id) == snapshot["payer_id"] and current(item.payer_mandate):
             roles.append("payer")
         if member.is_employee and any(
             r["employee_id"] == str(user.id) for r in snapshot["placements"]
@@ -31,10 +34,22 @@ def roles_for(item, user):
             staff = getattr(member, "staff_record", None)
             if staff is None or staff.employment_status == "active":
                 roles.append("employee")
-    return roles
+    from .role_context import narrow
+
+    return sorted(narrow(user, item.booking.request.company, roles))
 
 
 def manages(item, user):
+    from .role_context import selected
+
+    try:
+        if selected(user, item.booking.request.company, required=False) not in {
+            None,
+            "coordinator",
+        }:
+            return False
+    except (PermissionDenied, NotFound, Http404):
+        return False
     return bool(
         item.booking.request.coordinator_id == user.pk
         and CompanyMembership.objects.filter(
@@ -49,21 +64,16 @@ def manages(item, user):
 def can_read(item, user):
     # The original counterparty retains its historical review. A new property
     # owner does not inherit private employee reviews or the old owner's consent.
+    from .role_context import narrow
+
+    historical_owner = str(user.id) == item.snapshot["owner_id"] and bool(
+        narrow(user, item.booking.request.company, {"owner"})
+    )
     return bool(
         user
         and user.is_active
         and user.is_verified
-        and (
-            str(user.id) == item.snapshot["owner_id"]
-            or roles_for(item, user)
-            or manages(item, user)
-            or CompanyMembership.objects.filter(
-                company=item.booking.request.company,
-                user=user,
-                is_active=True,
-                is_admin=True,
-            ).exists()
-        )
+        and (historical_owner or roles_for(item, user) or manages(item, user))
     )
 
 
@@ -86,7 +96,7 @@ def visible(user):
         booking__request__company__memberships__user=user,
         booking__request__company__memberships__is_active=True,
     )
-    return (
+    candidates = (
         CompanyContractPreparation.objects.filter(
             Q(snapshot__owner_id=str(user.id))
             | membership
@@ -119,3 +129,11 @@ def visible(user):
         .distinct()
         .order_by("-updated_at", "id")
     )
+
+    from .role_context import http_context
+
+    if http_context(user) is not None:
+        return candidates.filter(
+            pk__in=[row.pk for row in candidates if can_read(row, user)]
+        )
+    return candidates

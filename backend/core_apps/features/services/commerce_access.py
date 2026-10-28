@@ -14,6 +14,9 @@ def organization_for(user, identity, *, lock=False, pay=False, amount=0):
     identity = field.run_validation(identity)
     query = Company.objects.select_for_update() if lock else Company.objects
     company = get_object_or_404(query, id=identity)
+    from .company.role_context import require
+
+    require(user, company, {"payer"})
     member = CompanyMembership.objects.filter(
         company=company, user=user, is_active=True
     ).first()

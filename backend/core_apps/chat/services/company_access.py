@@ -3,7 +3,7 @@
 import uuid
 from dataclasses import dataclass
 from django.db import transaction
-from django.db.models import Q, F
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
 from core_apps.features.company_models import (
@@ -46,50 +46,16 @@ def lock_root(conversation):
 
 
 def authorize(conversation, user, *, action="read_chat", lock=False):
-    from .group_access import actions
-
-    require_actor(User.objects.get(pk=user.pk))
-    request = (
-        lock_root(conversation)
-        if lock
-        else get_object_or_404(
-            CompanyHousingRequest, pk=conversation.company_request_id
-        )
+    # Applies to REST, sockets, exports and attachments. Legacy messages have
+    # no verified role audience and cannot be disclosed through another path.
+    raise PermissionDenied(
+        "This discussion has no verified role audience.",
+        code="company_role_audience_required",
     )
-    member = case_members(request).filter(user=user).first()
-    if conversation.kind != "company_request" or not member:
-        raise PermissionDenied(
-            "Company discussion access is no longer available.",
-            code="chat_access_revoked",
-        )
-    query = Conversation.objects.select_for_update() if lock else Conversation.objects
-    conversation = query.get(pk=conversation.pk)
-    participant = ConversationParticipant.objects.filter(
-        conversation=conversation,
-        user=user,
-        company_membership=member,
-        membership_revision=member.revision,
-    ).first()
-    if not participant or not participant.membership_period:
-        raise PermissionDenied(
-            "Company discussion access is no longer available.",
-            code="chat_access_revoked",
-        )
-    grant = CompanyConversationGrant(member.id)
-    if action not in actions(grant):
-        raise PermissionDenied("This chat action is unavailable.")
-    conversation.company_request = request
-    return conversation, participant, grant
 
 
 def eligible_participants(conversation):
-    members = case_members(conversation.company_request)
-    return conversation.participant_set.filter(
-        company_membership__in=members,
-        membership_revision=F("company_membership__revision"),
-        user__is_active=True,
-        user__is_verified=True,
-    )
+    return conversation.participant_set.none()
 
 
 @transaction.atomic

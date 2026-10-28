@@ -164,6 +164,18 @@ def open_system_case(
         },
     )
     if created:
+        from ..company.role_cases import company_for
+        from ..company.role_context import http_context, selected
+
+        company = company_for(item)
+        if company and actor and http_context(actor) is not None:
+            role = selected(actor, company, required=False)
+            if role:
+                item.baseline = {**item.baseline, "company_role": role}
+                item.save(update_fields=["baseline", "updated_at"])
+            elif lease and lease.owner_id == actor.pk:
+                item.baseline = {**item.baseline, "independent_owner_id": str(actor.id)}
+                item.save(update_fields=["baseline", "updated_at"])
         if evidence:
             item.evidence.set(evidence)
         audit(item, actor, "case.opened", reason)
@@ -174,6 +186,7 @@ def open_system_case(
 
 def notify_case_participants(item, action):
     from ..fulfillment_cases import KIND, notify as notify_activation
+
     if item.kind == KIND:
         return notify_activation(item, action)
     from .notifications import record_rental_event
@@ -207,6 +220,7 @@ def notify_case_participants(item, action):
 
 def case_queryset(user):
     from ..fulfillment_cases import visible_company_cases, restrict_visibility
+
     own = RentalOperationalCase.objects.filter(
         Q(opened_by=user)
         | Q(lease__owner=user)
@@ -240,12 +254,17 @@ def case_queryset(user):
             if not independent_case_operator(item, user)
         ]
         qs = qs.exclude(pk__in=excluded_reports)
-        return restrict_visibility(qs | own, user)
-    return restrict_visibility(own, user)
+        from ..company.role_cases import restrict
+
+        return restrict(restrict_visibility(qs | own, user), user)
+    from ..company.role_cases import restrict
+
+    return restrict(restrict_visibility(own, user), user)
 
 
 def agreement_case_blocker(item):
     from ..fulfillment_cases import KIND, blocker as activation_blocker
+
     if item.kind == KIND:
         return activation_blocker(item)
     from ..company.service_requests import blocker
@@ -440,8 +459,14 @@ def case_payload(item, user):
             if item.kind == sourcing.KIND
             else {}
         ),
-        **({"allowed_actions": [], "blocking_reasons": ["A verified active account is required."]}
-           if item.kind == "service_activation" and not user.is_verified else {}),
+        **(
+            {
+                "allowed_actions": [],
+                "blocking_reasons": ["A verified active account is required."],
+            }
+            if item.kind == "service_activation" and not user.is_verified
+            else {}
+        ),
     }
 
 
@@ -454,6 +479,7 @@ def independent_case_operator(item, user):
     ):
         return False
     from ..fulfillment_cases import KIND
+
     if item.kind == KIND and item.payment_attempt_id:
         company = item.payment_attempt.invoice.organization
         if company and company.memberships.filter(user=user).exists():
