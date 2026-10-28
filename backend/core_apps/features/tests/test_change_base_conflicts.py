@@ -100,3 +100,23 @@ def test_worker_preserves_conflicting_signed_change_and_processes_valid_change_o
     assert RentalOperationalCase.objects.filter(
         kind="agreement_terms_review", source_key=f"change-terms:{stale.id}:{stale.revision}",
     ).count() == 1
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("language,expected", [
+    ("ar", "تغيرت شروط العقد. راجع الاتفاق الحالي قبل توقيع مقترح جديد."),
+    ("en", "The lease terms changed. Review the current agreement before signing a new proposal."),
+])
+def test_base_conflict_reason_uses_requested_language_without_rewriting_user_text(phase5_lease, language, expected):
+    owner, tenant, lease = phase5_lease
+    item = competing_change(lease, owner, "pending_signatures")
+    item.reason = "Original participant text remains unchanged"
+    item.save(update_fields=["reason"])
+    response = client_for(tenant).get(
+        f"/api/v1/features/v1/amendments/{item.id}/", HTTP_ACCEPT_LANGUAGE=language,
+    )
+    assert response.status_code == 200
+    assert response.data["blocking_reasons"] == [expected]
+    assert response.data["reason"] == item.reason
+    assert response.data["allowed_actions"] == []
+    assert response["Content-Language"] == language

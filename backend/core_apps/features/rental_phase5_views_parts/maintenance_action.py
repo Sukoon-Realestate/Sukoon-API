@@ -222,6 +222,7 @@ def maintenance_action(request, request_id):
 
 
 def change_payload(item, user=None):
+    from core_apps.common.translation import translate_message
     from ..services.signing_documents import projection
     from ..services.change_terms import changed_terms_blocker
     from ..services.change_versions import history, comments
@@ -230,7 +231,7 @@ def change_payload(item, user=None):
     blocker = changed_terms_blocker(item)
     return {
         "allowed_actions": cycle_actions(user, item),
-        "blocking_reasons": [blocker] if blocker else [],
+        "blocking_reasons": [translate_message(blocker)] if blocker else [],
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "invoice_id": str(item.invoice.id) if item.invoice else None,

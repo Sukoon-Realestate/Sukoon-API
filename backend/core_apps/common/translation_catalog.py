@@ -42,6 +42,8 @@ EN_TO_AR_MESSAGES = {
     'Review the current proposal and your role before responding.': 'راجع نسخة المقترح الحالية وصلاحيتك قبل الرد.',
     'The lease terms changed. The author must review and submit an updated proposal.': 'تغيرت شروط العقد. على صاحب المقترح مراجعتها وإرسال نسخة محدثة.',
     'The lease terms changed. Review the current agreement before signing a new proposal.': 'تغيرت شروط العقد. راجع الاتفاق الحالي قبل توقيع مقترح جديد.',
+    'The proposed terms require correction and fresh participant review before signing or execution.': 'تحتاج الشروط المقترحة إلى تصحيح ومراجعة جديدة من الأطراف قبل التوقيع أو التنفيذ.',
+    'The signed document identity requires operational review before execution.': 'تحتاج هوية المستند الموقع إلى مراجعة تشغيلية قبل التنفيذ.',
     'The signed change refers to lease terms replaced by another agreement.': 'يشير التعديل الموقع إلى شروط عقد تغيرت بموجب اتفاق آخر.',
     'Preserve both signed documents and review the current terms with both parties. Do not overwrite the current agreement or infer new consent.': 'احتفظ بالمستندين الموقعين وراجع الشروط الحالية مع الطرفين. لا تستبدل الاتفاق الحالي ولا تفترض موافقة جديدة.',
     'This invoice no longer matches the proposed payment extension.': 'تغيرت الفاتورة المرتبطة بالتأجيل. راجع حالتها الحالية.',
