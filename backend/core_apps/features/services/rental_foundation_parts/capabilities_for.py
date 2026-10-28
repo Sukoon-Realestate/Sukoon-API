@@ -127,6 +127,10 @@ def capabilities_for(user, subject, requested_action=""):
             allowed.append("create_rental_dispute")
     elif isinstance(subject, RentInvoice):
         enabled.extend(["rental_center"])
+        invoice_actions = cycle_actions(user, subject)
+        if invoice_actions:
+            enabled.append("rental_changes")
+            allowed.extend(invoice_actions)
         if subject.lease_id:
             from ..company.tenancy_access import can_pay
 

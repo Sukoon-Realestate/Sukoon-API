@@ -8,6 +8,7 @@ from ..models import (
     RentalChange,
     RentalDispute,
     RentalHandover,
+    RentInvoice,
 )
 from ..providers import signing_available
 from .maintenance_access import access_window_current, appointment_reviewable
@@ -89,6 +90,23 @@ def cycle_actions(user, subject):
         ).exists():
             actions.append("create_rental_refund")
         return actions
+    if isinstance(subject, RentInvoice):
+        from .rental_phase3 import invoice_balance_minor
+
+        if (
+            subject.purpose == "rent"
+            and subject.due_at is not None
+            and subject.status not in {
+                RentInvoice.Status.PAID,
+                RentInvoice.Status.SETTLED,
+                RentInvoice.Status.CANCELLED,
+                RentInvoice.Status.WRITTEN_OFF,
+            }
+            and invoice_balance_minor(subject) > 0
+            and "create_payment_extension" in cycle_actions(user, lease)
+        ):
+            return ["create_payment_extension"]
+        return []
     if isinstance(subject, MaintenanceRequest):
         if subject.status == "cancelled":
             return []
