@@ -42,6 +42,7 @@ EN_TO_AR_MESSAGES = {
     'Review the current proposal and your role before responding.': 'راجع نسخة المقترح الحالية وصلاحيتك قبل الرد.',
     'The lease terms changed. The author must review and submit an updated proposal.': 'تغيرت شروط العقد. على صاحب المقترح مراجعتها وإرسال نسخة محدثة.',
     'The lease terms changed. Review the current agreement before signing a new proposal.': 'تغيرت شروط العقد. راجع الاتفاق الحالي قبل توقيع مقترح جديد.',
+    'A continuous renewal starts at the current end date and ends later.': 'يبدأ التجديد المتصل في تاريخ انتهاء العقد الحالي وينتهي بعده. راجع تاريخَي البداية والنهاية.',
     'The proposed terms require correction and fresh participant review before signing or execution.': 'تحتاج الشروط المقترحة إلى تصحيح ومراجعة جديدة من الأطراف قبل التوقيع أو التنفيذ.',
     'The signed document identity requires operational review before execution.': 'تحتاج هوية المستند الموقع إلى مراجعة تشغيلية قبل التنفيذ.',
     'The signed change refers to lease terms replaced by another agreement.': 'يشير التعديل الموقع إلى شروط عقد تغيرت بموجب اتفاق آخر.',
@@ -239,6 +240,7 @@ for en_msg, ar_msg in EN_TO_AR_MESSAGES.items():
         AR_TO_EN_MESSAGES[ar_msg] = en_msg
 
 FIELD_LABELS_AR = {
+    "Terms": "الشروط",
     "Email": "البريد الإلكتروني",
     "Password": "كلمة المرور",
     "Current Password": "كلمة المرور الحالية",
