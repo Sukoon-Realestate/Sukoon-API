@@ -4,12 +4,44 @@ from django.db import transaction
 from django.http import Http404
 from django.core.exceptions import ValidationError as DjangoValidationError
 from datetime import timedelta
+from uuid import UUID
 from django.db.models import Q
 from django.utils import timezone
 from ...planning_models import PlanningEvent
 
 
-def deliver_planning_events(*, event_kinds=None):
+_ALL_EVENTS = object()
+_MAX_TARGETED_EVENTS = 100
+
+
+def _selected_event_ids(value):
+    if (
+        not isinstance(value, (list, tuple))
+        or not 1 <= len(value) <= _MAX_TARGETED_EVENTS
+    ):
+        raise ValueError(
+            "event_ids must be a nonempty list or tuple of at most 100 UUIDs."
+        )
+    if any(not isinstance(identifier, (str, UUID)) for identifier in value):
+        raise ValueError("event_ids must contain only UUIDs or UUID strings.")
+    try:
+        return tuple(UUID(str(identifier)) for identifier in value)
+    except ValueError as error:
+        raise ValueError("event_ids must contain only valid UUIDs.") from error
+
+
+def deliver_planning_events(*, event_kinds=None, event_ids=_ALL_EVENTS):
+    """Return the number delivered through the normal inbox and push queue.
+
+    Omitting event_ids preserves the scheduled worker's general scan. An explicit
+    selection must contain 1–100 UUIDs; invalid/None/empty input fails before any
+    query. Selection intersects event_kinds and the ordinary due/authority guards;
+    unknown or already handled IDs never fall back to general processing.
+    Delivery enqueues PushDelivery as usual; this is not an inbox-only option.
+    """
+    if event_ids is not _ALL_EVENTS:
+        event_ids = _selected_event_ids(event_ids)
+
     from core_apps.notifications.services.notification_service import (
         NotificationService,
     )
@@ -21,6 +53,8 @@ def deliver_planning_events(*, event_kinds=None):
     pending = PlanningEvent.objects.filter(
         delivered_at__isnull=True, attempts__lt=5, recipient__is_active=True
     )
+    if event_ids is not _ALL_EVENTS:
+        pending = pending.filter(id__in=event_ids)
     if event_kinds is not None:
         pending = pending.filter(destination__event_kind__in=event_kinds)
     for identifier in (
