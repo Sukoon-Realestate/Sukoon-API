@@ -53,17 +53,22 @@ def create(request, preparation_id):
 
 @company_api(["GET"])
 def collection(request):
+    from rest_framework import serializers
+
     from .services.rental_lifecycle.common import require_actor
 
     require_actor(request.user)
     query = access.visible(request.user)
     if request.query_params.get("company_id"):
-        from rest_framework import serializers
-
         identity = serializers.UUIDField().run_validation(
             request.query_params["company_id"]
         )
         query = query.filter(lease__renter_company__id=identity)
+    if "lease_id" in request.query_params:
+        lease_id = serializers.UUIDField().run_validation(
+            request.query_params["lease_id"]
+        )
+        query = query.filter(lease__id=lease_id)
     return page(request, query, lambda item: projection.payload(item, request.user))
 
 
