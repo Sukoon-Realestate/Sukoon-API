@@ -2,7 +2,7 @@
 
 import json
 from copy import deepcopy
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone as dt_timezone
 from unittest.mock import patch
 
 import pytest
@@ -720,6 +720,24 @@ def test_assistant_comparison_keeps_selected_properties_and_rejects_private_cont
 
 @pytest.mark.django_db
 def test_signed_renewal_survives_worker_order_and_applies_only_once(phase5_lease):
+    _assert_signed_renewal_worker_order(phase5_lease)
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("now", [
+    datetime(2026, 10, 28, 21, 30, tzinfo=dt_timezone.utc),  # Ordinary local day.
+    datetime(2026, 10, 29, 20, 30, tzinfo=dt_timezone.utc),  # First 23:30.
+    datetime(2026, 10, 29, 21, 30, tzinfo=dt_timezone.utc),  # Repeated 23:30.
+])
+def test_signed_renewal_worker_applies_in_both_cairo_folds(phase5_lease, monkeypatch, now):
+    # Replay the real failing instant through the API and worker, without
+    # changing the original test's use of the current clock.
+    monkeypatch.setattr(timezone, "now", lambda: now)
+    with timezone.override("Africa/Cairo"):
+        _assert_signed_renewal_worker_order(phase5_lease)
+
+
+def _assert_signed_renewal_worker_order(phase5_lease):
     from rest_framework.test import APIClient
     from core_apps.features.providers import sign_fake_webhook
     from core_apps.features.models import ChangeSigningSession
@@ -795,9 +813,13 @@ def test_signed_renewal_survives_worker_order_and_applies_only_once(phase5_lease
         and renewal.tenancy_root_id == lease.tenancy_root_id
     )
     assert renewal.occupancy_status == lease.occupancy_status
+    invoice = renewal.invoices.get()
+    assert invoice.due_at > renewal.activated_at
+    assert invoice.billing_period.sequence == 1
     before = renewal.billing_periods.count()
     assert before > 0 and process_rental_changes()["applied"] == 0
     assert renewal.billing_periods.count() == before
+    assert renewal.invoices.get().id == invoice.id
     assert Lease.objects.filter(tenancy_root_id=lease.tenancy_root_id).count() == 2
 
 

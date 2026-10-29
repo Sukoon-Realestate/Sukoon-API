@@ -82,6 +82,8 @@ LABELS = {
     "renter_company": "الشركة المستأجرة / Renter company",
     "deposit_holder": "حائز التأمين / Deposit holder",
     "notice_days": "مهلة الإخطار بالأيام / Notice days",
+    "notice_method": "طريقة الإخطار / Notice method",
+    "clause_text": "نص البند / Clause text",
     "automatic": "التجديد التلقائي / Automatic renewal",
     "timezone": "المنطقة الزمنية / Time zone",
     "billing_anchor_day": "يوم الفوترة الشهري / Monthly billing day",
@@ -123,6 +125,8 @@ VALUES = {
 
 
 def _display(value, field=""):
+    if field == "notice_method" and value == "written":
+        return "كتابي / Written"
     if isinstance(value, bool):
         return "نعم / Yes" if value else "لا / No"
     if field.endswith("_bps") and isinstance(value, (int, str)):

@@ -1,6 +1,6 @@
 """Rental phase3: issue invoice."""
 
-from datetime import datetime, time, timedelta
+from datetime import datetime, time, timedelta, timezone as dt_timezone
 from zoneinfo import ZoneInfo
 from django.db import transaction
 from django.utils import timezone
@@ -21,6 +21,11 @@ CAIRO = ZoneInfo("Africa/Cairo")
 
 
 def cairo_instant(day, at_time=time.min):
+    if at_time == time.max:
+        # Cairo's last civil hour can repeat when DST ends. Subtract in UTC
+        # from the next day boundary to select the final instant, not fold=0.
+        following_midnight = datetime.combine(day + timedelta(days=1), time.min, tzinfo=CAIRO)
+        return (following_midnight.astimezone(dt_timezone.utc) - timedelta(microseconds=1)).astimezone(CAIRO)
     return datetime.combine(day, at_time, tzinfo=CAIRO)
 
 

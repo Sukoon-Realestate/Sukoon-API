@@ -63,7 +63,9 @@ def test_real_company_document_completes_both_signers_and_retains_pdf(provider_c
     employee = authenticated(cycle["employee"]).get(
         API + f"company-tenancies/{item.id}/"
     )
-    assert employee.data["signing_document"] is None
+    assert employee.status_code == 200
+    assert employee.data["active_role"] == "employee"
+    assert {"signing_document", "signing_sessions", "document_hash", "terms"}.isdisjoint(employee.data)
     assert (
         authenticated(cycle["employee"])
         .get(API + f"signing/documents/{document.id}/")
@@ -95,7 +97,7 @@ def test_revoked_signer_cannot_open_provider_document(provider_company):
     mandate.state = "revoked"
     mandate.save()
     response = act(item, cycle["signer"], "sign", digest=item.lease.document_hash)
-    assert response.status_code in {403, 409}
+    assert response.status_code == 404
     assert not item.lease.signing_sessions.exists()
 
 
