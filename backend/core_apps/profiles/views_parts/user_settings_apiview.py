@@ -2,12 +2,13 @@
 
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from core_apps.common.pagination import (
     ClientResultsSetPagination,
     StandardResultsSetPagination,
 )
 from core_apps.common.renderers import GenericJsonRenderer
-from ..models import Contract, UserSettings
+from ..models import UserSettings
 from ..serializers import (
     OwnerUnreadCountsSerializer,
     TenantContractSerializer,
@@ -17,6 +18,7 @@ from ..serializers import (
     VerificationStatusSerializer,
 )
 from ..services import ProfileService
+from ..services import contract_projection
 from core_apps.properties.models import PropertyVisitReview
 
 
@@ -152,8 +154,8 @@ class VerificationStatusAPIView(generics.RetrieveAPIView):
 
 class TenantContractsListAPIView(generics.ListAPIView):
     """
-    GET profiles/contracts/?page=1&page_size=20
-    Returns paginated contracts for the authenticated tenant.
+    GET profiles/contracts/?bucket=current|all&page=1&page_size=20
+    Omitted bucket preserves all/history for existing clients.
     """
 
     serializer_class = TenantContractSerializer
@@ -162,8 +164,25 @@ class TenantContractsListAPIView(generics.ListAPIView):
     pagination_class = ClientResultsSetPagination
 
     def get_queryset(self):
-        return (
-            Contract.objects.filter(tenant=self.request.user)
-            .select_related("property")
-            .order_by("-created_at")
+        self.contract_bucket = self.request.query_params.get("bucket", "all")
+        if self.contract_bucket not in {"current", "all"}:
+            raise ValidationError({"bucket": "Choose current or all."})
+        self.contract_as_of = contract_projection.civil_day()
+        return contract_projection.rows(
+            self.request.user, bucket=self.contract_bucket, as_of=self.contract_as_of
         )
+
+    def get_paginated_response(self, data):
+        response = super().get_paginated_response(data)
+        # Keep the established collection body and X-Page headers. Extra body
+        # keys would make the common renderer treat this page as an aggregate.
+        metadata = {
+            "X-Contracts-Bucket": self.contract_bucket,
+            "X-Contracts-As-Of": self.contract_as_of.isoformat(),
+            "X-Contracts-Projection-Version": "1",
+        }
+        for name, value in metadata.items():
+            response[name] = value
+        response["Access-Control-Expose-Headers"] = ", ".join(metadata)
+        response["Cache-Control"] = "private, no-store"
+        return response

@@ -149,6 +149,10 @@ class TestMyAccountScreenAPI:
         contracts = res.json()["data"]["menu_items"]["contracts"]
         assert contracts["count"] == 2
         assert contracts["subtitle"] == "2 عقد نشط"
+        current = auth_client.get(reverse("tenant-contracts-list"), {"bucket": "current"})
+        assert current.status_code == status.HTTP_200_OK
+        assert isinstance(current.json()["data"], list)
+        assert int(current["X-Total-Count"]) == contracts["count"]
 
 
 @pytest.mark.django_db

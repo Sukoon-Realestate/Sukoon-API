@@ -1,7 +1,8 @@
 """ProfileAccount operations owned by ProfileService."""
 
 from typing import Any, Dict, Optional
-from core_apps.profiles.models import Contract, Profile
+from core_apps.profiles.models import Profile
+from core_apps.profiles.services import contract_projection
 from ..arabic_months import ARABIC_MONTHS, format_arabic_month_year, format_arabic_count
 
 
@@ -72,9 +73,8 @@ class ProfileAccountMixin:
         saved_count = SavedProperty.objects.filter(user=user).count()
         visits_count = PropertyVisit.objects.filter(tenant=user).count()
         reviews_count = PropertyVisitReview.objects.filter(visit__tenant=user).count()
-        contracts_count = Contract.objects.filter(
-            tenant=user, status=Contract.Status.ACTIVE
-        ).count()
+        contracts_as_of = contract_projection.civil_day()
+        contracts_count = contract_projection.count_current(user, as_of=contracts_as_of)
 
         verification_label = "موثّق ✓" if user.is_verified else "غير موثّق"
 
@@ -107,6 +107,8 @@ class ProfileAccountMixin:
                     "title": "عقودي",
                     "count": contracts_count,
                     "subtitle": f"{contracts_count} عقد نشط",
+                    "as_of": contracts_as_of.isoformat(),
+                    "projection_version": 1,
                 },
                 "reviews": {
                     "title": "تقييماتي",

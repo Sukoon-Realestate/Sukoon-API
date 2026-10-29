@@ -47,6 +47,25 @@ class TenantContractSerializer(serializers.ModelSerializer):
     Serializer for listing tenant contracts.
     """
 
+    id = serializers.CharField(read_only=True)
+    source = serializers.CharField(read_only=True)
+    party_role = serializers.CharField(read_only=True)
+    lease_id = serializers.UUIDField(read_only=True, allow_null=True)
+    revision = serializers.IntegerField(read_only=True, allow_null=True)
+    is_current = serializers.BooleanField(read_only=True)
+    end_date_is_exclusive = serializers.BooleanField(read_only=True, allow_null=True)
+    lease_status = serializers.CharField(read_only=True, allow_null=True)
+    tenancy_root_id = serializers.UUIDField(read_only=True, allow_null=True)
+    offer_id = serializers.CharField(read_only=True)
+    offer_snapshot = serializers.JSONField(read_only=True, allow_null=True)
+
+    def to_representation(self, instance):
+        if isinstance(instance, dict) and "_source" in instance:
+            from ..services.contract_projection import representation
+
+            instance = representation(instance)
+        return super().to_representation(instance)
+
     class Meta:
         model = Contract
         fields = [
@@ -56,5 +75,7 @@ class TenantContractSerializer(serializers.ModelSerializer):
             "start_date",
             "end_date",
             "document_url",
+            "source", "party_role", "lease_id", "revision", "is_current",
+            "end_date_is_exclusive", "lease_status", "tenancy_root_id", "offer_id", "offer_snapshot",
         ]
         read_only_fields = fields
