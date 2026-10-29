@@ -159,6 +159,35 @@ CATALOG = {
         },
         "consumer": "rental_lifecycle.cases.request_review; canonical resolution blockers remain",
     },
+    "D26": {
+        "title": ["Private export verification", "التحقق لتصدير البيانات الخاصة"],
+        "description": [
+            "Private export requires fresh verification for the exact actor, session, resource revision and action details. Verified account email or the current staff authenticator is used. Verification never grants access to another party's records or authorizes other sensitive actions.",
+            "تصدير البيانات الخاصة يحتاج تحققًا حديثًا مرتبطًا بالحساب والجلسة ومراجعة السجل وتفاصيل العملية نفسها. يُستخدم بريد الحساب المؤكد أو تطبيق التحقق الحالي للموظف. التحقق لا يمنح الوصول لسجلات الغير ولا يجيز عمليات حساسة أخرى.",
+        ],
+        "scope": ["private.export"],
+        "rules": {
+            "provider": "core_apps.users.services.assurance.AccountAssuranceProvider",
+            "assurance": "email_otp_or_totp",
+            "proof_lifetime_seconds": 300,
+        },
+        "choices": {
+            "provider": ["core_apps.users.services.assurance.AccountAssuranceProvider"],
+            "assurance": ["email_otp_or_totp"],
+        },
+        "bounds": {"proof_lifetime_seconds": [1, 300]},
+        "labels": {
+            "proof_lifetime_seconds": [
+                "Maximum verification lifetime (seconds)",
+                "أقصى صلاحية للتحقق بالثواني",
+            ],
+        },
+        "consumer": (
+            "users.services.sensitive_actions.begin/verify/consume and "
+            "rental_phase6_views_parts.lease_reviews.rental_statement_create; "
+            "existing party authority, session, security epoch, exact payload and single-use proof remain required"
+        ),
+    },
     "D29": {
         "title": ["Habitability assessment", "تقييم صلاحية السكن"],
         "description": [
@@ -181,6 +210,7 @@ SOURCES = {
     "D17": "https://docs.stripe.com/api/idempotent_requests",
     "D23": "https://www.airbnb.com/help/article/767",
     "D25": "https://cpa.gov.eg/ar-eg/كيف-تتقدم-بشكوى",
+    "D26": "Sokoun existing first-party AccountAssuranceProvider and action-bound private.export contract",
     "D29": "Sokoun existing independent habitability assessment and clearance contract",
 }
 

@@ -4,11 +4,13 @@ import string
 import time
 from math import ceil
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError, APIException
 
@@ -36,7 +38,7 @@ def generate_otp(length: int = OTP_LENGTH) -> str:
     return "".join(secrets.choice(string.digits) for _ in range(length))
 
 
-def send_otp_email(email: str, otp: str, user_name: str = "") -> bool:
+def send_otp_email(email: str, otp: str, user_name: str = "", *, action_expires_at=None) -> bool:
     """
     ? Send the OTP verification code to the given email address.
 
@@ -64,6 +66,27 @@ def send_otp_email(email: str, otp: str, user_name: str = "") -> bool:
             f"تنتهي صلاحيته خلال {OTP_EXPIRATION_SECONDS // 60} دقائق.\n"
             "إذا لم تطلب هذا الرمز، تجاهل الرسالة."
         )
+
+    if action_expires_at is not None:
+        # The action's saved deadline is authoritative. Do not reuse the email
+        # verification TTL or infer a new validity period from delivery time.
+        local_deadline = timezone.localtime(action_expires_at, ZoneInfo("Africa/Cairo"))
+        offset = local_deadline.strftime("%z")
+        deadline = local_deadline.strftime("%Y-%m-%d %H:%M:%S") + f" (UTC{offset[:3]}:{offset[3:]})"
+        if (get_language() or "").startswith("ar"):
+            subject = f"[{site_name}] التحقق من العملية"
+            message = (
+                f"هذا الرمز للعملية المطلوبة فقط: {otp}\n\n"
+                f"تنتهي صلاحيته في {deadline} بتوقيت القاهرة.\n"
+                "إذا لم تطلب هذه العملية، تجاهل الرسالة."
+            )
+        else:
+            subject = f"[{site_name}] Verify this action - OTP"
+            message = (
+                f"This code is for the requested action only: {otp}\n\n"
+                f"It expires at {deadline} (Cairo time).\n"
+                "If you did not request this action, please ignore this email."
+            )
 
     from_email = getattr(settings, "DEFAULT_FROM_EMAIL", None)
 

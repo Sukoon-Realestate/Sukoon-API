@@ -39,12 +39,12 @@ class AccountAssuranceProvider:
                 )
             code = generate_otp()
             item.code_hash = make_password(code)
-            if not send_otp_email(item.user.email, code):
+            if not send_otp_email(item.user.email, code, action_expires_at=item.expires_at):
                 raise OTPDeliveryUnavailable()
             instructions = (
-                "أدخل رمز البريد لهذه العملية. ينتهي خلال خمس دقائق."
+                "أدخل رمز البريد لهذه العملية قبل موعد الانتهاء المذكور في البريد."
                 if (get_language() or "en").startswith("ar")
-                else "Enter the email code for this action. It expires in five minutes."
+                else "Enter the email code for this action before the expiry stated in the email."
             )
         item.save(update_fields=["factor_revision", "code_hash", "updated_at"])
         return {

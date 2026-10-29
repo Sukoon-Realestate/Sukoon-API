@@ -31,11 +31,38 @@ Initial pack: `python manage.py publish_business_policies --actor-id UUID --evid
 | D17 | 30-minute hold, one extension, three active holds | Canonical personal/company hold engine; existing hold snapshot controls extension |
 | D23 | Explicit action consent, generic notice preview | Existing durable inbox/outbox and destination authorization; not delivery proof |
 | D25 | 72h reassessment, no silent consent | Revisioned `request_review` case action after expiry/resolution; pending review cannot be duplicated |
+| D26 | `private.export` only; first-party email OTP / staff TOTP; 300-second maximum proof lifetime | Existing action-bound verification and rental statement export; current party/role/session authority remains required |
 | D29 | Assigned independent `habitability_assessor` | Existing scoped inspected restriction/clearance/reopen authorization |
 
 Numeric bounds and exact supported modes are authoritative in `business_policy_catalog.py`. Fixed modes are disclosures, not a generic executable policy language. New penalties, arbitrary proration, forced legal discharge or cash-custody products cannot be enabled by JSON. Policy publication does not create a provider, operator, physical inspection or cash transfer. Market research informed choices; numerical operational targets are product decisions, not statutory deadlines.
 
 Corporate package snapshots include the exact policy versions before approval. Agreement terms/documents preserve them. A newer publication does not amend an accepted contract, existing hold or case deadline. An absent historical snapshot remains unknown. Public legacy approvals are excluded unless explicitly created with the public presentation contract. Provider availability, current mandates, independent reviews, financial capacity, canonical locks and original receipts remain enforced.
+
+## D26 private export publication — 30 October 2026
+
+The catalog now supports the existing first-party assurance consumer through the normal operator API, Django publication form and policy-pack command. This adds publication support; deploying source does not itself publish a policy, verify an email, send a challenge, create an export or change any financial/contract record. The pack command now includes D26 when explicitly applied; its default remains dry review. Use the single-policy operator flow for a narrowly reviewed D26 publication.
+
+The server fixes scope to `["private.export"]`. The exact rule schema is:
+
+```json
+{
+  "provider": "core_apps.users.services.assurance.AccountAssuranceProvider",
+  "assurance": "email_otp_or_totp",
+  "proof_lifetime_seconds": 300
+}
+```
+
+Only that provider and assurance value are accepted; the lifetime must be an integer from 1 through 300 (booleans are invalid). Arbitrary import paths, other assurance modes, unknown rule keys, client-supplied scopes, backdating and missing governance evidence are rejected by the existing publication path. Head revision, original request identity, immutable versions, current administrator authority, audit and idempotent receipts remain unchanged. The published public disclosure exposes the duration, not internal provider paths or approval evidence.
+
+Compatibility is with the implemented consumer, not an inferred new security flow:
+
+- `users.services.sensitive_actions._adapter` uses the first-party provider when `SECURITY_ASSURANCE_PROVIDER` is empty; any configured value must exactly match the published provider. The first-party provider works with `DEBUG=false`; a test provider or `SECURITY_TEST_BYPASS` is not needed or enabled by this policy.
+- `begin` resolves `approved_policy("D26", action)`, requires a positive integer lifetime, and caps expiry at 300 seconds from challenge creation. The returned `expires_at` is authoritative, including a shorter published lifetime. A non-staff actor must already have a verified email; staff/superusers must have a confirmed current TOTP factor. Delivery failure does not verify a challenge.
+- First-party action email now identifies the requested action and displays that exact saved expiry in Cairo time with its date and UTC offset (including DST/repeated-hour distinctions). It does not reuse the ordinary verification email's 600-second wording or reset expiry when email is delivered. Ordinary verify-email/resend/contact-verification mail remains unchanged. Neither the email text nor delivery acknowledgment extends the proof deadline.
+- `verify` and `consume` retain actor, session, security epoch, exact action/resource/revision/payload, current policy, expiry and single-use checks. The rental statement command independently checks current party/company authority and lease revision. A proof is not a permission grant or a statement.
+- `policy_registry.approved_policy` selects the latest effective approved row containing the requested action. A new private-export-only publication therefore does not remove other scopes from older immutable approvals. Existing non-public/legacy D26 rows and their rules are not rewritten or widened; `business_policies.current` separately controls public disclosures. Publishing a newer policy for `private.export` intentionally requires a fresh proof under that version; it does not replay an existing operation.
+
+The catalog deliberately does not expose `refund.execute`, `payout.execute`, company member updates, account changes/recovery/closure, or an arbitrary security scope. Their existing policies and consumers remain independent. Real email delivery/mailbox possession, current payer authority, normal governance publication, statement creation, worker generation and protected download are separate operational acceptance steps. Source and isolated tests do not certify them.
 
 ## Recovery deferral
 

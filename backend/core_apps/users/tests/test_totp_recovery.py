@@ -433,7 +433,7 @@ def test_mail_failure_never_returns_a_challenge(actors, monkeypatch):
         email="mail-failure@example.invalid", password="test", is_email_verified=True
     )
     monkeypatch.setattr(
-        "core_apps.users.services.assurance.send_otp_email", lambda *args: False
+        "core_apps.users.services.assurance.send_otp_email", lambda *args, **kwargs: False
     )
     with pytest.raises(OTPDeliveryUnavailable):
         sensitive_actions.begin(
