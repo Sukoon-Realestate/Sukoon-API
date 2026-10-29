@@ -42,20 +42,53 @@ def test_background_badges_do_not_change_last_used_campaign_target(auth_client, 
 def test_account_with_four_spaces_has_independent_feed_count_and_read_all(
     auth_client, user, another_user
 ):
+    from core_apps.features.company_models import Company, CompanyMembership
+    from core_apps.features.services.company.role_context import bound_role
+
+    company = Company.objects.create(
+        name="Scoped notification company",
+        registration_number="NOTIFICATION-SCOPE",
+        contact_email="notifications@example.test",
+    )
+    CompanyMembership.objects.create(company=company, user=user, is_employee=True)
+    company_headers = {
+        "HTTP_X_SUKOON_COMPANY_ID": str(company.id),
+        "HTTP_X_SUKOON_COMPANY_ROLE": "employee",
+    }
     notices = {
         space: Notification.objects.create(
-            user=user, title=space, data={"workspace": space}
+            user=user,
+            title=space,
+            data={
+                "workspace": space,
+                **(
+                    {"company_id": str(company.id), "company_role": "employee"}
+                    if space == "company"
+                    else {}
+                ),
+            },
         )
         for space in SPACES
     }
+    legacy_company = Notification.objects.create(
+        user=user, title="Unbound legacy company notice", data={"workspace": "company"}
+    )
     account = Notification.objects.create(
         user=user, title="Account", data={"scope": "account"}
     )
     foreign = Notification.objects.create(
         user=another_user, title="Private", data={"workspace": "owner"}
     )
+    missing_context = auth_client.get(reverse("notification-list"), {"scope": "company"})
+    assert missing_context.status_code == 200
+    assert missing_context.data["results"] == []
+    assert missing_context.data["unread_count"] == 0
     for scope, notice in notices.items():
-        result = auth_client.get(reverse("notification-list"), {"scope": scope})
+        result = auth_client.get(
+            reverse("notification-list"),
+            {"scope": scope},
+            **(company_headers if scope == "company" else {}),
+        )
         assert result.status_code == 200
         assert [row["id"] for row in result.data["results"]] == [str(notice.id)]
         assert result.data["unread_count"] == 1
@@ -69,20 +102,25 @@ def test_account_with_four_spaces_has_independent_feed_count_and_read_all(
         notice.refresh_from_db()
         assert notice.is_read == (scope == "owner")
         assert auth_client.get(
-            reverse("notification-unread-count"), {"scope": scope}
+            reverse("notification-unread-count"),
+            {"scope": scope},
+            **(company_headers if scope == "company" else {}),
         ).data["unread_count"] == int(scope != "owner")
     assert (
         ProfileService.get_owner_unread_counts(user)["unread_notifications_count"] == 0
     )
-    assert (
-        ProfileService.get_tenant_unread_counts(user, scope="company")[
-            "unread_notifications_count"
-        ]
-        == 1
-    )
+    with bound_role(user, str(company.id), "employee"):
+        assert (
+            ProfileService.get_tenant_unread_counts(user, scope="company")[
+                "unread_notifications_count"
+            ]
+            == 1
+        )
     account.refresh_from_db()
     foreign.refresh_from_db()
+    legacy_company.refresh_from_db()
     assert not account.is_read and not foreign.is_read
+    assert not legacy_company.is_read
 
 
 def test_explicit_owner_wins_over_company_action_and_old_notice_keeps_identity(user):

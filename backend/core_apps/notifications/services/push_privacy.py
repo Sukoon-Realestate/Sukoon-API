@@ -29,6 +29,7 @@ ROUTING_FIELDS = frozenset(
         "change_kind",
         "group_id",
         "company_id",
+        "company_role",
         "item_id",
         "revision",
         "review_id",
