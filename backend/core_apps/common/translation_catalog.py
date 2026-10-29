@@ -1,6 +1,7 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "This action awaits an approved policy.": "يتطلب هذا الإجراء سياسة معتمدة، وهي غير متاحة حاليًا.",
     "Your housing": "سكني",
     "Maintenance request submitted.": "تم إرسال طلب الصيانة.",
     "Maintenance request acknowledged.": "تم استلام طلب الصيانة.",

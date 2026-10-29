@@ -1,4 +1,6 @@
 import json
+from unittest.mock import Mock
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
@@ -218,6 +220,53 @@ class TestGenericJsonRendererLocalization:
 
         assert response.status_code == 401
         assert "بيانات الدخول" in response.data["message"] or "غير مصرح" in response.data["message"]
+
+
+@pytest.mark.parametrize(
+    ("language", "message"),
+    [
+        ("ar", "يتطلب هذا الإجراء سياسة معتمدة، وهي غير متاحة حاليًا."),
+        ("en", "This action awaits an approved policy."),
+    ],
+)
+def test_missing_approved_policy_keeps_localized_http_error(language, message, monkeypatch):
+    from core_apps.features.services import policy_registry
+    from core_apps.features.services.rental_phase2 import RentalConflict
+
+    # Only database access is replaced: exercise the real policy rejection,
+    # language middleware, exception handler and rendered HTTP response.
+    policies = Mock()
+    policies.order_by.return_value = []
+    lookup = Mock(return_value=policies)
+    monkeypatch.setattr(policy_registry.PolicyDecision.objects, "filter", lookup)
+    request = APIRequestFactory().post(
+        "/api/v1/auth/security/challenges/", HTTP_ACCEPT_LANGUAGE=language
+    )
+
+    def rejected_action(request):
+        with pytest.raises(RentalConflict) as rejected:
+            policy_registry.approved_policy("D26", "private.export")
+        assert rejected.value.get_codes() == "awaiting_policy"
+        response = custom_exception_handler(rejected.value, {"request": request})
+        response.accepted_renderer = GenericJsonRenderer()
+        response.accepted_media_type = "application/json"
+        response.renderer_context = {"request": request, "response": response}
+        response.render()
+        return response
+
+    response = MobileLocaleMiddleware(rejected_action)(request)
+
+    assert response.status_code == status.HTTP_409_CONFLICT
+    assert json.loads(response.content) == {"message": message, "data": None}
+    assert response["X-App-Error-Code"] == "awaiting_policy"
+    assert response["Content-Language"] == language
+    assert "Accept-Language" in response["Vary"]
+    assert "no-store" in response["Cache-Control"]
+    assert lookup.call_count == 1
+    assert lookup.call_args.kwargs["code"] == "D26"
+    assert lookup.call_args.kwargs["status"] == "approved"
+    assert "effective_at__lte" in lookup.call_args.kwargs
+    policies.order_by.assert_called_once_with("-effective_at")
 
 
 @pytest.mark.django_db
