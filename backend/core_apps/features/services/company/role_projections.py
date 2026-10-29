@@ -107,6 +107,71 @@ CHANGE_KINDS = {
 }
 
 
+def payer_settlement_content(content):
+    """Decision basis from the validated settlement, not its internal snapshot."""
+
+    def line(value):
+        result = keep(
+            value, {"id", "type", "description", "invoice_id", "evidence_ids"}
+        )
+        result["amount"] = keep(
+            value.get("amount", {}), {"amount_minor", "currency", "exponent"}
+        )
+        if "evidence" in value:
+            # Already resolved for this lease by review_content. Storage and
+            # uploader metadata are not part of the payer's decision basis.
+            result["evidence"] = [
+                keep(
+                    row,
+                    {
+                        "id",
+                        "lease_id",
+                        "name",
+                        "mime_type",
+                        "size_bytes",
+                        "status",
+                        "sha256",
+                        "revision",
+                    },
+                )
+                for row in value["evidence"]
+            ]
+        return result
+
+    source = content.get("plan", {})
+    plan = keep(
+        source,
+        {
+            "rent_balance_minor",
+            "deposit_to_return_minor",
+            "refund_due_minor",
+            "total_due_minor",
+            "released_deposit_due_minor",
+        },
+    )
+    plan["charges"] = [line(row) for row in source.get("charges", [])]
+    plan["credits"] = [
+        keep(row, {"invoice_id", "amount_minor", "type", "line_id"})
+        for row in source.get("credits", [])
+    ]
+    plan["deposit_applications"] = [
+        keep(row, {"invoice_id", "amount_minor"})
+        for row in source.get("deposit_applications", [])
+    ]
+    plan["refunds"] = [
+        {
+            **keep(row, {"payment_attempt_id", "amount_minor"}),
+            "allocations": keep(row.get("allocations", {}), {"rent", "deposit"}),
+        }
+        for row in source.get("refunds", [])
+    ]
+    return {
+        "kind_of_document": "summary",
+        "lines": [line(row) for row in content.get("lines", [])],
+        "plan": plan,
+    }
+
+
 def tenancy(value, item, user):
     from .role_context import http_context
 
@@ -252,6 +317,9 @@ def tenancy(value, item, user):
             )
             if role == "employee":
                 row["content"].pop("employee_name", None)
+        elif role == "payer" and change["kind"] == "settlement":
+            row["reason"] = change.get("reason", "")
+            row["content"] = payer_settlement_content(row.get("content", {}))
         elif role in {"payer", "approver"}:
             content = row.get("content", {})
             row["content"] = keep(
