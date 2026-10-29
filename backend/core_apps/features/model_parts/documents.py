@@ -39,6 +39,8 @@ class RentalDocument(TimeStampedModel):
         max_length=20, choices=Status.choices, default=Status.QUEUED
     )
     revision = models.PositiveIntegerField(default=1)
+    # Durable work intent for normal new statements only; historical rows stay NULL.
+    generation_requested_at = models.DateTimeField(null=True, blank=True, editable=False)
     starts_on = models.DateField(null=True, blank=True)
     ends_on_exclusive = models.DateField(null=True, blank=True)
     sha256 = models.CharField(max_length=64, blank=True, default="")
@@ -50,6 +52,16 @@ class RentalDocument(TimeStampedModel):
 
     class Meta:
         ordering = ["-created_at", "-updated_at"]
+        indexes = [
+            models.Index(
+                fields=["updated_at", "id"],
+                condition=Q(
+                    status="queued", document_type="statement",
+                    generation_requested_at__isnull=False,
+                ),
+                name="queued_statement_generation",
+            ),
+        ]
         constraints = [
             models.UniqueConstraint(
                 fields=["lease", "document_type", "source_reference"],

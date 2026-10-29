@@ -51,6 +51,12 @@ def configure(scope):
     # These replace the existing policy-maintenance process in the combined
     # worker. They retain its mode/privacy gates and do not enable new business.
     maintenance = {
+        # Only new, explicitly marked statement requests; never old private docs
+        # or the financial/closure worker. The DB row survives broker outages.
+        "generate-requested-rental-statements": {
+            "task": "core_apps.features.tasks_parts.rental_statement_delivery.generate_requested_rental_statements",
+            "schedule": 10.0,
+        },
         "deliver-notification-push": catalog["deliver-notification-push"],
         "maintain-support-uploads": catalog["maintain-support-uploads"],
         "maintain-chat": {

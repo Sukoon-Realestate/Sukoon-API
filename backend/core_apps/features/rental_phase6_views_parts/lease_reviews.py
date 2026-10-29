@@ -189,6 +189,7 @@ def rental_statement_create(request):
         requested_by=request.user,
         document_type=RentalDocument.DocumentType.STATEMENT,
         title="Rental statement",
+        generation_requested_at=timezone.now(),
         starts_on=parse_date(starts) if starts else None,
         ends_on_exclusive=parse_date(ends) if ends else None,
     )

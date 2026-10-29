@@ -50,6 +50,7 @@ from .tasks_parts.process_rental_closure import (
     process_rental_closure,
 )
 from .tasks_parts.rent_payment_notifications import process_rent_payment_notifications
+from .tasks_parts.rental_statement_delivery import generate_requested_rental_statements
 
 
 @shared_task
