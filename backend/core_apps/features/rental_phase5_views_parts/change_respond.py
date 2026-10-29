@@ -136,6 +136,10 @@ def change_respond(request, change_id, kind):
             raise RentalConflict("This change is no longer awaiting a response.")
         if kind != RentalChange.Kind.EXTERNAL_PAYMENT:
             from ..services.cycle_permissions import cycle_actions
+            if action == "accept" and kind == RentalChange.Kind.TERMINATION:
+                from ..services.termination_notice import validate_accept
+
+                termination_values = validate_accept(item, request.data)
             if action == "accept" and kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
                 from ..services.change_terms import validate_changed_terms
                 validate_changed_terms(item.terms)
@@ -154,6 +158,10 @@ def change_respond(request, change_id, kind):
         elif kind == RentalChange.Kind.EXTERNAL_PAYMENT:
             item.status = RentalChange.Status.ACCEPTED
         else:
+            if kind == RentalChange.Kind.TERMINATION:
+                from ..services.termination_notice import record_decision
+
+                record_decision(item, request.user, "accept", termination_values["short_notice_acknowledged"])
             if kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}:
                 from ..services.change_terms import validate_changed_terms
 
@@ -175,9 +183,11 @@ def change_respond(request, change_id, kind):
                     item.applied_at = timezone.now()
                 elif kind == RentalChange.Kind.TERMINATION:
                     from ..services.legal_lifecycle import accept_termination
+                    from ..services.termination_notice import today
 
+                    item.save(update_fields=["approvals", "status", "updated_at"])
                     accept_termination(item)
-                    if item.effective_on <= timezone.localdate():
+                    if item.effective_on <= today():
                         item.status = RentalChange.Status.APPLIED
                         item.applied_at = timezone.now()
         item.revision += 1

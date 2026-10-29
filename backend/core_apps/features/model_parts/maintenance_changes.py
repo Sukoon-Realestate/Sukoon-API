@@ -122,6 +122,7 @@ class RentalChange(TimeStampedModel):
     method = models.CharField(max_length=40, blank=True, default="")
     terms = models.JSONField(default=dict, blank=True)
     previous_terms = models.JSONField(default=dict, blank=True)
+    termination_notice_snapshot = models.JSONField(default=dict, blank=True)
     approvals = models.JSONField(default=list, blank=True)
     evidence = models.ManyToManyField(
         RentalEvidence, related_name="rental_changes", blank=True

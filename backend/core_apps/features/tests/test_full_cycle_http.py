@@ -118,6 +118,8 @@ def test_complete_funded_cycle_over_http(
     lease = Lease.objects.get()
     owner_api, tenant_api = actors[owner.pk], actors[tenant.pk]
     ending_day = lease.start_date + timedelta(days=20)
+    from core_apps.features.services.termination_notice import policy
+
     termination = owner_api.post(
         API + f"leases/{lease.id}/termination-requests/",
         command(
@@ -125,13 +127,15 @@ def test_complete_funded_cycle_over_http(
             effective_on=str(ending_day),
             reason="Mutually agreed early end",
             evidence_ids=[],
+            termination_mode="contract_notice",
+            notice_basis_digest=policy(lease)["basis_digest"],
         ),
     )
     assert termination.status_code == 201, termination.data
     change = termination.data["resource"]
     response = tenant_api.post(
         API + f"termination-requests/{change['id']}/respond/",
-        command(change["revision"], action="accept"),
+        command(change["revision"], action="accept", termination_notice_digest=change["termination_notice"]["digest"]),
     )
     assert response.status_code == 200, response.data
     lease.refresh_from_db()

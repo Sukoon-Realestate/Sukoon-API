@@ -79,6 +79,8 @@ def rental_center(request, lease_id):
             "sequence"
         )[:12]
     ]
+    from ..services.termination_notice import policy as termination_notice_policy
+
     response = Response(
         {
             "id": str(lease.id),
@@ -90,6 +92,7 @@ def rental_center(request, lease_id):
             "occupancy_status": lease.occupancy_status,
             "financial_closure_status": lease.financial_closure_status,
             "terms": lease.terms,
+            "termination_notice_policy": termination_notice_policy(lease),
             "balance": _money(balance),
             "next_action": next_action,
             "journey_summary": journey,

@@ -239,6 +239,15 @@ EN_TO_AR_MESSAGES.update(SHARED_HOUSING_MESSAGES)
 EN_TO_AR_MESSAGES.update(ADVANCED_MESSAGES)
 EN_TO_AR_MESSAGES.update(BILLING_MESSAGES)
 EN_TO_AR_MESSAGES.update(COMPANY_MESSAGES)
+EN_TO_AR_MESSAGES.update({
+    "The current contract notice could not be verified. Review the agreement before requesting an early end.": "تعذر التحقق من مهلة الإخطار في العقد الحالي. راجع الاتفاق قبل طلب إنهائه مبكرًا.",
+    "The agreement or notice date changed. Refresh and review a new termination proposal.": "تغير الاتفاق أو تاريخ الإخطار. حدّث البيانات وراجع طلب إنهاء جديدًا.",
+    "Choose the termination mode that matches this exact date and the contract notice.": "اختر طريقة الإنهاء التي تطابق هذا التاريخ المحدد ومهلة الإخطار في العقد.",
+    "Explicit agreement to shorten notice for this date is required. Financial obligations and possession return remain separate.": "يلزم اتفاق صريح على تقصير مهلة الإخطار لهذا التاريخ. تظل الالتزامات المالية وتسليم الحيازة إجراءات مستقلة.",
+    "This termination needs a new notice review. Reject it and create a new proposal; earlier approval is not a notice waiver.": "يتطلب هذا الإنهاء مراجعة جديدة للإخطار. ارفضه وأنشئ طلبًا جديدًا؛ الموافقة السابقة لا تعني التنازل عن مهلة الإخطار.",
+    "The proposed end date has passed. Reject this proposal and review a new current or future date.": "مضى تاريخ الإنهاء المقترح. ارفض الطلب وراجع تاريخًا جديدًا لليوم أو للمستقبل.",
+    "Resolve the existing termination or renewal before proposing another end.": "احسم طلب الإنهاء أو التجديد الحالي قبل اقتراح إنهاء آخر.",
+})
 for en_msg, ar_msg in EN_TO_AR_MESSAGES.items():
     if ar_msg not in AR_TO_EN_MESSAGES:
         AR_TO_EN_MESSAGES[ar_msg] = en_msg

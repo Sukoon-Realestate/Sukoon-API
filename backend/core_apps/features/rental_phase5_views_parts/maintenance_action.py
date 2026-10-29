@@ -227,11 +227,14 @@ def change_payload(item, user=None):
     from ..services.change_terms import changed_terms_blocker
     from ..services.change_versions import history, comments
     from ..rental_phase4_views_parts.handover_payload import evidence_payload
+    from ..services.termination_notice import projection as notice_projection
 
     blocker = changed_terms_blocker(item)
+    termination_notice = notice_projection(item, user)
     return {
         "allowed_actions": cycle_actions(user, item),
-        "blocking_reasons": [translate_message(blocker)] if blocker else [],
+        "blocking_reasons": ([translate_message(blocker)] if blocker else []) + (termination_notice.get("blocking_reasons", []) if termination_notice else []),
+        "termination_notice": termination_notice,
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "invoice_id": str(item.invoice.id) if item.invoice else None,

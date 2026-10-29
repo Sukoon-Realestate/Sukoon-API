@@ -132,6 +132,7 @@ class LeaseSerializer(serializers.ModelSerializer):
     allowed_actions = serializers.SerializerMethodField()
     blocking_reasons = serializers.SerializerMethodField()
     invitation_id = serializers.SerializerMethodField()
+    termination_notice_policy = serializers.SerializerMethodField()
 
     class Meta:
         model = Lease
@@ -166,7 +167,13 @@ class LeaseSerializer(serializers.ModelSerializer):
             "document_id",
             "document_hash",
             "hold_expires_at",
+            "termination_notice_policy",
         ]
+
+    def get_termination_notice_policy(self, obj):
+        from ..services.termination_notice import policy
+
+        return policy(obj) if not obj.renter_company_id else None
 
     def get_invitation_id(self, obj):
         invitation = getattr(obj, "tenancy_invitation", None)

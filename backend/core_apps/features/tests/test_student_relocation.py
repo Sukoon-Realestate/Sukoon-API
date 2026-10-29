@@ -75,6 +75,7 @@ def test_journey_e_internship_booking_formal_departure_and_separate_deposit_sett
     )
     current.refresh_from_db()
     assert (current.status, current.occupancy_status, current.terms) == before
+    from core_apps.features.services.termination_notice import policy
 
     change = post(
         owner,
@@ -84,13 +85,15 @@ def test_journey_e_internship_booking_formal_departure_and_separate_deposit_sett
             effective_on=str(ending_day),
             reason="Reviewed internship relocation",
             evidence_ids=[],
+            termination_mode="contract_notice",
+            notice_basis_digest=policy(current)["basis_digest"],
         ),
         201,
     ).data["resource"]
     post(
         tenant,
         f"termination-requests/{change['id']}/respond/",
-        command(change["revision"], action="accept"),
+        command(change["revision"], action="accept", termination_notice_digest=change["termination_notice"]["digest"]),
     )
     current.refresh_from_db()
     assert (

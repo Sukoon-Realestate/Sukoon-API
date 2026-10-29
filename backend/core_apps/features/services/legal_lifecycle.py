@@ -3,12 +3,29 @@
 from django.db import transaction
 from django.utils import timezone
 
-from ..models import BillingPeriod, Lease, RentalTimelineEvent
+from ..models import BillingPeriod, Lease, RentalChange, RentalTimelineEvent
 
 
+@transaction.atomic
 def accept_termination(change):
     lease = change.lease
-    change.previous_terms = {**lease.terms, "ends_on_exclusive": str(lease.end_date)}
+    if not lease.renter_company_id:
+        from .termination_notice import fail, require_application
+
+        lease = Lease.objects.select_for_update().get(pk=change.lease_id)
+        locked = RentalChange.objects.select_for_update().get(pk=change.pk)
+        locked.lease = lease
+        if (
+            locked.termination_notice_snapshot != change.termination_notice_snapshot
+            or locked.approvals != change.approvals
+            or locked.effective_on != change.effective_on
+            or locked.content_revision != change.content_revision
+            or locked.kind != change.kind
+        ):
+            fail("termination_notice_review_required")
+        require_application(locked)
+        change.lease = lease
+    change.previous_terms = {**(lease.terms if isinstance(lease.terms, dict) else {}), "ends_on_exclusive": str(lease.end_date)}
     lease.end_date = change.effective_on
     lease.status = Lease.Status.TERMINATION_PENDING
     lease.revision += 1
@@ -20,9 +37,12 @@ def accept_termination(change):
 
 
 def end_lease_if_due(lease):
+    from .termination_notice import today
+
+    civil_day = timezone.localdate() if lease.renter_company_id else today()
     if (
         lease.status not in {Lease.Status.ACTIVE, Lease.Status.TERMINATION_PENDING}
-        or lease.end_date > timezone.localdate()
+        or lease.end_date > civil_day
     ):
         return False
     # Bill elapsed scheduled periods before ending; worker order cannot erase debt.

@@ -42,6 +42,7 @@ def snapshot(item):
         'invoice_revision': item.invoice.revision if item.invoice_id else None,
         'evidence_ids': [str(value) for value in item.evidence.values_list('id', flat=True)],
         'content_version': item.content_revision,
+        **({'termination_notice': deepcopy(item.termination_notice_snapshot)} if item.kind == 'termination' else {}),
     }
 
 

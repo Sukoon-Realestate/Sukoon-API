@@ -69,8 +69,9 @@ def cycle_actions(user, subject):
                 "create_payment_extension",
                 "create_amendment",
                 "create_renewal",
-                "create_termination",
             ]
+        if lease.status == Lease.Status.ACTIVE:
+            actions.append("create_termination")
         from .evidence_storage import available as evidence_available
 
         if evidence_available() and lease.status in {
@@ -150,6 +151,12 @@ def cycle_actions(user, subject):
     if isinstance(subject, RentalChange):
         if subject.kind == RentalChange.Kind.EXTERNAL_PAYMENT:
             return []  # Financial operations approval is not a participant action.
+        if subject.kind == RentalChange.Kind.TERMINATION:
+            from .termination_notice import blocker
+
+            if subject.status not in {"proposed", "changes_requested", "review_required"}:
+                return []
+            return ["reject"] + (["accept"] if not blocker(subject) and str(user.id) not in subject.approvals else [])
         from .change_terms import changed_terms_blocker
 
         if (

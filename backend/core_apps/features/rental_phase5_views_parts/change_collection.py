@@ -97,18 +97,6 @@ def change_collection(request, lease_id, kind):
         raise ValidationError(
             {"terms": "Continuous renewals require zero acquisition commission."}
         )
-    if kind == RentalChange.Kind.TERMINATION:
-        effective = parse_date(request.data.get("effective_on", ""))
-        if (
-            not effective
-            or effective < max(lease.start_date, timezone.localdate())
-            or effective > lease.end_date
-        ):
-            raise ValidationError(
-                {
-                    "effective_on": "Choose a current or future date within this lease term."
-                }
-            )
     evidence = _safe_evidence(lease, request.data.get("evidence_ids", []))
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True, servicing=kind in EDITABLE)
@@ -119,6 +107,11 @@ def change_collection(request, lease_id, kind):
             return Response(replay[0], status=replay[1])
         if int(request.data.get("lease_revision", 0)) != lease.revision:
             raise RentalConflict("Lease revision conflict.", code="stale_revision")
+        termination_snapshot, termination_values = {}, {}
+        if kind == RentalChange.Kind.TERMINATION:
+            from ..services.termination_notice import prepare
+
+            termination_snapshot, termination_values = prepare(lease, effective_date, request.data)
         if kind in EDITABLE:
             from ..services.cycle_permissions import cycle_actions
             if f"create_{kind}" not in cycle_actions(request.user, lease):
@@ -198,6 +191,7 @@ def change_collection(request, lease_id, kind):
             amount_minor=(request.data.get("amount") or {}).get("amount_minor"),
             method=request.data.get("method", ""),
             terms=reviewed,
+            termination_notice_snapshot=termination_snapshot,
             previous_terms=(
                 lease.terms
                 if kind in {RentalChange.Kind.AMENDMENT, RentalChange.Kind.RENEWAL}
@@ -210,6 +204,10 @@ def change_collection(request, lease_id, kind):
             ),
         )
         item.evidence.set(evidence)
+        if kind == RentalChange.Kind.TERMINATION:
+            from ..services.termination_notice import record_decision
+
+            record_decision(item, request.user, "propose", termination_values["short_notice_acknowledged"])
         from ..services.change_versions import freeze, snapshot
         from ..services.rental_lifecycle.consents import record_consent
         freeze(item)
