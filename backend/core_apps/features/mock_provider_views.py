@@ -125,8 +125,16 @@ def signing_complete(request, session_id, change=False):
     session = get_object_or_404(session_model, id=session_id, signer=request.user)
     operation = f"mock.signing.complete.{session_id}"
     with transaction.atomic():
+        company_review = None
         if change:
             subject = RentalChange.objects.select_for_update().get(pk=session.change_id)
+            if subject.lease.renter_company_id:
+                from .services.company.continuation_capabilities import (
+                    authorize_current_signatory,
+                    require_pending_session,
+                )
+
+                company_review = authorize_current_signatory(request.user, subject)
         else:
             from .services.rental_lifecycle.locks import lock_financial_lease
 
@@ -146,6 +154,10 @@ def signing_complete(request, session_id, change=False):
         if replay is not None:
             return replay
         _revision(data, subject)
+        if company_review is not None:
+            require_pending_session(
+                request.user, subject, company_review, session=session
+            )
         apply_fake_rental_event(
             {
                 "type": (

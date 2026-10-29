@@ -2,6 +2,7 @@
 
 from core_apps.properties.models import Property
 from core_apps.users.models import User
+from core_apps.common.translation import translate_message
 from ...models import (
     Lease,
     OwnerPaymentProfile,
@@ -115,7 +116,12 @@ def capabilities_for(user, subject, requested_action=""):
         allowed.extend(handover_actions(user, subject))
     elif isinstance(subject, RentalChange):
         enabled.append("rental_changes")
-        allowed.extend(cycle_actions(user, subject))
+        if subject.lease.renter_company_id:
+            from ..company.continuation_capabilities import completion_actions
+
+            allowed.extend(completion_actions(user, subject))
+        else:
+            allowed.extend(cycle_actions(user, subject))
     elif isinstance(subject, (FinalSettlement, RentalDispute)):
         capability = {
             FinalSettlement: "rental_settlement",
@@ -220,7 +226,10 @@ def capabilities_for(user, subject, requested_action=""):
             and requested_action == "create_rental_interest"
             else None
         )
-        blocking.append(reason or "The requested rental action is not available yet.")
+        blocking.append(
+            reason
+            or translate_message("The requested rental action is not available yet.")
+        )
 
     return {
         "account_id": str(user.id),
