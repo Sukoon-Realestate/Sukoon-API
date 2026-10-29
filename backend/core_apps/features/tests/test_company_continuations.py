@@ -8,15 +8,16 @@ from core_apps.users.models import User
 from core_apps.features.tests.test_company_tenancy import (
     cycle,
     person,
-    company_setup,
+    company_setup as base_company_setup,
     rental_participants,
-    policy,
+    policy as base_policy,
     command,
     authenticated,
     API,
     agreement,
     signed_agreement,
     active_agreement,
+    occupied_agreement,
     act,
     expose_unexpected_exceptions,
 )
@@ -27,12 +28,67 @@ from core_apps.features.models import (
     RentInvoice,
     FinalSettlement,
     SettlementAdjustment,
+    IdempotencyRecord,
+    ReservationHold,
 )
 from core_apps.features.services.rental_phase2 import add_months
 from core_apps.features.services.company import tenancy_projection
 from core_apps.features.rental_phase5_views_parts.change_signing_session import (
     complete_change_signature,
 )
+
+
+@pytest.fixture
+def policy(db, settings, request):
+    configured = base_policy.__wrapped__(db, settings)
+    days = getattr(request, "param", 0)
+    configured.lifecycle_rules = {**configured.lifecycle_rules, "turnover_days": days}
+    configured.save(update_fields=["lifecycle_rules"])
+    return configured
+
+
+@pytest.fixture
+def company_setup(rental_participants, policy, settings, request):
+    # These fixtures are also imported by continuation/recovery test modules;
+    # reuse the original factory without introducing a new fixture dependency.
+    configured = base_company_setup.__wrapped__(rental_participants, policy, settings)
+    if getattr(request, "param", None) != "single-property":
+        return configured
+    from core_apps.features.services.company import bookings, offers
+
+    owner, coordinator, approver, company, building, units, _, housing = configured
+    offer = offers.create_offer(
+        owner,
+        {
+            "scope": "selected_units",
+            "unit_ids": [units[0].id],
+            "monthly_rent_minor": 100000,
+            "deposit_minor": 20000,
+            "publish": True,
+            "occupancy_policy": "reserve_capacity_with_notice",
+        },
+    )
+    housing = bookings.update_request(
+        coordinator,
+        housing.id,
+        {
+            "expected_revision": housing.revision,
+            "starts_on": housing.starts_on,
+            "ends_on_exclusive": housing.ends_on_exclusive,
+            "headcount": 2,
+        },
+    )
+    # The normal cycle places both independent employees in this exact unit.
+    return (
+        owner,
+        coordinator,
+        approver,
+        company,
+        building,
+        [units[0]] * 2,
+        offer,
+        housing,
+    )
 
 
 def proposal(cycle, item, **extra):
@@ -93,6 +149,306 @@ def signatures(item, change):
     change.refresh_from_db()
     item.refresh_from_db()
     item.lease.refresh_from_db()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "policy,company_setup",
+    [(0, None), (1, "single-property")],
+    indirect=True,
+    ids=["no-buffer", "one-day-buffer"],
+)
+def test_renewal_last_approver_http_acceptance_preserves_invoice_and_receipt(
+    occupied_agreement,
+    policy,
+):
+    cycle, item = occupied_agreement
+    company = cycle["company"]
+    invoice = item.lease.invoices.get()
+    original_invoice = dict(RentInvoice.objects.filter(pk=invoice.pk).values().get())
+    original_end = item.lease.end_date
+    hold = item.preparation.booking.hold
+    turnover = policy.lifecycle_rules["turnover_days"]
+    assert (original_end - item.lease.start_date).days == 31
+    assert hold.blocked_until_exclusive == original_end + timedelta(days=turnover)
+    original_locks = list(item.lease.inventory_day_locks.order_by("id").values())
+    owned_buffer = item.lease.inventory_day_locks.filter(stay_on=original_end)
+    assert owned_buffer.count() == len({p.pk for p in cycle["units"]}) * turnover
+    if turnover:
+        row = owned_buffer.get()
+        assert row.kind == "occupied" and row.hold_id == hold.pk
+        assert row.company_change_id is None and row.expires_at is None
+        assert row.unit.physical_key == f"property:{cycle['units'][0].id}"
+    reservation = CompanyBudgetReservation.objects.get(item=item.preparation.booking)
+    original_rent = reservation.rent_minor
+    change = proposal(cycle, item)
+    item.lease.refresh_from_db()
+    proposal_revision = item.lease.revision
+    required = change.snapshot["required"]
+    order = ("owner", "signer", "payer", "resident_0", "resident_1", "approver")
+    assert set(required) == set(order)
+    assert len(set(required.values())) == 6
+    assert (
+        item.preparation.booking.assignments.filter(occupancy_status="occupied").count()
+        == 2
+    )
+    path = API + f"company-tenancies/{item.id}/"
+
+    for index, role in enumerate(order):
+        user = User.objects.get(id=required[role])
+        # Owner uses the personal owner context; each company participant sends
+        # the real selected-role headers, including approver on the final POST.
+        selected_role = "employee" if role.startswith("resident_") else role
+        actor = (
+            authenticated(user)
+            if role == "owner"
+            else authenticated(user, company=company, role=selected_role)
+        )
+        detail = actor.get(path)
+        assert detail.status_code == 200, (role, detail.data)
+        visible = next(
+            row for row in detail.data["changes"] if row["id"] == str(change.id)
+        )
+        assert visible["roles_to_decide"] == [role]
+        capability = actor.get(
+            API + "planning-capabilities/",
+            {
+                "capability": "company_housing",
+                "action": "respond_change",
+                "subject_id": str(item.id),
+            },
+        )
+        assert capability.status_code == 200, (role, capability.data)
+        assert "respond_change" in capability.data["allowed_actions"]
+        if role == "approver":
+            change.refresh_from_db()
+            reservation.refresh_from_db()
+            assert change.state == "pending" and change.revision == 6
+            assert set(change.decisions) == set(order[:-1])
+            assert reservation.rent_minor == original_rent
+            assert not change.inventory_locks.exists()
+        body = command(
+            expected_revision=detail.data["revision"],
+            change_id=str(change.id),
+            digest=visible["digest"],
+            role=role,
+            decision="accept",
+            reason="Independent synthetic renewal review",
+        )
+        response = actor.post(path + "respond_change/", body, format="json")
+        assert response.status_code == 200, (role, response.data)
+        assert response.data["resource"]["revision"] == proposal_revision + index + 1
+
+    change.refresh_from_db()
+    change.rental_change.refresh_from_db()
+    item.lease.refresh_from_db()
+    reservation.refresh_from_db()
+    assert change.state == "accepted" and change.revision == 7
+    assert set(change.decisions) == set(order)
+    assert all(value["decision"] == "accept" for value in change.decisions.values())
+    assert change.rental_change.status == "accepted"
+    assert change.rental_change.revision == 1
+    assert not change.rental_change.signing_sessions.exists()
+    assert item.lease.revision == proposal_revision + 6
+    assert item.lease.end_date == original_end
+    assert item.lease.occupancy_status == "occupied"
+    assert (
+        reservation.rent_minor
+        == original_rent + change.snapshot["content"]["rent_delta_minor"]
+    )
+    assert change.inventory_locks.exists()
+    assert not change.inventory_locks.exclude(kind="hold").exists()
+    assert (
+        list(
+            item.lease.inventory_day_locks.filter(
+                id__in=[row["id"] for row in original_locks]
+            )
+            .order_by("id")
+            .values()
+        )
+        == original_locks
+    )
+    assert item.lease.billing_periods.count() == 1
+    assert item.lease.invoices.count() == 1
+    assert (
+        dict(RentInvoice.objects.filter(pk=invoice.pk).values().get())
+        == original_invoice
+    )
+
+    receipt = response.data["operation_receipt"]
+    record = IdempotencyRecord.objects.get(
+        user=user,
+        operation="company.tenancy.respond_change",
+        request_key=str(body["request_key"]),
+    )
+    assert str(record.id) == receipt["id"]
+    assert (
+        str(record.request_subject_id) == str(record.result_subject_id) == str(item.id)
+    )
+    assert record.result_revision == item.lease.revision == receipt["revision"]
+    assert record.recovery_status == receipt["status"] == "confirmed"
+    lookup = actor.get(
+        API + f"rental-operations/{body['request_key']}/", {"subject_id": str(item.id)}
+    )
+    assert lookup.status_code == 200, lookup.data
+    assert lookup.data["operation_receipt"] == receipt
+    detail = actor.get(path)
+    assert detail.status_code == 200, detail.data
+    assert detail.data["revision"] == item.lease.revision
+    assert str(change.id) not in {row["id"] for row in detail.data["changes"]}
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("policy", [1], indirect=True)
+@pytest.mark.parametrize("outcome", ["withdraw", "sign"])
+def test_renewal_preserves_turnover_provenance_and_protects_extended_end(
+    active_agreement, policy, outcome
+):
+    from core_apps.features.services.rental_lifecycle.inventory import assert_available
+    from core_apps.features.services.rental_phase2 import RentalConflict
+
+    cycle, item = active_agreement
+    hold = item.preparation.booking.hold
+    original_hold = ReservationHold.objects.filter(pk=hold.pk).values().get()
+    original_locks = list(item.lease.inventory_day_locks.order_by("id").values())
+    original_ids = [row["id"] for row in original_locks]
+    invoice = item.lease.invoices.values().get()
+    original_end = item.lease.end_date
+    next_end = add_months(original_end, 1)
+    change = proposal(cycle, item)
+    reviews(item, change)
+    assert change.state == "accepted"
+    assert set(change.inventory_locks.values_list("stay_on", flat=True)) == {
+        original_end + timedelta(days=offset)
+        for offset in range(1, (next_end - original_end).days + 1)
+    }
+    assert not change.inventory_locks.filter(id__in=original_ids).exists()
+    assert not change.inventory_locks.exclude(kind="hold", expires_at=None).exists()
+    for prop in cycle["units"]:
+        with pytest.raises(RentalConflict) as conflict:
+            assert_available(
+                prop,
+                {"rental_scope": "entire_property"},
+                next_end,
+                next_end + timedelta(days=1),
+            )
+        assert conflict.value.get_codes() == "offer_unavailable"
+
+    if outcome == "withdraw":
+        response = act(
+            item,
+            cycle["owner"],
+            "withdraw_change",
+            change_id=str(change.id),
+            reason="Withdraw unsigned synthetic renewal",
+        )
+        assert response.status_code == 200, response.data
+        assert not change.inventory_locks.exists()
+        assert (
+            list(item.lease.inventory_day_locks.order_by("id").values())
+            == original_locks
+        )
+        assert (
+            CompanyBudgetReservation.objects.get(
+                item=item.preparation.booking
+            ).rent_minor
+            == 100000
+        )
+        for prop in cycle["units"]:
+            assert_available(
+                prop,
+                {"rental_scope": "entire_property"},
+                next_end,
+                next_end + timedelta(days=1),
+            )
+    else:
+        signatures(item, change)
+        assert change.state == "applied" and item.lease.end_date == next_end
+        assert not change.inventory_locks.exclude(
+            kind="occupied", expires_at=None
+        ).exists()
+        assert change.inventory_locks.filter(stay_on=next_end).count() == 2
+        assert not item.lease.inventory_day_locks.filter(
+            stay_on__gte=next_end + timedelta(days=1)
+        ).exists()
+        assert (
+            list(
+                item.lease.inventory_day_locks.filter(id__in=original_ids)
+                .order_by("id")
+                .values()
+            )
+            == original_locks
+        )
+        assert item.lease.billing_periods.count() == 2
+    assert ReservationHold.objects.filter(pk=hold.pk).values().get() == original_hold
+    assert item.lease.invoices.values().get() == invoice
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("policy", [1], indirect=True)
+@pytest.mark.parametrize("same_lease", [False, True], ids=["external", "own-unsigned"])
+def test_conflicting_or_unsigned_turnover_hold_rejects_final_approval_atomically(
+    active_agreement, policy, same_lease
+):
+    from core_apps.features.services.rental_lifecycle.inventory import allocate_days
+
+    cycle, item = active_agreement
+    change = proposal(cycle, item)
+    next_end = add_months(item.lease.end_date, 1)
+    with transaction.atomic():
+        external = allocate_days(
+            prop=cycle["units"][1],
+            snapshot={"rental_scope": "entire_property"},
+            offer_id="independent-external-booking",
+            starts_on=next_end,
+            ends_on=next_end + timedelta(days=1),
+            expires_at=timezone.now() + timedelta(days=1),
+            lease=item.lease if same_lease else None,
+        )
+    original = list(RentalInventoryDayLock.objects.order_by("id").values())
+    order = ("owner", "signer", "payer", "resident_0", "resident_1", "approver")
+    for role in order[:-1]:
+        response = act(
+            item,
+            User.objects.get(id=change.snapshot["required"][role]),
+            "respond_change",
+            change_id=str(change.id),
+            digest=change.snapshot_digest,
+            role=role,
+            decision="accept",
+        )
+        assert response.status_code == 200, response.data
+    item.lease.refresh_from_db()
+    revision = item.lease.revision
+    actor = authenticated(cycle["approver"], company=cycle["company"], role="approver")
+    body = command(
+        expected_revision=revision,
+        change_id=str(change.id),
+        digest=change.snapshot_digest,
+        role="approver",
+        decision="accept",
+        reason="Independent synthetic review",
+    )
+    response = actor.post(
+        API + f"company-tenancies/{item.id}/respond_change/", body, format="json"
+    )
+    assert response.status_code == 409, response.data
+    assert response.data["detail"].code == "offer_unavailable"
+    change.refresh_from_db()
+    item.lease.refresh_from_db()
+    assert change.state == "pending" and change.revision == 6
+    assert set(change.decisions) == set(order[:-1])
+    assert item.lease.revision == revision
+    assert change.reserved_rent_minor == 0 and not change.inventory_locks.exists()
+    assert (
+        CompanyBudgetReservation.objects.get(item=item.preparation.booking).rent_minor
+        == 100000
+    )
+    assert list(RentalInventoryDayLock.objects.order_by("id").values()) == original
+    assert RentalInventoryDayLock.objects.filter(id=external[0].id).exists()
+    assert not IdempotencyRecord.objects.filter(
+        user=cycle["approver"], request_key=body["request_key"]
+    ).exists()
 
 
 @pytest.mark.django_db

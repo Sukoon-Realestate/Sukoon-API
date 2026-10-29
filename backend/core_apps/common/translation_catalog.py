@@ -23,6 +23,7 @@ EN_TO_AR_MESSAGES = {
     "Base rent": "الإيجار الأساسي",
     "Security deposit": "التأمين",
     "The legal agreement has not ended.": "لم ينتهِ العقد بعد.",
+    "The accommodation is no longer available for those dates.": "السكن غير متاح في التواريخ المحددة. راجع فترة الإقامة قبل المتابعة.",
     "The final settlement is not accepted.": "لم يعتمد الطرفان التسوية النهائية بعد.",
     "A payment is still awaiting reconciliation.": "لا تزال إحدى عمليات الدفع قيد التحقق من النتيجة.",
     "Occupancy has not been returned.": "لم يتم تأكيد إخلاء السكن وتسليمه بعد.",

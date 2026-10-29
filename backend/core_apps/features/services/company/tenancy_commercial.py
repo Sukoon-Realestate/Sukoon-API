@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 from datetime import date, timedelta, time
+from django.db import IntegrityError, transaction
 from django.db.models import Sum, Max
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
@@ -13,6 +14,7 @@ from ...models import (
     RentalChange,
     BillingPeriod,
     EmployeeAssignment,
+    RentalInventoryDayLock,
 )
 from ..rental_phase2 import RentalConflict, fingerprint, add_months
 from ..rental_phase3_parts.issue_invoice import cairo_instant
@@ -124,6 +126,15 @@ def roster(item):
         .exclude(occupancy_status__in=["returned", "cancelled"])
         .order_by("id")
     ]
+
+
+def renewal_blocked_until(item, change):
+    # Keep the turnover policy approved with the original reservation. The hold
+    # remains historical evidence; continuation locks protect the extended end.
+    hold = item.preparation.booking.hold
+    return date.fromisoformat(
+        change.snapshot["content"]["ends_on_exclusive"]
+    ) + timedelta(days=hold.policy_snapshot["turnover_days"])
 
 
 def propose(item, user, data):
@@ -284,9 +295,53 @@ def revalidate(item, change):
                 prop,
                 {"rental_scope": "entire_property"},
                 date.fromisoformat(body["effective_on"]),
-                date.fromisoformat(body["ends_on_exclusive"]),
+                renewal_blocked_until(item, change),
                 exclude_lease=item.lease,
             )
+
+
+def reserve_renewal_inventory(item, change):
+    from ..rental_lifecycle.inventory import ensure_units
+
+    start = date.fromisoformat(change.snapshot["content"]["effective_on"])
+    end = renewal_blocked_until(item, change)
+    for prop in access.properties(item, lock=True):
+        units = ensure_units(prop, {"rental_scope": "entire_property"})
+        owned = set(
+            prop.rental_day_locks.filter(
+                lease=item.lease,
+                stay_on__gte=start,
+                stay_on__lt=end,
+                kind="occupied",
+                expires_at__isnull=True,
+            ).values_list("unit_id", "stay_on")
+        )
+        # An original occupied turnover day already protects this same lease.
+        # Preserve its identity/provenance so withdrawing the unsigned renewal
+        # only releases newly reserved days, never the original buffer.
+        rows = [
+            RentalInventoryDayLock(
+                property=prop,
+                offer_id=item.lease.offer_id,
+                unit=unit,
+                stay_on=start + timedelta(days=offset),
+                kind="hold",
+                lease=item.lease,
+                company_change=change,
+                expires_at=None,
+            )
+            for unit in units
+            for offset in range((end - start).days)
+            if (unit.pk, start + timedelta(days=offset)) not in owned
+        ]
+        try:
+            with transaction.atomic():
+                RentalInventoryDayLock.objects.bulk_create(rows, batch_size=500)
+        except IntegrityError as error:
+            raise RentalConflict(
+                "The accommodation is no longer available for those dates.",
+                code="offer_unavailable",
+            ) from error
 
 
 def reserve(item, change):
@@ -327,27 +382,7 @@ def reserve(item, change):
     change.reserved_rent_minor = increment
     change.save()
     if change.kind == "renewal":
-        from ..rental_lifecycle.inventory import allocate_days
-
-        body = change.snapshot["content"]
-        for prop in access.properties(item, lock=True):
-            rows = allocate_days(
-                prop=prop,
-                snapshot={"rental_scope": "entire_property"},
-                offer_id=item.lease.offer_id,
-                starts_on=date.fromisoformat(body["effective_on"]),
-                ends_on=date.fromisoformat(body["ends_on_exclusive"]),
-                expires_at=None,
-                lease=item.lease,
-            )
-            # Approved, unsigned continuation is protected independently of the
-            # original occupied days; no expiry can release an unknown signature.
-            for row in rows:
-                row.company_change = change
-                row.kind = "hold"
-            from ...models import RentalInventoryDayLock
-
-            RentalInventoryDayLock.objects.bulk_update(rows, ["company_change", "kind"])
+        reserve_renewal_inventory(item, change)
     change.rental_change.status = "accepted"
     change.rental_change.save()
 
