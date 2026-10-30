@@ -22,6 +22,9 @@ ${en.why.subtitle} ${en.hero.badge}.
 - [${SITE_NAME} in English](${absoluteUrl("/en")}): ${en.meta.title}
 - [${SITE_NAME} in Arabic](${absoluteUrl("/ar")}): ${getDictionary("ar").meta.title}
 
+- [Privacy policy](${absoluteUrl("/en/privacy")}): Account, data and privacy practices.
+- [Terms and conditions](${absoluteUrl("/en/terms")}): Rules for accounts and rental workflows.
+
 ## How it works
 
 ### ${tenant.label}

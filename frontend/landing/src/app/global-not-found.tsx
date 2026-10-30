@@ -60,7 +60,7 @@ export default function GlobalNotFound() {
             <Link
               href="/ar"
               hrefLang="ar"
-              className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:bg-brand-hover"
+              className="inline-flex min-h-11 items-center rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-heading transition-colors hover:bg-brand-hover"
             >
               {ar.cta}
             </Link>
@@ -69,7 +69,7 @@ export default function GlobalNotFound() {
               hrefLang="en"
               lang="en"
               dir="ltr"
-              className="rounded-full border border-white/15 px-5 py-2.5 font-[family-name:var(--font-latin)] text-sm font-medium text-white transition-colors hover:bg-white/10"
+              className="inline-flex min-h-11 items-center rounded-xl border border-white/15 px-5 py-2.5 font-[family-name:var(--font-latin)] text-sm font-medium text-white transition-colors hover:bg-white/10"
             >
               {en.cta}
             </Link>
