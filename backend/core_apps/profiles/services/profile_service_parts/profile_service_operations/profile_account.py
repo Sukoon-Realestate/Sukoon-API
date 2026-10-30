@@ -3,7 +3,7 @@
 from typing import Any, Dict, Optional
 from core_apps.profiles.models import Profile
 from core_apps.profiles.services import contract_projection
-from ..arabic_months import ARABIC_MONTHS, format_arabic_month_year, format_arabic_count
+from ..account_metadata import account_text, format_account_count, membership_labels
 
 
 class ProfileAccountMixin:
@@ -59,15 +59,7 @@ class ProfileAccountMixin:
         profile, _ = Profile.objects.get_or_create(user=user)
 
         avatar_url = profile.avatar.url if profile.avatar else None
-        member_year = user.date_joined.year if user.date_joined else 2026
-        member_month = (
-            ARABIC_MONTHS.get(user.date_joined.month, "يناير")
-            if user.date_joined
-            else "يناير"
-        )
-        member_since_label = format_arabic_month_year(
-            user.date_joined, prefix="عضو منذ"
-        )
+        member_year, member_month, member_since_label = membership_labels(user.date_joined)
 
         # * Calculate statistics
         saved_count = SavedProperty.objects.filter(user=user).count()
@@ -76,7 +68,14 @@ class ProfileAccountMixin:
         contracts_as_of = contract_projection.civil_day()
         contracts_count = contract_projection.count_current(user, as_of=contracts_as_of)
 
-        verification_label = "موثّق ✓" if user.is_verified else "غير موثّق"
+        verification_badge = (
+            account_text("Verified", "موثّق")
+            if user.is_verified
+            else account_text("Unverified", "غير موثّق")
+        )
+        verification_label = (
+            f"{verification_badge} ✓" if user.is_verified else verification_badge
+        )
 
         return {
             "user": {
@@ -86,8 +85,8 @@ class ProfileAccountMixin:
                 "last_name": user.last_name,
                 "avatar": avatar_url,
                 "is_verified": user.is_verified,
-                "verification_badge": "موثّق" if user.is_verified else "غير موثّق",
-                "role_label": "مستأجر",
+                "verification_badge": verification_badge,
+                "role_label": account_text("Tenant", "مستأجر"),
                 "member_since_label": member_since_label,
                 "member_since_year": member_year,
                 "member_since_month": member_month,
@@ -99,24 +98,31 @@ class ProfileAccountMixin:
             },
             "menu_items": {
                 "visit_requests": {
-                    "title": "طلبات الزيارة",
+                    "title": account_text("Visit requests", "طلبات الزيارة"),
                     "count": visits_count,
-                    "subtitle": format_arabic_count(visits_count, "طلب", "طلبات"),
+                    "subtitle": format_account_count(
+                        visits_count, "request", "requests", "طلب", "طلبات"
+                    ),
                 },
                 "contracts": {
-                    "title": "عقودي",
+                    "title": account_text("My contracts", "عقودي"),
                     "count": contracts_count,
-                    "subtitle": f"{contracts_count} عقد نشط",
+                    "subtitle": format_account_count(
+                        contracts_count, "active contract", "active contracts",
+                        "عقد نشط", "عقد نشط",
+                    ),
                     "as_of": contracts_as_of.isoformat(),
                     "projection_version": 1,
                 },
                 "reviews": {
-                    "title": "تقييماتي",
+                    "title": account_text("My reviews", "تقييماتي"),
                     "count": reviews_count,
-                    "subtitle": f"{reviews_count} تقييم",
+                    "subtitle": format_account_count(
+                        reviews_count, "review", "reviews", "تقييم", "تقييم"
+                    ),
                 },
                 "verification": {
-                    "title": "التوثيق والخصوصية",
+                    "title": account_text("Verification and privacy", "التوثيق والخصوصية"),
                     "is_verified": user.is_verified,
                     "subtitle": verification_label,
                 },

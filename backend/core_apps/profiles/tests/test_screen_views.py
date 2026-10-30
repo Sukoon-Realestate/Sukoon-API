@@ -59,7 +59,7 @@ class TestMyAccountScreenAPI:
         user.is_verified = True
         user.save()
 
-        res = auth_client.get(MY_ACCOUNT_URL)
+        res = auth_client.get(MY_ACCOUNT_URL, HTTP_ACCEPT_LANGUAGE="ar")
         assert res.status_code == status.HTTP_200_OK
 
         data = res.json()["data"]
@@ -114,7 +114,7 @@ class TestMyAccountScreenAPI:
             comment="تجربة ممتازة",
         )
 
-        res = auth_client.get(MY_ACCOUNT_URL)
+        res = auth_client.get(MY_ACCOUNT_URL, HTTP_ACCEPT_LANGUAGE="ar")
         assert res.status_code == status.HTTP_200_OK
 
         data = res.json()["data"]
@@ -143,7 +143,7 @@ class TestMyAccountScreenAPI:
                 end_date=date(2026, 12, 31),
             )
 
-        res = auth_client.get(MY_ACCOUNT_URL)
+        res = auth_client.get(MY_ACCOUNT_URL, HTTP_ACCEPT_LANGUAGE="ar")
 
         assert res.status_code == status.HTTP_200_OK
         contracts = res.json()["data"]["menu_items"]["contracts"]
