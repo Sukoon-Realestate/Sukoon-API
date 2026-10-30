@@ -1,6 +1,7 @@
 """Recover original Paymob operations; never create or retry a charge."""
 
 from django.core.management.base import BaseCommand
+from django.db.models import F
 from django.utils import timezone
 from rest_framework.exceptions import APIException
 from core_apps.features.models import PaymobPayment
@@ -29,7 +30,7 @@ class Command(BaseCommand):
         for payment in (
             PaymobPayment.objects.exclude(status="captured")
             .select_related("attempt__invoice")
-            .order_by("reconciled_at", "pkid")[:limit]
+            .order_by(F("reconciled_at").asc(nulls_first=True), "pkid")[:limit]
         ):
             try:
                 reconcile(payment)
