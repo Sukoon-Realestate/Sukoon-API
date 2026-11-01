@@ -254,3 +254,11 @@ def test_payment_percentage_uses_confirmed_full_payment_and_masks_small_samples(
     assert result["on_time_percentage"] == 66.7
     assert result["late_count"] == 1
     assert result["overdue_unpaid_count"] == 0
+
+
+@pytest.mark.django_db
+def test_public_owner_route_does_not_publish_a_tenant_account(actors):
+    tenant = actors[1]
+    response = APIClient().get(f"/api/v1/properties/owners/{tenant.id}/profile/")
+    assert response.status_code == 404
+    assert tenant.email.encode() not in response.content

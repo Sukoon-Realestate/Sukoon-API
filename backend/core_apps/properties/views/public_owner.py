@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.features.services.reputation.public_summary import public_summary
@@ -15,6 +16,12 @@ class PublicOwnerProfileView(APIView):
 
     def get(self, request, identity):
         owner = get_object_or_404(get_user_model(), id=identity, is_active=True)
+        from core_apps.features.models import Lease
+        from ..models import Property
+
+        # Switching workspaces does not make a tenant account a public owner.
+        if not Property.objects.filter(owner=owner).exists() and not Lease.objects.filter(owner=owner).exists():
+            raise NotFound()
         profile = getattr(owner, "profile", None)
         image = getattr(profile, "avatar", None)
         from core_apps.features.services.owner_achievements import summary
