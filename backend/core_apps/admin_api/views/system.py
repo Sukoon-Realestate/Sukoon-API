@@ -2,7 +2,7 @@ import logging
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
+from core_apps.admin_api.pagination import AdminResultsSetPagination
 from core_apps.admin_api.permissions import IsSystemOwner
 from core_apps.admin_api.services.system_service import (
     get_system_health,
@@ -36,7 +36,7 @@ class AdminAuditLogsAPIView(APIView):
     """
 
     permission_classes = [IsSystemOwner]
-    pagination_class = PageNumberPagination
+    pagination_class = AdminResultsSetPagination
 
     def get(self, request):
         type_filter = request.query_params.get("type")
