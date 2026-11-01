@@ -1,5 +1,12 @@
 """OwnerProfile operations owned by OwnerDashboardService."""
 
+from datetime import date
+
+from core_apps.profiles.services.profile_service_parts.account_metadata import (
+    account_text,
+    membership_labels,
+)
+
 from ...models import Property, PropertyVisit, PropertyVisitReview
 
 
@@ -17,7 +24,6 @@ class OwnerProfileMixin:
         """
         from django.db.models import Avg
         from core_apps.profiles.services.profile_service import (
-            format_arabic_month_year,
             mask_phone_number,
         )
 
@@ -39,13 +45,14 @@ class OwnerProfileMixin:
         )
         masked_phone = mask_phone_number(raw_phone)
         full_name = owner.get_full_name or owner.first_name or owner.email
-        member_since = (
-            format_arabic_month_year(owner.date_joined, prefix="عضو منذ")
-            if owner.date_joined
-            else "عضو منذ يناير 2025"
-        )
+        # Keep this endpoint's existing missing-date fallback and stored calendar.
+        member_since = membership_labels(owner.date_joined or date(2025, 1, 1))[2]
 
-        role_badge = "مالك موثّق" if owner.is_verified else "مالك"
+        role_badge = (
+            account_text("Verified owner", "مالك موثّق")
+            if owner.is_verified
+            else account_text("Owner", "مالك")
+        )
         properties_count = Property.objects.filter(owner=owner).count()
 
         from core_apps.features.services.reputation.visibility import summary, subject_rows
@@ -83,11 +90,11 @@ class OwnerProfileMixin:
             },
             "stats": {
                 "properties_count": properties_count,
-                "properties_label": "عقارات",
+                "properties_label": account_text("Properties", "عقارات"),
                 "reviews_count": reviews_count,
-                "reviews_label": "تقييم",
+                "reviews_label": account_text("Reviews", "تقييم"),
                 "acceptance_rate": acceptance_rate,
-                "acceptance_label": "قبول",
+                "acceptance_label": account_text("Acceptance", "قبول"),
                 "formatted_acceptance_rate": f"{acceptance_rate}%",
             },
             "account_details": {
@@ -98,7 +105,10 @@ class OwnerProfileMixin:
             },
             "privacy_notice": {
                 "icon": "lock",
-                "text": "رقمك لا يُعرض للمستأجرين – يظهر فقط بعد قبول الزيارة",
+                "text": account_text(
+                    "Your number is hidden from tenants and is shown only after a visit is accepted",
+                    "رقمك لا يُعرض للمستأجرين – يظهر فقط بعد قبول الزيارة",
+                ),
             },
             "recent_reviews": recent_reviews,
         }
