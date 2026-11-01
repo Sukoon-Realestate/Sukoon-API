@@ -16,12 +16,14 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { fetchKycDetail, approveKyc, rejectKyc } from '@/lib/api/kyc';
-import { KycDetail } from '@/lib/api/types';
+import { KycDetail, KycDocumentDecisions } from '@/lib/api/types';
+import { KycDocumentReview } from './kyc-document-review';
 import { LogoLoader } from '@/components/ui/LogoLoader';
 
 function IndividualKycReviewContent({ submissionId }: { submissionId: string }) {
 
   const [kycData, setKycData] = useState<KycDetail | null>(null);
+  const [documentDecisions, setDocumentDecisions] = useState<KycDocumentDecisions>({});
   const [internalNote, setInternalNote] = useState('');
   const [status, setStatus] = useState<'غير متاح' | 'قيد المراجعة' | 'مقبول' | 'مرفوض'>('غير متاح');
   const [modalType, setModalType] = useState<'approve' | 'reject' | 'reupload' | null>(null);
@@ -57,6 +59,17 @@ function IndividualKycReviewContent({ submissionId }: { submissionId: string }) 
   const handleConfirmDecision = async () => {
     if (isDeciding || !modalType || kycData?.id !== submissionId || !kycData?.canReview) { showToast('Load the current pending submission before deciding.', 'error'); return; }
     if (modalType !== 'approve' && !internalNote.trim()) { showToast('Enter the reason that will be visible to the applicant.', 'error'); return; }
+    if (modalType !== 'approve' && kycData.documentFields?.length) {
+      const complete = kycData.documentFields.every(field => {
+        const decision = documentDecisions[field];
+        return decision && (decision.status === 'approved' || Boolean(decision.reason?.trim()));
+      });
+      const rejected = Object.values(documentDecisions).some(item => item?.status === 'rejected');
+      if (!complete || !rejected) {
+        showToast('حدد قرار كل مستند واكتب سببًا لكل مستند مرفوض.', 'error');
+        return;
+      }
+    }
     setIsDeciding(true);
     try {
       if (modalType === 'approve') {
@@ -64,11 +77,11 @@ function IndividualKycReviewContent({ submissionId }: { submissionId: string }) 
         setStatus('مقبول');
         showToast(`تمت الموافقة على توثيق هوية ${userName} بنجاح`, 'success');
       } else if (modalType === 'reject') {
-        if (kycData?.id) await rejectKyc(kycData.id, internalNote.trim());
+        if (kycData?.id) await rejectKyc(kycData.id, internalNote.trim(), documentDecisions);
         setStatus('مرفوض');
         showToast('تم رفض طلب التوثيق وتثبيت الحالة في النظام', 'error');
       } else if (modalType === 'reupload') {
-        await rejectKyc(kycData.id, internalNote.trim());
+        await rejectKyc(kycData.id, internalNote.trim(), documentDecisions);
         setStatus('مرفوض');
         showToast('Resubmission requested through the recorded rejection reason.', 'success');
       }
@@ -254,6 +267,12 @@ function IndividualKycReviewContent({ submissionId }: { submissionId: string }) 
                 ></textarea>
               </div>
 
+              {kycData?.documentFields && <KycDocumentReview
+                fields={kycData.documentFields}
+                value={canDecide ? documentDecisions : kycData.documentDecisions ?? {}}
+                disabled={!canDecide}
+                onChange={setDocumentDecisions}
+              />}
               <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                 <button
                   disabled={!canDecide}

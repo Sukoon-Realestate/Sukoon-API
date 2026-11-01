@@ -1,6 +1,8 @@
 import hashlib
 import json
 import uuid
+import re
+from urllib.parse import urlparse
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
@@ -15,6 +17,21 @@ class PollDefinition(serializers.Serializer):
     question = serializers.CharField(max_length=200)
     options = serializers.ListField(child=serializers.CharField(max_length=80), min_length=2, max_length=10)
     allow_multiple = serializers.BooleanField(default=False)
+    links = serializers.ListField(child=serializers.CharField(max_length=400, allow_blank=True), max_length=10, required=False)
+
+    def validate(self, value):
+        links = value.get("links", [])
+        if links and len(links) != len(value["options"]):
+            raise serializers.ValidationError("Each link must match a poll option.")
+        for link in links:
+            if not link:
+                continue
+            parsed = urlparse(link)
+            if (parsed.scheme != "https" or parsed.netloc not in {"sokoun.app", "www.sokoun.app"}
+                    or parsed.query or parsed.fragment
+                    or not re.fullmatch(r"/properties/[a-zA-Z0-9_-]{1,128}(?:/offers/[a-zA-Z0-9_-]{1,128})?", parsed.path)):
+                raise serializers.ValidationError("Use a public Sokoun property link.")
+        return value
 
     def validate_options(self, value):
         if len({label.casefold() for label in value}) != len(value):
@@ -34,7 +51,9 @@ def create_poll(message, definition):
         question=definition["question"],
         allow_multiple=definition["allow_multiple"],
         options=[
-            {"id": str(uuid.uuid5(message.id, str(i))), "text": text} for i, text in enumerate(definition["options"])
+            {"id": str(uuid.uuid5(message.id, str(i))), "text": text,
+             **({"url": definition["links"][i]} if definition.get("links") and definition["links"][i] else {})}
+            for i, text in enumerate(definition["options"])
         ],
     )
 

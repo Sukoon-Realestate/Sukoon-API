@@ -73,6 +73,9 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
+        if request.query_params.get("ordering") == "personalized":
+            from core_apps.features.experience.discovery import rank
+            queryset = rank(queryset, request)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

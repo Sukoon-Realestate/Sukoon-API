@@ -12,6 +12,9 @@ def event_copy(event):
 
         if not audience_current(event.recipient, event.destination):
             raise NotFound()
+    if event.destination.get("event_kind") == "experience_suggestion":
+        from ...experience.suggestions import event_copy as experience_copy
+        return experience_copy(event)
     from ..rent_payment_reminders import (
         EVENT_KINDS,
         authorize,

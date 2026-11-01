@@ -105,7 +105,13 @@ export interface KycMetrics {
   reviewedToday: number;
 }
 
+export type KycDocumentField = 'national_id' | 'front_id_image' | 'back_id_image' | 'selfie_image';
+export type KycDocumentDecision = { status: 'approved' | 'rejected'; reason?: string };
+export type KycDocumentDecisions = Partial<Record<KycDocumentField, KycDocumentDecision>>;
+
 export interface KycDetail {
+  documentFields?: KycDocumentField[];
+  documentDecisions?: KycDocumentDecisions;
   canReview: boolean;
   evidenceDigest: string;
   id: string;

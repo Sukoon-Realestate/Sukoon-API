@@ -49,7 +49,7 @@ def apple_app_site_association(request):
             "details": [
                 {
                     "appID": f"{team_id}.{bundle_id}",
-                    "paths": ["/properties/*"],
+                    "paths": ["/properties/*", "/owners/*"],
                 }
                 for bundle_id in bundle_ids
             ],

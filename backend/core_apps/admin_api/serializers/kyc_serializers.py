@@ -65,6 +65,7 @@ class KYCSubmissionListSerializer(serializers.ModelSerializer):
 
 
 class KYCRejectActionSerializer(serializers.Serializer):
+    document_decisions = serializers.DictField(required=False)
     reason = serializers.CharField(
         required=True,
         error_messages={"required": "يرجى كتابة سبب رفض التوثيق."},

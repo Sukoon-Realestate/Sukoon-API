@@ -257,3 +257,7 @@ from .shared_housing_models import (
     SharedHousingAllocation,
     SharedHousingConsent,
 )
+
+from .model_parts.owner_achievements import OwnerRentalAchievement, OwnerMilestone
+
+from .experience.models import (ExperiencePreferences, ExperienceVersion, ExperienceOperation, DiscoveryInteraction, PreparationTask, ExperienceDismissal, ListingAssessment)

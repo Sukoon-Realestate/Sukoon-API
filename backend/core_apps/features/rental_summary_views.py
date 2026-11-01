@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.db.models import Q, F
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
 from core_apps.users.models import User
 from .models import Lease, RentInvoice, PaymentReceipt, RentalSummaryGrant
@@ -131,7 +131,12 @@ def summary_grants(request, lease_id=None):
             get_object_or_404(Lease, id=lease_id, tenant=request.user)
             items = items.filter(lease__id=lease_id, granted_by=request.user)
         else:
-            items = items.filter(recipient=request.user)
+            direction = request.query_params.get("direction", "received")
+            if direction == "sent" and (request.headers.get("X-Sukoon-Company-Id") or request.headers.get("X-Sukoon-Company-Role")):
+                raise PermissionDenied("Leave the company context to view personal sharing.")
+            if direction not in {"sent", "received"}:
+                raise ValidationError({"direction": "Choose sent or received."})
+            items = items.filter(**{"granted_by" if direction == "sent" else "recipient": request.user})
         return page(
             request,
             items.order_by("-created_at", "id"),

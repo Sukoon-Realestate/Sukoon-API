@@ -38,10 +38,12 @@ class PropertyImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PropertyImage
-        fields = ["id", "image", "name", "description", "created_at", "updated_at"]
+        fields = ["id", "image", "name", "description", "room_category", "created_at", "updated_at"]
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
+        from core_apps.features.experience.media import variants
+        ret["variants"] = variants(instance.image)
         ret["name"] = (instance.name or "").strip()
         ret["description"] = (instance.description or "").strip()
         return ret
@@ -146,6 +148,14 @@ def build_rental_summary(obj: Property, offer_ids=None):
 
 
 class PropertyListSerializer(PropertyPolicyProjection, serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        from core_apps.features.experience.media import variants
+        result["main_image_variants"] = variants(instance.main_image)
+        if hasattr(instance, "_experience_ranking"):
+            result["personalization"] = instance._experience_ranking
+        return result
+
     main_image = CloudinarySerializerField(read_only=True)
     images_count = serializers.IntegerField(read_only=True)
     rate = serializers.SerializerMethodField()

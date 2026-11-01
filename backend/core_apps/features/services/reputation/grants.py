@@ -16,6 +16,7 @@ def payload(item):
         "purpose": item.purpose,
         "expires_at": item.expires_at.isoformat(),
         "revoked": bool(item.revoked_at),
+        "status": "revoked" if item.revoked_at else "expired" if item.expires_at <= timezone.now() else "active",
         "revision": item.revision,
     }
 
@@ -88,3 +89,16 @@ def read(user, identity):
         raise ReviewError("grant_expired")
     audit(item, user, "summary_read")
     return summary(item.subject_kind, item.owner.id, item.owner)
+
+
+def preview(user, identity):
+    """The grant owner sees precisely the same summary projection as its recipient."""
+    item = ReputationAccessGrant.objects.select_related("owner").filter(id=identity, owner=user).first()
+    if not item:
+        raise NotFound()
+    if item.revoked_at:
+        raise ReviewError("grant_revoked")
+    if timezone.now() >= item.expires_at:
+        raise ReviewError("grant_expired")
+    return {**summary(item.subject_kind, item.owner.id, item.owner),
+            "grant_id": str(item.id), "grant_revision": item.revision}

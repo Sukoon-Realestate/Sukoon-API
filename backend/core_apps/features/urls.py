@@ -23,6 +23,7 @@ from .views_parts.listing_suggestions import owner_analytics_export
 from .views_parts.boost_campaigns import boost_campaign_detail, boost_campaign_resolve
 
 urlpatterns = [
+    path("", include("core_apps.features.experience.urls")),
     path("operations/refunds/", refund_operations.queue, name="operation-refund-queue"),
     path(
         "operations/refunds/<uuid:refund_id>/review/",

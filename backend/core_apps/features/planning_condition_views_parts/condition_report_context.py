@@ -9,7 +9,7 @@ from django.utils.translation import get_language
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 from core_apps.common.translation import translate_message
-from ..models import Lease, PrivateAccessRevocation
+from ..models import Lease, PrivateAccessRevocation, RentalEvidence
 from ..planning_models import ConditionReport
 from ..rental_phase4_views import evidence_payload
 from ..services.planning import display_name, planning_api, selection_payload
@@ -78,6 +78,10 @@ def report_payload(item, user):
         "acknowledgements": item.acknowledgements,
         "baseline_id": str(item.baseline.id) if item.baseline_id else "",
         "baseline_revision": item.baseline_revision,
+        "baseline_inspected_on": item.baseline_snapshot.get("inspected_on", ""),
+        "baseline_evidence": [evidence_payload(x) for x in RentalEvidence.objects.filter(
+            lease_id=item.lease_id, id__in=item.baseline_snapshot.get("evidence_ids", [])
+        )],
         "baseline_items": item.baseline_snapshot.get(
             "items", item.baseline.items if item.baseline_id else []
         ),

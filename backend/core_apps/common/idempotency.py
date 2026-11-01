@@ -199,7 +199,7 @@ def response_headers(replayed):
 
 
 def recoverable_operation(operation):
-    return operation == "property.create" or operation.startswith(
+    return operation in {"property.create", "identity.submit"} or operation.startswith(
         (
             "property.update:",
             "property.moderate:",

@@ -1,3 +1,4 @@
+from .views.public_owner import PublicOwnerProfileView, PublicOwnerListingsView
 from .views.home_visit_reminder import home_visit_reminder
 from .views.operation_recovery import PropertyOperationRecovery
 from django.urls import path
@@ -47,8 +48,12 @@ from .views import (
 )
 
 from .views.image_order import order_images
+from .views.owner_availability import owner_availability
 
 urlpatterns = [
+    path("owner/properties/<uuid:property_id>/availability/", owner_availability),
+    path("owners/<uuid:identity>/profile/", PublicOwnerProfileView.as_view()),
+    path("owners/<uuid:identity>/listings/", PublicOwnerListingsView.as_view()),
     path("visits/home-reminder/", home_visit_reminder, name="home-visit-reminder"),
     path("<uuid:property_id>/images/order/", order_images),
     path(

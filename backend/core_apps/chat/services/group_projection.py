@@ -206,6 +206,7 @@ def summary(conversation, user):
         "idempotent_message_retry": True,
         "supports_mentions": not direct,
         "supports_polls": not direct,
+        "supports_property_polls": not direct,
         "supports_quick_replies": company
         or viewer_workspace(conversation, user) == "owner",
         "can_pin_messages": can_pin(conversation, participant, member),

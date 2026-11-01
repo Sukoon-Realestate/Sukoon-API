@@ -733,6 +733,27 @@ CELERY_BEAT_SCHEDULE["reconcile-hosted-checkout"] = {
     "schedule": 60.0,
 }
 
+# User-requested audio transcription has an independent operational gate.
+CHAT_TRANSCRIPTION_ENABLED = getenv("CHAT_TRANSCRIPTION_ENABLED", "false").lower() == "true"
+CHAT_TRANSCRIPTION_MODEL = getenv("CHAT_TRANSCRIPTION_MODEL", CHAT_MODERATION_MODEL)
+CELERY_BEAT_SCHEDULE["process-voice-transcriptions"] = {
+    "task": "core_apps.chat.tasks.process_voice_transcriptions", "schedule": 5.0,
+}
+
+# Additive experience capabilities. Enable only after API and app validation.
+SOKOUN_EXPERIENCE_FEATURES = [name.strip() for name in getenv("SOKOUN_EXPERIENCE_FEATURES", "").split(",") if name.strip()]
+
+CELERY_BEAT_SCHEDULE["process-listing-assessments"] = {
+    "task": "core_apps.features.experience.quality.process_pending_assessments", "schedule": 10.0,
+}
+
+CELERY_BEAT_SCHEDULE["purge-experience-snapshots"] = {
+    "task": "core_apps.features.experience.quality.purge_snapshots", "schedule": timedelta(minutes=30),
+}
+
+CELERY_BEAT_SCHEDULE["record-experience-suggestions"] = {"task": "core_apps.features.experience.suggestions.record_suggestions", "schedule": timedelta(minutes=15)}
+CELERY_BEAT_SCHEDULE["purge-discovery-interactions"] = {"task": "core_apps.features.experience.suggestions.purge_interactions", "schedule": timedelta(hours=1)}
+
 # Finalize after every domain has registered its schedule, including checkout.
 from config.background import configure as configure_background
 

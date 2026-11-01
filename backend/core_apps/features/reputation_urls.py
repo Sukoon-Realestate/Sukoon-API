@@ -2,6 +2,9 @@ from django.urls import path
 from . import reputation_views as v
 
 urlpatterns = [
+    path("owner-achievements/", v.OwnerAchievementsView.as_view()),
+    path("owner-achievements/<uuid:identity>/acknowledge/", v.OwnerAchievementAcknowledgeView.as_view()),
+    path("reviews/subjects/<str:kind>/<uuid:identity>/public-summary/", v.PublicReputationSummaryView.as_view()),
     path("reviews/capabilities/", v.ReviewCapabilitiesView.as_view()),
     path("reviews/opportunities/", v.ReviewOpportunitiesView.as_view()),
     path("reviews/opportunities/<uuid:identity>/", v.ReviewOpportunityView.as_view()),
@@ -45,6 +48,7 @@ urlpatterns = [
     path("reputation-grants/", v.ReputationGrantsView.as_view()),
     path("reputation-grants/<uuid:identity>/revoke/", v.ReputationGrantView.as_view()),
     path("reputation-grants/<uuid:identity>/summary/", v.ReputationGrantView.as_view()),
+    path("reputation-grants/<uuid:identity>/preview/", v.ReputationGrantPreviewView.as_view()),
 ]
 
 from . import reputation_experience_views as experiences

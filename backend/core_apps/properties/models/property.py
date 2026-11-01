@@ -253,6 +253,10 @@ class PropertyRequest(Property):
 
 class PropertyImage(TimeStampedModel):
     position = models.PositiveIntegerField(default=0)
+    room_category = models.CharField(max_length=24, default="other", choices=[
+        ("bedroom", "Bedroom"), ("living", "Living room"), ("kitchen", "Kitchen"),
+        ("bathroom", "Bathroom"), ("exterior", "Exterior"), ("other", "Other"),
+    ])
     property = models.ForeignKey(
         Property,
         on_delete=models.CASCADE,

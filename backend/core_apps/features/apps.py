@@ -5,3 +5,6 @@ class FeaturesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "core_apps.features"
     verbose_name = "Free product features"
+
+    def ready(self):
+        from .services import owner_achievements  # noqa: F401

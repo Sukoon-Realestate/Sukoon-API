@@ -10,7 +10,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.throttling import (
     SimpleRateThrottle,
     UserRateThrottle,
@@ -338,6 +338,11 @@ class ReviewSubjectView(ReviewView):
         if aggregate:
             return Response(visibility.summary(kind, identity, request.user))
         rows = visibility.subject_rows(kind, identity, request.user)
+        context_type = request.query_params.get("context_type")
+        if context_type:
+            if context_type not in {"viewing", "tenancy", "co_living"}:
+                raise ReviewError("invalid_review_target", 400)
+            rows = [row for row in rows if row.submission.opportunity.case.context_type == context_type]
         score = request.query_params.get("rating")
         if score:
             if score not in {"1", "2", "3", "4", "5"}:
@@ -469,21 +474,30 @@ class ReviewEligibilityRequestView(ReviewView):
 
 class ReputationGrantsView(ReviewView):
     def get(self, request):
-        return self.page(
-            request,
-            ReputationAccessGrant.objects.filter(
-                Q(owner=request.user) | Q(recipient=request.user)
-            )
-            .select_related("owner", "recipient")
-            .order_by("-created_at"),
-            lambda item: {
+        direction = request.query_params.get("direction", "all")
+        if direction == "sent" and (request.headers.get("X-Sukoon-Company-Id") or request.headers.get("X-Sukoon-Company-Role")):
+            raise PermissionDenied("Leave the company context to view personal sharing.")
+        if direction not in {"all", "sent"}:
+            raise ValidationError({"direction": "Choose all or sent."})
+        rows = ReputationAccessGrant.objects.filter(
+            Q(owner=request.user) if direction == "sent" else Q(owner=request.user) | Q(recipient=request.user)
+        ).select_related("owner", "recipient").order_by("-created_at", "id")
+
+        def project(item):
+            current = not item.revoked_at and item.expires_at > timezone.now()
+            owner = item.owner_id == request.user.pk
+            return {
                 **grants.payload(item),
-                "can_revoke": item.owner_id == request.user.pk,
-                "can_read": item.recipient_id == request.user.pk,
+                "can_revoke": owner and current,
+                "can_preview": owner and current,
+                "can_read": item.recipient_id == request.user.pk and current,
+                "allowed_actions": (["preview", "revoke"] if owner else ["read"]) if current else [],
                 "recipient_name": item.recipient.get_full_name,
                 "owner_name": item.owner.get_full_name,
-            },
-        )
+            }
+        response = self.page(request, rows, project)
+        response["Cache-Control"] = "private, no-store"
+        return response
 
     def post(self, request):
         data = dict(request.data)
@@ -498,6 +512,13 @@ class ReputationGrantView(ReviewView):
 
     def post(self, request, identity):
         return Response(grants.revoke(request.user, identity, request.data))
+
+
+class ReputationGrantPreviewView(ReviewView):
+    def get(self, request, identity):
+        response = Response(grants.preview(request.user, identity))
+        response["Cache-Control"] = "private, no-store"
+        return response
 
 
 class ReviewModerationQueueView(ReviewView):
@@ -697,3 +718,24 @@ class ReviewResolveCaseView(ReviewView):
                 item.id,
             )
         )
+
+
+class PublicReputationSummaryView(ReviewView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, kind, identity):
+        from .services.reputation.public_summary import public_summary
+        response = Response(public_summary(kind, identity))
+        response["Cache-Control"] = "no-store"
+        return response
+
+
+class OwnerAchievementsView(ReviewView):
+    def get(self, request):
+        from .services.owner_achievements import summary
+        return Response(summary(request.user))
+
+class OwnerAchievementAcknowledgeView(ReviewView):
+    def post(self, request, identity):
+        from .services.owner_achievements import acknowledge
+        return Response(acknowledge(request.user, identity))

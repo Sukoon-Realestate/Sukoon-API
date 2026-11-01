@@ -85,3 +85,7 @@ def reconcile_advanced_execution():
     from .services.advanced_execution.progress import reconcile_progress
 
     return reconcile_progress()
+
+from .experience.quality import analyze as analyze_listing_quality, purge_snapshots
+
+from .experience.suggestions import record_suggestions, purge_interactions

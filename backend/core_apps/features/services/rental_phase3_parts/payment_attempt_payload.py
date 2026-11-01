@@ -3,7 +3,7 @@
 import hashlib
 import json
 from django.utils import timezone
-from ...models import Lease, RentInvoice, RentalTimelineEvent
+from ...models import Lease, RentInvoice, RentalTimelineEvent, RentalDocument
 from ..rental_phase2 import RentalConflict, activate_inventory, assert_owner_ready
 
 
@@ -110,6 +110,10 @@ def payment_attempt_payload(attempt, user=None):
 
     invoice = attempt.invoice
     receipt = getattr(attempt, "receipt", None)
+    receipt_document = RentalDocument.objects.filter(
+        lease_id=attempt.invoice.lease_id, document_type="receipt",
+        source_reference=str(receipt.id), status="ready",
+    ).first() if receipt else None
     refundable_components = remaining_components(attempt)
     refundable = sum(refundable_components.values())
     return {
@@ -172,6 +176,7 @@ def payment_attempt_payload(attempt, user=None):
             attempt.confirmed_at.isoformat() if attempt.confirmed_at else None
         ),
         "receipt_id": str(receipt.id) if receipt else "",
+        "receipt_document_id": str(receipt_document.id) if receipt_document else "",
         "payout_status": attempt.payout_status,
         "settlement_status": attempt.settlement_status,
         "updated_at": attempt.updated_at.isoformat(),
