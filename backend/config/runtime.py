@@ -10,6 +10,7 @@ import hashlib
 import logging
 import re
 import time
+from datetime import timedelta
 from uuid import uuid4
 
 from celery import signals
@@ -212,7 +213,13 @@ def execution_report(client, *, expected_sha, since=0, now=None):
     for name, entry in settings.CELERY_BEAT_SCHEDULE.items():
         raw = client.get(key(f"execution:{name}"))
         record = json.loads(raw) if raw else {}
-        age_limit = max(float(entry["schedule"]) * 2 + 60, 180)
+        interval = entry["schedule"]
+        seconds = (
+            interval.total_seconds()
+            if isinstance(interval, timedelta)
+            else float(interval)
+        )
+        age_limit = max(seconds * 2 + 60, 180)
         valid = (
             record.get("state") == "SUCCESS"
             and record.get("task") == entry["task"]
