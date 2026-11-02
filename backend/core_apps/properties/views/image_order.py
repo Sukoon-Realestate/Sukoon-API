@@ -27,6 +27,10 @@ def order_images(request, property_id):
         ordered = request.data.get("image_ids")
         images = list(prop.images.order_by("position", "created_at", "pkid"))
         by_id = {str(image.id): image for image in images}
+        categories = request.data.get("categories", {})
+        if (not isinstance(categories, dict) or set(categories) - set(by_id)
+                or any(not isinstance(value, str) or value not in {"bedroom", "living", "kitchen", "bathroom", "exterior", "other"} for value in categories.values())):
+            raise ValidationError("Supply a known category for each referenced photo.")
         if (
             not isinstance(ordered, list)
             or not ordered
@@ -38,7 +42,7 @@ def order_images(request, property_id):
         if request.data.get("main_image_id") != ordered[0]:
             raise ValidationError("The first image must be the cover.")
         expected = request.data.get("expected_revision")
-        unchanged = [str(image.id) for image in images] == ordered and str(
+        unchanged = all(by_id[key].room_category == value for key, value in categories.items()) and [str(image.id) for image in images] == ordered and str(
             prop.main_image
         ) == str(by_id[ordered[0]].image)
         if (
@@ -55,9 +59,11 @@ def order_images(request, property_id):
             )
         for index, identity in enumerate(ordered):
             image = by_id[identity]
-            if image.position != index:
+            category = categories.get(identity, image.room_category)
+            if image.position != index or image.room_category != category:
                 image.position = index
-                image.save(update_fields=["position"])
+                image.room_category = category
+                image.save(update_fields=["position", "room_category"])
         prop.refresh_from_db(
             fields=[
                 "media_revision",

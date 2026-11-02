@@ -140,8 +140,11 @@ def deliver_planning_events(*, event_kinds=None, event_ids=_ALL_EVENTS):
                 queue_notification,
             )
 
-            queue_notification(event.notification)
-            event.delivery_status = "push_queued"
+            if copy.get("push_enabled", True):
+                queue_notification(event.notification)
+                event.delivery_status = "push_queued"
+            else:
+                event.delivery_status = "inbox_only"
             event.delivered_at = timezone.now()
             event.attempts += 1
             event.save()

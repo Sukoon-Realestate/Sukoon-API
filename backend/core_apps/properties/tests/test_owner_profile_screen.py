@@ -80,7 +80,7 @@ class TestOwnerProfileScreenAPI:
             comment="مالك ممتاز ومتعاون جداً",
         )
 
-        res = auth_client.get(OWNER_PROFILE_URL)
+        res = auth_client.get(OWNER_PROFILE_URL, HTTP_ACCEPT_LANGUAGE="ar")
         assert res.status_code == status.HTTP_200_OK
 
         data = res.json()["data"]
@@ -125,7 +125,7 @@ class TestOwnerProfileScreenAPI:
         user.is_verified = False
         user.save()
 
-        res = auth_client.get(OWNER_PROFILE_URL)
+        res = auth_client.get(OWNER_PROFILE_URL, HTTP_ACCEPT_LANGUAGE="ar")
         assert res.status_code == status.HTTP_200_OK
         assert res.json()["data"]["owner"]["role_badge"] == "مالك"
 
@@ -152,7 +152,7 @@ class TestOwnerProfileScreenAPI:
         )
 
         # 24 / 25 = 96%
-        res = auth_client.get(OWNER_PROFILE_URL)
+        res = auth_client.get(OWNER_PROFILE_URL, HTTP_ACCEPT_LANGUAGE="ar")
         assert res.status_code == status.HTTP_200_OK
         assert res.json()["data"]["stats"]["acceptance_rate"] == 96
         assert res.json()["data"]["stats"]["formatted_acceptance_rate"] == "96%"

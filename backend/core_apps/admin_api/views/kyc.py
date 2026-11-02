@@ -111,7 +111,8 @@ class AdminKYCRejectAPIView(APIView):
         reason = serializer.validated_data["reason"]
 
         submission = reject_kyc_submission(
-            submission_id, reviewer=request.user, reason=reason
+            submission_id, reviewer=request.user, reason=reason,
+            document_decisions=serializer.validated_data.get("document_decisions"),
         )
         return Response(
             {

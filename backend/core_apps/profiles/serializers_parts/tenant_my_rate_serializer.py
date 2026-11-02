@@ -40,6 +40,9 @@ class VerificationStatusSerializer(serializers.Serializer):
     full_name = serializers.CharField(allow_blank=True)
     submitted_at = serializers.DateTimeField(allow_null=True)
     rejection_reason = serializers.CharField(allow_blank=True, default="")
+    submission_id = serializers.CharField(allow_null=True)
+    revision = serializers.CharField()
+    documents = serializers.ListField(child=serializers.DictField())
 
 
 class TenantContractSerializer(serializers.ModelSerializer):

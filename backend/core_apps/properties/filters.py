@@ -113,6 +113,11 @@ class PropertyVisitFilter(django_filters.FilterSet):
     - status (e.g. ?status=pending) — one of: pending, confirmed, canceled, rejected
     """
 
+    visit_date = django_filters.DateFilter(method="filter_day")
+
+    def filter_day(self, queryset, name, value):
+        return queryset.filter(visit_date=value).order_by("visit_time", "pk")
+
     # Older owner clients expose a completed tab, while the authoritative
     # visit lifecycle currently has four states. An unsupported completed
     # projection is an empty successful collection, never a fabricated status.
@@ -126,7 +131,7 @@ class PropertyVisitFilter(django_filters.FilterSet):
 
     class Meta:
         model = PropertyVisit
-        fields = ["status"]
+        fields = ["status", "visit_date"]
 
 
 class PropertyOrderingFilter(OrderingFilter):

@@ -35,7 +35,7 @@ export default async function LandingPage({ params }: PageProps<"/[lang]">) {
         <Faq dict={dict} />
         <FinalCta dict={dict} />
       </main>
-      <SiteFooter dict={dict} />
+      <SiteFooter dict={dict} lang={lang} />
       <InViewObserver />
     </>
   );

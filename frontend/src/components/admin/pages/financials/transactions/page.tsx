@@ -1,48 +1,93 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
-import { Search, FileSpreadsheet } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { fetchTransactions } from '@/lib/api/financials';
-import { TransactionItem } from '@/lib/api/types';
+import { Pagination } from '@/components/ui/Pagination';
+import { PaginatedResponse, TransactionItem } from '@/lib/api/types';
+
+type TransactionStatus = 'all' | 'paid' | 'pending' | 'refunded';
+type TransactionPage = PaginatedResponse<TransactionItem> & {
+  page: number;
+  per_page: number;
+  total_pages: number;
+};
+
+function transactionPage(response: unknown, requestedPage: number): TransactionPage {
+  const value = response as Partial<TransactionPage> | null;
+  if (!value || !Array.isArray(value.results) ||
+      !Number.isSafeInteger(value.page) || value.page !== requestedPage ||
+      !Number.isSafeInteger(value.per_page) || value.per_page! < 1 ||
+      !Number.isSafeInteger(value.count) || value.count! < 0 ||
+      !Number.isSafeInteger(value.total_pages) || value.total_pages! < 1) {
+    throw new Error('Invalid transaction pagination');
+  }
+  const { page, per_page: perPage, count, total_pages: totalPages } = value as TransactionPage;
+  if (totalPages !== Math.max(1, Math.ceil(count / perPage)) || page > totalPages ||
+      value.results.length !== Math.min(perPage, Math.max(0, count - (page - 1) * perPage)) ||
+      value.next !== (page < totalPages ? `?page=${page + 1}` : null) ||
+      value.previous !== (page > 1 ? `?page=${page - 1}` : null)) {
+    throw new Error('Invalid transaction pagination');
+  }
+  return value as TransactionPage;
+}
 
 export default function FinancialTransactionsPage() {
-  const [activeTab, setActiveTab] = useState<'all' | 'paid' | 'pending' | 'refunded'>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [transactions, setTransactions] = useState<TransactionItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [query, setQuery] = useState({ status: 'all' as TransactionStatus, search: '', page: 1 });
+  const [retry, setRetry] = useState(0);
+  const [result, setResult] = useState<{ key: string; page: TransactionPage | null; failed: boolean }>({
+    key: '', page: null, failed: false,
+  });
+  const requestVersion = useRef(0);
+  const requestKey = JSON.stringify([query.status, query.search, query.page, retry]);
+  const activeTab = query.status;
+  const searchQuery = query.search;
+  const isLoading = result.key !== requestKey;
+  const hasError = !isLoading && result.failed;
+  const currentPage = !isLoading && !hasError ? result.page : null;
+  const transactions = currentPage?.results ?? [];
+
+  function filter(status: TransactionStatus, search: string) {
+    if (status === query.status && search === query.search) return;
+    requestVersion.current += 1;
+    setQuery({ status, search, page: 1 });
+  }
+
+  function changePage(page: number) {
+    if (!currentPage || !Number.isSafeInteger(page) || page < 1 ||
+        page > currentPage.total_pages || page === query.page) return;
+    requestVersion.current += 1;
+    setQuery({ ...query, page });
+  }
 
   useEffect(() => {
     let isCancelled = false;
-    async function loadTransactions() {
-      setIsLoading(true);
+    const version = ++requestVersion.current;
+    const timer = setTimeout(async () => {
       try {
-        const res = await fetchTransactions({
-          status: activeTab,
-          search: searchQuery.trim() || undefined,
+        const response = await fetchTransactions({
+          status: query.status,
+          search: query.search.trim() || undefined,
+          page: query.page,
         });
-        if (!isCancelled) {
-          setTransactions(res.results || []);
+        const page = transactionPage(response, query.page);
+        if (!isCancelled && version === requestVersion.current) {
+          setResult({ key: requestKey, page, failed: false });
         }
-      } catch (err) {
-        console.error('Failed to load transactions:', err);
-      } finally {
-        if (!isCancelled) {
-          setIsLoading(false);
+      } catch {
+        if (!isCancelled && version === requestVersion.current) {
+          setResult({ key: requestKey, page: null, failed: true });
         }
       }
-    }
-
-    const timer = setTimeout(() => {
-      loadTransactions();
     }, 300);
 
     return () => {
       isCancelled = true;
       clearTimeout(timer);
     };
-  }, [activeTab, searchQuery]);
+  }, [query.status, query.search, query.page, requestKey]);
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -60,22 +105,21 @@ export default function FinancialTransactionsPage() {
                 type="text"
                 placeholder="بحث برقم المعاملة..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="بحث برقم المعاملة"
+                onChange={(e) => filter(activeTab, e.target.value)}
                 className="w-full pl-4 pr-10 py-2 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-[var(--text-subtle)] text-[var(--foreground)]"
               />
               <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3" />
             </div>
 
-            <button className="flex items-center gap-2 bg-[var(--card-bg)] px-4 py-2 rounded-xl border border-[var(--card-border)] text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)] cursor-pointer">
-              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-              <span>تصدير Excel</span>
-            </button>
           </div>
 
           {/* Filter Pills */}
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto justify-end">
             <button
-              onClick={() => setActiveTab('all')}
+              type="button"
+              aria-pressed={activeTab === 'all'}
+              onClick={() => filter('all', searchQuery)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === 'all'
                   ? 'bg-teal-700 text-white'
@@ -85,7 +129,9 @@ export default function FinancialTransactionsPage() {
               الكل
             </button>
             <button
-              onClick={() => setActiveTab('paid')}
+              type="button"
+              aria-pressed={activeTab === 'paid'}
+              onClick={() => filter('paid', searchQuery)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === 'paid'
                   ? 'bg-teal-700 text-white'
@@ -95,7 +141,9 @@ export default function FinancialTransactionsPage() {
               مدفوع
             </button>
             <button
-              onClick={() => setActiveTab('pending')}
+              type="button"
+              aria-pressed={activeTab === 'pending'}
+              onClick={() => filter('pending', searchQuery)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === 'pending'
                   ? 'bg-teal-700 text-white'
@@ -105,7 +153,9 @@ export default function FinancialTransactionsPage() {
               معلق
             </button>
             <button
-              onClick={() => setActiveTab('refunded')}
+              type="button"
+              aria-pressed={activeTab === 'refunded'}
+              onClick={() => filter('refunded', searchQuery)}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === 'refunded'
                   ? 'bg-teal-700 text-white'
@@ -117,8 +167,22 @@ export default function FinancialTransactionsPage() {
           </div>
         </div>
 
+        {hasError && (
+          <div role="alert" className="rounded-xl border border-rose-300 p-4 text-sm text-[var(--foreground)]">
+            <p>تعذر تحميل المعاملات. أعد المحاولة لقراءة الصفحة الحالية.</p>
+            <button
+              type="button"
+              onClick={() => { requestVersion.current += 1; setRetry((value) => value + 1); }}
+              className="mt-2 rounded-lg border border-[var(--card-border)] px-3 py-2 font-bold focus-visible:outline-2 focus-visible:outline-teal-600"
+            >
+              إعادة المحاولة
+            </button>
+          </div>
+        )}
+
         {/* Transactions Table Container */}
         <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden">
+          <div aria-busy={isLoading}>
           <TableScroll>
             <table className="w-full text-right border-collapse">
               <thead>
@@ -138,7 +202,7 @@ export default function FinancialTransactionsPage() {
                       جاري تحميل المعاملات...
                     </td>
                   </tr>
-                ) : transactions.length === 0 ? (
+                ) : hasError ? null : transactions.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="py-8 text-center text-[var(--text-subtle)] font-medium">
                       لا توجد معاملات مطابقة
@@ -186,6 +250,21 @@ export default function FinancialTransactionsPage() {
               </tbody>
             </table>
           </TableScroll>
+          </div>
+          {currentPage && (
+            <nav aria-label="صفحات المعاملات المالية">
+              <p role="status" aria-live="polite" className="px-4 pt-3 text-xs text-[var(--text-muted)]">
+                الصفحة {currentPage.page} من {currentPage.total_pages} — إجمالي المعاملات: {currentPage.count}
+              </p>
+              <Pagination
+                currentPage={currentPage.page}
+                totalPages={currentPage.total_pages}
+                totalItems={currentPage.count}
+                itemsPerPage={currentPage.per_page}
+                onPageChange={changePage}
+              />
+            </nav>
+          )}
         </div>
       </div>
     </div>

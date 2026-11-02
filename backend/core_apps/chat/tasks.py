@@ -15,3 +15,9 @@ def clean_chat_media():
     from .services.group_media_storage import cleanup_orphans
 
     return cleanup_orphans()
+
+
+@shared_task(ignore_result=True)
+def process_voice_transcriptions():
+    from .services.transcription import process_one
+    return process_one()

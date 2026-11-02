@@ -1,3 +1,4 @@
+from .views.transcription import VoiceTranscriptionView
 from django.urls import path
 from .group_urls import urlpatterns as group_urls
 from .moderation.urls import urlpatterns as moderation_urls
@@ -16,7 +17,8 @@ from core_apps.chat.views.message import (
 )
 
 urlpatterns = (
-    group_urls
+    [path("conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/", VoiceTranscriptionView.as_view())]
+    + group_urls
     + moderation_urls
     + [
         path("lists/", ChatListsAPIView.as_view(), name="chat-lists"),

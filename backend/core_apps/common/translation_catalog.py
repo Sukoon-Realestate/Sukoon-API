@@ -1,6 +1,8 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "Identity review changed. Refresh before submitting.": "تغيرت مراجعة الهوية. حدّث الحالة قبل إرسال التعديل.",
+    "This identity document cannot be replaced in the current review.": "لا يمكن استبدال هذا المستند في حالة المراجعة الحالية.",
     "This action awaits an approved policy.": "يتطلب هذا الإجراء سياسة معتمدة، وهي غير متاحة حاليًا.",
     "Your housing": "سكني",
     "Maintenance request submitted.": "تم إرسال طلب الصيانة.",

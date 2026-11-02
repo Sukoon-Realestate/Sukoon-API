@@ -147,9 +147,10 @@ class VerificationStatusAPIView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def retrieve(self, request, *args, **kwargs) -> Response:
-        data = ProfileService.get_verification_status(request.user)
+        from core_apps.profiles.identity_status import current_projection
+        data = current_projection(request.user)
         serializer = self.get_serializer(data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers={"Cache-Control": "private, no-store"})
 
 
 class TenantContractsListAPIView(generics.ListAPIView):

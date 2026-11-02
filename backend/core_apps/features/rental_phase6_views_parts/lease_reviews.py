@@ -117,6 +117,8 @@ def document_download(request, document_id):
         {
             "id": str(document.id),
             "subject_id": str(document.lease.id),
+            "revision": document.revision,
+            "sha256": document.sha256,
             "url": download_url(request, document),
             "expires_at": expires.isoformat(),
         }

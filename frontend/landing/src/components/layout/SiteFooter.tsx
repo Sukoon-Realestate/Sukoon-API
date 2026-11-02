@@ -1,3 +1,4 @@
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { SECTION_IDS } from "@/lib/sections";
 import { BUSINESS, SOCIAL_LINKS } from "@/lib/site";
@@ -5,13 +6,13 @@ import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { SignatureMark } from "@/components/ui/Decor";
 
-export function SiteFooter({ dict }: { dict: Dictionary }) {
+export function SiteFooter({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const sections = [
-    { label: dict.nav.features, href: `#${SECTION_IDS.features}` },
-    { label: dict.nav.howItWorks, href: `#${SECTION_IDS.howItWorks}` },
-    { label: dict.nav.why, href: `#${SECTION_IDS.why}` },
-    { label: dict.nav.faq, href: `#${SECTION_IDS.faq}` },
-    { label: dict.nav.download, href: `#${SECTION_IDS.download}` },
+    { label: dict.nav.features, href: `/${lang}#${SECTION_IDS.features}` },
+    { label: dict.nav.howItWorks, href: `/${lang}#${SECTION_IDS.howItWorks}` },
+    { label: dict.nav.why, href: `/${lang}#${SECTION_IDS.why}` },
+    { label: dict.nav.faq, href: `/${lang}#${SECTION_IDS.faq}` },
+    { label: dict.nav.download, href: `/${lang}#${SECTION_IDS.download}` },
   ];
 
   const destination = (value: string | undefined) => {
@@ -19,8 +20,8 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
     try { const url = new URL(value); return url.protocol === 'https:' ? url.href : undefined; } catch { return undefined; }
   };
   const links = [
-    { label: dict.footer.privacy, href: destination(process.env.NEXT_PUBLIC_PRIVACY_URL) },
-    { label: dict.footer.terms, href: destination(process.env.NEXT_PUBLIC_TERMS_URL) },
+    { label: dict.footer.privacy, href: destination(process.env.NEXT_PUBLIC_PRIVACY_URL) ?? `/${lang}/privacy` },
+    { label: dict.footer.terms, href: destination(process.env.NEXT_PUBLIC_TERMS_URL) ?? `/${lang}/terms` },
     { label: dict.footer.contact, href: `mailto:${BUSINESS.email}` },
   ];
 
@@ -36,7 +37,7 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-fg/70">
               {sections.map((section) => (
                 <li key={section.href}>
-                  <a href={section.href} className="transition-colors hover:text-fg">
+                  <a href={section.href} className="inline-flex min-h-11 items-center transition-colors hover:text-fg">
                     {section.label}
                   </a>
                 </li>
@@ -84,11 +85,11 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
 
         <div className="flex flex-col items-center gap-4 rounded-2xl border-t border-line px-4 py-6 text-center transition-[background-color,box-shadow,border-color] duration-300 hover:border-brand/40 hover:bg-brand/5 hover:shadow-[0_0_32px_rgba(4,164,23,0.15)] focus-within:border-brand/40 focus-within:bg-brand/5 focus-within:shadow-[0_0_32px_rgba(4,164,23,0.15)] sm:flex-row sm:justify-between sm:text-start">
           <nav aria-label={dict.footer.linksLabel}>
-            <ul className="flex gap-6 text-sm text-fg/70">
+            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-fg/70">
               {links.map((link) => (
                 <li key={link.label}>
-                  {link.href ? <a href={link.href} className="rounded-lg px-2 py-2 transition-[color,background-color,box-shadow] duration-300 hover:bg-brand/10 hover:text-accent hover:shadow-[0_0_20px_rgba(4,164,23,0.3)] focus-visible:bg-brand/10 focus-visible:text-accent focus-visible:shadow-[0_0_20px_rgba(4,164,23,0.3)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand">{link.label}</a>
-                    : <span aria-disabled="true" title={dict.footer.unavailableHelp}>{link.label} — {dict.footer.unavailable}</span>}
+                  {link.href ? <a href={link.href} className="inline-flex min-h-11 items-center rounded-lg px-2 py-2 transition-[color,background-color,box-shadow] duration-300 hover:bg-brand/10 hover:text-accent hover:shadow-[0_0_20px_rgba(4,164,23,0.3)] focus-visible:bg-brand/10 focus-visible:text-accent focus-visible:shadow-[0_0_20px_rgba(4,164,23,0.3)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand">{link.label}</a>
+                    : <span aria-disabled="true" title={dict.footer.unavailableHelp}>{link.label}: {dict.footer.unavailable}</span>}
                 </li>
               ))}
             </ul>

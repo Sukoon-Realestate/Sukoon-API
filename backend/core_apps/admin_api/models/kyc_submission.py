@@ -34,6 +34,7 @@ class KYCSubmission(TimeStampedModel):
     reviewed_at = models.DateTimeField(_("Reviewed At"), null=True, blank=True)
     rejection_reason = models.TextField(_("Rejection Reason"), blank=True, default="")
     notes = models.TextField(_("Admin Notes"), blank=True, default="")
+    document_decisions = models.JSONField(default=dict, blank=True)
     evidence_snapshot = models.JSONField(default=dict, editable=False)
     evidence_digest = models.CharField(
         max_length=64, blank=True, default="", editable=False

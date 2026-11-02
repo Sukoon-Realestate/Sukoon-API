@@ -35,3 +35,6 @@ private_support_media/
 
 # Local capture workbench database; contains runtime data, not source.
 .capture-dev-postgres/
+
+# Isolated demo database, generated media and local seed credentials
+.demo/

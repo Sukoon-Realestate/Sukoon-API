@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
@@ -261,3 +262,16 @@ def test_health_checks_dependencies_without_exposing_failure_details():
         response = health(RequestFactory().get("/health/"))
         assert response.status_code == 503
         assert json.loads(response.content) == {"ready": False}
+
+
+def test_timedelta_schedule_requires_real_current_completion(runtime_settings):
+    runtime_settings.CELERY_BEAT_SCHEDULE["scan"]["schedule"] = timedelta(minutes=15)
+    client = MemoryRedis()
+    live_beat(client)
+    record(client)
+    report = runtime.execution_report(client, expected_sha=SHA, now=120)
+    assert report["tasks"][0]["verified"] is True
+    assert report["failures"] == []
+    report = runtime.execution_report(client, expected_sha=SHA, now=2000)
+    assert report["tasks"][0]["verified"] is False
+    assert "scheduled_execution_unverified:scan" in report["failures"]

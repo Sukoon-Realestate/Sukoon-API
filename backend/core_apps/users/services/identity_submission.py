@@ -56,6 +56,21 @@ def submit_identity(user, data, *, request_key=None):
     latest = profile.kyc_submissions.order_by("-created_at", "-pk").first()
 
     def apply():
+        from core_apps.profiles.identity_status import documents, revision, DOCUMENT_FIELDS
+        from rest_framework.exceptions import APIException, ValidationError
+
+        expected = data.get("expected_revision")
+        if expected and expected != revision(profile, latest):
+            conflict = APIException("Identity review changed. Refresh before submitting.")
+            conflict.status_code = 409
+            conflict.default_code = "identity_revision_conflict"
+            raise conflict
+        # Granular accepted evidence is immutable during a correction, including
+        # requests from older clients that do not send the new revision field.
+        if expected or (latest and latest.status == "rejected" and latest.document_decisions):
+            for item in documents(profile, latest):
+                if data.get(item["field"]) and not item["can_replace"]:
+                    raise ValidationError({item["field"]: "This identity document cannot be replaced in the current review."})
         if (
             latest
             and latest.submission_fingerprint == supplied_fingerprint
@@ -89,6 +104,14 @@ def submit_identity(user, data, *, request_key=None):
                 evidence_snapshot=snapshot,
                 evidence_digest=fingerprint(snapshot),
                 submission_fingerprint=supplied_fingerprint,
+                document_decisions={
+                    wire: {"status": "approved", "reason": ""}
+                    for wire, field in DOCUMENT_FIELDS.items()
+                    if latest
+                    and (latest.document_decisions or {}).get(wire, {}).get("status") == "approved"
+                    and latest.evidence_snapshot.get(field) == snapshot.get(field)
+                    and snapshot.get(field)
+                },
             )
         # A new version cannot inherit an approval of older evidence.
         user.is_verified = False

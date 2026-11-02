@@ -108,7 +108,9 @@ def allowed(item):
                     if key not in {"scope", "workspace", "presentation_workspace"}
                 ):
                     return False
-                event_copy(planning_event)
+                current_copy = event_copy(planning_event)
+                if not current_copy.get("push_enabled", True):
+                    return False
         except (
             APIException,
             Http404,

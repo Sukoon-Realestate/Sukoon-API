@@ -226,6 +226,7 @@ def change_payload(item, user=None):
     from ..services.signing_documents import projection
     from ..services.change_terms import changed_terms_blocker
     from ..services.change_versions import history, comments
+    from ..services.version_comparison import rental_change_comparison
     from ..rental_phase4_views_parts.handover_payload import evidence_payload
     from ..services.termination_notice import projection as notice_projection
 
@@ -259,6 +260,7 @@ def change_payload(item, user=None):
         "amount": _money(item.amount_minor),
         "terms": item.terms,
         "previous_terms": item.previous_terms,
+        "comparison": rental_change_comparison(item),
         "document_id": str(item.document_id) if item.document_id else None,
         "signing_document": projection(item, user),
         "document_hash": item.document_hash,

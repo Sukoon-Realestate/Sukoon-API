@@ -125,6 +125,7 @@ class CompleteRegisterSerializer(serializers.Serializer):
     Serializer for uploading missing KYC documents and national ID.
     """
 
+    expected_revision = serializers.CharField(required=False, min_length=64, max_length=64)
     national_id = serializers.CharField(
         required=False,
         allow_blank=True,

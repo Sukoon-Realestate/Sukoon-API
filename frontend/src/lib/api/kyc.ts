@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { KycRequest, KycMetrics, KycDetail, PaginatedResponse } from './types';
+import { KycRequest, KycMetrics, KycDetail, KycDocumentDecisions, PaginatedResponse } from './types';
 
 export interface FetchKycParams {
   [key: string]: string | number | boolean | null | undefined;
@@ -27,9 +27,9 @@ export async function approveKyc(submissionId: string): Promise<{ message: strin
   });
 }
 
-export async function rejectKyc(submissionId: string, reason: string): Promise<{ message: string }> {
+export async function rejectKyc(submissionId: string, reason: string, documentDecisions?: KycDocumentDecisions): Promise<{ message: string }> {
   return apiClient<{ message: string }>(`/api/v1/admin/kyc/${submissionId}/reject/`, {
     method: 'POST',
-    body: JSON.stringify({ reason }),
+    body: JSON.stringify({ reason, document_decisions: documentDecisions }),
   });
 }

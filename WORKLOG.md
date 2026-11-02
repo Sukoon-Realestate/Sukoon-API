@@ -1152,3 +1152,12 @@
 - **Details:** Preserved the original working tree in a private local snapshot and retained its recovery stash. Local development database and environment credentials remained byte-for-byte unchanged and untracked. Inventoried 39 forward migrations against the running PostgreSQL release; all retired asset tables were empty. Verified an encrypted PostgreSQL backup and a private archive of all five existing local media files using the configured storage account. Existing provider settings, resource sizes and deployment components were retained.
 - **Validation:** Parsed 566 changed Python files; Django system check and migration-drift check passed. Both independent and embedded admin production builds passed. Pending source passed whitespace and credential-pattern review. No automated test suite was run; existing test changes were preserved. Deployment/runtime results are recorded separately from these pre-release checks.
 - **Files:** Pending changes across backend/config, backend/core_apps, backend/tools/qa, frontend/src, frontend/landing, frontend/scripts, frontend/tests and this worklog. Private release evidence: /tmp/sukoon-release-20261027/; private source snapshot under ~/.codex/backups/.
+
+
+## 2026-11-01
+
+### Repair admin transaction and audit pagination
+- **What:** Restored authoritative pagination metadata to admin transaction/audit lists and added transaction page navigation and read-error recovery.
+- **Why:** Multi-page transaction responses omitted page-size/page-count headers, causing the strict client to reject the list and hide the remaining transactions.
+- **Details:** Preserved 10-row pages and existing authorization; filters reset to page1, stale reads are ignored, and retry repeats only the current GET. Removed the inactive Excel control. 114 backend transport/permission-path tests and8 frontend state tests passed; scoped TypeScript/ESLint passed. Deployment and browser acceptance remain separate follow-up checks.
+- **Files:** backend/core_apps/admin_api/pagination.py; views/financials.py; views/system.py; tests/test_pagination_contract.py; frontend/src/components/admin/pages/financials/transactions/page.tsx; frontend/tests/financial-transactions-page.test.cjs.
