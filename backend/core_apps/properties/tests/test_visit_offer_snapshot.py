@@ -164,6 +164,29 @@ def test_public_booking_details_decision_and_invitation_share_complete_frozen_sn
         },
         format="json",
     )
+    from core_apps.common.mvp_scope import enabled
+    if enabled():
+        assert decision.status_code == 403
+        assert not hasattr(visit, "post_visit_decision")
+        changed_inventory(property_obj)
+        for client, endpoint in ((owner_client, owner_path), (tenant_client, tenant_path)):
+            detail = client.get(endpoint)
+            assert detail.status_code == 200
+            assert detail.data["offer_snapshot"] == expected
+        replay = tenant_client.post(PROPERTIES + f"{property_obj.id}/visits/", payload,
+            format="json", HTTP_IDEMPOTENCY_KEY=operation_key)
+        assert replay.status_code == 201 and replay.data["id"] == str(visit.id)
+        assert replay.data["offer_snapshot"] == expected
+        assert PropertyVisit.objects.count() == 1 and not TenancyInvitation.objects.exists()
+        output = os.environ.get('MVP_FIXTURE_DIR')
+        if output:
+            directory = Path(output)
+            directory.mkdir(parents=True, exist_ok=True)
+            (directory / f'mvp-booking-{scope}.json').write_text(json.dumps({
+                'source': 'isolated_postgresql_mvp_booking', 'scope': scope,
+                'scenarios': examples, 'replay': replay.json(),
+            }), encoding='utf-8')
+        return
     assert decision.status_code == 200, decision.data
     examples["decision"] = decision.json()
     assert decision.data["offer_snapshot"] == expected
@@ -261,6 +284,13 @@ def test_existing_thin_snapshot_is_never_backfilled_from_current_inventory(
         },
         format="json",
     )
+    from core_apps.common.mvp_scope import enabled
+    if enabled():
+        assert decision.status_code == 403
+        visit.refresh_from_db()
+        assert visit.offer_snapshot == thin
+        assert not hasattr(visit, "post_visit_decision")
+        return
     assert decision.status_code == 200, decision.data
     visit.refresh_from_db()
     assert visit.offer_snapshot == visit.post_visit_decision.offer_snapshot == thin

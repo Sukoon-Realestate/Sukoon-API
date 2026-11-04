@@ -14,12 +14,15 @@ from core_apps.users.models import User
 class SupportCommand(serializers.Serializer):
     expected_revision = serializers.IntegerField(min_value=1)
     action = serializers.ChoiceField(
-        choices=["claim", "assign", "escalate", "note", "reply", "resolve"]
+        choices=["claim", "assign", "escalate", "note", "reply", "resolve", "request_information", "accept_information", "return_information", "withdraw_information", "request_evidence", "mark_evidence_conflicting"]
     )
     reason = serializers.CharField(max_length=1000)
     assignee_id = serializers.UUIDField(required=False)
     body = serializers.CharField(max_length=4000, required=False)
     acknowledge_resolution = serializers.BooleanField(required=False)
+    prompt = serializers.CharField(max_length=2000, required=False)
+    information_request_id = serializers.UUIDField(required=False)
+    information_revision = serializers.IntegerField(min_value=1, required=False)
 
 
 class AdminSupportDetailAPIView(APIView):
@@ -44,7 +47,10 @@ class AdminSupportDetailAPIView(APIView):
         body.is_valid(raise_exception=True)
         data = body.validated_data
         key = request_key(request)
-        if data["action"] in {"reply", "resolve"}:
+        from core_apps.support.services import information
+        if data["action"] in information.ACTIONS:
+            result, code, replayed = information.staff_command(request.user, ticket_id, data, key)
+        elif data["action"] in {"reply", "resolve"}:
             result, code, replayed = reply_as_staff(
                 user=request.user,
                 ticket_id=ticket_id,

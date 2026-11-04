@@ -51,7 +51,7 @@ def _stringify_value(value: Any, language: Optional[str] = None) -> str:
 def _stringify_field_errors(errors: dict, language: Optional[str] = None) -> str:
     messages = []
     for field, value in errors.items():
-        label = field.replace("_", " ").title()
+        label = str(field).replace("_", " ").title()
         if language and language.startswith("ar"):
             label = translate_field_label(label, language)
         messages.append(f"{label}: {_stringify_value(value, language)}")

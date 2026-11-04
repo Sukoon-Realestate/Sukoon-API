@@ -21,5 +21,5 @@ def codec_environment(executable):
         return None
     env = os.environ.copy()
     inherited = env.get("LD_LIBRARY_PATH", "")
-    env["LD_LIBRARY_PATH"] = ":".join(paths + ([inherited] if inherited else []))
+    env["LD_LIBRARY_PATH"] = os.pathsep.join(paths + ([inherited] if inherited else []))
     return env

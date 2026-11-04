@@ -48,6 +48,10 @@ class GroupChatConsumerMixin:
                 raise ValidationError("Supply a valid conversation identity.")
             return None
         conversation = Conversation.objects.filter(id=identity).first()
+        from core_apps.common.mvp_scope import enabled
+        from rest_framework.exceptions import PermissionDenied
+        if enabled() and conversation and conversation.kind != "direct":
+            raise PermissionDenied("This workflow is deferred for the MVP release.", code="mvp_feature_deferred")
         rich_direct = (
             conversation
             and conversation.kind == "direct"

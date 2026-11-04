@@ -74,9 +74,10 @@ def upload_attachment(
     filename = original_name(upload.name)
     _, initial, _ = authorize(conversation, user, action="upload_attachment")
     cap = limits()[f"{kind}_max_bytes"]
-    keys, persisted = [], False
+    keys, persisted, staging_path = [], False, None
     try:
-        with tempfile.NamedTemporaryFile(dir=private_root(), prefix="staging-") as temp:
+        with tempfile.NamedTemporaryFile(dir=private_root(), prefix="staging-", delete=False) as temp:
+            staging_path = Path(temp.name)
             digest, size = hashlib.sha256(), 0
             for chunk in upload.chunks():
                 size += len(chunk)
@@ -87,6 +88,9 @@ def upload_attachment(
                 digest.update(chunk)
                 temp.write(chunk)
             temp.flush()
+            # Inspectors and codecs reopen the path. Windows forbids this while
+            # NamedTemporaryFile holds its delete-sharing handle.
+            temp.close()
             if size == 0 or (
                 supplied_hash and supplied_hash.lower() != digest.hexdigest()
             ):
@@ -173,6 +177,8 @@ def upload_attachment(
     except OSError as exc:
         raise ChatUnavailable("Private media storage is unavailable.") from exc
     finally:
+        if staging_path is not None:
+            staging_path.unlink(missing_ok=True)
         if not persisted:
             for key in keys:
                 private_path(key).unlink(missing_ok=True)

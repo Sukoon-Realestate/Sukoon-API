@@ -14,6 +14,7 @@ from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.users.models import User
 from core_apps.users.services.sessions import validate_session
 from ..models import OwnerAvailabilitySlot, Property, PropertyVisit
+from ..services.availability_closures import slot_in_closure
 
 
 def _input(data):
@@ -51,6 +52,8 @@ def _preview(prop, week, pattern):
             status = "past"
         elif (day, time) in busy:
             status = "busy"
+        elif slot_in_closure(prop, day, datetime.strptime(time, '%H:%M').time()):
+            status = 'closed'
         elif (day, time) in existing:
             status = "existing" if existing[day, time] else "disabled"
         slots.append({"date": day.isoformat(), "time": time, "status": status})

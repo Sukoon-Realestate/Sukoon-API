@@ -21,7 +21,7 @@ def inquiry(user, another_user):
     ticket = create_ticket(
         user,
         "tenant",
-        "payment",
+        "visit",
         "Private inquiry",
         "Private bank information must stay in the ticket.",
     )

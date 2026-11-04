@@ -21,7 +21,7 @@ def emoji_catalog():
     source = Path(__file__).resolve().parent.parent / "data" / "emoji16.json"
     return {
         value.replace("\ufe0f", ""): value
-        for value in json.loads(source.read_text())["emoji"]
+        for value in json.loads(source.read_text(encoding='utf-8'))["emoji"]
     }
 
 

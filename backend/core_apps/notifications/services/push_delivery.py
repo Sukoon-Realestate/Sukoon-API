@@ -24,6 +24,14 @@ def queue_notification(notification):
 def allowed(item):
     device, notification = item.device, item.notification
     user = notification.user
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and notification.scope not in {"account", "individual", "owner"}:
+        return False
+    from .delivery_policy import consent_current, summary_authorized, SUMMARY_KIND
+    if user.closed_at or not consent_current(notification):
+        return False
+    if (notification.data or {}).get("event_kind") == SUMMARY_KIND and not summary_authorized(notification):
+        return False
     if not user.is_active or not device.is_active or device.user_id != user.pk:
         return False
     session = device.auth_session
@@ -231,6 +239,16 @@ def dispatch(limit=100):
                 and item.claimed_until > timezone.now()
             ):
                 continue
+            from .delivery_policy import schedule
+            decision, due = schedule(item, timezone.now())
+            if decision != "send":
+                if decision == "defer":
+                    item.next_attempt_at = due
+                    item.save(update_fields=["next_attempt_at"])
+                else:
+                    item.suppressed = True
+                    item.save(update_fields=["suppressed"])
+                continue
             item.claimed_until = timezone.now() + timedelta(minutes=2)
             item.attempts += 1
             item.save(update_fields=["claimed_until", "attempts"])
@@ -243,6 +261,14 @@ def dispatch(limit=100):
             )
             continue
         notice = item.notification
+        # Reconcile a changed policy after claiming, before provider IO.
+        from .delivery_policy import schedule
+        decision, due = schedule(item, timezone.now())
+        if decision != "send":
+            PushDelivery.objects.filter(pk=identity).update(claimed_until=None,
+                suppressed=decision == "suppress", next_attempt_at=due or timezone.now(),
+                attempts=max(0, item.attempts - 1))
+            continue
         from .inbox_scope import receipt_data
         from core_apps.features.services.company.role_notifications import push_content
 

@@ -11,13 +11,19 @@ from core_apps.profiles.services import ProfileService
 
 @company_api(["GET"])
 def summary(request):
+    from core_apps.common.mvp_scope import enabled
+    mvp = enabled()
     user = request.user
     from core_apps.notifications.services.inbox_scope import request_scope
     from core_apps.notifications.services.preferences import touch
     scope = request_scope(request)
+    if mvp and scope not in {"individual", "owner"}:
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("This workspace is deferred for the MVP release.")
     if request.query_params.get("active_workspace") == "true":
         touch(user, scope)
-    data = ProfileService.get_tenant_unread_counts(user, scope=scope)
+    data = (ProfileService.get_owner_unread_counts(user) if scope == "owner"
+            else ProfileService.get_tenant_unread_counts(user, scope=scope))
     counts = {
         key: 0
         for key in ("individual", "student", "owner", "company", "general", "all")
@@ -29,6 +35,8 @@ def summary(request):
     ):
         contexts.setdefault(cid, set()).add(workspace)
     for conversation in visible(user).select_related("company_request"):
+        if mvp and conversation.kind != "direct":
+            continue
         if conversation.kind == "direct":
             participant = conversation.participant_set.get(user=user)
             count = participant.unread_count
@@ -45,6 +53,10 @@ def summary(request):
                 company_counts[cid] = company_counts.get(cid, 0) + count
             else:
                 spaces = {"student"}
+        if mvp:
+            spaces = spaces & {"individual", "owner"}
+            if not spaces:
+                continue
         counts["all"] += count
         for space in spaces:
             counts[space] += count

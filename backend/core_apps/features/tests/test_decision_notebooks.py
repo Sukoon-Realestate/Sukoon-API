@@ -97,15 +97,22 @@ def test_operation_recovery_does_not_duplicate_and_payload_change_is_rejected(re
 def test_private_account_and_workspace_and_staff_cannot_read_another_account(rental_participants):
     owner, user, other, *_ = rental_participants
     sync(user, content(note("private")))
-    sync(user, content(note("student")), workspace="student")
+    student_write = sync(user, content(note("student")), workspace="student")
     owner.is_superuser = owner.is_staff = True
     owner.save(update_fields=["is_superuser", "is_staff"])
     for actor in (owner, other):
         response = authenticated(actor).get(API, {"workspace": "individual", "user_id": str(user.pk)})
         assert response.json()["data"]["content"] == empty()
         assert response["Cache-Control"] == "private, no-store"
-    assert authenticated(user).get(API, {"workspace": "student"}).json()["data"]["content"]["properties"][0]["note"] == "student"
-    assert sync(user, content(note()), workspace="company", company=uuid.uuid4()).status_code == 404
+    from core_apps.common.mvp_scope import enabled
+    student_read = authenticated(user).get(API, {"workspace": "student"})
+    company_write = sync(user, content(note()), workspace="company", company=uuid.uuid4())
+    if enabled():
+        assert student_write.status_code == student_read.status_code == company_write.status_code == 403
+        assert not DecisionNotebook.objects.filter(workspace__in=["student", "company"]).exists()
+    else:
+        assert student_read.json()["data"]["content"]["properties"][0]["note"] == "student"
+        assert company_write.status_code == 404
 
 
 @pytest.mark.django_db

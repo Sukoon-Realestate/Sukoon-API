@@ -532,3 +532,10 @@ def review_decision(request, property_id, tour_id, revision_id, asset_kind="prop
         return services.review(value, request.user, request.data)
 
     return mutation(request, "revision.review", revision_id, execute)
+
+
+@endpoint(["GET"], public=True, viewer=True)
+def place_offer(request, session_id, place_id):
+    from .place_offers import resolve
+    session = viewer_session(request, session_id)
+    return Response(resolve(session, place_id))

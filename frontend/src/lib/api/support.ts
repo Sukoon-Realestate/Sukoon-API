@@ -21,12 +21,23 @@ export async function fetchSupportMetrics(signal?: AbortSignal): Promise<Support
   return apiClient<SupportMetrics>('/api/v1/admin/support/metrics/', { signal });
 }
 
-export type SupportAction = 'reply' | 'resolve' | 'claim' | 'assign' | 'escalate' | 'note';
+export type SupportAction = 'reply' | 'resolve' | 'claim' | 'assign' | 'escalate' | 'note' | 'request_information' | 'accept_information' | 'return_information' | 'withdraw_information' | 'request_evidence' | 'mark_evidence_conflicting';
 export interface SupportCommand {
   expected_revision: number; action: SupportAction; reason: string;
   body?: string; assignee_id?: string; acknowledge_resolution?: boolean;
+  prompt?: string; information_request_id?: string; information_revision?: number;
+}
+export interface SupportInformationRequest {
+  evidence_requirement?: { min_attachments: number; max_attachments: number; types: string[] };
+  evidence_versions?: {id: string; version: number; message_id: string; review_status: string; review_reason: string; files: {id: string; available: boolean}[]}[];
+  id: string; revision: number; prompt: string;
+  status: 'requested' | 'answer_sent' | 'accepted' | 'withdrawn';
+  source_message_id: string; answer_message_id: string | null;
+  can_answer: boolean;
+  history: { id: string; action: string; revision: number; reason: string; answer_message_id: string | null; created_at: string }[];
 }
 export interface SupportDetail extends SupportTicket {
+  information_requests?: SupportInformationRequest[];
   reference: string; workspace: string; revision: number; escalated: boolean;
   assigned_to_id: string | null;
   messages: { id: string; sender: string; body: string; created_at: string; attachments: {id: string; name: string; url: string}[] }[];

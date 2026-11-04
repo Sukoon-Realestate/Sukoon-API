@@ -43,10 +43,10 @@ def test_app_associations_use_configured_release_identities(api_client):
     assert apple.json()["applinks"]["details"] == [
         {
             "appID": "TEAM123456.com.app.sokoon.real.estate",
-            "paths": ["/properties/*"],
+            "paths": ["/properties/*", "/owners/*"],
         },
         {
             "appID": "TEAM123456.com.app.sokoon.real.estate.dev",
-            "paths": ["/properties/*"],
+            "paths": ["/properties/*", "/owners/*"],
         },
     ]

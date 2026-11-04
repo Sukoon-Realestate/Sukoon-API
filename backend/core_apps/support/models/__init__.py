@@ -6,3 +6,4 @@ __all__ = ["Ticket", "TicketMessage", "TicketAttachment"]
 
 from .help_content import HelpContact, HelpArticle
 from .operations import TicketTransition, TicketInternalNote
+from .information import TicketInformationRequest, TicketInformationEvent, TicketEvidenceSubmission

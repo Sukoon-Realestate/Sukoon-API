@@ -129,7 +129,9 @@ def capture_job(property_obj, user):
     manifest = CaptureManifestRevision.objects.create(
         session=session, revision=1, sha256="a" * 64, document={"frameIds": []}
     )
-    return CaptureProcessingJob.objects.create(manifest=manifest)
+    return CaptureProcessingJob.objects.create(manifest=manifest, outputs={
+        'panorama360': {'status': 'pending'}, 'walkthrough3d': {'status': 'pending'},
+    })
 
 
 def test_capture_result_keeps_manifest_and_job_no_implicit_3d_success(

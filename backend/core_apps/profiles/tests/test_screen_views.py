@@ -150,6 +150,10 @@ class TestMyAccountScreenAPI:
         assert contracts["count"] == 2
         assert contracts["subtitle"] == "2 عقد نشط"
         current = auth_client.get(reverse("tenant-contracts-list"), {"bucket": "current"})
+        from core_apps.common.mvp_scope import enabled
+        if enabled():
+            assert current.status_code == 403
+            return
         assert current.status_code == status.HTTP_200_OK
         assert isinstance(current.json()["data"], list)
         assert int(current["X-Total-Count"]) == contracts["count"]

@@ -7,19 +7,27 @@ const React = require('react');
 
 const flush = () => new Promise(resolve => setImmediate(resolve));
 function mount(file, apiName, api) {
-  const states = [], effects = [], refs = [];
-  let stateIndex, effectIndex, refIndex, pending = [], unmounted = false, lateWrites = 0;
+  const states = [], effects = [], refs = [], callbacks = [];
+  let stateIndex, effectIndex, refIndex, callbackIndex, pending = [], unmounted = false, lateWrites = 0, dirty = false;
   const hooks = { ...React,
     useState(initial) {
       const i = stateIndex++;
       if (!(i in states)) states[i] = typeof initial === 'function' ? initial() : initial;
       return [states[i], value => {
         if (unmounted) { lateWrites++; return; }
-        states[i] = typeof value === 'function' ? value(states[i]) : value;
+        const next = typeof value === 'function' ? value(states[i]) : value;
+        if (!Object.is(states[i], next)) dirty = true;
+        states[i] = next;
       }];
     },
     useRef(initial) { const i = refIndex++; return refs[i] || (refs[i] = { current: initial }); },
-    useCallback(callback) { return callback; },
+    useCallback(callback, dependencies) {
+      const i = callbackIndex++, old = callbacks[i];
+      if (!old || dependencies.some((value, j) => !Object.is(value, old.dependencies[j]))) {
+        callbacks[i] = { dependencies, callback };
+      }
+      return callbacks[i].callback;
+    },
     useEffect(callback, dependencies) {
       const i = effectIndex++, old = effects[i];
       if (!old || dependencies.some((value, j) => !Object.is(value, old.dependencies[j]))) {
@@ -41,10 +49,16 @@ function mount(file, apiName, api) {
   const Component = exports.default || exports.StaffIdentitySetup;
   return {
     render() {
-      stateIndex = effectIndex = refIndex = 0;
-      const tree = Component({ enabled: true });
-      const queued = pending; pending = []; queued.forEach(effect => effect());
-      return tree;
+      // React commits state updates scheduled by effects before the next
+      // settled observation. Preserve callback identity while doing so.
+      for (let pass = 0; pass < 20; pass++) {
+        dirty = false;
+        stateIndex = effectIndex = refIndex = callbackIndex = 0;
+        const tree = Component({ enabled: true });
+        const queued = pending; pending = []; queued.forEach(effect => effect());
+        if (!dirty) return tree;
+      }
+      throw new Error('Component effects did not settle');
     },
     unmount() { unmounted = true; effects.forEach(effect => effect.cleanup?.()); },
     lateWrites: () => lateWrites,

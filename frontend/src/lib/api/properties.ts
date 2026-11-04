@@ -42,6 +42,9 @@ export const recoverPropertyReview = (id: string, key: string, close = false) =>
 export async function exportProperty(id: string) {
   // Fetch again so current server authority, rather than a cached page, permits export.
   const value = await fetchAdminPropertyDetail(id);
+  if (!value || String(value.id) !== id) {
+    throw new Error('The property response does not match the requested export.');
+  }
   const blob = new Blob([JSON.stringify(value, null, 2)], { type: 'application/json;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');

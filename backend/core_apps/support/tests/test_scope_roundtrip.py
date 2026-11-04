@@ -25,6 +25,11 @@ def test_scope_roundtrip_and_foreign_context_rejection(
     created = auth_client.post(
         collection, body, format="multipart", HTTP_IDEMPOTENCY_KEY="original-ticket"
     )
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and scope in {'student', 'company'}:
+        assert created.status_code == 403
+        assert Ticket.objects.count() == 0
+        return
     assert created.status_code == 201, created.data
     ticket_id = created.json()["data"]["id"]
     ticket = Ticket.objects.get(id=ticket_id)
@@ -66,6 +71,12 @@ def test_scope_roundtrip_and_foreign_context_rejection(
     )
     assert recovered_reply.json()["data"]["outcome"] == "acknowledged"
     for other in set(Ticket.Workspace.values) - {scope}:
+        if enabled() and other in {'student', 'company'}:
+            assert auth_client.get(collection, {'workspace': other}).status_code == 403
+            assert auth_client.get(detail, {'workspace': other}).status_code == 403
+            assert auth_client.get(file_url, {'workspace': other}).status_code == 403
+            assert auth_client.post(f'{reply}?workspace={other}', {'body': 'Wrong deferred context'}, format='json').status_code == 403
+            continue
         assert (
             api_json(auth_client.get(collection, {"workspace": other}))["data"][
                 "results"
@@ -87,3 +98,18 @@ def test_scope_roundtrip_and_foreign_context_rejection(
     assert api_client.get(detail, {"workspace": scope}).status_code == 404
     assert Ticket.objects.count() == 1
     assert ticket.messages.count() == 2
+
+
+@pytest.mark.parametrize("category,context", [
+    ("payment", {}),
+    ("other", {"lease_id": "not-an-active-mvp-resource"}),
+])
+def test_mvp_ticket_body_cannot_enable_deferred_case(auth_client, settings, category, context):
+    settings.SUKOON_MVP = True
+    result = auth_client.post(reverse("support-ticket-list-create"), {
+        "workspace": "owner", "category": category,
+        "subject": "Synthetic deferred case", "description": "Synthetic isolated boundary check",
+        "rental_context": context,
+    }, format="json", HTTP_IDEMPOTENCY_KEY="deferred-case")
+    assert result.status_code == 403
+    assert not Ticket.objects.exists()

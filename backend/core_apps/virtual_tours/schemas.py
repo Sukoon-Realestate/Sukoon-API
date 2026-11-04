@@ -39,6 +39,7 @@ SPACE = obj(
         "space_kind": {"enum": ["room", "bed", "shared", "corridor", "entrance"]},
         "room_id": UUID,
         "bed_id": UUID,
+        "offer_link": obj({"offer_id": UUID, "rental_scope": {"enum": ["entire_property", "room", "room_group", "bed"]}, "room_ids": array(UUID, 0, 100), "bed_id": {"type": "string", "maxLength": 36}}),
     },
     ["id", "label", "floor_id", "space_kind"],
 )

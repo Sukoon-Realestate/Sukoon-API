@@ -1,5 +1,6 @@
 import io
 import json
+import os
 from datetime import datetime, timezone
 from unittest.mock import patch
 
@@ -49,8 +50,13 @@ def test_large_source_survives_cache_loss_and_commits_manifest_last(private_clou
     assert calls[-1].endswith("/manifest")
     assert max(map(len, objects.values())) <= cloud.CHUNK_BYTES
     storage.path(key).unlink()
-    assert storage.read_path(key).read_bytes() == content
-    assert storage.path(key).stat().st_mode & 0o777 == 0o600
+    with patch.object(cloud.os, 'chmod', wraps=cloud.os.chmod) as permissions:
+        assert storage.read_path(key).read_bytes() == content
+        assert any(call.args[1] == 0o600 for call in permissions.call_args_list)
+    # Windows st_mode cannot represent an owner-only ACL. Verify the private
+    # permission request above on every host and its POSIX effect where supported.
+    if os.name != 'nt':
+        assert storage.path(key).stat().st_mode & 0o777 == 0o600
 
 
 def test_tile_survives_cache_loss_without_public_media_url(private_cloud):

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import transaction
 from django.db.models import F, Q
 from django.utils import timezone
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from core_apps.common.idempotency import fingerprint, IdempotencyConflict
 from core_apps.notifications.models import (
     DeviceToken,
@@ -20,6 +20,17 @@ from ..models import PushCampaign, CampaignRecipient, CampaignDelivery
 from ..permissions import require_staff_actor
 
 AUDIENCES = {"all", "tenants", "landlords", "verified", "students", "companies"}
+
+
+def allowed_audiences():
+    from core_apps.common.mvp_scope import enabled
+    return sorted(AUDIENCES - {'students', 'companies'} if enabled() else AUDIENCES)
+
+
+def require_active_audience(audience):
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and isinstance(audience, str) and audience in {'students', 'companies'}:
+        raise PermissionDenied('This campaign audience is deferred for the MVP release.', code='mvp_feature_deferred')
 
 
 def eligible_spaces(user, audience):
@@ -38,6 +49,17 @@ def eligible_spaces(user, audience):
     spaces = {"individual"}
     if Property.objects.filter(owner=user).exists():
         spaces.add("owner")
+    from core_apps.common.mvp_scope import enabled
+    if enabled():
+        if audience in {'students', 'companies'}:
+            return set()
+        if audience == 'landlords':
+            return spaces & {'owner'}
+        if audience == 'tenants':
+            personal = PropertyVisit.objects.filter(tenant=user, company__isnull=True,
+                academic_plan__isnull=True, groupprocess__isnull=True).exists()
+            return {'individual'} if personal else set()
+        return spaces
     if StudentProfile.objects.filter(user=user).exists():
         spaces.add("student")
     if CompanyMembership.objects.filter(
@@ -112,6 +134,7 @@ def preview(actor, data):
         data.get("body"),
         data.get("audience", "all"),
     )
+    require_active_audience(audience)
     if (
         not isinstance(title, str)
         or not title.strip()
@@ -119,6 +142,7 @@ def preview(actor, data):
         or not isinstance(body, str)
         or not body.strip()
         or len(body) > 2000
+        or not isinstance(audience, str)
         or audience not in AUDIENCES
     ):
         raise ValidationError("Supply a title, body and supported audience.")

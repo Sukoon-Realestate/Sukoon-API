@@ -218,7 +218,29 @@ def test_base64_retry_preserves_original_operation_and_upload():
     assert upload.call_count == 1
 
 
-def test_conversion_reconciles_provider_success_after_lost_response(tmp_path):
+@pytest.fixture
+def private_manifest_permissions(tmp_path, monkeypatch):
+    """Model POSIX private modes for conversion-state tests on Windows.
+
+    The command's real permission gate remains fail-closed; this fixture does
+    not claim Windows ACL or live-provider acceptance.
+    """
+    import os
+    import stat
+    from pathlib import Path
+
+    original = Path.stat
+    def private_stat(path, *args, **kwargs):
+        result = original(path, *args, **kwargs)
+        if path == tmp_path or path == tmp_path / "conversion.json":
+            values = list(result)
+            values[0] = stat.S_IFMT(result.st_mode) | (0o700 if stat.S_ISDIR(result.st_mode) else 0o600)
+            return os.stat_result(values)
+        return result
+    monkeypatch.setattr(Path, "stat", private_stat)
+
+
+def test_conversion_reconciles_provider_success_after_lost_response(tmp_path, private_manifest_permissions):
     from django.core.management import call_command
     import cloudinary.api
     import json
@@ -272,7 +294,7 @@ def test_conversion_reconciles_provider_success_after_lost_response(tmp_path):
     )
 
 
-def test_conversion_does_not_change_asset_shared_with_public_avatar(tmp_path):
+def test_conversion_does_not_change_asset_shared_with_public_avatar(tmp_path, private_manifest_permissions):
     from django.core.management import call_command
     import json
 

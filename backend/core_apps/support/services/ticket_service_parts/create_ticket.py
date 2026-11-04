@@ -5,7 +5,7 @@ import logging
 import uuid
 from typing import Any, List, Optional
 from django.db import transaction
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound, ValidationError, PermissionDenied
 from core_apps.support.models import Ticket, TicketAttachment, TicketMessage
 
 
@@ -62,6 +62,9 @@ def create_ticket(
     subject = subject.strip()
     description = description.strip()
     rental_context = rental_context or {}
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and (category == 'payment' or rental_context):
+        raise PermissionDenied('Rental and payment support contexts are deferred for the MVP release.')
     if not isinstance(rental_context, dict):
         raise ValidationError({"rental_context": "Must be an object."})
     allowed_context = {

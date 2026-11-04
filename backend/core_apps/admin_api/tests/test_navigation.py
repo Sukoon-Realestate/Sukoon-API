@@ -5,6 +5,7 @@ import pytest
 from django.urls import reverse
 from django.utils import timezone
 
+from core_apps.common.mvp_scope import enabled
 from core_apps.admin_api.models import StaffProfile, UserReport
 from core_apps.admin_api.services.report_service import get_reports_overview_stats
 
@@ -42,14 +43,14 @@ def test_navigation_keeps_existing_authorities_separate(
     for path, allowed in [
         ("/support", support),
         ("/account-closure", closure),
-        ("/financials", finance),
+        ("/financials", finance and not enabled()),
         ("/properties", properties),
         ("/users", users),
     ]:
         assert (path in paths) is allowed
     assert ("/system/health" in paths) is (role == "system_owner")
-    assert ("/financials/payouts" in paths) is (role in {"payout_operator", "psp_reconciliation"})
-    assert ("/financials/refunds" in paths) is (role in {"refund_operator", "financial_approver", "psp_reconciliation"})
+    assert ("/financials/payouts" in paths) is (not enabled() and role in {"payout_operator", "psp_reconciliation"})
+    assert ("/financials/refunds" in paths) is (not enabled() and role in {"refund_operator", "financial_approver", "psp_reconciliation"})
 
 
 def test_independent_recovery_account_stays_limited_even_as_superuser(
@@ -73,9 +74,7 @@ def test_independent_recovery_account_stays_limited_even_as_superuser(
 def test_navigation_uses_current_profile_after_role_change(api_client, user):
     profile = StaffProfile.objects.create(user=user, role_name="system_owner")
     api_client.force_authenticate(user)
-    assert (
-        "/financials" in api_client.get(reverse("admin-session")).data["allowedPaths"]
-    )
+    assert ("/financials" in api_client.get(reverse("admin-session")).data["allowedPaths"]) is (not enabled())
     StaffProfile.objects.filter(pk=profile.pk).update(role_name="support")
     result = api_client.get(reverse("admin-session"))
     assert result.data["role"] == "support"

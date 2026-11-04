@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from .models import PolicyDecision
 from .renderers import FeatureJsonRenderer
 from .services import business_policies as policies
-from .services.business_policy_catalog import CATALOG
 
 
 def language():
@@ -19,8 +18,8 @@ def language():
 def current_policies(request):
     items = [
         policies.public(item, language())
-        for code in CATALOG
-        if (item := policies.current(code))
+        for code in policies.publication_codes()
+        if (item := policies.current(code, publication=True))
     ]
     return Response(
         {
@@ -34,6 +33,7 @@ def current_policies(request):
 @permission_classes([AllowAny])
 @renderer_classes([FeatureJsonRenderer])
 def policy_version(request, code, version):
+    policies.publication_definition(code)
     item = get_object_or_404(
         PolicyDecision,
         code=code,

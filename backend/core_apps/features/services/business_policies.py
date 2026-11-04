@@ -16,9 +16,14 @@ from .rental_phase2 import (
     replay_operation,
 )
 from .rental_lifecycle.common import audit, require_keys
+from . import business_policy_mvp
 
 
 def administrator(user):
+    if not user or not user.is_authenticated:
+        raise PermissionDenied("An active policy administrator is required.")
+    from core_apps.admin_api.permissions import require_staff_actor
+    user = require_staff_actor(user)
     if not (
         user
         and user.is_authenticated
@@ -28,16 +33,25 @@ def administrator(user):
         and (user.is_superuser or user.has_perm("features.change_policydecision"))
     ):
         raise PermissionDenied("An active policy administrator is required.")
+    return user
 
 
-def current(code):
+def publication_definition(code):
+    return business_policy_mvp.project(code, definition(code))
+
+
+def publication_codes():
+    return business_policy_mvp.codes(CATALOG)
+
+
+def current(code, *, publication=False):
     candidates = PolicyDecision.objects.filter(
         code=code,
         status="approved",
         effective_at__lte=timezone.now(),
         presentation__contract="public-business-policy-v1",
     ).order_by("-effective_at", "-pkid")
-    spec = CATALOG.get(code, {})
+    spec = publication_definition(code) if publication else CATALOG.get(code, {})
     # Expanded prospective scopes do not hide immutable older publications.
     # A new consumer must require its own explicit scope before using a policy.
     required = set(spec.get("legacy_scope", spec.get("scope", [])))
@@ -104,19 +118,21 @@ def templates():
     return [
         {
             "code": code,
-            **deepcopy(spec),
+            **deepcopy(publication_definition(code)),
             "source": SOURCES[code],
             "head_revision": heads[code].revision if code in heads else 0,
-            "current_version": (item.version if (item := current(code)) else None),
+            "current_version": (item.version if (item := current(code, publication=True)) else None),
         }
-        for code, spec in CATALOG.items()
+        for code in publication_codes()
     ]
 
 
 @transaction.atomic
 def publish(user, data):
-    administrator(user)
+    user = administrator(user)
     user = User.objects.select_for_update(no_key=True).get(pk=user.pk)
+    from core_apps.admin_api.models import StaffProfile
+    StaffProfile.objects.select_for_update().filter(user=user).first()
     administrator(user)
     keys = {
         "code",
@@ -128,6 +144,7 @@ def publish(user, data):
         "request_key",
     }
     require_keys(data, keys, keys)
+    spec = publication_definition(data['code'])
     try:
         request_key = str(uuid.UUID(str(data["request_key"])))
     except (ValueError, TypeError, AttributeError):
@@ -135,7 +152,6 @@ def publish(user, data):
     replay = replay_operation(user, "business_policy.publish", request_key, data)
     if replay:
         return replay
-    spec = definition(data["code"])
     validate_rules(data["code"], data["rules"])
     if not isinstance(data["version"], str) or not re.fullmatch(
         r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}", data["version"]

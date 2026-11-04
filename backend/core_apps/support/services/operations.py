@@ -175,7 +175,8 @@ def receipt(user, ticket_id, key, action, *, close=False, auth_claims=None):
     actor(user)
     if not Ticket.objects.filter(id=ticket_id).exists():
         raise NotFound()
-    if action not in {"claim", "assign", "escalate", "note", "reply", "resolve"}:
+    from .information import ACTIONS
+    if action not in {"claim", "assign", "escalate", "note", "reply", "resolve"} | ACTIONS:
         raise ValidationError("Choose the original support action.")
     operation = f"support.ticket.{'staff_' + action if action in {'reply', 'resolve'} else 'manage'}:{ticket_id}"
     row = (
@@ -219,6 +220,7 @@ def projection(ticket, user, *, detail=False):
     if not detail:
         return value
     from core_apps.support.serializers.ticket import TicketMessageSerializer
+    from .information import projection as information_projection, eligible
     from .staff_replies import can_resolve_inquiry
 
     independent = user.pk != ticket.user_id
@@ -234,6 +236,7 @@ def projection(ticket, user, *, detail=False):
         responsible = False
     closed = ticket.status in {"closed", "resolved"}
     value.update(
+        information_requests=information_projection(ticket),
         messages=TicketMessageSerializer(
             ticket.messages.order_by("created_at"), many=True
         ).data,
@@ -268,6 +271,12 @@ def projection(ticket, user, *, detail=False):
             )
         ],
         actions={
+            "request_information": responsible and not closed and eligible(ticket),
+            "accept_information": responsible and not closed and eligible(ticket),
+            "return_information": responsible and not closed and eligible(ticket),
+            "withdraw_information": responsible and not closed and eligible(ticket),
+            "request_evidence": responsible and not closed and eligible(ticket),
+            "mark_evidence_conflicting": responsible and not closed and eligible(ticket),
             "reply": responsible and not closed,
             "resolve": responsible and not closed and can_resolve_inquiry(ticket),
             "claim": responsible and not closed and not assigned,

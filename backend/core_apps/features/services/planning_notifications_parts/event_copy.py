@@ -7,6 +7,9 @@ from ..planning_access import planning_subject
 def event_copy(event):
     if not isinstance(event.destination, dict):
         raise NotFound()
+    if event.destination.get("event_kind") == "identity_document_expiry":
+        from core_apps.profiles.identity_expiry import event_copy as expiry_copy
+        return expiry_copy(event)
     if event.destination.get("workspace") == "company":
         from ..company.role_notifications import audience_current
 

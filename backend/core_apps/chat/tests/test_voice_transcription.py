@@ -10,11 +10,13 @@ from core_apps.chat.services.transcription import (
     payload,
 )
 from core_apps.chat.services.group_media_storage import private_path
+from .test_direct_media import direct_chat
 
 
 @pytest.fixture
-def voice(chat_group, settings):
-    group, conversation, user, other = chat_group
+def voice(direct_chat, settings, tmp_path):
+    conversation, user, other = direct_chat
+    settings.CHAT_PRIVATE_MEDIA_ROOT = tmp_path / "chat-private"
     settings.CHAT_TRANSCRIPTION_ENABLED = True
     settings.CHAT_MODERATION_PRIVATE_INPUTS_APPROVED = True
     settings.GEMINI_API_KEY = "test-only-never-sent"

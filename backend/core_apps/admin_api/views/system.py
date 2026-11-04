@@ -62,6 +62,9 @@ class AdminPushCampaignsAPIView(APIView):
     permission_classes = [IsSystemOwner]
 
     def get(self, request):
+        if request.query_params.get('capabilities') == '1':
+            from core_apps.admin_api.services.workspace_campaigns import allowed_audiences
+            return Response({'audiences': allowed_audiences()}, headers={'Cache-Control': 'private, no-store'})
         campaigns = get_push_campaigns()
         return Response(campaigns, status=status.HTTP_200_OK)
 

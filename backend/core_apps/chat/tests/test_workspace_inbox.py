@@ -39,7 +39,12 @@ def test_filter_is_applied_before_pagination(user, another_user):
     assert individual.status_code == 200, individual.data
     assert individual.data["count"] == 1
     assert client.get(url, {"workspace": "general"}).status_code == 400
-    assert client.get(url, {"workspace": "student"}).data["count"] == 0
+    from core_apps.common.mvp_scope import enabled
+    student = client.get(url, {"workspace": "student"})
+    if enabled():
+        assert student.status_code == 403
+    else:
+        assert student.data["count"] == 0
     assert client.get(url, {"workspace": "unknown"}).status_code == 400
     assert client.get(url).data["count"] == 1  # Omitted scope uses individuals.
 
@@ -70,7 +75,8 @@ def test_summary_counts_distinct_conversations_and_context(user, another_user):
         conversation.participant_set.filter(user=user).update(unread_count=3)
     result = authenticated(user).get("/api/v1/features/v1/workspace-summary/")
     assert result.status_code == 200, result.data
-    assert result.data["workspace_chat_counts"]["all"] == 6
+    from core_apps.common.mvp_scope import enabled
+    assert result.data["workspace_chat_counts"]["all"] == (3 if enabled() else 6)
     assert result.data["workspace_chat_counts"]["owner"] == 3
-    assert result.data["workspace_chat_counts"]["student"] == 3
+    assert result.data["workspace_chat_counts"]["student"] == (0 if enabled() else 3)
     assert result.data["workspace_chat_counts"]["individual"] == 0

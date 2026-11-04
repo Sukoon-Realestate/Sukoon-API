@@ -13,6 +13,10 @@ def test_retired_reminder_never_returns_a_calendar_banner(auth_client, user, ano
     PropertyVisit.objects.create(property=prop, tenant=user, status="confirmed")
     PropertyVisit.objects.create(property=prop, tenant=user, status="confirmed", visit_date=timezone.localdate(), visit_time="14:00")
     response = auth_client.get(reverse("home-visit-reminder"), {"workspace": workspace})
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and workspace in {'company', 'student'}:
+        assert response.status_code == 403
+        return
     assert response.status_code == 200
     assert response.json()["data"]["banner"] is None
     assert response["Cache-Control"] == "private, no-store"

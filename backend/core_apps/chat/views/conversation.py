@@ -123,6 +123,7 @@ class ConversationCreateAPIView(APIView):
             user=request.user, other_user=other,
             workspace=serializer.validated_data.get("workspace"),
             rental_context=serializer.validated_data.get("rental_context"),
+            expected_visit_revision=serializer.validated_data.get('expected_visit_revision'),
         )
         from core_apps.chat.moderation.policy import attach_context
 

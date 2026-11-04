@@ -66,6 +66,12 @@ class Profile(TimeStampedModel):
 
 class UserSettings(TimeStampedModel):
     revision = models.PositiveIntegerField(default=1)
+    # Persisted by migration 0012; keep the runtime insert contract aligned.
+    typing_indicator = models.BooleanField(
+        _("Typing Indicator"),
+        default=True,
+        help_text=_("Show and receive typing indicators"),
+    )
     user = models.OneToOneField(
         User,
         verbose_name=_("User"),
@@ -187,3 +193,18 @@ class NotificationPreferenceChange(TimeStampedModel):
                 name="unique_notification_preference_revision",
             )
         ]
+
+
+class IdentityDocumentExpiry(TimeStampedModel):
+    """User-entered metadata; never an identity review or proof of validity."""
+
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="identity_expiries")
+    document_version = models.CharField(max_length=64)
+    expires_on = models.DateField(null=True, blank=True)
+    reminder_days = models.JSONField(default=list)
+    revision = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            fields=["profile", "document_version"], name="unique_identity_card_expiry_version"
+        )]

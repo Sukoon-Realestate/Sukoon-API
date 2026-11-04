@@ -18,6 +18,9 @@ from ..permissions import require_staff_actor
 
 def users(audience):
     result = User.objects.filter(is_active=True, settings__promotions_and_updates=True)
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and audience in {'students', 'companies'}:
+        return result.none()
     if audience == "verified":
         result = result.filter(is_verified=True)
     elif audience == "landlords":
@@ -29,7 +32,7 @@ def users(audience):
 
 def devices(audience):
     return DeviceToken.objects.filter(is_active=True, user__in=users(audience)).filter(
-        Q(auth_session__isnull=True, user__security_epoch=0)
+        Q(auth_session__isnull=True, user__security_epoch=0, user__requires_bound_session=False)
         | Q(
             auth_session__isnull=False,
             auth_session__revoked_at__isnull=True,
@@ -51,6 +54,7 @@ def registration(device):
 
 
 def payload(item):
+    from .workspace_campaigns import allowed_audiences
     counts = dict(
         CampaignDelivery.objects.filter(recipient__campaign=item)
         .values_list("state")
@@ -77,7 +81,7 @@ def payload(item):
         "deliveryCounts": counts,
         "openRate": None,
         "timeAgo": item.created_at.isoformat(),
-        "can_confirm": item.state == "preview" and settings.ADMIN_CAMPAIGNS_ENABLED,
+        "can_confirm": item.state == "preview" and settings.ADMIN_CAMPAIGNS_ENABLED and item.audience in allowed_audiences(),
         "delivery_semantics": "Provider acceptance is not device delivery. Unknown results are not retried.",
     }
 
@@ -92,6 +96,9 @@ def transition(actor, identity, data, *, cancel=False):
         return item
     if not cancel and item.confirmed_at:
         return item  # Original confirmation recovery cannot restart delivery.
+    if not cancel:
+        from .workspace_campaigns import require_active_audience
+        require_active_audience(item.audience)
     if (
         type(data.get("expected_revision")) is not int
         or data["expected_revision"] != item.revision

@@ -82,6 +82,8 @@ def reply_as_staff(
                 code="domain_resolution_required",
             )
         own_for_reply(ticket, user)
+        if resolve_inquiry and ticket.information_requests.filter(status__in=["requested", "answer_sent"]).exists():
+            raise RentalConflict("Review or withdraw outstanding information requests before resolving this inquiry.")
         message = TicketMessage.objects.create(
             ticket=ticket,
             sender="support",

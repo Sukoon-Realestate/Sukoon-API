@@ -277,6 +277,13 @@ def test_verified_proof_does_not_grant_or_restore_a_financial_role(
         "/api/v1/features/v1/operations/payouts/execute/", payload, format="json"
     )
     assert response.status_code == 403
+    from core_apps.common.mvp_scope import enabled
+    if enabled():
+        assert response.json()['code'] == 'mvp_feature_deferred'
+        assert SensitiveAuthorization.objects.get(id=challenge['id']).consumed_at is None
+        assert not RentalPayout.objects.exists() and not LedgerTransaction.objects.exists()
+        assert not RentalAuditEvent.objects.filter(actor=user, action='payout.execute.denied').exists()
+        return
     assert "financial operations role" in str(response.data)
     assert SensitiveAuthorization.objects.get(id=challenge["id"]).consumed_at is None
     assert not RentalPayout.objects.exists() and not LedgerTransaction.objects.exists()

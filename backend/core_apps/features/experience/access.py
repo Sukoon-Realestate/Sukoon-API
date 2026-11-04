@@ -5,6 +5,9 @@ FEATURES = ('action_center', 'costs', 'discovery', 'suggestions', 'preparation',
 
 
 def enabled(feature):
+    from core_apps.common.mvp_scope import enabled as mvp_enabled
+    if mvp_enabled() and feature == 'preparation':
+        return False
     return feature in getattr(settings, 'SOKOUN_EXPERIENCE_FEATURES', ())
 
 

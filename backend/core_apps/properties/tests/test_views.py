@@ -190,7 +190,11 @@ class TestPropertyViews:
         assert "banner" in json_data["data"]
         assert json_data["data"]["banner"] is None
 
-        assert len(ctx.captured_queries) <= 4
+        # UX06 adds one account-scoped hidden-preference read, independent
+        # of result count. Preserve the original four-query listing budget.
+        preference_queries = [q for q in ctx.captured_queries if 'properties_hiddenlistingpreference' in q['sql']]
+        assert len(preference_queries) == 1
+        assert len(ctx.captured_queries) - len(preference_queries) <= 4
 
     def test_homepage_properties_includes_upcoming_confirmed_visit_banner(
         self, auth_client, user, another_user
@@ -290,7 +294,11 @@ class TestPropertyViews:
 
         assert response.status_code == status.HTTP_200_OK
         assert len(api_json(response)["data"]["results"]) == count
-        assert len(ctx.captured_queries) <= 4
+        # UX06 adds one account-scoped hidden-preference read, independent
+        # of result count. Preserve the original four-query listing budget.
+        preference_queries = [q for q in ctx.captured_queries if 'properties_hiddenlistingpreference' in q['sql']]
+        assert len(preference_queries) == 1
+        assert len(ctx.captured_queries) - len(preference_queries) <= 4
 
     def test_new_properties_supports_search_and_filter(self, auth_client, user):
         _create_published_property(
@@ -452,8 +460,8 @@ class TestPropertyViews:
         response = api_client.get(url)
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    def test_retrieve_property_records_authenticated_view(self, api_client, user):
-        property_obj = _create_property(owner=user)
+    def test_retrieve_property_records_authenticated_view(self, api_client, user, another_user):
+        property_obj = _create_published_property(owner=another_user)
         api_client.force_authenticate(user=user)
         url = reverse("property-detail", kwargs={"id": property_obj.id})
 

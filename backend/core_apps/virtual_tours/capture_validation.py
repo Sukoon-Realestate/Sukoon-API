@@ -203,6 +203,7 @@ def manifest(value, session):
             "roomIds",
             "frameIds",
         },
+        {"coveragePlan"},
     )
     require(
         value["schemaVersion"] == 1
@@ -268,4 +269,7 @@ def manifest(value, session):
                 "MANIFEST_INVALID",
                 "A station cannot cross rooms or tracking resets.",
             )
+    if "coveragePlan" in value:
+        from .capture_plan import validate
+        validate(value["coveragePlan"], session, stations, set(value["roomIds"]))
     return value

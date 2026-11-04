@@ -33,6 +33,7 @@ class PropertyStatisticsSerializer(serializers.Serializer):
     """
 
     id = serializers.UUIDField(read_only=True)
+    funnel = serializers.JSONField(read_only=True)
     title = serializers.CharField(read_only=True)
     status = serializers.CharField(read_only=True)
     is_verified = serializers.BooleanField(read_only=True)

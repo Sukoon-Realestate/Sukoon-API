@@ -64,6 +64,9 @@ def validate(revision, document):
         require(station.get("fullSphere") is True and station.get("status") == "needsReview", "panorama_incomplete", "Incomplete spheres cannot become tour scenes.", 409)
         covered.add(station["roomId"])
     require(covered == set(spaces), "capture_scope_incomplete", "Map every captured room, without adding unrelated spaces.")
+    from .place_offers import validate_link
+    for space in spaces.values():
+        validate_link(revision.tour.target, space)
     scopes = {}
     used_components, used_stations = set(), set()
     for spec in document["variants"]:

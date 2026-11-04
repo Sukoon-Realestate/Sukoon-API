@@ -49,8 +49,24 @@ from .views import (
 
 from .views.image_order import order_images
 from .views.owner_availability import owner_availability
+from .views.hidden_listings import hidden_listings
+from .views.saved_search_reads import acknowledge_saved_search
+from .views.owner_draft_review import owner_draft_review
+from .views.availability_closures import availability_closures
+from .views.viewing_times import viewing_times
+from .views.viewing_arrival import viewing_arrival
+from .views.viewing_day_plan import viewing_day_plan
+from .views.viewing_message_context import viewing_message_context
 
 urlpatterns = [
+    path('visits/<uuid:visit_id>/message-context/',viewing_message_context,name='viewing-message-context'),
+    path('visits/day-plan/', viewing_day_plan, name='viewing-day-plan'),
+    path('visits/<uuid:visit_id>/arrival/', viewing_arrival, name='viewing-arrival'),
+    path('visits/<uuid:visit_id>/time-proposals/', viewing_times, name='viewing-time-proposals'),
+    path('owner/properties/<uuid:property_id>/availability/closures/', availability_closures, name='availability-closures'),
+    path("owner/properties/<uuid:property_id>/draft-review/", owner_draft_review, name="owner-draft-review"),
+    path("saved-search-reads/<uuid:read_id>/ack/", acknowledge_saved_search, name="saved-search-read-ack"),
+    path("hidden-listings/", hidden_listings, name="hidden-listings"),
     path("owner/properties/<uuid:property_id>/availability/", owner_availability),
     path("owners/<uuid:identity>/profile/", PublicOwnerProfileView.as_view()),
     path("owners/<uuid:identity>/listings/", PublicOwnerListingsView.as_view()),

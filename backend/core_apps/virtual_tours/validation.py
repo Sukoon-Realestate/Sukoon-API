@@ -2,6 +2,9 @@ import copy
 import io
 import json
 import math
+import os
+from pathlib import Path
+import shutil
 import struct
 import subprocess
 from datetime import date
@@ -11,6 +14,16 @@ from .errors import require
 from .policy import digest, scope_policy
 from .schemas import WALK, connected, unique, validate_schema
 from .storage import read_path as path
+
+
+def validator_argv(command, asset_path):
+    # Windows cannot execute a Node shebang. Preserve Linux worker behavior
+    # and configured executables; never interpolate a shell command.
+    if os.name == 'nt' and Path(command).suffix in {'.js', '.cjs', '.mjs'}:
+        node = shutil.which('node')
+        require(bool(node), 'validator_unconfigured', 'Configure Node on the validation worker.', 503)
+        return [node, command, str(asset_path)]
+    return [command, str(asset_path)]
 
 
 def validate_authoring(revision, document):
@@ -31,6 +44,9 @@ def validate_authoring(revision, document):
     unique(document["spaces"])
     unique(document["variants"], "context")
     spaces = {s["id"]: s for s in document["spaces"]}
+    from .place_offers import validate_link
+    for space in spaces.values():
+        validate_link(revision.tour.target, space)
     assets = {str(a.id): a for a in revision.assets.all()}
     used = set()
 
@@ -232,7 +248,7 @@ def validate_glb(asset, collision=False):
     )
     # Executable path is deployment-owned; no shell or uploaded command text.
     result = subprocess.run(
-        [command, str(file)], capture_output=True, timeout=90, check=False
+        validator_argv(command, file), capture_output=True, timeout=90, check=False
     )
     require(
         result.returncode == 0,
@@ -283,7 +299,7 @@ def validate_spawns(asset, variant):
         503,
     )
     result = subprocess.run(
-        [command, str(path(asset.blob))],
+        validator_argv(command, path(asset.blob)),
         input=json.dumps({"spawns": variant["spawns"]}).encode(),
         capture_output=True,
         timeout=90,

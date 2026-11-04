@@ -6,6 +6,7 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 from core_apps.common.models import ContentView
 from ...models import Property, PropertyVisit
+from ..listing_funnel import listing_funnel
 
 
 class PropertyStatisticsMixin:
@@ -172,6 +173,7 @@ class PropertyStatisticsMixin:
         ratings_count = ratings_agg["count"]
 
         return {
+            "funnel": listing_funnel(property_obj, period_cutoff),
             "id": property_obj.id,
             "title": property_obj.title,
             "status": property_obj.status,

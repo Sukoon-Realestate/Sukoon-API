@@ -76,6 +76,8 @@ def identity(value):
 class ReviewCapabilitiesView(ReviewView):
     def get(self, request):
         enabled = getattr(settings, "REVIEWS_ENABLED", False)
+        from core_apps.common.mvp_scope import enabled as mvp_enabled
+        can_write = enabled and not mvp_enabled()
         return Response(
             {
                 "policy_version": POLICY["version"],
@@ -83,12 +85,12 @@ class ReviewCapabilitiesView(ReviewView):
                 "generated_at": timezone.now().isoformat(),
                 "enabled": enabled,
                 "capabilities": {
-                    "review_viewings": enabled,
-                    "review_tenancies": enabled,
-                    "review_housemates": enabled,
-                    "share_reputation_summary": enabled,
-                    "review_company_relationships": enabled,
-                    "review_portfolio_rollups": enabled,
+                    "review_viewings": can_write,
+                    "review_tenancies": can_write,
+                    "review_housemates": can_write,
+                    "share_reputation_summary": can_write,
+                    "review_company_relationships": can_write,
+                    "review_portfolio_rollups": can_write,
                 },
                 "blocking_reason_codes": [] if enabled else ["capability_unavailable"],
                 "report_reasons": REPORT_REASONS,

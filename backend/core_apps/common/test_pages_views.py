@@ -4,6 +4,7 @@ from rest_framework import status
 
 
 @pytest.mark.django_db
+@pytest.mark.usefixtures('public_content_pages')
 class TestStaticPagesAPI:
     def test_about_us_page_default_en(self, api_client):
         url = reverse("page-about-us")

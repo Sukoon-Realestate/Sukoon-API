@@ -3,7 +3,7 @@
 import { Header } from '@/components/layout/Header';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { fetchPushCampaigns, previewCampaign, changeCampaign } from '../../lib/api/system';
+import { fetchPushCampaigns, fetchCampaignAudiences, previewCampaign, changeCampaign } from '../../lib/api/system';
 import { isBackendEnabled } from '../../lib/api/config';
 import { PushCampaign } from '../../lib/api/types';
 import { ApiError } from '../../lib/api/client';
@@ -11,9 +11,11 @@ import { ApiError } from '../../lib/api/client';
 type Audience = 'all' | 'tenants' | 'landlords' | 'verified' | 'students' | 'companies';
 type PreviewIntent = {request_key: string; title: string; body: string; audience: Audience};
 const labels: Record<string, string> = {preview: 'بانتظار المراجعة', queued: 'في طابور الإرسال', complete: 'انتهت المعالجة', cancelled: 'أُلغي المتبقي', sending: 'جارٍ الإرسال', accepted_by_provider: 'قبله مزود الإشعارات', delivery_unknown: 'نتيجة التسليم غير مؤكدة', failed: 'تعذّر الإرسال', skipped: 'لم يعد مؤهلًا'};
+const audienceLabels: Record<Audience, string> = {all: 'كل الموافقين على العروض', tenants: 'المستأجرون', landlords: 'الملاك', verified: 'الحسابات الموثقة', students: 'الطلاب', companies: 'أعضاء الشركات النشطون'};
 
 function CampaignEditor({owner, canOperate}: {owner?: string; canOperate: boolean}) {
   const [audience, setAudience] = useState<Audience>('all');
+  const [allowedAudiences, setAllowedAudiences] = useState<Audience[]>([]);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [campaigns, setCampaigns] = useState<PushCampaign[]>([]);
@@ -53,8 +55,9 @@ function CampaignEditor({owner, canOperate}: {owner?: string; canOperate: boolea
       }
     } catch { setJournalError(true); setError('تعذّر قراءة سجل العملية المحلي. راجع الحملات المسجلة قبل بدء إرسال جديد.'); }
     };
-    void fetchPushCampaigns().then(items => {
+    void Promise.all([fetchPushCampaigns(), fetchCampaignAudiences()]).then(([items, audiences]) => {
       if (epoch !== generation.current) return;
+      setAllowedAudiences(audiences);
       restoreJournal(); setLoading(false);
       setCampaigns(items);
       const original = items.find(item => item.request_key === intent.current);
@@ -68,8 +71,9 @@ function CampaignEditor({owner, canOperate}: {owner?: string; canOperate: boolea
     const epoch = generation.current;
     setBusy(true);
     try {
-      const items = await fetchPushCampaigns();
+      const [items, audiences] = await Promise.all([fetchPushCampaigns(), fetchCampaignAudiences()]);
       if (epoch !== generation.current) return;
+      setAllowedAudiences(audiences);
       setCampaigns(items);
       const original = items.find(item => item.id === selected?.id || item.request_key === intent.current);
       if (original) { setSelected(original); setUnknown(false); setError(''); }
@@ -79,6 +83,10 @@ function CampaignEditor({owner, canOperate}: {owner?: string; canOperate: boolea
 
   async function preview() {
     if (!owner || loading || busy || journalError || !isBackendEnabled()) return;
+    if (!allowedAudiences.includes(originalPreview.current?.audience ?? audience)) {
+      setError('هذا الجمهور غير متاح في الإصدار الحالي. راجع العملية السابقة قبل بدء حملة جديدة.');
+      return;
+    }
     const epoch = generation.current;
     intent.current ??= crypto.randomUUID();
     const original = originalPreview.current ?? {title, body, audience, request_key: intent.current};
@@ -145,12 +153,13 @@ function CampaignEditor({owner, canOperate}: {owner?: string; canOperate: boolea
         <section aria-label="إنشاء ومراجعة حملة" className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-6 space-y-4">
           <fieldset disabled={loading || busy || !!selected || unknown || journalError} className="space-y-4">
             <label className="block">الجمهور<select className={field} value={audience} onChange={event => setAudience(event.target.value as Audience)}>
-              <option value="all">كل الموافقين على العروض</option><option value="tenants">المستأجرون</option><option value="landlords">الملاك</option><option value="verified">الحسابات الموثقة</option><option value="students">الطلاب</option><option value="companies">أعضاء الشركات النشطون</option>
+              {!allowedAudiences.includes(audience) && <option value={audience} disabled>{audienceLabels[audience]} — غير متاح في الإصدار الحالي</option>}
+              {allowedAudiences.map(value => <option key={value} value={value}>{audienceLabels[value]}</option>)}
             </select></label>
             <label className="block">عنوان الإشعار<input className={field} maxLength={180} value={title} onChange={event => setTitle(event.target.value)} /></label>
             <label className="block">نص الإشعار<textarea className={field} maxLength={2000} rows={5} value={body} onChange={event => setBody(event.target.value)} /></label>
           </fieldset>
-          {!selected && <button className={button} disabled={loading || busy || journalError || !title.trim() || !body.trim() || !isBackendEnabled()} onClick={preview}>{busy ? 'جارٍ التحميل…' : unknown ? 'إعادة طلب المعاينة الأصلية' : 'معاينة الجمهور'}</button>}
+          {!selected && <button className={button} disabled={loading || busy || journalError || !allowedAudiences.includes(audience) || !title.trim() || !body.trim() || !isBackendEnabled()} onClick={preview}>{busy ? 'جارٍ التحميل…' : unknown ? 'إعادة طلب المعاينة الأصلية' : 'معاينة الجمهور'}</button>}
           {selected && <div className="space-y-3" aria-live="polite">
             <p>{labels[selected.state ?? ''] ?? 'الحالة غير متاحة'} · {selected.recipientCount} مستلم</p>
             <p>{selected.receiptCount ?? 0} إيصال مساحة · {selected.pushAccountCount ?? 0} حساب مؤهل لتنبيه Push واحد.</p><ul>{Object.entries(selected.workspaceCounts ?? {}).map(([space, count]) => <li key={space}>{({individual: "الأفراد", owner: "الملاك", student: "الطلاب", company: "الشركات", account: "الحساب"} as Record<string,string>)[space] || space}: {count}</li>)}</ul><p>تُراجع الأهلية والتفضيلات مرة أخرى قبل الإرسال. تبقى إيصالات التطبيق مستقلة عن Push؛ قبول المزود لا يثبت القراءة.</p>

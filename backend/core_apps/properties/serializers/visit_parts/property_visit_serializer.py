@@ -116,6 +116,20 @@ class PostVisitContextMixin:
 
             output.update(visit_context(instance, request.user))
             output["stay_preferences"] = instance.stay_preferences
+            if instance.visit_date is not None and instance.visit_time is not None:
+                from .tenant_visit_request_serializer import (
+                    _format_full_date, _format_time_clock, _format_owner_schedule_label,
+                )
+
+                language = get_visit_language(self.context)
+                output.update(
+                    visit_date=instance.visit_date.isoformat(),
+                    visit_time=instance.visit_time.isoformat(),
+                    day_label=_format_full_date(instance.visit_date, language),
+                    time_label=_format_time_clock(instance.visit_time, language),
+                    schedule_label=_format_owner_schedule_label(instance.visit_date, instance.visit_time, language),
+                    timezone='Africa/Cairo',
+                )
         return output
 
 

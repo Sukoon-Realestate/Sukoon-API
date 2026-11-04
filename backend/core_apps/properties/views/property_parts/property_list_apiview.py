@@ -16,6 +16,32 @@ from .property_filter_options_apiview import PropertyPagination
 
 
 class VisiblePropertyListMixin:
+    def finalize_response(self, request, response, *args, **kwargs):
+        response = super().finalize_response(request, response, *args, **kwargs)
+        metadata = getattr(request, "saved_search_metadata", None)
+        if metadata and response.status_code < 400 and isinstance(response.data, dict):
+            snapshot = request.saved_search_snapshot
+            response.data["saved_search_read"] = {**metadata, "changes": {
+                str(row["id"]): snapshot.changes[str(row["id"])]
+                for row in response.data.get("results", [])
+                if isinstance(row, dict) and str(row.get("id")) in snapshot.changes}}
+        if request.user.is_authenticated:
+            response["Cache-Control"] = "private, no-store"
+        return response
+
+    def filter_queryset(self, queryset):
+        from ...services.hidden_listings import apply_hidden_listings
+        from ...services.saved_search_reads import apply_saved_search_read
+
+        queryset = apply_hidden_listings(super().filter_queryset(queryset), self.request)
+        return apply_saved_search_read(queryset, self.request)
+
+    def paginate_queryset(self, queryset):
+        from ...services.saved_search_reads import validate_page
+
+        page = super().paginate_queryset(queryset)
+        return validate_page(page, self.request) if page is not None else page
+
     def get_queryset(self):
         from ...services.public_access import public_properties
 
@@ -83,6 +109,10 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
             # ! Mutate the paginated payload before rendering; DRF Response.data
             # ! is the unrendered dict, so this is safe.
             response.data["banner"] = self._get_upcoming_visit_banner()
+            if self.paginator.page.paginator.count == 0:
+                from ...services.search_suggestions import search_suggestions
+
+                response.data["search_suggestions"] = search_suggestions(self)
             if hasattr(request, "student_offer_matches"):
                 response.data["student_search_version"] = 1
             if getattr(request, "rental_search_version", None):
@@ -162,6 +192,10 @@ class PropertyNewListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
+        if isinstance(response.data, dict) and response.data.get("count") == 0:
+            from ...services.search_suggestions import search_suggestions
+
+            response.data["search_suggestions"] = search_suggestions(self)
         if hasattr(request, "student_offer_matches") and isinstance(
             response.data, dict
         ):

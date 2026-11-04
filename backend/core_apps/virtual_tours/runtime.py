@@ -5,7 +5,6 @@ protect jobs during rolling deployments. Interrupted jobs remain in the outbox.
 """
 
 import asyncio
-import fcntl
 import logging
 import threading
 import time
@@ -16,6 +15,7 @@ from django.db import close_old_connections, connections
 from .models import TourRevision
 from .processing import process_revision
 from .storage import root
+from .processor_lock import claim_process_lock
 from .tasks import cleanup_tours, recover_interrupted_tours
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def run_processor(stop):
         with (root().parent / ".virtual-tour-processor.lock").open("a") as lock:
             while not stop.is_set():
                 try:
-                    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    claim_process_lock(lock)
                     break
                 except BlockingIOError:
                     stop.wait(5)

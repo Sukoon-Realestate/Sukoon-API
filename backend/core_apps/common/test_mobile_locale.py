@@ -311,7 +311,7 @@ def test_zero_weight_language_is_not_selected():
 
 
 @pytest.mark.django_db
-def test_public_content_language_switch_and_headers(api_client):
+def test_public_content_language_switch_and_headers(api_client, public_content_pages):
     url = reverse('page-about-us')
     arabic = api_client.get(url, HTTP_ACCEPT_LANGUAGE='ar-EG, en;q=.5')
     english = api_client.get(url, HTTP_ACCEPT_LANGUAGE='en-US, ar;q=.5')

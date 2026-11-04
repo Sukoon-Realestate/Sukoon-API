@@ -1,4 +1,4 @@
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from core_apps.support.models import Ticket
 
 
@@ -8,4 +8,7 @@ def normalize_workspace(value):
         raise ValidationError(
             {"workspace": "Choose a supported account or workspace context."}
         )
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and value in {'student', 'company'}:
+        raise PermissionDenied('This support workspace is deferred for the MVP release.')
     return value

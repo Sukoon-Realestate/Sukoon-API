@@ -34,6 +34,7 @@ urlpatterns = [
     path("virtual-tour-operations/<uuid:operation_id>/", views.operation),
     path("virtual-tour-viewer/exchange/", views.exchange),
     path(session_base + "manifest/", views.manifest),
+    path(session_base + "places/<str:place_id>/offer/", views.place_offer),
     path(session_base + "renew/", views.renew_session),
     path(session_base, views.revoke_session),
     path(resource_base + "access/", views.resource_access),

@@ -1,3 +1,6 @@
+import json
+import os
+from pathlib import Path
 import csv
 import io
 import pytest
@@ -16,6 +19,10 @@ def test_csv_matches_authorized_metrics_and_unknown_values(phase4_lease, days, l
     report = client.get(path, query).data
     result = client.get(path + "export/", query)
     assert result.status_code == 200
+    if days == 30 and os.environ.get('MVP_FIXTURE_DIR'):
+        directory = Path(os.environ['MVP_FIXTURE_DIR'])
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / f'mvp-listing-analytics-{language}.json').write_text(json.dumps(report), encoding='utf-8')
     assert result.content.startswith(b"\xef\xbb\xbf")
     assert result["Cache-Control"] == "private, no-store"
     rows = list(csv.DictReader(io.StringIO(result.content.decode("utf-8-sig"))))

@@ -149,7 +149,7 @@ class TestTicketDetailAndRepliesAPIView:
         ticket = create_ticket(
             user=user,
             workspace="owner",
-            category="payment",
+            category="visit",
             subject="استفسار عن الدفع",
             description="تفاصيل الاستفسار بالكامل",
         )

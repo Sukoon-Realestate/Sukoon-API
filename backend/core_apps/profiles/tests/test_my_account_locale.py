@@ -228,8 +228,17 @@ def test_language_switch_preserves_projection_counts_identities_and_business_dat
         response = auth_client.get(
             reverse("tenant-contracts-list"), {"bucket": "current"}, HTTP_ACCEPT_LANGUAGE=language,
         )
+        from core_apps.common.mvp_scope import enabled
+        if enabled():
+            assert response.status_code == 403
+            continue
         assert response.status_code == 200 and int(response["X-Total-Count"]) == 2
         pages.append(response.json()["data"])
+    from core_apps.common.mvp_scope import enabled
+    if enabled():
+        assert not pages
+        assert before == [list(model.objects.order_by("pk").values()) for model in models]
+        return
     assert pages[0] == pages[1]
     assert {row["id"] for row in pages[0]} == {f"lease:{current.id}", str(legacy.id)}
     assert before == [list(model.objects.order_by("pk").values()) for model in models]

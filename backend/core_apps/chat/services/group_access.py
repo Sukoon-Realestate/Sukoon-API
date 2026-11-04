@@ -9,6 +9,9 @@ from core_apps.chat.models import Conversation, ConversationParticipant
 
 
 def authorize(conversation, user, *, action="read_chat", lock=False):
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and conversation.kind != "direct":
+        raise PermissionDenied("This workflow is deferred for the MVP release.", code="mvp_feature_deferred")
     if conversation.kind != 'direct' and action in {'send_message', 'upload_attachment', 'reply'}:
         from core_apps.chat.moderation.policy import require_new_business
         require_new_business(user)

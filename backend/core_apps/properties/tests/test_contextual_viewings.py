@@ -18,7 +18,7 @@ from core_apps.features.models import (
 )
 from core_apps.features.tests.test_rental_phase2 import (
     rental_participants,
-    authenticated,
+    authenticated as base_authenticated,
 )
 from core_apps.features.tests.test_cycle_concurrency import parallel_calls
 from core_apps.properties.models import PropertyVisit, OwnerAvailabilitySlot
@@ -33,6 +33,20 @@ from .test_post_visit_decision import visit, path, body, invite_body
 
 pytestmark = pytest.mark.django_db
 API = "/api/v1/properties/"
+
+
+def authenticated(user):
+    """Explicit current company role required by the HTTP test contract."""
+    client = base_authenticated(user)
+    member = CompanyMembership.objects.filter(user=user, is_active=True).first()
+    if member:
+        representative = PropertyVisit.objects.filter(
+            company=member.company, tenant=user, status__in=['pending', 'confirmed']
+        ).exists()
+        role = 'coordinator' if member.is_coordinator or representative else 'employee'
+        client.credentials(HTTP_X_SUKOON_COMPANY_ID=str(member.company.id),
+                           HTTP_X_SUKOON_COMPANY_ROLE=role)
+    return client
 
 
 def company_for(user, representative=None):
@@ -98,6 +112,7 @@ def test_company_books_without_simulator_budget_or_personal_obligation_and_recov
     response = client.post(
         API + f"{prop.id}/visits/", payload, format="json", HTTP_IDEMPOTENCY_KEY=key
     )
+    assert response.wsgi_request.headers.get('X-Sukoon-Company-Role') == 'coordinator'
     assert response.status_code == 201, response.data
     appointment = PropertyVisit.objects.get()
     assert appointment.company == company and appointment.requested_by == actor
@@ -136,6 +151,7 @@ def test_employee_cannot_book_on_company_behalf_and_revoked_representative_loses
     )
     assert rejected.status_code == 403
     visit.company, visit.context_kind, visit.tenant = company, "company", other
+    visit.requested_by = actor
     visit.save()
     assert authenticated(other).get(path(visit)).status_code == 200
     employee.is_active = False

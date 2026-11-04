@@ -420,6 +420,8 @@ def document():
         body=obj({}),
         security="viewer",
     )
+    route(s + "places/{place_id}/offer/", "get",
+          "Resolve an exact authorized place against current offer identity", security="viewer")
     route(s, "delete", "Revoke session", body=obj({}), security="viewer")
     route(
         resource + "access/",

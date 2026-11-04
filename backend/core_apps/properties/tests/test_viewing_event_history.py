@@ -9,7 +9,6 @@ from core_apps.features.planning_models import PlanningEvent
 from core_apps.features.company_models import CompanyMembership
 from core_apps.features.services.planning_notifications import deliver_planning_events
 from core_apps.features.tests.test_rental_phase2 import (
-    authenticated,
     rental_participants,
 )
 from core_apps.features.tests.test_planning_cycles import configured_planning_offer
@@ -18,7 +17,7 @@ from core_apps.properties.models import PropertyVisit
 from core_apps.properties.services.visit import PropertyVisitService
 from core_apps.properties.services.viewing_commands import notify, command
 from core_apps.properties.services.viewing_access import context_payload
-from .test_contextual_viewings import API, booking, company_for
+from .test_contextual_viewings import API, booking, company_for, authenticated
 
 pytestmark = pytest.mark.django_db
 

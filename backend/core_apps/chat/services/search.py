@@ -101,8 +101,10 @@ def discover(request, conversation_id=None):
         )
     )
     if kind == "search":
+        body_match = Q()
         for word in text.split():
-            rows = rows.filter(search_document__body__contains=word)
+            body_match &= Q(search_document__body__contains=word)
+        rows = rows.filter(body_match | Q(attachments__voicetranscription__state="ready"))
     elif kind == "link":
         rows = rows.filter(search_document__isnull=False).exclude(
             search_document__links=[]
@@ -170,6 +172,24 @@ def discover(request, conversation_id=None):
         if message.sequence < participant.visible_from_sequence:
             continue
         payload = message_payload(message, participant, member)
+        transcript_matches = []
+        if kind == "search":
+            from ..models import VoiceTranscription
+            from .transcription import payload as transcript_payload
+            from ..views.group_attachments import accessible_attachment
+
+            for job in VoiceTranscription.objects.filter(attachment__message=message, state="ready").select_related("attachment"):
+                try:
+                    attachment = accessible_attachment(conversation, request.user, identity=job.attachment.id)
+                    if job.fingerprint != attachment.fingerprint:
+                        continue
+                    transcript = transcript_payload(job)
+                    if all(word in normalize(transcript["text"]) for word in text.split()):
+                        transcript_matches.append({"attachment_id": str(attachment.id), **transcript})
+                except APIException:
+                    continue
+            if not all(word in normalize(message.content) for word in text.split()) and not transcript_matches:
+                continue
         if kind not in {"search", "link"}:
             payload["attachments"] = [
                 a for a in payload["attachments"] if a["kind"] in kinds
@@ -181,6 +201,7 @@ def discover(request, conversation_id=None):
                 ).data,
                 "message": payload,
                 "links": message.search_document.links if kind == "link" else [],
+                "transcripts": transcript_matches,
             }
         )
         if len(results) == 20:

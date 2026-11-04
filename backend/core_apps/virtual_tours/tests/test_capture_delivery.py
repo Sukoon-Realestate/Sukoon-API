@@ -98,10 +98,12 @@ def test_selection_private_preview_version_negotiation_review_and_revocation(sel
     services.submit_review(revision, {"source_hash": revision.source_hash}, '"draft-1"')
     assert revision.review_state == "pending"
     # Even an administrator cannot independently approve their own capture.
+    from django.contrib.auth.models import Permission
     user.is_staff = True
-    with patch.object(user, "has_perm", return_value=True):
-        with pytest.raises(TourError, match="different authorized reviewer"):
-            services.review(revision, user, {"decision": "approved", "expected_source_hash": revision.source_hash, "reason": "Self review is invalid"})
+    user.save(update_fields=['is_staff'])
+    user.user_permissions.add(Permission.objects.get(content_type__app_label='virtual_tours', codename='change_tourrevision'))
+    with pytest.raises(TourError, match="different authorized reviewer"):
+        services.review(revision, user, {"decision": "approved", "expected_source_hash": revision.source_hash, "reason": "Self review is invalid"})
     revision.refresh_from_db()
     assert revision.review_state == "pending"
     job.cancel_requested = True; job.save(update_fields=["cancel_requested"])

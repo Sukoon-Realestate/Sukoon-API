@@ -130,6 +130,9 @@ def for_user(user):
 
 def prepare_context(actor, raw):
     kind = raw.get("kind", "personal")
+    from core_apps.common.mvp_scope import enabled
+    if enabled() and kind in {"student", "company"}:
+        raise PermissionDenied("This workflow is deferred for the MVP release.", code="mvp_feature_deferred")
     if kind not in {"personal", "student", "company"}:
         raise ValidationError(
             {

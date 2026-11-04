@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from core_apps.admin_api.permissions import IsSystemOwner
 from core_apps.admin_api.services import content_editor, content_registry as registry
+from core_apps.admin_api.services import content_mvp
 from core_apps.common.content_models import ContentEditAudit
 from core_apps.common.idempotency import request_key, response_headers
 
@@ -42,7 +43,7 @@ class AdminContentAPIView(APIView):
                 reason = "التعديل متوقف. راجع أمان الحساب وطلب استعادة عامل التحقق."
             return Response(
                 {
-                    "catalogs": [registry.schema(key) for key in registry.REGISTRY],
+                    "catalogs": [registry.schema(key) for key in content_mvp.kinds(registry.REGISTRY)],
                     "can_edit": not reason,
                     "blocking_reason": reason,
                 },
@@ -51,7 +52,7 @@ class AdminContentAPIView(APIView):
         entry = registry.spec(kind)
         if identity:
             result = registry.projection(
-                kind, get_object_or_404(entry.model, **{entry.identity_field: identity})
+                kind, get_object_or_404(content_mvp.query(entry.model.objects.all()), **{entry.identity_field: identity})
             )
             result["history"] = list(
                 ContentEditAudit.objects.filter(kind=kind, object_id=identity)
@@ -59,7 +60,7 @@ class AdminContentAPIView(APIView):
                 .values("revision", "reason", "before", "after", "created_at")
             )
             return Response(result, headers={"Cache-Control": "private, no-store"})
-        query = entry.model.objects.order_by("pk")
+        query = content_mvp.query(entry.model.objects.order_by("pk"))
         search = request.query_params.get("search", "").strip()[:200]
         if search:
             from django.db.models import Q

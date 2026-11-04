@@ -48,11 +48,14 @@ def write_blob(chunks, maximum):
                 output.write(chunk)
             output.flush()
             os.fsync(output.fileno())
-        directory = os.open(root(), os.O_RDONLY)
-        try:
-            os.fsync(directory)
-        finally:
-            os.close(directory)
+        # Windows flushes through the file handle and cannot open a directory
+        # with POSIX os.open. Keep the directory barrier on supported hosts.
+        if os.name != "nt":
+            directory = os.open(root(), os.O_RDONLY)
+            try:
+                os.fsync(directory)
+            finally:
+                os.close(directory)
         remote_storage.persist(key, destination)
         return key, size, checksum.hexdigest()
     except BaseException:

@@ -31,6 +31,16 @@ export async function fetchPushCampaigns(): Promise<PushCampaign[]> {
   return apiClient<PushCampaign[]>('/api/v1/admin/system/notifications/');
 }
 
+export type CampaignAudience = 'all' | 'tenants' | 'landlords' | 'verified' | 'students' | 'companies';
+export async function fetchCampaignAudiences(): Promise<CampaignAudience[]> {
+  const result = await apiClient<{audiences: unknown}>('/api/v1/admin/system/notifications/', {params: {capabilities: '1'}});
+  const known = ['all', 'tenants', 'landlords', 'verified', 'students', 'companies'];
+  if (!Array.isArray(result?.audiences) || !result.audiences.length || result.audiences.some(value => typeof value !== 'string' || !known.includes(value))) {
+    throw new Error('The current campaign audience configuration is unavailable.');
+  }
+  return [...new Set(result.audiences)] as CampaignAudience[];
+}
+
 export async function sendPushNotification(payload: {
   title: string;
   body: string;

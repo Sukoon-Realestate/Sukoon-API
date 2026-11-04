@@ -139,7 +139,7 @@ def rank(queryset, request):
         record = CommuteSearch.objects.filter(id=item.ranking.get('commute_id'), user=request.user, status='succeeded', expires_at__gt=timezone.now()).first()
         if record:
             commute = {str(row.get('property_id')): row for row in record.matches}
-    matches = getattr(request, 'student_offer_matches', {})
+    matches = getattr(request, 'listing_offer_matches', getattr(request, 'student_offer_matches', {}))
     ranked = []
     for prop in queryset:
         eligible = matches.get(prop.pk)

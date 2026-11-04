@@ -19,7 +19,7 @@ def test_relocated_codec_libraries_include_nested_paths_without_global_change(tm
     with patch("shutil.which", return_value=str(binary)), patch.dict(
         os.environ, {"LD_LIBRARY_PATH": "/existing-libraries"}
     ):
-        result = codec_environment("ffmpeg")["LD_LIBRARY_PATH"].split(":")
+        result = codec_environment("ffmpeg")["LD_LIBRARY_PATH"].split(os.pathsep)
         assert all(
             str(nested / name) in result for name in ("pulseaudio", "blas", "lapack")
         )

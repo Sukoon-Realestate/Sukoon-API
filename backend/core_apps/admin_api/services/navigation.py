@@ -59,4 +59,7 @@ def allowed_paths(request):
         pass
     else:
         paths.append("/account-closure")
+    from core_apps.common.mvp_scope import enabled
+    if enabled():
+        paths = [path for path in paths if not path.startswith('/financials')]
     return paths

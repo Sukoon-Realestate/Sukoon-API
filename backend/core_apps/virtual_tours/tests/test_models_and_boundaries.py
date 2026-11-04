@@ -2,6 +2,7 @@
 
 import copy
 import json
+import os
 import struct
 import uuid
 from pathlib import Path
@@ -85,7 +86,7 @@ def asset(revision, role, content):
 
 @pytest.fixture
 def model_revision(property_obj, settings):
-    scripts = Path(__file__).resolve().parents[3] / "tools" / "virtual_tours"
+    scripts = Path(os.environ.get('MVP_VALIDATOR_ROOT') or Path(__file__).resolve().parents[3] / "tools" / "virtual_tours")
     settings.VIRTUAL_TOUR_GLTF_VALIDATOR = str(scripts / "validate-glb.cjs")
     settings.VIRTUAL_TOUR_SPAWN_VALIDATOR = str(scripts / "validate-spawns.mjs")
     tour = PropertyVirtualTour.objects.create(property=property_obj, kind="model_3d")

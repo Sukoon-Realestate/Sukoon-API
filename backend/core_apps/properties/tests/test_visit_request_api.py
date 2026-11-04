@@ -1,3 +1,4 @@
+from core_apps.common.mvp_scope import enabled as mvp_enabled
 from core_apps.common.contract_testing import api_json
 from datetime import date, time, timedelta
 import uuid
@@ -191,7 +192,7 @@ class TestPropertyVisitReviewAPI:
         )
 
         # The legacy route has no explicit overall score/final confirmation.
-        assert response.status_code == status.HTTP_409_CONFLICT
+        assert response.status_code == (status.HTTP_403_FORBIDDEN if mvp_enabled() else status.HTTP_409_CONFLICT)
         assert not PropertyVisitReview.objects.filter(visit=visit).exists()
         assert not PropertyRating.objects.filter(
             user=user, property=property_obj
@@ -231,9 +232,9 @@ class TestPropertyVisitReviewAPI:
             url, {**payload, "comment": "Changed"}, format="json", **headers
         )
 
-        assert first.status_code == status.HTTP_409_CONFLICT
-        assert replay.status_code == status.HTTP_409_CONFLICT
-        assert changed.status_code == status.HTTP_409_CONFLICT
+        assert first.status_code == (status.HTTP_403_FORBIDDEN if mvp_enabled() else status.HTTP_409_CONFLICT)
+        assert replay.status_code == (status.HTTP_403_FORBIDDEN if mvp_enabled() else status.HTTP_409_CONFLICT)
+        assert changed.status_code == (status.HTTP_403_FORBIDDEN if mvp_enabled() else status.HTTP_409_CONFLICT)
         assert not PropertyVisitReview.objects.filter(visit=visit).exists()
 
     def test_legacy_criteria_cannot_infer_an_overall_score(
@@ -266,7 +267,7 @@ class TestPropertyVisitReviewAPI:
             payload,
             format="json",
         )
-        assert response.status_code == status.HTTP_409_CONFLICT
+        assert response.status_code == (status.HTTP_403_FORBIDDEN if mvp_enabled() else status.HTTP_409_CONFLICT)
         assert not PropertyVisitReview.objects.filter(visit=visit).exists()
 
     def test_rejects_review_before_visit_and_invalid_scores(
@@ -300,15 +301,15 @@ class TestPropertyVisitReviewAPI:
             url, {**valid_payload, "cleanliness_rating": 6}, format="json"
         )
 
-        assert early.status_code == status.HTTP_409_CONFLICT
-        assert invalid.status_code == status.HTTP_400_BAD_REQUEST
+        assert early.status_code == (status.HTTP_403_FORBIDDEN if mvp_enabled() else status.HTTP_409_CONFLICT)
+        assert invalid.status_code == (status.HTTP_403_FORBIDDEN if mvp_enabled() else status.HTTP_400_BAD_REQUEST)
 
     def test_review_requires_authentication(self, api_client):
         response = api_client.post(
             reverse("property-visit-review-create", kwargs={"id": uuid.uuid4()}),
             {},
         )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.status_code == (status.HTTP_403_FORBIDDEN if mvp_enabled() else status.HTTP_401_UNAUTHORIZED)
 
 
 

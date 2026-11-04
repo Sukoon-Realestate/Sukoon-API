@@ -180,11 +180,12 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         # * Track the view so owners see real "number of views" stats
-        ContentView.record_view(
-            content_object=instance,
-            user=request.user if request.user.is_authenticated else None,
-            viewer_ip=get_client_ip(request),
-        )
+        if not request.user.is_authenticated or instance.owner_id != request.user.pk:
+            ContentView.record_view(
+                content_object=instance,
+                user=request.user if request.user.is_authenticated else None,
+                viewer_ip=get_client_ip(request),
+            )
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 

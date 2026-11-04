@@ -187,6 +187,22 @@ def test_api_requires_version_and_retains_receipt(listing, superuser, api_client
     assert recovered["receipt"]["decision_id"] == result.json()["data"]["decision_id"]
 
 
+def test_export_source_rechecks_current_role_and_exact_property(listing, another_user, api_client):
+    profile = StaffProfile.objects.create(user=another_user, role_name='property_reviewer')
+    api_client.force_authenticate(another_user)
+    path = f'/api/v1/admin/properties/{listing.id}/'
+    current = api_client.get(path)
+    assert current.status_code == 200 and current.data['id'] == str(listing.id)
+    assert current['Cache-Control'] == 'private, no-store'
+    assert api_client.get(f'/api/v1/admin/properties/{uuid4()}/').status_code == 404
+    profile.role_name = StaffProfile.RoleName.SUPPORT
+    profile.save(update_fields=['role_name'])
+    assert api_client.get(path).status_code == 403
+    profile.role_name, profile.is_active = 'property_reviewer', False
+    profile.save(update_fields=['role_name', 'is_active'])
+    assert api_client.get(path).status_code == 403
+
+
 @pytest.mark.django_db(transaction=True)
 def test_concurrent_reviewers_only_one_decision(listing, superuser, another_user):
     if connection.vendor != "postgresql":

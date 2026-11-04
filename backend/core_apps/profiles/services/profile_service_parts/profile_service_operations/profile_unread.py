@@ -9,6 +9,10 @@ class ProfileUnreadMixin:
         """
         Calculates badge / unread counts for an owner account.
         """
+        from core_apps.common.mvp_scope import enabled
+        if enabled():
+            from core_apps.profiles.services.mvp_counts import active_counts
+            return active_counts(user, 'owner')
         from core_apps.chat.services.group_access import total_unread_count
         from core_apps.properties.models import PropertyVisit
         from core_apps.notifications.services import NotificationService
@@ -35,6 +39,10 @@ class ProfileUnreadMixin:
         """
         Calculates badge / unread counts for a tenant account.
         """
+        from core_apps.common.mvp_scope import enabled
+        if enabled():
+            from core_apps.profiles.services.mvp_counts import active_counts
+            return active_counts(user, scope)
         from core_apps.chat.services.group_access import total_unread_count
         from core_apps.properties.models import PropertyVisit, SavedProperty
         from core_apps.notifications.services import NotificationService

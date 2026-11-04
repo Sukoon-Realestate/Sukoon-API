@@ -153,13 +153,23 @@ class TicketReplyAPIView(APIView):
 
         def create_reply():
             try:
-                updated_ticket = add_ticket_reply(
-                    user=request.user,
-                    ticket_id=id,
-                    body=serializer.validated_data["body"],
-                    workspace=workspace,
-                    attachment_ids=serializer.validated_data.get("attachment_ids", []),
-                )
+                information_id = serializer.validated_data.get("information_request_id")
+                if information_id:
+                    if not request_key:
+                        from rest_framework.exceptions import ValidationError
+                        raise ValidationError("Retain the original operation key before answering.")
+                    from core_apps.support.services.information import answer
+                    updated_ticket = answer(user=request.user, ticket_id=id, workspace=workspace,
+                        request_id=information_id, expected_revision=serializer.validated_data["information_revision"],
+                        body=serializer.validated_data["body"], attachment_ids=serializer.validated_data.get("attachment_ids", []))
+                else:
+                    updated_ticket = add_ticket_reply(
+                        user=request.user,
+                        ticket_id=id,
+                        body=serializer.validated_data["body"],
+                        workspace=workspace,
+                        attachment_ids=serializer.validated_data.get("attachment_ids", []),
+                    )
             except TicketClosedConflict as exc:
                 # The row may have changed after the pre-check.
                 raise TicketStateConflict(str(exc))

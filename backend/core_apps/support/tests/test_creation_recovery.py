@@ -10,9 +10,9 @@ from core_apps.support.models import Ticket
 pytestmark = pytest.mark.django_db
 BODY = {
     "workspace": "tenant",
-    "category": "payment",
-    "subject": "Payment inquiry",
-    "description": "Please help me check my original payment.",
+    "category": "visit",
+    "subject": "Viewing inquiry",
+    "description": "Please help me check my original viewing request.",
 }
 
 

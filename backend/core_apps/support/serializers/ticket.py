@@ -46,6 +46,10 @@ class TicketListSerializer(serializers.ModelSerializer):
 
 
 class TicketDetailSerializer(serializers.ModelSerializer):
+    information_requests = serializers.SerializerMethodField()
+    def get_information_requests(self, obj):
+        from core_apps.support.services.information import projection
+        return projection(obj)
     messages = TicketMessageSerializer(many=True, read_only=True)
     rental_context = serializers.SerializerMethodField()
 
@@ -69,6 +73,7 @@ class TicketDetailSerializer(serializers.ModelSerializer):
             "status",
             "created_at",
             "messages",
+            "information_requests",
             "rental_context",
         ]
         read_only_fields = fields
@@ -107,6 +112,9 @@ class TicketCreateSerializer(serializers.Serializer):
 
 
 class TicketReplySerializer(serializers.Serializer):
+    information_request_id = serializers.UUIDField(required=False)
+    information_revision = serializers.IntegerField(min_value=1, required=False)
+
     attachment_ids = serializers.ListField(
         child=serializers.UUIDField(), max_length=3, required=False
     )
@@ -117,6 +125,8 @@ class TicketReplySerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
+        if ("information_request_id" in attrs) != ("information_revision" in attrs):
+            raise serializers.ValidationError("Supply the information request and its current revision together.")
         if not attrs["body"] and not attrs.get("attachment_ids"):
             raise serializers.ValidationError(
                 {"body": "Supply a reply or an attachment."}

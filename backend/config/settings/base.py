@@ -94,7 +94,11 @@ INSTALLED_APPS = (
     + ["channels", "django.contrib.postgres"]
 )
 
+# Temporary release scope. Restore with SUKOON_MVP=false after deferred QA.
+SUKOON_MVP = getenv("SUKOON_MVP", "true").lower() in {"true", "1", "yes"}
+
 MIDDLEWARE = [
+    "core_apps.common.mvp_scope.MvpScopeMiddleware",
     "core_apps.common.runtime_metrics.RuntimeMetricsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -148,6 +152,10 @@ SOKOUN_RELEASE_SHA = getenv("SOKOUN_RELEASE_SHA", "")
 RUNTIME_EVIDENCE_ENABLED = getenv("RUNTIME_EVIDENCE_ENABLED", "False").lower() == "true"
 RUNTIME_EVIDENCE_NAMESPACE = getenv("RUNTIME_EVIDENCE_NAMESPACE", "sukoon")
 CELERY_BEAT_SCHEDULE = {
+    "purge-saved-search-reads": {
+        "task": "core_apps.properties.tasks.purge_saved_search_reads",
+        "schedule": 86400.0,
+    },
     "deliver-security-notices": {
         "task": "core_apps.users.tasks.deliver_security_notices",
         "schedule": 60.0,
@@ -755,6 +763,12 @@ CELERY_BEAT_SCHEDULE["record-experience-suggestions"] = {"task": "core_apps.feat
 CELERY_BEAT_SCHEDULE["purge-discovery-interactions"] = {"task": "core_apps.features.experience.suggestions.purge_interactions", "schedule": timedelta(hours=1)}
 
 # Finalize after every domain has registered its schedule, including checkout.
+CELERY_BEAT_SCHEDULE["build-notification-digests"] = {
+    "task": "core_apps.notifications.tasks.build_daily_digests", "schedule": 60.0,
+}
+CELERY_BEAT_SCHEDULE["record-identity-expiry-reminders"] = {
+    "task": "core_apps.profiles.tasks.record_identity_expiry_reminders", "schedule": timedelta(hours=1),
+}
 from config.background import configure as configure_background
 
 configure_background(globals())

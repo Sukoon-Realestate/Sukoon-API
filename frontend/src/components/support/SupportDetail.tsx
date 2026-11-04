@@ -1,5 +1,6 @@
 'use client';
 
+import SupportInformationPanel from './SupportInformationPanel';
 import { Header } from '@/components/layout/Header';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -7,7 +8,7 @@ import { apiClient } from '../../lib/api/client';
 import { commandSupport, downloadSupportAttachment, fetchSupportDetail, fetchSupportTeam, recoverSupport, SupportAction, SupportCommand, SupportDetail as Ticket } from '../../lib/api/support';
 
 type Pending = { key: string; action: SupportAction };
-const names: Record<SupportAction, string> = { reply: 'إرسال الرد', resolve: 'حل الاستفسار العام', claim: 'استلام التذكرة', assign: 'إعادة الإسناد', escalate: 'تصعيد للمشرفين', note: 'حفظ ملاحظة داخلية' };
+const names: Record<SupportAction, string> = { request_evidence: 'طلب دليل', mark_evidence_conflicting: 'تسجيل تعارض', request_information: 'طلب معلومات', accept_information: 'قبول الإجابة', return_information: 'طلب تصحيح', withdraw_information: 'سحب الطلب', reply: 'إرسال الرد', resolve: 'حل الاستفسار العام', claim: 'استلام التذكرة', assign: 'إعادة الإسناد', escalate: 'تصعيد للمشرفين', note: 'حفظ ملاحظة داخلية' };
 const control = 'rounded-lg border border-[var(--card-border)] px-4 py-2 disabled:opacity-50';
 
 export default function SupportDetail({ id }: { id: string }) {
@@ -43,9 +44,9 @@ export default function SupportDetail({ id }: { id: string }) {
     return () => { live.current = false; controller.abort(); };
   }, [load]);
   const clearPending = () => { sessionStorage.removeItem(storageKey); setPending(null); };
-  const send = async (action: SupportAction) => {
+  const send = async (action: SupportAction, fields: Partial<SupportCommand> = {}) => {
     if (!ticket || !storageKey || busy || pending || !ticket.actions[action]) return;
-    const body: SupportCommand = { action, expected_revision: ticket.revision, reason: reason.trim() || names[action] };
+    const body: SupportCommand = { action, expected_revision: ticket.revision, reason: reason.trim() || names[action], ...fields };
     if (action === 'reply' || action === 'resolve') body.body = reply.trim();
     if (action === 'resolve') body.acknowledge_resolution = true;
     if (action === 'assign') body.assignee_id = assignee;
@@ -89,6 +90,7 @@ export default function SupportDetail({ id }: { id: string }) {
       <section className="space-y-2 rounded-xl border p-4"><h2 className="font-bold">{ticket.subject}</h2><p>{ticket.user} · {ticket.workspace}</p><p>{ticket.status} · {ticket.escalated ? 'في متابعة المشرفين' : 'متابعة الدعم'}</p><p>المسؤول: {ticket.assignedTo || 'لم تُسند بعد'}</p>
         {ticket.actions.claim && <button className={control} disabled={busy || !!pending} onClick={() => void send('claim')}>{names.claim}</button>}
       </section>
+      <SupportInformationPanel requests={ticket.information_requests ?? []} actions={ticket.actions} disabled={busy || !!pending} onCommand={send} />
       <section className="space-y-3 rounded-xl border p-4"><h2 className="text-lg font-bold">المحادثة مع المستخدم</h2>
         {ticket.messages.map(message => <article key={message.id} className="rounded-lg border p-3 break-words"><p>{message.sender === 'user' ? 'المستخدم' : 'الدعم'} · {new Date(message.created_at).toLocaleString('ar')}</p><p className="whitespace-pre-wrap">{message.body}</p>{message.attachments.map(file => <p key={file.id}>{file.url ? <button className="underline" onClick={() => void downloadSupportAttachment(file.url, file.name).catch(e => setError(e.message))}>{file.name}</button> : file.name}</p>)}</article>)}
         {ticket.actions.reply && <><label className="block">الرد للمستخدم<textarea className="w-full border rounded p-3" maxLength={4000} value={reply} onChange={e => setReply(e.target.value)} /></label><button className={control} disabled={busy || !!pending} onClick={() => void send('reply')}>{names.reply}</button></>}

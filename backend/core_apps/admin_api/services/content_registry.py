@@ -8,6 +8,7 @@ from core_apps.common.content_models import PublicContentPage, ReleaseNote
 from core_apps.support.models import HelpContact, HelpArticle
 from .catalog_registry import catalogs, RELATIONS, LABELS as CATALOG_LABELS
 from . import commerce_catalog_registry as commerce
+from . import content_mvp
 
 
 @dataclass(frozen=True)
@@ -102,6 +103,7 @@ CHOICE_LABELS = {
 
 
 def spec(kind):
+    content_mvp.require_kind(kind)
     if kind not in REGISTRY:
         raise NotFound()
     return REGISTRY[kind]
@@ -237,6 +239,7 @@ def schema(kind):
                 "choices": [
                     {"value": k, "label": CHOICE_LABELS.get(k, str(v))}
                     for k, v in field.choices or []
+                    if content_mvp.allows_choice(name, k)
                 ],
             }
         )

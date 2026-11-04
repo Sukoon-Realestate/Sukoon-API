@@ -1,4 +1,5 @@
 from django.urls import path
+from .delivery_policy_views import NotificationDeliveryPolicyAPIView
 
 from .views import (
     DeviceTokenCreateAPIView,
@@ -12,6 +13,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("delivery-policy/", NotificationDeliveryPolicyAPIView.as_view(), name="notification-delivery-policy"),
     # * T-NOTIF-01: Notification list with unread filtering & pagination
     path("", NotificationListAPIView.as_view(), name="notification-list"),
     # * Unread badge count

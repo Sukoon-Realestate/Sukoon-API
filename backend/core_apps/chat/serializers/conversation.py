@@ -154,3 +154,4 @@ class ConversationCreateSerializer(serializers.Serializer):
     workspace = serializers.ChoiceField(choices=['individual', 'owner', 'student'], required=False)
 
     rental_context = serializers.JSONField(required=False)
+    expected_visit_revision = serializers.IntegerField(min_value=1,required=False)

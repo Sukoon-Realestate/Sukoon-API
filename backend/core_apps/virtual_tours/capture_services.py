@@ -137,6 +137,7 @@ def retry(job, body):
 
 
 def session_payload(session):
+    latest_manifest = session.manifests.order_by("-revision").first()
     jobs = (
         CaptureProcessingJob.objects.filter(manifest__session=session)
         .select_related("manifest")
@@ -150,6 +151,7 @@ def session_payload(session):
         "revision": session.revision,
         "policyVersion": session.policy_version,
         "coachOptIn": session.coach_opt_in,
+        "coveragePlan": latest_manifest.document.get("coveragePlan") if latest_manifest else None,
         "rooms": [
             {"id": str(r.client_id), "label": r.label, "confirmed": r.confirmed}
             for r in session.rooms.all()
