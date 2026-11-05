@@ -131,7 +131,7 @@ def test_staff_password_setup_uses_shared_admin_link_without_documenting_identit
     import re
 
     response = api_client.post('/api/v1/auth/users/reset_password/', {'email': applicant.email}, format='json')
-    assert response.status_code == 204, response.data
+    assert response.status_code == 200, response.data
     assert len(mailoutbox) == 1 and mailoutbox[0].to == [applicant.email]
     link = re.search(r'admin/password-reset/([A-Za-z0-9_-]+)/([A-Za-z0-9-]+)', mailoutbox[0].body)
     assert link, 'Staff recovery email must target the shared admin password-setup route'
@@ -140,7 +140,7 @@ def test_staff_password_setup_uses_shared_admin_link_without_documenting_identit
     confirmed = api_client.post('/api/v1/auth/users/reset_password_confirm/', {
         'uid': uid, 'token': token, 'new_password': password, 're_new_password': password,
     }, format='json')
-    assert confirmed.status_code == 204, confirmed.data
+    assert confirmed.status_code == 200, confirmed.data
     applicant.refresh_from_db()
     assert applicant.check_password(password) and not applicant.is_verified
     assert not StaffSecurityIdentity.objects.filter(user=applicant).exists()

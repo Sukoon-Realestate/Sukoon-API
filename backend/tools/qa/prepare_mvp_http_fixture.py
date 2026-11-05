@@ -23,8 +23,8 @@ user.set_password(password)
 user.is_verified = True
 user.is_active = True
 user.save()
-gov, _ = Governorate.objects.get_or_create(slug='mvp-http', defaults={'name': 'Synthetic'})
-city, _ = City.objects.get_or_create(slug='mvp-http', defaults={'name': 'Synthetic', 'governorate': gov})
+gov, _ = Governorate.objects.get_or_create(name='Synthetic')
+city, _ = City.objects.get_or_create(name='Synthetic', governorate=gov)
 kind, _ = PropertyType.objects.get_or_create(slug='mvp-http', defaults={'name': 'Synthetic'})
 prop, _ = Property.objects.get_or_create(owner=user, title='Synthetic private MVP HTTP fixture',
     defaults={'property_type': kind, 'governorate': gov, 'city': city, 'district': 'Synthetic', 'status': 'hidden'})

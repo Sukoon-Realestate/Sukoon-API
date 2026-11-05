@@ -7,6 +7,7 @@ from django.urls import reverse
 from rest_framework.exceptions import ValidationError
 from core_apps.admin_api.tests.test_content_editor import client, operator, save, ROOT
 from core_apps.common.content_models import ContentEditAudit
+from core_apps.common.mvp_scope import enabled
 from core_apps.properties.models import Governorate, City, District
 from core_apps.properties.catalog_access import require_current_selection
 from core_apps.properties.catalog_labels import location_label
@@ -266,7 +267,7 @@ def test_catalog_rejects_new_children_under_stopped_parent_and_unknown_fields():
         ].status_code
         == 400
     )
-    assert api.get(ROOT + f"campuses/{uuid4()}/").status_code == 404
+    assert api.get(ROOT + f"campuses/{uuid4()}/").status_code == (403 if enabled() else 404)
     assert api.get(ROOT + "cities/not-an-id/").status_code == 404
 
 

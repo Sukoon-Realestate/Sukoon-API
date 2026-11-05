@@ -5,7 +5,7 @@ import json
 from datetime import timedelta
 from django.db import transaction
 from django.utils import timezone
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from core_apps.chat.models import (
     Conversation,
     ChatModerationBatch,
@@ -292,6 +292,21 @@ def review(actor, case_id, client_id, expected_revision, action, notes):
     )
     require_staff_actor(actor, {"system_owner", "main_admin"}, lock=True)
     case = ChatModerationCase.objects.select_for_update().get(pk=case.pk)
+    # Administrative authority does not make a conversation participant independent.
+    # Recheck before receipt recovery too: a previous decision grants no new access.
+    from core_apps.users.totp_models import StaffSecurityIdentity
+
+    involved = set(case.conversation.participants.values_list("pk", flat=True))
+    involved.add(case.subject_id)
+    person = StaffSecurityIdentity.objects.filter(user=actor).values_list(
+        "person_reference", flat=True
+    ).first()
+    if actor.pk in involved or (
+        person and StaffSecurityIdentity.objects.filter(
+            user_id__in=involved, person_reference=person
+        ).exists()
+    ):
+        raise PermissionDenied("An independent reviewer is required.")
     fingerprint = hashlib.sha256(
         json.dumps(
             {"revision": expected_revision, "action": action, "notes": notes},

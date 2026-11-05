@@ -28,6 +28,14 @@ def test_active_personal_owner_campaign_has_two_receipts_one_latest_enabled_push
         property_type=apartment_type, city=cairo_city, governorate=cairo_governorate)
     for scope in ['individual', 'owner']:
         preferences.touch(user, scope)
+    # Windows clocks can produce equal instants for sequential calls. Explicitly
+    # model a later owner visit instead of depending on host timer resolution.
+    from datetime import timedelta
+    from django.utils import timezone
+    from core_apps.notifications.models import NotificationScopePreference
+    instant = timezone.now()
+    NotificationScopePreference.objects.filter(user=user, scope='individual').update(last_used_at=instant - timedelta(seconds=1))
+    NotificationScopePreference.objects.filter(user=user, scope='owner').update(last_used_at=instant)
     owner = preferences.get(user, 'owner')
     owner.push_enabled = push_owner
     owner.save(update_fields=['push_enabled'])

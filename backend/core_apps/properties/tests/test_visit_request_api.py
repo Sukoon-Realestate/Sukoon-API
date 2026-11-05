@@ -362,6 +362,10 @@ class TestPropertyReviewListAPI:
             owner_interaction_rating=4,
             comment="Nice host and decent place.",
         )
+        # Explicit chronology: the host clock may give both inserts one instant.
+        PropertyVisitReview.objects.filter(visit=visit1).update(
+            created_at=timezone.now() - timedelta(seconds=1)
+        )
 
         url = reverse("property-review-list", kwargs={"property_id": property_obj.id})
         response = api_client.get(url)

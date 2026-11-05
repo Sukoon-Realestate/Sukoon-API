@@ -151,6 +151,7 @@ class Property(NewAccountBusinessMixin, TimeStampedModel):
     )
     deposit = models.CharField(_("Deposit"), max_length=50, blank=True, default="")
     ownership_proof = CloudinaryField(
+        type="authenticated",
         folder="properties/ownership_proofs/",
         null=True,
         blank=True,

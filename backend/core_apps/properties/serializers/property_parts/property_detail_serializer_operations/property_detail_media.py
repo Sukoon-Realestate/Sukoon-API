@@ -40,17 +40,10 @@ class PropertyDetailMediaMixin:
         return inventory
 
     def get_ownership_proof(self, obj: Property) -> Optional[str]:
+        from ....ownership_proof import proof_url
+
         request = self.context.get("request")
-        if (
-            not request
-            or not getattr(request, "user", None)
-            or not request.user.is_authenticated
-        ):
-            return None
-        if request.user == obj.owner or getattr(request.user, "is_staff", False):
-            if obj.ownership_proof:
-                return getattr(obj.ownership_proof, "url", str(obj.ownership_proof))
-        return None
+        return proof_url(obj, request.user, request=request) if request else None
 
     def _get_cover_and_images(self, obj: Property):
         cache = getattr(self, '_ordered_media_cache', None)

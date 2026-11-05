@@ -238,7 +238,7 @@ def projection(ticket, user, *, detail=False):
     value.update(
         information_requests=information_projection(ticket),
         messages=TicketMessageSerializer(
-            ticket.messages.order_by("created_at"), many=True
+            ticket.messages.order_by("created_at", "pk"), many=True
         ).data,
         rental_context=ticket.rental_context,
         internal_notes=[

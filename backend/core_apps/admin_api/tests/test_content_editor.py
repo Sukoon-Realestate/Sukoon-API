@@ -7,6 +7,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from core_apps.admin_api.models import StaffProfile
 from core_apps.common.content_models import ContentEditAudit, ReleaseNote
+from core_apps.common.mvp_scope import enabled
 from core_apps.support.models import HelpArticle, HelpContact
 
 pytestmark = pytest.mark.django_db
@@ -140,15 +141,18 @@ def test_content_allowlist_fixed_identity_and_validation(user):
         ).status_code
         == 400
     )
-    assert api.get(ROOT + "permissions/").status_code == 404
+    assert api.get(ROOT + "permissions/").status_code == (403 if enabled() else 404)
     assert api.get(ROOT + "articles/?page=not-a-page").status_code == 404
-    invalid = article()
+    active_article = article()
+    if enabled():
+        active_article['workspace'] = 'owner'
+    invalid = dict(active_article)
     invalid["financial_approver"] = True
     assert save(api, "articles", invalid)[0].status_code == 400
-    invalid = article()
+    invalid = dict(active_article)
     invalid["workspace"] = "community"
-    assert save(api, "articles", invalid)[0].status_code == 400
-    assert save(api, "articles", article())[0].status_code == 201
+    assert save(api, "articles", invalid)[0].status_code == (403 if enabled() else 400)
+    assert save(api, "articles", active_article)[0].status_code == 201
     assert (
         save(api, "articles", {"slug": "another-id"}, 1, "content-proof")[0].status_code
         == 400

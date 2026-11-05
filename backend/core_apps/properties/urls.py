@@ -6,6 +6,7 @@ from .views.districts import DistrictListAPIView
 from .views.viewing_commands import viewing_command, viewing_receipt, resolve_viewing_command
 from .views.viewing_representatives import representatives
 from .views.post_visit_decision import post_visit_decision
+from .views.ownership_proof import PropertyOwnershipProofAPIView
 
 from .views import (
     CityListAPIView,
@@ -59,6 +60,7 @@ from .views.viewing_day_plan import viewing_day_plan
 from .views.viewing_message_context import viewing_message_context
 
 urlpatterns = [
+    path('<uuid:property_id>/ownership-proof/', PropertyOwnershipProofAPIView.as_view(), name='property-ownership-proof'),
     path('visits/<uuid:visit_id>/message-context/',viewing_message_context,name='viewing-message-context'),
     path('visits/day-plan/', viewing_day_plan, name='viewing-day-plan'),
     path('visits/<uuid:visit_id>/arrival/', viewing_arrival, name='viewing-arrival'),

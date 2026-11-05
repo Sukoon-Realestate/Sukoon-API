@@ -33,6 +33,9 @@ def test_empty_dashboard_does_not_invent_activity_or_trends():
 
 
 def test_registration_trend_uses_actual_dates_and_empty_intervals(user):
+    # The report's exclusive measurement bound must follow the fixture event,
+    # even on hosts whose clock returns one instant for sequential operations.
+    User.objects.filter(pk=user.pk).update(date_joined=timezone.now() - timedelta(minutes=1))
     old = User.objects.create_user(email="old@example.invalid", password="test")
     User.objects.filter(pk=old.pk).update(
         date_joined=timezone.now() - timedelta(days=60)

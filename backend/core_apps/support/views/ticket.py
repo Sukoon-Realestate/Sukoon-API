@@ -176,7 +176,7 @@ class TicketReplyAPIView(APIView):
             detail = TicketDetailSerializer(
                 updated_ticket, context={"request": request}
             ).data
-            reply = updated_ticket.messages.order_by("-created_at").first()
+            reply = updated_ticket.messages.order_by("-created_at", "-pk").first()
             return detail, status.HTTP_200_OK, reply.id
 
         payload = {**serializer.validated_data, "workspace": workspace or ""}

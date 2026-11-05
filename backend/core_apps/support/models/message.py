@@ -36,7 +36,7 @@ class TicketMessage(TimeStampedModel):
     class Meta:
         verbose_name = _("Ticket Message")
         verbose_name_plural = _("Ticket Messages")
-        ordering = ["created_at"]
+        ordering = ["created_at", "pk"]
 
     def __str__(self):
         return f"Message on {self.ticket.reference} by {self.sender}"

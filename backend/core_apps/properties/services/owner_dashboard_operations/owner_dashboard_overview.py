@@ -32,7 +32,7 @@ class OwnerDashboardOverviewMixin:
                 property__owner=owner, status=PropertyVisit.Status.PENDING
             )
             .select_related("property", "tenant", "tenant__profile")
-            .order_by("-created_at")
+            .order_by("-created_at", "-pk")
         )
 
         return {

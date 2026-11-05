@@ -23,8 +23,8 @@ def projection(ticket):
         "can_answer": row.status == "requested" and ticket.status not in {"closed", "resolved"},
         "history": [{"id": str(event.id), "action": event.action, "revision": event.revision,
             "reason": event.reason, "answer_message_id": str(event.answer.id) if event.answer else None,
-            "created_at": event.created_at.isoformat()} for event in row.history.select_related("answer").order_by("created_at")],
-        } for row in ticket.information_requests.select_related("source_message", "answer").order_by("created_at")]
+            "created_at": event.created_at.isoformat()} for event in row.history.select_related("answer").order_by("created_at", "pk")],
+        } for row in ticket.information_requests.select_related("source_message", "answer").order_by("created_at", "pk")]
 
 
 def event(row, actor, action, reason=""):

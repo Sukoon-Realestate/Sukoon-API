@@ -4,6 +4,7 @@ import json
 from django.utils import timezone
 from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
+from core_apps.profiles.identity_media import IdentityImageField
 from ...models import City, Governorate, Property, PropertyType, District
 from ..location import PublicUUIDRelatedField
 from ...services import PropertyService
@@ -36,7 +37,7 @@ class PropertySerializer(PropertyValidationMixin, serializers.ModelSerializer):
         required=False, allow_null=True, min_value=1, max_value=60
     )
     remove_video = serializers.BooleanField(required=False, default=False)
-    ownership_proof = CloudinaryMediaField(required=False, allow_null=True)
+    ownership_proof = IdentityImageField(required=False, allow_null=True)
     remove_ownership_proof = serializers.BooleanField(required=False, default=False)
     amenities = serializers.JSONField(required=False)
     retained_image_ids = serializers.JSONField(required=False)

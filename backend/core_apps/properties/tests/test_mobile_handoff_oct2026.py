@@ -23,7 +23,7 @@ def mock_cloudinary_upload():
         "format": "jpg",
         "resource_type": kwargs.get("resource_type", "image"),
         "version": 123456,
-        "type": "upload",
+        "type": kwargs.get("type", "upload"),
     }
     with patch("cloudinary.uploader.upload", side_effect=mock_upload_response):
         yield
