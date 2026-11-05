@@ -14,8 +14,10 @@ Approval applies to this exact source hash. A published property and unchanged s
   <p id="tour-preview-status" role="status"></p>
   <p>The preview requires the viewer and admin to be served on the same HTTPS origin. Bootstrap credentials are sent in memory, never in the address bar.</p>
   {% if can_review %}
-  <label for="tour-reason">Review evidence or rejection reason</label><br>
-  <textarea id="tour-reason" name="reason" rows="6" cols="80" maxlength="4000" required></textarea>
+  <label for="tour-reason">Private review evidence (staff only)</label><br>
+  <textarea id="tour-reason" name="reason" rows="6" cols="80" maxlength="4000" required>{{ request.POST.reason }}</textarea>
+  <p><label for="tour-public-reason">Correction reason visible to the owner (required for rejection)</label><br>
+  <textarea id="tour-public-reason" name="public_reason" rows="4" cols="80" maxlength="2000">{{ request.POST.public_reason }}</textarea></p>
   <p><button name="decision" value="approved">Approve inspected packages</button>
   <button name="decision" value="rejected">Reject with reason</button></p>
   {% endif %}

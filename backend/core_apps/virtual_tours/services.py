@@ -8,6 +8,11 @@ from .validation import validate_authoring
 
 
 def revision_payload(revision):
+    public_reason = ""
+    if revision.review_state == "rejected":
+        public_reason = (revision.reviews.filter(
+            decision="rejected", source_hash=revision.source_hash,
+        ).order_by("-created_at", "-pk").values_list("public_reason", flat=True).first() or "")
     return {
         "id": str(revision.id),
         "tour_id": str(revision.tour.id),
@@ -16,6 +21,7 @@ def revision_payload(revision):
         "authoring": revision.authoring,
         "processing_state": revision.processing_state,
         "review_state": revision.review_state,
+        "review_reason": public_reason,
         "source_hash": revision.source_hash,
         "stage": revision.stage,
         "report": revision.report,
@@ -299,7 +305,8 @@ def review(revision, user, body):
             403,
         )
     require(
-        set(body) == {"decision", "expected_source_hash", "reason"}
+        set(body) in ({"decision", "expected_source_hash", "reason"},
+                      {"decision", "expected_source_hash", "reason", "public_reason"})
         and body["decision"] in ("approved", "rejected"),
         "invalid_review",
         "Provide decision, expected_source_hash and reason.",
@@ -308,6 +315,13 @@ def review(revision, user, body):
         isinstance(body["reason"], str) and 1 <= len(body["reason"].strip()) <= 4000,
         "review_reason_required",
         "Record the privacy and package review, or rejection reason.",
+    )
+    public_reason = body.get("public_reason", "")
+    require(
+        isinstance(public_reason, str) and len(public_reason.strip()) <= 2000
+        and (body["decision"] != "rejected" or bool(public_reason.strip())),
+        "public_review_reason_required",
+        "Provide a correction reason visible to the owner when rejecting a tour.",
     )
     require(
         revision.review_state == "pending" and revision.processing_state == "ready",
@@ -338,6 +352,7 @@ def review(revision, user, body):
         decision=body["decision"],
         source_hash=current_hash,
         reason=body["reason"],
+        public_reason=public_reason.strip() if body["decision"] == "rejected" else "",
     )
     if body["decision"] == "approved":
         tour = PropertyVirtualTour.objects.select_for_update().get(pk=revision.tour_id)

@@ -120,6 +120,7 @@ class RevisionAdmin(ReadOnlyTourAdmin):
                             "decision": request.POST.get("decision"),
                             "expected_source_hash": request.POST.get("source_hash"),
                             "reason": request.POST.get("reason", ""),
+                            "public_reason": request.POST.get("public_reason", ""),
                         },
                     )
                 self.message_user(request, "Review decision saved.", messages.SUCCESS)

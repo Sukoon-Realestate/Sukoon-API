@@ -49,13 +49,22 @@ def test_arrival_permissions_revision_idempotency_withdrawal_and_cancellation(ap
     assert api_client.post(path,directions(visit),format='json').status_code==409
     api_client.force_authenticate(another_user)
     assert api_client.get(path).data['card']['instructions']=='PRIVATE_FIXTURE_DIRECTIONS'
+    original_revision = api_client.get(path).data['revision']
     if exported:
         (root/'viewing_arrival_renter.json').write_text(json.dumps(api_client.get(path).data),encoding='utf8')
     assert api_client.post(path,directions(visit),format='json').status_code==403
     api_client.force_authenticate(superuser)
     assert api_client.get(path).status_code==403
     api_client.force_authenticate(user)
-    assert api_client.post(path,directions(visit,active=False,expected_revision=1),format='json').status_code==200
+    updated = api_client.post(path, directions(visit, expected_revision=original_revision,
+        instructions='Revised synthetic entrance instructions'), format='json')
+    assert updated.status_code == 200
+    api_client.force_authenticate(another_user)
+    revised = api_client.get(path)
+    assert revised.data['revision'] == original_revision + 1
+    assert revised.data['card']['instructions'] == 'Revised synthetic entrance instructions'
+    api_client.force_authenticate(user)
+    assert api_client.post(path,directions(visit,active=False,expected_revision=revised.data['revision']),format='json').status_code==200
     api_client.force_authenticate(another_user)
     assert api_client.get(path).data['card'] is None
     visit.status='canceled'

@@ -195,6 +195,8 @@ class TourReviewEvent(TimeStampedModel):
     decision = models.CharField(max_length=20)
     source_hash = models.CharField(max_length=64)
     reason = models.TextField(blank=True)
+    # Historical review evidence stays private; never backfill it into this field.
+    public_reason = models.TextField(blank=True, default="")
 
 
 from .capture_models import (  # noqa: E402,F401

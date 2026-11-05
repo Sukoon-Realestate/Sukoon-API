@@ -12,27 +12,35 @@ export default function TourReviewPage() {
   const [page, setPage] = useState(1);
   const [result, setResult] = useState<ReviewPage | null>(null);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<TourReview | null>(null);
   const load = useCallback(async (signal?: AbortSignal) => {
-    setLoading(true); setError('');
     try { const value = await reviewList(state, page, signal); if (!signal?.aborted) setResult(value); }
     catch (failure) { if (!signal?.aborted) setError(failure instanceof Error ? failure.message : 'تعذّر تحميل المراجعات.'); }
     finally { if (!signal?.aborted) setLoading(false); }
   }, [state, page]);
-  useEffect(() => { const controller = new AbortController(); void load(controller.signal); return () => controller.abort(); }, [load]);
+  const prepareLoad = () => { setLoading(true); setError(''); };
+  const reload = () => { prepareLoad(); return load(); };
+  useEffect(() => {
+    const controller = new AbortController();
+    void Promise.resolve().then(() => {
+      if (!controller.signal.aborted) return load(controller.signal);
+    });
+    return () => controller.abort();
+  }, [load]);
   return <><Header title="مراجعة الجولات" /><main dir="rtl" className="mx-auto max-w-5xl space-y-5 p-4 sm:p-8">
     <p>راجع الإصدار والمخرجات ونطاق الغرف قبل القرار. اعتماد الجولة لا يغيّر حالة مراجعة إعلان العقار.</p>
-    <div className="flex flex-wrap gap-3"><label>الحالة <select value={state} disabled={loading} onChange={e => { setState(e.target.value); setPage(1); setSelected(null); }} className="rounded border p-2">{['pending', 'approved', 'rejected', 'all'].map(value => <option key={value} value={value}>{label[value] || 'كل المراجعات'}</option>)}</select></label><button className="rounded border px-4 py-2" disabled={loading} onClick={() => void load()}>تحديث القائمة</button></div>
+    <div className="flex flex-wrap gap-3"><label>الحالة <select value={state} disabled={loading} onChange={e => { prepareLoad(); setState(e.target.value); setPage(1); setSelected(null); }} className="rounded border p-2">{['pending', 'approved', 'rejected', 'all'].map(value => <option key={value} value={value}>{label[value] || 'كل المراجعات'}</option>)}</select></label><button className="rounded border px-4 py-2" disabled={loading} onClick={() => void reload()}>تحديث القائمة</button></div>
     {error && <p role="alert">{error}</p>}{loading && <p role="status">جارٍ التحميل…</p>}
-    {result && <><p>عدد الإصدارات: {result.count}</p><ul className="space-y-3">{result.items.map(item => <li key={item.id} className="rounded-xl border p-4"><button className="text-start underline" onClick={() => setSelected(item)}>{item.title || 'جولة عقار'} · {label[item.kind] || item.kind} · {label[item.review_state] || item.review_state}</button><p>الإصدار {item.draft_version}</p></li>)}</ul>{result.items.length === 0 && <p>لا توجد إصدارات في هذه القائمة.</p>}<div className="flex gap-3"><button disabled={loading || page === 1} onClick={() => { setPage(page - 1); setSelected(null); }}>السابق</button><span>صفحة {page}</span><button disabled={loading || !result.has_next} onClick={() => { setPage(page + 1); setSelected(null); }}>التالي</button></div></>}
-    {selected && <ReviewEditor key={selected.id} initial={selected} onSaved={() => load()} />}
+    {result && <><p>عدد الإصدارات: {result.count}</p><ul className="space-y-3">{result.items.map(item => <li key={item.id} className="rounded-xl border p-4"><button className="text-start underline" onClick={() => setSelected(item)}>{item.title || 'جولة عقار'} · {label[item.kind] || item.kind} · {label[item.review_state] || item.review_state}</button><p>الإصدار {item.draft_version}</p></li>)}</ul>{result.items.length === 0 && <p>لا توجد إصدارات في هذه القائمة.</p>}<div className="flex gap-3"><button disabled={loading || page === 1} onClick={() => { prepareLoad(); setPage(page - 1); setSelected(null); }}>السابق</button><span>صفحة {page}</span><button disabled={loading || !result.has_next} onClick={() => { prepareLoad(); setPage(page + 1); setSelected(null); }}>التالي</button></div></>}
+    {selected && <ReviewEditor key={selected.id} initial={selected} onSaved={reload} />}
   </main></>;
 }
 
-function ReviewEditor({ initial, onSaved }: { initial: TourReview; onSaved: () => Promise<void> }) {
+export function ReviewEditor({ initial, onSaved }: { initial: TourReview; onSaved: () => Promise<void> }) {
   const [item, setItem] = useState(initial);
   const [reason, setReason] = useState('');
+  const [publicReason, setPublicReason] = useState('');
   const [decision, setDecision] = useState('approved');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -46,11 +54,11 @@ function ReviewEditor({ initial, onSaved }: { initial: TourReview; onSaved: () =
   }
   async function submit(event: React.FormEvent) {
     event.preventDefault(); if (busy || !item.can_review) return;
-    const body = JSON.stringify({ id: item.id, hash: item.source_hash, decision, reason });
+    const body = JSON.stringify({ id: item.id, hash: item.source_hash, decision, reason, publicReason });
     if (!intent.current || intent.current.body !== body) intent.current = { body, key: crypto.randomUUID() };
     setBusy(true); setError(''); setUncertain(true);
     try {
-      await decideTour(item, decision, reason, intent.current.key);
+      await decideTour(item, decision, reason, intent.current.key, publicReason);
       setItem(await reviewDetail(item.id)); setUncertain(false); await onSaved();
     } catch (failure) {
       if (failure instanceof ApiError && failure.status < 500 && ![408, 429].includes(failure.status)) setUncertain(false);
@@ -64,8 +72,9 @@ function ReviewEditor({ initial, onSaved }: { initial: TourReview; onSaved: () =
     {item.variants.map(variant => <section className="rounded border p-3" key={variant.id}><p>نطاق المعاينة: {variant.context === 'overview' ? 'المساحات العامة المسموحة' : variant.context}</p><TourPreviewButton item={item} context={variant.context} /></section>)}
     <details><summary>تقرير المعالجة</summary><pre dir="ltr" className="overflow-auto whitespace-pre-wrap">{JSON.stringify(item.report, null, 2)}</pre></details>
     {!item.can_review && <p>{item.review_blocker}</p>}
-    <form onSubmit={submit} className="space-y-3"><label className="block">القرار<select className="block w-full rounded border p-2" disabled={busy || uncertain || !item.can_review} value={decision} onChange={e => setDecision(e.target.value)}><option value="approved">اعتماد المخرجات بعد فحصها</option><option value="rejected">رفض مع سبب التصحيح</option></select></label><label className="block">توثيق المراجعة أو سبب الرفض<textarea required maxLength={4000} className="block w-full rounded border p-2" value={reason} disabled={busy || uncertain || !item.can_review} onChange={e => setReason(e.target.value)} /></label>
+    <form onSubmit={submit} className="space-y-3"><label className="block">القرار<select className="block w-full rounded border p-2" disabled={busy || uncertain || !item.can_review} value={decision} onChange={e => setDecision(e.target.value)}><option value="approved">اعتماد المخرجات بعد فحصها</option><option value="rejected">رفض مع سبب التصحيح</option></select></label><label className="block">توثيق المراجعة الداخلي للموظفين فقط<textarea required maxLength={4000} className="block w-full rounded border p-2" value={reason} disabled={busy || uncertain || !item.can_review} onChange={e => setReason(e.target.value)} /></label>
+    {decision === 'rejected' && <label className="block">سبب التصحيح الظاهر للمالك<textarea required maxLength={2000} className="block w-full rounded border p-2" value={publicReason} disabled={busy || uncertain || !item.can_review} onChange={e => setPublicReason(e.target.value)} /></label>}
     {error && <p role="alert">{error}</p>}<button className="rounded border px-4 py-2" disabled={busy || !item.can_review}>{uncertain ? 'استعادة نتيجة القرار نفسه' : 'حفظ القرار لهذا الإصدار'}</button></form>
-    <ol className="space-y-2">{item.history.map((event, index) => <li key={`${event.created_at}:${index}`}>{label[event.decision] || event.decision} — {event.reason} — {new Date(event.created_at).toLocaleString('ar')}</li>)}</ol>
+    <ol className="space-y-2">{item.history.map((event, index) => <li key={`${event.created_at}:${index}`}>{label[event.decision] || event.decision} — {event.reason}{event.public_reason && <p>الظاهر للمالك: {event.public_reason}</p>} — {new Date(event.created_at).toLocaleString('ar')}</li>)}</ol>
   </section>;
 }

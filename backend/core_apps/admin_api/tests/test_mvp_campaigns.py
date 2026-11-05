@@ -5,10 +5,45 @@ import pytest
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from core_apps.admin_api.models import CampaignRecipient, PushCampaign
 from core_apps.admin_api.services import push_campaigns, workspace_campaigns
-from core_apps.notifications.models import Notification
+from core_apps.notifications.models import Notification, DeviceToken
+from core_apps.properties.tests.conftest import apartment_type, cairo_city, cairo_governorate  # noqa: F401
 from .test_workspace_campaigns import four_spaces, campaign, run_dispatch  # noqa: F401
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.mark.parametrize('push_owner,expected_scope', [(True, 'owner'), (False, 'individual')])
+def test_active_personal_owner_campaign_has_two_receipts_one_latest_enabled_push(
+    superuser, user, apartment_type, cairo_city, cairo_governorate, settings,
+    push_owner, expected_scope,
+):
+    from core_apps.notifications.services import preferences
+    from core_apps.profiles.models import UserSettings
+    from core_apps.properties.models import Property
+
+    settings.SUKOON_MVP = True
+    settings.ADMIN_CAMPAIGNS_ENABLED = True
+    UserSettings.objects.filter(user=user).update(promotions_and_updates=True)
+    Property.objects.create(owner=user, title='Synthetic active campaign owner',
+        property_type=apartment_type, city=cairo_city, governorate=cairo_governorate)
+    for scope in ['individual', 'owner']:
+        preferences.touch(user, scope)
+    owner = preferences.get(user, 'owner')
+    owner.push_enabled = push_owner
+    owner.save(update_fields=['push_enabled'])
+    DeviceToken.objects.create(user=user, token='synthetic-active-device')
+    item = campaign(superuser)
+    assert set(item.recipients.values_list('workspace', flat=True)) == {'individual', 'owner'}
+    with patch.object(workspace_campaigns.FCMService, 'send_push_to_device', return_value=True) as send:
+        assert run_dispatch()['accepted_by_provider'] == 1
+        assert run_dispatch()['accepted_by_provider'] == 0
+        assert send.call_count == 1
+        assert send.call_args.kwargs['data']['workspace'] == expected_scope
+    assert set(Notification.objects.filter(user=user).values_list('scope', flat=True)) == {'individual', 'owner'}
+    individual = Notification.objects.get(user=user, scope='individual')
+    individual.is_read = True
+    individual.save(update_fields=['is_read'])
+    assert not Notification.objects.get(user=user, scope='owner').is_read
 
 
 @pytest.mark.parametrize('audience', [[], {}, 1])

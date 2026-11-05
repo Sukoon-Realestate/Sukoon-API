@@ -19,6 +19,8 @@ class OwnerVisitRequestDetailSerializer(
     Detailed serializer for the Owner Visit Request Details screen (Screen 2).
     """
 
+    include_agreed_schedule = True
+
     tenant = serializers.SerializerMethodField()
     property = serializers.SerializerMethodField()
     status_label = serializers.SerializerMethodField()

@@ -1,6 +1,7 @@
 """Bilingual message, field and choice catalogs."""
 
 EN_TO_AR_MESSAGES = {
+    "Provide a correction reason visible to the owner when rejecting a tour.": "اكتب سبب التصحيح الذي سيظهر للمالك عند رفض الجولة.",
     "Identity review changed. Refresh before submitting.": "تغيرت مراجعة الهوية. حدّث الحالة قبل إرسال التعديل.",
     "This identity document cannot be replaced in the current review.": "لا يمكن استبدال هذا المستند في حالة المراجعة الحالية.",
     "This action awaits an approved policy.": "يتطلب هذا الإجراء سياسة معتمدة، وهي غير متاحة حاليًا.",

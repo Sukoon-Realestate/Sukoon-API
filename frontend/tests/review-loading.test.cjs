@@ -91,6 +91,7 @@ test('tour filter changes lock controls until the new server result and abort on
   const page = mount('src/components/tours/TourReviewPage.tsx', '../../lib/api/tour-review', { reviewList: queue.read });
   let tree = page.render();
   assert.equal(nodes(tree).find(node => node.type === 'select').props.disabled, true);
+  await flush();
   assert.deepEqual(queue.calls[0].args.slice(0, 2), ['pending', 1]);
   queue.calls[0].resolve({ items: [], count: 0, has_next: false });
   await flush();
@@ -100,10 +101,21 @@ test('tour filter changes lock controls until the new server result and abort on
   filter.props.onChange({ target: { value: 'approved' } });
   tree = page.render();
   assert.equal(nodes(tree).find(node => node.type === 'select').props.disabled, true);
+  await flush();
   assert.deepEqual(queue.calls[1].args.slice(0, 2), ['approved', 1]);
   page.unmount();
   assert.equal(queue.calls[1].args[2].aborted, true);
   queue.calls[1].reject(new Error('Cancelled response'));
   await flush();
+  assert.equal(page.lateWrites(), 0);
+});
+
+test('tour unmount before its scheduled read starts makes no server request', async () => {
+  const queue = readQueue();
+  const page = mount('src/components/tours/TourReviewPage.tsx', '../../lib/api/tour-review', { reviewList: queue.read });
+  page.render();
+  page.unmount();
+  await flush();
+  assert.equal(queue.calls.length, 0);
   assert.equal(page.lateWrites(), 0);
 });

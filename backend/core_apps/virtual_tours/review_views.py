@@ -51,6 +51,7 @@ def projection(item, user):
             {
                 "decision": e.decision,
                 "reason": e.reason,
+                "public_reason": e.public_reason,
                 "source_hash": e.source_hash,
                 "created_at": e.created_at,
             }

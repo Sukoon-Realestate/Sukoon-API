@@ -99,6 +99,8 @@ class TenantVisitRequestSerializer(PostVisitContextMixin, serializers.ModelSeria
 
 
 class TenantVisitRequestDetailSerializer(TenantVisitRequestSerializer):
+    include_agreed_schedule = True
+
     owner = serializers.SerializerMethodField()
     note = serializers.CharField(read_only=True)
     review = PropertyVisitReviewSerializer(read_only=True)

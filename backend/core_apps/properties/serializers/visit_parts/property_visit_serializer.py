@@ -108,6 +108,8 @@ User = get_user_model()
 
 
 class PostVisitContextMixin:
+    include_agreed_schedule = False
+
     def to_representation(self, instance):
         output = super().to_representation(instance)
         request = self.context.get("request")
@@ -116,7 +118,8 @@ class PostVisitContextMixin:
 
             output.update(visit_context(instance, request.user))
             output["stay_preferences"] = instance.stay_preferences
-            if instance.visit_date is not None and instance.visit_time is not None:
+            if (self.include_agreed_schedule and instance.visit_date is not None
+                    and instance.visit_time is not None):
                 from .tenant_visit_request_serializer import (
                     _format_full_date, _format_time_clock, _format_owner_schedule_label,
                 )

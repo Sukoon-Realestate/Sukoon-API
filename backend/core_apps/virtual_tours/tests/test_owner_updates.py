@@ -43,6 +43,7 @@ def test_old_update_reads_current_tour_and_original_revision(
                 "decision": "rejected",
                 "expected_source_hash": revision.source_hash,
                 "reason": "Private reviewer detail",
+                "public_reason": "Correct the bedroom panorama before resubmitting.",
             },
         )
     newer = TourRevision.objects.create(tour=tour)
@@ -53,6 +54,7 @@ def test_old_update_reads_current_tour_and_original_revision(
     assert response.data["tour"]["latest_revision"]["id"] == str(newer.id)
     assert [h["change"] for h in response.data["history"]] == ["rejected", "ready"]
     assert "Private reviewer detail" not in str(response.data)
+    assert response.data["revision"]["review_reason"] == "Correct the bedroom panorama before resubmitting."
 
 
 @pytest.mark.parametrize("revocation", ["owner", "retired", "deleted", "target"])
