@@ -22,7 +22,21 @@ capabilities. A new build is required because public Next.js values are compiled
 into the browser bundle. Run `node --test scripts/vercel-build.test.mjs` to check
 the deployment environment boundary.
 
-Public footer destinations use `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL`, and `NEXT_PUBLIC_CONTACT_URL`. Only approved HTTPS URLs should be configured; absent destinations are visibly unavailable. No legal text or contact address is inferred.
+Public pages are available at `/{ar|en}/privacy`, `/terms`, `/delete-account`,
+and `/support`. Privacy and terms use the same published, localized API content
+as the mobile app and show its update date and revision. They never fall back to
+invented policy text. Deletion and support pages work without app installation
+or sign-in. Their email links prepare drafts for the visitor to review and send;
+they do not submit a deletion command or send email automatically.
+
+The footer links to these pages. `NEXT_PUBLIC_PRIVACY_URL` and
+`NEXT_PUBLIC_TERMS_URL` can override the corresponding destinations with approved
+HTTPS URLs. The owner confirmed `info@sukoon.rent` for support, privacy and deletion
+requests; it is configured as `BUSINESS.email` in `src/lib/site.ts`.
+Privacy and deletion pages include visibly marked placeholders for processing
+time and retained data/reasons/periods, as requested. Replace these before store
+submission. See [store page handoff](../../docs/qa/public-store-pages-2026-11-07.md)
+for store fields, verification and remaining policy decisions.
 
 ## Structure
 
@@ -48,7 +62,7 @@ src/
 
 - `components/ui/Logo.tsx` is a text placeholder. Replace it with the official SVG wordmark.
 - The store buttons are non-interactive ("coming soon"). Turn them into links once the store listings are live.
-- Approved legal/contact destinations remain deployment configuration requirements; unavailable entries do not pretend to navigate.
+- Complete the marked retention/deletion placeholders before submitting the page URLs to the stores.
 - `lib/site.ts`: `SOCIAL_LINKS` supplies the footer's Instagram and TikTok links and the Organization schema's `sameAs` profiles. The `BUSINESS` details remain empty `TODO`s; the LocalBusiness schema switches on by itself once name, phone, street and city are filled in.
 
 Run `rg -n "TODO" src` to list them all.

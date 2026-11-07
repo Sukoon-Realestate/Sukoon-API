@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { defaultLocale, locales } from "@/i18n/config";
 import { absoluteUrl } from "@/lib/site";
+import { publicPageKeys } from "@/lib/public-pages";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return ["", "/privacy", "/terms"].flatMap((path) => {
+  return ["", ...publicPageKeys.map((page) => `/${page}`)].flatMap((path) => {
     const languages = {
       ...Object.fromEntries(locales.map((lang) => [lang, absoluteUrl(`/${lang}${path}`)])),
       "x-default": absoluteUrl(`/${defaultLocale}${path}`),

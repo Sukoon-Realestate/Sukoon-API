@@ -24,6 +24,8 @@ ${en.why.subtitle} ${en.hero.badge}.
 
 - [Privacy policy](${absoluteUrl("/en/privacy")}): Account, data and privacy practices.
 - [Terms and conditions](${absoluteUrl("/en/terms")}): Rules for accounts and rental workflows.
+- [Delete account](${absoluteUrl("/en/delete-account")}): Request account and associated data deletion without reinstalling the app.
+- [Support and contact](${absoluteUrl("/en/support")}): Contact Sukoon about app issues, account access or personal data.
 
 ## How it works
 

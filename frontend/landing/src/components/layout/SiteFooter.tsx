@@ -1,7 +1,7 @@
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { SECTION_IDS } from "@/lib/sections";
-import { BUSINESS, SOCIAL_LINKS } from "@/lib/site";
+import { SOCIAL_LINKS } from "@/lib/site";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { SignatureMark } from "@/components/ui/Decor";
@@ -22,7 +22,8 @@ export function SiteFooter({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const links = [
     { label: dict.footer.privacy, href: destination(process.env.NEXT_PUBLIC_PRIVACY_URL) ?? `/${lang}/privacy` },
     { label: dict.footer.terms, href: destination(process.env.NEXT_PUBLIC_TERMS_URL) ?? `/${lang}/terms` },
-    { label: dict.footer.contact, href: `mailto:${BUSINESS.email}` },
+    { label: dict.footer.deleteAccount, href: `/${lang}/delete-account` },
+    { label: dict.footer.contact, href: `/${lang}/support` },
   ];
 
   return (
