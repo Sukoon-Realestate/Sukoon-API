@@ -64,6 +64,19 @@ metadata. All pages appear in the site navigation, footer and sitemap.
   were present in the generated Arabic/English privacy and deletion pages, and
   the confirmed mailbox appeared in both support and deletion page languages.
 
+## Deployment correction
+
+The first Vercel build of `b16a2de6` failed with 26 unresolved `lucide-react`
+imports from shared code in `frontend/src`. The Vercel project builds from
+`frontend/landing` and had installed only that package's dependencies.
+
+`frontend/landing/vercel.json` now installs both packages with
+`npm ci --prefix .. && npm ci`, using their existing lockfiles. Verification used
+an isolated checkout containing only tracked frontend/design sources and no
+pre-existing dependencies: both installs, all three `vercel-build.test.mjs`
+checks and `VERCEL_ENV=production node scripts/vercel-build.mjs` passed. All eight
+localized public pages were generated successfully.
+
 ## Before publication and store submission
 
 1. Replace the visible draft placeholders with the approved processing time and

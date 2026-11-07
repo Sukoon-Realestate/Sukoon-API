@@ -14,6 +14,10 @@ The older standalone dashboard in `frontend/src/app` still builds separately wit
 Live API mode is the default. Demo mode requires explicit `NEXT_PUBLIC_ENABLE_BACKEND=false` or `NEXT_PUBLIC_USE_MOCK_DATA=true`, and displays a demo banner. Live failures never fall back to demo records.
 
 The existing Vercel production project builds through `scripts/vercel-build.mjs`.
+Its install step runs `npm ci --prefix .. && npm ci` from `frontend/landing` so
+shared code in `frontend/src` can resolve its own locked dependencies as well as
+the landing app's dependencies. Installing only the landing package leaves
+shared admin imports such as `lucide-react` unresolved in a clean deployment.
 It pins production to live, same-origin API requests and uses
 `SOKOUN_API_PROXY_URL` (defaulting to the existing DigitalOcean API). Preview and
 local builds keep their explicit isolated/demo configuration. This does not
