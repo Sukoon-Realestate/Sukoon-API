@@ -54,8 +54,9 @@ class AdminUserListSerializer(serializers.ModelSerializer):
             return "موثق"
         profile = getattr(obj, "profile", None)
         if profile and hasattr(profile, "kyc_submissions"):
-            first_sub = profile.kyc_submissions.first()
-            if first_sub:
+            subs = [s for s in profile.kyc_submissions.all() if not s.superseded_at]
+            if subs:
+                first_sub = subs[0]
                 if first_sub.status == "approved":
                     return "موثق"
                 elif first_sub.status == "rejected":

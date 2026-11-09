@@ -71,6 +71,8 @@ class AdminPropertyItemSerializer(serializers.ModelSerializer):
         return f"{int(obj.price):,} ج.م" if obj.price else "0 ج.م"
 
     def get_views(self, obj):
+        if hasattr(obj, "views_count"):
+            return obj.views_count
         content_type = ContentType.objects.get_for_model(Property)
         views = ContentView.objects.filter(
             content_type=content_type, object_id=obj.pkid

@@ -36,12 +36,29 @@ def get_admin_properties_queryset(
     """
     Returns an optimized queryset for admin properties list.
     """
+    from core_apps.common.models import ContentView
+    from django.contrib.contenttypes.models import ContentType
+    from django.db.models import Subquery, OuterRef
+    from django.db.models.functions import Coalesce
+
+    content_type = ContentType.objects.get_for_model(Property)
+    views_subquery = (
+        ContentView.objects.filter(
+            content_type=content_type,
+            object_id=OuterRef("pkid"),
+        )
+        .values("content_type")
+        .annotate(c=Count("id"))
+        .values("c")
+    )
+
     qs = (
         Property.objects.select_related("owner", "property_type", "governorate", "city")
         .prefetch_related("images")
         .annotate(
             images_count=Count("images", distinct=True),
             visits_count=Count("visits", distinct=True),
+            views_count=Coalesce(Subquery(views_subquery), 0),
         )
         .order_by("-created_at")
     )

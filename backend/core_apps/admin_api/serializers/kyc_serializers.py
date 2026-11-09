@@ -35,6 +35,8 @@ class KYCSubmissionListSerializer(serializers.ModelSerializer):
         return str(obj.profile.user.id)
 
     def get_type(self, obj):
+        if hasattr(obj, "is_owner"):
+            return "مالك" if obj.is_owner else "مستأجر"
         return "مالك" if obj.profile.user.properties.exists() else "مستأجر"
 
     def get_nationalIdMask(self, obj):
@@ -54,6 +56,8 @@ class KYCSubmissionListSerializer(serializers.ModelSerializer):
         return f"{mins} دقيقة"
 
     def get_hasWarning(self, obj):
+        if hasattr(obj, "has_warning"):
+            return bool(obj.has_warning)
         return obj.profile.user.reports_received.filter(status="active").exists()
 
     def get_statusDisplay(self, obj):
