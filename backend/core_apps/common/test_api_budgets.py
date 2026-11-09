@@ -114,7 +114,6 @@ def test_screen_query_and_payload_budget(screen, budget_context, api_client):
 
 
 @pytest.mark.django_db
-@pytest.mark.xfail(strict=True, reason="A6-03: admin property list counts ContentView per row (Sprint 04/10)")
 def test_admin_property_list_query_count_is_flat(budget_context, api_client):
     StaffProfile.objects.create(user=budget_context["tenant"], role_name="property_reviewer")
     client = client_for("tenant", budget_context, api_client)
