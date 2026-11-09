@@ -1,0 +1,314 @@
+{
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/results/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/results/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/results/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/results/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/results/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/results/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/results/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/results/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/results/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/results/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/results/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/results/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/commute-searches/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/commute-searches/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/commute-searches/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/commute-searches/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/commute-searches/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/commute-searches/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/commute-searches/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/commute-searches/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/commute-searches/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/commute-searches/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/commute-searches/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/commute-searches/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/cancel/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/cancel/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/cancel/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/cancel/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/cancel/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/cancel/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/cancel/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/cancel/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/cancel/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/cancel/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/commute-searches/00000000-0000-4000-8000-000000000000/cancel/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/cancel/",
+  "served_by": "",
+  "status": 400
+ }
+}

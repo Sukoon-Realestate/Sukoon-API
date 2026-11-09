@@ -1,0 +1,392 @@
+{
+ "GET /api/v1/features/v1/payment-attempts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/payment-attempts/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payment-attempts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/payment-attempts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payment-attempts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/payment-attempts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/",
+  "served_by": "payment-attempt-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/",
+  "served_by": "payment-attempt-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/",
+  "served_by": "payment-attempt-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/",
+  "served_by": "payment-attempt-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/",
+  "served_by": "payment-attempt-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/",
+  "served_by": "payment-attempt-detail",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/payment-attempts/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/payment-attempts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/payment-attempts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/",
+  "served_by": "payment-attempts",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/reconcile/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/reconcile/",
+  "served_by": "payment-attempt-reconcile",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/reconcile/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/reconcile/",
+  "served_by": "payment-attempt-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/reconcile/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/reconcile/",
+  "served_by": "payment-attempt-reconcile",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/reconcile/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/reconcile/",
+  "served_by": "payment-attempt-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/reconcile/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/reconcile/",
+  "served_by": "payment-attempt-reconcile",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/reconcile/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/reconcile/",
+  "served_by": "payment-attempt-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/resume/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/resume/",
+  "served_by": "payment-attempt-resume",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/resume/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/resume/",
+  "served_by": "payment-attempt-resume",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/resume/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/resume/",
+  "served_by": "payment-attempt-resume",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/resume/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/resume/",
+  "served_by": "payment-attempt-resume",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/resume/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/resume/",
+  "served_by": "payment-attempt-resume",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/payment-attempts/00000000-0000-4000-8000-000000000000/resume/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/resume/",
+  "served_by": "payment-attempt-resume",
+  "status": 403
+ }
+}

@@ -1,0 +1,574 @@
+{
+ "GET /api/v1/admin/system/health/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/health/",
+  "served_by": "admin-system-health",
+  "status": 401
+ },
+ "GET /api/v1/admin/system/health/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/health/",
+  "served_by": "admin-system-health",
+  "status": 401
+ },
+ "GET /api/v1/admin/system/health/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "apiPerformanceData",
+   "auditLogs",
+   "incidents",
+   "internalAdminNotes",
+   "metrics",
+   "telemetry"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/system/health/",
+  "served_by": "admin-system-health",
+  "status": 200
+ },
+ "GET /api/v1/admin/system/health/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "apiPerformanceData",
+   "auditLogs",
+   "incidents",
+   "internalAdminNotes",
+   "metrics",
+   "telemetry"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/system/health/",
+  "served_by": "admin-system-health",
+  "status": 200
+ },
+ "GET /api/v1/admin/system/health/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/health/",
+  "served_by": "admin-system-health",
+  "status": 403
+ },
+ "GET /api/v1/admin/system/health/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/health/",
+  "served_by": "admin-system-health",
+  "status": 403
+ },
+ "GET /api/v1/admin/system/logs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/logs/",
+  "served_by": "admin-system-logs",
+  "status": 401
+ },
+ "GET /api/v1/admin/system/logs/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/logs/",
+  "served_by": "admin-system-logs",
+  "status": 401
+ },
+ "GET /api/v1/admin/system/logs/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/system/logs/",
+  "served_by": "admin-system-logs",
+  "status": 200
+ },
+ "GET /api/v1/admin/system/logs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/system/logs/",
+  "served_by": "admin-system-logs",
+  "status": 200
+ },
+ "GET /api/v1/admin/system/logs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/logs/",
+  "served_by": "admin-system-logs",
+  "status": 403
+ },
+ "GET /api/v1/admin/system/logs/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/logs/",
+  "served_by": "admin-system-logs",
+  "status": 403
+ },
+ "GET /api/v1/admin/system/notifications/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/",
+  "served_by": "admin-system-notifications",
+  "status": 401
+ },
+ "GET /api/v1/admin/system/notifications/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/",
+  "served_by": "admin-system-notifications",
+  "status": 401
+ },
+ "GET /api/v1/admin/system/notifications/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/system/notifications/",
+  "served_by": "admin-system-notifications",
+  "status": 200
+ },
+ "GET /api/v1/admin/system/notifications/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/system/notifications/",
+  "served_by": "admin-system-notifications",
+  "status": 200
+ },
+ "GET /api/v1/admin/system/notifications/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/",
+  "served_by": "admin-system-notifications",
+  "status": 403
+ },
+ "GET /api/v1/admin/system/notifications/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/",
+  "served_by": "admin-system-notifications",
+  "status": 403
+ },
+ "GET /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 403
+ },
+ "POST /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 401
+ },
+ "POST /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 401
+ },
+ "POST /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 400
+ },
+ "POST /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 400
+ },
+ "POST /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 403
+ },
+ "POST /api/v1/admin/system/notifications/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+  "served_by": "admin-campaign-detail",
+  "status": 403
+ },
+ "POST /api/v1/admin/system/notifications/preview/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/preview/",
+  "served_by": "admin-campaign-preview",
+  "status": 401
+ },
+ "POST /api/v1/admin/system/notifications/preview/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/preview/",
+  "served_by": "admin-campaign-preview",
+  "status": 401
+ },
+ "POST /api/v1/admin/system/notifications/preview/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/system/notifications/preview/",
+  "served_by": "admin-campaign-preview",
+  "status": 400
+ },
+ "POST /api/v1/admin/system/notifications/preview/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/system/notifications/preview/",
+  "served_by": "admin-campaign-preview",
+  "status": 400
+ },
+ "POST /api/v1/admin/system/notifications/preview/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/preview/",
+  "served_by": "admin-campaign-preview",
+  "status": 403
+ },
+ "POST /api/v1/admin/system/notifications/preview/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/preview/",
+  "served_by": "admin-campaign-preview",
+  "status": 403
+ },
+ "POST /api/v1/admin/system/notifications/send/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/send/",
+  "served_by": "admin-system-notifications-send",
+  "status": 401
+ },
+ "POST /api/v1/admin/system/notifications/send/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/system/notifications/send/",
+  "served_by": "admin-system-notifications-send",
+  "status": 401
+ },
+ "POST /api/v1/admin/system/notifications/send/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/system/notifications/send/",
+  "served_by": "admin-system-notifications-send",
+  "status": 400
+ },
+ "POST /api/v1/admin/system/notifications/send/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/system/notifications/send/",
+  "served_by": "admin-system-notifications-send",
+  "status": 400
+ },
+ "POST /api/v1/admin/system/notifications/send/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/send/",
+  "served_by": "admin-system-notifications-send",
+  "status": 403
+ },
+ "POST /api/v1/admin/system/notifications/send/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/system/notifications/send/",
+  "served_by": "admin-system-notifications-send",
+  "status": 403
+ }
+}

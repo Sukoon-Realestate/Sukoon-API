@@ -1,0 +1,86 @@
+{
+ "GET /api/v1/features/v1/subscription-plans/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/subscription-plans/",
+  "served_by": "subscription-plans",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/subscription-plans/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/subscription-plans/",
+  "served_by": "subscription-plans",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/subscription-plans/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/subscription-plans/",
+  "served_by": "subscription-plans",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/subscription-plans/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/subscription-plans/",
+  "served_by": "subscription-plans",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/subscription-plans/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/subscription-plans/",
+  "served_by": "subscription-plans",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/subscription-plans/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/subscription-plans/",
+  "served_by": "subscription-plans",
+  "status": 403
+ }
+}

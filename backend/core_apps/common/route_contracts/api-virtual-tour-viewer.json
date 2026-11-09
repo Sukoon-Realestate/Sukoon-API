@@ -1,0 +1,626 @@
+{
+ "DELETE /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/manifest/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/manifest/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/manifest/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/manifest/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/manifest/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/manifest/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/manifest/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/manifest/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/manifest/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/manifest/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/manifest/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/manifest/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/places/sample/offer/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/places/<str:place_id>/offer/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/places/sample/offer/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/places/<str:place_id>/offer/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/places/sample/offer/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/places/<str:place_id>/offer/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/places/sample/offer/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/places/<str:place_id>/offer/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/places/sample/offer/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/places/<str:place_id>/offer/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/places/sample/offer/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/places/<str:place_id>/offer/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/access/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/access/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/access/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/access/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/access/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/access/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/access/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/access/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/access/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/access/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/access/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/access/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/sample/1/1/1/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/<str:face>/<int:level>/<int:x>/<int:y>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/sample/1/1/1/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/<str:face>/<int:level>/<int:x>/<int:y>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/sample/1/1/1/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/<str:face>/<int:level>/<int:x>/<int:y>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/sample/1/1/1/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/<str:face>/<int:level>/<int:x>/<int:y>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/sample/1/1/1/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/<str:face>/<int:level>/<int:x>/<int:y>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/resources/sample/bytes/sample/1/1/1/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "resource_grant_expired",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/resources/<str:resource_id>/bytes/<str:face>/<int:level>/<int:x>/<int:y>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/virtual-tour-viewer/exchange/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-viewer/exchange/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-viewer/exchange/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-viewer/exchange/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-viewer/exchange/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-viewer/exchange/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-viewer/exchange/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-viewer/exchange/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-viewer/exchange/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-viewer/exchange/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-viewer/exchange/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-viewer/exchange/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/renew/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/renew/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/renew/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/renew/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/renew/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/renew/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/renew/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/renew/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/renew/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/renew/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/virtual-tour-viewer/sessions/00000000-0000-4000-8000-000000000000/renew/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-viewer/sessions/<uuid:session_id>/renew/",
+  "served_by": "",
+  "status": 404
+ }
+}

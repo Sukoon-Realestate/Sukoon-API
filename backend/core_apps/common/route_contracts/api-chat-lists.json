@@ -1,0 +1,236 @@
+{
+ "DELETE /api/v1/chat/lists/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 401
+ },
+ "DELETE /api/v1/chat/lists/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 401
+ },
+ "DELETE /api/v1/chat/lists/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "DELETE /api/v1/chat/lists/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "DELETE /api/v1/chat/lists/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "DELETE /api/v1/chat/lists/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "GET /api/v1/chat/lists/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 401
+ },
+ "GET /api/v1/chat/lists/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 401
+ },
+ "GET /api/v1/chat/lists/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "GET /api/v1/chat/lists/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "GET /api/v1/chat/lists/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "GET /api/v1/chat/lists/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "POST /api/v1/chat/lists/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 401
+ },
+ "POST /api/v1/chat/lists/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 401
+ },
+ "POST /api/v1/chat/lists/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "POST /api/v1/chat/lists/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "POST /api/v1/chat/lists/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ },
+ "POST /api/v1/chat/lists/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/lists/",
+  "served_by": "chat-lists",
+  "status": 400
+ }
+}

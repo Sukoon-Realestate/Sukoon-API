@@ -1,0 +1,1186 @@
+{
+ "DELETE /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 401
+ },
+ "DELETE /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 401
+ },
+ "DELETE /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 404
+ },
+ "DELETE /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 404
+ },
+ "DELETE /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 404
+ },
+ "DELETE /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 404
+ },
+ "GET /api/v1/support/attachment-policy/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/attachment-policy/",
+  "served_by": "support-attachment-policy",
+  "status": 401
+ },
+ "GET /api/v1/support/attachment-policy/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/attachment-policy/",
+  "served_by": "support-attachment-policy",
+  "status": 401
+ },
+ "GET /api/v1/support/attachment-policy/ staff mvp=off": {
+  "cache_control": "no-store",
+  "content_type": "application/json",
+  "data": [
+   "available",
+   "blocking_reasons",
+   "image_max_bytes",
+   "max_attachments",
+   "pdf_max_bytes",
+   "pdf_max_pages",
+   "schema_version",
+   "types",
+   "video_max_bytes",
+   "video_max_duration_ms"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/attachment-policy/",
+  "served_by": "support-attachment-policy",
+  "status": 200
+ },
+ "GET /api/v1/support/attachment-policy/ staff mvp=on": {
+  "cache_control": "no-store",
+  "content_type": "application/json",
+  "data": [
+   "available",
+   "blocking_reasons",
+   "image_max_bytes",
+   "max_attachments",
+   "pdf_max_bytes",
+   "pdf_max_pages",
+   "schema_version",
+   "types",
+   "video_max_bytes",
+   "video_max_duration_ms"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/attachment-policy/",
+  "served_by": "support-attachment-policy",
+  "status": 200
+ },
+ "GET /api/v1/support/attachment-policy/ tenant mvp=off": {
+  "cache_control": "no-store",
+  "content_type": "application/json",
+  "data": [
+   "available",
+   "blocking_reasons",
+   "image_max_bytes",
+   "max_attachments",
+   "pdf_max_bytes",
+   "pdf_max_pages",
+   "schema_version",
+   "types",
+   "video_max_bytes",
+   "video_max_duration_ms"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/attachment-policy/",
+  "served_by": "support-attachment-policy",
+  "status": 200
+ },
+ "GET /api/v1/support/attachment-policy/ tenant mvp=on": {
+  "cache_control": "no-store",
+  "content_type": "application/json",
+  "data": [
+   "available",
+   "blocking_reasons",
+   "image_max_bytes",
+   "max_attachments",
+   "pdf_max_bytes",
+   "pdf_max_pages",
+   "schema_version",
+   "types",
+   "video_max_bytes",
+   "video_max_duration_ms"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/attachment-policy/",
+  "served_by": "support-attachment-policy",
+  "status": 200
+ },
+ "GET /api/v1/support/attachments/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/attachments/<uuid:id>/",
+  "served_by": "support-attachment",
+  "status": 401
+ },
+ "GET /api/v1/support/attachments/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/attachments/<uuid:id>/",
+  "served_by": "support-attachment",
+  "status": 401
+ },
+ "GET /api/v1/support/attachments/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/attachments/<uuid:id>/",
+  "served_by": "support-attachment",
+  "status": 404
+ },
+ "GET /api/v1/support/attachments/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/attachments/<uuid:id>/",
+  "served_by": "support-attachment",
+  "status": 404
+ },
+ "GET /api/v1/support/attachments/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/attachments/<uuid:id>/",
+  "served_by": "support-attachment",
+  "status": 404
+ },
+ "GET /api/v1/support/attachments/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/attachments/<uuid:id>/",
+  "served_by": "support-attachment",
+  "status": 404
+ },
+ "GET /api/v1/support/help-center/ anonymous mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "email",
+   "faqs",
+   "hours",
+   "phone",
+   "revision"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/help-center/",
+  "served_by": "support-help-center",
+  "status": 200
+ },
+ "GET /api/v1/support/help-center/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "email",
+   "faqs",
+   "hours",
+   "phone",
+   "revision"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/help-center/",
+  "served_by": "support-help-center",
+  "status": 200
+ },
+ "GET /api/v1/support/help-center/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "email",
+   "faqs",
+   "hours",
+   "phone",
+   "revision"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/help-center/",
+  "served_by": "support-help-center",
+  "status": 200
+ },
+ "GET /api/v1/support/help-center/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "email",
+   "faqs",
+   "hours",
+   "phone",
+   "revision"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/help-center/",
+  "served_by": "support-help-center",
+  "status": 200
+ },
+ "GET /api/v1/support/help-center/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "email",
+   "faqs",
+   "hours",
+   "phone",
+   "revision"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/help-center/",
+  "served_by": "support-help-center",
+  "status": 200
+ },
+ "GET /api/v1/support/help-center/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "email",
+   "faqs",
+   "hours",
+   "phone",
+   "revision"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/help-center/",
+  "served_by": "support-help-center",
+  "status": 200
+ },
+ "GET /api/v1/support/tickets/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 401
+ },
+ "GET /api/v1/support/tickets/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 401
+ },
+ "GET /api/v1/support/tickets/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 200
+ },
+ "GET /api/v1/support/tickets/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 200
+ },
+ "GET /api/v1/support/tickets/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 200
+ },
+ "GET /api/v1/support/tickets/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 200
+ },
+ "GET /api/v1/support/tickets/creation-receipt/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 401
+ },
+ "GET /api/v1/support/tickets/creation-receipt/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 401
+ },
+ "GET /api/v1/support/tickets/creation-receipt/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 400
+ },
+ "GET /api/v1/support/tickets/creation-receipt/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 400
+ },
+ "GET /api/v1/support/tickets/creation-receipt/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 400
+ },
+ "GET /api/v1/support/tickets/creation-receipt/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 400
+ },
+ "GET /api/v1/support/tickets/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/<str:id>/",
+  "served_by": "support-ticket-detail",
+  "status": 401
+ },
+ "GET /api/v1/support/tickets/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/<str:id>/",
+  "served_by": "support-ticket-detail",
+  "status": 401
+ },
+ "GET /api/v1/support/tickets/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/",
+  "served_by": "support-ticket-detail",
+  "status": 404
+ },
+ "GET /api/v1/support/tickets/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/",
+  "served_by": "support-ticket-detail",
+  "status": 404
+ },
+ "GET /api/v1/support/tickets/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/",
+  "served_by": "support-ticket-detail",
+  "status": 404
+ },
+ "GET /api/v1/support/tickets/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/",
+  "served_by": "support-ticket-detail",
+  "status": 404
+ },
+ "GET /api/v1/support/tickets/sample/reply-receipt/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 401
+ },
+ "GET /api/v1/support/tickets/sample/reply-receipt/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 401
+ },
+ "GET /api/v1/support/tickets/sample/reply-receipt/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 404
+ },
+ "GET /api/v1/support/tickets/sample/reply-receipt/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 404
+ },
+ "GET /api/v1/support/tickets/sample/reply-receipt/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 404
+ },
+ "GET /api/v1/support/tickets/sample/reply-receipt/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 404
+ },
+ "GET /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 401
+ },
+ "GET /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 401
+ },
+ "GET /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 404
+ },
+ "GET /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 404
+ },
+ "GET /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 404
+ },
+ "GET /api/v1/support/uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/uploads/<uuid:id>/",
+  "served_by": "support-upload-detail",
+  "status": 404
+ },
+ "POST /api/v1/support/tickets/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 401
+ },
+ "POST /api/v1/support/tickets/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 401
+ },
+ "POST /api/v1/support/tickets/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/",
+  "served_by": "support-ticket-list-create",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/creation-receipt/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 401
+ },
+ "POST /api/v1/support/tickets/creation-receipt/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 401
+ },
+ "POST /api/v1/support/tickets/creation-receipt/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/creation-receipt/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/creation-receipt/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/creation-receipt/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/creation-receipt/",
+  "served_by": "support-ticket-creation-receipt",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/sample/replies/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/<str:id>/replies/",
+  "served_by": "support-ticket-reply",
+  "status": 401
+ },
+ "POST /api/v1/support/tickets/sample/replies/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/<str:id>/replies/",
+  "served_by": "support-ticket-reply",
+  "status": 401
+ },
+ "POST /api/v1/support/tickets/sample/replies/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/<str:id>/replies/",
+  "served_by": "support-ticket-reply",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/sample/replies/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/<str:id>/replies/",
+  "served_by": "support-ticket-reply",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/sample/replies/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/<str:id>/replies/",
+  "served_by": "support-ticket-reply",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/sample/replies/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/support/tickets/<str:id>/replies/",
+  "served_by": "support-ticket-reply",
+  "status": 400
+ },
+ "POST /api/v1/support/tickets/sample/reply-receipt/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 401
+ },
+ "POST /api/v1/support/tickets/sample/reply-receipt/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 401
+ },
+ "POST /api/v1/support/tickets/sample/reply-receipt/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 404
+ },
+ "POST /api/v1/support/tickets/sample/reply-receipt/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 404
+ },
+ "POST /api/v1/support/tickets/sample/reply-receipt/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 404
+ },
+ "POST /api/v1/support/tickets/sample/reply-receipt/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+  "served_by": "support-reply-receipt",
+  "status": 404
+ },
+ "POST /api/v1/support/uploads/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/uploads/",
+  "served_by": "support-upload",
+  "status": 401
+ },
+ "POST /api/v1/support/uploads/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/support/uploads/",
+  "served_by": "support-upload",
+  "status": 401
+ },
+ "POST /api/v1/support/uploads/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "unsupported_media_type",
+  "route": "api/v1/support/uploads/",
+  "served_by": "support-upload",
+  "status": 415
+ },
+ "POST /api/v1/support/uploads/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "unsupported_media_type",
+  "route": "api/v1/support/uploads/",
+  "served_by": "support-upload",
+  "status": 415
+ },
+ "POST /api/v1/support/uploads/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "unsupported_media_type",
+  "route": "api/v1/support/uploads/",
+  "served_by": "support-upload",
+  "status": 415
+ },
+ "POST /api/v1/support/uploads/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "unsupported_media_type",
+  "route": "api/v1/support/uploads/",
+  "served_by": "support-upload",
+  "status": 415
+ }
+}

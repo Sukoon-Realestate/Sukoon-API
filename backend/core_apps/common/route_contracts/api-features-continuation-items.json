@@ -1,0 +1,86 @@
+{
+ "GET /api/v1/features/v1/continuation-items/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/continuation-items/",
+  "served_by": "continuation-items",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/continuation-items/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/continuation-items/",
+  "served_by": "continuation-items",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/continuation-items/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/continuation-items/",
+  "served_by": "continuation-items",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/continuation-items/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/continuation-items/",
+  "served_by": "continuation-items",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/continuation-items/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/continuation-items/",
+  "served_by": "continuation-items",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/continuation-items/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/continuation-items/",
+  "served_by": "continuation-items",
+  "status": 403
+ }
+}

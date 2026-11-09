@@ -1,0 +1,422 @@
+{
+ "GET /api/v1/admin/reports/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/",
+  "served_by": "admin-reports-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/reports/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/",
+  "served_by": "admin-reports-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/reports/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/reports/",
+  "served_by": "admin-reports-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/reports/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/reports/",
+  "served_by": "admin-reports-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/reports/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/",
+  "served_by": "admin-reports-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/reports/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/",
+  "served_by": "admin-reports-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/reports/metrics/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/metrics/",
+  "served_by": "admin-reports-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/reports/metrics/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/metrics/",
+  "served_by": "admin-reports-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/reports/metrics/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "active",
+   "banned",
+   "dismissed",
+   "suspended",
+   "total"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/reports/metrics/",
+  "served_by": "admin-reports-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/reports/metrics/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "active",
+   "banned",
+   "dismissed",
+   "suspended",
+   "total"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/reports/metrics/",
+  "served_by": "admin-reports-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/reports/metrics/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/metrics/",
+  "served_by": "admin-reports-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/reports/metrics/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/metrics/",
+  "served_by": "admin-reports-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/reports/overview/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/overview/",
+  "served_by": "admin-reports-overview",
+  "status": 401
+ },
+ "GET /api/v1/admin/reports/overview/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/overview/",
+  "served_by": "admin-reports-overview",
+  "status": 401
+ },
+ "GET /api/v1/admin/reports/overview/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "bookingLog",
+   "disputeReasons",
+   "measured_at",
+   "metrics",
+   "tickets"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/reports/overview/",
+  "served_by": "admin-reports-overview",
+  "status": 200
+ },
+ "GET /api/v1/admin/reports/overview/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "bookingLog",
+   "disputeReasons",
+   "measured_at",
+   "metrics",
+   "tickets"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/reports/overview/",
+  "served_by": "admin-reports-overview",
+  "status": 200
+ },
+ "GET /api/v1/admin/reports/overview/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/overview/",
+  "served_by": "admin-reports-overview",
+  "status": 403
+ },
+ "GET /api/v1/admin/reports/overview/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/overview/",
+  "served_by": "admin-reports-overview",
+  "status": 403
+ },
+ "POST /api/v1/admin/reports/00000000-0000-4000-8000-000000000000/action/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/<uuid:report_id>/action/",
+  "served_by": "admin-report-action",
+  "status": 401
+ },
+ "POST /api/v1/admin/reports/00000000-0000-4000-8000-000000000000/action/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/<uuid:report_id>/action/",
+  "served_by": "admin-report-action",
+  "status": 401
+ },
+ "POST /api/v1/admin/reports/00000000-0000-4000-8000-000000000000/action/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/reports/<uuid:report_id>/action/",
+  "served_by": "admin-report-action",
+  "status": 400
+ },
+ "POST /api/v1/admin/reports/00000000-0000-4000-8000-000000000000/action/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/reports/<uuid:report_id>/action/",
+  "served_by": "admin-report-action",
+  "status": 400
+ },
+ "POST /api/v1/admin/reports/00000000-0000-4000-8000-000000000000/action/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/<uuid:report_id>/action/",
+  "served_by": "admin-report-action",
+  "status": 403
+ },
+ "POST /api/v1/admin/reports/00000000-0000-4000-8000-000000000000/action/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/<uuid:report_id>/action/",
+  "served_by": "admin-report-action",
+  "status": 403
+ },
+ "POST /api/v1/admin/reports/sample/action/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/<str:report_id>/action/",
+  "served_by": "admin-report-action-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/reports/sample/action/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reports/<str:report_id>/action/",
+  "served_by": "admin-report-action-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/reports/sample/action/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/reports/<str:report_id>/action/",
+  "served_by": "admin-report-action-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/reports/sample/action/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/reports/<str:report_id>/action/",
+  "served_by": "admin-report-action-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/reports/sample/action/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/<str:report_id>/action/",
+  "served_by": "admin-report-action-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/reports/sample/action/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reports/<str:report_id>/action/",
+  "served_by": "admin-report-action-str",
+  "status": 403
+ }
+}

@@ -1,0 +1,1808 @@
+{
+ "GET /api/v1/features/v1/operations/payables/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/payables/",
+  "served_by": "operations-payable-queue",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/payables/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payables/",
+  "served_by": "operations-payable-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payables/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/operations/payables/",
+  "served_by": "operations-payable-queue",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/operations/payables/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payables/",
+  "served_by": "operations-payable-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payables/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/payables/",
+  "served_by": "operations-payable-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payables/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payables/",
+  "served_by": "operations-payable-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/payouts/",
+  "served_by": "operations-payout-queue",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/payouts/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/",
+  "served_by": "operations-payout-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/operations/payouts/",
+  "served_by": "operations-payout-queue",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/operations/payouts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/",
+  "served_by": "operations-payout-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/payouts/",
+  "served_by": "operations-payout-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/",
+  "served_by": "operations-payout-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/review/",
+  "served_by": "operations-payout-review",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/review/",
+  "served_by": "operations-payout-review",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/review/",
+  "served_by": "operations-payout-review",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/review/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/review/",
+  "served_by": "operations-payout-review",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/review/",
+  "served_by": "operations-payout-review",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/review/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/review/",
+  "served_by": "operations-payout-review",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/preview/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/payouts/preview/",
+  "served_by": "operations-payout-preview",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/payouts/preview/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/preview/",
+  "served_by": "operations-payout-preview",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/preview/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/payouts/preview/",
+  "served_by": "operations-payout-preview",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/operations/payouts/preview/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/preview/",
+  "served_by": "operations-payout-preview",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/preview/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/payouts/preview/",
+  "served_by": "operations-payout-preview",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/payouts/preview/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/preview/",
+  "served_by": "operations-payout-preview",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/refunds/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/refunds/",
+  "served_by": "operation-refund-queue",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/refunds/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/",
+  "served_by": "operation-refund-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/refunds/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/operations/refunds/",
+  "served_by": "operation-refund-queue",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/operations/refunds/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/",
+  "served_by": "operation-refund-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/refunds/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/refunds/",
+  "served_by": "operation-refund-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/refunds/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/",
+  "served_by": "operation-refund-queue",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/review/",
+  "served_by": "operation-refund-review",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/review/",
+  "served_by": "operation-refund-review",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/review/",
+  "served_by": "operation-refund-review",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/review/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/review/",
+  "served_by": "operation-refund-review",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/review/",
+  "served_by": "operation-refund-review",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/review/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/review/",
+  "served_by": "operation-refund-review",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reauthorize/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reauthorize/",
+  "served_by": "operations-payout-reauthorize",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reauthorize/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reauthorize/",
+  "served_by": "operations-payout-reauthorize",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reauthorize/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reauthorize/",
+  "served_by": "operations-payout-reauthorize",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reauthorize/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reauthorize/",
+  "served_by": "operations-payout-reauthorize",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reauthorize/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reauthorize/",
+  "served_by": "operations-payout-reauthorize",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reauthorize/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reauthorize/",
+  "served_by": "operations-payout-reauthorize",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reconcile/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reconcile/",
+  "served_by": "operations-payout-reconcile",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reconcile/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reconcile/",
+  "served_by": "operations-payout-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reconcile/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reconcile/",
+  "served_by": "operations-payout-reconcile",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reconcile/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reconcile/",
+  "served_by": "operations-payout-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reconcile/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reconcile/",
+  "served_by": "operations-payout-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/reconcile/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reconcile/",
+  "served_by": "operations-payout-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/retry/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/retry/",
+  "served_by": "operations-payout-retry",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/retry/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/retry/",
+  "served_by": "operations-payout-retry",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/retry/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/retry/",
+  "served_by": "operations-payout-retry",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/retry/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/retry/",
+  "served_by": "operations-payout-retry",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/retry/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/retry/",
+  "served_by": "operations-payout-retry",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/00000000-0000-4000-8000-000000000000/retry/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/retry/",
+  "served_by": "operations-payout-retry",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/execute/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/payouts/execute/",
+  "served_by": "operations-payout-execute",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/payouts/execute/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/execute/",
+  "served_by": "operations-payout-execute",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/execute/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/payouts/execute/",
+  "served_by": "operations-payout-execute",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/payouts/execute/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/execute/",
+  "served_by": "operations-payout-execute",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/execute/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/payouts/execute/",
+  "served_by": "operations-payout-execute",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/payouts/execute/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/payouts/execute/",
+  "served_by": "operations-payout-execute",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reauthorize/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reauthorize/",
+  "served_by": "operation-refund-reauthorize",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reauthorize/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reauthorize/",
+  "served_by": "operation-refund-reauthorize",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reauthorize/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reauthorize/",
+  "served_by": "operation-refund-reauthorize",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reauthorize/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reauthorize/",
+  "served_by": "operation-refund-reauthorize",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reauthorize/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reauthorize/",
+  "served_by": "operation-refund-reauthorize",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reauthorize/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reauthorize/",
+  "served_by": "operation-refund-reauthorize",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reconcile/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reconcile/",
+  "served_by": "operation-refund-reconcile",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reconcile/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reconcile/",
+  "served_by": "operation-refund-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reconcile/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reconcile/",
+  "served_by": "operation-refund-reconcile",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reconcile/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reconcile/",
+  "served_by": "operation-refund-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reconcile/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reconcile/",
+  "served_by": "operation-refund-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/reconcile/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reconcile/",
+  "served_by": "operation-refund-reconcile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/retry/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/retry/",
+  "served_by": "operation-refund-retry",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/retry/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/retry/",
+  "served_by": "operation-refund-retry",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/retry/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/retry/",
+  "served_by": "operation-refund-retry",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/retry/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/retry/",
+  "served_by": "operation-refund-retry",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/retry/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/retry/",
+  "served_by": "operation-refund-retry",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/refunds/00000000-0000-4000-8000-000000000000/retry/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/retry/",
+  "served_by": "operation-refund-retry",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/rental-cases/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/student-verifications/00000000-0000-4000-8000-000000000000/review/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/verification-claims/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/verification-claims/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/verification-claims/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/verification-claims/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/verification-claims/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/verification-claims/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/operations/verification-claims/<uuid:claim_id>/revoke/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/verification-claims/<uuid:claim_id>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/verification-claims/<uuid:claim_id>/revoke/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/verification-claims/<uuid:claim_id>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/operations/verification-claims/<uuid:claim_id>/revoke/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/operations/verification-claims/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/operations/verification-claims/<uuid:claim_id>/revoke/",
+  "served_by": "",
+  "status": 403
+ }
+}

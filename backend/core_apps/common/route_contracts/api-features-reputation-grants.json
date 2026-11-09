@@ -1,0 +1,638 @@
+{
+ "GET /api/v1/features/v1/reputation-grants/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reputation-grants/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/reputation-grants/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/reputation-grants/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/preview/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/preview/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/preview/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/preview/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/preview/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/preview/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/preview/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/preview/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/preview/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/recipients/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reputation-grants/recipients/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reputation-grants/recipients/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/recipients/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/recipients/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/reputation-grants/recipients/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/reputation-grants/recipients/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/recipients/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reputation-grants/recipients/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/reputation-grants/recipients/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/reputation-grants/recipients/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/recipients/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/reputation-grants/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_review_target",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reputation-grants/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_review_target",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reputation-grants/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/reputation-grants/00000000-0000-4000-8000-000000000000/summary/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+  "served_by": "",
+  "status": 403
+ }
+}

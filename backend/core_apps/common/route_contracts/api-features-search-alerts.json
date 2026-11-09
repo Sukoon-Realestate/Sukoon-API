@@ -1,0 +1,404 @@
+{
+ "DELETE /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 401
+ },
+ "DELETE /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 401
+ },
+ "DELETE /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "DELETE /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "DELETE /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "DELETE /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/search-alerts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/search-alerts/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/search-alerts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/search-alerts/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/search-alerts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/search-alerts/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "PATCH /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 401
+ },
+ "PATCH /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 401
+ },
+ "PATCH /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "PATCH /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "PATCH /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "PATCH /api/v1/features/v1/search-alerts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+  "served_by": "search-alert-detail",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/search-alerts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/search-alerts/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/search-alerts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/search-alerts/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/search-alerts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/search-alerts/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/search-alerts/",
+  "served_by": "search-alerts",
+  "status": 400
+ }
+}

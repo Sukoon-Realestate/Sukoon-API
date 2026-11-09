@@ -1,0 +1,1144 @@
+{
+ "DELETE /api/v1/notifications/devices/unregister/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 401
+ },
+ "DELETE /api/v1/notifications/devices/unregister/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 401
+ },
+ "DELETE /api/v1/notifications/devices/unregister/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 400
+ },
+ "DELETE /api/v1/notifications/devices/unregister/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 400
+ },
+ "DELETE /api/v1/notifications/devices/unregister/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 400
+ },
+ "DELETE /api/v1/notifications/devices/unregister/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 400
+ },
+ "GET /api/v1/notifications/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/",
+  "served_by": "notification-list",
+  "status": 401
+ },
+ "GET /api/v1/notifications/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/",
+  "served_by": "notification-list",
+  "status": 401
+ },
+ "GET /api/v1/notifications/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "total_pages",
+   "unread_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/",
+  "served_by": "notification-list",
+  "status": 200
+ },
+ "GET /api/v1/notifications/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "total_pages",
+   "unread_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/",
+  "served_by": "notification-list",
+  "status": 200
+ },
+ "GET /api/v1/notifications/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "total_pages",
+   "unread_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/",
+  "served_by": "notification-list",
+  "status": 200
+ },
+ "GET /api/v1/notifications/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "total_pages",
+   "unread_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/",
+  "served_by": "notification-list",
+  "status": 200
+ },
+ "GET /api/v1/notifications/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/<uuid:pk>/",
+  "served_by": "notification-detail",
+  "status": 401
+ },
+ "GET /api/v1/notifications/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/<uuid:pk>/",
+  "served_by": "notification-detail",
+  "status": 401
+ },
+ "GET /api/v1/notifications/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/notifications/<uuid:pk>/",
+  "served_by": "notification-detail",
+  "status": 404
+ },
+ "GET /api/v1/notifications/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/notifications/<uuid:pk>/",
+  "served_by": "notification-detail",
+  "status": 404
+ },
+ "GET /api/v1/notifications/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/notifications/<uuid:pk>/",
+  "served_by": "notification-detail",
+  "status": 404
+ },
+ "GET /api/v1/notifications/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/notifications/<uuid:pk>/",
+  "served_by": "notification-detail",
+  "status": 404
+ },
+ "GET /api/v1/notifications/delivery-policy/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 401
+ },
+ "GET /api/v1/notifications/delivery-policy/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 401
+ },
+ "GET /api/v1/notifications/delivery-policy/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "categories",
+   "modes",
+   "quiet_end",
+   "quiet_start",
+   "revision",
+   "summary_hour",
+   "timezone"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 200
+ },
+ "GET /api/v1/notifications/delivery-policy/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "categories",
+   "modes",
+   "quiet_end",
+   "quiet_start",
+   "revision",
+   "summary_hour",
+   "timezone"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 200
+ },
+ "GET /api/v1/notifications/delivery-policy/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "categories",
+   "modes",
+   "quiet_end",
+   "quiet_start",
+   "revision",
+   "summary_hour",
+   "timezone"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 200
+ },
+ "GET /api/v1/notifications/delivery-policy/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "categories",
+   "modes",
+   "quiet_end",
+   "quiet_start",
+   "revision",
+   "summary_hour",
+   "timezone"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 200
+ },
+ "GET /api/v1/notifications/settings/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 401
+ },
+ "GET /api/v1/notifications/settings/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 401
+ },
+ "GET /api/v1/notifications/settings/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "push_enabled",
+   "revision",
+   "scope",
+   "sections",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 200
+ },
+ "GET /api/v1/notifications/settings/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "push_enabled",
+   "revision",
+   "scope",
+   "sections",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 200
+ },
+ "GET /api/v1/notifications/settings/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "push_enabled",
+   "revision",
+   "scope",
+   "sections",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 200
+ },
+ "GET /api/v1/notifications/settings/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "push_enabled",
+   "revision",
+   "scope",
+   "sections",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 200
+ },
+ "GET /api/v1/notifications/unread-count/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/unread-count/",
+  "served_by": "notification-unread-count",
+  "status": 401
+ },
+ "GET /api/v1/notifications/unread-count/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/unread-count/",
+  "served_by": "notification-unread-count",
+  "status": 401
+ },
+ "GET /api/v1/notifications/unread-count/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "unread_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/unread-count/",
+  "served_by": "notification-unread-count",
+  "status": 200
+ },
+ "GET /api/v1/notifications/unread-count/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "unread_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/unread-count/",
+  "served_by": "notification-unread-count",
+  "status": 200
+ },
+ "GET /api/v1/notifications/unread-count/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "unread_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/unread-count/",
+  "served_by": "notification-unread-count",
+  "status": 200
+ },
+ "GET /api/v1/notifications/unread-count/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "unread_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/unread-count/",
+  "served_by": "notification-unread-count",
+  "status": 200
+ },
+ "PATCH /api/v1/notifications/00000000-0000-4000-8000-000000000000/read/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/<uuid:pk>/read/",
+  "served_by": "notification-mark-read",
+  "status": 401
+ },
+ "PATCH /api/v1/notifications/00000000-0000-4000-8000-000000000000/read/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/<uuid:pk>/read/",
+  "served_by": "notification-mark-read",
+  "status": 401
+ },
+ "PATCH /api/v1/notifications/00000000-0000-4000-8000-000000000000/read/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/notifications/<uuid:pk>/read/",
+  "served_by": "notification-mark-read",
+  "status": 404
+ },
+ "PATCH /api/v1/notifications/00000000-0000-4000-8000-000000000000/read/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/notifications/<uuid:pk>/read/",
+  "served_by": "notification-mark-read",
+  "status": 404
+ },
+ "PATCH /api/v1/notifications/00000000-0000-4000-8000-000000000000/read/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/notifications/<uuid:pk>/read/",
+  "served_by": "notification-mark-read",
+  "status": 404
+ },
+ "PATCH /api/v1/notifications/00000000-0000-4000-8000-000000000000/read/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/notifications/<uuid:pk>/read/",
+  "served_by": "notification-mark-read",
+  "status": 404
+ },
+ "PATCH /api/v1/notifications/settings/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 401
+ },
+ "PATCH /api/v1/notifications/settings/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 401
+ },
+ "PATCH /api/v1/notifications/settings/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 400
+ },
+ "PATCH /api/v1/notifications/settings/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 400
+ },
+ "PATCH /api/v1/notifications/settings/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 400
+ },
+ "PATCH /api/v1/notifications/settings/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 400
+ },
+ "POST /api/v1/notifications/delivery-policy/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 401
+ },
+ "POST /api/v1/notifications/delivery-policy/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 401
+ },
+ "POST /api/v1/notifications/delivery-policy/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 400
+ },
+ "POST /api/v1/notifications/delivery-policy/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 400
+ },
+ "POST /api/v1/notifications/delivery-policy/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 400
+ },
+ "POST /api/v1/notifications/delivery-policy/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/delivery-policy/",
+  "served_by": "notification-delivery-policy",
+  "status": 400
+ },
+ "POST /api/v1/notifications/devices/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/devices/",
+  "served_by": "device-token-create",
+  "status": 401
+ },
+ "POST /api/v1/notifications/devices/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/devices/",
+  "served_by": "device-token-create",
+  "status": 401
+ },
+ "POST /api/v1/notifications/devices/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/",
+  "served_by": "device-token-create",
+  "status": 400
+ },
+ "POST /api/v1/notifications/devices/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/",
+  "served_by": "device-token-create",
+  "status": 400
+ },
+ "POST /api/v1/notifications/devices/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/",
+  "served_by": "device-token-create",
+  "status": 400
+ },
+ "POST /api/v1/notifications/devices/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/",
+  "served_by": "device-token-create",
+  "status": 400
+ },
+ "POST /api/v1/notifications/devices/unregister/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 401
+ },
+ "POST /api/v1/notifications/devices/unregister/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 401
+ },
+ "POST /api/v1/notifications/devices/unregister/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 400
+ },
+ "POST /api/v1/notifications/devices/unregister/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 400
+ },
+ "POST /api/v1/notifications/devices/unregister/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 400
+ },
+ "POST /api/v1/notifications/devices/unregister/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/devices/unregister/",
+  "served_by": "device-token-delete",
+  "status": 400
+ },
+ "POST /api/v1/notifications/mark-all-read/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/mark-all-read/",
+  "served_by": "notification-mark-all-read",
+  "status": 401
+ },
+ "POST /api/v1/notifications/mark-all-read/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/mark-all-read/",
+  "served_by": "notification-mark-all-read",
+  "status": 401
+ },
+ "POST /api/v1/notifications/mark-all-read/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "marked_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/mark-all-read/",
+  "served_by": "notification-mark-all-read",
+  "status": 200
+ },
+ "POST /api/v1/notifications/mark-all-read/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "marked_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/mark-all-read/",
+  "served_by": "notification-mark-all-read",
+  "status": 200
+ },
+ "POST /api/v1/notifications/mark-all-read/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "marked_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/mark-all-read/",
+  "served_by": "notification-mark-all-read",
+  "status": 200
+ },
+ "POST /api/v1/notifications/mark-all-read/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "marked_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/notifications/mark-all-read/",
+  "served_by": "notification-mark-all-read",
+  "status": 200
+ },
+ "PUT /api/v1/notifications/settings/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 401
+ },
+ "PUT /api/v1/notifications/settings/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 401
+ },
+ "PUT /api/v1/notifications/settings/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 400
+ },
+ "PUT /api/v1/notifications/settings/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 400
+ },
+ "PUT /api/v1/notifications/settings/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 400
+ },
+ "PUT /api/v1/notifications/settings/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/notifications/settings/",
+  "served_by": "notification-settings",
+  "status": 400
+ }
+}

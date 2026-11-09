@@ -1,0 +1,470 @@
+{
+ "GET /api/v1/features/v1/rent-invoices/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rent-invoices/",
+  "served_by": "rent-invoices",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/rent-invoices/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/",
+  "served_by": "rent-invoices",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rent-invoices/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rent-invoices/",
+  "served_by": "rent-invoices",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/rent-invoices/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/",
+  "served_by": "rent-invoices",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rent-invoices/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rent-invoices/",
+  "served_by": "rent-invoices",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/rent-invoices/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/",
+  "served_by": "rent-invoices",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/",
+  "served_by": "rent-invoice-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/",
+  "served_by": "rent-invoice-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/",
+  "served_by": "rent-invoice-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/",
+  "served_by": "rent-invoice-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/",
+  "served_by": "rent-invoice-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/",
+  "served_by": "rent-invoice-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/payments/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/payments/",
+  "served_by": "rent-invoice-payments",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/payments/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/payments/",
+  "served_by": "rent-invoice-payments",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/payments/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/payments/",
+  "served_by": "rent-invoice-payments",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/payments/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/payments/",
+  "served_by": "rent-invoice-payments",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/payments/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/payments/",
+  "served_by": "rent-invoice-payments",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/payments/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/payments/",
+  "served_by": "rent-invoice-payments",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/checkout/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "rent-invoice-checkout",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/checkout/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "rent-invoice-checkout",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/checkout/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "rent-invoice-checkout",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/checkout/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "rent-invoice-checkout",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/checkout/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "rent-invoice-checkout",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/checkout/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "rent-invoice-checkout",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/external-payment-claims/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/external-payment-claims/",
+  "served_by": "external-claim-create",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/external-payment-claims/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/external-payment-claims/",
+  "served_by": "external-claim-create",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/external-payment-claims/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/external-payment-claims/",
+  "served_by": "external-claim-create",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/external-payment-claims/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/external-payment-claims/",
+  "served_by": "external-claim-create",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/external-payment-claims/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/external-payment-claims/",
+  "served_by": "external-claim-create",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/external-payment-claims/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/external-payment-claims/",
+  "served_by": "external-claim-create",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/quote/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/quote/",
+  "served_by": "rent-invoice-quote",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/quote/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/quote/",
+  "served_by": "rent-invoice-quote",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/quote/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/quote/",
+  "served_by": "rent-invoice-quote",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/quote/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/quote/",
+  "served_by": "rent-invoice-quote",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/quote/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/quote/",
+  "served_by": "rent-invoice-quote",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/rent-invoices/00000000-0000-4000-8000-000000000000/quote/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/quote/",
+  "served_by": "rent-invoice-quote",
+  "status": 403
+ }
+}

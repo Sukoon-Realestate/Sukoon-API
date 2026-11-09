@@ -1,0 +1,104 @@
+{
+ "POST /api/v1/auth/complete-register/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/complete-register/",
+  "served_by": "complete-register",
+  "status": 401
+ },
+ "POST /api/v1/auth/complete-register/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/complete-register/",
+  "served_by": "complete-register",
+  "status": 401
+ },
+ "POST /api/v1/auth/complete-register/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "evidence_digest",
+   "missing_fields",
+   "registration_complete",
+   "submission_id",
+   "verification_status"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/complete-register/",
+  "served_by": "complete-register",
+  "status": 200
+ },
+ "POST /api/v1/auth/complete-register/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "evidence_digest",
+   "missing_fields",
+   "registration_complete",
+   "submission_id",
+   "verification_status"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/complete-register/",
+  "served_by": "complete-register",
+  "status": 200
+ },
+ "POST /api/v1/auth/complete-register/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "evidence_digest",
+   "missing_fields",
+   "registration_complete",
+   "submission_id",
+   "verification_status"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/complete-register/",
+  "served_by": "complete-register",
+  "status": 200
+ },
+ "POST /api/v1/auth/complete-register/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "evidence_digest",
+   "missing_fields",
+   "registration_complete",
+   "submission_id",
+   "verification_status"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/complete-register/",
+  "served_by": "complete-register",
+  "status": 200
+ }
+}

@@ -1,0 +1,2822 @@
+{
+ "DELETE /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/",
+  "served_by": "conversation-list",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/",
+  "served_by": "conversation-list",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/conversations/",
+  "served_by": "conversation-list",
+  "status": 200
+ },
+ "GET /api/v1/chat/conversations/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/conversations/",
+  "served_by": "conversation-list",
+  "status": 200
+ },
+ "GET /api/v1/chat/conversations/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/conversations/",
+  "served_by": "conversation-list",
+  "status": 200
+ },
+ "GET /api/v1/chat/conversations/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/conversations/",
+  "served_by": "conversation-list",
+  "status": 200
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/",
+  "served_by": "conversation-detail",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/",
+  "served_by": "conversation-detail",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/",
+  "served_by": "conversation-detail",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/",
+  "served_by": "conversation-detail",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/",
+  "served_by": "conversation-detail",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/",
+  "served_by": "conversation-detail",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/by-client-id/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/by-client-id/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/by-client-id/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/by-client-id/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/by-client-id/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/by-client-id/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/chat/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/chat/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/chat/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/chat/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/chat/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/chat/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/chat/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/chat/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/chat/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/chat/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/chat/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/chat/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/events/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/events/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/events/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/events/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/events/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/events/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/events/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/events/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/events/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/events/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/events/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/events/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/library/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/library/",
+  "served_by": "conversation-library",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/library/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/library/",
+  "served_by": "conversation-library",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/library/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/conversations/<uuid:id>/library/",
+  "served_by": "conversation-library",
+  "status": 400
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/library/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/conversations/<uuid:id>/library/",
+  "served_by": "conversation-library",
+  "status": 400
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/library/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/conversations/<uuid:id>/library/",
+  "served_by": "conversation-library",
+  "status": 400
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/library/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/conversations/<uuid:id>/library/",
+  "served_by": "conversation-library",
+  "status": 400
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/members/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/members/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/members/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/members/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/members/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/members/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/members/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/members/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/members/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/members/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/members/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/members/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/",
+  "served_by": "message-list",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/",
+  "served_by": "message-list",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/",
+  "served_by": "message-list",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/",
+  "served_by": "message-list",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/",
+  "served_by": "message-list",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/",
+  "served_by": "message-list",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/context/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/context/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/context/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/context/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/context/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/context/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/context/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/context/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/context/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/context/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/context/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/context/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward-destinations/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward-destinations/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward-destinations/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward-destinations/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward-destinations/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward-destinations/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/readers/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/readers/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/readers/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/readers/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/readers/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/readers/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/by-client-id/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/by-client-id/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/by-client-id/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/by-client-id/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/by-client-id/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/by-client-id/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/starred/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/starred/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/starred/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/starred/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/starred/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/starred/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/starred/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/starred/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/starred/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/starred/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/starred/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/starred/",
+  "served_by": "",
+  "status": 404
+ },
+ "PATCH /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "PATCH /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "PATCH /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "PATCH /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "PATCH /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "PATCH /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/preferences/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/transcription/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/forward/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/forward/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/forward/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/forward/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/forward/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/forward/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/forward/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/forward/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/forward/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/forward/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/forward/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/forward/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/forward/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/close/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/close/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/close/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/close/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/close/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/close/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/create/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/create/",
+  "served_by": "message-create",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/create/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/create/",
+  "served_by": "message-create",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/create/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/create/",
+  "served_by": "message-create",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/create/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/create/",
+  "served_by": "message-create",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/create/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/create/",
+  "served_by": "message-create",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/create/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/create/",
+  "served_by": "message-create",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/policy/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/read/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/read/",
+  "served_by": "conversation-read",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/read/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/read/",
+  "served_by": "conversation-read",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/read/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/read/",
+  "served_by": "conversation-read",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/read/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/read/",
+  "served_by": "conversation-read",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/read/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/read/",
+  "served_by": "conversation-read",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/read/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/read/",
+  "served_by": "conversation-read",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/rental-context/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/rental-context/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/rental-context/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/rental-context/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/rental-context/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/rental-context/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/rental-context/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/rental-context/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/rental-context/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/rental-context/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/rental-context/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/rental-context/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/chat/conversations/create/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/create/",
+  "served_by": "conversation-create",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/create/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/create/",
+  "served_by": "conversation-create",
+  "status": 401
+ },
+ "POST /api/v1/chat/conversations/create/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/conversations/create/",
+  "served_by": "conversation-create",
+  "status": 400
+ },
+ "POST /api/v1/chat/conversations/create/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/conversations/create/",
+  "served_by": "conversation-create",
+  "status": 400
+ },
+ "POST /api/v1/chat/conversations/create/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/conversations/create/",
+  "served_by": "conversation-create",
+  "status": 400
+ },
+ "POST /api/v1/chat/conversations/create/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/conversations/create/",
+  "served_by": "conversation-create",
+  "status": 400
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/00000000-0000-4000-8000-000000000000/seen/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/00000000-0000-4000-8000-000000000000/seen/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/00000000-0000-4000-8000-000000000000/seen/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/00000000-0000-4000-8000-000000000000/seen/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/00000000-0000-4000-8000-000000000000/seen/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/mentions/00000000-0000-4000-8000-000000000000/seen/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/pin/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/pin/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/pin/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/pin/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/pin/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/pin/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/vote/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/vote/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/vote/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/vote/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/vote/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/poll/vote/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/reaction/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/reaction/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/reaction/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/reaction/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/reaction/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/reaction/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/star/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/star/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/star/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/star/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/star/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/star/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/star/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/star/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/star/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/star/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/chat/conversations/00000000-0000-4000-8000-000000000000/messages/00000000-0000-4000-8000-000000000000/star/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/star/",
+  "served_by": "",
+  "status": 404
+ }
+}

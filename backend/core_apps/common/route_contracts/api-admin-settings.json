@@ -1,0 +1,158 @@
+{
+ "GET /api/v1/admin/settings/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 401
+ },
+ "GET /api/v1/admin/settings/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 401
+ },
+ "GET /api/v1/admin/settings/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 200
+ },
+ "GET /api/v1/admin/settings/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 200
+ },
+ "GET /api/v1/admin/settings/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 403
+ },
+ "GET /api/v1/admin/settings/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 403
+ },
+ "POST /api/v1/admin/settings/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 401
+ },
+ "POST /api/v1/admin/settings/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 401
+ },
+ "POST /api/v1/admin/settings/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 200
+ },
+ "POST /api/v1/admin/settings/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 200
+ },
+ "POST /api/v1/admin/settings/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 403
+ },
+ "POST /api/v1/admin/settings/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/settings/",
+  "served_by": "admin-settings",
+  "status": 403
+ }
+}

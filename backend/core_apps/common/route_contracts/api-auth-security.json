@@ -1,0 +1,1184 @@
+{
+ "GET /api/v1/auth/security/sessions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/security/sessions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/security/sessions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "results",
+   "sensitive_actions_frozen"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/security/sessions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "results",
+   "sensitive_actions_frozen"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/security/sessions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "results",
+   "sensitive_actions_frozen"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/security/sessions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "results",
+   "sensitive_actions_frozen"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/security/totp/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/security/totp/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/security/totp/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/security/totp/review/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/security/totp/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/review/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/review/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/staff-identities/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/staff-identities/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/security/totp/staff-identities/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/staff-identities/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/security/totp/staff-identities/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/staff-identities/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/staff-identities/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/staff-identities/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/staff-identities/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/staff-identities/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/security/totp/staff-identities/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/staff-identities/",
+  "served_by": "",
+  "status": 403
+ },
+ "PATCH /api/v1/auth/security/sessions/current/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/sessions/current/",
+  "served_by": "",
+  "status": 401
+ },
+ "PATCH /api/v1/auth/security/sessions/current/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/sessions/current/",
+  "served_by": "",
+  "status": 401
+ },
+ "PATCH /api/v1/auth/security/sessions/current/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "reauthentication_required",
+  "route": "api/v1/auth/security/sessions/current/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/auth/security/sessions/current/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "reauthentication_required",
+  "route": "api/v1/auth/security/sessions/current/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/auth/security/sessions/current/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "reauthentication_required",
+  "route": "api/v1/auth/security/sessions/current/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/auth/security/sessions/current/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "reauthentication_required",
+  "route": "api/v1/auth/security/sessions/current/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/challenges/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/challenges/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/challenges/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/challenges/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/challenges/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/challenges/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/challenges/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/challenges/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/challenges/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/challenges/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/challenges/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/challenges/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/challenges/00000000-0000-4000-8000-000000000000/verify/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/challenges/<uuid:identity>/verify/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/challenges/00000000-0000-4000-8000-000000000000/verify/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/challenges/<uuid:identity>/verify/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/challenges/00000000-0000-4000-8000-000000000000/verify/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/challenges/<uuid:identity>/verify/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/challenges/00000000-0000-4000-8000-000000000000/verify/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/challenges/<uuid:identity>/verify/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/challenges/00000000-0000-4000-8000-000000000000/verify/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/challenges/<uuid:identity>/verify/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/challenges/00000000-0000-4000-8000-000000000000/verify/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/challenges/<uuid:identity>/verify/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/sessions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/sessions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/sessions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/sessions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/sessions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/sessions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/sessions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/enrollments/00000000-0000-4000-8000-000000000000/confirm/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/enrollments/00000000-0000-4000-8000-000000000000/confirm/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/enrollments/00000000-0000-4000-8000-000000000000/confirm/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/enrollments/00000000-0000-4000-8000-000000000000/confirm/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/enrollments/00000000-0000-4000-8000-000000000000/confirm/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/enrollments/00000000-0000-4000-8000-000000000000/confirm/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/initial-enrollment/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/initial-enrollment/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/initial-enrollment/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/initial-enrollment/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/initial-enrollment/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/initial-enrollment/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/security/totp/initial-enrollment/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/initial-enrollment/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/security/totp/initial-enrollment/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/initial-enrollment/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/security/totp/initial-enrollment/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/initial-enrollment/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/security/totp/recoveries/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/recoveries/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/recoveries/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/recoveries/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/recoveries/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/enroll/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/enroll/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/enroll/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/enroll/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/enroll/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/enroll/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/respond/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/respond/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/respond/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/respond/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/respond/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/respond/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/review/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/recoveries/00000000-0000-4000-8000-000000000000/review/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/staff-identities/00000000-0000-4000-8000-000000000000/document/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/staff-identities/00000000-0000-4000-8000-000000000000/document/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/security/totp/staff-identities/00000000-0000-4000-8000-000000000000/document/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/staff-identities/00000000-0000-4000-8000-000000000000/document/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/staff-identities/00000000-0000-4000-8000-000000000000/document/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/security/totp/staff-identities/00000000-0000-4000-8000-000000000000/document/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/",
+  "served_by": "",
+  "status": 400
+ }
+}

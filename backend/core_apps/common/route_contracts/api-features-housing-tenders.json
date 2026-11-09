@@ -1,0 +1,785 @@
+{
+ "GET /api/v1/features/v1/housing-tenders/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-tenders/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/housing-tenders/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-tenders/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/automatic-package-runs/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/bids/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/package-runs/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/<str:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-tenders/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ }
+}

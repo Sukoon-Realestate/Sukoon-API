@@ -1,0 +1,968 @@
+{
+ "GET /api/v1/features/v1/billing/entitlements/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/entitlements/",
+  "served_by": "billing-entitlements",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/billing/entitlements/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/entitlements/",
+  "served_by": "billing-entitlements",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/entitlements/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/entitlements/",
+  "served_by": "billing-entitlements",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/billing/entitlements/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/entitlements/",
+  "served_by": "billing-entitlements",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/entitlements/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/entitlements/",
+  "served_by": "billing-entitlements",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/billing/entitlements/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/entitlements/",
+  "served_by": "billing-entitlements",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoice-operations/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/invoice-operations/<uuid:request_key>/",
+  "served_by": "billing-invoice-operation",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/billing/invoice-operations/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoice-operations/<uuid:request_key>/",
+  "served_by": "billing-invoice-operation",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoice-operations/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "absence_confirmed",
+   "invoice"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/billing/invoice-operations/<uuid:request_key>/",
+  "served_by": "billing-invoice-operation",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/billing/invoice-operations/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoice-operations/<uuid:request_key>/",
+  "served_by": "billing-invoice-operation",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoice-operations/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "absence_confirmed",
+   "invoice"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/billing/invoice-operations/<uuid:request_key>/",
+  "served_by": "billing-invoice-operation",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/billing/invoice-operations/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoice-operations/<uuid:request_key>/",
+  "served_by": "billing-invoice-operation",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoices/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/billing/invoices/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoices/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/billing/invoices/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoices/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/billing/invoices/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/",
+  "served_by": "billing-invoice",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/",
+  "served_by": "billing-invoice",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/",
+  "served_by": "billing-invoice",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/",
+  "served_by": "billing-invoice",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/",
+  "served_by": "billing-invoice",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/",
+  "served_by": "billing-invoice",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/purchase-routing/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/purchase-routing/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/billing/purchase-routing/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/purchase-routing/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/purchase-routing/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "category",
+   "contract_version",
+   "enabled",
+   "message",
+   "product_id",
+   "product_type",
+   "reason",
+   "route"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/billing/purchase-routing/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/billing/purchase-routing/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/purchase-routing/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/purchase-routing/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "category",
+   "contract_version",
+   "enabled",
+   "message",
+   "product_id",
+   "product_type",
+   "reason",
+   "route"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/billing/purchase-routing/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/billing/purchase-routing/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/purchase-routing/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/store/context/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/store/context/",
+  "served_by": "billing-store-context",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/billing/store/context/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/context/",
+  "served_by": "billing-store-context",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/store/context/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/store/context/",
+  "served_by": "billing-store-context",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/billing/store/context/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/context/",
+  "served_by": "billing-store-context",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/billing/store/context/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/store/context/",
+  "served_by": "billing-store-context",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/billing/store/context/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/context/",
+  "served_by": "billing-store-context",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/billing/invoices/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/billing/invoices/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/billing/invoices/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/",
+  "served_by": "billing-invoices",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/cancel/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/cancel/",
+  "served_by": "billing-cancel",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/cancel/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/cancel/",
+  "served_by": "billing-cancel",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/cancel/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/cancel/",
+  "served_by": "billing-cancel",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/cancel/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/cancel/",
+  "served_by": "billing-cancel",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/cancel/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/cancel/",
+  "served_by": "billing-cancel",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/cancel/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/cancel/",
+  "served_by": "billing-cancel",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/checkout/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "billing-checkout",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/checkout/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "billing-checkout",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/checkout/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "billing-checkout",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/checkout/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "billing-checkout",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/checkout/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "billing-checkout",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/checkout/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/checkout/",
+  "served_by": "billing-checkout",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/quote/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/quote/",
+  "served_by": "billing-quote",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/quote/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/quote/",
+  "served_by": "billing-quote",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/quote/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/quote/",
+  "served_by": "billing-quote",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/quote/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/quote/",
+  "served_by": "billing-quote",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/quote/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/quote/",
+  "served_by": "billing-quote",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/billing/invoices/00000000-0000-4000-8000-000000000000/quote/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/quote/",
+  "served_by": "billing-quote",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/store/notifications/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/store/notifications/<str:platform>/",
+  "served_by": "billing-store-notification",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/billing/store/notifications/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/notifications/<str:platform>/",
+  "served_by": "billing-store-notification",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/store/notifications/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/store/notifications/<str:platform>/",
+  "served_by": "billing-store-notification",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/billing/store/notifications/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/notifications/<str:platform>/",
+  "served_by": "billing-store-notification",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/store/notifications/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/store/notifications/<str:platform>/",
+  "served_by": "billing-store-notification",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/billing/store/notifications/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/notifications/<str:platform>/",
+  "served_by": "billing-store-notification",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/store/verify/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/billing/store/verify/",
+  "served_by": "billing-store-verify",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/billing/store/verify/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/verify/",
+  "served_by": "billing-store-verify",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/store/verify/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/store/verify/",
+  "served_by": "billing-store-verify",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/billing/store/verify/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/verify/",
+  "served_by": "billing-store-verify",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/billing/store/verify/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/billing/store/verify/",
+  "served_by": "billing-store-verify",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/billing/store/verify/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/billing/store/verify/",
+  "served_by": "billing-store-verify",
+  "status": 403
+ }
+}

@@ -1,0 +1,720 @@
+{
+ "GET /api/v1/admin/kyc/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/",
+  "served_by": "admin-kyc-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/",
+  "served_by": "admin-kyc-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/kyc/",
+  "served_by": "admin-kyc-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/kyc/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/kyc/",
+  "served_by": "admin-kyc-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/kyc/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/",
+  "served_by": "admin-kyc-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/",
+  "served_by": "admin-kyc-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/",
+  "served_by": "admin-kyc-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/",
+  "served_by": "admin-kyc-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/",
+  "served_by": "admin-kyc-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/",
+  "served_by": "admin-kyc-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/",
+  "served_by": "admin-kyc-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/",
+  "served_by": "admin-kyc-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/media/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/media/<slug:field>/",
+  "served_by": "admin-kyc-media",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/media/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/media/<slug:field>/",
+  "served_by": "admin-kyc-media",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/media/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/media/<slug:field>/",
+  "served_by": "admin-kyc-media",
+  "status": 404
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/media/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/media/<slug:field>/",
+  "served_by": "admin-kyc-media",
+  "status": 404
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/media/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/media/<slug:field>/",
+  "served_by": "admin-kyc-media",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/media/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/media/<slug:field>/",
+  "served_by": "admin-kyc-media",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/metrics/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/metrics/",
+  "served_by": "admin-kyc-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/metrics/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/metrics/",
+  "served_by": "admin-kyc-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/metrics/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "acceptedToday",
+   "pendingReview",
+   "rejectedToday",
+   "reviewedToday"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/kyc/metrics/",
+  "served_by": "admin-kyc-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/kyc/metrics/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "acceptedToday",
+   "pendingReview",
+   "rejectedToday",
+   "reviewedToday"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/kyc/metrics/",
+  "served_by": "admin-kyc-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/kyc/metrics/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/metrics/",
+  "served_by": "admin-kyc-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/metrics/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/metrics/",
+  "served_by": "admin-kyc-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<str:submission_id>/",
+  "served_by": "admin-kyc-detail-str",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<str:submission_id>/",
+  "served_by": "admin-kyc-detail-str",
+  "status": 401
+ },
+ "GET /api/v1/admin/kyc/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<str:submission_id>/",
+  "served_by": "admin-kyc-detail-str",
+  "status": 404
+ },
+ "GET /api/v1/admin/kyc/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<str:submission_id>/",
+  "served_by": "admin-kyc-detail-str",
+  "status": 404
+ },
+ "GET /api/v1/admin/kyc/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<str:submission_id>/",
+  "served_by": "admin-kyc-detail-str",
+  "status": 403
+ },
+ "GET /api/v1/admin/kyc/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<str:submission_id>/",
+  "served_by": "admin-kyc-detail-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/approve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/approve/",
+  "served_by": "admin-kyc-approve",
+  "status": 401
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/approve/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/approve/",
+  "served_by": "admin-kyc-approve",
+  "status": 401
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/approve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/approve/",
+  "served_by": "admin-kyc-approve",
+  "status": 404
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/approve/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/approve/",
+  "served_by": "admin-kyc-approve",
+  "status": 404
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/approve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/approve/",
+  "served_by": "admin-kyc-approve",
+  "status": 403
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/approve/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/approve/",
+  "served_by": "admin-kyc-approve",
+  "status": 403
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/reject/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/reject/",
+  "served_by": "admin-kyc-reject",
+  "status": 401
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/reject/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/reject/",
+  "served_by": "admin-kyc-reject",
+  "status": 401
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/reject/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/reject/",
+  "served_by": "admin-kyc-reject",
+  "status": 400
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/reject/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/reject/",
+  "served_by": "admin-kyc-reject",
+  "status": 400
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/reject/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/reject/",
+  "served_by": "admin-kyc-reject",
+  "status": 403
+ },
+ "POST /api/v1/admin/kyc/00000000-0000-4000-8000-000000000000/reject/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<uuid:submission_id>/reject/",
+  "served_by": "admin-kyc-reject",
+  "status": 403
+ },
+ "POST /api/v1/admin/kyc/sample/approve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<str:submission_id>/approve/",
+  "served_by": "admin-kyc-approve-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/kyc/sample/approve/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<str:submission_id>/approve/",
+  "served_by": "admin-kyc-approve-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/kyc/sample/approve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<str:submission_id>/approve/",
+  "served_by": "admin-kyc-approve-str",
+  "status": 404
+ },
+ "POST /api/v1/admin/kyc/sample/approve/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/kyc/<str:submission_id>/approve/",
+  "served_by": "admin-kyc-approve-str",
+  "status": 404
+ },
+ "POST /api/v1/admin/kyc/sample/approve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<str:submission_id>/approve/",
+  "served_by": "admin-kyc-approve-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/kyc/sample/approve/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<str:submission_id>/approve/",
+  "served_by": "admin-kyc-approve-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/kyc/sample/reject/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<str:submission_id>/reject/",
+  "served_by": "admin-kyc-reject-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/kyc/sample/reject/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/kyc/<str:submission_id>/reject/",
+  "served_by": "admin-kyc-reject-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/kyc/sample/reject/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/kyc/<str:submission_id>/reject/",
+  "served_by": "admin-kyc-reject-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/kyc/sample/reject/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/kyc/<str:submission_id>/reject/",
+  "served_by": "admin-kyc-reject-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/kyc/sample/reject/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<str:submission_id>/reject/",
+  "served_by": "admin-kyc-reject-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/kyc/sample/reject/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/kyc/<str:submission_id>/reject/",
+  "served_by": "admin-kyc-reject-str",
+  "status": 403
+ }
+}

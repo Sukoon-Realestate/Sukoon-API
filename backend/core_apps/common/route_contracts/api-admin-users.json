@@ -1,0 +1,584 @@
+{
+ "GET /api/v1/admin/users/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/",
+  "served_by": "admin-users-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/users/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/",
+  "served_by": "admin-users-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/users/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "email",
+    "first_name",
+    "id",
+    "is_active",
+    "is_verified",
+    "kycStatus",
+    "last_name",
+    "name",
+    "phone",
+    "regDate",
+    "reportsAgainst",
+    "status",
+    "type",
+    "visitRequests"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/users/",
+  "served_by": "admin-users-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/users/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "email",
+    "first_name",
+    "id",
+    "is_active",
+    "is_verified",
+    "kycStatus",
+    "last_name",
+    "name",
+    "phone",
+    "regDate",
+    "reportsAgainst",
+    "status",
+    "type",
+    "visitRequests"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/users/",
+  "served_by": "admin-users-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/users/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/",
+  "served_by": "admin-users-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/users/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/",
+  "served_by": "admin-users-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/users/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<uuid:user_id>/",
+  "served_by": "admin-user-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/users/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<uuid:user_id>/",
+  "served_by": "admin-user-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/users/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<uuid:user_id>/",
+  "served_by": "admin-user-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/users/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<uuid:user_id>/",
+  "served_by": "admin-user-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/users/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<uuid:user_id>/",
+  "served_by": "admin-user-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/users/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<uuid:user_id>/",
+  "served_by": "admin-user-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/users/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<str:user_id>/",
+  "served_by": "admin-user-detail-str",
+  "status": 401
+ },
+ "GET /api/v1/admin/users/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<str:user_id>/",
+  "served_by": "admin-user-detail-str",
+  "status": 401
+ },
+ "GET /api/v1/admin/users/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<str:user_id>/",
+  "served_by": "admin-user-detail-str",
+  "status": 404
+ },
+ "GET /api/v1/admin/users/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<str:user_id>/",
+  "served_by": "admin-user-detail-str",
+  "status": 404
+ },
+ "GET /api/v1/admin/users/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<str:user_id>/",
+  "served_by": "admin-user-detail-str",
+  "status": 403
+ },
+ "GET /api/v1/admin/users/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<str:user_id>/",
+  "served_by": "admin-user-detail-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/suspend/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<uuid:user_id>/suspend/",
+  "served_by": "admin-user-suspend",
+  "status": 401
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/suspend/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<uuid:user_id>/suspend/",
+  "served_by": "admin-user-suspend",
+  "status": 401
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/suspend/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<uuid:user_id>/suspend/",
+  "served_by": "admin-user-suspend",
+  "status": 404
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/suspend/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<uuid:user_id>/suspend/",
+  "served_by": "admin-user-suspend",
+  "status": 404
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/suspend/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<uuid:user_id>/suspend/",
+  "served_by": "admin-user-suspend",
+  "status": 403
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/suspend/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<uuid:user_id>/suspend/",
+  "served_by": "admin-user-suspend",
+  "status": 403
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/unsuspend/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<uuid:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend",
+  "status": 401
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/unsuspend/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<uuid:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend",
+  "status": 401
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/unsuspend/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<uuid:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend",
+  "status": 404
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/unsuspend/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<uuid:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend",
+  "status": 404
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/unsuspend/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<uuid:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend",
+  "status": 403
+ },
+ "POST /api/v1/admin/users/00000000-0000-4000-8000-000000000000/unsuspend/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<uuid:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend",
+  "status": 403
+ },
+ "POST /api/v1/admin/users/sample/suspend/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<str:user_id>/suspend/",
+  "served_by": "admin-user-suspend-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/users/sample/suspend/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<str:user_id>/suspend/",
+  "served_by": "admin-user-suspend-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/users/sample/suspend/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<str:user_id>/suspend/",
+  "served_by": "admin-user-suspend-str",
+  "status": 404
+ },
+ "POST /api/v1/admin/users/sample/suspend/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<str:user_id>/suspend/",
+  "served_by": "admin-user-suspend-str",
+  "status": 404
+ },
+ "POST /api/v1/admin/users/sample/suspend/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<str:user_id>/suspend/",
+  "served_by": "admin-user-suspend-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/users/sample/suspend/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<str:user_id>/suspend/",
+  "served_by": "admin-user-suspend-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/users/sample/unsuspend/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<str:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/users/sample/unsuspend/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/users/<str:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/users/sample/unsuspend/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<str:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend-str",
+  "status": 404
+ },
+ "POST /api/v1/admin/users/sample/unsuspend/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/users/<str:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend-str",
+  "status": 404
+ },
+ "POST /api/v1/admin/users/sample/unsuspend/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<str:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/users/sample/unsuspend/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/users/<str:user_id>/unsuspend/",
+  "served_by": "admin-user-unsuspend-str",
+  "status": 403
+ }
+}

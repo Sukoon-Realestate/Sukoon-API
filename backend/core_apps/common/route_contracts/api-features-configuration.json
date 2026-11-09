@@ -1,0 +1,80 @@
+{
+ "GET /api/v1/features/v1/configuration/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/configuration/",
+  "served_by": "feature-configuration",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/configuration/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/configuration/",
+  "served_by": "feature-configuration",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/configuration/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/configuration/",
+  "served_by": "feature-configuration",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/configuration/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/configuration/",
+  "served_by": "feature-configuration",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/configuration/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/configuration/",
+  "served_by": "feature-configuration",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/configuration/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/configuration/",
+  "served_by": "feature-configuration",
+  "status": 400
+ }
+}

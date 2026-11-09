@@ -1,0 +1,100 @@
+{
+ "GET /api/v1/admin/permissions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/permissions/",
+  "served_by": "admin-permissions-matrix",
+  "status": 401
+ },
+ "GET /api/v1/admin/permissions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/permissions/",
+  "served_by": "admin-permissions-matrix",
+  "status": 401
+ },
+ "GET /api/v1/admin/permissions/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "action",
+    "kycReviewer",
+    "mainAdmin",
+    "propertyReviewer",
+    "support",
+    "systemOwner"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/permissions/",
+  "served_by": "admin-permissions-matrix",
+  "status": 200
+ },
+ "GET /api/v1/admin/permissions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "action",
+    "kycReviewer",
+    "mainAdmin",
+    "propertyReviewer",
+    "support",
+    "systemOwner"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/permissions/",
+  "served_by": "admin-permissions-matrix",
+  "status": 200
+ },
+ "GET /api/v1/admin/permissions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/permissions/",
+  "served_by": "admin-permissions-matrix",
+  "status": 403
+ },
+ "GET /api/v1/admin/permissions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/permissions/",
+  "served_by": "admin-permissions-matrix",
+  "status": 403
+ }
+}

@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/admin/review-recovery/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/review-recovery/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/review-recovery/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/review-recovery/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/review-recovery/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_review_target",
+  "route": "api/v1/admin/review-recovery/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/review-recovery/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/review-recovery/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/review-recovery/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_review_target",
+  "route": "api/v1/admin/review-recovery/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/review-recovery/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/review-recovery/",
+  "served_by": "",
+  "status": 403
+ }
+}

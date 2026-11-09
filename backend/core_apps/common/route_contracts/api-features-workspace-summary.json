@@ -1,0 +1,114 @@
+{
+ "GET /api/v1/features/v1/workspace-summary/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/workspace-summary/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/workspace-summary/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/workspace-summary/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/workspace-summary/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "company_approval_counts",
+   "company_chat_counts",
+   "favorites_count",
+   "group_join_requests_count",
+   "request_counts",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count",
+   "workspace_chat_counts"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/workspace-summary/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/workspace-summary/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "company_chat_counts",
+   "favorites_count",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count",
+   "workspace_chat_counts"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/workspace-summary/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/workspace-summary/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "company_approval_counts",
+   "company_chat_counts",
+   "favorites_count",
+   "group_join_requests_count",
+   "request_counts",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count",
+   "workspace_chat_counts"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/workspace-summary/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/workspace-summary/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "company_chat_counts",
+   "favorites_count",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count",
+   "workspace_chat_counts"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/workspace-summary/",
+  "served_by": "",
+  "status": 200
+ }
+}

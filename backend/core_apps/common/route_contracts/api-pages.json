@@ -1,0 +1,536 @@
+{
+ "GET /api/v1/pages/about-us/ anonymous mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/about-us/",
+  "served_by": "page-about-us",
+  "status": 200
+ },
+ "GET /api/v1/pages/about-us/ anonymous mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/about-us/",
+  "served_by": "page-about-us",
+  "status": 200
+ },
+ "GET /api/v1/pages/about-us/ staff mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/about-us/",
+  "served_by": "page-about-us",
+  "status": 200
+ },
+ "GET /api/v1/pages/about-us/ staff mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/about-us/",
+  "served_by": "page-about-us",
+  "status": 200
+ },
+ "GET /api/v1/pages/about-us/ tenant mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/about-us/",
+  "served_by": "page-about-us",
+  "status": 200
+ },
+ "GET /api/v1/pages/about-us/ tenant mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/about-us/",
+  "served_by": "page-about-us",
+  "status": 200
+ },
+ "GET /api/v1/pages/privacy-policy/ anonymous mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/privacy-policy/",
+  "served_by": "page-privacy-policy",
+  "status": 200
+ },
+ "GET /api/v1/pages/privacy-policy/ anonymous mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/privacy-policy/",
+  "served_by": "page-privacy-policy",
+  "status": 200
+ },
+ "GET /api/v1/pages/privacy-policy/ staff mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/privacy-policy/",
+  "served_by": "page-privacy-policy",
+  "status": 200
+ },
+ "GET /api/v1/pages/privacy-policy/ staff mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/privacy-policy/",
+  "served_by": "page-privacy-policy",
+  "status": 200
+ },
+ "GET /api/v1/pages/privacy-policy/ tenant mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/privacy-policy/",
+  "served_by": "page-privacy-policy",
+  "status": 200
+ },
+ "GET /api/v1/pages/privacy-policy/ tenant mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/privacy-policy/",
+  "served_by": "page-privacy-policy",
+  "status": 200
+ },
+ "GET /api/v1/pages/release-notes/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/pages/release-notes/",
+  "served_by": "release-notes",
+  "status": 400
+ },
+ "GET /api/v1/pages/release-notes/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/pages/release-notes/",
+  "served_by": "release-notes",
+  "status": 400
+ },
+ "GET /api/v1/pages/release-notes/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/pages/release-notes/",
+  "served_by": "release-notes",
+  "status": 400
+ },
+ "GET /api/v1/pages/release-notes/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/pages/release-notes/",
+  "served_by": "release-notes",
+  "status": 400
+ },
+ "GET /api/v1/pages/release-notes/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/pages/release-notes/",
+  "served_by": "release-notes",
+  "status": 400
+ },
+ "GET /api/v1/pages/release-notes/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/pages/release-notes/",
+  "served_by": "release-notes",
+  "status": 400
+ },
+ "GET /api/v1/pages/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/pages/<str:slug>/",
+  "served_by": "page-dynamic",
+  "status": 404
+ },
+ "GET /api/v1/pages/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/pages/<str:slug>/",
+  "served_by": "page-dynamic",
+  "status": 404
+ },
+ "GET /api/v1/pages/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/pages/<str:slug>/",
+  "served_by": "page-dynamic",
+  "status": 404
+ },
+ "GET /api/v1/pages/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/pages/<str:slug>/",
+  "served_by": "page-dynamic",
+  "status": 404
+ },
+ "GET /api/v1/pages/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/pages/<str:slug>/",
+  "served_by": "page-dynamic",
+  "status": 404
+ },
+ "GET /api/v1/pages/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/pages/<str:slug>/",
+  "served_by": "page-dynamic",
+  "status": 404
+ },
+ "GET /api/v1/pages/terms/ anonymous mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/terms/",
+  "served_by": "page-terms",
+  "status": 200
+ },
+ "GET /api/v1/pages/terms/ anonymous mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/terms/",
+  "served_by": "page-terms",
+  "status": 200
+ },
+ "GET /api/v1/pages/terms/ staff mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/terms/",
+  "served_by": "page-terms",
+  "status": 200
+ },
+ "GET /api/v1/pages/terms/ staff mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/terms/",
+  "served_by": "page-terms",
+  "status": 200
+ },
+ "GET /api/v1/pages/terms/ tenant mvp=off": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/terms/",
+  "served_by": "page-terms",
+  "status": 200
+ },
+ "GET /api/v1/pages/terms/ tenant mvp=on": {
+  "cache_control": "public, max-age=0, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "content",
+   "content_format",
+   "language",
+   "revision",
+   "slug",
+   "title",
+   "updated_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/pages/terms/",
+  "served_by": "page-terms",
+  "status": 200
+ }
+}

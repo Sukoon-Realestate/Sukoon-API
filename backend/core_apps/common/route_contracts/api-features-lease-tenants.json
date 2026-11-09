@@ -1,0 +1,80 @@
+{
+ "GET /api/v1/features/v1/lease-tenants/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/lease-tenants/",
+  "served_by": "lease-tenants",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/lease-tenants/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lease-tenants/",
+  "served_by": "lease-tenants",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/lease-tenants/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/lease-tenants/",
+  "served_by": "lease-tenants",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/lease-tenants/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lease-tenants/",
+  "served_by": "lease-tenants",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/lease-tenants/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/lease-tenants/",
+  "served_by": "lease-tenants",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/lease-tenants/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lease-tenants/",
+  "served_by": "lease-tenants",
+  "status": 403
+ }
+}

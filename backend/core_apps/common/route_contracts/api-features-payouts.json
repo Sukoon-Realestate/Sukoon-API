@@ -1,0 +1,158 @@
+{
+ "GET /api/v1/features/v1/payouts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/payouts/",
+  "served_by": "rental-payouts",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/payouts/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payouts/",
+  "served_by": "rental-payouts",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payouts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/payouts/",
+  "served_by": "rental-payouts",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/payouts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payouts/",
+  "served_by": "rental-payouts",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payouts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/payouts/",
+  "served_by": "rental-payouts",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/payouts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payouts/",
+  "served_by": "rental-payouts",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payouts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/payouts/<uuid:payout_id>/",
+  "served_by": "rental-payout-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/payouts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payouts/<uuid:payout_id>/",
+  "served_by": "rental-payout-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payouts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/payouts/<uuid:payout_id>/",
+  "served_by": "rental-payout-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/payouts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payouts/<uuid:payout_id>/",
+  "served_by": "rental-payout-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/payouts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/payouts/<uuid:payout_id>/",
+  "served_by": "rental-payout-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/payouts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/payouts/<uuid:payout_id>/",
+  "served_by": "rental-payout-detail",
+  "status": 403
+ }
+}

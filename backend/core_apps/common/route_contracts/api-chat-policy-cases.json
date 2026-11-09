@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/chat/policy-cases/00000000-0000-4000-8000-000000000000/appeal/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/policy-cases/<uuid:id>/appeal/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/policy-cases/00000000-0000-4000-8000-000000000000/appeal/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/policy-cases/<uuid:id>/appeal/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/policy-cases/00000000-0000-4000-8000-000000000000/appeal/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/policy-cases/<uuid:id>/appeal/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/policy-cases/00000000-0000-4000-8000-000000000000/appeal/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/policy-cases/<uuid:id>/appeal/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/policy-cases/00000000-0000-4000-8000-000000000000/appeal/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/policy-cases/<uuid:id>/appeal/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/policy-cases/00000000-0000-4000-8000-000000000000/appeal/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/policy-cases/<uuid:id>/appeal/",
+  "served_by": "",
+  "status": 400
+ }
+}

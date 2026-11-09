@@ -1,0 +1,422 @@
+{
+ "GET /api/v1/chat/admin/policy-cases/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-cases/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/admin/policy-cases/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-cases/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/admin/policy-cases/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/admin/policy-cases/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/admin/policy-cases/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/admin/policy-cases/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/admin/policy-cases/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/admin/policy-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/admin/policy-cases/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/admin/policy-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/attachments/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/attachments/<uuid:attachment_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/admin/policy-status/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-status/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/admin/policy-status/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-status/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/admin/policy-status/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "batches",
+   "daily_limit",
+   "daily_requests",
+   "last_failure_code",
+   "last_success_at",
+   "mode",
+   "model",
+   "overdue_reviews",
+   "pending",
+   "private_inputs_approved",
+   "provider_configured"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/admin/policy-status/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/admin/policy-status/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "batches",
+   "daily_limit",
+   "daily_requests",
+   "last_failure_code",
+   "last_success_at",
+   "mode",
+   "model",
+   "overdue_reviews",
+   "pending",
+   "private_inputs_approved",
+   "provider_configured"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/admin/policy-status/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/admin/policy-status/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/admin/policy-status/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/admin/policy-status/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/admin/policy-status/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/chat/admin/policy-cases/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+  "served_by": "",
+  "status": 400
+ }
+}

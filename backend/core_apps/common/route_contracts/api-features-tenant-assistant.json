@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/features/v1/tenant-assistant/turns/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenant-assistant/turns/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/tenant-assistant/turns/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenant-assistant/turns/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/tenant-assistant/turns/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/tenant-assistant/turns/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenant-assistant/turns/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/tenant-assistant/turns/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenant-assistant/turns/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenant-assistant/turns/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/tenant-assistant/turns/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenant-assistant/turns/",
+  "served_by": "",
+  "status": 400
+ }
+}

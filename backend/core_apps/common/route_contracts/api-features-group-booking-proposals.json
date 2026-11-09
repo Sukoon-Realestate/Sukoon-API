@@ -1,0 +1,1724 @@
+{
+ "GET /api/v1/features/v1/group-booking-proposals/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/consents/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/submit/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/accept/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/counter/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/edit/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/reject/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/request-changes/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/terms/withdraw/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/group-booking-proposals/00000000-0000-4000-8000-000000000000/withdraw/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ }
+}

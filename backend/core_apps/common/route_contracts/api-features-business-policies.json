@@ -1,0 +1,176 @@
+{
+ "GET /api/v1/features/v1/business-policies/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "application",
+   "items"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/",
+  "served_by": "business-policies",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/business-policies/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "application",
+   "items"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/",
+  "served_by": "business-policies",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/business-policies/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "application",
+   "items"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/",
+  "served_by": "business-policies",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/business-policies/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "application",
+   "items"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/",
+  "served_by": "business-policies",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/business-policies/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "application",
+   "items"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/",
+  "served_by": "business-policies",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/business-policies/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "application",
+   "items"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/",
+  "served_by": "business-policies",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/business-policies/sample/versions/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/<str:code>/versions/<str:version>/",
+  "served_by": "business-policy-version",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/business-policies/sample/versions/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/<str:code>/versions/<str:version>/",
+  "served_by": "business-policy-version",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/business-policies/sample/versions/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/<str:code>/versions/<str:version>/",
+  "served_by": "business-policy-version",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/business-policies/sample/versions/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/<str:code>/versions/<str:version>/",
+  "served_by": "business-policy-version",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/business-policies/sample/versions/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/<str:code>/versions/<str:version>/",
+  "served_by": "business-policy-version",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/business-policies/sample/versions/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/business-policies/<str:code>/versions/<str:version>/",
+  "served_by": "business-policy-version",
+  "status": 400
+ }
+}

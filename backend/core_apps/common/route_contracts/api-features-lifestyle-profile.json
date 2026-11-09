@@ -1,0 +1,169 @@
+{
+ "GET /api/v1/features/v1/lifestyle-profile/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/lifestyle-profile/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/lifestyle-profile/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/lifestyle-profile/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/lifestyle-profile/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "details",
+   "disclosed",
+   "discoverable",
+   "habits",
+   "id",
+   "importance",
+   "preferences",
+   "reason_categories",
+   "revision",
+   "search_context"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/lifestyle-profile/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/lifestyle-profile/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/lifestyle-profile/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/lifestyle-profile/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/lifestyle-profile/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/lifestyle-profile/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/lifestyle-profile/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lifestyle-profile/",
+  "served_by": "",
+  "status": 403
+ }
+}

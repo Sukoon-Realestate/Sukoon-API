@@ -1,0 +1,392 @@
+{
+ "DELETE /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "DELETE /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "DELETE /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "DELETE /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/complete/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/complete/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/complete/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/complete/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_request",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/",
+  "served_by": "",
+  "status": 422
+ },
+ "PUT /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/1/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "upload_grant_expired",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/<int:part>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/1/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "upload_grant_expired",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/<int:part>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/1/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "upload_grant_expired",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/<int:part>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/1/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "upload_grant_expired",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/<int:part>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/1/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "upload_grant_expired",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/<int:part>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/virtual-tour-uploads/00000000-0000-4000-8000-000000000000/parts/1/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "upload_grant_expired",
+  "route": "api/v1/virtual-tour-uploads/<uuid:upload_id>/parts/<int:part>/",
+  "served_by": "",
+  "status": 401
+ }
+}

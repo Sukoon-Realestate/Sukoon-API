@@ -1,0 +1,392 @@
+{
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-summary/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-summary/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-summary/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-summary/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-summary/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-summary/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-summary/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-summary/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-summary/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-summary/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-summary/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-summary/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/availability-confirmation/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/availability-confirmation/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/availability-confirmation/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/availability-confirmation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/availability-confirmation/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/availability-confirmation/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/availability-confirmation/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/availability-confirmation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/availability-confirmation/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/availability-confirmation/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/availability-confirmation/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/availability-confirmation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-facts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-facts/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-facts/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-facts/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-facts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-facts/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-facts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-facts/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-facts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-facts/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/decision-facts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-facts/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/properties/00000000-0000-4000-8000-000000000000/student-policies/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+  "served_by": "",
+  "status": 403
+ }
+}

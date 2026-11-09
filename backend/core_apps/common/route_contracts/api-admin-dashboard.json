@@ -1,0 +1,184 @@
+{
+ "GET /api/v1/admin/dashboard/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/dashboard/",
+  "served_by": "admin-dashboard-stats",
+  "status": 401
+ },
+ "GET /api/v1/admin/dashboard/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/dashboard/",
+  "served_by": "admin-dashboard-stats",
+  "status": 401
+ },
+ "GET /api/v1/admin/dashboard/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "chart_data",
+   "metrics",
+   "period",
+   "recent_activities",
+   "user_distribution"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/dashboard/",
+  "served_by": "admin-dashboard-stats",
+  "status": 200
+ },
+ "GET /api/v1/admin/dashboard/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "chart_data",
+   "metrics",
+   "period",
+   "recent_activities",
+   "user_distribution"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/dashboard/",
+  "served_by": "admin-dashboard-stats",
+  "status": 200
+ },
+ "GET /api/v1/admin/dashboard/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/dashboard/",
+  "served_by": "admin-dashboard-stats",
+  "status": 403
+ },
+ "GET /api/v1/admin/dashboard/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/dashboard/",
+  "served_by": "admin-dashboard-stats",
+  "status": 403
+ },
+ "GET /api/v1/admin/dashboard/executive/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/dashboard/executive/",
+  "served_by": "admin-executive-dashboard",
+  "status": 401
+ },
+ "GET /api/v1/admin/dashboard/executive/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/dashboard/executive/",
+  "served_by": "admin-executive-dashboard",
+  "status": 401
+ },
+ "GET /api/v1/admin/dashboard/executive/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "executiveActivities",
+   "executiveMetrics",
+   "monthlyUserChartData",
+   "period",
+   "reportTrendData",
+   "userDistribution"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/dashboard/executive/",
+  "served_by": "admin-executive-dashboard",
+  "status": 200
+ },
+ "GET /api/v1/admin/dashboard/executive/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "executiveActivities",
+   "executiveMetrics",
+   "monthlyUserChartData",
+   "period",
+   "reportTrendData",
+   "userDistribution"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/dashboard/executive/",
+  "served_by": "admin-executive-dashboard",
+  "status": 200
+ },
+ "GET /api/v1/admin/dashboard/executive/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/dashboard/executive/",
+  "served_by": "admin-executive-dashboard",
+  "status": 403
+ },
+ "GET /api/v1/admin/dashboard/executive/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/dashboard/executive/",
+  "served_by": "admin-executive-dashboard",
+  "status": 403
+ }
+}

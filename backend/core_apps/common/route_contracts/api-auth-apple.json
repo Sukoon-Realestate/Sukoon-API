@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/auth/apple/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/apple/",
+  "served_by": "apple-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/apple/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/apple/",
+  "served_by": "apple-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/apple/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/apple/",
+  "served_by": "apple-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/apple/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/apple/",
+  "served_by": "apple-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/apple/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/apple/",
+  "served_by": "apple-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/apple/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/apple/",
+  "served_by": "apple-login",
+  "status": 400
+ }
+}

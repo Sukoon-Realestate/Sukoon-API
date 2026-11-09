@@ -1,4 +1,5 @@
 import logging
+from django.core.exceptions import ValidationError as InvalidIdentifier
 from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError, NotFound, PermissionDenied
@@ -11,9 +12,27 @@ def get_kyc_queue_queryset():
     """
     Returns queryset of KYC submissions optimized with related profile and user data.
     """
+    from django.db.models import Exists, OuterRef
+    from core_apps.properties.models import Property
+    from core_apps.admin_api.models import UserReport
+
+    is_owner_subquery = Exists(
+        Property.objects.filter(owner=OuterRef("profile__user"))
+    )
+    has_warning_subquery = Exists(
+        UserReport.objects.filter(
+            reported_user=OuterRef("profile__user"),
+            status=UserReport.Status.ACTIVE,
+        )
+    )
+
     return (
         KYCSubmission.objects.select_related("profile", "profile__user", "reviewer")
         .filter(superseded_at__isnull=True)
+        .annotate(
+            is_owner=is_owner_subquery,
+            has_warning=has_warning_subquery,
+        )
         .order_by("-created_at")
     )
 
@@ -51,7 +70,7 @@ def get_kyc_detail(submission_id):
         submission = KYCSubmission.objects.select_related(
             "profile", "profile__user", "reviewer"
         ).get(id=submission_id)
-    except (KYCSubmission.DoesNotExist, ValueError):
+    except (KYCSubmission.DoesNotExist, ValueError, InvalidIdentifier):
         raise NotFound(f"KYC Submission with ID {submission_id} was not found.")
 
     user = submission.profile.user
@@ -201,7 +220,7 @@ def _reviewable_submission(submission_id, reviewer):
 
     try:
         initial = KYCSubmission.objects.select_related("profile").get(id=submission_id)
-    except (KYCSubmission.DoesNotExist, ValueError):
+    except (KYCSubmission.DoesNotExist, ValueError, InvalidIdentifier):
         raise NotFound("Identity submission was not found.")
     if initial.profile.user_id == reviewer.pk:
         raise PermissionDenied("Identity decisions require an independent reviewer.")

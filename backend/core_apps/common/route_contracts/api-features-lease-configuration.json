@@ -1,0 +1,94 @@
+{
+ "GET /api/v1/features/v1/lease-configuration/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/lease-configuration/",
+  "served_by": "lease-configuration",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/lease-configuration/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lease-configuration/",
+  "served_by": "lease-configuration",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/lease-configuration/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "allowed_actions",
+   "blocking_reasons",
+   "can_create",
+   "fixed_terms",
+   "policy",
+   "templates"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/lease-configuration/",
+  "served_by": "lease-configuration",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/lease-configuration/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lease-configuration/",
+  "served_by": "lease-configuration",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/lease-configuration/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "allowed_actions",
+   "blocking_reasons",
+   "can_create",
+   "fixed_terms",
+   "policy",
+   "templates"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/lease-configuration/",
+  "served_by": "lease-configuration",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/lease-configuration/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/lease-configuration/",
+  "served_by": "lease-configuration",
+  "status": 403
+ }
+}

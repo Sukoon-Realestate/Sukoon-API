@@ -1,0 +1,794 @@
+{
+ "GET /api/v1/features/v1/residential-assets/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-assets/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-assets/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/residential-assets/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/residential-assets/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/residential-assets/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/changes/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/changes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/changes/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/changes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/changes/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/changes/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/changes/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/changes/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/changes/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/changes/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/changes/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/changes/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PATCH /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PATCH /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-assets/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/attach-unit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/attach-unit/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/attach-unit/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/attach-unit/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/attach-unit/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/attach-unit/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/attach-unit/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/attach-unit/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/attach-unit/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/attach-unit/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/attach-unit/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/attach-unit/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/bulk-edit/preview/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/bulk-edit/preview/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/bulk-edit/preview/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/bulk-edit/preview/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/bulk-edit/preview/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/bulk-edit/preview/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/media/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/topology/preview/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/topology/preview/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/topology/preview/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/topology/preview/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/topology/preview/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/topology/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/topology/preview/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/topology/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/topology/preview/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/topology/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-assets/sample/00000000-0000-4000-8000-000000000000/topology/preview/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/topology/preview/",
+  "served_by": "",
+  "status": 400
+ }
+}

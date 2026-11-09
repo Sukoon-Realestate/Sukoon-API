@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/auth/verify-otp/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify-otp/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify-otp/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify-otp/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify-otp/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify-otp/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify-otp/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify-otp/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify-otp/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify-otp/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify-otp/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify-otp/",
+  "served_by": "",
+  "status": 400
+ }
+}

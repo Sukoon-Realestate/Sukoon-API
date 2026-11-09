@@ -1,0 +1,166 @@
+{
+ "GET /api/v1/admin/financials/summary/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/financials/summary/",
+  "served_by": "admin-financials-summary",
+  "status": 401
+ },
+ "GET /api/v1/admin/financials/summary/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/financials/summary/",
+  "served_by": "admin-financials-summary",
+  "status": 403
+ },
+ "GET /api/v1/admin/financials/summary/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "basis",
+   "metrics",
+   "revenueBreakdown",
+   "sixMonthTrend"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/financials/summary/",
+  "served_by": "admin-financials-summary",
+  "status": 200
+ },
+ "GET /api/v1/admin/financials/summary/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/financials/summary/",
+  "served_by": "admin-financials-summary",
+  "status": 403
+ },
+ "GET /api/v1/admin/financials/summary/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/financials/summary/",
+  "served_by": "admin-financials-summary",
+  "status": 403
+ },
+ "GET /api/v1/admin/financials/summary/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/financials/summary/",
+  "served_by": "admin-financials-summary",
+  "status": 403
+ },
+ "GET /api/v1/admin/financials/transactions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/financials/transactions/",
+  "served_by": "admin-financials-transactions",
+  "status": 401
+ },
+ "GET /api/v1/admin/financials/transactions/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/financials/transactions/",
+  "served_by": "admin-financials-transactions",
+  "status": 403
+ },
+ "GET /api/v1/admin/financials/transactions/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/financials/transactions/",
+  "served_by": "admin-financials-transactions",
+  "status": 200
+ },
+ "GET /api/v1/admin/financials/transactions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/financials/transactions/",
+  "served_by": "admin-financials-transactions",
+  "status": 403
+ },
+ "GET /api/v1/admin/financials/transactions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/financials/transactions/",
+  "served_by": "admin-financials-transactions",
+  "status": 403
+ },
+ "GET /api/v1/admin/financials/transactions/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/financials/transactions/",
+  "served_by": "admin-financials-transactions",
+  "status": 403
+ }
+}

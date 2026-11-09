@@ -26,6 +26,9 @@ Most failures were not application bugs. They came from three test-side causes, 
 | BUG-09 | Medium | Company admins could not read their organisation's subscription/billing: the role gate accepted only `payer` although billing authority admits admins. Paying still requires payer + mandate. | `commerce_access.py`: reads accept `admin` or `payer`; payment unchanged. |
 | BUG-10 | Medium | The company payer could not see chargebacks on the tenancy they fund (missing from the payer projection). | `company/role_projections.py`: add `chargebacks` to the payer view. |
 | BUG-11 | Low | Virtual-tour responses violated their published OpenAPI contract (`review_reason` returned but not declared; schema forbids extra fields). | `virtual_tours/openapi.py`: declare `review_reason`. |
+| BUG-12 | Medium | Admin KYC detail/approve and moderation delete returned HTTP 500 for a malformed ID (Django's UUID `ValidationError` escaped; only `ValueError` was mapped to 404). Found by the route contracts. | `admin_api/services/kyc_service.py`, `moderation_service.py`: malformed IDs are 404. |
+| BUG-13 | Low | `POST /api/v1/auth/o/<provider>/` with an unknown provider returned HTTP 500 (`MissingBackend`). | `users/views_parts/set_auth_cookies.py`: unknown provider is 404. |
+| BUG-14 | Low | `POST /features/v1/reviews/employee-assignments/` crashed (`TypeError`): the identity-less read alias shares a view whose POST needs a company binding. | `reputation_experience_views.py`: that alias answers 405; the bound route is unchanged. |
 
 ## Found, not fixed — needs a decision
 
@@ -49,3 +52,14 @@ Earlier known-defect repros (A1-02 account deletion, A6-03 admin query growth) r
 
 Databases, media and `.env` hashes are unchanged; nothing was deployed. Node validators were installed from
 `tools/virtual_tours/package-lock.json` (`npm ci`, git-ignored) so the real Khronos/Rapier processing test runs.
+
+## Sprint 00 follow-up: failing-before cases and contract fixtures
+
+Five new strict-xfail repros, each checked with `--runxfail` to fail for its documented reason in both release modes:
+`chat/tests/test_edit_moderation_enqueue.py` (A5-01), `profiles/tests/test_avatar_ownership.py` (A1-01),
+`users/tests/test_social_adoption_credentials.py` (A1-03), `features/tests/test_portfolio_media_retention.py` (A3-01),
+`features/tests/test_partial_refund_commission.py` (A4-01).
+
+`common/test_route_contracts.py` records 6,072 boundary observations across all 795 API patterns in 189 committed
+family fixtures (PostgreSQL lane). Two fresh-database runs produce identical fixtures. It surfaced BUG-12–14 above; the only
+remaining 5xx responses are deliberate 503s (Paymob not configured, capture coach unavailable).

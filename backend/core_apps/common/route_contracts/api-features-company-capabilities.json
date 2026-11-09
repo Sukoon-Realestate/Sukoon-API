@@ -1,0 +1,112 @@
+{
+ "GET /api/v1/features/v1/company-capabilities/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-capabilities/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/company-capabilities/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-capabilities/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-capabilities/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_contexts",
+   "activation_email_delivery",
+   "assigned_approvals",
+   "available",
+   "blocking_reasons",
+   "contract_preparation",
+   "contracting",
+   "independent_mandates",
+   "internal_request_discussions",
+   "new_bookings",
+   "payments",
+   "portfolio_creation",
+   "provider_mode",
+   "staff_provisioning",
+   "tenancy_servicing"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/company-capabilities/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/company-capabilities/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-capabilities/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-capabilities/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_contexts",
+   "activation_email_delivery",
+   "assigned_approvals",
+   "available",
+   "blocking_reasons",
+   "contract_preparation",
+   "contracting",
+   "independent_mandates",
+   "internal_request_discussions",
+   "new_bookings",
+   "payments",
+   "portfolio_creation",
+   "provider_mode",
+   "staff_provisioning",
+   "tenancy_servicing"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/company-capabilities/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/company-capabilities/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-capabilities/",
+  "served_by": "",
+  "status": 403
+ }
+}

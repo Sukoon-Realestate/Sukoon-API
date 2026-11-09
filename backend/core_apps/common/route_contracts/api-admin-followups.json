@@ -1,0 +1,86 @@
+{
+ "GET /api/v1/admin/followups/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/followups/",
+  "served_by": "admin-followups",
+  "status": 401
+ },
+ "GET /api/v1/admin/followups/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/followups/",
+  "served_by": "admin-followups",
+  "status": 401
+ },
+ "GET /api/v1/admin/followups/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "measured_at",
+   "results"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/followups/",
+  "served_by": "admin-followups",
+  "status": 200
+ },
+ "GET /api/v1/admin/followups/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "measured_at",
+   "results"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/followups/",
+  "served_by": "admin-followups",
+  "status": 200
+ },
+ "GET /api/v1/admin/followups/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/followups/",
+  "served_by": "admin-followups",
+  "status": 403
+ },
+ "GET /api/v1/admin/followups/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/followups/",
+  "served_by": "admin-followups",
+  "status": 403
+ }
+}

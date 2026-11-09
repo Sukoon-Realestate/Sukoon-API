@@ -1,0 +1,548 @@
+{
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/auth/email-change/start/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/start/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/email-change/start/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/email-change/start/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/email-change/start/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/email-change/start/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/email-change/start/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/email-change/start/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/email-change/start/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/email-change/start/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/email-change/start/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/email-change/start/",
+  "served_by": "",
+  "status": 403
+ }
+}

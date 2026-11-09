@@ -22,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 HTTP = ("get", "post", "put", "patch", "delete")
 SAMPLE = {"uuid": "00000000-0000-4000-8000-000000000000", "int": "1", "slug": "sample", "str": "sample",
-          "path": "sample"}
+          "path": "sample", "drf_format_suffix": ".json"}
 
 # Route family -> owning review area and the sprint that converts it. Families are the
 # first meaningful segments under api/v1/ (see family_of). Areas follow SOURCE_INVENTORY.md.
@@ -63,9 +63,11 @@ def walk(patterns, prefix=""):
 
 
 def concrete_path(route):
-    path = re.sub(r"<(?:(\w+):)?\w+>", lambda m: SAMPLE.get(m.group(1) or "str", "sample"), route)
+    # Regex named groups first, so their <name> is not mistaken for a path converter.
+    path = re.sub(r"\(\?P<format>[^)]*\)", "json", route)
     path = re.sub(r"\(\?P<\w+>[^)]*\)", "sample", path)
-    path = path.replace("^", "").replace("$", "").replace("\\.", ".").replace("\\Z", "")
+    path = re.sub(r"<(?:(\w+):)?\w+>", lambda m: SAMPLE.get(m.group(1) or "str", "sample"), path)
+    path = path.replace("^", "").replace("$", "").replace("\\.", ".").replace("\\Z", "").replace("/?", "/")
     path = re.sub(r"\.\(\?P?<?format>?[^)]*\)", "", path)
     return "/" + path.lstrip("/")
 

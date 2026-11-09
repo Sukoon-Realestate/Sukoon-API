@@ -1,0 +1,785 @@
+{
+ "GET /api/v1/features/v1/housing-groups/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-groups/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/housing-groups/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/chat/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/chat/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/chat/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/chat/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/chat/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/chat/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/chat/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/chat/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/chat/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/chat/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/chat/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/chat/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-groups/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/housing-groups/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/invitations/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/join-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/join-requests/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/join-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/join-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/join-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/join-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/join-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/join-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/join-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/join-requests/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/join-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/join-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/living-labs/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/<slug:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/<slug:action>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/housing-groups/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ }
+}

@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/features/v1/listing-suggestions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/listing-suggestions/",
+  "served_by": "listing-suggestions",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/listing-suggestions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/listing-suggestions/",
+  "served_by": "listing-suggestions",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/listing-suggestions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/listing-suggestions/",
+  "served_by": "listing-suggestions",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/listing-suggestions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/listing-suggestions/",
+  "served_by": "listing-suggestions",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/listing-suggestions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/listing-suggestions/",
+  "served_by": "listing-suggestions",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/listing-suggestions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/listing-suggestions/",
+  "served_by": "listing-suggestions",
+  "status": 400
+ }
+}

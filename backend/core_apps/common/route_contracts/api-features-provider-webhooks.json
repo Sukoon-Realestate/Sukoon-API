@@ -1,0 +1,158 @@
+{
+ "POST /api/v1/features/v1/provider-webhooks/payments/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/provider-webhooks/payments/",
+  "served_by": "fake-payment-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/payments/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/provider-webhooks/payments/",
+  "served_by": "fake-payment-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/payments/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/provider-webhooks/payments/",
+  "served_by": "fake-payment-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/payments/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/provider-webhooks/payments/",
+  "served_by": "fake-payment-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/payments/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/provider-webhooks/payments/",
+  "served_by": "fake-payment-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/payments/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/provider-webhooks/payments/",
+  "served_by": "fake-payment-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/rental/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/provider-webhooks/rental/",
+  "served_by": "fake-rental-provider-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/rental/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/provider-webhooks/rental/",
+  "served_by": "fake-rental-provider-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/rental/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/provider-webhooks/rental/",
+  "served_by": "fake-rental-provider-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/rental/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/provider-webhooks/rental/",
+  "served_by": "fake-rental-provider-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/rental/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/provider-webhooks/rental/",
+  "served_by": "fake-rental-provider-webhook",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/provider-webhooks/rental/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/provider-webhooks/rental/",
+  "served_by": "fake-rental-provider-webhook",
+  "status": 403
+ }
+}

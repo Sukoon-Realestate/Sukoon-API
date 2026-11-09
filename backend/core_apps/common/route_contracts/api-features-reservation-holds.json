@@ -1,0 +1,632 @@
+{
+ "GET /api/v1/features/v1/reservation-holds/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reservation-holds/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/reservation-holds/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/reservation-holds/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/reservation-holds/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reservation-holds/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reservation-holds/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/extend/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/reservation-holds/00000000-0000-4000-8000-000000000000/release/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+  "served_by": "",
+  "status": 403
+ }
+}

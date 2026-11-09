@@ -1,0 +1,3356 @@
+{
+ "GET /api/v1/features/v1/leases/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/leases/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/leases/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/billing-schedule/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/billing-schedule/",
+  "served_by": "lease-billing-schedule",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/billing-schedule/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/billing-schedule/",
+  "served_by": "lease-billing-schedule",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/billing-schedule/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/billing-schedule/",
+  "served_by": "lease-billing-schedule",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/billing-schedule/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/billing-schedule/",
+  "served_by": "lease-billing-schedule",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/billing-schedule/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/billing-schedule/",
+  "served_by": "lease-billing-schedule",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/billing-schedule/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/billing-schedule/",
+  "served_by": "lease-billing-schedule",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-report-context/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-report-context/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-report-context/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-report-context/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-report-context/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-report-context/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-report-context/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-report-context/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-report-context/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-report-context/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-report-context/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-report-context/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/deposit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/deposit/",
+  "served_by": "lease-deposit",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/deposit/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/deposit/",
+  "served_by": "lease-deposit",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/deposit/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/deposit/",
+  "served_by": "lease-deposit",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/deposit/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/deposit/",
+  "served_by": "lease-deposit",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/deposit/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/deposit/",
+  "served_by": "lease-deposit",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/deposit/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/deposit/",
+  "served_by": "lease-deposit",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/documents/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/documents/",
+  "served_by": "lease-documents",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/documents/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/documents/",
+  "served_by": "lease-documents",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/documents/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/documents/",
+  "served_by": "lease-documents",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/documents/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/documents/",
+  "served_by": "lease-documents",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/documents/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/documents/",
+  "served_by": "lease-documents",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/documents/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/documents/",
+  "served_by": "lease-documents",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/external-payment-claims/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/external-payment-claims/",
+  "served_by": "external-claims",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/external-payment-claims/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/external-payment-claims/",
+  "served_by": "external-claims",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/external-payment-claims/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/external-payment-claims/",
+  "served_by": "external-claims",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/external-payment-claims/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/external-payment-claims/",
+  "served_by": "external-claims",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/external-payment-claims/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/external-payment-claims/",
+  "served_by": "external-claims",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/external-payment-claims/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/external-payment-claims/",
+  "served_by": "external-claims",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/",
+  "served_by": "final-settlement",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/",
+  "served_by": "final-settlement",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/",
+  "served_by": "final-settlement",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/",
+  "served_by": "final-settlement",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/",
+  "served_by": "final-settlement",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/",
+  "served_by": "final-settlement",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-planning-context/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-planning-context/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-planning-context/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-planning-context/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-planning-context/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-planning-context/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-planning-context/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-planning-context/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-planning-context/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-planning-context/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-planning-context/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-planning-context/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/rental-center/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/rental-center/",
+  "served_by": "rental-center",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/rental-center/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/rental-center/",
+  "served_by": "rental-center",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/rental-center/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/rental-center/",
+  "served_by": "rental-center",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/rental-center/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/rental-center/",
+  "served_by": "rental-center",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/rental-center/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/rental-center/",
+  "served_by": "rental-center",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/rental-center/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/rental-center/",
+  "served_by": "rental-center",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-candidates/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-candidates/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-candidates/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-candidates/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-candidates/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-candidates/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-candidates/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-candidates/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-candidates/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-candidates/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-candidates/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-candidates/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-sharing-options/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-sharing-options/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-sharing-options/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-sharing-options/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-sharing-options/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-sharing-options/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-sharing-options/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-sharing-options/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-sharing-options/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-sharing-options/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-sharing-options/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-sharing-options/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/timeline/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/timeline/",
+  "served_by": "lease-timeline",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/timeline/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/timeline/",
+  "served_by": "lease-timeline",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/timeline/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/timeline/",
+  "served_by": "lease-timeline",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/timeline/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/timeline/",
+  "served_by": "lease-timeline",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/timeline/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/timeline/",
+  "served_by": "lease-timeline",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/timeline/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/timeline/",
+  "served_by": "lease-timeline",
+  "status": 403
+ },
+ "PATCH /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 401
+ },
+ "PATCH /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 403
+ },
+ "PATCH /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 400
+ },
+ "PATCH /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 403
+ },
+ "PATCH /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 400
+ },
+ "PATCH /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+  "served_by": "lease-detail",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/leases/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/leases/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/",
+  "served_by": "leases",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/amendments/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+  "served_by": "amendments",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/cancel/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/cancel/",
+  "served_by": "lease-cancel",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/cancel/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/cancel/",
+  "served_by": "lease-cancel",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/cancel/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/cancel/",
+  "served_by": "lease-cancel",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/cancel/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/cancel/",
+  "served_by": "lease-cancel",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/cancel/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/cancel/",
+  "served_by": "lease-cancel",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/cancel/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/cancel/",
+  "served_by": "lease-cancel",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/condition-reports/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/propose/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/propose/",
+  "served_by": "final-settlement-propose",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/propose/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/propose/",
+  "served_by": "final-settlement-propose",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/propose/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/propose/",
+  "served_by": "final-settlement-propose",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/propose/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/propose/",
+  "served_by": "final-settlement-propose",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/propose/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/propose/",
+  "served_by": "final-settlement-propose",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/propose/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/propose/",
+  "served_by": "final-settlement-propose",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/respond/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/respond/",
+  "served_by": "final-settlement-respond",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/respond/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/respond/",
+  "served_by": "final-settlement-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/respond/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/respond/",
+  "served_by": "final-settlement-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/respond/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/respond/",
+  "served_by": "final-settlement-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/respond/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/respond/",
+  "served_by": "final-settlement-respond",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/final-settlement/respond/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/respond/",
+  "served_by": "final-settlement-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/handovers/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+  "served_by": "lease-handovers",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/maintenance-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+  "served_by": "maintenance-requests",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/move-out-notices/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/payment-extension-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+  "served_by": "payment-extensions",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/renewals/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+  "served_by": "renewals",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/replacement-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/review/",
+  "served_by": "lease-review",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/review/",
+  "served_by": "lease-review",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/review/",
+  "served_by": "lease-review",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/review/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/review/",
+  "served_by": "lease-review",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/review/",
+  "served_by": "lease-review",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/review/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/review/",
+  "served_by": "lease-review",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/reviews/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+  "served_by": "lease-reviews",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/signing-session/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/signing-session/",
+  "served_by": "lease-signing-session",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/signing-session/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/signing-session/",
+  "served_by": "lease-signing-session",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/signing-session/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/signing-session/",
+  "served_by": "lease-signing-session",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/signing-session/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/signing-session/",
+  "served_by": "lease-signing-session",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/signing-session/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/signing-session/",
+  "served_by": "lease-signing-session",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/signing-session/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/signing-session/",
+  "served_by": "lease-signing-session",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/submit-for-signature/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/submit-for-signature/",
+  "served_by": "lease-submit-for-signature",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/submit-for-signature/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/submit-for-signature/",
+  "served_by": "lease-submit-for-signature",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/submit-for-signature/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/submit-for-signature/",
+  "served_by": "lease-submit-for-signature",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/submit-for-signature/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/submit-for-signature/",
+  "served_by": "lease-submit-for-signature",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/submit-for-signature/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/submit-for-signature/",
+  "served_by": "lease-submit-for-signature",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/submit-for-signature/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/submit-for-signature/",
+  "served_by": "lease-submit-for-signature",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/summary-grants/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/leases/00000000-0000-4000-8000-000000000000/termination-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+  "served_by": "terminations",
+  "status": 403
+ }
+}

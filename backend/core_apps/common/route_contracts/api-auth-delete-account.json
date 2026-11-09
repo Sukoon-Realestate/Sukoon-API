@@ -1,0 +1,158 @@
+{
+ "DELETE /api/v1/auth/delete-account/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 401
+ },
+ "DELETE /api/v1/auth/delete-account/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 401
+ },
+ "DELETE /api/v1/auth/delete-account/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 409
+ },
+ "DELETE /api/v1/auth/delete-account/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 409
+ },
+ "DELETE /api/v1/auth/delete-account/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 409
+ },
+ "DELETE /api/v1/auth/delete-account/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 409
+ },
+ "POST /api/v1/auth/delete-account/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 401
+ },
+ "POST /api/v1/auth/delete-account/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 401
+ },
+ "POST /api/v1/auth/delete-account/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 409
+ },
+ "POST /api/v1/auth/delete-account/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 409
+ },
+ "POST /api/v1/auth/delete-account/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 409
+ },
+ "POST /api/v1/auth/delete-account/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/auth/delete-account/",
+  "served_by": "user-delete",
+  "status": 409
+ }
+}

@@ -1,0 +1,344 @@
+{
+ "GET /api/v1/features/v1/owner-payment-profile/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/owner-payment-profile/",
+  "served_by": "owner-payment-profile",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/owner-payment-profile/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/",
+  "served_by": "owner-payment-profile",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/owner-payment-profile/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "accepted_policy_versions",
+   "allowed_actions",
+   "blocking_reasons",
+   "id",
+   "masked_beneficiary",
+   "policy_summary",
+   "prepared_beneficiary",
+   "provider",
+   "required_policy_versions",
+   "requirements",
+   "revision",
+   "status",
+   "structured_summary",
+   "submitted_beneficiary"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/owner-payment-profile/",
+  "served_by": "owner-payment-profile",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/owner-payment-profile/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/",
+  "served_by": "owner-payment-profile",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/owner-payment-profile/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "accepted_policy_versions",
+   "allowed_actions",
+   "blocking_reasons",
+   "id",
+   "masked_beneficiary",
+   "policy_summary",
+   "prepared_beneficiary",
+   "provider",
+   "required_policy_versions",
+   "requirements",
+   "revision",
+   "status",
+   "structured_summary",
+   "submitted_beneficiary"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/owner-payment-profile/",
+  "served_by": "owner-payment-profile",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/owner-payment-profile/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/",
+  "served_by": "owner-payment-profile",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/beneficiary-details/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/owner-payment-profile/beneficiary-details/",
+  "served_by": "owner-beneficiary-details",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/beneficiary-details/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/beneficiary-details/",
+  "served_by": "owner-beneficiary-details",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/beneficiary-details/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/owner-payment-profile/beneficiary-details/",
+  "served_by": "owner-beneficiary-details",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/beneficiary-details/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/beneficiary-details/",
+  "served_by": "owner-beneficiary-details",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/beneficiary-details/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/owner-payment-profile/beneficiary-details/",
+  "served_by": "owner-beneficiary-details",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/beneficiary-details/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/beneficiary-details/",
+  "served_by": "owner-beneficiary-details",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/confirm-beneficiary/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/owner-payment-profile/confirm-beneficiary/",
+  "served_by": "owner-beneficiary-confirm",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/confirm-beneficiary/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/confirm-beneficiary/",
+  "served_by": "owner-beneficiary-confirm",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/confirm-beneficiary/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/owner-payment-profile/confirm-beneficiary/",
+  "served_by": "owner-beneficiary-confirm",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/confirm-beneficiary/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/confirm-beneficiary/",
+  "served_by": "owner-beneficiary-confirm",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/confirm-beneficiary/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/owner-payment-profile/confirm-beneficiary/",
+  "served_by": "owner-beneficiary-confirm",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/confirm-beneficiary/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/confirm-beneficiary/",
+  "served_by": "owner-beneficiary-confirm",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/onboarding-session/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/owner-payment-profile/onboarding-session/",
+  "served_by": "owner-onboarding-session",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/onboarding-session/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/onboarding-session/",
+  "served_by": "owner-onboarding-session",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/onboarding-session/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/owner-payment-profile/onboarding-session/",
+  "served_by": "owner-onboarding-session",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/onboarding-session/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/onboarding-session/",
+  "served_by": "owner-onboarding-session",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/onboarding-session/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/owner-payment-profile/onboarding-session/",
+  "served_by": "owner-onboarding-session",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/owner-payment-profile/onboarding-session/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/owner-payment-profile/onboarding-session/",
+  "served_by": "owner-onboarding-session",
+  "status": 403
+ }
+}

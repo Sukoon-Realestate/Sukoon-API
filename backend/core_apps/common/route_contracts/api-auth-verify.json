@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/auth/verify/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify/",
+  "served_by": "verify-email",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify/",
+  "served_by": "verify-email",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify/",
+  "served_by": "verify-email",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify/",
+  "served_by": "verify-email",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify/",
+  "served_by": "verify-email",
+  "status": 400
+ },
+ "POST /api/v1/auth/verify/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/verify/",
+  "served_by": "verify-email",
+  "status": 400
+ }
+}

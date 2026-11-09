@@ -1,0 +1,629 @@
+{
+ "GET /api/v1/features/v1/housing-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/housing-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/changes/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/changes/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/changes/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/changes/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/changes/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/changes/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/changes/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/changes/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/changes/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offer-inventory/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offer-inventory/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offer-inventory/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offer-inventory/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offer-inventory/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offer-inventory/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/housing-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/offers/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/<slug:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/<slug:action>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/housing-requests/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ }
+}

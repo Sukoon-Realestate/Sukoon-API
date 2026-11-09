@@ -1,0 +1,80 @@
+{
+ "GET /api/v1/features/v1/rental-capabilities/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-capabilities/",
+  "served_by": "rental-capabilities",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/rental-capabilities/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-capabilities/",
+  "served_by": "rental-capabilities",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-capabilities/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rental-capabilities/",
+  "served_by": "rental-capabilities",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/rental-capabilities/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-capabilities/",
+  "served_by": "rental-capabilities",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-capabilities/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rental-capabilities/",
+  "served_by": "rental-capabilities",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/rental-capabilities/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-capabilities/",
+  "served_by": "rental-capabilities",
+  "status": 403
+ }
+}

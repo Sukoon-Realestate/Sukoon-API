@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/auth/register/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/register/",
+  "served_by": "user-register",
+  "status": 400
+ },
+ "POST /api/v1/auth/register/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/register/",
+  "served_by": "user-register",
+  "status": 400
+ },
+ "POST /api/v1/auth/register/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/register/",
+  "served_by": "user-register",
+  "status": 400
+ },
+ "POST /api/v1/auth/register/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/register/",
+  "served_by": "user-register",
+  "status": 400
+ },
+ "POST /api/v1/auth/register/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/register/",
+  "served_by": "user-register",
+  "status": 400
+ },
+ "POST /api/v1/auth/register/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/register/",
+  "served_by": "user-register",
+  "status": 400
+ }
+}

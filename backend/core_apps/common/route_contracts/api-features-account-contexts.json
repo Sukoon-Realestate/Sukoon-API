@@ -1,0 +1,88 @@
+{
+ "GET /api/v1/features/v1/account-contexts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/account-contexts/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/account-contexts/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/account-contexts/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/account-contexts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "contexts",
+   "preferred_context_id",
+   "user_id"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/account-contexts/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/account-contexts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/account-contexts/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/account-contexts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "contexts",
+   "preferred_context_id",
+   "user_id"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/account-contexts/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/account-contexts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/account-contexts/",
+  "served_by": "",
+  "status": 403
+ }
+}

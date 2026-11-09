@@ -1,0 +1,470 @@
+{
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/items/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/items/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/items/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/items/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/items/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/items/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/items/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/items/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/items/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/items/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/items/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/items/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/add/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/add/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/add/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/add/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/add/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/add/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/add/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/add/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/add/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/add/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/add/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/add/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/archive/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/archive/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/archive/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/archive/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/archive/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/archive/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/archive/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/archive/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/archive/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/archive/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/archive/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/archive/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/remove/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/remove/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/remove/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/remove/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/remove/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/remove/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/remove/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/remove/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/remove/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/remove/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/remove/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/remove/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/rename/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/rename/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/rename/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/rename/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/rename/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/rename/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/rename/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/rename/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/rename/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/rename/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-saved-lists/00000000-0000-4000-8000-000000000000/rename/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/rename/",
+  "served_by": "",
+  "status": 403
+ }
+}

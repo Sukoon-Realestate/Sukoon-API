@@ -1,0 +1,398 @@
+{
+ "GET /api/v1/features/v1/refund-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/refund-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/refund-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/refund-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/refund-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/refund-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/",
+  "served_by": "refund-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/",
+  "served_by": "refund-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/",
+  "served_by": "refund-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/",
+  "served_by": "refund-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/",
+  "served_by": "refund-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/",
+  "served_by": "refund-detail",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/refund-requests/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/refund-requests/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/refund-requests/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/",
+  "served_by": "refund-requests",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/execute/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/execute/",
+  "served_by": "refund-execute",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/execute/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/execute/",
+  "served_by": "refund-execute",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/execute/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/execute/",
+  "served_by": "refund-execute",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/execute/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/execute/",
+  "served_by": "refund-execute",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/execute/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/execute/",
+  "served_by": "refund-execute",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/execute/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/execute/",
+  "served_by": "refund-execute",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/respond/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/respond/",
+  "served_by": "refund-respond",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/respond/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/respond/",
+  "served_by": "refund-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/respond/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/respond/",
+  "served_by": "refund-respond",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/respond/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/respond/",
+  "served_by": "refund-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/respond/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/respond/",
+  "served_by": "refund-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/refund-requests/00000000-0000-4000-8000-000000000000/respond/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/respond/",
+  "served_by": "refund-respond",
+  "status": 403
+ }
+}

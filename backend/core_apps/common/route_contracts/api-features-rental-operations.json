@@ -1,0 +1,80 @@
+{
+ "GET /api/v1/features/v1/rental-operations/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-operations/<uuid:request_key>/",
+  "served_by": "rental-operation-lookup",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/rental-operations/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-operations/<uuid:request_key>/",
+  "served_by": "rental-operation-lookup",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-operations/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rental-operations/<uuid:request_key>/",
+  "served_by": "rental-operation-lookup",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/rental-operations/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-operations/<uuid:request_key>/",
+  "served_by": "rental-operation-lookup",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-operations/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rental-operations/<uuid:request_key>/",
+  "served_by": "rental-operation-lookup",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/rental-operations/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-operations/<uuid:request_key>/",
+  "served_by": "rental-operation-lookup",
+  "status": 403
+ }
+}

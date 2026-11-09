@@ -1,0 +1,314 @@
+{
+ "POST /api/v1/features/v1/mock-provider/change-signing-sessions/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/mock-provider/change-signing-sessions/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/change-signing-sessions/00000000-0000-4000-8000-000000000000/complete/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/change-signing-sessions/00000000-0000-4000-8000-000000000000/complete/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/change-signing-sessions/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/mock-provider/change-signing-sessions/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/onboarding-sessions/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/mock-provider/onboarding-sessions/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/onboarding-sessions/00000000-0000-4000-8000-000000000000/complete/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/onboarding-sessions/00000000-0000-4000-8000-000000000000/complete/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/onboarding-sessions/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/mock-provider/onboarding-sessions/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/payment-attempts/00000000-0000-4000-8000-000000000000/events/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/mock-provider/payment-attempts/<uuid:attempt_id>/events/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/mock-provider/payment-attempts/00000000-0000-4000-8000-000000000000/events/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/payment-attempts/<uuid:attempt_id>/events/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/payment-attempts/00000000-0000-4000-8000-000000000000/events/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/mock-provider/payment-attempts/<uuid:attempt_id>/events/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/payment-attempts/00000000-0000-4000-8000-000000000000/events/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/payment-attempts/<uuid:attempt_id>/events/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/payment-attempts/00000000-0000-4000-8000-000000000000/events/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/mock-provider/payment-attempts/<uuid:attempt_id>/events/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/mock-provider/payment-attempts/00000000-0000-4000-8000-000000000000/events/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/payment-attempts/<uuid:attempt_id>/events/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/signing-sessions/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/mock-provider/signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/mock-provider/signing-sessions/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/signing-sessions/00000000-0000-4000-8000-000000000000/complete/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/mock-provider/signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/signing-sessions/00000000-0000-4000-8000-000000000000/complete/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/mock-provider/signing-sessions/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/mock-provider/signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/mock-provider/signing-sessions/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/mock-provider/signing-sessions/<uuid:session_id>/complete/",
+  "served_by": "",
+  "status": 403
+ }
+}

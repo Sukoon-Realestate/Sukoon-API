@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/auth/logout/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/logout/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/logout/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/logout/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/logout/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/logout/",
+  "served_by": "",
+  "status": 200
+ },
+ "POST /api/v1/auth/logout/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/logout/",
+  "served_by": "",
+  "status": 200
+ },
+ "POST /api/v1/auth/logout/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/logout/",
+  "served_by": "",
+  "status": 200
+ },
+ "POST /api/v1/auth/logout/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/logout/",
+  "served_by": "",
+  "status": 200
+ }
+}

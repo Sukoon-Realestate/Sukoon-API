@@ -1,0 +1,158 @@
+{
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/execution-review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/execution-review/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/execution-review/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/execution-review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/execution-review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/execution-review/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/execution-review/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/execution-review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/execution-review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/execution-review/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/execution-review/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/execution-review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/<slug:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-mandates/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ }
+}

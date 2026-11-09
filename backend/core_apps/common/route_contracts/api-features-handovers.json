@@ -1,0 +1,236 @@
+{
+ "GET /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 403
+ },
+ "PATCH /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 401
+ },
+ "PATCH /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 403
+ },
+ "PATCH /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 403
+ },
+ "PATCH /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 403
+ },
+ "PATCH /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 404
+ },
+ "PATCH /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+  "served_by": "handover-detail",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/respond/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/respond/",
+  "served_by": "handover-respond",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/respond/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/respond/",
+  "served_by": "handover-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/respond/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/respond/",
+  "served_by": "handover-respond",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/respond/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/respond/",
+  "served_by": "handover-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/respond/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/respond/",
+  "served_by": "handover-respond",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/handovers/00000000-0000-4000-8000-000000000000/respond/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/handovers/<uuid:handover_id>/respond/",
+  "served_by": "handover-respond",
+  "status": 403
+ }
+}

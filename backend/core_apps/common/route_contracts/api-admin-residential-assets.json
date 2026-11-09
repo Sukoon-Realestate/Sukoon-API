@@ -1,0 +1,158 @@
+{
+ "POST /api/v1/admin/residential-assets/building/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/residential-assets/building/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/residential-assets/building/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/residential-assets/building/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/residential-assets/building/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/admin/residential-assets/building/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/residential-assets/building/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/admin/residential-assets/building/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/residential-assets/building/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/residential-assets/building/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/residential-assets/building/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/residential-assets/building/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/residential-assets/complex/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/residential-assets/complex/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/residential-assets/complex/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/residential-assets/complex/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/residential-assets/complex/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/admin/residential-assets/complex/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/residential-assets/complex/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/admin/residential-assets/complex/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/residential-assets/complex/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/residential-assets/complex/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/residential-assets/complex/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/residential-assets/complex/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 403
+ }
+}

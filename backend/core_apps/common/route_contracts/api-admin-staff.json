@@ -1,0 +1,438 @@
+{
+ "DELETE /api/v1/admin/staff/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/<uuid:staff_id>/",
+  "served_by": "admin-staff-delete",
+  "status": 401
+ },
+ "DELETE /api/v1/admin/staff/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/<uuid:staff_id>/",
+  "served_by": "admin-staff-delete",
+  "status": 401
+ },
+ "DELETE /api/v1/admin/staff/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/staff/<uuid:staff_id>/",
+  "served_by": "admin-staff-delete",
+  "status": 400
+ },
+ "DELETE /api/v1/admin/staff/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/staff/<uuid:staff_id>/",
+  "served_by": "admin-staff-delete",
+  "status": 400
+ },
+ "DELETE /api/v1/admin/staff/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/<uuid:staff_id>/",
+  "served_by": "admin-staff-delete",
+  "status": 403
+ },
+ "DELETE /api/v1/admin/staff/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/<uuid:staff_id>/",
+  "served_by": "admin-staff-delete",
+  "status": 403
+ },
+ "DELETE /api/v1/admin/staff/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/<str:staff_id>/",
+  "served_by": "admin-staff-delete-str",
+  "status": 401
+ },
+ "DELETE /api/v1/admin/staff/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/<str:staff_id>/",
+  "served_by": "admin-staff-delete-str",
+  "status": 401
+ },
+ "DELETE /api/v1/admin/staff/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/staff/<str:staff_id>/",
+  "served_by": "admin-staff-delete-str",
+  "status": 400
+ },
+ "DELETE /api/v1/admin/staff/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/staff/<str:staff_id>/",
+  "served_by": "admin-staff-delete-str",
+  "status": 400
+ },
+ "DELETE /api/v1/admin/staff/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/<str:staff_id>/",
+  "served_by": "admin-staff-delete-str",
+  "status": 403
+ },
+ "DELETE /api/v1/admin/staff/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/<str:staff_id>/",
+  "served_by": "admin-staff-delete-str",
+  "status": 403
+ },
+ "GET /api/v1/admin/staff/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/",
+  "served_by": "admin-staff-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/staff/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/",
+  "served_by": "admin-staff-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/staff/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "avatarColor",
+    "display_role",
+    "email",
+    "id",
+    "is_active",
+    "name",
+    "roleName",
+    "role_name",
+    "timeAgo"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/staff/",
+  "served_by": "admin-staff-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/staff/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "avatarColor",
+    "display_role",
+    "email",
+    "id",
+    "is_active",
+    "name",
+    "roleName",
+    "role_name",
+    "timeAgo"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/staff/",
+  "served_by": "admin-staff-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/staff/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/",
+  "served_by": "admin-staff-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/staff/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/",
+  "served_by": "admin-staff-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/staff/roles/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/roles/",
+  "served_by": "admin-roles-summary",
+  "status": 401
+ },
+ "GET /api/v1/admin/staff/roles/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/roles/",
+  "served_by": "admin-roles-summary",
+  "status": 401
+ },
+ "GET /api/v1/admin/staff/roles/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "badges",
+    "color",
+    "id",
+    "name",
+    "subtext",
+    "userCount"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/staff/roles/",
+  "served_by": "admin-roles-summary",
+  "status": 200
+ },
+ "GET /api/v1/admin/staff/roles/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "badges",
+    "color",
+    "id",
+    "name",
+    "subtext",
+    "userCount"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/staff/roles/",
+  "served_by": "admin-roles-summary",
+  "status": 200
+ },
+ "GET /api/v1/admin/staff/roles/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/roles/",
+  "served_by": "admin-roles-summary",
+  "status": 403
+ },
+ "GET /api/v1/admin/staff/roles/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/roles/",
+  "served_by": "admin-roles-summary",
+  "status": 403
+ },
+ "POST /api/v1/admin/staff/invite/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/invite/",
+  "served_by": "admin-staff-invite",
+  "status": 401
+ },
+ "POST /api/v1/admin/staff/invite/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/staff/invite/",
+  "served_by": "admin-staff-invite",
+  "status": 401
+ },
+ "POST /api/v1/admin/staff/invite/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/staff/invite/",
+  "served_by": "admin-staff-invite",
+  "status": 400
+ },
+ "POST /api/v1/admin/staff/invite/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/staff/invite/",
+  "served_by": "admin-staff-invite",
+  "status": 400
+ },
+ "POST /api/v1/admin/staff/invite/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/invite/",
+  "served_by": "admin-staff-invite",
+  "status": 403
+ },
+ "POST /api/v1/admin/staff/invite/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/staff/invite/",
+  "served_by": "admin-staff-invite",
+  "status": 403
+ }
+}

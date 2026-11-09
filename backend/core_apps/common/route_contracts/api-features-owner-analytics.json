@@ -1,0 +1,158 @@
+{
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/",
+  "served_by": "owner-analytics",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/",
+  "served_by": "owner-analytics",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/",
+  "served_by": "owner-analytics",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/",
+  "served_by": "owner-analytics",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/",
+  "served_by": "owner-analytics",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/",
+  "served_by": "owner-analytics",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/export/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/export/",
+  "served_by": "owner-analytics-export",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/export/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/export/",
+  "served_by": "owner-analytics-export",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/export/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/export/",
+  "served_by": "owner-analytics-export",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/export/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/export/",
+  "served_by": "owner-analytics-export",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/export/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/export/",
+  "served_by": "owner-analytics-export",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/owner-analytics/00000000-0000-4000-8000-000000000000/export/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/export/",
+  "served_by": "owner-analytics-export",
+  "status": 404
+ }
+}

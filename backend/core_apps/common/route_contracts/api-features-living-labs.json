@@ -1,0 +1,1172 @@
+{
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/amendments/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/amendments/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/amendments/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/amendments/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/amendments/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/amendments/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/amendments/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/amendments/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/amendments/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/amendments/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/amendments/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/amendments/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/close/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/close/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/close/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/close/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/close/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/close/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/close/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/close/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/close/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/close/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/close/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/close/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/configuration/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/configuration/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/configuration/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/configuration/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/configuration/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/configuration/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/configuration/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/configuration/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/configuration/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/configuration/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/configuration/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/configuration/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/disclosures/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/disclosures/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/disclosures/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/disclosures/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/disclosures/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/disclosures/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/disclosures/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/disclosures/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/disclosures/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/disclosures/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/disclosures/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/disclosures/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-application/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-application/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-application/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-application/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-application/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-application/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-application/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-application/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-application/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-application/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-application/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-application/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-cost-proposal/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-cost-proposal/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-cost-proposal/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-cost-proposal/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-cost-proposal/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-cost-proposal/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-cost-proposal/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-cost-proposal/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-cost-proposal/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-cost-proposal/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-cost-proposal/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-cost-proposal/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-tender/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-tender/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-tender/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-tender/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-tender/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-tender/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-tender/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-tender/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-tender/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-tender/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/prepare-tender/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-tender/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/responses/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/responses/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/responses/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/responses/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/responses/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/responses/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/responses/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/responses/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/responses/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/responses/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/responses/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/responses/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/runs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/runs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/runs/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/runs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/runs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/runs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/runs/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/scenario-runs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/scenario-runs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/scenario-runs/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/scenario-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/scenario-runs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/scenario-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/scenario-runs/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/scenario-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/scenario-runs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/scenario-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/scenario-runs/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/scenario-runs/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/withdraw/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/withdraw/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/withdraw/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/withdraw/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/withdraw/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/withdraw/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/withdraw/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/withdraw/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/withdraw/",
+  "served_by": "",
+  "status": 403
+ },
+ "PUT /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "PUT /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "PUT /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ },
+ "PUT /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/features/v1/living-labs/00000000-0000-4000-8000-000000000000/my-requirements/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+  "served_by": "",
+  "status": 403
+ }
+}

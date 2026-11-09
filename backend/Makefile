@@ -80,7 +80,7 @@ BASELINE_ENV = CHAT_PRIVATE_MEDIA_ROOT=$(BASELINE_OUT)/storage/chat SUPPORT_PRIV
 BASELINE_PYTEST = $(CYCLE_PYTHON) -m pytest -p no:cacheprovider \
 	-o addopts="--strict-markers --tb=short" -q -rfE --cov=core_apps --cov-report=
 
-.PHONY: test-collect test-baseline-mvp test-baseline-restoration test-postgres-races route-matrix import-baseline
+.PHONY: test-collect test-baseline-mvp test-baseline-restoration test-postgres-races route-contracts route-matrix import-baseline
 test-collect: ## Collection only; must report zero errors
 	$(CYCLE_PYTHON) -m pytest --collect-only -q -p no:cacheprovider
 
@@ -100,6 +100,11 @@ test-postgres-races: ## PostgreSQL-only tests; requires disposable TEST_POSTGRES
 	$(BASELINE_ENV) SUKOON_MVP=false $(CYCLE_PYTHON) -m pytest -p no:cacheprovider \
 		-o addopts="--strict-markers --tb=short" -q -rfE --ds=config.settings.postgres_test \
 		--junitxml=$(BASELINE_OUT)/postgres/junit.xml $(or $(PG_TESTS),core_apps)
+
+route-contracts: ## Check (or with ROUTE_CONTRACTS_UPDATE=1 regenerate) per-family HTTP contracts on PostgreSQL
+	@test -n "$(TEST_POSTGRES_DB)" || (echo "Set TEST_POSTGRES_DB/USER/HOST/PORT to a disposable database" && exit 2)
+	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -q --ds=config.settings.postgres_test \
+		core_apps/common/test_route_contracts.py
 
 route-matrix: ## Regenerate sprints/ROUTE_MATRIX.md and its JSON evidence from the URL resolver
 	DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/route_matrix.py \

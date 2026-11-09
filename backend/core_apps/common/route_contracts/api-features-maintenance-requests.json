@@ -1,0 +1,158 @@
+{
+ "GET /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/",
+  "served_by": "maintenance-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/",
+  "served_by": "maintenance-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/",
+  "served_by": "maintenance-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/",
+  "served_by": "maintenance-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/",
+  "served_by": "maintenance-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/",
+  "served_by": "maintenance-detail",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/actions/",
+  "served_by": "maintenance-action",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/actions/",
+  "served_by": "maintenance-action",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/actions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/actions/",
+  "served_by": "maintenance-action",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/actions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/actions/",
+  "served_by": "maintenance-action",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/actions/",
+  "served_by": "maintenance-action",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/maintenance-requests/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/actions/",
+  "served_by": "maintenance-action",
+  "status": 403
+ }
+}

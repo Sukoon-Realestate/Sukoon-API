@@ -124,7 +124,13 @@ class CustomTokenRefreshView(TokenRefreshView):
 
 class CustomProviderAuthView(ProviderAuthView):
     def post(self, request: Request, *args, **kwargs) -> Response:
-        provider_res = super().post(request, *args, **kwargs)
+        from rest_framework.exceptions import NotFound
+        from social_core.exceptions import MissingBackend
+
+        try:
+            provider_res = super().post(request, *args, **kwargs)
+        except MissingBackend:
+            raise NotFound("Unknown authentication provider.")
 
         if provider_res.status_code == status.HTTP_201_CREATED:
             access_token = provider_res.data.get("access")

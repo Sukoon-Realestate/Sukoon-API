@@ -1,0 +1,1406 @@
+{
+ "DELETE /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "DELETE /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "DELETE /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "DELETE /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/components/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/components/<uuid:component_id>/<str:resource>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/components/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/components/<uuid:component_id>/<str:resource>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/components/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/components/<uuid:component_id>/<str:resource>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/components/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/components/<uuid:component_id>/<str:resource>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/components/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/components/<uuid:component_id>/<str:resource>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/components/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/components/<uuid:component_id>/<str:resource>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/stations/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/stations/<uuid:station_id>/<str:resource>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/stations/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/stations/<uuid:station_id>/<str:resource>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/stations/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/stations/<uuid:station_id>/<str:resource>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/stations/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/stations/<uuid:station_id>/<str:resource>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/stations/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/stations/<uuid:station_id>/<str:resource>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/stations/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/stations/<uuid:station_id>/<str:resource>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "PATCH /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PATCH /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PATCH /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "PATCH /api/v1/property-captures/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "COACH_UNAVAILABLE",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/",
+  "served_by": "",
+  "status": 503
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "COACH_UNAVAILABLE",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/",
+  "served_by": "",
+  "status": 503
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "COACH_UNAVAILABLE",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/",
+  "served_by": "",
+  "status": 503
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "COACH_UNAVAILABLE",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/",
+  "served_by": "",
+  "status": 503
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/00000000-0000-4000-8000-000000000000/close/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/<uuid:coach_id>/close/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/00000000-0000-4000-8000-000000000000/close/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/<uuid:coach_id>/close/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/00000000-0000-4000-8000-000000000000/close/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/<uuid:coach_id>/close/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/00000000-0000-4000-8000-000000000000/close/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/<uuid:coach_id>/close/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/00000000-0000-4000-8000-000000000000/close/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/<uuid:coach_id>/close/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/coach-sessions/00000000-0000-4000-8000-000000000000/close/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/coach-sessions/<uuid:coach_id>/close/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/manifests/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/manifests/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/manifests/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/manifests/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/manifests/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/manifests/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/manifests/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/manifests/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/manifests/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/manifests/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/manifests/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/manifests/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/retry/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/retry/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/retry/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/retry/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/retry/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/retry/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/retry/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/retry/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/retry/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/retry/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/retry/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/retry/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/select-outputs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/select-outputs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/select-outputs/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/select-outputs/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/select-outputs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "MANIFEST_INVALID",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/select-outputs/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/select-outputs/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "MANIFEST_INVALID",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/select-outputs/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/select-outputs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "MANIFEST_INVALID",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/select-outputs/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/select-outputs/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "MANIFEST_INVALID",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/<uuid:job_id>/select-outputs/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/rooms/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/rooms/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/rooms/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/rooms/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/rooms/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "MANIFEST_INVALID",
+  "route": "api/v1/property-captures/<uuid:session_id>/rooms/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/rooms/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "MANIFEST_INVALID",
+  "route": "api/v1/property-captures/<uuid:session_id>/rooms/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/rooms/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "MANIFEST_INVALID",
+  "route": "api/v1/property-captures/<uuid:session_id>/rooms/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/rooms/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "MANIFEST_INVALID",
+  "route": "api/v1/property-captures/<uuid:session_id>/rooms/",
+  "served_by": "",
+  "status": 422
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/complete/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/complete/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/complete/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/complete/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/complete/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/complete/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/complete/",
+  "served_by": "",
+  "status": 400
+ },
+ "PUT /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/parts/1/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/parts/<int:index>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/parts/1/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/parts/<int:index>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/parts/1/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/parts/<int:index>/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/parts/1/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/parts/<int:index>/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/parts/1/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/parts/<int:index>/",
+  "served_by": "",
+  "status": 404
+ },
+ "PUT /api/v1/property-captures/00000000-0000-4000-8000-000000000000/uploads/00000000-0000-4000-8000-000000000000/parts/1/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/uploads/<uuid:asset_id>/parts/<int:index>/",
+  "served_by": "",
+  "status": 404
+ }
+}

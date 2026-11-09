@@ -1,0 +1,140 @@
+{
+ "GET /api/v1/homepage/ anonymous mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "banner",
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "search_suggestions",
+   "total_pages"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/homepage/",
+  "served_by": "property-homepage-list",
+  "status": 200
+ },
+ "GET /api/v1/homepage/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "banner",
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "search_suggestions",
+   "total_pages"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/homepage/",
+  "served_by": "property-homepage-list",
+  "status": 200
+ },
+ "GET /api/v1/homepage/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "banner",
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "search_suggestions",
+   "total_pages"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/homepage/",
+  "served_by": "property-homepage-list",
+  "status": 200
+ },
+ "GET /api/v1/homepage/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "banner",
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "search_suggestions",
+   "total_pages"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/homepage/",
+  "served_by": "property-homepage-list",
+  "status": 200
+ },
+ "GET /api/v1/homepage/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "banner",
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "search_suggestions",
+   "total_pages"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/homepage/",
+  "served_by": "property-homepage-list",
+  "status": 200
+ },
+ "GET /api/v1/homepage/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "banner",
+   "count",
+   "next",
+   "page",
+   "per_page",
+   "previous",
+   "results",
+   "search_suggestions",
+   "total_pages"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/homepage/",
+  "served_by": "property-homepage-list",
+  "status": 200
+ }
+}

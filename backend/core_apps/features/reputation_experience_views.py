@@ -166,7 +166,12 @@ class CompanyAssignmentsView(ExperienceView):
             lambda x: occupancy.payload(x, request.user),
         )
 
-    def post(self, request, identity):
+    def post(self, request, identity=None):
+        if identity is None:
+            # reviews/employee-assignments/ is a read alias; assignment needs a company binding.
+            from rest_framework.exceptions import MethodNotAllowed
+
+            raise MethodNotAllowed("POST")
         return Response(
             occupancy.assign(request.user, identity, request.data), status=201
         )

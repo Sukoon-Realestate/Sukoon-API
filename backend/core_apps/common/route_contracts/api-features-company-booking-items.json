@@ -1,0 +1,392 @@
+{
+ "GET /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/contract-preparation/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/negotiation/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/negotiation/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/negotiation/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/negotiation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/negotiation/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/negotiation/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/negotiation/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/negotiation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/negotiation/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/negotiation/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/negotiation/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/negotiation/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/reassign/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/reassign/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/reassign/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/reassign/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/reassign/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/reassign/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/reassign/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/reassign/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/reassign/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/reassign/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/reassign/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/reassign/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/<slug:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "company_role_forbidden",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-booking-items/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ }
+}

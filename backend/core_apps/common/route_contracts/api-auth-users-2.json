@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/auth/users/set_password/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/users/set_password/",
+  "served_by": "user-set-password",
+  "status": 401
+ },
+ "POST /api/v1/auth/users/set_password/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/users/set_password/",
+  "served_by": "user-set-password",
+  "status": 401
+ },
+ "POST /api/v1/auth/users/set_password/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/users/set_password/",
+  "served_by": "user-set-password",
+  "status": 400
+ },
+ "POST /api/v1/auth/users/set_password/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/users/set_password/",
+  "served_by": "user-set-password",
+  "status": 400
+ },
+ "POST /api/v1/auth/users/set_password/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/users/set_password/",
+  "served_by": "user-set-password",
+  "status": 400
+ },
+ "POST /api/v1/auth/users/set_password/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/users/set_password/",
+  "served_by": "user-set-password",
+  "status": 400
+ }
+}

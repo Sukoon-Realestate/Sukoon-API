@@ -1,0 +1,80 @@
+{
+ "GET /api/v1/chat/messages/search/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/messages/search/",
+  "served_by": "message-search",
+  "status": 401
+ },
+ "GET /api/v1/chat/messages/search/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/messages/search/",
+  "served_by": "message-search",
+  "status": 401
+ },
+ "GET /api/v1/chat/messages/search/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/messages/search/",
+  "served_by": "message-search",
+  "status": 400
+ },
+ "GET /api/v1/chat/messages/search/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/messages/search/",
+  "served_by": "message-search",
+  "status": 400
+ },
+ "GET /api/v1/chat/messages/search/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/messages/search/",
+  "served_by": "message-search",
+  "status": 400
+ },
+ "GET /api/v1/chat/messages/search/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/messages/search/",
+  "served_by": "message-search",
+  "status": 400
+ }
+}

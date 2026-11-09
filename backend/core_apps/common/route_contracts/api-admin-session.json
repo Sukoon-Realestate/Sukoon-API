@@ -1,0 +1,94 @@
+{
+ "GET /api/v1/admin/session/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/session/",
+  "served_by": "admin-session",
+  "status": 401
+ },
+ "GET /api/v1/admin/session/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/session/",
+  "served_by": "admin-session",
+  "status": 401
+ },
+ "GET /api/v1/admin/session/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "allowedPaths",
+   "canManageStaff",
+   "email",
+   "id",
+   "name",
+   "role"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/session/",
+  "served_by": "admin-session",
+  "status": 200
+ },
+ "GET /api/v1/admin/session/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "allowedPaths",
+   "canManageStaff",
+   "email",
+   "id",
+   "name",
+   "role"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/session/",
+  "served_by": "admin-session",
+  "status": 200
+ },
+ "GET /api/v1/admin/session/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/session/",
+  "served_by": "admin-session",
+  "status": 403
+ },
+ "GET /api/v1/admin/session/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/session/",
+  "served_by": "admin-session",
+  "status": 403
+ }
+}

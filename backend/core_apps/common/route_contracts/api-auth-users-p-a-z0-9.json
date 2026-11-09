@@ -1,0 +1,190 @@
+{
+ "GET /api/v1/auth/users.json/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 401
+ },
+ "GET /api/v1/auth/users.json/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 401
+ },
+ "GET /api/v1/auth/users.json/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "email",
+    "first_name",
+    "id",
+    "last_name"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 200
+ },
+ "GET /api/v1/auth/users.json/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "email",
+    "first_name",
+    "id",
+    "last_name"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 200
+ },
+ "GET /api/v1/auth/users.json/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "email",
+    "first_name",
+    "id",
+    "last_name"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 200
+ },
+ "GET /api/v1/auth/users.json/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "email",
+    "first_name",
+    "id",
+    "last_name"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 200
+ },
+ "POST /api/v1/auth/users.json/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 400
+ },
+ "POST /api/v1/auth/users.json/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 400
+ },
+ "POST /api/v1/auth/users.json/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 400
+ },
+ "POST /api/v1/auth/users.json/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 400
+ },
+ "POST /api/v1/auth/users.json/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 400
+ },
+ "POST /api/v1/auth/users.json/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+  "served_by": "user-list",
+  "status": 400
+ }
+}

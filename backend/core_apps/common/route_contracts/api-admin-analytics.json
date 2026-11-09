@@ -1,0 +1,110 @@
+{
+ "GET /api/v1/admin/analytics/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/analytics/",
+  "served_by": "admin-analytics-stats",
+  "status": 401
+ },
+ "GET /api/v1/admin/analytics/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/analytics/",
+  "served_by": "admin-analytics-stats",
+  "status": 401
+ },
+ "GET /api/v1/admin/analytics/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avgRating",
+   "avgRatingChange",
+   "completedVisits",
+   "completedVisitsChange",
+   "dailyChart",
+   "kycBreakdown",
+   "period",
+   "propertyActivity",
+   "retentionRate",
+   "retentionRateChange",
+   "snapshot_measured_at",
+   "topRegions",
+   "visitRequests",
+   "visitRequestsChange"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/analytics/",
+  "served_by": "admin-analytics-stats",
+  "status": 200
+ },
+ "GET /api/v1/admin/analytics/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avgRating",
+   "avgRatingChange",
+   "completedVisits",
+   "completedVisitsChange",
+   "dailyChart",
+   "kycBreakdown",
+   "period",
+   "propertyActivity",
+   "retentionRate",
+   "retentionRateChange",
+   "snapshot_measured_at",
+   "topRegions",
+   "visitRequests",
+   "visitRequestsChange"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/analytics/",
+  "served_by": "admin-analytics-stats",
+  "status": 200
+ },
+ "GET /api/v1/admin/analytics/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/analytics/",
+  "served_by": "admin-analytics-stats",
+  "status": 403
+ },
+ "GET /api/v1/admin/analytics/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/analytics/",
+  "served_by": "admin-analytics-stats",
+  "status": 403
+ }
+}

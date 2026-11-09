@@ -1,0 +1,1198 @@
+{
+ "GET /api/v1/admin/properties/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/",
+  "served_by": "admin-properties-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/",
+  "served_by": "admin-properties-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/properties/",
+  "served_by": "admin-properties-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/properties/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/properties/",
+  "served_by": "admin-properties-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/properties/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/",
+  "served_by": "admin-properties-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/",
+  "served_by": "admin-properties-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/",
+  "served_by": "admin-property-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/",
+  "served_by": "admin-property-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/properties/<uuid:property_id>/",
+  "served_by": "admin-property-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/properties/<uuid:property_id>/",
+  "served_by": "admin-property-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/",
+  "served_by": "admin-property-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/",
+  "served_by": "admin-property-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/metrics/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/metrics/",
+  "served_by": "admin-properties-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/metrics/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/metrics/",
+  "served_by": "admin-properties-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/metrics/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "acceptedToday",
+   "active",
+   "blocked",
+   "openReports",
+   "pending",
+   "propertyTypes",
+   "rejected",
+   "rejectedToday",
+   "total"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/properties/metrics/",
+  "served_by": "admin-properties-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/properties/metrics/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "acceptedToday",
+   "active",
+   "blocked",
+   "openReports",
+   "pending",
+   "propertyTypes",
+   "rejected",
+   "rejectedToday",
+   "total"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/properties/metrics/",
+  "served_by": "admin-properties-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/properties/metrics/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/metrics/",
+  "served_by": "admin-properties-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/metrics/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/metrics/",
+  "served_by": "admin-properties-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<str:property_id>/",
+  "served_by": "admin-property-detail-str",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<str:property_id>/",
+  "served_by": "admin-property-detail-str",
+  "status": 401
+ },
+ "GET /api/v1/admin/properties/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/properties/<str:property_id>/",
+  "served_by": "admin-property-detail-str",
+  "status": 404
+ },
+ "GET /api/v1/admin/properties/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/properties/<str:property_id>/",
+  "served_by": "admin-property-detail-str",
+  "status": 404
+ },
+ "GET /api/v1/admin/properties/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<str:property_id>/",
+  "served_by": "admin-property-detail-str",
+  "status": 403
+ },
+ "GET /api/v1/admin/properties/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<str:property_id>/",
+  "served_by": "admin-property-detail-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/approve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/approve/",
+  "served_by": "admin-property-approve",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/approve/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/approve/",
+  "served_by": "admin-property-approve",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/approve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/approve/",
+  "served_by": "admin-property-approve",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/approve/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/approve/",
+  "served_by": "admin-property-approve",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/approve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/approve/",
+  "served_by": "admin-property-approve",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/approve/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/approve/",
+  "served_by": "admin-property-approve",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/block/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/block/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/block/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/block/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/block/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/block/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/block/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/block/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/block/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/block/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/block/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/block/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/reject/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/reject/",
+  "served_by": "admin-property-reject",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/reject/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/reject/",
+  "served_by": "admin-property-reject",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/reject/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/reject/",
+  "served_by": "admin-property-reject",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/reject/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/reject/",
+  "served_by": "admin-property-reject",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/reject/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/reject/",
+  "served_by": "admin-property-reject",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/reject/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/reject/",
+  "served_by": "admin-property-reject",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/revision/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/revision/",
+  "served_by": "admin-property-revision",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/revision/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/revision/",
+  "served_by": "admin-property-revision",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/revision/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/revision/",
+  "served_by": "admin-property-revision",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/revision/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/revision/",
+  "served_by": "admin-property-revision",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/revision/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/revision/",
+  "served_by": "admin-property-revision",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/revision/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/revision/",
+  "served_by": "admin-property-revision",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/unblock/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/unblock/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/unblock/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/unblock/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/unblock/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/unblock/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/unblock/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<uuid:property_id>/unblock/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/unblock/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/unblock/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/unblock/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/unblock/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/admin/properties/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "idempotency_key_required",
+  "route": "api/v1/admin/properties/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/00000000-0000-4000-8000-000000000000/virtual-tours/00000000-0000-4000-8000-000000000000/revisions/00000000-0000-4000-8000-000000000000/review-decisions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<uuid:property_id>/virtual-tours/<uuid:tour_id>/revisions/<uuid:revision_id>/review-decisions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/sample/approve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<str:property_id>/approve/",
+  "served_by": "admin-property-approve-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/sample/approve/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<str:property_id>/approve/",
+  "served_by": "admin-property-approve-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/sample/approve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<str:property_id>/approve/",
+  "served_by": "admin-property-approve-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/sample/approve/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<str:property_id>/approve/",
+  "served_by": "admin-property-approve-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/sample/approve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<str:property_id>/approve/",
+  "served_by": "admin-property-approve-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/sample/approve/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<str:property_id>/approve/",
+  "served_by": "admin-property-approve-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/sample/reject/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<str:property_id>/reject/",
+  "served_by": "admin-property-reject-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/sample/reject/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<str:property_id>/reject/",
+  "served_by": "admin-property-reject-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/sample/reject/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<str:property_id>/reject/",
+  "served_by": "admin-property-reject-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/sample/reject/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<str:property_id>/reject/",
+  "served_by": "admin-property-reject-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/sample/reject/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<str:property_id>/reject/",
+  "served_by": "admin-property-reject-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/sample/reject/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<str:property_id>/reject/",
+  "served_by": "admin-property-reject-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/sample/revision/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<str:property_id>/revision/",
+  "served_by": "admin-property-revision-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/sample/revision/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/properties/<str:property_id>/revision/",
+  "served_by": "admin-property-revision-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/properties/sample/revision/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<str:property_id>/revision/",
+  "served_by": "admin-property-revision-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/sample/revision/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/properties/<str:property_id>/revision/",
+  "served_by": "admin-property-revision-str",
+  "status": 400
+ },
+ "POST /api/v1/admin/properties/sample/revision/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<str:property_id>/revision/",
+  "served_by": "admin-property-revision-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/properties/sample/revision/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/properties/<str:property_id>/revision/",
+  "served_by": "admin-property-revision-str",
+  "status": 403
+ }
+}

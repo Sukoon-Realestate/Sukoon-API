@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/auth/facebook/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/facebook/",
+  "served_by": "facebook-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/facebook/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/facebook/",
+  "served_by": "facebook-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/facebook/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/facebook/",
+  "served_by": "facebook-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/facebook/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/facebook/",
+  "served_by": "facebook-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/facebook/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/facebook/",
+  "served_by": "facebook-login",
+  "status": 400
+ },
+ "POST /api/v1/auth/facebook/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/facebook/",
+  "served_by": "facebook-login",
+  "status": 400
+ }
+}

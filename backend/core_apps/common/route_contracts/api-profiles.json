@@ -1,0 +1,2528 @@
+{
+ "DELETE /api/v1/profiles/delete-account/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 401
+ },
+ "DELETE /api/v1/profiles/delete-account/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 401
+ },
+ "DELETE /api/v1/profiles/delete-account/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 409
+ },
+ "DELETE /api/v1/profiles/delete-account/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 409
+ },
+ "DELETE /api/v1/profiles/delete-account/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 409
+ },
+ "DELETE /api/v1/profiles/delete-account/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 409
+ },
+ "GET /api/v1/profiles/account-summary/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/account-summary/",
+  "served_by": "account-summary",
+  "status": 401
+ },
+ "GET /api/v1/profiles/account-summary/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/account-summary/",
+  "served_by": "account-summary",
+  "status": 403
+ },
+ "GET /api/v1/profiles/account-summary/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "identity_verification",
+   "shortcuts",
+   "stats",
+   "user"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/account-summary/",
+  "served_by": "account-summary",
+  "status": 200
+ },
+ "GET /api/v1/profiles/account-summary/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/account-summary/",
+  "served_by": "account-summary",
+  "status": 403
+ },
+ "GET /api/v1/profiles/account-summary/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "identity_verification",
+   "shortcuts",
+   "stats",
+   "user"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/account-summary/",
+  "served_by": "account-summary",
+  "status": 200
+ },
+ "GET /api/v1/profiles/account-summary/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/account-summary/",
+  "served_by": "account-summary",
+  "status": 403
+ },
+ "GET /api/v1/profiles/all/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/all/",
+  "served_by": "profile-list",
+  "status": 401
+ },
+ "GET /api/v1/profiles/all/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/all/",
+  "served_by": "profile-list",
+  "status": 401
+ },
+ "GET /api/v1/profiles/all/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "legacy_directory_retired",
+  "route": "api/v1/profiles/all/",
+  "served_by": "profile-list",
+  "status": 410
+ },
+ "GET /api/v1/profiles/all/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "legacy_directory_retired",
+  "route": "api/v1/profiles/all/",
+  "served_by": "profile-list",
+  "status": 410
+ },
+ "GET /api/v1/profiles/all/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "legacy_directory_retired",
+  "route": "api/v1/profiles/all/",
+  "served_by": "profile-list",
+  "status": 410
+ },
+ "GET /api/v1/profiles/all/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "legacy_directory_retired",
+  "route": "api/v1/profiles/all/",
+  "served_by": "profile-list",
+  "status": 410
+ },
+ "GET /api/v1/profiles/contracts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/contracts/",
+  "served_by": "tenant-contracts-list",
+  "status": 401
+ },
+ "GET /api/v1/profiles/contracts/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/contracts/",
+  "served_by": "tenant-contracts-list",
+  "status": 403
+ },
+ "GET /api/v1/profiles/contracts/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/contracts/",
+  "served_by": "tenant-contracts-list",
+  "status": 200
+ },
+ "GET /api/v1/profiles/contracts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/contracts/",
+  "served_by": "tenant-contracts-list",
+  "status": 403
+ },
+ "GET /api/v1/profiles/contracts/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/contracts/",
+  "served_by": "tenant-contracts-list",
+  "status": 200
+ },
+ "GET /api/v1/profiles/contracts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/contracts/",
+  "served_by": "tenant-contracts-list",
+  "status": 403
+ },
+ "GET /api/v1/profiles/edit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 401
+ },
+ "GET /api/v1/profiles/edit/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 401
+ },
+ "GET /api/v1/profiles/edit/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "GET /api/v1/profiles/edit/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "GET /api/v1/profiles/edit/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "GET /api/v1/profiles/edit/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "GET /api/v1/profiles/identity-expiry/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 401
+ },
+ "GET /api/v1/profiles/identity-expiry/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 401
+ },
+ "GET /api/v1/profiles/identity-expiry/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "allowed_reminder_days",
+   "document_version",
+   "expires_on",
+   "reminder_days",
+   "revision",
+   "source"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 200
+ },
+ "GET /api/v1/profiles/identity-expiry/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "allowed_reminder_days",
+   "document_version",
+   "expires_on",
+   "reminder_days",
+   "revision",
+   "source"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 200
+ },
+ "GET /api/v1/profiles/identity-expiry/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "allowed_reminder_days",
+   "document_version",
+   "expires_on",
+   "reminder_days",
+   "revision",
+   "source"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 200
+ },
+ "GET /api/v1/profiles/identity-expiry/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "allowed_reminder_days",
+   "document_version",
+   "expires_on",
+   "reminder_days",
+   "revision",
+   "source"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 200
+ },
+ "GET /api/v1/profiles/identity-media/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/identity-media/<slug:field>/",
+  "served_by": "identity-media",
+  "status": 401
+ },
+ "GET /api/v1/profiles/identity-media/sample/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/identity-media/<slug:field>/",
+  "served_by": "identity-media",
+  "status": 401
+ },
+ "GET /api/v1/profiles/identity-media/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/profiles/identity-media/<slug:field>/",
+  "served_by": "identity-media",
+  "status": 404
+ },
+ "GET /api/v1/profiles/identity-media/sample/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/profiles/identity-media/<slug:field>/",
+  "served_by": "identity-media",
+  "status": 404
+ },
+ "GET /api/v1/profiles/identity-media/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/profiles/identity-media/<slug:field>/",
+  "served_by": "identity-media",
+  "status": 404
+ },
+ "GET /api/v1/profiles/identity-media/sample/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/profiles/identity-media/<slug:field>/",
+  "served_by": "identity-media",
+  "status": 404
+ },
+ "GET /api/v1/profiles/my-account/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/my-account/",
+  "served_by": "my-account",
+  "status": 401
+ },
+ "GET /api/v1/profiles/my-account/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/my-account/",
+  "served_by": "my-account",
+  "status": 401
+ },
+ "GET /api/v1/profiles/my-account/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "account_details",
+   "menu_items",
+   "stats",
+   "user"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/my-account/",
+  "served_by": "my-account",
+  "status": 200
+ },
+ "GET /api/v1/profiles/my-account/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "account_details",
+   "menu_items",
+   "stats",
+   "user"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/my-account/",
+  "served_by": "my-account",
+  "status": 200
+ },
+ "GET /api/v1/profiles/my-account/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "account_details",
+   "menu_items",
+   "stats",
+   "user"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/my-account/",
+  "served_by": "my-account",
+  "status": 200
+ },
+ "GET /api/v1/profiles/my-account/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "account_details",
+   "menu_items",
+   "stats",
+   "user"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/my-account/",
+  "served_by": "my-account",
+  "status": 200
+ },
+ "GET /api/v1/profiles/my-rates/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/my-rates/",
+  "served_by": "tenant-my-rates",
+  "status": 401
+ },
+ "GET /api/v1/profiles/my-rates/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/my-rates/",
+  "served_by": "tenant-my-rates",
+  "status": 403
+ },
+ "GET /api/v1/profiles/my-rates/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/my-rates/",
+  "served_by": "tenant-my-rates",
+  "status": 200
+ },
+ "GET /api/v1/profiles/my-rates/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/my-rates/",
+  "served_by": "tenant-my-rates",
+  "status": 403
+ },
+ "GET /api/v1/profiles/my-rates/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/my-rates/",
+  "served_by": "tenant-my-rates",
+  "status": 200
+ },
+ "GET /api/v1/profiles/my-rates/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/profiles/my-rates/",
+  "served_by": "tenant-my-rates",
+  "status": 403
+ },
+ "GET /api/v1/profiles/owner/unread-counts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/owner/unread-counts/",
+  "served_by": "owner-unread-counts",
+  "status": 401
+ },
+ "GET /api/v1/profiles/owner/unread-counts/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/owner/unread-counts/",
+  "served_by": "owner-unread-counts",
+  "status": 401
+ },
+ "GET /api/v1/profiles/owner/unread-counts/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "request_counts",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/owner/unread-counts/",
+  "served_by": "owner-unread-counts",
+  "status": 200
+ },
+ "GET /api/v1/profiles/owner/unread-counts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/owner/unread-counts/",
+  "served_by": "owner-unread-counts",
+  "status": 200
+ },
+ "GET /api/v1/profiles/owner/unread-counts/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "request_counts",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/owner/unread-counts/",
+  "served_by": "owner-unread-counts",
+  "status": 200
+ },
+ "GET /api/v1/profiles/owner/unread-counts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/owner/unread-counts/",
+  "served_by": "owner-unread-counts",
+  "status": 200
+ },
+ "GET /api/v1/profiles/settings/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 401
+ },
+ "GET /api/v1/profiles/settings/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 401
+ },
+ "GET /api/v1/profiles/settings/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "GET /api/v1/profiles/settings/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "GET /api/v1/profiles/settings/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "GET /api/v1/profiles/settings/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "GET /api/v1/profiles/tenant/unread-counts/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/tenant/unread-counts/",
+  "served_by": "tenant-unread-counts",
+  "status": 401
+ },
+ "GET /api/v1/profiles/tenant/unread-counts/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/tenant/unread-counts/",
+  "served_by": "tenant-unread-counts",
+  "status": 401
+ },
+ "GET /api/v1/profiles/tenant/unread-counts/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "company_approval_counts",
+   "favorites_count",
+   "group_join_requests_count",
+   "request_counts",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/tenant/unread-counts/",
+  "served_by": "tenant-unread-counts",
+  "status": 200
+ },
+ "GET /api/v1/profiles/tenant/unread-counts/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "favorites_count",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/tenant/unread-counts/",
+  "served_by": "tenant-unread-counts",
+  "status": 200
+ },
+ "GET /api/v1/profiles/tenant/unread-counts/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "company_approval_counts",
+   "favorites_count",
+   "group_join_requests_count",
+   "request_counts",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/tenant/unread-counts/",
+  "served_by": "tenant-unread-counts",
+  "status": 200
+ },
+ "GET /api/v1/profiles/tenant/unread-counts/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "favorites_count",
+   "unread_chat_messages_count",
+   "unread_notifications_count",
+   "visit_requests_count"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/tenant/unread-counts/",
+  "served_by": "tenant-unread-counts",
+  "status": 200
+ },
+ "GET /api/v1/profiles/user/my-profile/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/user/my-profile/",
+  "served_by": "profile-detail",
+  "status": 401
+ },
+ "GET /api/v1/profiles/user/my-profile/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/user/my-profile/",
+  "served_by": "profile-detail",
+  "status": 401
+ },
+ "GET /api/v1/profiles/user/my-profile/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "date_joined",
+   "first_name",
+   "full_name",
+   "gender",
+   "id",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/my-profile/",
+  "served_by": "profile-detail",
+  "status": 200
+ },
+ "GET /api/v1/profiles/user/my-profile/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "date_joined",
+   "first_name",
+   "full_name",
+   "gender",
+   "id",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/my-profile/",
+  "served_by": "profile-detail",
+  "status": 200
+ },
+ "GET /api/v1/profiles/user/my-profile/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "date_joined",
+   "first_name",
+   "full_name",
+   "gender",
+   "id",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/my-profile/",
+  "served_by": "profile-detail",
+  "status": 200
+ },
+ "GET /api/v1/profiles/user/my-profile/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "date_joined",
+   "first_name",
+   "full_name",
+   "gender",
+   "id",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/my-profile/",
+  "served_by": "profile-detail",
+  "status": 200
+ },
+ "GET /api/v1/profiles/user/update/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 401
+ },
+ "GET /api/v1/profiles/user/update/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 401
+ },
+ "GET /api/v1/profiles/user/update/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "first_name",
+   "gender",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 200
+ },
+ "GET /api/v1/profiles/user/update/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "first_name",
+   "gender",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 200
+ },
+ "GET /api/v1/profiles/user/update/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "first_name",
+   "gender",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 200
+ },
+ "GET /api/v1/profiles/user/update/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "first_name",
+   "gender",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 200
+ },
+ "GET /api/v1/profiles/verification-status/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/verification-status/",
+  "served_by": "verification-status",
+  "status": 401
+ },
+ "GET /api/v1/profiles/verification-status/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/verification-status/",
+  "served_by": "verification-status",
+  "status": 401
+ },
+ "GET /api/v1/profiles/verification-status/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "documents",
+   "full_name",
+   "rejection_reason",
+   "revision",
+   "status",
+   "submission_id",
+   "submitted_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/verification-status/",
+  "served_by": "verification-status",
+  "status": 200
+ },
+ "GET /api/v1/profiles/verification-status/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "documents",
+   "full_name",
+   "rejection_reason",
+   "revision",
+   "status",
+   "submission_id",
+   "submitted_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/verification-status/",
+  "served_by": "verification-status",
+  "status": 200
+ },
+ "GET /api/v1/profiles/verification-status/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "documents",
+   "full_name",
+   "rejection_reason",
+   "revision",
+   "status",
+   "submission_id",
+   "submitted_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/verification-status/",
+  "served_by": "verification-status",
+  "status": 200
+ },
+ "GET /api/v1/profiles/verification-status/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "documents",
+   "full_name",
+   "rejection_reason",
+   "revision",
+   "status",
+   "submission_id",
+   "submitted_at"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/verification-status/",
+  "served_by": "verification-status",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/edit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 401
+ },
+ "PATCH /api/v1/profiles/edit/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 401
+ },
+ "PATCH /api/v1/profiles/edit/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/edit/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/edit/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/edit/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/settings/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 401
+ },
+ "PATCH /api/v1/profiles/settings/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 401
+ },
+ "PATCH /api/v1/profiles/settings/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/settings/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/settings/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/settings/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/user/update/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 401
+ },
+ "PATCH /api/v1/profiles/user/update/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 401
+ },
+ "PATCH /api/v1/profiles/user/update/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "first_name",
+   "gender",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/user/update/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "first_name",
+   "gender",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/user/update/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "first_name",
+   "gender",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 200
+ },
+ "PATCH /api/v1/profiles/user/update/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "city",
+   "confirmation_selfi",
+   "first_name",
+   "gender",
+   "id_back",
+   "id_face",
+   "last_name",
+   "national_id",
+   "phone_number"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 200
+ },
+ "POST /api/v1/profiles/delete-account/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 401
+ },
+ "POST /api/v1/profiles/delete-account/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 401
+ },
+ "POST /api/v1/profiles/delete-account/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 409
+ },
+ "POST /api/v1/profiles/delete-account/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 409
+ },
+ "POST /api/v1/profiles/delete-account/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 409
+ },
+ "POST /api/v1/profiles/delete-account/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_closure_review_required",
+  "route": "api/v1/profiles/delete-account/",
+  "served_by": "profile-delete-account",
+  "status": 409
+ },
+ "POST /api/v1/profiles/identity-expiry/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 401
+ },
+ "POST /api/v1/profiles/identity-expiry/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 401
+ },
+ "POST /api/v1/profiles/identity-expiry/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 400
+ },
+ "POST /api/v1/profiles/identity-expiry/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 400
+ },
+ "POST /api/v1/profiles/identity-expiry/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 400
+ },
+ "POST /api/v1/profiles/identity-expiry/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/profiles/identity-expiry/",
+  "served_by": "identity-expiry",
+  "status": 400
+ },
+ "POST /api/v1/profiles/identity-operations/00000000-0000-4000-8000-000000000000/resolve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/",
+  "served_by": "identity-operation-resolve",
+  "status": 401
+ },
+ "POST /api/v1/profiles/identity-operations/00000000-0000-4000-8000-000000000000/resolve/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/",
+  "served_by": "identity-operation-resolve",
+  "status": 401
+ },
+ "POST /api/v1/profiles/identity-operations/00000000-0000-4000-8000-000000000000/resolve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "operation_id",
+   "result",
+   "status"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/",
+  "served_by": "identity-operation-resolve",
+  "status": 200
+ },
+ "POST /api/v1/profiles/identity-operations/00000000-0000-4000-8000-000000000000/resolve/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "operation_id",
+   "result",
+   "status"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/",
+  "served_by": "identity-operation-resolve",
+  "status": 200
+ },
+ "POST /api/v1/profiles/identity-operations/00000000-0000-4000-8000-000000000000/resolve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "operation_id",
+   "result",
+   "status"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/",
+  "served_by": "identity-operation-resolve",
+  "status": 200
+ },
+ "POST /api/v1/profiles/identity-operations/00000000-0000-4000-8000-000000000000/resolve/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "operation_id",
+   "result",
+   "status"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/",
+  "served_by": "identity-operation-resolve",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/edit/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 401
+ },
+ "PUT /api/v1/profiles/edit/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 401
+ },
+ "PUT /api/v1/profiles/edit/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/edit/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/edit/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/edit/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avatar",
+   "birth_date",
+   "birth_date_label",
+   "city",
+   "email",
+   "first_name",
+   "full_name",
+   "gender",
+   "gender_label",
+   "last_name",
+   "masked_phone_number",
+   "phone_number",
+   "profile_image"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/edit/",
+  "served_by": "profile-edit",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/settings/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 401
+ },
+ "PUT /api/v1/profiles/settings/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 401
+ },
+ "PUT /api/v1/profiles/settings/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/settings/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/settings/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/settings/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "always_hide_mobile_number",
+   "always_hide_mobile_number_locked",
+   "id",
+   "new_properties_in_area",
+   "owner_messages",
+   "promotions_and_updates",
+   "property_updates",
+   "revision",
+   "sections",
+   "security_alerts",
+   "share_location_for_search",
+   "show_profile_in_search",
+   "visit_notifications"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/profiles/settings/",
+  "served_by": "user-settings",
+  "status": 200
+ },
+ "PUT /api/v1/profiles/user/update/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 401
+ },
+ "PUT /api/v1/profiles/user/update/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 401
+ },
+ "PUT /api/v1/profiles/user/update/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 400
+ },
+ "PUT /api/v1/profiles/user/update/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 400
+ },
+ "PUT /api/v1/profiles/user/update/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 400
+ },
+ "PUT /api/v1/profiles/user/update/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/profiles/user/update/",
+  "served_by": "profile-update",
+  "status": 400
+ }
+}

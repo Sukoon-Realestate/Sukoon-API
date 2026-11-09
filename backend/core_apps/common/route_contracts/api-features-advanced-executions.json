@@ -1,0 +1,239 @@
+{
+ "GET /api/v1/features/v1/advanced-executions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/advanced-executions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/advanced-executions/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/advanced-executions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/advanced-executions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/advanced-executions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/advanced-executions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/advanced-executions/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/advanced-executions/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/<str:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/<str:action>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/advanced-executions/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/<str:action>/",
+  "served_by": "",
+  "status": 403
+ }
+}

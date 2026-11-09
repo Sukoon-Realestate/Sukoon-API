@@ -1,0 +1,578 @@
+{
+ "GET /api/v1/auth/account-closure/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/account-closure/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/account-closure/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "expected_revision",
+   "history",
+   "new_business_restricted",
+   "request"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/account-closure/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "expected_revision",
+   "history",
+   "new_business_restricted",
+   "request"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/account-closure/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "expected_revision",
+   "history",
+   "new_business_restricted",
+   "request"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/account-closure/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "expected_revision",
+   "history",
+   "new_business_restricted",
+   "request"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/account-closure/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/account-closure/review/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/auth/account-closure/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/account-closure/review/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/account-closure/review/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/account-closure/review/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/auth/account-closure/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/account-closure/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/auth/account-closure/review/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/account-closure/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/account-closure/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/account-closure/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/account-closure/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/review/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/withdraw/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/withdraw/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/withdraw/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/withdraw/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/withdraw/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/withdraw/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/withdraw/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/withdraw/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/withdraw/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/withdraw/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/00000000-0000-4000-8000-000000000000/withdraw/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/<uuid:identity>/withdraw/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/receipt/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/receipt/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/account-closure/receipt/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/account-closure/receipt/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/auth/account-closure/receipt/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/receipt/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/receipt/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/receipt/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/receipt/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/receipt/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/auth/account-closure/receipt/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/auth/account-closure/receipt/",
+  "served_by": "",
+  "status": 400
+ }
+}

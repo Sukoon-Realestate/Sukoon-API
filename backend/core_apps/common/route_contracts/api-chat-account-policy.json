@@ -1,0 +1,108 @@
+{
+ "GET /api/v1/chat/account-policy/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/account-policy/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/account-policy/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/account-policy/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/account-policy/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "can_appeal",
+   "can_manage_existing_obligations",
+   "case_ids",
+   "cases",
+   "restricted",
+   "state"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/account-policy/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/account-policy/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "can_appeal",
+   "can_manage_existing_obligations",
+   "case_ids",
+   "cases",
+   "restricted",
+   "state"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/account-policy/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/account-policy/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "can_appeal",
+   "can_manage_existing_obligations",
+   "case_ids",
+   "cases",
+   "restricted",
+   "state"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/account-policy/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/account-policy/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "can_appeal",
+   "can_manage_existing_obligations",
+   "case_ids",
+   "cases",
+   "restricted",
+   "state"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/account-policy/",
+  "served_by": "",
+  "status": 200
+ }
+}

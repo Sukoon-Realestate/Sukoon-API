@@ -1,0 +1,626 @@
+{
+ "GET /api/v1/features/v1/academic-plans/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/academic-plans/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/history/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/history/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/history/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/history/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/history/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/history/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/history/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/history/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/history/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/history/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/history/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/history/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/publication-preview/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/publication-preview/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/publication-preview/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/publication-preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/publication-preview/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/publication-preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/publication-preview/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/publication-preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/publication-preview/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/publication-preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/publication-preview/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/publication-preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/academic-plans/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/arrangements/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/<slug:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/academic-plans/00000000-0000-4000-8000-000000000000/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ }
+}

@@ -1,0 +1,548 @@
+{
+ "GET /api/v1/features/v1/tenancy-invitations/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/",
+  "served_by": "tenancy-invitation-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/",
+  "served_by": "tenancy-invitation-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/",
+  "served_by": "tenancy-invitation-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/",
+  "served_by": "tenancy-invitation-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/",
+  "served_by": "tenancy-invitation-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/",
+  "served_by": "tenancy-invitation-detail",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/",
+  "served_by": "tenancy-invitations",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/",
+  "served_by": "tenancy-invitation-respond",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/",
+  "served_by": "tenancy-invitation-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/",
+  "served_by": "tenancy-invitation-respond",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/",
+  "served_by": "tenancy-invitation-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/",
+  "served_by": "tenancy-invitation-respond",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/",
+  "served_by": "tenancy-invitation-respond",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/resolve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/resolve/",
+  "served_by": "tenancy-invitation-response-resolve",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/resolve/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/resolve/",
+  "served_by": "tenancy-invitation-response-resolve",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/resolve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/resolve/",
+  "served_by": "tenancy-invitation-response-resolve",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/resolve/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/resolve/",
+  "served_by": "tenancy-invitation-response-resolve",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/resolve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/resolve/",
+  "served_by": "tenancy-invitation-response-resolve",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/respond/resolve/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/resolve/",
+  "served_by": "tenancy-invitation-response-resolve",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/revoke/",
+  "served_by": "tenancy-invitation-revoke",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/revoke/",
+  "served_by": "tenancy-invitation-revoke",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/revoke/",
+  "served_by": "tenancy-invitation-revoke",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/revoke/",
+  "served_by": "tenancy-invitation-revoke",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/revoke/",
+  "served_by": "tenancy-invitation-revoke",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/revoke/",
+  "served_by": "tenancy-invitation-revoke",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/create/resolve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/tenancy-invitations/create/resolve/",
+  "served_by": "tenancy-invitation-create-resolve",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/create/resolve/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/create/resolve/",
+  "served_by": "tenancy-invitation-create-resolve",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/create/resolve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenancy-invitations/create/resolve/",
+  "served_by": "tenancy-invitation-create-resolve",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/create/resolve/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/create/resolve/",
+  "served_by": "tenancy-invitation-create-resolve",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/create/resolve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/tenancy-invitations/create/resolve/",
+  "served_by": "tenancy-invitation-create-resolve",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/tenancy-invitations/create/resolve/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/tenancy-invitations/create/resolve/",
+  "served_by": "tenancy-invitation-create-resolve",
+  "status": 403
+ }
+}

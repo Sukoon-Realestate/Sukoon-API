@@ -1,0 +1,174 @@
+{
+ "GET /api/v1/auth/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/",
+  "served_by": "api-root",
+  "status": 401
+ },
+ "GET /api/v1/auth/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/",
+  "served_by": "api-root",
+  "status": 401
+ },
+ "GET /api/v1/auth/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "users"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/",
+  "served_by": "api-root",
+  "status": 200
+ },
+ "GET /api/v1/auth/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "users"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/",
+  "served_by": "api-root",
+  "status": 200
+ },
+ "GET /api/v1/auth/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "users"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/",
+  "served_by": "api-root",
+  "status": 200
+ },
+ "GET /api/v1/auth/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "users"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/",
+  "served_by": "api-root",
+  "status": 200
+ },
+ "GET /api/v1/auth/.json anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/<drf_format_suffix:format>",
+  "served_by": "api-root",
+  "status": 401
+ },
+ "GET /api/v1/auth/.json anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/auth/<drf_format_suffix:format>",
+  "served_by": "api-root",
+  "status": 401
+ },
+ "GET /api/v1/auth/.json staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "users"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/<drf_format_suffix:format>",
+  "served_by": "api-root",
+  "status": 200
+ },
+ "GET /api/v1/auth/.json staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "users"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/<drf_format_suffix:format>",
+  "served_by": "api-root",
+  "status": 200
+ },
+ "GET /api/v1/auth/.json tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "users"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/<drf_format_suffix:format>",
+  "served_by": "api-root",
+  "status": 200
+ },
+ "GET /api/v1/auth/.json tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "users"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/<drf_format_suffix:format>",
+  "served_by": "api-root",
+  "status": 200
+ }
+}

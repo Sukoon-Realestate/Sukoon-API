@@ -1,0 +1,80 @@
+{
+ "GET /api/v1/features/v1/action-center/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/action-center/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/action-center/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/action-center/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/action-center/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/action-center/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/action-center/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/action-center/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/action-center/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/action-center/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/action-center/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/action-center/",
+  "served_by": "",
+  "status": 403
+ }
+}

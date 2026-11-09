@@ -1,0 +1,152 @@
+{
+ "GET /api/v1/features/v1/planning-capabilities/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "account_verified",
+   "allowed_actions",
+   "blocking_reasons",
+   "configuration",
+   "enabled_capabilities",
+   "expires_at",
+   "policy_version",
+   "privacy_actions",
+   "privacy_subject_id",
+   "verified_services"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/planning-capabilities/",
+  "served_by": "planning-capabilities",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/planning-capabilities/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "account_verified",
+   "allowed_actions",
+   "blocking_reasons",
+   "configuration",
+   "enabled_capabilities",
+   "expires_at",
+   "policy_version",
+   "privacy_actions",
+   "privacy_subject_id",
+   "verified_services"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/planning-capabilities/",
+  "served_by": "planning-capabilities",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/planning-capabilities/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "account_verified",
+   "allowed_actions",
+   "blocking_reasons",
+   "configuration",
+   "enabled_capabilities",
+   "expires_at",
+   "policy_version",
+   "privacy_actions",
+   "privacy_subject_id",
+   "verified_services"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/planning-capabilities/",
+  "served_by": "planning-capabilities",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/planning-capabilities/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "account_verified",
+   "allowed_actions",
+   "blocking_reasons",
+   "configuration",
+   "enabled_capabilities",
+   "expires_at",
+   "policy_version",
+   "privacy_actions",
+   "privacy_subject_id",
+   "verified_services"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/planning-capabilities/",
+  "served_by": "planning-capabilities",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/planning-capabilities/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "account_verified",
+   "allowed_actions",
+   "blocking_reasons",
+   "configuration",
+   "enabled_capabilities",
+   "expires_at",
+   "policy_version",
+   "privacy_actions",
+   "privacy_subject_id",
+   "verified_services"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/planning-capabilities/",
+  "served_by": "planning-capabilities",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/planning-capabilities/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "account_id",
+   "account_verified",
+   "allowed_actions",
+   "blocking_reasons",
+   "configuration",
+   "enabled_capabilities",
+   "expires_at",
+   "policy_version",
+   "privacy_actions",
+   "privacy_subject_id",
+   "verified_services"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/planning-capabilities/",
+  "served_by": "planning-capabilities",
+  "status": 200
+ }
+}

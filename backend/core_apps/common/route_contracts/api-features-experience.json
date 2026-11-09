@@ -1,0 +1,1266 @@
+{
+ "DELETE /api/v1/features/v1/experience/discovery-preferences/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/features/v1/experience/discovery-preferences/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/features/v1/experience/discovery-preferences/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/features/v1/experience/discovery-preferences/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/features/v1/experience/discovery-preferences/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "DELETE /api/v1/features/v1/experience/discovery-preferences/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/alternatives/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/alternatives/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/alternatives/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/alternatives/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/alternatives/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/alternatives/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/alternatives/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/alternatives/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/alternatives/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/alternatives/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/alternatives/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/alternatives/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/capabilities/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/capabilities/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/capabilities/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/capabilities/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/capabilities/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "features",
+   "scope",
+   "version"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/experience/capabilities/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/experience/capabilities/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "features",
+   "scope",
+   "version"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/experience/capabilities/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/experience/capabilities/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "features",
+   "scope",
+   "version"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/experience/capabilities/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/experience/capabilities/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "features",
+   "scope",
+   "version"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/experience/capabilities/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/experience/discovery-preferences/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/discovery-preferences/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/discovery-preferences/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/discovery-preferences/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/discovery-preferences/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/discovery-preferences/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/preferences/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/preferences/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/preferences/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/preferences/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/preferences/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/preferences/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/preparation-tasks/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/preparation-tasks/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/experience/preparation-tasks/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/preparation-tasks/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/experience/preparation-tasks/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/preparation-tasks/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/experience/suggestions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/suggestions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/suggestions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/suggestions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/suggestions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/suggestions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/viewings/00000000-0000-4000-8000-000000000000/calendar/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/viewings/<uuid:identity>/calendar/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/viewings/00000000-0000-4000-8000-000000000000/calendar/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/viewings/<uuid:identity>/calendar/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/experience/viewings/00000000-0000-4000-8000-000000000000/calendar/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/viewings/<uuid:identity>/calendar/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/viewings/00000000-0000-4000-8000-000000000000/calendar/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/viewings/<uuid:identity>/calendar/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/viewings/00000000-0000-4000-8000-000000000000/calendar/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/viewings/<uuid:identity>/calendar/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/experience/viewings/00000000-0000-4000-8000-000000000000/calendar/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/viewings/<uuid:identity>/calendar/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/discovery-interactions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/discovery-interactions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/discovery-interactions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/discovery-interactions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/discovery-interactions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-interactions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/discovery-interactions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-interactions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/discovery-interactions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-interactions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/discovery-interactions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-interactions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/discovery-preferences/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/discovery-preferences/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/discovery-preferences/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/discovery-preferences/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/discovery-preferences/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/discovery-preferences/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/discovery-preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/listing-assessments/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/listing-assessments/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/listing-assessments/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/preferences/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/preferences/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/preferences/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/preferences/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/preferences/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/preferences/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preferences/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/preparation-tasks/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/preparation-tasks/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/experience/preparation-tasks/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/preparation-tasks/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/experience/preparation-tasks/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/preparation-tasks/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/experience/preparation-tasks/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/experience/suggestions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/suggestions/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/experience/suggestions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/suggestions/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/suggestions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/experience/suggestions/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/experience/suggestions/",
+  "served_by": "",
+  "status": 404
+ }
+}

@@ -1,0 +1,330 @@
+{
+ "GET /api/v1/admin/moderation/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/moderation/",
+  "served_by": "admin-moderation-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/moderation/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/moderation/",
+  "served_by": "admin-moderation-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/moderation/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/moderation/",
+  "served_by": "admin-moderation-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/moderation/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/moderation/",
+  "served_by": "admin-moderation-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/moderation/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/moderation/",
+  "served_by": "admin-moderation-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/moderation/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/moderation/",
+  "served_by": "admin-moderation-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/moderation/metrics/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/moderation/metrics/",
+  "served_by": "admin-moderation-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/moderation/metrics/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/moderation/metrics/",
+  "served_by": "admin-moderation-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/moderation/metrics/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "inappropriateContent",
+   "misleadingDesc",
+   "phoneNumInPhotos",
+   "suspiciousImages"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/moderation/metrics/",
+  "served_by": "admin-moderation-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/moderation/metrics/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "inappropriateContent",
+   "misleadingDesc",
+   "phoneNumInPhotos",
+   "suspiciousImages"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/moderation/metrics/",
+  "served_by": "admin-moderation-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/moderation/metrics/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/moderation/metrics/",
+  "served_by": "admin-moderation-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/moderation/metrics/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/moderation/metrics/",
+  "served_by": "admin-moderation-metrics",
+  "status": 403
+ },
+ "POST /api/v1/admin/moderation/00000000-0000-4000-8000-000000000000/delete/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/moderation/<uuid:property_id>/delete/",
+  "served_by": "admin-moderation-delete",
+  "status": 401
+ },
+ "POST /api/v1/admin/moderation/00000000-0000-4000-8000-000000000000/delete/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/moderation/<uuid:property_id>/delete/",
+  "served_by": "admin-moderation-delete",
+  "status": 401
+ },
+ "POST /api/v1/admin/moderation/00000000-0000-4000-8000-000000000000/delete/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/moderation/<uuid:property_id>/delete/",
+  "served_by": "admin-moderation-delete",
+  "status": 404
+ },
+ "POST /api/v1/admin/moderation/00000000-0000-4000-8000-000000000000/delete/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/moderation/<uuid:property_id>/delete/",
+  "served_by": "admin-moderation-delete",
+  "status": 404
+ },
+ "POST /api/v1/admin/moderation/00000000-0000-4000-8000-000000000000/delete/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/moderation/<uuid:property_id>/delete/",
+  "served_by": "admin-moderation-delete",
+  "status": 403
+ },
+ "POST /api/v1/admin/moderation/00000000-0000-4000-8000-000000000000/delete/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/moderation/<uuid:property_id>/delete/",
+  "served_by": "admin-moderation-delete",
+  "status": 403
+ },
+ "POST /api/v1/admin/moderation/sample/delete/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/moderation/<str:property_id>/delete/",
+  "served_by": "admin-moderation-delete-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/moderation/sample/delete/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/moderation/<str:property_id>/delete/",
+  "served_by": "admin-moderation-delete-str",
+  "status": 401
+ },
+ "POST /api/v1/admin/moderation/sample/delete/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/moderation/<str:property_id>/delete/",
+  "served_by": "admin-moderation-delete-str",
+  "status": 404
+ },
+ "POST /api/v1/admin/moderation/sample/delete/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/moderation/<str:property_id>/delete/",
+  "served_by": "admin-moderation-delete-str",
+  "status": 404
+ },
+ "POST /api/v1/admin/moderation/sample/delete/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/moderation/<str:property_id>/delete/",
+  "served_by": "admin-moderation-delete-str",
+  "status": 403
+ },
+ "POST /api/v1/admin/moderation/sample/delete/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/moderation/<str:property_id>/delete/",
+  "served_by": "admin-moderation-delete-str",
+  "status": 403
+ }
+}

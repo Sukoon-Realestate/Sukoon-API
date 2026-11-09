@@ -1,0 +1,244 @@
+{
+ "DELETE /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "DELETE /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "DELETE /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "DELETE /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "id"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 200
+ },
+ "DELETE /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "id"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/quick-replies/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/quick-replies/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/quick-replies/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/quick-replies/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/chat/quick-replies/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/quick-replies/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/quick-replies/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/quick-replies/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/chat/quick-replies/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "replies"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/quick-replies/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/chat/quick-replies/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "replies"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/chat/quick-replies/",
+  "served_by": "",
+  "status": 200
+ },
+ "PUT /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "PUT /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "PUT /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "PUT /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "PUT /api/v1/chat/quick-replies/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/chat/quick-replies/<uuid:id>/",
+  "served_by": "",
+  "status": 400
+ }
+}

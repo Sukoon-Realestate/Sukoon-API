@@ -1,0 +1,236 @@
+{
+ "GET /api/v1/features/v1/decision-notebook/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/decision-notebook/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/decision-notebook/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/decision-notebook/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/decision-notebook/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/features/v1/decision-notebook/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/decision-notebook/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/decision-notebook/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/decision-notebook/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/decision-notebook/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/decision-notebook/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/decision-notebook/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/decision-notebook/resolve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/decision-notebook/resolve/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/decision-notebook/resolve/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/decision-notebook/resolve/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/decision-notebook/resolve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/resolve/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/decision-notebook/resolve/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/resolve/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/decision-notebook/resolve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/resolve/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/decision-notebook/resolve/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/decision-notebook/resolve/",
+  "served_by": "",
+  "status": 400
+ }
+}

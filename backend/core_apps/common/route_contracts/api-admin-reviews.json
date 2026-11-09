@@ -1,0 +1,324 @@
+{
+ "GET /api/v1/admin/reviews/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reviews/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/admin/reviews/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/reviews/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/reviews/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid_review_text",
+  "route": "api/v1/admin/reviews/",
+  "served_by": "",
+  "status": 400
+ },
+ "GET /api/v1/admin/reviews/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/reviews/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/reviews/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/reviews/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/reviews/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/reviews/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/virtual-tours/reviews/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/virtual-tours/reviews/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "count",
+   "has_next",
+   "items",
+   "page"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/virtual-tours/reviews/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "count",
+   "has_next",
+   "items",
+   "page"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/virtual-tours/reviews/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/virtual-tours/reviews/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/virtual-tours/reviews/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/virtual-tours/reviews/<uuid:revision_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/virtual-tours/reviews/<uuid:revision_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/virtual-tours/reviews/<uuid:revision_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/virtual-tours/reviews/<uuid:revision_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/virtual-tours/reviews/<uuid:revision_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/admin/virtual-tours/reviews/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/virtual-tours/reviews/<uuid:revision_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/reviews/00000000-0000-4000-8000-000000000000/decisions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/reviews/<uuid:identity>/decisions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/admin/reviews/00000000-0000-4000-8000-000000000000/decisions/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/reviews/<uuid:identity>/decisions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/reviews/00000000-0000-4000-8000-000000000000/decisions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/reviews/<uuid:identity>/decisions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/admin/reviews/00000000-0000-4000-8000-000000000000/decisions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/reviews/<uuid:identity>/decisions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/admin/reviews/00000000-0000-4000-8000-000000000000/decisions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/reviews/<uuid:identity>/decisions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/admin/reviews/00000000-0000-4000-8000-000000000000/decisions/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/admin/reviews/<uuid:identity>/decisions/",
+  "served_by": "",
+  "status": 403
+ }
+}

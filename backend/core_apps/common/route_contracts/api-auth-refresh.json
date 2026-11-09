@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/auth/refresh/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/refresh/",
+  "served_by": "refresh",
+  "status": 400
+ },
+ "POST /api/v1/auth/refresh/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/refresh/",
+  "served_by": "refresh",
+  "status": 400
+ },
+ "POST /api/v1/auth/refresh/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/refresh/",
+  "served_by": "refresh",
+  "status": 400
+ },
+ "POST /api/v1/auth/refresh/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/refresh/",
+  "served_by": "refresh",
+  "status": 400
+ },
+ "POST /api/v1/auth/refresh/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/refresh/",
+  "served_by": "refresh",
+  "status": 400
+ },
+ "POST /api/v1/auth/refresh/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/auth/refresh/",
+  "served_by": "refresh",
+  "status": 400
+ }
+}

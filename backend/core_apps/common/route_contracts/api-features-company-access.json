@@ -1,0 +1,392 @@
+{
+ "GET /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-access/contact-proof/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-access/contact-proof/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-access/contact-proof/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-access/contact-proof/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/preview/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-access/preview/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-access/preview/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/preview/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-access/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-access/preview/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/preview/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-access/preview/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-access/preview/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/preview/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/company-access/<slug:action>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/company-access/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/sample/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-access/<slug:action>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-access/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/company-access/sample/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/company-access/<slug:action>/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/company-access/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/company-access/<slug:action>/",
+  "served_by": "",
+  "status": 403
+ }
+}

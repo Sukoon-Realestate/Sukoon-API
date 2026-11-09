@@ -1,0 +1,335 @@
+{
+ "GET /api/v1/payments/paymob/return/ anonymous mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 503
+ },
+ "GET /api/v1/payments/paymob/return/ anonymous mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 503
+ },
+ "GET /api/v1/payments/paymob/return/ staff mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 503
+ },
+ "GET /api/v1/payments/paymob/return/ staff mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 503
+ },
+ "GET /api/v1/payments/paymob/return/ tenant mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 503
+ },
+ "GET /api/v1/payments/paymob/return/ tenant mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 503
+ },
+ "GET /api/v1/payments/paymob/webhook/ anonymous mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 405
+ },
+ "GET /api/v1/payments/paymob/webhook/ anonymous mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 405
+ },
+ "GET /api/v1/payments/paymob/webhook/ staff mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 405
+ },
+ "GET /api/v1/payments/paymob/webhook/ staff mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 405
+ },
+ "GET /api/v1/payments/paymob/webhook/ tenant mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 405
+ },
+ "GET /api/v1/payments/paymob/webhook/ tenant mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 405
+ },
+ "POST /api/v1/payments/paymob/return/ anonymous mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 405
+ },
+ "POST /api/v1/payments/paymob/return/ anonymous mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 405
+ },
+ "POST /api/v1/payments/paymob/return/ staff mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 405
+ },
+ "POST /api/v1/payments/paymob/return/ staff mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 405
+ },
+ "POST /api/v1/payments/paymob/return/ tenant mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 405
+ },
+ "POST /api/v1/payments/paymob/return/ tenant mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/return/",
+  "served_by": "paymob-return",
+  "status": 405
+ },
+ "POST /api/v1/payments/paymob/test-checkout/ anonymous mvp=off": {
+  "cache_control": null,
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/test-checkout/",
+  "served_by": "paymob-test-checkout",
+  "status": 503
+ },
+ "POST /api/v1/payments/paymob/test-checkout/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/payments/paymob/test-checkout/",
+  "served_by": "paymob-test-checkout",
+  "status": 403
+ },
+ "POST /api/v1/payments/paymob/test-checkout/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/test-checkout/",
+  "served_by": "paymob-test-checkout",
+  "status": 503
+ },
+ "POST /api/v1/payments/paymob/test-checkout/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/payments/paymob/test-checkout/",
+  "served_by": "paymob-test-checkout",
+  "status": 403
+ },
+ "POST /api/v1/payments/paymob/test-checkout/ tenant mvp=off": {
+  "cache_control": null,
+  "content_type": "text/html",
+  "data": null,
+  "envelope": null,
+  "error_code": null,
+  "route": "api/v1/payments/paymob/test-checkout/",
+  "served_by": "paymob-test-checkout",
+  "status": 503
+ },
+ "POST /api/v1/payments/paymob/test-checkout/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/payments/paymob/test-checkout/",
+  "served_by": "paymob-test-checkout",
+  "status": 403
+ },
+ "POST /api/v1/payments/paymob/webhook/ anonymous mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 400
+ },
+ "POST /api/v1/payments/paymob/webhook/ anonymous mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 400
+ },
+ "POST /api/v1/payments/paymob/webhook/ staff mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 400
+ },
+ "POST /api/v1/payments/paymob/webhook/ staff mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 400
+ },
+ "POST /api/v1/payments/paymob/webhook/ tenant mvp=off": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 400
+ },
+ "POST /api/v1/payments/paymob/webhook/ tenant mvp=on": {
+  "cache_control": "max-age=0, no-cache, no-store, must-revalidate, private",
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "error"
+  ],
+  "error_code": null,
+  "route": "api/v1/payments/paymob/webhook/",
+  "served_by": "paymob-webhook",
+  "status": 400
+ }
+}

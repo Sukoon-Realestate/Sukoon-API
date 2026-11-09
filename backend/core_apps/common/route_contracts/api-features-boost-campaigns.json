@@ -1,0 +1,320 @@
+{
+ "GET /api/v1/features/v1/boost-campaigns/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/boost-campaigns/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/boost-campaigns/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/boost-campaigns/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/boost-campaigns/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/boost-campaigns/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/boost-campaigns/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/boost-campaigns/<uuid:campaign_id>/",
+  "served_by": "boost-campaign-detail",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/boost-campaigns/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/<uuid:campaign_id>/",
+  "served_by": "boost-campaign-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/boost-campaigns/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/boost-campaigns/<uuid:campaign_id>/",
+  "served_by": "boost-campaign-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/boost-campaigns/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/<uuid:campaign_id>/",
+  "served_by": "boost-campaign-detail",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/boost-campaigns/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/boost-campaigns/<uuid:campaign_id>/",
+  "served_by": "boost-campaign-detail",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/boost-campaigns/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/<uuid:campaign_id>/",
+  "served_by": "boost-campaign-detail",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/boost-campaigns/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/boost-campaigns/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/boost-campaigns/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/boost-campaigns/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/boost-campaigns/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/boost-campaigns/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/",
+  "served_by": "boost-campaigns",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/boost-campaigns/resolve/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/boost-campaigns/resolve/",
+  "served_by": "boost-campaign-resolve",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/boost-campaigns/resolve/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/resolve/",
+  "served_by": "boost-campaign-resolve",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/boost-campaigns/resolve/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/boost-campaigns/resolve/",
+  "served_by": "boost-campaign-resolve",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/boost-campaigns/resolve/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/resolve/",
+  "served_by": "boost-campaign-resolve",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/boost-campaigns/resolve/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/boost-campaigns/resolve/",
+  "served_by": "boost-campaign-resolve",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/boost-campaigns/resolve/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/boost-campaigns/resolve/",
+  "served_by": "boost-campaign-resolve",
+  "status": 403
+ }
+}

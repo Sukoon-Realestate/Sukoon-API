@@ -1,0 +1,684 @@
+{
+ "GET /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/advertising/v1/media/<uuid:advertisement_id>/",
+  "served_by": "advertisement-media",
+  "status": 404
+ },
+ "GET /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/media/<uuid:advertisement_id>/",
+  "served_by": "advertisement-media",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/advertising/v1/media/<uuid:advertisement_id>/",
+  "served_by": "advertisement-media",
+  "status": 404
+ },
+ "GET /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/media/<uuid:advertisement_id>/",
+  "served_by": "advertisement-media",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/advertising/v1/media/<uuid:advertisement_id>/",
+  "served_by": "advertisement-media",
+  "status": 404
+ },
+ "GET /api/v1/advertising/v1/media/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/media/<uuid:advertisement_id>/",
+  "served_by": "advertisement-media",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/operations/sample/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/advertising/v1/operations/<str:operation_id>/",
+  "served_by": "operation-detail",
+  "status": 401
+ },
+ "GET /api/v1/advertising/v1/operations/sample/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/operations/<str:operation_id>/",
+  "served_by": "operation-detail",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/operations/sample/ staff mvp=off": {
+  "cache_control": "no-store",
+  "content_type": "application/json",
+  "data": [
+   "advertisement",
+   "operation_id",
+   "retry_allowed",
+   "state"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/operations/<str:operation_id>/",
+  "served_by": "operation-detail",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/operations/sample/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/operations/<str:operation_id>/",
+  "served_by": "operation-detail",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/operations/sample/ tenant mvp=off": {
+  "cache_control": "no-store",
+  "content_type": "application/json",
+  "data": [
+   "advertisement",
+   "operation_id",
+   "retry_allowed",
+   "state"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/operations/<str:operation_id>/",
+  "served_by": "operation-detail",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/operations/sample/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/operations/<str:operation_id>/",
+  "served_by": "operation-detail",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 401
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/ staff mvp=off": {
+  "cache_control": "no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/ tenant mvp=off": {
+  "cache_control": "no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/",
+  "served_by": "owner-advertisement-detail",
+  "status": 401
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/",
+  "served_by": "owner-advertisement-detail",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/",
+  "served_by": "owner-advertisement-detail",
+  "status": 404
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/",
+  "served_by": "owner-advertisement-detail",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/",
+  "served_by": "owner-advertisement-detail",
+  "status": 404
+ },
+ "GET /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/",
+  "served_by": "owner-advertisement-detail",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/placements/tenant-home/ anonymous mvp=off": {
+  "cache_control": "private, max-age=60, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "results",
+   "server_now"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/placements/tenant-home/",
+  "served_by": "tenant-home",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/placements/tenant-home/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/placements/tenant-home/",
+  "served_by": "tenant-home",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/placements/tenant-home/ staff mvp=off": {
+  "cache_control": "private, max-age=60, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "results",
+   "server_now"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/placements/tenant-home/",
+  "served_by": "tenant-home",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/placements/tenant-home/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/placements/tenant-home/",
+  "served_by": "tenant-home",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/placements/tenant-home/ tenant mvp=off": {
+  "cache_control": "private, max-age=60, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "results",
+   "server_now"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/placements/tenant-home/",
+  "served_by": "tenant-home",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/placements/tenant-home/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/placements/tenant-home/",
+  "served_by": "tenant-home",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/plans/ anonymous mvp=off": {
+  "cache_control": "private, max-age=300, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "active",
+    "duration_count",
+    "duration_unit",
+    "id",
+    "price",
+    "revision",
+    "title"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/plans/",
+  "served_by": "plan-list",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/plans/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/plans/",
+  "served_by": "plan-list",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/plans/ staff mvp=off": {
+  "cache_control": "private, max-age=300, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "active",
+    "duration_count",
+    "duration_unit",
+    "id",
+    "price",
+    "revision",
+    "title"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/plans/",
+  "served_by": "plan-list",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/plans/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/plans/",
+  "served_by": "plan-list",
+  "status": 403
+ },
+ "GET /api/v1/advertising/v1/plans/ tenant mvp=off": {
+  "cache_control": "private, max-age=300, must-revalidate",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "active",
+    "duration_count",
+    "duration_unit",
+    "id",
+    "price",
+    "revision",
+    "title"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/plans/",
+  "served_by": "plan-list",
+  "status": 200
+ },
+ "GET /api/v1/advertising/v1/plans/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/plans/",
+  "served_by": "plan-list",
+  "status": 403
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 401
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 403
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 400
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 403
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 400
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/",
+  "served_by": "owner-advertisement-list",
+  "status": 403
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/mock-payment/",
+  "served_by": "mock-payment",
+  "status": 401
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/mock-payment/",
+  "served_by": "mock-payment",
+  "status": 403
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/mock-payment/",
+  "served_by": "mock-payment",
+  "status": 400
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/mock-payment/",
+  "served_by": "mock-payment",
+  "status": 403
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/mock-payment/",
+  "served_by": "mock-payment",
+  "status": 400
+ },
+ "POST /api/v1/advertising/v1/owner-advertisements/00000000-0000-4000-8000-000000000000/mock-payment/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/mock-payment/",
+  "served_by": "mock-payment",
+  "status": 403
+ }
+}

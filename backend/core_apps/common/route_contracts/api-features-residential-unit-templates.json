@@ -1,0 +1,92 @@
+{
+ "GET /api/v1/features/v1/residential-unit-templates/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-unit-templates/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-unit-templates/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-unit-templates/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-unit-templates/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-unit-templates/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/residential-unit-templates/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-unit-templates/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/residential-unit-templates/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-unit-templates/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/residential-unit-templates/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/residential-unit-templates/",
+  "served_by": "",
+  "status": 200
+ }
+}

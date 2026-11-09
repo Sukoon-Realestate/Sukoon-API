@@ -1,0 +1,578 @@
+{
+ "GET /api/v1/admin/support/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/",
+  "served_by": "admin-support-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/",
+  "served_by": "admin-support-list",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/support/",
+  "served_by": "admin-support-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/support/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/support/",
+  "served_by": "admin-support-list",
+  "status": 200
+ },
+ "GET /api/v1/admin/support/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/",
+  "served_by": "admin-support-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/",
+  "served_by": "admin-support-list",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 404
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 404
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 404
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/metrics/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/metrics/",
+  "served_by": "admin-support-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/metrics/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/metrics/",
+  "served_by": "admin-support-metrics",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/metrics/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avgResolutionTime",
+   "escalated",
+   "inProgress",
+   "openTickets",
+   "solvedToday"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/support/metrics/",
+  "served_by": "admin-support-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/support/metrics/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "avgResolutionTime",
+   "escalated",
+   "inProgress",
+   "openTickets",
+   "solvedToday"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/support/metrics/",
+  "served_by": "admin-support-metrics",
+  "status": 200
+ },
+ "GET /api/v1/admin/support/metrics/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/metrics/",
+  "served_by": "admin-support-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/metrics/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/metrics/",
+  "served_by": "admin-support-metrics",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/team/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/team/",
+  "served_by": "admin-support-team",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/team/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/team/",
+  "served_by": "admin-support-team",
+  "status": 401
+ },
+ "GET /api/v1/admin/support/team/ staff mvp=off": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "id",
+    "name"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/support/team/",
+  "served_by": "admin-support-team",
+  "status": 200
+ },
+ "GET /api/v1/admin/support/team/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": [
+   "list",
+   [
+    "id",
+    "name"
+   ]
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/admin/support/team/",
+  "served_by": "admin-support-team",
+  "status": 200
+ },
+ "GET /api/v1/admin/support/team/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/team/",
+  "served_by": "admin-support-team",
+  "status": 403
+ },
+ "GET /api/v1/admin/support/team/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/team/",
+  "served_by": "admin-support-team",
+  "status": 403
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 401
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 401
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 400
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 400
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 403
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/",
+  "served_by": "admin-support-detail",
+  "status": 403
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 401
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 401
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 404
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 404
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 403
+ },
+ "POST /api/v1/admin/support/00000000-0000-4000-8000-000000000000/receipts/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+  "served_by": "admin-support-receipt",
+  "status": 403
+ }
+}

@@ -1,0 +1,80 @@
+{
+ "POST /api/v1/features/v1/rental-summary-grants/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-summary-grants/<uuid:grant_id>/revoke/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/rental-summary-grants/00000000-0000-4000-8000-000000000000/revoke/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-summary-grants/<uuid:grant_id>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-summary-grants/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "account_verification_required",
+  "route": "api/v1/features/v1/rental-summary-grants/<uuid:grant_id>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-summary-grants/00000000-0000-4000-8000-000000000000/revoke/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-summary-grants/<uuid:grant_id>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-summary-grants/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "capability_unavailable",
+  "route": "api/v1/features/v1/rental-summary-grants/<uuid:grant_id>/revoke/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-summary-grants/00000000-0000-4000-8000-000000000000/revoke/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-summary-grants/<uuid:grant_id>/revoke/",
+  "served_by": "",
+  "status": 403
+ }
+}

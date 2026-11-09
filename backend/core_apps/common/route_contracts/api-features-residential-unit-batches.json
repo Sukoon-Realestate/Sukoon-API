@@ -1,0 +1,158 @@
+{
+ "GET /api/v1/features/v1/residential-unit-batches/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-unit-batches/<uuid:batch_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-unit-batches/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-unit-batches/<uuid:batch_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/residential-unit-batches/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/residential-unit-batches/<uuid:batch_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/residential-unit-batches/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/residential-unit-batches/<uuid:batch_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/residential-unit-batches/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/residential-unit-batches/<uuid:batch_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/residential-unit-batches/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/residential-unit-batches/<uuid:batch_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/residential-unit-batches/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-unit-batches/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-unit-batches/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/residential-unit-batches/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/residential-unit-batches/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/residential-unit-batches/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/residential-unit-batches/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "permission_denied",
+  "route": "api/v1/features/v1/residential-unit-batches/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/residential-unit-batches/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-unit-batches/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/residential-unit-batches/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/residential-unit-batches/",
+  "served_by": "",
+  "status": 400
+ }
+}

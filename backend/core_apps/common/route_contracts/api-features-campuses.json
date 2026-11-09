@@ -1,0 +1,89 @@
+{
+ "GET /api/v1/features/v1/campuses/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/campuses/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/campuses/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/campuses/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/campuses/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/campuses/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/campuses/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/campuses/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/campuses/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/campuses/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/campuses/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/campuses/",
+  "served_by": "",
+  "status": 403
+ }
+}

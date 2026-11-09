@@ -1,0 +1,554 @@
+{
+ "GET /api/v1/features/v1/rental-cases/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/rental-cases/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-cases/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/rental-cases/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-cases/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": [
+   "list",
+   "empty"
+  ],
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": null,
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 200
+ },
+ "GET /api/v1/features/v1/rental-cases/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/rental-cases/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/rental-cases/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/rental-cases/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 404
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/actions/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/habitability/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/habitability/",
+  "served_by": "",
+  "status": 401
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/habitability/ anonymous mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/habitability/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/habitability/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/habitability/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/habitability/ staff mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/habitability/",
+  "served_by": "",
+  "status": 403
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/habitability/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "invalid",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/habitability/",
+  "served_by": "",
+  "status": 400
+ },
+ "POST /api/v1/features/v1/rental-cases/00000000-0000-4000-8000-000000000000/habitability/ tenant mvp=on": {
+  "cache_control": null,
+  "content_type": "application/json",
+  "data": null,
+  "envelope": [
+   "code",
+   "detail"
+  ],
+  "error_code": "mvp_feature_deferred",
+  "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/habitability/",
+  "served_by": "",
+  "status": 403
+ }
+}
