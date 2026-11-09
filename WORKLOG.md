@@ -2,6 +2,31 @@
 
 ## 2026-11-09
 
+### Sukoon backend baseline health sweep execution
+- **What:** Completed a full read-only baseline health sweep across all six areas of the Sukoon Django backend (`core_apps/`, `config/`), executed automated AST code metrics, Django deployment security check, `sukoon-v1` query-growth benchmark, and the full test suite.
+- **Why:** Establish a comprehensive, verified baseline of backend health, query efficiency, zero-trust security controls, state transition invariants, and test coverage without modifying application code.
+- **Details:**
+  - **AST Metrics:** Scanned 1,196 files and 147,302 lines of code across `core_apps` and `config`. Analyzed 4,189 functions with median length of 13 lines; 86.6% (3,628 functions) are <= 50 lines. Identified 2 modularization candidates: `tenancy_projection.py` (`S3-N1`) and `event_copy.py` (`S5-N1`).
+  - **Query Growth Benchmark:** Executed `sukoon-v1` comparator across 13 screens with small (5 rows) vs large (40 rows) fixtures. 13 of 13 screens (100%) achieved near-constant query complexity with zero N+1 query regressions. Public catalog queries stayed flat at 4 queries.
+  - **Deployment Security Check:** Identified 0 errors and 4 standard development warnings (`W004` HSTS, `W008` SSL redirect, `W012` session cookie secure, `W016` CSRF cookie secure) documented under `S6-N3`.
+  - **Full Test Suite:** 4,018 tests passed out of 4,307 test cases (270 skipped for PostgreSQL/concurrency isolation). Verified 8 failures: 7 were properly intercepted by the sweep isolated runtime's socket guard blocking local loopback TCP sockets (`S6-N2`), and 1 was an `XPASS(strict)` from flattened admin property list query counts (`S6-N1`).
+  - **Findings Recorded:** Generated comprehensive reports and backlog findings across all 6 areas (`S1-N1` through `S6-N3`), noting verified zero-trust protections on private media (`image/authenticated/`), instant session revocation, integer-cent currency precision, Paymob webhook HMAC verification, and Celery `LeaseScheduler` master lease locks.
+- **Validation:**
+  - `metrics.json`: 147,302 lines, 4,189 functions.
+  - `check_deploy.txt`: 0 errors, 4 non-fatal warnings.
+  - `bench/`: 13/13 screens near-constant queries.
+  - `tests.txt`: 4,018 passed, 270 skipped, 11 xfailed, 484.42s runtime.
+  - Zero application source code modifications.
+- **Files:**
+  - `backend/docs/health/README.md`
+  - `backend/docs/health/area-1.md`
+  - `backend/docs/health/area-2.md`
+  - `backend/docs/health/area-3.md`
+  - `backend/docs/health/area-4.md`
+  - `backend/docs/health/area-5.md`
+  - `backend/docs/health/area-6.md`
+  - `WORKLOG.md`
+
 ### Admin portal backend implementation and health audit resolution
 - **What:** Completed and audited the whole admin portal backend on `feature/admin-portal-backend`, resolving critical moderation invariants, filter relationships, prefetch optimizations, and comprehensive test coverage.
 - **Why:** Ensure full functionality, security, independent review enforcement, and N+1 query elimination across all domains of the Sukoon admin portal (Users, KYC, Moderation, Staff & Roles, Financials, Audit Logs, Settings).
