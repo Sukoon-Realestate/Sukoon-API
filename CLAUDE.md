@@ -1,81 +1,17 @@
-# CLAUDE.md — Sukoon Monorepo Orchestrator
+# CLAUDE.md — Sukoon Monorepo
 
-Sukoon is a multi-platform real estate ecosystem organized as a clean monorepo with three core workspaces:
-1. `backend/`: Django REST API + Django Channels (WebSockets) + PostgreSQL/SQLite + SimpleJWT.
-2. `frontend/`: Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS (Admin & Web Dashboard).
-3. `mobile/`: Flutter 3.9+ + Dart + Melos 8 monorepo (`packages/core`, `apps/sokoun_app`, `apps/landing_page`).
-
----
-
-## 🧭 Monorepo Routing Rule
-
-**Always inspect the relevant workspace before making changes:**
-
-| Target Workspace | Scope | Primary Configuration | Agent / Skill Location |
-|---|---|---|---|
-| **Backend** (`backend/`) | Django API, models, migrations, endpoints, serializers, Celery, Channels, auth | [backend/CLAUDE.md](file:///Users/demo23home/code/Sukoon-API/backend/CLAUDE.md) | `backend/.claude/agents/`, `backend/.claude/skills/` |
-| **Frontend** (`frontend/`) | Next.js admin & portal, pages, React components, Tailwind styling, web client | [frontend/CLAUDE.md](file:///Users/demo23home/code/Sukoon-API/frontend/CLAUDE.md) | `frontend/AGENTS.md` |
-| **Mobile** (`mobile/`) | Flutter tenant & owner apps, Melos packages, Clean Architecture, Cubits, UI widgets | [mobile/CLAUDE.md](file:///Users/demo23home/code/Sukoon-API/mobile/CLAUDE.md) | `mobile/.claude/agents/`, `mobile/.claude/skills/` |
-| **Cross-Platform / Docs** (`docs/`) | API handoffs, Postman collections, architecture specifications | Root `docs/` | Cross-discipline |
-
----
-
-## 🛠️ Root Commands (from Repo Root)
-
-```bash
-# ── Help ───────────────────────────────────────────
-make help                     # Show all monorepo commands
-
-# ── Backend Shortcuts ──────────────────────────────
-make backend-run              # Start Django API dev server
-make backend-test             # Run Django pytest suite
-make backend-migrate          # Apply database migrations
-make backend-makemigrations   # Create new database migrations
-make backend-shell            # Open Django shell_plus
-
-# ── Frontend Shortcuts ─────────────────────────────
-make frontend-dev             # Start Next.js development server
-make frontend-build           # Build Next.js production bundle
-make frontend-lint            # Run ESLint on frontend
-
-# ── Mobile Shortcuts ───────────────────────────────
-make mobile-analyze           # Run Melos analyze across all packages & apps
-make mobile-test              # Run Flutter tests across all packages & apps
-make mobile-codegen           # Run build_runner code generation
-make mobile-translations      # Generate localization strings from lang.json
-make mobile-clean             # Clean Melos packages
-
-# ── Fullstack Dev Runner ───────────────────────────
-make dev                      # Start unified backend + frontend runner
-```
-
----
-
-## 🏗️ Architecture & Conventions by Workspace
-
-### 1. Backend (`backend/`)
-- Settings located in `backend/config/settings/` (`base.py` plus per-environment modules such as `test.py`, `postgres_test.py`, `local.py`, `production.py`).
-- Apps located in `backend/core_apps/` (`users`, `profiles`, `properties`, `chat`, `notifications`, `support`, etc.).
-- Views: explicit class-based views over domain services is the approved target (`backend/sprints/ARCHITECTURE.md`); existing `@api_view` functions are migration debt — do not add new ones.
-- JWT authentication (`SimpleJWT`) and role-based permissions (`Tenant`, `Owner`, `Admin`).
-
-### 2. Frontend (`frontend/`)
-- Next.js 15 App Router (`src/app/`) with TypeScript and Tailwind CSS.
-- Authentication context with token refresh (`src/context/AuthContext.tsx`).
-- API client abstraction in `src/lib/api/`.
-
-### 3. Mobile (`mobile/`)
-- Melos workspace managing `packages/core`, `apps/sokoun_app`, and `apps/landing_page`.
-- Clean Architecture: Presentation (thin screens, extracted widgets, `AsyncCubit<T>`), Data (models, datasources), Domain (use cases).
-- Navigation MUST use `Go` static helper (`Go.to`, `Go.back`, etc.) — never raw `Navigator`.
-- Paginated lists MUST use `AppPagify`.
-- Localization uses `LocaleKeys` sourced from `packages/core/assets/translations/lang.json`.
+Sukoon is a real-estate platform. This repo holds `backend/` (Django API — see `backend/CLAUDE.md`) and `frontend/` (Next.js — see `frontend/AGENTS.md`); the Flutter mobile app lives in the separate `sokoun` repo. Run `make help` for monorepo commands.
 
 ---
 
 ## 📝 ALWAYS — Log Completed Tasks to WORKLOG.md
 
-After finishing **any task requested by the user**, append an entry to `WORKLOG.md` under today's date heading (`## YYYY-MM-DD`):
+After finishing **any task requested by the user** (a feature, fix, refactor, config change, etc.), append an entry to the repo-root `WORKLOG.md` before ending your turn. It is the user's daily record for tech-lead/Plane review, so each entry must be self-contained.
+
+- Append under today's date heading (`## YYYY-MM-DD`); create that heading if it's a new day.
+- Write it as a finished, copy-pasteable summary — past tense, no "I will". Note any follow-ups or caveats the tech lead should see.
+- Skip only for pure questions/conversation where nothing was changed. When in doubt, log it.
+
 ```markdown
 ### <short task title>
 - **What:** <one line on what was done>
