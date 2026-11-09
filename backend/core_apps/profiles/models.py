@@ -208,3 +208,42 @@ class IdentityDocumentExpiry(TimeStampedModel):
         constraints = [models.UniqueConstraint(
             fields=["profile", "document_version"], name="unique_identity_card_expiry_version"
         )]
+
+
+class ProfileMediaUpload(TimeStampedModel):
+    """Server-recorded provenance for profile media this account actually uploaded.
+
+    A1-01: provider references are only erased on account closure when a receipt proves
+    the asset was uploaded by that account. Rows exist only for uploads made through the
+    profile/identity services; legacy references without one are held for review.
+    """
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="profile_media_uploads"
+    )
+    field = models.CharField(max_length=32)
+    public_id = models.CharField(max_length=300)
+    storage_type = models.CharField(max_length=20, default="upload")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["public_id", "storage_type"],
+                name="profile_media_upload_unique_asset",
+            )
+        ]
+
+
+def record_profile_upload(user, field, asset):
+    """Record that ``asset`` (a stored CloudinaryResource) was uploaded by ``user``."""
+    public_id = getattr(asset, "public_id", None)
+    if not public_id:
+        return
+    storage_type = getattr(asset, "type", None) or (
+        "upload" if field == "avatar" else "authenticated"
+    )
+    ProfileMediaUpload.objects.get_or_create(
+        public_id=str(public_id),
+        storage_type=storage_type,
+        defaults={"user": user, "field": field},
+    )

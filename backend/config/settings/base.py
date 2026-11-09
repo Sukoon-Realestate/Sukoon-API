@@ -511,6 +511,15 @@ COOKIE_PATH = "/"  # ? cookies will be accessed project widest
 COOKIE_HTTPONLY = True  # ? can't be accessed via js
 # ?HTTPS only or HTTP && HTTPS
 COOKIE_SECURE = getenv("COOKIE_SECURE", "True") == "True"
+# A1-08: unsafe requests authenticated only by the auth cookies must come from this
+# host or one of these origins when the browser sends an Origin header. Bearer
+# (Authorization header) clients and requests without an Origin are unaffected.
+COOKIE_ORIGIN_ENFORCEMENT = getenv("COOKIE_ORIGIN_ENFORCEMENT", "True") == "True"
+COOKIE_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in getenv("COOKIE_TRUSTED_ORIGINS", "").split(",")
+    if origin.strip()
+]
 
 
 ## Rest FrameWork Settings

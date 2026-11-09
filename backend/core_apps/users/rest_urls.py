@@ -47,6 +47,29 @@ class CanonicalUserViewSet(UserViewSet):
             "Contact changes require approved verification of the new contact."
         )
 
+    # A1-02: Djoser's destroy (reached by DELETE users/<id>/, users/me/ and their
+    # router format-suffix variants, for self and staff alike) physically deleted
+    # the account outside reviewed closure. Every alias now answers like the other
+    # retired delete routes. The object is resolved first, so Djoser's existing
+    # permission answers (401 anonymous, 403 non-owner) are unchanged.
+    def destroy(self, request, *args, **kwargs):
+        from rest_framework import status
+        from rest_framework.response import Response
+
+        self.get_object()
+        return Response(
+            {
+                "message": "راجع طلب حذف الحساب من إعدادات الحساب. / Use the account closure review in account settings.",
+                "code": "account_closure_review_required",
+            },
+            status=status.HTTP_409_CONFLICT,
+        )
+
+    def perform_destroy(self, instance):
+        from rest_framework.exceptions import PermissionDenied
+
+        raise PermissionDenied("Accounts close only through the reviewed closure request.")
+
     @action(["post"], detail=False, url_path="reset_email")
     def reset_username(self, request, *args, **kwargs):
         return self.set_username(request, *args, **kwargs)

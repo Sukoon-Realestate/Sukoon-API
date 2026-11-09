@@ -143,7 +143,7 @@ def delete_user_account(user: Any) -> None:
 # * Complete user registration / KYC documents service
 @transaction.atomic
 def complete_user_registration(
-    user: Any, validated_data: dict, *, request_key=None
+    user: Any, validated_data: dict, *, request_key=None, auth_claims=None
 ) -> dict:
     """
     Updates missing KYC documents / national ID on user's profile.
@@ -152,7 +152,9 @@ def complete_user_registration(
     """
     from .identity_submission import submit_identity
 
-    return submit_identity(user, validated_data, request_key=request_key)
+    return submit_identity(
+        user, validated_data, request_key=request_key, auth_claims=auth_claims
+    )
 
 
 # * Change user password service

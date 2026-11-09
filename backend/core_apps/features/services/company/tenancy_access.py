@@ -315,15 +315,29 @@ def commercial_read(lease, user):
     return bool(roles(lease.company_tenancy, user) & {"owner", "new_owner", "signer"})
 
 
+def _personally_revoked(lease, user):
+    """A4-02: a personal participant whose private access to this lease was revoked.
+
+    Company roles already honor PrivateAccessRevocation through roles(); personal
+    leases now apply the same rule to private financial reads and new payment
+    commands. Original-operation reconciliation is authorized separately.
+    """
+    from ...models import PrivateAccessRevocation
+
+    return PrivateAccessRevocation.objects.filter(lease=lease, user=user).exists()
+
+
 def financial_read(lease, user):
     if not lease.renter_company_id:
-        return user.pk in {lease.owner_id, lease.tenant_id}
+        return user.pk in {lease.owner_id, lease.tenant_id} and not _personally_revoked(
+            lease, user
+        )
     return bool(roles(lease.company_tenancy, user) & {"owner", "payer"})
 
 
 def can_pay(lease, user):
     if not lease.renter_company_id:
-        return user.pk == lease.tenant_id
+        return user.pk == lease.tenant_id and not _personally_revoked(lease, user)
     try:
         require_delegate(lease.company_tenancy, user, "pay")
         return True

@@ -55,7 +55,7 @@ def _invoice(request, invoice_id, lock=False):
     return invoice
 
 
-def _attempt(request, attempt_id, lock=False):
+def _attempt(request, attempt_id, lock=False, allow_original_payer=False):
     queryset = PaymentAttempt.objects.select_related("invoice__lease", "quote")
     if lock:
         candidate = get_object_or_404(queryset, id=attempt_id)
@@ -67,6 +67,10 @@ def _attempt(request, attempt_id, lock=False):
         from ..services.billing_invoices import authorized_invoice
 
         authorized_invoice(request.user, attempt.invoice.id)
+        return attempt
+    if allow_original_payer and attempt.payer_id == request.user.pk:
+        # A4-02: reconciling one's own original payment stays possible after a
+        # private-access revocation; it reveals and changes nothing else.
         return attempt
     if attempt.invoice.beneficiary_id != request.user.pk and not financial_read(
         attempt.invoice.lease, request.user

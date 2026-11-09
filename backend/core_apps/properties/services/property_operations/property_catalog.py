@@ -141,12 +141,12 @@ class PropertyCatalogMixin:
     @classmethod
     def get_available_places(cls, property_type):
         """Return distinct locations for approved properties of a given type."""
+        from core_apps.properties.services.public_access import public_properties
+
+        # A2-01: the same publication policy as the catalog (owner restrictions,
+        # closure and moderation blocks included).
         places = (
-            Property.objects.filter(
-                property_type=property_type,
-                retired_at=None,
-            )
-            .filter(status=Property.Status.VERIFIED)
+            public_properties(Property.objects.filter(property_type=property_type))
             .values("governorate__name", "city__name", "district")
             .distinct()
             .order_by("governorate__name", "city__name", "district")

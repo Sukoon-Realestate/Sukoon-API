@@ -16,6 +16,10 @@ class CookieAuthentication(JWTAuthentication):
         if header is not None:
             raw_token = self.get_raw_token(header)
         elif settings.COOKIE_NAME in request.COOKIES:
+            from .cookie_origin import require_cookie_origin
+
+            # A1-08: ambient cookie credentials need same-origin proof on writes.
+            require_cookie_origin(request)
             raw_token = request.COOKIES.get(settings.COOKIE_NAME)
 
         if raw_token is not None:

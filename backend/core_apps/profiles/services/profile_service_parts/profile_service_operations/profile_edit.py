@@ -107,11 +107,18 @@ class ProfileEditMixin:
             user.save(update_fields=list(set(user_fields_to_update)))
 
         # * Update profile fields (including avatar)
+        from django.core.files.uploadedfile import UploadedFile
+
+        uploaded_avatar = isinstance(validated_data.get("avatar"), UploadedFile)
         for field, value in validated_data.items():
             if hasattr(profile, field):
                 setattr(profile, field, value)
 
         profile.save()
+        if uploaded_avatar:
+            from core_apps.profiles.models import record_profile_upload
+
+            record_profile_upload(user, "avatar", profile.avatar)
         return profile
 
     @classmethod

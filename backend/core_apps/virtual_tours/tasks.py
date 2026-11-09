@@ -101,10 +101,8 @@ def cleanup_tours():
     ):
         if revision.tour.active_revision_id != revision.pk:
             revision.delete()
-    referenced = set(TourAsset.objects.values_list("blob", flat=True))
     from .capture_models import (
         PropertyCaptureSession,
-        CaptureAsset,
         CaptureProcessingJob,
     )
 
@@ -117,6 +115,35 @@ def cleanup_tours():
     CaptureProcessingJob.objects.filter(
         manifest__session__deleted_at__isnull=False
     ).update(cancel_requested=True)
+    referenced = referenced_blobs(now)
+    threshold = (now - timedelta(days=7)).timestamp()
+    removed = 0
+    for entry in root().iterdir():
+        if (
+            entry.name not in referenced or remote_storage.configured()
+        ) and entry.stat().st_mtime < threshold:
+            if entry.is_dir():
+                shutil.rmtree(entry)
+            else:
+                entry.unlink()
+            removed += 1
+    return {
+        "removed_local_files": removed,
+        "removed_remote_orphans": remote_storage.sweep(referenced, threshold),
+    }
+
+
+def referenced_blobs(now=None):
+    """Every private-storage key a live record still needs (A3-01).
+
+    This is the single reference graph for local and remote orphan sweeping. Any new
+    consumer of ``storage.write_blob`` must be added here, or cleanup will reclaim it.
+    """
+    from .capture_models import CaptureAsset, CaptureProcessingJob
+    from core_apps.properties.models.portfolio import ResidentialMedia
+
+    now = now or timezone.now()
+    referenced = set(TourAsset.objects.values_list("blob", flat=True))
     for capture in CaptureAsset.objects.filter(session__deleted_at=None):
         if capture.blob:
             referenced.add(capture.blob)
@@ -136,18 +163,12 @@ def cleanup_tours():
         state="open", expires_at__gt=now
     ).values_list("parts", flat=True):
         referenced.update(p["blob"] for p in parts.values())
-    threshold = (now - timedelta(days=7)).timestamp()
-    removed = 0
-    for entry in root().iterdir():
-        if (
-            entry.name not in referenced or remote_storage.configured()
-        ) and entry.stat().st_mtime < threshold:
-            if entry.is_dir():
-                shutil.rmtree(entry)
-            else:
-                entry.unlink()
-            removed += 1
-    return {
-        "removed_local_files": removed,
-        "removed_remote_orphans": remote_storage.sweep(referenced, threshold),
-    }
+    # Company portfolio photos/documents share this storage. Ready media is served;
+    # removed media is retained as private review/audit evidence (portfolio_media.remove
+    # revokes byte access but keeps the record), so both stay referenced.
+    referenced.update(
+        ResidentialMedia.objects.exclude(blob="").exclude(blob__isnull=True).values_list("blob", flat=True)
+    )
+    referenced.discard("")
+    referenced.discard(None)
+    return referenced

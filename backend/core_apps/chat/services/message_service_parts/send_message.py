@@ -35,6 +35,9 @@ def send_message(
                 "content": content,
             },
         )
+    from ..group_limits import validate_text
+
+    content = validate_text(content)
     # Guard: sender must be a participant in the conversation
     if not ConversationParticipant.objects.filter(
         conversation=conversation, user=sender

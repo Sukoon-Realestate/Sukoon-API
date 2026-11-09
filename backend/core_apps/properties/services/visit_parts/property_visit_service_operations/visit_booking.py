@@ -36,6 +36,14 @@ class VisitBookingMixin:
         # Validate that tenant is not the property owner
         if property_obj.owner == tenant:
             raise ValidationError(_("You cannot book a visit for your own property."))
+        # A2-01: one publication policy under the lock. Hidden, under-review,
+        # needs-revision, rejected, retired, blocked, restricted-owner and
+        # closure-pending inventory cannot start new visits (same 404 as the catalog).
+        from ...public_access import public_properties
+        from rest_framework.exceptions import NotFound
+
+        if not public_properties(Property.objects.filter(pk=property_obj.pk)).exists():
+            raise NotFound(_("This property is not available."))
 
         expected_offer_revision = validated_data.pop("expected_offer_revision", None)
         offer_id = str(validated_data.get("offer_id") or "")

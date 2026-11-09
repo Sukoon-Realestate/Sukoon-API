@@ -45,12 +45,22 @@ def result_for(profile, submission):
 
 
 @transaction.atomic
-def submit_identity(user, data, *, request_key=None):
+def submit_identity(user, data, *, request_key=None, auth_claims=None):
+    from rest_framework.exceptions import PermissionDenied
+
+    # A1-05: the epoch this request was authenticated with, captured before the
+    # lock. A revocation that commits while the request waits must reject it before
+    # any profile/KYC change or provider upload (including replay and no-key paths).
+    expected_epoch = user.security_epoch
     user = User.objects.select_for_update().get(pk=user.pk)
     if user.closed_at or not user.is_active:
-        from rest_framework.exceptions import PermissionDenied
-
         raise PermissionDenied("Account unavailable.")
+    if user.security_epoch != expected_epoch:
+        raise PermissionDenied("Account authority changed. Sign in again.")
+    if auth_claims is not None:
+        from .sessions import validate_session
+
+        validate_session(user, auth_claims)
     profile = Profile.objects.select_for_update().get(user=user)
     supplied_fingerprint = fingerprint(data)
     latest = profile.kyc_submissions.order_by("-created_at", "-pk").first()
@@ -86,6 +96,16 @@ def submit_identity(user, data, *, request_key=None):
             if data.get(source):
                 setattr(profile, target, data[source])
         profile.save()
+        from django.core.files.uploadedfile import UploadedFile
+        from core_apps.profiles.models import record_profile_upload
+
+        for source, target in (
+            ("front_id_image", "id_face"),
+            ("back_id_image", "id_back"),
+            ("selfie_image", "confirmation_selfi"),
+        ):
+            if isinstance(data.get(source), UploadedFile):
+                record_profile_upload(user, target, getattr(profile, target))
         snapshot = evidence_snapshot(profile)
         if (
             latest
@@ -128,5 +148,6 @@ def submit_identity(user, data, *, request_key=None):
         key=request_key,
         payload=data,
         action=apply,
+        auth_claims=auth_claims,
     )
     return result

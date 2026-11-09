@@ -63,3 +63,6 @@ class AccountProfileErasureFile(TimeStampedModel):
     )
     deleted_at = models.DateTimeField(null=True)
     attempts = models.PositiveIntegerField(default=0)
+    # A1-01: non-empty when provider deletion is withheld (e.g. no upload receipt
+    # proves this account owns the asset). Held items are never sent to the provider.
+    held_reason = models.CharField(max_length=40, blank=True, default="")

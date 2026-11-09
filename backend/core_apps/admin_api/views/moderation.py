@@ -49,8 +49,17 @@ class AdminModerationDeleteAPIView(APIView):
     permission_classes = [IsPropertyReviewer]
 
     def post(self, request, property_id):
-        delete_moderation_item(property_id, request.user)
+        from core_apps.common.idempotency import request_key, response_headers
+
+        data = request.data if isinstance(request.data, dict) else {}
+        _, _, replayed = delete_moderation_item(
+            property_id,
+            request.user,
+            expected_version=data.get("expected_version") or None,
+            request_key=request_key(request),
+        )
         return Response(
             {"message": "تم حذف المحتوى المخالف بنجاح."},
             status=status.HTTP_200_OK,
+            headers=response_headers(replayed),
         )

@@ -103,7 +103,7 @@ class TestPropertyVisitService:
     from rest_framework.exceptions import PermissionDenied, ValidationError
 
     def test_create_visit_service_success(self, user, another_user):
-        property_obj = _create_property(owner=user, title="Sample Property")
+        property_obj = _create_property(owner=user, title="Sample Property", status="verified")
         OwnerAvailabilitySlot.objects.create(
             owner=user, property=property_obj, date="2099-07-20", time="14:00:00"
         )
@@ -136,7 +136,7 @@ class TestPropertyVisitService:
         assert "You cannot book a visit for your own property." in str(excinfo.value)
 
     def test_create_visit_service_duplicate_fails(self, user, another_user):
-        property_obj = _create_property(owner=user, title="Sample Property")
+        property_obj = _create_property(owner=user, title="Sample Property", status="verified")
         OwnerAvailabilitySlot.objects.create(
             owner=user, property=property_obj, date="2099-07-20", time="14:00:00"
         )

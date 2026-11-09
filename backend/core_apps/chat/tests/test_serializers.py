@@ -18,7 +18,8 @@ class TestChatSerializers:
         serializer = ParticipantSerializer(user)
         data = serializer.data
         assert data["id"] == str(user.id)
-        assert data["email"] == user.email
+        # A5-03 (Sprint 01): without a requesting viewer, no account email is disclosed.
+        assert data["email"] == ""
         assert data["full_name"] == user.get_full_name
         assert "avatar_url" in data
         assert "is_online" in data

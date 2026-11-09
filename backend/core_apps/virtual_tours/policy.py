@@ -125,20 +125,38 @@ def match_version(revision, etag):
 
 
 def public_property(prop):
-    from core_apps.chat.models import AccountRestriction
+    """A2-02: the canonical publication policy for tour availability, sessions,
+    exchange, manifests, credential renewal and byte grants.
 
-    owner_id = prop.owner_id if isinstance(prop, Property) else prop.manager_id
+    Units use the catalog predicate (status, retirement, moderation block, owner
+    restriction, pending/complete account closure). Building/complex containers apply
+    the same account rules to their manager plus their own authority review.
+    """
+    from core_apps.properties.services.public_access import public_properties
+
+    if isinstance(prop, Property):
+        return public_properties(Property.objects.filter(pk=prop.pk)).exists()
+    if not account_may_publish(prop.manager_id):
+        return False
+    return (
+        not prop.archived
+        and prop.authority_status == "verified"
+        and bool(prop.authority_reviewed_by_id and prop.authority_reference)
+    )
+
+
+def account_may_publish(user_id):
+    """True when ``user_id`` may currently publish (no restriction or closure)."""
+    from core_apps.chat.models import AccountRestriction
+    from core_apps.users.models import AccountClosureRequest, User
+
     if AccountRestriction.objects.filter(
-        user_id=owner_id, state__in=["pending_review", "permanent"]
+        user_id=user_id, state__in=["pending_review", "permanent"]
     ).exists():
         return False
-    if not isinstance(prop, Property):
-        return (
-            not prop.archived
-            and prop.authority_status == "verified"
-            and bool(prop.authority_reviewed_by_id and prop.authority_reference)
-        )
-    return prop.retired_at is None and prop.status == Property.Status.VERIFIED
+    if AccountClosureRequest.objects.filter(user_id=user_id, active=True).exists():
+        return False
+    return User.objects.filter(pk=user_id, closed_at__isnull=True).exists()
 
 
 def scope_policy(prop, context, spaces):

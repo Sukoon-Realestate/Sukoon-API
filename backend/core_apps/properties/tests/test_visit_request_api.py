@@ -19,8 +19,9 @@ from core_apps.properties.models import (
 )
 
 
-def create_property(owner, apartment_type, cairo_city, cairo_governorate):
+def create_property(owner, apartment_type, cairo_city, cairo_governorate, **extra):
     return Property.objects.create(
+        **extra,
         owner=owner,
         title="Furnished Apartment",
         price=6500,
@@ -327,7 +328,8 @@ class TestPropertyReviewListAPI:
         cairo_governorate,
     ):
         property_obj = create_property(
-            another_user, apartment_type, cairo_city, cairo_governorate
+            another_user, apartment_type, cairo_city, cairo_governorate,
+            status=Property.Status.VERIFIED,
         )
         # First visit and review by user
         visit1 = PropertyVisit.objects.create(
@@ -403,7 +405,8 @@ class TestPropertyReviewListAPI:
         cairo_governorate,
     ):
         property_obj = create_property(
-            another_user, apartment_type, cairo_city, cairo_governorate
+            another_user, apartment_type, cairo_city, cairo_governorate,
+            status=Property.Status.VERIFIED,
         )
         url = reverse("property-review-list", kwargs={"property_id": property_obj.id})
         response = api_client.get(url)
@@ -433,7 +436,8 @@ class TestPropertyReviewListAPI:
         cairo_governorate,
     ):
         property_obj = create_property(
-            another_user, apartment_type, cairo_city, cairo_governorate
+            another_user, apartment_type, cairo_city, cairo_governorate,
+            status=Property.Status.VERIFIED,
         )
         for i, reviewer in enumerate([user, superuser]):
             visit = PropertyVisit.objects.create(

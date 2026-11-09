@@ -58,7 +58,7 @@ def erase_files(limit=100):
 
     count = 0
     for identity in list(
-        AccountProfileErasureFile.objects.filter(deleted_at__isnull=True)
+        AccountProfileErasureFile.objects.filter(deleted_at__isnull=True, held_reason="")
         .order_by("updated_at")
         .values_list("pk", flat=True)[:limit]
     ):
@@ -66,7 +66,19 @@ def erase_files(limit=100):
             item = AccountProfileErasureFile.objects.select_for_update().get(
                 pk=identity
             )
-            if item.deleted_at:
+            if item.deleted_at or item.held_reason:
+                continue
+            # A1-01: recheck provenance at the moment of deletion (also covers items
+            # queued before receipts existed). Unproven assets are held, never destroyed.
+            from core_apps.profiles.models import ProfileMediaUpload
+
+            if not ProfileMediaUpload.objects.filter(
+                user_id=item.request.user_id,
+                public_id=item.public_id,
+                storage_type=item.storage_type,
+            ).exists():
+                item.held_reason = "unverified_provenance"
+                item.save(update_fields=["held_reason", "updated_at"])
                 continue
             item.attempts += 1
             try:

@@ -87,7 +87,10 @@ class MessageCreateAPIView(APIView):
             _, participant, member = authorize(conversation, request.user)
             return Response(message_payload(message, participant, member), status=201)
         self.check_object_permissions(request, conversation)
+        from core_apps.chat.services.group_rate_limit import enforce_rate
 
+        # A5-02: the legacy transport consumes the same send quota as rich sends.
+        enforce_rate(request.user, "send")
         serializer = MessageCreateSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

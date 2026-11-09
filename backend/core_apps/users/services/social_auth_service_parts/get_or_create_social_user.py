@@ -56,9 +56,10 @@ def get_or_create_social_user(
 
     if email and email_verified:
         email = email.lower().strip()
-        try:
-            user = UserModel.objects.get(email=email)
-        except UserModel.DoesNotExist:
+        user = (
+            UserModel.objects.select_for_update().filter(email__iexact=email).first()
+        )
+        if user is None:
             user = UserModel.objects.create_user(
                 email=email,
                 first_name=first_name,
@@ -66,18 +67,55 @@ def get_or_create_social_user(
                 password=None,
                 is_active=True,
             )
-        SocialAccount.objects.create(
-            user=user,
-            provider=provider,
-            provider_uid=provider_uid,
-            email=email,
-        )
+        else:
+            user = _adopt_existing_account(user)
+        from django.db import IntegrityError
+
+        try:
+            with transaction.atomic():
+                SocialAccount.objects.create(
+                    user=user,
+                    provider=provider,
+                    provider_uid=provider_uid,
+                    email=email,
+                )
+        except IntegrityError:
+            # A concurrent request linked this provider identity first.
+            social = SocialAccount.objects.select_related("user").get(
+                provider=provider, provider_uid=provider_uid
+            )
+            if social.user_id != user.pk:
+                raise ValidationError("This social identity is linked to another account.")
         UserModel.objects.filter(pk=user.pk).update(is_email_verified=True)
-        user.is_email_verified = True
+        user.refresh_from_db()
         return user
 
     # No email and no existing SocialAccount — cannot resolve identity.
     raise ValidationError("Social email is unavailable.")
+
+
+def _adopt_existing_account(user):
+    """A1-03: link a provider-verified email to an existing local account safely.
+
+    - Closed or suspended accounts are not adopted.
+    - An account whose email possession was already proven (OTP) is the rightful
+      owner's established account: link it and keep its credentials.
+    - An account whose email was never proven may have been pre-registered by
+      someone else. The provider has now proven possession, so retire the
+      unproven password and every existing session/device before adopting it.
+    """
+    from rest_framework.exceptions import PermissionDenied
+
+    if user.closed_at or not user.is_active:
+        raise PermissionDenied("Account unavailable.")
+    if user.is_email_verified:
+        return user
+    from core_apps.users.services.sessions import revoke_all
+
+    if user.has_usable_password():
+        user.set_unusable_password()
+        user.save(update_fields=["password"])
+    return revoke_all(user, action="account.social_adoption")
 
 
 def _verify_google(token: str) -> dict:

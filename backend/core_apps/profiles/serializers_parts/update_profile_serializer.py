@@ -39,6 +39,46 @@ class CloudinarySerializerField(serializers.ImageField):
         return str(value)
 
 
+class OwnedAvatarField(CloudinarySerializerField):
+    """Avatar input: an uploaded file or data URI, never a borrowed provider reference.
+
+    A1-01: a string that is not a data URI is accepted only when it names the avatar
+    already stored on this profile (clients may echo the current value back); it is then
+    a no-op. Any other URL/public ID is refused, so it can never become an owned asset
+    or an account-closure deletion target.
+    """
+
+    def to_internal_value(self, data):
+        if isinstance(data, str) and not data.startswith("data:image"):
+            current = getattr(getattr(self.parent, "instance", None), "avatar", None)
+            if current and _same_asset(current, data):
+                return current
+            raise serializers.ValidationError(
+                "Upload the image itself; existing provider references cannot be attached."
+            )
+        return super().to_internal_value(data)
+
+
+def _same_asset(current, reference):
+    from cloudinary.models import CloudinaryField
+
+    def identity(value):
+        if hasattr(value, "public_id"):
+            return (str(value.public_id), getattr(value, "type", None) or "upload")
+        text = str(value or "")
+        if text.startswith(("http://", "https://")):
+            return None
+        asset = CloudinaryField().to_python(text)
+        return (str(asset.public_id), getattr(asset, "type", None) or "upload") if asset else None
+
+    mine = identity(current)
+    if mine is None:
+        return False
+    if str(reference) in {str(current), getattr(current, "url", None)}:
+        return True
+    return identity(reference) == mine
+
+
 class ProfileCitySerializer(serializers.Serializer):
     id = serializers.UUIDField(read_only=True)
     name = serializers.CharField(read_only=True)
@@ -117,7 +157,7 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
     phone_number = PhoneNumberField(required=False, allow_blank=True)
     city = ProfileCitySerializer(read_only=True)
     city_id = serializers.UUIDField(required=False, allow_null=True, write_only=True)
-    avatar = CloudinarySerializerField(required=False, allow_null=True)
+    avatar = OwnedAvatarField(required=False, allow_null=True)
     id_face = CloudinarySerializerField(required=False, allow_null=True)
     id_back = CloudinarySerializerField(required=False, allow_null=True)
     confirmation_selfi = CloudinarySerializerField(required=False, allow_null=True)

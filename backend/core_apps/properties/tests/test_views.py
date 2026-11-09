@@ -101,7 +101,7 @@ def _create_published_property(*, images=0, **kwargs):
     # These read tests start after approval of the current content and media.
     # Media creation itself correctly invalidates any previous approval.
     Property.objects.filter(pk=prop.pk).update(
-        status=Property.Status.VERIFIED, is_verified=True
+        status="verified", is_verified=True
     )
     prop.refresh_from_db()
     return prop
@@ -756,7 +756,8 @@ class TestPropertyVisitViews:
         self, auth_client, user, another_user
     ):
         property_obj = _create_property(
-            owner=another_user, title="Apartment Heliopolis", price=20000.00
+            owner=another_user, title="Apartment Heliopolis", price=20000.00,
+            status="verified",
         )
         OwnerAvailabilitySlot.objects.create(
             owner=another_user,
@@ -778,7 +779,8 @@ class TestPropertyVisitViews:
         self, auth_client, user, another_user
     ):
         property_obj = _create_property(
-            owner=another_user, title="Recoverable visit", price=20000.00
+            owner=another_user, title="Recoverable visit", price=20000.00,
+            status="verified",
         )
         OwnerAvailabilitySlot.objects.create(
             owner=another_user,
@@ -1101,7 +1103,7 @@ class TestOwnerDashboard:
         verified_prop = _create_property(
             owner=user,
             title="Verified Apartment",
-            status=Property.Status.VERIFIED,
+            status="verified",
         )
         _create_property(
             owner=user,

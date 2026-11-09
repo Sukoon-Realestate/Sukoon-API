@@ -143,7 +143,7 @@ def payment_attempt_detail(request, attempt_id):
 @renderer_classes([FeatureJsonRenderer])
 @throttle_classes([PaymentReconcileThrottle])
 def payment_attempt_reconcile(request, attempt_id):
-    candidate = _attempt(request, attempt_id)
+    candidate = _attempt(request, attempt_id, allow_original_payer=True)
     if hasattr(candidate, "paymob_payment"):
         if request.user.pk != candidate.payer_id:
             raise PermissionDenied(
@@ -161,7 +161,7 @@ def payment_attempt_reconcile(request, attempt_id):
             payment_attempt_payload(reconcile(candidate.paymob_payment), request.user)
         )
     with transaction.atomic():
-        attempt = _attempt(request, attempt_id, lock=True)
+        attempt = _attempt(request, attempt_id, lock=True, allow_original_payer=True)
         if request.user != attempt.payer:
             raise PermissionDenied("Only the payer can reconcile this attempt.")
         if (

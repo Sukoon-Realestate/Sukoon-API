@@ -33,10 +33,10 @@
    "data",
    "message"
   ],
-  "error_code": "invalid",
+  "error_code": "account_closure_review_required",
   "route": "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
   "served_by": "user-me",
-  "status": 400
+  "status": 409
  },
  "DELETE /api/v1/auth/users/me.json/ staff mvp=on": {
   "cache_control": "private, no-store",
@@ -46,10 +46,10 @@
    "data",
    "message"
   ],
-  "error_code": "invalid",
+  "error_code": "account_closure_review_required",
   "route": "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
   "served_by": "user-me",
-  "status": 400
+  "status": 409
  },
  "DELETE /api/v1/auth/users/me.json/ tenant mvp=off": {
   "cache_control": "private, no-store",
@@ -59,10 +59,10 @@
    "data",
    "message"
   ],
-  "error_code": "invalid",
+  "error_code": "account_closure_review_required",
   "route": "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
   "served_by": "user-me",
-  "status": 400
+  "status": 409
  },
  "DELETE /api/v1/auth/users/me.json/ tenant mvp=on": {
   "cache_control": "private, no-store",
@@ -72,10 +72,10 @@
    "data",
    "message"
   ],
-  "error_code": "invalid",
+  "error_code": "account_closure_review_required",
   "route": "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
   "served_by": "user-me",
-  "status": 400
+  "status": 409
  },
  "DELETE /api/v1/auth/users/me/ anonymous mvp=off": {
   "cache_control": "private, no-store",
@@ -111,10 +111,10 @@
    "data",
    "message"
   ],
-  "error_code": "invalid",
+  "error_code": "account_closure_review_required",
   "route": "api/v1/auth/^users/me/$",
   "served_by": "user-me",
-  "status": 400
+  "status": 409
  },
  "DELETE /api/v1/auth/users/me/ staff mvp=on": {
   "cache_control": "private, no-store",
@@ -124,10 +124,10 @@
    "data",
    "message"
   ],
-  "error_code": "invalid",
+  "error_code": "account_closure_review_required",
   "route": "api/v1/auth/^users/me/$",
   "served_by": "user-me",
-  "status": 400
+  "status": 409
  },
  "DELETE /api/v1/auth/users/me/ tenant mvp=off": {
   "cache_control": "private, no-store",
@@ -137,10 +137,10 @@
    "data",
    "message"
   ],
-  "error_code": "invalid",
+  "error_code": "account_closure_review_required",
   "route": "api/v1/auth/^users/me/$",
   "served_by": "user-me",
-  "status": 400
+  "status": 409
  },
  "DELETE /api/v1/auth/users/me/ tenant mvp=on": {
   "cache_control": "private, no-store",
@@ -150,10 +150,10 @@
    "data",
    "message"
   ],
-  "error_code": "invalid",
+  "error_code": "account_closure_review_required",
   "route": "api/v1/auth/^users/me/$",
   "served_by": "user-me",
-  "status": 400
+  "status": 409
  },
  "DELETE /api/v1/auth/users/sample.json/ anonymous mvp=off": {
   "cache_control": "private, no-store",

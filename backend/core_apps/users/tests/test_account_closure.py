@@ -358,6 +358,10 @@ def test_avatar_cleanup_retries_without_erasing_contract_evidence(user, reviewer
     from core_apps.users.services.identity_submission import evidence_snapshot
 
     profile = Profile.objects.get(user=user)
+    from core_apps.profiles.models import record_profile_upload
+
+    # A1-01: the avatar is one this account uploaded (provenance receipt).
+    record_profile_upload(user, "avatar", profile.avatar)
     evidence = evidence_snapshot(profile)
     KYCSubmission.objects.create(
         profile=profile, status="approved", evidence_snapshot=evidence
@@ -522,3 +526,42 @@ def test_concurrent_request_and_withdraw_finalization_have_one_winner(reviewer):
         results = list(executor.map(finish, ["withdraw", "complete"]))
     assert sorted(results) == [False, True]
     assert AccountClosureDecision.objects.count() == 2
+
+
+def test_closure_never_destroys_a_borrowed_or_unproven_avatar(user, another_user, reviewer):
+    """A1-01: a reference with no upload receipt for this account is held, not destroyed."""
+    from core_apps.profiles.models import Profile, record_profile_upload
+    from core_apps.users.models import AccountProfileErasureFile
+    from core_apps.users.services.closure_delivery import erase_files
+
+    victim_asset = "image/upload/v1/profile_documents/avatar/victim.jpg"
+    Profile.objects.filter(user=another_user).update(avatar=victim_asset)
+    record_profile_upload(another_user, "avatar", Profile.objects.get(user=another_user).avatar)
+    # Legacy row: the closing account points at the other user's asset.
+    Profile.objects.filter(user=user).update(avatar=victim_asset)
+
+    decision(reviewer, submit(user))
+    item = AccountProfileErasureFile.objects.get()
+    assert item.held_reason == "unverified_provenance"
+    with patch("cloudinary.uploader.destroy", return_value={"result": "ok"}) as destroy:
+        assert erase_files() == 0
+    destroy.assert_not_called()
+    assert Profile.objects.get(user=another_user).avatar.public_id.endswith("victim")
+
+
+def test_items_queued_before_receipts_existed_are_rechecked_at_erasure(user, reviewer):
+    from core_apps.profiles.models import Profile, record_profile_upload
+    from core_apps.users.models import AccountProfileErasureFile
+    from core_apps.users.services.closure_delivery import erase_files
+
+    Profile.objects.filter(user=user).update(avatar="image/upload/v1/profile_documents/avatar/old.jpg")
+    record_profile_upload(user, "avatar", Profile.objects.get(user=user).avatar)
+    decision(reviewer, submit(user))
+    # Simulate a pre-Sprint-01 queued row whose receipt never existed.
+    from core_apps.profiles.models import ProfileMediaUpload
+
+    ProfileMediaUpload.objects.all().delete()
+    with patch("cloudinary.uploader.destroy", return_value={"result": "ok"}) as destroy:
+        assert erase_files() == 0
+    destroy.assert_not_called()
+    assert AccountProfileErasureFile.objects.get().held_reason == "unverified_provenance"

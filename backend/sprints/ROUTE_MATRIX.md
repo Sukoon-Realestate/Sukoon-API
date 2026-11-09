@@ -28,7 +28,7 @@ How to read the columns:
 | `api/admin/financials` | 2 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 2 | CookieAuthentication | IsFinancialStaff | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/admin/followups` | 1 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
 | `api/admin/kyc` | 9 | Area 6 — Admin/shared/config | 10 | 6 | GET, POST | DRF CBV 9 | CookieAuthentication | IsIdentityReviewer | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
-| `api/admin/moderation` | 4 | Area 6 — Admin/shared/config | 10 | 2 | GET, POST | DRF CBV 4 | CookieAuthentication | IsPropertyReviewer | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
+| `api/admin/moderation` | 4 | Area 6 — Admin/shared/config | 10 | 2 | GET, POST | DRF CBV 4 | CookieAuthentication | IsPropertyReviewer | 0 | 0 | 2 | 0 | 0 | 0 | 1 |
 | `api/admin/permissions` | 1 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAdminStaff | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/admin/properties` | 14 | Area 6 — Admin/shared/config | 10 | 9 | GET, POST | DRF CBV 13; decorated FBV 1 | CookieAuthentication | IsAuthenticated<br>IsPropertyReviewer | 0 | 1 | 1 | 0 | 3 | 0 | 0 |
 | `api/admin/reports` | 5 | Area 6 — Admin/shared/config | 10 | 2 | GET, POST | DRF CBV 5 | CookieAuthentication | IsAdminStaff | 0 | 0 | 0 | 0 | 0 | 0 | 0 |

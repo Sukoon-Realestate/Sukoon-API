@@ -5,7 +5,7 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from ..models import Profile
 from ..services.profile_service import format_arabic_date, mask_phone_number
 from .update_profile_serializer import (
-    CloudinarySerializerField,
+    OwnedAvatarField,
     ProfileCitySerializer,
     AccountSummaryUserSerializer,
     IdentityVerificationSerializer,
@@ -46,11 +46,11 @@ class ProfileEditSerializer(serializers.ModelSerializer):
     gender_label = serializers.SerializerMethodField(read_only=True)
     city = ProfileCitySerializer(read_only=True)
     city_id = serializers.UUIDField(required=False, allow_null=True, write_only=True)
-    avatar = CloudinarySerializerField(required=False, allow_null=True)
-    profile_image = CloudinarySerializerField(
+    avatar = OwnedAvatarField(required=False, allow_null=True)
+    profile_image = OwnedAvatarField(
         required=False, allow_null=True, write_only=True
     )
-    image = CloudinarySerializerField(required=False, allow_null=True, write_only=True)
+    image = OwnedAvatarField(required=False, allow_null=True, write_only=True)
 
     class Meta:
         model = Profile

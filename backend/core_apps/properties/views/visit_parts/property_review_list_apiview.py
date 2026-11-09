@@ -29,9 +29,26 @@ class PropertyReviewListAPIView(generics.ListAPIView):
     def get_property(self):
         if not hasattr(self, "_property_obj"):
             self._property_obj = get_object_or_404(
-                Property.objects.only("id", "pkid"), id=self.kwargs["property_id"]
+                self._readable_properties().only("id", "pkid"),
+                id=self.kwargs["property_id"],
             )
         return self._property_obj
+
+    def _readable_properties(self):
+        # A2-01: anonymous/unrelated readers follow the catalog publication policy.
+        # The owner, staff and visit participants keep their historical read.
+        from django.db.models import Q
+        from core_apps.properties.services.public_access import public_properties
+
+        public = public_properties()
+        user = self.request.user
+        if not getattr(user, "is_authenticated", False):
+            return public
+        if user.is_staff:
+            return Property.objects.all()
+        return Property.objects.filter(
+            Q(pk__in=public.values("pk")) | Q(owner=user) | Q(visits__tenant=user)
+        ).distinct()
 
     def get_queryset(self):
         property_obj = self.get_property()

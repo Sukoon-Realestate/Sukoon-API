@@ -93,6 +93,11 @@ class CustomTokenRefreshView(TokenRefreshView):
     serializer_class = CanonicalTokenRefreshSerializer
 
     def post(self, request: Request, *args, **kwargs) -> Response:
+        if request.COOKIES.get("refresh"):
+            # A1-08: the cookie wins over a body token, so it needs origin proof.
+            from core_apps.common.cookie_origin import require_cookie_origin
+
+            require_cookie_origin(request)
         refresh_token = request.COOKIES.get("refresh") or request.data.get("refresh")
 
         if not refresh_token:

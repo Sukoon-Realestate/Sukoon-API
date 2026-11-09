@@ -98,15 +98,22 @@ def upload(user, identity, uploaded):
     # Provider I/O is outside database locks. The durable pending row is the retry
     # identity; a lost response is resolved by GET before another transmission.
     key, _, _ = storage.write_blob([cleaned.getvalue()], 32 * 1024 * 1024)
-    with transaction.atomic():
-        item = media_for(user, identity, lock=True)
-        if item.state == "pending":
-            item.blob, item.state = key, "ready"
-            item.revision += 1
-            item.save()
-            audit(item, user, "portfolio_media_uploaded")
-        elif item.state != "ready":
-            raise RentalConflict("This upload was removed.", code="media_removed")
+    try:
+        with transaction.atomic():
+            item = media_for(user, identity, lock=True)
+            if item.state == "pending":
+                item.blob, item.state = key, "ready"
+                item.revision += 1
+                item.save()
+                audit(item, user, "portfolio_media_uploaded")
+            elif item.state != "ready":
+                raise RentalConflict("This upload was removed.", code="media_removed")
+    finally:
+        # A3-01: a concurrent winner, a removal during I/O or a failed commit leaves
+        # this write unreferenced. Drop the local copy now; any remote copy is an
+        # unreferenced orphan that the storage sweep reclaims after its threshold.
+        if not ResidentialMedia.objects.filter(blob=key).exists():
+            storage.path(key).unlink(missing_ok=True)
     return item
 
 

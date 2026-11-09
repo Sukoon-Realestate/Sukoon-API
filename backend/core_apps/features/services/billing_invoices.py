@@ -47,8 +47,15 @@ def invoice_queryset(user, workspace, organization=None):
     ) & (Q(workspace=workspace) | Q(purchase_snapshot__workspace="both"))
     # Rent receivables remain in owner financial screens, not own purchases.
     if workspace == "tenant":
+        from ..models import PrivateAccessRevocation
+
+        # A4-02: a revoked personal participant no longer lists that lease's rent.
         purchases |= Q(
             lease__tenant=user, lease__renter_company__isnull=True, purpose="rent"
+        ) & ~Q(
+            lease_id__in=PrivateAccessRevocation.objects.filter(user=user).values(
+                "lease_id"
+            )
         )
     return (
         RentInvoice.objects.filter(purchases)

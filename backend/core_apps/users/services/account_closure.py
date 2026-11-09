@@ -234,11 +234,20 @@ def _erase_profile(user, actor, item):
             # Provider deletion targets the resource, not one URL/version.
             if not asset or asset_identity(asset) in retained:
                 continue
+            storage_type = getattr(asset, "type", None) or (
+                "upload" if field == "avatar" else "authenticated"
+            )
+            from core_apps.profiles.models import ProfileMediaUpload
+
+            # A1-01: only assets this account provably uploaded may be destroyed.
+            owned = ProfileMediaUpload.objects.filter(
+                user=user, public_id=str(asset.public_id), storage_type=storage_type
+            ).exists()
             AccountProfileErasureFile.objects.create(
                 request=item,
                 public_id=asset.public_id,
-                storage_type=getattr(asset, "type", None)
-                or ("upload" if field == "avatar" else "authenticated"),
+                storage_type=storage_type,
+                held_reason="" if owned else "unverified_provenance",
             )
     Profile.objects.filter(user=user).update(
         phone_number="",

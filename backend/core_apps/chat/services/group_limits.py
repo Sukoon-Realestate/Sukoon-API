@@ -34,6 +34,26 @@ def limits(*, property_sharing=False, polls=True):
     return {**result, "message_kinds": kinds}
 
 
+def validate_text(content):
+    """A5-02: the one text policy for every send transport (REST/WS, legacy/rich).
+
+    Returns the newline-normalized text. Raises a ValidationError for non-string,
+    blank, NUL-containing or over-limit input.
+    """
+    from rest_framework.exceptions import ValidationError
+
+    if not isinstance(content, str):
+        raise ValidationError({"content": "Supply text."})
+    content = content.replace("\r\n", "\n").replace("\r", "\n")
+    if not content.strip():
+        raise ValidationError({"content": "Message text is required."})
+    if len(content) > limits()["text_max_code_points"] or "\x00" in content:
+        raise ValidationError(
+            {"content": "Message text exceeds the limit or contains invalid characters."}
+        )
+    return content
+
+
 class ChatConflict(APIException):
     status_code = 409
     default_code = "chat_identity_conflict"

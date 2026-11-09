@@ -83,12 +83,33 @@ class ChatConsumer(GroupChatConsumerMixin, AsyncJsonWebsocketConsumer):
             send_message,
         )
 
+        from rest_framework.exceptions import Throttled
+
+        from core_apps.chat.services.group_limits import validate_text
+        from core_apps.chat.services.group_rate_limit import enforce_rate
+
         conversation_id = content.get("conversation_id")
-        text = content.get("content", "").strip()
+        raw = content.get("content")
         client_message_id = content.get("client_message_id")
 
-        if not conversation_id or not text:
+        if not conversation_id or raw is None or (isinstance(raw, str) and not raw.strip()):
             await self.send_json({"error": "conversation_id and content are required."})
+            return
+        # A5-02: the same typed text policy and send quota as REST and rich sends.
+        # Invalid frames get a stable error and the socket stays open.
+        try:
+            text = validate_text(raw).strip()
+        except ValidationError:
+            await self.send_json(
+                {"error": "Message text is invalid or too long.", "code": "invalid_message"}
+            )
+            return
+        try:
+            await sync_to_async(enforce_rate)(self.user, "send")
+        except Throttled:
+            await self.send_json(
+                {"error": "Too many messages. Try again shortly.", "code": "rate_limited"}
+            )
             return
         if client_message_id:
             try:

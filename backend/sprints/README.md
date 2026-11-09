@@ -62,6 +62,8 @@ view conversion, behavior fixes, dependency upgrades and schema changes into one
    [feature/upload/alias inventory](FEATURE_AVAILABILITY.md) and [baseline evidence](evidence/sprint-00/README.md).
 5. Use [SOURCE_INVENTORY.md](SOURCE_INVENTORY.md) for the application/configuration scope and area ownership. Every
    changed workflow needs its own caller, permission, input, query, retry and side-effect checks.
+   Sprint 01 results and evidence: [sprint-01](sprint-01-security-and-data-preservation.md#results-2026-11-09),
+   [evidence/sprint-01](evidence/sprint-01/README.md).
 6. Mark a story complete only with the evidence required by its sprint. Keep untested PostgreSQL, provider, storage,
    deployment and device behavior explicitly open. Do not claim completion from a file move or a passing 13-screen sample.
 

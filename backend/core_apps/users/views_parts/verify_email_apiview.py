@@ -150,6 +150,7 @@ class CompleteRegisterAPIView(APIView):
             user=request.user,
             validated_data=serializer.validated_data,
             request_key=request_key(request),
+            auth_claims=request.auth,
         )
 
         return Response(result, status=status.HTTP_200_OK)

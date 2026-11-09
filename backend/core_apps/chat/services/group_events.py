@@ -11,6 +11,11 @@ from .group_projection import message_payload, summary
 logger = logging.getLogger(__name__)
 
 
+# A5-01: event kinds that carry a new reviewable message revision. These are the
+# recorded *event* names (commands such as "message.edit" emit "message.edited").
+MODERATED_MESSAGE_EVENTS = frozenset({"message.new", "message.edited"})
+
+
 def record_event(conversation, kind, *, message=None, actor=None, data=None):
     conversation.last_event_sequence += 1
     conversation.save(update_fields=["last_event_sequence", "updated_at"])
@@ -22,7 +27,7 @@ def record_event(conversation, kind, *, message=None, actor=None, data=None):
         actor=actor,
         data=data or {},
     )
-    if message is not None and kind in {'message.new', 'message.edit'}:
+    if message is not None and kind in MODERATED_MESSAGE_EVENTS:
         from core_apps.chat.moderation.queue import enqueue
         enqueue(message)
     transaction.on_commit(
