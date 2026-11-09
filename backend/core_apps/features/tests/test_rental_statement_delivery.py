@@ -337,9 +337,8 @@ def test_forward_migration_preserves_historical_documents_unmarked(phase6_lease)
     loader = MigrationLoader(None)
     before = loader.project_state([("features", "0093_rentalchange_termination_notice_snapshot")])
     migration = loader.get_migration("features", "0094_rentaldocument_generation_requested_at")
-    assert loader.graph.leaf_nodes("features") == [
-        ("features", "0094_rentaldocument_generation_requested_at")
-    ]
+    # Exercise 0094 directly; later migrations (0095+) must not make this a leaf-only check.
+    assert ("features", "0094_rentaldocument_generation_requested_at") in loader.graph.nodes
     old_model = before.apps.get_model("features", "RentalDocument")
     schema = "statement_migration_" + uuid.uuid4().hex
     quoted = connection.ops.quote_name(schema)

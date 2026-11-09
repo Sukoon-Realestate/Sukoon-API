@@ -10,6 +10,19 @@ from ..rental_phase2 import RentalConflict
 from ..advanced_execution import create_plan, record_step
 from ..advanced_execution.provider import mock_instruction, reconcile_instructions
 from . import access, decisions
+from ..company.role_context import system_context
+
+
+def creator_decision(plan):
+    """Re-check the plan creator's current authority as the creator.
+
+    Execution steps are requested by many parties (owner, employees, signer,
+    payer). Their selected HTTP company role must not stand in for the creator's
+    coordinator/sign/pay authority, which is still validated from current
+    membership, mandates and assignments.
+    """
+    with system_context():
+        return decisions.for_user(plan.created_by, plan.source_id)
 
 
 def authorize(user, source_id):
@@ -135,6 +148,11 @@ def create(user, decision):
 
 
 def revalidate(plan, action="prepare"):
+    with system_context():
+        return _revalidate(plan, action)
+
+
+def _revalidate(plan, action):
     decision = decisions.for_user(plan.created_by, plan.source_id)
     access.scenario_for(plan.created_by, decision.scenario.id, write=True)
     if (
@@ -317,7 +335,7 @@ def advance(plan, actor, data):
             "Only the current corporate signer or payment authorizer can perform this step."
         )
     terms = leg.specification["terms"]
-    decision = decisions.for_user(plan.created_by, plan.source_id)
+    decision = creator_decision(plan)
     step = data["step"]
     if str(actor.id) == terms["signer_id"]:
         member_for(
@@ -467,7 +485,7 @@ def withdraw(plan, actor, data):
 
 def authorize_participant(plan, user):
     """A stored consent actor is not a durable grant after source authority ends."""
-    decision = decisions.for_user(plan.created_by, plan.source_id)
+    decision = creator_decision(plan)
     if not user.is_active or not user.is_verified:
         raise PermissionDenied(
             "This execution participant no longer has current authority."

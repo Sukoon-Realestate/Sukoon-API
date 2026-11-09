@@ -56,8 +56,19 @@ def real_postgres_without_providers(settings):
     settings.PLANNING_MOCK_DISCOVERY = False
 
 
+def company_client(user, path=""):
+    """Company HTTP commands need the role that owns them (role_routes since f1f2bdbd)."""
+    client = authenticated(user)
+    member = CompanyMembership.objects.filter(user=user, is_active=True).select_related("company").first()
+    if member is not None:
+        deciding = "/decide/" in path or not member.is_coordinator
+        role = "approver" if deciding and member.is_approver else "coordinator"
+        client.credentials(HTTP_X_SUKOON_COMPANY_ROLE=role, HTTP_X_SUKOON_COMPANY_ID=str(member.company.id))
+    return client
+
+
 def post(user, path, body):
-    return authenticated(user).post(API + path, body, format="json")
+    return company_client(user, path).post(API + path, body, format="json")
 
 
 def blocked_command_after_change(company, actor, path, body, change):
@@ -202,14 +213,15 @@ def test_concurrent_same_identity_hold_has_one_effect_and_recovers_receipt(
         lambda _: post(coordinator, f"company-booking-items/{item.id}/hold/", body)
     )
     assert [r.status_code for r in responses] == [200, 200]
-    assert responses[0].data == responses[1].data
+    # One execution, one replay: company replays return the same receipt and identity.
+    assert responses[0].data["operation_receipt"] == responses[1].data["operation_receipt"]
     item.refresh_from_db()
     assert ReservationHold.objects.count() == 1
     assert item.revision == body["expected_revision"] + 1
     assert set(item.hold.day_locks.values_list("property_id", flat=True)) == {
         prop.pk for prop in props
     }
-    receipt = authenticated(coordinator).get(
+    receipt = company_client(coordinator).get(
         API + f"rental-operations/{body['request_key']}/",
         {"subject_id": str(item.id)},
     )

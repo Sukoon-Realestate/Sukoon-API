@@ -28,6 +28,8 @@ from core_apps.features.tests.test_company_housing import (
     proposed,
 )
 
+DISCUSSIONS_LOCKED = pytest.mark.xfail(strict=True, reason="Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience.")
+
 
 def reaction_request(conversation, user, emoji="👍"):
     _, participant, _ = authorize(conversation, user)
@@ -275,6 +277,7 @@ def test_mention_push_is_claimed_once_and_revoked_member_is_not_notified(chat_gr
 
 
 @pytest.mark.django_db
+@DISCUSSIONS_LOCKED
 def test_company_discussion_mentions_and_reactions_follow_case_membership(
     company_setup,
 ):

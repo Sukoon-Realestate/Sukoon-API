@@ -78,25 +78,34 @@ def test_history_pages_remain_invoice_scoped_and_stably_ordered(disputed):
     assert client.get(path, {"page": 3}).status_code == 404
 
 
+def acting(actors, role):
+    """Company members read through their selected company role (role_routes since f1f2bdbd)."""
+    client = authenticated(actors[role])
+    if role in {"coordinator", "signer", "payer", "employee", "approver"}:
+        client.credentials(HTTP_X_SUKOON_COMPANY_ROLE=role, HTTP_X_SUKOON_COMPANY_ID=str(actors["company"].id))
+    return client
+
+
 @pytest.mark.django_db
-@pytest.mark.parametrize("role", ["owner", "coordinator", "signer", "payer"])
+# Company payment history is financial data: owner and current payer only (f1f2bdbd).
+@pytest.mark.parametrize("role", ["owner", "payer"])
 def test_current_commercial_actor_reads_company_history(active_agreement, role):
     actors, tenancy = active_agreement
     invoice = tenancy.lease.invoices.get()
-    result = authenticated(actors[role]).get(API + f"{invoice.id}/payments/")
+    result = acting(actors, role).get(API + f"{invoice.id}/payments/")
     assert result.status_code == 200, result.data
     assert result.data["count"] == 1
     assert result.data["results"][0]["payment_status"] == "captured"
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("role", ["employee", "colleague", "approver"])
+@pytest.mark.parametrize("role", ["employee", "colleague", "approver", "coordinator", "signer"])
 def test_company_membership_without_commercial_access_cannot_read_history(
     active_agreement, role
 ):
     actors, tenancy = active_agreement
     invoice = tenancy.lease.invoices.get()
-    result = authenticated(actors[role]).get(API + f"{invoice.id}/payments/")
+    result = acting(actors, role).get(API + f"{invoice.id}/payments/")
     assert result.status_code == 404
 
 
@@ -105,16 +114,16 @@ def test_removed_coordinator_and_revoked_private_access_lose_history(active_agre
     actors, tenancy = active_agreement
     invoice = tenancy.lease.invoices.get()
     path = API + f"{invoice.id}/payments/"
-    client = authenticated(actors["coordinator"])
-    assert client.get(path).status_code == 200
-    CompanyMembership.objects.filter(
-        company=actors["company"], user=actors["coordinator"]
-    ).update(is_active=False)
-    assert client.get(path).status_code == 404
+    payer = acting(actors, "payer")
+    assert payer.get(path).status_code == 200
     PrivateAccessRevocation.objects.create(
         lease=tenancy.lease, user=actors["payer"], reason="Synthetic privacy revocation"
     )
-    assert authenticated(actors["payer"]).get(path).status_code == 404
+    assert payer.get(path).status_code == 404
+    CompanyMembership.objects.filter(
+        company=actors["company"], user=actors["coordinator"]
+    ).update(is_active=False)
+    assert acting(actors, "coordinator").get(path).status_code == 404
     assert authenticated(person("history-outsider")).get(path).status_code == 404
     assert APIClient().get(path).status_code in {401, 403}
 

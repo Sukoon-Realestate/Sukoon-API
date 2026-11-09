@@ -69,6 +69,12 @@ def replacement(item):
     invoice = item.payment_attempt.invoice
     invoice.refresh_from_db()
     client = client_for(item.payment_attempt.payer)
+    if invoice.lease.renter_company_id:
+        # Company invoices are paid through the payer's selected company role.
+        client.credentials(
+            HTTP_X_SUKOON_COMPANY_ROLE="payer",
+            HTTP_X_SUKOON_COMPANY_ID=str(invoice.lease.renter_company.id),
+        )
     quote = client.post(
         API + f"rent-invoices/{invoice.id}/quote/",
         {

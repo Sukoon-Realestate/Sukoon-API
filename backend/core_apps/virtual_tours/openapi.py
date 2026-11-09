@@ -36,6 +36,8 @@ REVISION = obj(
             "enum": ["draft", "queued", "processing", "ready", "failed"]
         },
         "review_state": {"enum": ["not_submitted", "pending", "approved", "rejected"]},
+        # Public reviewer explanation returned by services.revision_payload().
+        "review_reason": STRING,
         "source_hash": STRING,
         "stage": STRING,
         "report": {"type": "object"},

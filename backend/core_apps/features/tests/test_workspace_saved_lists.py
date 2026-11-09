@@ -1,6 +1,6 @@
 import pytest
 from django.utils import timezone
-from core_apps.features.tests.test_company_housing import company_setup, command, API
+from core_apps.features.tests.test_company_housing import company_setup, command, API, role_client
 from core_apps.features.tests.test_rental_phase2 import (
     rental_participants,
     authenticated,
@@ -15,19 +15,21 @@ pytestmark = pytest.mark.django_db
 
 def test_lists_are_team_scoped_revisioned_and_idempotent(company_setup):
     owner, coordinator, approver, company, *rest = company_setup
-    client = authenticated(coordinator)
+    client = role_client(coordinator, company, "coordinator")
     body = command(name="Team candidates")
     url = API + f"companies/{company.id}/saved-lists/"
     response = client.post(url, body, format="json")
     assert response.status_code == 201, response.data
     item = response.data["resource"]
     replay = client.post(url, body, format="json")
-    assert replay.data == response.data
+    assert replay.data["operation_receipt"] == response.data["operation_receipt"]
+    assert replay.data["resource"]["id"] == item["id"]
     assert CompanySavedList.objects.count() == 1
     detail = API + f"company-saved-lists/{item['id']}/"
-    assert authenticated(approver).get(url).status_code == 200
+    # Team lists are coordinator work (role_routes: company_saved_views).
+    assert role_client(approver, company, "approver").get(url).status_code == 403
     assert (
-        authenticated(approver)
+        role_client(approver, company, "approver")
         .post(
             detail + "rename/", command(expected_revision=1, name="No"), format="json"
         )
@@ -64,7 +66,7 @@ def test_saved_offers_are_exact_no_reservation_and_survive_creator_departure(
     owner, coordinator, approver, company, building, properties, offer, request = (
         company_setup
     )
-    client = authenticated(coordinator)
+    client = role_client(coordinator, company, "coordinator")
     response = client.post(
         API + f"companies/{company.id}/saved-lists/",
         command(name="Candidates"),
@@ -76,7 +78,8 @@ def test_saved_offers_are_exact_no_reservation_and_survive_creator_departure(
     body = command(expected_revision=1, portfolio_offer_id=str(offer.id))
     response = client.post(url + "add/", body, format="json")
     assert response.status_code == 200, response.data
-    assert client.post(url + "add/", body, format="json").data == response.data
+    replay = client.post(url + "add/", body, format="json").data
+    assert replay["operation_receipt"] == response.data["operation_receipt"]
     assert CompanySavedItem.objects.count() == 1
     assert request.items.count() == before
     result = client.get(url + "items/")
@@ -88,7 +91,8 @@ def test_saved_offers_are_exact_no_reservation_and_survive_creator_departure(
     CompanyMembership.objects.filter(company=company, user=coordinator).update(
         is_active=False
     )
-    assert authenticated(approver).get(url + "items/").status_code == 200
+    CompanyMembership.objects.filter(company=company, user=approver).update(is_coordinator=True)
+    assert role_client(approver, company, "coordinator").get(url + "items/").status_code == 200
 
 
 def test_list_ids_cannot_be_used_by_other_company_members(company_setup):
@@ -117,8 +121,8 @@ def test_request_key_cannot_replay_into_another_company(company_setup):
     other = Company.objects.create(
         name="Second", registration_number="SECOND", contact_email="second@example.com"
     )
-    CompanyMembership.objects.create(company=other, user=coordinator, is_admin=True)
-    client = authenticated(coordinator)
+    CompanyMembership.objects.create(company=other, user=coordinator, is_admin=True, is_coordinator=True)
+    client = role_client(coordinator, company, "coordinator")
     body = command(name="Same intent key")
     assert (
         client.post(
@@ -126,7 +130,7 @@ def test_request_key_cannot_replay_into_another_company(company_setup):
         ).status_code
         == 201
     )
-    response = client.post(
+    response = role_client(coordinator, other, "coordinator").post(
         API + f"companies/{other.id}/saved-lists/", body, format="json"
     )
     assert response.status_code == 409, response.data
@@ -137,7 +141,7 @@ def test_property_bookmark_requires_live_exact_offer(company_setup):
     owner, coordinator, approver, company, building, props, offer, request = (
         company_setup
     )
-    client = authenticated(coordinator)
+    client = role_client(coordinator, company, "coordinator")
     prop = props[0]
     item = CompanySavedList.objects.create(
         company=company, name="Units", created_by=coordinator
@@ -184,7 +188,7 @@ def test_concurrent_list_edits_fence_revision(company_setup):
         try:
             barrier.wait(timeout=10)
             return (
-                authenticated(coordinator)
+                role_client(coordinator, company, "coordinator")
                 .post(
                     API + f"company-saved-lists/{item.id}/rename/",
                     command(expected_revision=1, name=f"After {index}"),

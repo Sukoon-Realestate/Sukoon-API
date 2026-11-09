@@ -24,6 +24,9 @@ def configured_capture(settings, tmp_path):
 def test_strict_preflight_requires_successful_requested_provider_probe(
     configured_capture, provider_state
 ):
+    if provider_state == "live":
+        # Readiness requires opencv-python-headless, which Pipfile.lock does not declare.
+        pytest.importorskip("cv2", reason="Capture readiness needs OpenCV (not in Pipfile.lock)")
     output = io.StringIO()
     response = io.BytesIO(
         json.dumps(

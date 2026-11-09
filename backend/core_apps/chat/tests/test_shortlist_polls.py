@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 from rest_framework.exceptions import APIException, PermissionDenied, ValidationError
-from core_apps.chat.services.polls import normalize_poll, poll_voters, change_poll
+from core_apps.chat.services.polls import normalize_poll, change_poll
 from core_apps.chat.services.group_send import send_group_message
 from core_apps.chat.services.group_projection import summary
 from core_apps.chat.services.group_access import authorize
@@ -58,61 +58,61 @@ def test_links_survive_poll_projection_and_do_not_change_membership(chat_group):
     assert summary(direct, peer)["supports_property_polls"] is False
 
 
+# Contract (Sprint 00, A5-12): polls expose aggregate counts and the viewer's own
+# choice only. No voter-identity list was ever implemented, routed or consumed by a
+# client; adding one is a separate product/privacy decision, not test repair.
+
+
+def fresh(message):
+    # Projections read message.poll; re-fetch so a cached poll row never hides a committed change.
+    return type(message).objects.get(pk=message.pk)
+
+
+def option_counts(payload):
+    return [option["votes"] for option in payload["poll"]["options"]]
+
+
 @pytest.mark.django_db
-def test_poll_voters_are_grouped_and_respect_current_membership(chat_group):
+def test_poll_counts_are_aggregate_and_respect_current_membership(chat_group):
     group, conversation, owner, peer = chat_group
     message = poll_message(conversation, owner, allow_multiple=True)
     options = [o["id"] for o in project(conversation, peer, message)["poll"]["options"]]
-    change_poll(
-        conversation,
-        peer,
-        message.id,
-        poll_command(conversation, peer, option_ids=options),
-    )
-    change_poll(
-        conversation,
-        owner,
-        message.id,
-        poll_command(conversation, owner, option_ids=[options[1]]),
-    )
+    change_poll(conversation, peer, message.id, poll_command(conversation, peer, option_ids=options))
+    change_poll(conversation, owner, message.id, poll_command(conversation, owner, option_ids=[options[1]]))
 
-    voters = poll_voters(conversation, peer, message.id)
-    assert voters["voter_count"] == 2
-    assert {v["id"] for v in voters["options"][0]["voters"]} == {str(peer.id)}
-    assert {v["id"] for v in voters["options"][1]["voters"]} == {
-        str(owner.id),
-        str(peer.id),
-    }
+    seen_by_peer = project(conversation, peer, fresh(message))
+    assert seen_by_peer["poll"]["voter_count"] == 2
+    assert option_counts(seen_by_peer) == [1, 2]
+    assert [o["is_mine"] for o in seen_by_peer["poll"]["options"]] == [True, True]
+    assert [o["is_mine"] for o in project(conversation, owner, fresh(message))["poll"]["options"]] == [False, True]
+    for option in seen_by_peer["poll"]["options"]:
+        assert set(option) <= {"id", "text", "url", "votes", "is_mine"}
 
     group.memberships.filter(user=peer).update(status="removed")
-    voters = poll_voters(conversation, owner, message.id)
-    assert voters["voter_count"] == 1
-    assert {v["id"] for v in voters["options"][1]["voters"]} == {str(owner.id)}
-    assert voters["options"][0]["voters"] == []
+    seen_by_owner = project(conversation, owner, fresh(message))
+    assert seen_by_owner["poll"]["voter_count"] == 1
+    assert option_counts(seen_by_owner) == [0, 1]
 
 
 @pytest.mark.django_db
-def test_poll_voters_require_a_vote_until_the_poll_is_closed(chat_group):
+def test_closed_poll_reports_closed_and_rejects_new_votes(chat_group):
     _, conversation, owner, peer = chat_group
     message = poll_message(conversation, owner)
+    options = [o["id"] for o in project(conversation, peer, message)["poll"]["options"]]
+    assert project(conversation, peer, message)["poll"]["voter_count"] == 0
 
     with pytest.raises(PermissionDenied):
-        poll_voters(conversation, peer, message.id)
-    assert poll_voters(conversation, owner, message.id)["voter_count"] == 0
-
-    change_poll(
-        conversation,
-        owner,
-        message.id,
-        poll_command(conversation, owner),
-        close=True,
-    )
-    assert poll_voters(conversation, peer, message.id)["is_closed"] is True
+        change_poll(conversation, peer, message.id, poll_command(conversation, peer), close=True)
+    change_poll(conversation, owner, message.id, poll_command(conversation, owner), close=True)
+    assert project(conversation, peer, fresh(message))["poll"]["is_closed"] is True
+    with pytest.raises(ValidationError):
+        change_poll(conversation, peer, message.id, poll_command(conversation, peer, option_ids=[options[0]]))
 
 
 @pytest.mark.django_db
-def test_poll_voters_reject_non_poll_messages(chat_group):
+def test_poll_commands_reject_non_poll_messages(chat_group):
     _, conversation, owner, peer = chat_group
     message = send_group_message(conversation, owner, message_request("plain"))
     with pytest.raises(ValidationError):
-        poll_voters(conversation, peer, message.id)
+        change_poll(conversation, peer, message.id, poll_command(conversation, peer))
+    assert project(conversation, peer, message).get("poll") is None

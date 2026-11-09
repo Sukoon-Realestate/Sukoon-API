@@ -21,6 +21,15 @@ def rental_change_comparison(item):
         "current_digest": fingerprint(current),
         "document_id": str(item.document_id) if item.document_id else None,
         "document_hash": item.document_hash,
-        "required_approvals": [str(item.lease.owner.id), str(item.lease.tenant.id)],
+        "required_approvals": required_approvals(item.lease),
     }
     return {**value, "digest": fingerprint(value)}
+
+
+def required_approvals(lease):
+    """Owner plus the renter's signer: the tenant, or a company lease's current signer."""
+    if lease.tenant_id:
+        return [str(lease.owner.id), str(lease.tenant.id)]
+    tenancy = getattr(lease, "company_tenancy", None)
+    signer = tenancy.signer_mandate.membership.user if tenancy and tenancy.signer_mandate_id else None
+    return [str(lease.owner.id)] + ([str(signer.id)] if signer else [])

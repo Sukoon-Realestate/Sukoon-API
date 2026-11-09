@@ -5,7 +5,7 @@ import pytest
 from core_apps.features.company_models import CompanyMembership
 from core_apps.features.services.company import bookings
 from core_apps.features.services.company.request_period import monthly_periods
-from .test_company_housing import company_setup, command, API, proposed
+from .test_company_housing import company_setup, command, API, proposed, role_client
 from .test_rental_phase2 import rental_participants, authenticated
 from .test_rental_lifecycle import policy
 
@@ -36,7 +36,7 @@ def test_existing_month_end_contract(start, end, count):
 def test_create_rejects_unsupported_period_before_creating(company_setup):
     _, user, _, company, *_, item = company_setup
     before = company.housing_requests.count()
-    response = authenticated(user).post(
+    response = role_client(user, company, "coordinator").post(
         API + f"companies/{company.id}/housing-requests/",
         body(item, ends_on_exclusive=item.ends_on_exclusive + timedelta(days=1)),
         format="json",
@@ -48,12 +48,18 @@ def test_create_rejects_unsupported_period_before_creating(company_setup):
 @pytest.mark.django_db
 def test_correction_receipt_replay_and_stale_revision(company_setup, monkeypatch):
     _, user, _, company, *_, item = company_setup
-    client = authenticated(user)
+    client = role_client(user, company, "coordinator")
     url = API + f"company-housing-requests/{item.id}/"
     data = body(item, title="Corrected request", commitment_ceiling_minor=1234567)
     response = client.post(url, data, format="json")
     assert response.status_code == 200
-    assert client.post(url, data, format="json").data == response.data
+
+    def same_receipt(replay):
+        # Company replays return the original receipt and identity, not an old projection.
+        return (replay.data["operation_receipt"] == response.data["operation_receipt"]
+                and replay.data["resource"]["id"] == response.data["resource"]["id"])
+
+    assert same_receipt(client.post(url, data, format="json"))
     item.refresh_from_db()
     assert item.title == "Corrected request"
     assert item.commitment_ceiling_minor == 1234567
@@ -67,7 +73,7 @@ def test_correction_receipt_replay_and_stale_revision(company_setup, monkeypatch
         "core_apps.features.services.company.request_period.timezone.localdate",
         lambda: item.ends_on_exclusive + timedelta(days=1),
     )
-    assert client.post(url, data, format="json").data == response.data
+    assert same_receipt(client.post(url, data, format="json"))
 
 
 @pytest.mark.django_db
@@ -75,19 +81,19 @@ def test_current_assigned_coordinator_required(company_setup):
     owner, user, approver, company, *_, item = company_setup
     url = API + f"company-housing-requests/{item.id}/"
     assert (
-        authenticated(approver).post(url, body(item), format="json").status_code == 403
+        role_client(approver, company, "approver").post(url, body(item), format="json").status_code == 403
     )
     CompanyMembership.objects.create(company=company, user=owner, is_coordinator=True)
-    assert authenticated(owner).post(url, body(item), format="json").status_code == 403
+    assert role_client(owner, company, "coordinator").post(url, body(item), format="json").status_code == 403
     assert bookings.request_payload(item, owner)["can_edit"] is False
     CompanyMembership.objects.filter(company=company, user=user).update(is_active=False)
-    assert authenticated(user).post(url, body(item), format="json").status_code == 404
+    assert role_client(user, company, "coordinator").post(url, body(item), format="json").status_code == 404
     assert bookings.request_payload(item, user)["can_edit"] is False
 
 
 @pytest.mark.django_db
 def test_selected_and_withdrawn_packages_keep_original_terms(company_setup):
-    _, user, _, _, *_, request = company_setup
+    _, user, _, company, *_, request = company_setup
     package = proposed(company_setup)
     request.refresh_from_db()
     url = API + f"company-housing-requests/{request.id}/"
@@ -98,7 +104,7 @@ def test_selected_and_withdrawn_packages_keep_original_terms(company_setup):
                 user, package.id, {"expected_revision": package.revision}
             )
             request.refresh_from_db()
-        result = authenticated(user).post(
+        result = role_client(user, company, "coordinator").post(
             url, body(request, title="Changed"), format="json"
         )
         assert result.status_code == 200

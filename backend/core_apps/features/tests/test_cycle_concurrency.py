@@ -15,6 +15,10 @@ from .test_rental_phase2 import authenticated, rental_participants
 
 
 def parallel_calls(call):
+    # Races need real row locks and independent sessions; SQLite serializes the
+    # whole database instead. Every caller is a PostgreSQL acceptance case.
+    if connection.vendor != "postgresql":
+        pytest.skip("Concurrent row-lock races require PostgreSQL")
     barrier = Barrier(2)
 
     def run(index):

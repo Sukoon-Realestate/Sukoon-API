@@ -153,6 +153,9 @@ def test_company_mock_completion_preserves_owned_receipt_recovery_and_replay(
     completions = []
     for role in ("owner", "signer"):
         client = authenticated(actors[role])
+        if role == "signer":
+            # Company signers act through the exact selected role (see the test below).
+            client.credentials(HTTP_X_SUKOON_COMPANY_ROLE="signer", HTTP_X_SUKOON_COMPANY_ID=str(actors["company"].id))
         session = event.signing_sessions.get(signer=actors[role])
         grant = capability(client, event)
         assert grant.status_code == 200 and grant.data["allowed_actions"] == ["sign"]

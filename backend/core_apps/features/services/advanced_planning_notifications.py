@@ -133,28 +133,37 @@ def context(item):
     )
 
 
+def _company_role(item, recipient):
+    """Company notices are delivered only to the role that owns the work."""
+    if isinstance(item, HousingScenarioDecision) and recipient.pk == item.approver.user_id:
+        return "approver"
+    return "coordinator"
+
+
 def record(item, actor, operation):
     action, target, company_id, recipients = context(item)
     for recipient in User.objects.filter(pk__in=recipients, is_active=True):
         if actor and recipient.pk == actor.pk:
             continue
+        destination = {
+            "action_type": action,
+            "target_id": target,
+            "event_kind": EVENT_KIND,
+            "source_model": item._meta.label_lower,
+            "source_id": str(item.id),
+            "revision": item.revision,
+            "change_kind": operation.split(".")[1],
+            "company_id": company_id,
+            "workspace": recipients[recipient.pk],
+            "schema_version": "1",
+        }
+        if destination["workspace"] == "company":
+            # event_copy() rejects company notices without the recipient's role.
+            destination["company_role"] = _company_role(item, recipient)
         PlanningEvent.objects.get_or_create(
             recipient=recipient,
             event_key=f"{operation}:{item._meta.label_lower}:{item.id}:{item.revision}",
-            defaults={
-                "destination": {
-                    "action_type": action,
-                    "target_id": target,
-                    "event_kind": EVENT_KIND,
-                    "source_model": item._meta.label_lower,
-                    "source_id": str(item.id),
-                    "revision": item.revision,
-                    "change_kind": operation.split(".")[1],
-                    "company_id": company_id,
-                    "workspace": recipients[recipient.pk],
-                    "schema_version": "1",
-                }
-            },
+            defaults={"destination": destination},
         )
     # A changed/withdrawn intent affects proposals shared with other participants.
     if isinstance(item, MoveIntent):

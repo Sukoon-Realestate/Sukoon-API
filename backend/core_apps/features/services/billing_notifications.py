@@ -49,14 +49,20 @@ def record_fulfilled(invoice, attempt):
         # The existing case owns its recovery notice and invoice shortcut.
         return
     recipients = [attempt.payer_id]
+    roles = {}
     if invoice.organization_id:
-        recipients = (
-            invoice.organization.memberships.filter(
+        from .company.role_context import available
+
+        # Each notice names the billing role that recipient can actually select.
+        roles = {
+            member.user_id: "payer" if "payer" in available(member) else "admin"
+            for member in invoice.organization.memberships.filter(
                 is_active=True, user__is_active=True
             )
             .filter(Q(is_admin=True) | Q(can_execute_payments=True))
-            .values_list("user_id", flat=True)
-        )
+            .select_related("user", "company")
+        }
+        recipients = list(roles)
     destination = {
         "schema_version": "1",
         "action_type": "open_purchase_invoice",
@@ -69,12 +75,14 @@ def record_fulfilled(invoice, attempt):
     }
     if invoice.organization_id:
         destination["company_id"] = str(invoice.organization.id)
-        destination["company_role"] = "payer"
     for identity in set(recipients):
+        data = dict(destination)
+        if invoice.organization_id:
+            data["company_role"] = roles[identity]
         PlanningEvent.objects.get_or_create(
             recipient_id=identity,
             event_key=f"purchase.fulfilled:{invoice.id}",
-            defaults={"destination": destination},
+            defaults={"destination": data},
         )
 
 

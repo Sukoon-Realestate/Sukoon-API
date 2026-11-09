@@ -10,8 +10,18 @@ from .group_projection import sender_payload
 from .group_rate_limit import enforce_rate
 
 
+def typing_enabled(user):
+    """UserSettings.typing_indicator: 'Show and receive typing indicators' (default on)."""
+    from core_apps.profiles.models import UserSettings
+
+    value = UserSettings.objects.filter(user=user).values_list("typing_indicator", flat=True).first()
+    return value is not False
+
+
 def broadcast_typing(conversation, user, *, started):
     _, participant, _ = authorize(conversation, user, action="send_message")
+    if not typing_enabled(user):
+        return
     key = f"chat-typing:{conversation.id}:{participant.membership_period}"
     if started and not cache.add(key, True, timeout=2):
         return
@@ -50,6 +60,9 @@ def typing_payload(event, user):
         .first()
     )
     if not actor or timezone.now().isoformat() > event["expires_at"]:
+        return None
+    # Both sides' privacy choice is current at delivery, not only at publication.
+    if not typing_enabled(user) or not typing_enabled(actor.user):
         return None
     # Historical read access can survive withdrawal of direct-message consent.
     # Recheck the actor when delivering a queued event, not only at publication.

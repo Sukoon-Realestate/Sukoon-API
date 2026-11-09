@@ -293,7 +293,9 @@ def test_company_plan_retains_independent_contract_reviews_and_private_destinati
     ]
     plan, actors = company_execution.corporate_execution_setup(company_setup)
     company_execution.consent_and_prepare(plan, actors)
-    response = authenticated(actors[1]).get(API + f"advanced-executions/{plan.id}/")
+    coordinator = authenticated(actors[1])
+    coordinator.credentials(HTTP_X_SUKOON_COMPANY_ROLE="coordinator", HTTP_X_SUKOON_COMPANY_ID=str(company_setup[3].id))
+    response = coordinator.get(API + f"advanced-executions/{plan.id}/")
     assert response.status_code == 200, response.data
     assert all(
         row["continuation_kind"] == "company_prepare" for row in response.data["legs"]

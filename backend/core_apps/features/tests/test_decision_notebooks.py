@@ -26,9 +26,17 @@ def content(*notes):
     return {**empty(), "properties": list(notes)}
 
 
-def sync(user, value, revision=0, key=None, workspace="individual", company=""):
+def as_member(user, company_id, role):
+    """Company-context notebooks are opened through a selected company role."""
+    client = authenticated(user)
+    client.credentials(HTTP_X_SUKOON_COMPANY_ROLE=role, HTTP_X_SUKOON_COMPANY_ID=str(company_id))
+    return client
+
+
+def sync(user, value, revision=0, key=None, workspace="individual", company="", role="coordinator"):
     query = f"?workspace={workspace}" + (f"&company_id={company}" if company else "")
-    return authenticated(user).post(API + query, {
+    client = as_member(user, company, role) if company else authenticated(user)
+    return client.post(API + query, {
         "operation_id": key or str(uuid.uuid4()), "base_revision": revision, "content": value,
     }, format="json")
 
@@ -174,9 +182,9 @@ def test_company_context_is_private_even_to_other_members_and_revocation_is_curr
     _, user, other, company, *_ = company_setup
     assert sync(user, content(note("private company thought")), workspace="company", company=company.id).status_code == 200
     query = {"workspace": "company", "company_id": str(company.id)}
-    assert authenticated(other).get(API, query).json()["data"]["content"] == empty()
+    assert as_member(other, company.id, "approver").get(API, query).json()["data"]["content"] == empty()
     CompanyMembership.objects.filter(company=company, user=user).update(is_active=False)
-    assert authenticated(user).get(API, query).status_code == 404
+    assert as_member(user, company.id, "coordinator").get(API, query).status_code == 404
     assert sync(user, content(note()), workspace="company", company=company.id).status_code == 404
 
 

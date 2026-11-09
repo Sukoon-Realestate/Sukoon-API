@@ -1,8 +1,8 @@
 # CLAUDE.md — Sukoon Backend API
 
-Django + DRF + SimpleJWT + Unfold admin. Settings package `config/settings/`, apps under `core_apps/`,
-Pipenv virtualenv, API views with DRF serializers and services. All API views follow clean modular
-patterns with function-based or class-based conventions as established in `core_apps/`.
+Django 4.2 + DRF + SimpleJWT + Channels. Settings package `config/settings/`, apps under `core_apps/`,
+environment from `Pipfile.lock`. Target architecture (`sprints/ARCHITECTURE.md`): explicit class-based views
+over domain services; remaining function views are migration debt tracked in `sprints/ROUTE_MATRIX.md`.
 
 ---
 
@@ -20,7 +20,7 @@ Matching is case-insensitive and partial — a keyword anywhere in the prompt co
 ## SKILLS (invoke with the Skill tool)
 
 ### `/django-feature`  ← preferred for almost all feature work here
-Encodes THIS project's layout (settings split, `apps/`, Makefile, JWT, django-filter, Unfold).
+Encodes THIS project's layout (`core_apps/`, `config/settings/` split, lock-based env, CBV + services target, MVP scope, Makefile).
 **Trigger words:** add, create, build, scaffold, new app, new model, model, field, migration,
 migrate, makemigrations, serializer, serialize, viewset, view, endpoint, route, url, api, crud,
 list/detail/create/update/delete endpoint, filter, django-filter, pagination, permission,
@@ -203,14 +203,23 @@ disaster simulation.
 ---
 
 ## Project conventions (always honor)
-- Use the `Makefile` targets and the `./Venv/` virtualenv for commands.
-- Respect the settings layout: `Project/settings.py` + the `Project/settings_modules/*` split
-  (`DJANGO_SETTINGS_MODULE = "Project.settings"`); env comes from a single repo-root `.env`.
-- All API views are function-based (`@api_view`) — no APIView/ViewSet/generic class views.
-  Favor short, human-readable code; inline serializers/helpers a feature doesn't need.
-- New code goes in `apps/<appname>/`.
-- DRF endpoints use SimpleJWT auth, django-filter, and the configured DRF pagination.
-- Admin uses django-unfold.
+- Use the `Makefile` targets. The environment is built from `Pipfile.lock` (Python 3.11, includes
+  `pillow-heif`): `pipenv install`, or a hash-checked `backend/.venv` as described in the
+  `django-feature` skill. There is no `./Venv/`.
+- Settings live in `config/settings/` (`base.py` + one module per environment). Tests use
+  `config.settings.test` (pytest.ini); PostgreSQL tests use `config.settings.postgres_test` with disposable
+  `TEST_POSTGRES_*` values. Deployed env comes from the repo-root `.env`/platform; never read or edit it for tests.
+- Apps live in `core_apps/<app>/` (urls → thin views → serializers → `services/`).
+- Architecture target (user-approved; see `sprints/ARCHITECTURE.md`): new and converted HTTP endpoints are
+  explicit class-based views; domain services own transactions, locks, authority and side effects. The existing
+  526 `@api_view` routes are migration debt converted by sprints 05–10 — do not add new `@api_view` functions
+  and do not change route names/aliases/contracts during conversion.
+- DRF endpoints use cookie/SimpleJWT auth (`core_apps.common.cookie_auth`), django-filter and the configured
+  pagination/renderer. Admin is Django admin plus the `admin_api` staff API (no django-unfold).
+- The MVP release switch (`SUKOON_MVP`, default true) gates deferred routes in `core_apps/common/mvp_scope.py`;
+  run both `make test-baseline-mvp` and `make test-baseline-restoration` for cross-cutting changes.
+- Regenerate `sprints/ROUTE_MATRIX.md` (`make route-matrix`) whenever routes change.
+- Never alter `db.sqlite3`, `commerce_sandbox.sqlite3`, `.demo/`, `media/` or production state to make tests pass.
 
 ---
 

@@ -1,3 +1,6 @@
+# Per-test release mode (MVP gate on/off) and the external-network guard.
+pytest_plugins = ["tools.qa.mvp_collection"]
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.cache import caches

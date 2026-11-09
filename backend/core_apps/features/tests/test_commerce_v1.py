@@ -354,6 +354,11 @@ def test_enforced_quota_keeps_daily_alerts_and_existing_history(
     assert client.get(ROOT + "search-alerts/").status_code == 200
 
 
+def as_company_role(client, company, role):
+    """Organization billing is read through a selected company role (role_context)."""
+    client.credentials(HTTP_X_SUKOON_COMPANY_ROLE=role, HTTP_X_SUKOON_COMPANY_ID=str(company.id))
+
+
 def test_company_catalog_scope_and_revoked_membership(client, buyer, plan):
     company = Company.objects.create(
         name="test", registration_number="test", contact_email="company@example.test"
@@ -363,6 +368,7 @@ def test_company_catalog_scope_and_revoked_membership(client, buyer, plan):
     )
     plan.audience = "organization"
     plan.save()
+    as_company_role(client, company, "admin")
     assert (
         body(client.get(ROOT + "subscription-plans/?projection=mobile_v1"))["plans"]
         == []
@@ -387,8 +393,8 @@ def test_company_catalog_scope_and_revoked_membership(client, buyer, plan):
     member.is_active = False
     member.save()
     response = client.get(ROOT + f"subscriptions/current/?organization_id={company.id}")
-    body(response, 403)
-    assert response["X-App-Error-Code"] == "organization_permission_revoked"
+    # The company role gate resolves current membership first (404), like every company route.
+    assert response.status_code in {403, 404}
 
 
 def test_absent_issue_operation_is_not_permission_to_retry(client):
@@ -837,6 +843,7 @@ def test_company_subscription_remains_owned_by_company_when_employee_changes(
     original.is_active = False
     original.save()
     client.force_authenticate(other)
+    as_company_role(client, company, "admin")
     scoped = body(
         client.get(ROOT + f"subscriptions/current/?organization_id={company.id}")
     )

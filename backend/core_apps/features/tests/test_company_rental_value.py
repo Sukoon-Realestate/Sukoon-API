@@ -4,7 +4,7 @@ import uuid
 import pytest
 from core_apps.features.models import RentalOperationalCase, CompanyMembership
 from core_apps.features.services.company import discovery, bookings
-from .test_company_housing import company_setup, command, API
+from .test_company_housing import company_setup, command, API, role_client
 from .test_rental_phase2 import rental_participants, authenticated
 from .test_rental_lifecycle import policy
 from .test_rental_lifecycle_safety import operator
@@ -25,7 +25,7 @@ def request_body(requirement, **changes):
 
 def test_request_worksite_catalog_and_full_term_budget(company_setup):
     _, user, _, company, _, _, _, requirement = company_setup
-    client = authenticated(user)
+    client = role_client(user, company, "coordinator")
     body = request_body(
         requirement,
         project_code="SITE-10",
@@ -60,7 +60,7 @@ def test_request_worksite_catalog_and_full_term_budget(company_setup):
 )
 def test_request_rejects_unsupported_structured_values(company_setup, changes):
     requirement = company_setup[-1]
-    result = authenticated(company_setup[1]).post(
+    result = role_client(company_setup[1], company_setup[3], "coordinator").post(
         API + f"company-housing-requests/{requirement.id}/",
         request_body(requirement, **changes),
         format="json",
@@ -86,7 +86,7 @@ def test_request_suitability_preserves_unknowns_and_distance(company_setup):
     units[0].save()
     row = discovery.suitability(offer, requirement)
     assert row["capacity"] is None and "capacity_unknown" in row["suitability_reasons"]
-    result = authenticated(user).get(
+    result = role_client(user, company, "coordinator").get(
         API + "portfolio-offers/",
         {
             "company_id": str(company.id),
@@ -107,7 +107,7 @@ def test_offer_over_budget_reasons_and_request_context(company_setup):
     assert {"rent_over_ceiling", "deposit_over_ceiling"} <= set(
         row["suitability_reasons"]
     )
-    result = authenticated(user).get(
+    result = role_client(user, company, "coordinator").get(
         API + "portfolio-offers/",
         {
             "company_id": str(uuid.uuid4()),
@@ -125,9 +125,14 @@ def assistance(setup):
         reason="Help source suitable accommodation.",
     )
     url = API + f"company-housing-requests/{requirement.id}/assistance/"
-    result = authenticated(user).post(url, body, format="json")
+    client = role_client(user, setup[3], "coordinator")
+    result = client.post(url, body, format="json")
     assert result.status_code == 200, result.data
-    assert authenticated(user).post(url, body, format="json").data == result.data
+    replay = client.post(url, body, format="json").data
+    # Company receipts replay the original receipt and identity only; fresh GETs carry
+    # the current role projection (remember_mutation.replay_operation).
+    assert replay["operation_receipt"] == result.data["operation_receipt"]
+    assert replay["resource"]["id"] == result.data["resource"]["id"]
     return RentalOperationalCase.objects.get(housing_request=requirement), result
 
 
@@ -138,7 +143,9 @@ def test_assistance_deduplicates_and_never_reserves(company_setup):
     assert requirement.assistance_cases.count() == 1
     assert requirement.items.count() == 0
     assert first.data["resource"]["assistance_cases"][0]["id"] == str(case.id)
-    result = case_action(case, company_setup[1], "withdraw_sourcing")
+    result = case_action(
+        case, company_setup[1], "withdraw_sourcing", company_role=(company_setup[3], "coordinator")
+    )
     assert result.status_code == 200, result.data
     case.refresh_from_db()
     assert case.status == "resolved" and case.resolution_code == "withdrawn"
@@ -166,7 +173,7 @@ def test_sourcing_operator_recommendation_revision_and_role_revocation(company_s
     )
     assert stale.status_code == 409
     CompanyMembership.objects.filter(company=company, user=user).update(is_active=False)
-    assert authenticated(user).get(API + f"rental-cases/{case.id}/").status_code == 404
+    assert role_client(user, company, "coordinator").get(API + f"rental-cases/{case.id}/").status_code == 404
     denied = case_action(
         case,
         support,
@@ -194,7 +201,8 @@ def test_csv_preview_no_records_activation_or_privileged_roles(company_setup):
     _, user, approver, company, *_ = company_setup
     url = API + f"companies/{company.id}/staff-batches/import-preview/"
     text = 'display_name,work_email,employee_code\n"A, B",a@example.invalid,E1\nOther,a@example.invalid,E2\n'
-    result = authenticated(user).post(url, {"csv_text": text}, format="json")
+    admin = role_client(user, company, "admin")
+    result = admin.post(url, {"csv_text": text}, format="json")
     assert result.status_code == 200, result.data
     assert result.data["rows"][0]["valid"]
     assert not result.data["rows"][1]["valid"]
@@ -202,11 +210,11 @@ def test_csv_preview_no_records_activation_or_privileged_roles(company_setup):
     assert not company.staff_records.exists()
     assert not result.data["persisted"] and not result.data["activation_sent"]
     assert (
-        authenticated(approver).post(url, {"csv_text": text}, format="json").status_code
+        role_client(approver, company, "approver").post(url, {"csv_text": text}, format="json").status_code
         == 403
     )
     assert (
-        authenticated(user)
+        admin
         .post(
             url,
             {
@@ -229,7 +237,7 @@ def test_csv_preview_no_records_activation_or_privileged_roles(company_setup):
     ],
 )
 def test_csv_preview_rejects_unbounded_or_malformed_files(company_setup, text):
-    result = authenticated(company_setup[1]).post(
+    result = role_client(company_setup[1], company_setup[3], "admin").post(
         API + f"companies/{company_setup[3].id}/staff-batches/import-preview/",
         {"csv_text": text},
         format="json",
@@ -283,8 +291,10 @@ def test_sourcing_admin_form_displays_requirements_and_commits_canonical_recomme
 def test_concurrent_assistance_creates_one_case_and_rejects_stale_intent(company_setup):
     from concurrent.futures import ThreadPoolExecutor
     from threading import Barrier
-    from django.db import close_old_connections
+    from django.db import close_old_connections, connection
 
+    if connection.vendor != "postgresql":
+        pytest.skip("Concurrent row locking requires PostgreSQL")
     user, requirement = company_setup[1], company_setup[-1]
     barrier = Barrier(2)
 
@@ -296,7 +306,7 @@ def test_concurrent_assistance_creates_one_case_and_rejects_stale_intent(company
             )
             barrier.wait(timeout=10)
             return (
-                authenticated(user)
+                role_client(user, company_setup[3], "coordinator")
                 .post(
                     API + f"company-housing-requests/{requirement.id}/assistance/",
                     body,
@@ -314,7 +324,7 @@ def test_concurrent_assistance_creates_one_case_and_rejects_stale_intent(company
 
 
 def test_csv_unterminated_header_is_rejected_without_server_error(company_setup):
-    result = authenticated(company_setup[1]).post(
+    result = role_client(company_setup[1], company_setup[3], "admin").post(
         API + f"companies/{company_setup[3].id}/staff-batches/import-preview/",
         {"csv_text": '"display_name,work_email\nA,a@b.test'},
         format="json",

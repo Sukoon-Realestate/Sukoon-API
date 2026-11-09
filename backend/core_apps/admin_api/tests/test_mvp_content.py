@@ -50,17 +50,19 @@ def test_mvp_content_creation_and_old_receipts_cannot_restore_deferred_scope(set
     api = client(operator())
     values = article(); values['workspace'] = workspace
     assert save(api, 'articles', values)[0].status_code == 403
-    assert not HelpArticle.objects.exists()
+    # Migration 0004 seeds help content; the refused save must not add this article.
+    assert not HelpArticle.objects.filter(slug=values['slug']).exists()
     settings.SUKOON_MVP = False
     created, key = save(api, 'articles', values)
     assert created.status_code == 201
     settings.SUKOON_MVP = True
     assert api.get(ROOT + 'articles/content-proof/').status_code == 404
-    assert api.get(ROOT + 'articles/').data['count'] == 0
+    # The deferred-scope article must not appear in the MVP listing (seeded articles may).
+    assert values['slug'] not in str(api.get(ROOT + 'articles/').data)
     assert save(api, 'articles', {'answer_en': 'Blocked'}, 1, 'content-proof')[0].status_code == 403
     assert save(api, 'articles', values, key=key)[0].status_code == 403
     assert api.post(ROOT + f'articles/receipts/{key}/', {'identity': None}, format='json').status_code == 403
-    assert HelpArticle.objects.get().answer_en == values['answer_en']
+    assert HelpArticle.objects.get(slug=values['slug']).answer_en == values['answer_en']
 
 
 @pytest.mark.parametrize('kind', ['universities', 'campuses', 'subscription_plans', 'advertising_plans', 'commerce_features'])

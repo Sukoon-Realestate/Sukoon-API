@@ -75,7 +75,10 @@ def test_owner_can_revoke_without_provider_and_replay_original_receipt(
     assert "rental_agreements" in readiness.data["enabled_capabilities"]
     assert "revoke_invitation" in readiness.data["allowed_actions"]
     assert readiness.data["blocking_reasons"] == []
-    if provider == "disabled":
+    # Lease drafting no longer depends on provider readiness (55265dd6); signing still does.
+    if invitation_status == "accepted":
+        assert "create_lease" in readiness.data["allowed_actions"]
+    else:
         assert "create_lease" not in readiness.data["allowed_actions"]
     assert client.get(detail_url).data["allowed_actions"] == ["revoke_invitation"]
 

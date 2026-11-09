@@ -29,3 +29,42 @@
 
 **Next:** proceed by the dependencies in the roadmap; update counts when the source changes, rather than treating this
 audit's file/route numbers as timeless constants.
+
+## Results (2026-11-09)
+
+Executed on `main` at `4d2556cf`; changes are uncommitted for review. Evidence: [evidence/sprint-00](evidence/sprint-00/README.md).
+No existing database, media, secret or production system was altered (hashes verified before/after).
+
+### Work items
+
+| Item | Status | Result |
+|---|---|---|
+| Reproducible environment incl. HEIF | Done | `backend/.venv` from `Pipfile.lock` with hash checking; 113/113 packages, `pip check` clean, pillow-heif/libheif import |
+| `poll_voters` contract | Done — needs product sign-off | No voter-identity helper, route or client ever existed (test added in `1bedcec2` without an implementation). Approved contract recorded as **aggregate counts + viewer's own choice**; the three stale tests were rewritten against it, link/vote/close/membership coverage kept, no dummy helper. A voter list would be a new privacy-reviewed feature |
+| Collection, then suite; categories | Done | 4,285 collected / 0 errors. Full SQLite runs in MVP and restoration modes; 149 affected modules on disposable PostgreSQL; skips and failures classified per test |
+| Route/method/alias matrix | Done (generated) | [ROUTE_MATRIX.md](ROUTE_MATRIX.md) via `make route-matrix`: methods, auth, permissions, throttles, parsers, schema hints, MVP availability, aliases, lock/receipt/authority/header/upload signals, test references, owning area/sprint |
+| Uploads, feature availability, aliases | Done (code defaults) | [FEATURE_AVAILABILITY.md](FEATURE_AVAILABILITY.md); deployed env values not inspected |
+| Architecture approval / stale guidance | Guidance done; approval open | `backend/CLAUDE.md`, root `CLAUDE.md` and the tracked `django-feature` skill (written for another project) now describe `core_apps/`, `config/settings/`, the lock-based env and the CBV + service target |
+| Budgets, lint/import baseline, evidence, PostgreSQL target | Done | 13-screen 5/40 budgets pass; import 1,865/0; flake8 baselines; disposable PostgreSQL 18.6 used for race tests |
+
+### Completion evidence
+
+| Criterion | Met? | Notes |
+|---|---|---|
+| Collection succeeds with zero unresolved import errors; versions and skipped categories recorded | **Yes** | [environment.txt](evidence/sprint-00/environment.txt), skip categories in the evidence README |
+| Actual full-suite result and valid exercised coverage recorded | **Yes** | MVP 2,303 pass / 1,188 fail+error; restoration 3,905 / 230; coverage 59.5 % / 86.1 % (exercised). The suite is **not green**: 108 genuine restoration failures + 15 PostgreSQL-only race failures, and 1,051 MVP-mode tests need deselection/marking |
+| Every API family has a named owner and compatibility matrix | **Partly** | Every family has an owning area and sprint; **named individuals are not assigned** (needs the backend lead) |
+| Every future migration batch has focused contract fixtures | **No** | The matrix lists per-route contract inputs; request/response fixtures per family are still to be written before each batch (350 routes have no HTTP-level test reference) |
+| Critical fixes have failing-before cases | **Partly** | A1-02 and A6-03 have strict-xfail repros. A1-01, A1-03, A2/A3 eligibility and storage, A4 refunds and A5-01 do not |
+| No secrets, databases, media or production state altered | **Yes** | SHA-256 before/after identical |
+
+### Open items handed to the owners
+
+1. Product: approve the aggregate poll contract (or request a privacy-reviewed voter list).
+2. Backend lead: approve [ARCHITECTURE.md](ARCHITECTURE.md); name an owner per area in ROUTE_MATRIX.
+3. QA: extend `tools/qa/mvp_collection.py` (or mark tests) so MVP mode has no gate-explained failures; triage the 27
+   mode-dependent and 108 + 15 genuine failures; replace random-UUID parametrize IDs in `test_purchase_events`.
+4. Run SQLite-incompatible modules on PostgreSQL in CI (`make test-postgres-races`); provision the second independent
+   cluster for the 5 recovery-drill tests.
+5. Ops: confirm deployed values of the switches in FEATURE_AVAILABILITY.md.
+6. Ruff/pip-audit and the Django 4.2 support-end upgrade remain for Sprint 01.

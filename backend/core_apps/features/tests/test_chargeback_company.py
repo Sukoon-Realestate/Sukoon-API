@@ -34,6 +34,13 @@ from core_apps.features.services.rental_phase6 import evaluate_financial_closure
 from core_apps.features.services.rental_lifecycle.locks import lock_financial_lease
 
 
+
+def as_role(actors, role):
+    """Company tenancy reads are projected for the caller's selected company role."""
+    client = authenticated(actors[role])
+    client.credentials(HTTP_X_SUKOON_COMPANY_ROLE=role, HTTP_X_SUKOON_COMPANY_ID=str(actors["company"].id))
+    return client
+
 @pytest.mark.django_db
 @pytest.mark.parametrize("resolution", ["restored", "replacement"])
 def test_company_closed_chargeback_restoration_closes_without_inventory_or_second_payable(
@@ -63,12 +70,13 @@ def test_company_closed_chargeback_restoration_closes_without_inventory_or_secon
     reservation.refresh_from_db()
     assert reservation.status == "committed"
     item = RentalChargeback.objects.get(payment_attempt=attempt)
-    employee = authenticated(actors["employee"]).get(
+    employee = as_role(actors, "employee").get(
         API + f"company-tenancies/{tenancy.id}/"
     )
-    payer = authenticated(actors["payer"]).get(API + f"company-tenancies/{tenancy.id}/")
+    payer = as_role(actors, "payer").get(API + f"company-tenancies/{tenancy.id}/")
     assert employee.status_code == payer.status_code == 200
-    assert employee.data["chargebacks"] == []
+    # Role projections omit financial history for residents entirely.
+    assert employee.data.get("chargebacks", []) == []
     assert payer.data["chargebacks"][0]["id"] == str(item.id)
     assert payer.data["chargebacks"][0]["resolved"] is False
     outsider = person("other-company-chargeback-reader")
@@ -96,7 +104,7 @@ def test_company_closed_chargeback_restoration_closes_without_inventory_or_secon
     assert not tenancy.lease.inventory_day_locks.exists()
     assert tenancy.lease.tenant_id is None and tenancy.lease.status == "ended"
     assert OwnerPayable.objects.filter(lease=tenancy.lease).count() == 1
-    completed = authenticated(actors["payer"]).get(
+    completed = as_role(actors, "payer").get(
         API + f"company-tenancies/{tenancy.id}/"
     )
     assert completed.data["chargebacks"][0]["resolved"] is True

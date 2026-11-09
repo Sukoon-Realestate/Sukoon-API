@@ -133,15 +133,17 @@ def selected(user, company, *, required=True):
     identity = request.headers.get("X-Sukoon-Company-Id", "")
     if not role and not required:
         return ""
+    from ...company_models import CompanyMembership
+
+    # Membership first: a non-member must get the same 404 as for a missing
+    # resource, never a role prompt that confirms a company resource exists.
+    member = get_object_or_404(
+        CompanyMembership, company=company, user=user, is_active=True
+    )
     if role not in ROLES or not identity or identity != str(company.id):
         raise PermissionDenied(
             "Choose a current role for this company.", code="company_role_required"
         )
-    from ...company_models import CompanyMembership
-
-    member = get_object_or_404(
-        CompanyMembership, company=company, user=user, is_active=True
-    )
     if role not in available(member):
         raise PermissionDenied(
             "This company role is no longer available.", code="company_role_revoked"

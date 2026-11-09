@@ -691,6 +691,7 @@ def test_company_subscription_belongs_to_company_and_requires_current_mandate(
         )
     plan.audience = "organization"
     plan.save()
+    client.credentials(HTTP_X_SUKOON_COMPANY_ROLE="payer", HTTP_X_SUKOON_COMPANY_ID=str(company.id))
     invoice = body(
         client.post(
             ROOT + "billing/invoices/",

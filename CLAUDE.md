@@ -54,9 +54,9 @@ make dev                      # Start unified backend + frontend runner
 ## 🏗️ Architecture & Conventions by Workspace
 
 ### 1. Backend (`backend/`)
-- Settings located in `backend/config/settings/` (`local_sqlite.py`, `local.py`, `production.py`, `test.py`).
+- Settings located in `backend/config/settings/` (`base.py` plus per-environment modules such as `test.py`, `postgres_test.py`, `local.py`, `production.py`).
 - Apps located in `backend/core_apps/` (`users`, `profiles`, `properties`, `chat`, `notifications`, `support`, etc.).
-- Function-based or service-backed API views with DRF serializers.
+- Views: explicit class-based views over domain services is the approved target (`backend/sprints/ARCHITECTURE.md`); existing `@api_view` functions are migration debt — do not add new ones.
 - JWT authentication (`SimpleJWT`) and role-based permissions (`Tenant`, `Owner`, `Admin`).
 
 ### 2. Frontend (`frontend/`)

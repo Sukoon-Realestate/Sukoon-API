@@ -277,6 +277,20 @@ def source_data(snapshot):
 
 
 def freshness(scenario, user):
+    from ..company.role_context import bound_role, http_context
+
+    request = http_context()
+    viewer = getattr(request, "user", None)
+    if viewer is not None and viewer.pk != user.pk:
+        # Re-validating another actor's snapshot (an approver deciding on the
+        # coordinator's scenario) checks that actor's coordinator authority,
+        # never the viewer's selected HTTP role.
+        with bound_role(user, scenario.company.id, "coordinator"):
+            return _freshness(scenario, user)
+    return _freshness(scenario, user)
+
+
+def _freshness(scenario, user):
     try:
         current = capture(
             user,

@@ -54,6 +54,13 @@ API = "/api/v1/features/v1/"
 FUTURE_YEAR = timezone.localdate().year + 1
 
 
+def role_client(user, company, role):
+    """HTTP company routes require an explicit current role (role_routes.py, since f1f2bdbd)."""
+    client = authenticated(user)
+    client.credentials(HTTP_X_SUKOON_COMPANY_ROLE=role, HTTP_X_SUKOON_COMPANY_ID=str(company.id))
+    return client
+
+
 def command(**values):
     return {"request_key": str(uuid.uuid4()), "expected_revision": 0, **values}
 
@@ -255,13 +262,11 @@ def test_last_admin_and_company_privacy(company_setup):
                 "is_active": True,
             },
         )
-    assert authenticated(owner).get(API + f"companies/{company.id}/").status_code == 404
-    assert (
-        authenticated(owner)
-        .get(API + f"companies/{company.id}/housing-requests/")
-        .status_code
-        == 404
-    )
+    # A non-member claiming a role still learns nothing: membership lookup is a 404.
+    outsider = role_client(owner, company, "admin")
+    assert outsider.get(API + f"companies/{company.id}/").status_code == 404
+    outsider = role_client(owner, company, "coordinator")
+    assert outsider.get(API + f"companies/{company.id}/housing-requests/").status_code == 404
 
 
 @pytest.mark.django_db
@@ -441,7 +446,7 @@ def test_parent_commitment_prevents_new_unit_and_child_expiry_releases_all(
 def test_disabled_new_bookings_preserve_existing_reads(company_setup, settings):
     item = held(company_setup)
     settings.COMPANY_HOUSING_ENABLED = False
-    client = authenticated(company_setup[1])
+    client = role_client(company_setup[1], company_setup[3], "coordinator")
     assert (
         client.get(API + f"company-housing-requests/{item.request.id}/").status_code
         == 200
@@ -615,7 +620,7 @@ def test_batch_receipt_recovery_and_retry_preserve_successful_ids(company_setup)
 def test_invitation_recovery_is_private_and_never_remints_token(company_setup):
     owner, coordinator, _, company, *_ = company_setup
     body = command(email="invitee@example.com", roles=["employee"])
-    client = authenticated(coordinator)
+    client = role_client(coordinator, company, "admin")
     result = client.post(
         API + f"companies/{company.id}/invitations/", body, format="json"
     )

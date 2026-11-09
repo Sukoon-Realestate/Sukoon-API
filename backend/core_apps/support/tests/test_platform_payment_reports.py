@@ -29,8 +29,13 @@ from .test_creation_recovery import create, lookup, BODY
 pytestmark = pytest.mark.django_db
 
 
+# Payment issues require the payment category; the shared BODY became a visit inquiry
+# when payment support was deferred for the MVP (8068d5a2).
+PAYMENT_BODY = {**BODY, "category": "payment", "subject": "Payment issue"}
+
+
 def report(client, context, key="report"):
-    return create(client, key, {**BODY, "rental_context": context})
+    return create(client, key, {**PAYMENT_BODY, "rental_context": context})
 
 
 def test_direct_retired_commands_are_rejected_without_provider_or_financial_effect(

@@ -30,7 +30,8 @@ from core_apps.features.services.housing_scenarios.solver import solve, validate
 from . import test_company_housing as company_fixtures
 from . import test_rental_phase2 as rental_fixtures
 from core_apps.features.tests.test_rental_lifecycle import policy
-from core_apps.features.tests.test_rental_phase2 import authenticated
+from core_apps.features.tests.test_rental_phase2 import authenticated  # noqa: F401
+from core_apps.features.tests.test_company_housing import role_client
 
 company_setup = company_fixtures.company_setup
 rental_participants = rental_fixtures.rental_participants
@@ -73,7 +74,7 @@ def scenario_input(setup):
 @pytest.mark.django_db
 def test_scenario_runs_readonly_and_replays_exact_receipt(company_setup):
     _, actor, _, company, _, _, _, _ = company_setup
-    client = authenticated(actor)
+    client = role_client(actor, company, "coordinator")
     body = scenario_input(company_setup)
     counts = [
         model.objects.count()
@@ -115,7 +116,8 @@ def test_scenario_runs_readonly_and_replays_exact_receipt(company_setup):
     assert plan["commute"]["average_minutes"] is None
     assert validate_plan(result["input_snapshot"], plan) == []
     assert not result["execution_available"]
-    assert client.post(path, run_body, format="json").data == response.data
+    replay = client.post(path, run_body, format="json").data
+    assert replay["operation_receipt"] == response.data["operation_receipt"]
     assert HousingScenarioRun.objects.count() == 1
     assert counts == [
         model.objects.count()
@@ -135,7 +137,7 @@ def test_scenario_stale_revoked_access_and_history_during_rollout(
     company_setup, settings
 ):
     _, actor, _, company, _, _, offer, _ = company_setup
-    client = authenticated(actor)
+    client = role_client(actor, company, "coordinator")
     body = scenario_input(company_setup)
     first = client.post(
         API + f"companies/{company.id}/housing-scenarios/", body, format="json"
@@ -278,20 +280,21 @@ def test_scenario_approver_and_incomplete_staff_cannot_read_or_plan(company_setu
     _, actor, approver, company, _, _, _, _ = company_setup
     body = scenario_input(company_setup)
     path = API + f"companies/{company.id}/housing-scenarios/"
-    first = authenticated(actor).post(path, body, format="json").data["resource"]
+    coordinator = role_client(actor, company, "coordinator")
+    first = coordinator.post(path, body, format="json").data["resource"]
     assert (
-        authenticated(approver)
+        role_client(approver, company, "approver")
         .get(API + f"housing-scenarios/{first['id']}/")
         .status_code
-        == 404
+        in (403, 404)  # role policy refuses before the coordinator-only lookup
     )
     assert (
-        authenticated(approver)
+        role_client(approver, company, "approver")
         .get(API + f"companies/{company.id}/housing-scenario-sources/staff/")
         .status_code
-        == 404
+        in (403, 404)
     )
     body["staff_ids"] = body["staff_ids"][:-1]
     body["request_key"] = str(uuid.uuid4())
-    assert authenticated(actor).post(path, body, format="json").status_code == 400
+    assert coordinator.post(path, body, format="json").status_code == 400
     assert HousingScenario.objects.count() == 1

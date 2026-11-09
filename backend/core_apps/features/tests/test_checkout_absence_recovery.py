@@ -167,7 +167,7 @@ def test_checkout_racing_its_closure_has_one_durable_outcome(phase3_lease):
     else:
         assert created.status_code == 201
         assert (
-            resolved.data["results"][0]["id"]
+            resolved.data["results"][0]["payment_attempt_id"]
             == created.data["resource"]["payment_attempt_id"]
         )
         assert PaymentAttempt.objects.filter(invoice=invoice).count() == 1

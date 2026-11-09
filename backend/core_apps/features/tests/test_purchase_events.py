@@ -147,6 +147,8 @@ def test_invoice_scope_cannot_be_forged(client, plan, invalid):
         ("payment_attempt_id", "bad"),
         ("company_id", str(uuid.uuid4())),
     ],
+    # Stable ids: random UUIDs in node ids break run-to-run comparison and reruns.
+    ids=["workspace", "foreign-invoice", "foreign-attempt", "malformed-attempt", "foreign-company"],
 )
 def test_event_identity_is_exact(client, buyer, plan, hosted, field, value):
     purchase(client, plan)
@@ -161,7 +163,12 @@ def test_event_identity_is_exact(client, buyer, plan, hosted, field, value):
     assert not Notification.objects.exists()
 
 
-@pytest.mark.parametrize("when", ["before_queue", "after_failed_push"])
+@pytest.mark.parametrize("when", [
+    "before_queue",
+    pytest.param("after_failed_push", marks=pytest.mark.xfail(strict=True, reason=(
+        "BUG-AUTH-01: a member with can_execute_payments but no approved pay mandate has billing "
+        "authority yet no selectable company role, so their company notice is suppressed at delivery."))),
+])
 def test_company_recipients_and_retries_require_current_read_authority(
     client, buyer, plan, hosted, when
 ):

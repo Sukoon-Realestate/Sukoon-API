@@ -58,9 +58,11 @@ view conversion, behavior fixes, dependency upgrades and schema changes into one
    source locations, proposed changes and acceptance cases.
 3. Track each route in [API_INVENTORY.md](API_INVENTORY.md). Its declared permission is an inventory value, not proof of
    object authorization. A generated DRF `WrappedAPIView` around a function does not satisfy the authored-CBV target.
-4. Use [SOURCE_INVENTORY.md](SOURCE_INVENTORY.md) for the application/configuration scope and area ownership. Every
+4. Sprint 00 added the generated [ROUTE_MATRIX.md](ROUTE_MATRIX.md) (`make route-matrix`), the
+   [feature/upload/alias inventory](FEATURE_AVAILABILITY.md) and [baseline evidence](evidence/sprint-00/README.md).
+5. Use [SOURCE_INVENTORY.md](SOURCE_INVENTORY.md) for the application/configuration scope and area ownership. Every
    changed workflow needs its own caller, permission, input, query, retry and side-effect checks.
-5. Mark a story complete only with the evidence required by its sprint. Keep untested PostgreSQL, provider, storage,
+6. Mark a story complete only with the evidence required by its sprint. Keep untested PostgreSQL, provider, storage,
    deployment and device behavior explicitly open. Do not claim completion from a file move or a passing 13-screen sample.
 
 ## Final definition of done

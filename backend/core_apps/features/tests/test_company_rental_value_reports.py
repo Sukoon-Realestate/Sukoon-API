@@ -27,8 +27,14 @@ from core_apps.features.services.company.read_snapshot import consistent_read
 pytestmark = pytest.mark.django_db
 
 
+COMPANY_ROLES = {"admin", "coordinator", "approver", "signer", "payer", "employee"}
+
+
 def get(cycle, role, endpoint, params=None):
-    return authenticated(cycle[role]).get(
+    client = authenticated(cycle[role])
+    if role in COMPANY_ROLES:
+        client.credentials(HTTP_X_SUKOON_COMPANY_ROLE=role, HTTP_X_SUKOON_COMPANY_ID=str(cycle["company"].id))
+    return client.get(
         API + f"companies/{cycle['company'].id}/{endpoint}/",
         params or {},
     )
@@ -43,8 +49,8 @@ def test_summary_resident_sees_only_own_assignment_and_no_capacity(active_agreem
     assert len(row["assignments"]) == 1
     assert row["assignments"][0]["employee_id"] == str(data["employee"].id)
     assert not row["commercial_access"]
-    assert row["contracted_capacity"] is None and row["unassigned_capacity"] is None
-    assert row["cost_center"] == row["project_code"] == ""
+    # Role projections omit coordinator-only commercial fields for residents.
+    assert not {"contracted_capacity", "unassigned_capacity", "cost_center", "project_code"} & set(row)
     assert not response.data["can_view_costs"]
     coordinator = get(data, "coordinator", "rental-summary").data["housing"][0]
     assert len(coordinator["assignments"]) == 2 and coordinator["commercial_access"]
@@ -96,7 +102,7 @@ def test_report_separates_commitment_invoice_capture_and_deposit(active_agreemen
     requirement = item.preparation.booking.request
     requirement.project_code, requirement.cost_center = "PROJECT-A", "SITE-1"
     requirement.save()
-    result = get(data, "coordinator", "housing-report")
+    result = get(data, "payer", "housing-report")
     assert result.status_code == 200, result.data
     rows = result.data["rows"]
     kinds = {row["kind"] for row in rows}
@@ -115,18 +121,19 @@ def test_report_separates_commitment_invoice_capture_and_deposit(active_agreemen
     assert payment["allocated_minor"] == payment["amount_minor"]
     assert "grand_total" not in result.data
     assert (
-        get(data, "coordinator", "housing-report", {"project_code": "other"}).data[
+        get(data, "payer", "housing-report", {"project_code": "other"}).data[
             "rows"
         ]
         == []
     )
     assert (
-        get(data, "coordinator", "housing-report", {"tenancy_id": str(item.id)}).data[
+        get(data, "payer", "housing-report", {"tenancy_id": str(item.id)}).data[
             "rows"
         ]
         == rows
     )
-    assert get(data, "employee", "housing-report").data["rows"] == []
+    # The financial report is payer-only (role_routes); residents are refused, not given an empty report.
+    assert get(data, "employee", "housing-report").status_code == 403
 
 
 def test_report_dates_are_exclusive_no_partial_month_proration(signed_agreement):
@@ -162,11 +169,11 @@ def test_report_absent_deposit_not_zero_and_csv_has_exact_ids(signed_agreement):
     requirement = item.preparation.booking.request
     requirement.title = "=unsafe spreadsheet formula"
     requirement.save()
-    result = get(data, "coordinator", "housing-report")
+    result = get(data, "payer", "housing-report")
     row = next(r for r in result.data["rows"] if r["kind"] == "deposit")
     assert row["amount_minor"] is None and row["collected_minor"] is None
     assert row["state"] == "not_established"
-    exported = get(data, "coordinator", "housing-report", {"export": "csv"})
+    exported = get(data, "payer", "housing-report", {"export": "csv"})
     assert (
         exported.status_code == 200 and exported["Cache-Control"] == "private, no-store"
     )

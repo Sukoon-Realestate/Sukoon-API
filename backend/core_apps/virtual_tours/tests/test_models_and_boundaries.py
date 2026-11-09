@@ -147,7 +147,10 @@ def model_revision(property_obj, settings):
     return revision, collider
 
 
-def test_real_khronos_and_rapier_processing(model_revision):
+def test_real_khronos_and_rapier_processing(model_revision, settings):
+    validators = Path(settings.VIRTUAL_TOUR_GLTF_VALIDATOR).parent / "node_modules"
+    if not validators.is_dir():
+        pytest.skip("Run `npm ci` in tools/virtual_tours to install the locked Khronos/Rapier validators")
     revision, collider = model_revision
     revision.source_hash, _ = validate_authoring(revision, revision.authoring)
     revision.processing_state = "queued"

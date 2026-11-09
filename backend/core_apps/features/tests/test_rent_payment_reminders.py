@@ -231,24 +231,20 @@ def test_successful_retry_and_repeat_job_do_not_duplicate_notification(
     assert PlanningEvent.objects.get().provider_accepted_at
 
 
-def test_company_payer_coordinator_only_and_current_membership(signed_agreement):
+def test_company_payer_only_and_current_membership(signed_agreement):
+    # Invoice notices go only to the current delegated payer; coordinators and
+    # admins never receive a financial destination (rent_payment_recipients).
     people, item = signed_agreement
     invoice = item.lease.invoices.get()
     events = PlanningEvent.objects.filter(destination__event_kind__in=EVENT_KINDS)
-    assert set(events.values_list("recipient_id", flat=True)) == {
-        people["payer"].pk,
-        people["coordinator"].pk,
-    }
-    assert not events.filter(recipient=people["employee"]).exists()
+    assert set(events.values_list("recipient_id", flat=True)) == {people["payer"].pk}
+    assert not events.filter(recipient__in=[people["employee"], people["coordinator"]]).exists()
     payer_event = events.get(recipient=people["payer"])
     membership = item.payer_mandate.membership
     membership.is_active = False
     membership.save()
     with pytest.raises(NotFound):
         authorize(payer_event)
-    coordinator_event = events.get(recipient=people["coordinator"])
-    _, role = authorize(coordinator_event)
-    assert role == "authority_required"
     assert record_invoice(invoice) == 0
 
 

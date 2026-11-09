@@ -80,7 +80,8 @@ def test_create_interest_without_provider_preserves_receipt_and_owner_delivery(
     grant = readiness(client, property_obj.id, "create_rental_interest")
     assert grant.status_code == 200
     assert grant["Cache-Control"] == "private, no-store"
-    assert grant.data["enabled_capabilities"] == ["rental_interests"]
+    # Interest and agreement drafting are local workflows (55265dd6); provider state never gates them.
+    assert "rental_interests" in grant.data["enabled_capabilities"]
     assert grant.data["allowed_actions"] == ["create_rental_interest"]
     assert grant.data["blocking_reasons"] == []
 

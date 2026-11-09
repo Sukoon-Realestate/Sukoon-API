@@ -1,0 +1,13 @@
+date: 2026-11-09 09:38 EET
+git: 4d2556cf on main (+ uncommitted Sprint 00 changes)
+os: macOS 27.0.1 arm64
+cpu: Apple M5 x10
+memory_gb: 16
+python: Python 3.11.15 (/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/bin/python3.11)
+pipenv: pipenv, version 2026.6.2
+pipfile_lock_sha256_meta: 8b9187c442e6d7870b4e5bc8a43dd6187ee11352f4d2db71e08c0ea728da1ecb
+lock_packages: 113 default, 0 develop; installed with pip --require-hashes --no-deps; pip check: no broken requirements
+key_packages: celery==5.4.0 channels==4.3.2 coverage==7.16.2 Django==4.2.11 djangorestframework==3.15.0 djoser==2.2.2 flake8==7.1.1 pillow==13.0.0 psycopg2-binary==2.9.9 pytest==8.3.5 pytest-cov==6.0.0 pytest-django==4.9.0 
+libheif: 1.23.6
+sqlite: 3.53.4
+postgresql: postgres (PostgreSQL) 18.6 (Homebrew) disposable initdb cluster, 127.0.0.1:55432, TCP only, fsync=off, data dir in session scratchpad

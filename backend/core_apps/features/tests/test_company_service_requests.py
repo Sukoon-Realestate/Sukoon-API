@@ -50,9 +50,13 @@ def request(cycle, item, kind="ownership_change", user=None):
     )
 
 
-def case_action(case, user, action, **data):
+def case_action(case, user, action, *, company_role=None, **data):
     case.refresh_from_db()
-    return authenticated(user).post(
+    client = authenticated(user)
+    if company_role:
+        company, role = company_role
+        client.credentials(HTTP_X_SUKOON_COMPANY_ROLE=role, HTTP_X_SUKOON_COMPANY_ID=str(company.id))
+    return client.post(
         API + f"rental-cases/{case.id}/actions/",
         command(
             expected_revision=case.revision,

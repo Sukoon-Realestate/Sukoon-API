@@ -225,6 +225,8 @@ def tenancy(value, item, user):
             "lease_id",
             "invoices",
             "refunds",
+            # The payer funds chargeback restoration and must see its state.
+            "chargebacks",
             "financial_closure_status",
             "closure_blocking_reasons",
             "cases",

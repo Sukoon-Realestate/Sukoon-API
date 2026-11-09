@@ -1,0 +1,208 @@
+{
+  "admin-properties-list": {
+    "known_defect": "A6-03",
+    "queries": [
+      10,
+      45
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "anonymous-catalog": {
+    "bytes": [
+      1919,
+      3428
+    ],
+    "ceiling": 4,
+    "queries": [
+      4,
+      4
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "cities": {
+    "bytes": [
+      349,
+      349
+    ],
+    "ceiling": 2,
+    "queries": [
+      2,
+      2
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "governorates": {
+    "bytes": [
+      261,
+      261
+    ],
+    "ceiling": 2,
+    "queries": [
+      2,
+      2
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "notification-unread-count": {
+    "bytes": [
+      61,
+      62
+    ],
+    "ceiling": 2,
+    "queries": [
+      2,
+      2
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "notifications": {
+    "bytes": [
+      1795,
+      6809
+    ],
+    "ceiling": 7,
+    "queries": [
+      7,
+      7
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "owner-properties": {
+    "bytes": [
+      1654,
+      2951
+    ],
+    "ceiling": 3,
+    "queries": [
+      3,
+      3
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "property-detail": {
+    "bytes": [
+      2072,
+      2072
+    ],
+    "ceiling": 9,
+    "queries": [
+      9,
+      9
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "property-types": {
+    "bytes": [
+      752,
+      752
+    ],
+    "ceiling": 1,
+    "queries": [
+      1,
+      1
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "saved-properties": {
+    "bytes": [
+      1614,
+      2879
+    ],
+    "ceiling": 5,
+    "queries": [
+      5,
+      5
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "tenant-account": {
+    "bytes": [
+      1091,
+      1092
+    ],
+    "ceiling": 9,
+    "queries": [
+      9,
+      9
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "tenant-catalog": {
+    "bytes": [
+      1919,
+      3428
+    ],
+    "ceiling": 5,
+    "queries": [
+      5,
+      5
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "tenant-profile": {
+    "bytes": [
+      351,
+      351
+    ],
+    "ceiling": 1,
+    "queries": [
+      1,
+      1
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  },
+  "tenant-settings": {
+    "bytes": [
+      1885,
+      1885
+    ],
+    "ceiling": 1,
+    "queries": [
+      1,
+      1
+    ],
+    "rows": [
+      5,
+      40
+    ]
+  }
+}

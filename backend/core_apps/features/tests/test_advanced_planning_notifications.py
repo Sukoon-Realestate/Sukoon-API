@@ -22,6 +22,7 @@ from .test_advanced_company_passport_v2 import (
     scenario_input,
     command,
     authenticated,
+    role_client,
 )
 from .test_transition_network import moves, matching, body, post as move_post
 
@@ -75,7 +76,7 @@ def test_sealed_bid_and_worker_result_do_not_notify_unrelated_members(scenario):
 
 def scenario_run(setup):
     actor, company = setup[1], setup[3]
-    client = authenticated(actor)
+    client = role_client(actor, company, "coordinator")
     response = client.post(
         API + f"companies/{company.id}/housing-scenarios/",
         scenario_input(setup),

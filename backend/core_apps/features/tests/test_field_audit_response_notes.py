@@ -63,8 +63,9 @@ def test_response_explanation_reaches_private_timeline_once(phase5_lease, kind):
         assert row["description"] == body["note"]
         assert row["resource_id"] == str(item.id)
         assert row["label"] in ("محضر التسليم: اعتراض", "طلب تعديل العقد: طلب تعديلات")
+    # A verified outsider exercises resource privacy, not the account-verification gate.
     outsider = type(owner).objects.create_user(
-        email="response-outsider@example.com", password="pass"
+        email="response-outsider@example.com", password="pass", is_verified=True
     )
     assert client_for(outsider).get(timeline).status_code == 404
     assert client_for(outsider).post(url, body, format="json").status_code == 404

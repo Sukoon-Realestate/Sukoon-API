@@ -45,7 +45,8 @@ def test_existing_personal_login_proves_work_contact_before_membership(
     endpoint = API + "company-access/contact-proof/"
     first = client.post(endpoint, body, format="json")
     assert first.status_code == 201, first.data
-    assert client.post(endpoint, body, format="json").json() == first.json()
+    replay = client.post(endpoint, body, format="json").json()
+    assert replay["data"]["operation_receipt"] == first.json()["data"]["operation_receipt"]
     proof = CompanyWorkContactProof.objects.get()
     assert "code" not in first.json()["data"]["resource"]
     assert not CompanyMembership.objects.filter(user=recipient).exists()

@@ -1,178 +1,73 @@
 ---
 name: django-feature
-description: Build features in the GeenadeProject Django 5 + DRF codebase the right way. Use when adding a new app, model, DRF endpoint, serializer, filter, or JWT-protected view, or when running migrations/tests. Encodes this project's specific layout (Project/ settings package + settings_modules split, apps/ directory, Makefile shortcuts, SimpleJWT, django-filter, Unfold admin) and its function-based-view convention.
+description: Build or change Sukoon backend features the right way. Use when adding or changing a model, migration, DRF endpoint, serializer, filter, permission or service in Sukoon-API/backend, or when running its tests. Encodes the real layout (core_apps/ apps, config/settings/ split, Pipfile.lock environment, SimpleJWT cookie auth, django-filter, MVP release scope) and the approved CBV + service architecture in sprints/ARCHITECTURE.md.
 ---
 
-# GeenadeProject Django Feature Workflow
+# Sukoon backend feature workflow
 
-This project uses a `Project/` settings package with a focused `settings_modules/` split. Follow these conventions exactly — they differ from a vanilla `startproject`.
+Django 4.2 + DRF 3.15 + SimpleJWT + Channels. Read `sprints/ARCHITECTURE.md` before changing an HTTP route;
+it is the target this skill follows. Existing function views are migration debt, not a pattern to copy.
 
-## Two rules that apply to ALL code you write here
-
-1. **Views are function-based.** Every endpoint is a `@api_view`-decorated function. Do **not**
-   add `APIView`, `ViewSet`, or DRF generic class views (`ListCreateAPIView`, etc.). The
-   established pattern lives in `apps/access/views.py` — match it.
-2. **Write the least code a human can read at a glance.** Prefer clarity and brevity over
-   cleverness or boilerplate. No layers, helpers, or abstractions a feature doesn't need.
-   A short, obvious function beats a "correct" but verbose class hierarchy. If a serializer or
-   helper isn't pulling its weight, inline it.
-
-## Project layout
+## Layout
 
 ```
-Project/                  # settings PACKAGE + project plumbing (DJANGO_SETTINGS_MODULE = "Project.settings")
-  env.py                  # django-environ; loads a SINGLE .env from the repo root
-  settings.py             # main settings: INSTALLED_APPS, MIDDLEWARE, then `from Project.settings_modules import *`
-  settings_modules/       # focused setting modules: drf, jwt_settings, cors, admin, db_config,
-                          #   ckeditor5, email_sending, otp, sessions, logger, unfold_settings
-  urls.py                 # ROOT_URLCONF — api_urls + third_party_urls lists
-  cdn/                    # storage backends (conf.py imported last in settings.py)
-  asgi.py / wsgi.py
-apps/                     # ALL local Django apps live here
-  access/                 # RBAC: decorators, permissions, checks, codes — reuse these
-.env                      # secrets at repo ROOT (gitignored); ENVIRONMENT/DEBUG/DJANGO_SECRET_KEY/...
-manage.py                 # sets DJANGO_SETTINGS_MODULE = "Project.settings"
-Makefile                  # use these targets instead of raw manage.py
+config/settings/      base.py + one module per environment (test, postgres_test, local, local_sqlite,
+                      production, staging, ...). Tests use config.settings.test (pytest.ini).
+config/urls.py        mounts each app under api/v1/<area>/ (features under api/v1/features/v1/)
+core_apps/<app>/      users, profiles, properties, virtual_tours, features, chat, notifications,
+                      support, advertising, admin_api, common
+  urls.py             stable paths/names; aliases are client contracts — never drop one silently
+  views/ or *_views.py  thin transport adapters
+  serializers/        command (input) and response serializers
+  services/           domain commands: invariants, authority, transactions, locks, receipts
+  tests/              pytest modules (test_*.py)
 ```
 
-Settings module is `Project.settings`, NOT `config.django` or `config.settings`. Env values come
-from one repo-root `.env`; `ENVIRONMENT` (`local` default | `test` | `Production`) is read from
-inside that file. There is **no** `ENV/.env.<env>` directory and **no** `config/` package.
+## Environment
 
-## Use the Makefile (don't call manage.py directly)
+- `backend/.venv` built from the lock: `pipenv requirements --hash > /tmp/req.txt` then
+  `python3.11 -m venv .venv && .venv/bin/pip install --require-hashes --no-deps -r /tmp/req.txt`.
+  `pipenv install` (Makefile `install`) also works. Python 3.11; `pillow-heif` is required.
+- Never point tests or scripts at `db.sqlite3`, `commerce_sandbox.sqlite3`, `.demo/`, `media/` or the
+  root `.env`. Under pytest, `config.settings.test` uses an in-memory SQLite test DB, but a management
+  command run with that module opens `db.sqlite3` — use `config.settings.postgres_test` with a disposable
+  `TEST_POSTGRES_*` database instead.
 
-| Task | Command |
-|------|---------|
-| Run dev server | `make run` |
-| Make migrations | `make make` |
-| Apply migrations | `make mi` |
-| Run tests | `make test` |
-| Django system check | `make check` |
-| Open shell | `make shell` |
-| Create superuser | `make superuser` |
-| Collect static | `make static` |
-| Install deps | `make install` |
+## Views (approved target)
 
-Override environment: `make test ENVIRONMENT=test` (default `local`). The virtualenv lives at
-`./Venv/` — use `./Venv/bin/python` if you must call Python directly.
+- New and converted HTTP endpoints are explicit classes: DRF generic views for ordinary resource reads,
+  `APIView` for commands/stateful workflows, Django `View` only for raw signed callbacks or byte streaming.
+  Do not add new `@api_view` functions; do not wrap a long function body in `post()` and call it done.
+- A view parses input with a command serializer, checks current authority, calls one service/selector and
+  formats the response. Business state changes, `transaction.atomic`, `select_for_update`, receipts and
+  `on_commit` side effects live in `services/`. Services never import view modules.
+- Keep route names, aliases, methods, status codes, headers and response envelopes identical unless a
+  separately approved fix says otherwise. Company routes are authorized by `features/services/company/role_routes.py`
+  keyed on the callable — replace that policy explicitly before changing callable identity.
 
-## Adding a new app
+## DRF defaults (config/settings/base.py)
 
-1. Create it under `apps/`:
-   ```bash
-   cd apps && ../Venv/bin/python ../manage.py startapp <app_name>
-   ```
-2. In `apps/<app_name>/apps.py`, `AppConfig.name` MUST be dotted from the repo root:
-   ```python
-   class <AppName>Config(AppConfig):
-       default_auto_field = "django.db.models.BigAutoField"
-       name = "apps.<app_name>"
-   ```
-3. Register it in `Project/settings.py` under the `LOCAL_APPS` section of `INSTALLED_APPS`:
-   ```python
-   # LOCAL_APPS
-   "apps.<app_name>",
-   ```
-4. Wire URLs in `Project/urls.py` by appending to the `api_urls` list:
-   ```python
-   api_urls = [
-       path("api/<app_name>/", include("apps.<app_name>.urls")),
-   ]
-   ```
-5. `make make && make mi`.
+Auth `core_apps.common.cookie_auth.CookieAuthentication`; default permission `IsAuthenticated`; pagination
+`core_apps.common.pagination.StandardResultsSetPagination` (PAGE_SIZE 10); filter backend `DjangoFilterBackend`;
+renderer `GenericJsonRenderer`; exception handler `custom_exception_handler`; anon/user throttles.
+Staff endpoints use role permissions in `core_apps/admin_api/permissions.py` (e.g. `IsPropertyReviewer`).
 
-## DRF conventions (configured in `Project/settings_modules/drf.py`)
+## MVP release scope
 
-- **JWT is the global default authenticator** (`DEFAULT_AUTHENTICATION_CLASSES = [JWTAuthentication]`).
-  So a protected view only needs `@permission_classes([IsAuthenticated])` — you do **not** repeat
-  `authentication_classes`. A **public** endpoint opts out with `@authentication_classes([])`.
-- Pagination: `PageNumberPagination`, `PAGE_SIZE = 20` (applies to DRF generic/paginated responses;
-  a plain `@api_view` returning a `Response(list)` is not auto-paginated — paginate manually only
-  if a list is genuinely large).
-- Filtering backend: `DjangoFilterBackend` (global default).
-- Throttle rates: `user` 100/hour, `anon` 10/minute, `otp_request` 3/hour.
+`SUKOON_MVP` (default true) makes `core_apps/common/mvp_scope.py` refuse deferred routes and group/company/student
+workflows with `403 mvp_feature_deferred`. A new route must be classified there. Tests run in two modes:
 
-### Function-based view pattern (the only pattern to use)
-
-```python
-# apps/<app_name>/views.py
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-
-from apps.<app_name>.models import Thing
-
-
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
-def things(request):
-    if request.method == "POST":
-        thing = Thing.objects.create(name=request.data["name"])
-        return Response({"id": thing.id, "name": thing.name}, status=201)
-    qs = Thing.objects.all()
-    return Response([{"id": t.id, "name": t.name} for t in qs])
+```bash
+make test-baseline-mvp          # production default; deferred tests deselected and listed
+make test-baseline-restoration  # SUKOON_MVP=false; whole suite
 ```
 
-```python
-# apps/<app_name>/urls.py
-from django.urls import path
+## Checks before finishing
 
-from apps.<app_name> import views
-
-app_name = "<app_name>"
-
-urlpatterns = [
-    path("things/", views.things, name="things"),
-]
-```
-
-Reach for a `ModelSerializer` only when a payload is large or reused across endpoints; for a few
-fields, an inline dict is shorter and clearer. Keep non-trivial business logic out of the view —
-but don't add a `services.py`/`selectors.py` layer for a one-liner.
-
-### RBAC (reuse `apps/access`, don't reinvent)
-
-Role/permission/branch gating already exists as decorators. Stack them under `@api_view`:
-
-```python
-from apps.access.decorators import branch_required, permission_required, role_required
-from apps.users.models import Role
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@role_required(Role.ADMIN, Role.AGENT)
-def order_list(request):
-    ...
-```
-
-`apps/access/checks.py` has query-scoping helpers (e.g. `visible_orders(user, qs)`) — use them to
-scope querysets by role instead of re-deriving access rules per view.
-
-### JWT / auth endpoints
-
-Header is `Authorization: Bearer <token>`, `AccessToken`, HS256 (`Project/settings_modules/jwt_settings.py`).
-Login/refresh: SimpleJWT's `TokenObtainPairView` / `TokenRefreshView` are already wired in
-`apps/registration/urls.py` — reuse those rather than writing new token views.
-
-## Admin (Unfold)
-
-`unfold` is installed before `django.contrib.admin` (required). Register models in
-`apps/<app_name>/admin.py` as usual; Unfold styles them. Admin is served at `/admin/`.
-
-## Before finishing any change
-
-1. `make check` — Django system checks pass.
-2. `make make && make mi` — if models changed.
-3. `make test` — tests pass.
-4. Lint/format clean: flake8 (`flake8_django`, max line length **120**, `F401` ignored) and Black
-   (line-length 120, see `pyproject.toml`). Migrations, `static`, and `manage.py` are excluded.
-
-## Gotchas specific to this repo
-
-- `DJANGO_SETTINGS_MODULE` is `Project.settings`. There is no `config/` package.
-- Settings are split across `Project/settings_modules/*` and pulled in via
-  `from Project.settings_modules import *` at the bottom of `Project/settings.py`.
-- A missing repo-root `.env` raises `ImproperlyConfigured` at startup (`Project/env.py`).
-- `SECRET_KEY` is `DJANGO_SECRET_KEY` from `.env`; never hardcode it.
-- Local app paths are dotted as `apps.<name>` everywhere (INSTALLED_APPS, AppConfig.name, includes).
-- `AUTH_USER_MODEL = "users.User"`. Health check endpoint already exists at `/health/`.
+- Focused tests for valid, invalid-input, permission and edge cases; add a query budget for list endpoints
+  (pattern: `core_apps/common/test_api_budgets.py`).
+- Migrations: `make check-owner-tenant` (Django check + `makemigrations --check --dry-run` on
+  `config.settings.postgres_test`; export disposable `TEST_POSTGRES_*` values first).
+- After route changes, regenerate the matrix: `make route-matrix` and review `sprints/ROUTE_MATRIX.md`.
+- `make lint` (flake8; F401 is ignored by config, so check unused imports manually).
+- Log the task in `../WORKLOG.md`.

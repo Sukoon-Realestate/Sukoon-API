@@ -79,7 +79,10 @@ def test_completed_selection_receipt_survives_employee_closure(cycle):
     assert first.status_code == 201, first.data
     close(cycle["employee"])
     replay = select(cycle, request, body)
-    assert replay.status_code == 201 and replay.data == first.data
+    # Company replays return the original receipt and identity, not an old projection.
+    assert replay.status_code == 201
+    assert replay.data["operation_receipt"] == first.data["operation_receipt"]
+    assert replay.data["resource"]["id"] == first.data["resource"]["id"]
     item = CompanyBookingItem.objects.get(id=first.data["resource"]["id"])
     result = bookings.item_payload(item)
     assert result["account_closure_blocked"]

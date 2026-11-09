@@ -16,7 +16,9 @@ def organization_for(user, identity, *, lock=False, pay=False, amount=0):
     company = get_object_or_404(query, id=identity)
     from .company.role_context import require
 
-    require(user, company, {"payer"})
+    # Billing reads follow the membership authority below (admin or payment
+    # executor); moving money additionally requires the payer role and mandate.
+    require(user, company, {"payer"} if pay else {"payer", "admin"})
     member = CompanyMembership.objects.filter(
         company=company, user=user, is_active=True
     ).first()

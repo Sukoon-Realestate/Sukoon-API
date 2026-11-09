@@ -35,6 +35,7 @@ from core_apps.features.tests.test_company_housing import (
     command,
     proposed,
     API,
+    role_client,
 )
 from core_apps.features.tests.test_cycle_concurrency import parallel_calls
 
@@ -111,7 +112,7 @@ def test_pending_approval_rechecks_approver_account_verification(company_setup):
 @pytest.mark.django_db
 def test_preparation_creates_no_login_and_forbids_privilege_injection(company_setup):
     actor, company = company_setup[1], company_setup[3]
-    client = authenticated(actor)
+    client = role_client(actor, company, "admin")
     count = User.objects.count()
     body = command(**staff_data())
     endpoint = f"{API}companies/{company.id}/staff/"
@@ -123,7 +124,9 @@ def test_preparation_creates_no_login_and_forbids_privilege_injection(company_se
     assert first.status_code == 201, first.data
     repeated = client.post(endpoint, body, format="json")
     assert repeated.status_code == 201
-    assert first.data == repeated.data
+    # Company replays return the original receipt and identity only.
+    assert first.data["operation_receipt"] == repeated.data["operation_receipt"]
+    assert first.data["resource"]["id"] == repeated.data["resource"]["id"]
     assert set(first.json()) == {"message", "data"}
     resource = first.json()["data"]["resource"]
     assert resource["company_id"] == str(company.id)
@@ -157,10 +160,8 @@ def test_existing_student_explicitly_links_without_changing_credentials(
     body = command(token=token, expected_revision=1, proposal_revision=1)
     accepted = client.post(API + "company-access/accept/", body, format="json")
     assert accepted.status_code == 200, accepted.data
-    assert (
-        client.post(API + "company-access/accept/", body, format="json").data
-        == accepted.data
-    )
+    replay = client.post(API + "company-access/accept/", body, format="json").data
+    assert replay["operation_receipt"] == accepted.data["operation_receipt"]
     assert (
         client.post(
             API + "company-access/accept/",
@@ -448,7 +449,7 @@ def test_pending_staff_can_be_planned_without_identity_or_acknowledgment(company
         company_setup[7],
     )
     person = staff.create_staff(actor, company, staff_data())
-    result = authenticated(actor).get(f"{API}companies/{company.id}/planning-staff/")
+    result = role_client(actor, company, "coordinator").get(f"{API}companies/{company.id}/planning-staff/")
     assert result.status_code == 200
     assert "work_email" not in str(result.json())
     item = bookings.select_offer(
@@ -513,7 +514,7 @@ def test_route_and_reassignment_api_are_uuid_scoped_and_financially_minimal(
     member = CompanyMembership.objects.create(
         company=company, user=backup, is_approver=True
     )
-    client = authenticated(actor)
+    client = role_client(actor, company, "admin")
     route = client.post(
         f"{API}companies/{company.id}/approval-route/",
         command(
@@ -525,7 +526,7 @@ def test_route_and_reassignment_api_are_uuid_scoped_and_financially_minimal(
         format="json",
     )
     assert route.status_code == 200, route.json()
-    work = client.get(f"{API}companies/{company.id}/work-items/")
+    work = role_client(actor, company, "coordinator").get(f"{API}companies/{company.id}/work-items/")
     assert work.status_code == 200
     assert "snapshot" not in str(work.json()) and "full_term_rent_minor" not in str(
         work.json()

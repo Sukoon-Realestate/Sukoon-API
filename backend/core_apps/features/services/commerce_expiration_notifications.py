@@ -29,15 +29,20 @@ def record(kind, item, invoice):
             workspace=invoice_workspace(invoice),
         )
         if invoice.organization_id:
+            from .company.role_context import available
+
             destination["company_id"] = str(invoice.organization.id)
-            destination["company_role"] = "payer"
-            recipients = (
-                invoice.organization.memberships.filter(
+            # Admins and payment executors both hold billing authority; each
+            # notice names the role that recipient can actually select.
+            roles = {
+                member.user_id: "payer" if "payer" in available(member) else "admin"
+                for member in invoice.organization.memberships.filter(
                     is_active=True, user__is_active=True
                 )
                 .filter(Q(is_admin=True) | Q(can_execute_payments=True))
-                .values_list("user_id", flat=True)
-            )
+                .select_related("user", "company")
+            }
+            recipients = list(roles)
     elif kind in {"promotion", "advertising"}:
         destination.update(
             action_type="open_promotion" if kind == "promotion" else "open_banner_ad",
@@ -48,10 +53,13 @@ def record(kind, item, invoice):
         # invoice or a destination pointing at a different purchase.
         return
     for recipient in set(recipients):
+        data = dict(destination)
+        if "company_id" in data:
+            data["company_role"] = roles[recipient]
         PlanningEvent.objects.get_or_create(
             recipient_id=recipient,
             event_key=f"commerce.expired:{kind}:{item.id}",
-            defaults={"destination": destination},
+            defaults={"destination": data},
         )
 
 

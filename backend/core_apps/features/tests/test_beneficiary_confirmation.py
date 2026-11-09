@@ -66,7 +66,8 @@ def test_prepared_recipient_is_private_and_owner_consent_does_not_transfer(prepa
     profile, config = prepared
     result = api(profile.owner).get(URL)
     assert result.status_code == 200 and result["Cache-Control"] == "private, no-store"
-    assert result.data["allowed_actions"] == ["onboard_beneficiary"]
+    # Owners may also submit their own details (beneficiary_details, 55265dd6).
+    assert "onboard_beneficiary" in result.data["allowed_actions"]
     assert result.data["prepared_beneficiary"]["masked_account"] == "•••• 4050"
     assert "01020304050" not in str(
         result.data

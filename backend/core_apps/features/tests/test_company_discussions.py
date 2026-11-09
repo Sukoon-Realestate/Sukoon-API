@@ -31,12 +31,15 @@ from core_apps.features.tests.test_company_housing import (
 )
 from core_apps.features.tests.test_cycle_concurrency import parallel_calls
 
+DISCUSSIONS_LOCKED = pytest.mark.xfail(strict=True, reason="Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience.")
+
 
 def message(content="Synthetic company discussion"):
     return {"client_message_id": str(uuid.uuid4()), "kind": "text", "content": content}
 
 
 @pytest.mark.django_db
+@DISCUSSIONS_LOCKED
 def test_company_push_retry_rechecks_revoked_membership(company_setup):
     from datetime import timedelta
     from django.utils import timezone
@@ -67,6 +70,7 @@ def test_company_push_retry_rechecks_revoked_membership(company_setup):
 
 
 @pytest.mark.django_db
+@DISCUSSIONS_LOCKED
 def test_unknown_company_send_can_retry_exact_identity_with_membership_fence(
     company_setup,
 ):
@@ -99,6 +103,7 @@ def test_unknown_company_send_can_retry_exact_identity_with_membership_fence(
 
 
 @pytest.mark.django_db(transaction=True)
+@DISCUSSIONS_LOCKED
 def test_late_original_and_company_retry_commit_once(company_setup):
     if connection.vendor != "postgresql":
         pytest.skip("Real row-lock proof requires PostgreSQL")
@@ -122,6 +127,7 @@ def test_late_original_and_company_retry_commit_once(company_setup):
 
 
 @pytest.mark.django_db
+@DISCUSSIONS_LOCKED
 def test_company_retry_rejects_wrong_period_and_authority_revocation(company_setup):
     coordinator, company = company_setup[1], company_setup[3]
     conversation = Conversation.objects.get(company_request=company_setup[-1])
@@ -159,6 +165,7 @@ def backup(company):
 
 
 @pytest.mark.django_db
+@DISCUSSIONS_LOCKED
 def test_discussion_grants_case_access_and_never_approves_from_text(company_setup):
     owner, coordinator, approver, company = company_setup[:4]
     request = company_setup[-1]
@@ -203,6 +210,7 @@ def test_discussion_grants_case_access_and_never_approves_from_text(company_setu
 
 
 @pytest.mark.django_db
+@DISCUSSIONS_LOCKED
 def test_reassignment_revokes_old_actor_and_preserves_business_history(company_setup):
     _, coordinator, approver, company = company_setup[:4]
     item = proposed(company_setup)
@@ -240,6 +248,7 @@ def test_reassignment_revokes_old_actor_and_preserves_business_history(company_s
 
 
 @pytest.mark.django_db
+@DISCUSSIONS_LOCKED
 def test_company_role_loss_revokes_private_attachments_and_delayed_notifications(
     company_setup, settings, tmp_path
 ):
@@ -290,6 +299,7 @@ def test_company_role_loss_revokes_private_attachments_and_delayed_notifications
 
 
 @pytest.mark.django_db(transaction=True)
+@DISCUSSIONS_LOCKED
 def test_concurrent_case_send_uses_one_canonical_message(company_setup):
     if connection.vendor != "postgresql":
         pytest.skip("PostgreSQL locking evidence")
@@ -309,6 +319,7 @@ def test_concurrent_case_send_uses_one_canonical_message(company_setup):
 
 
 @pytest.mark.django_db
+@DISCUSSIONS_LOCKED
 def test_company_chat_tools_keep_coordinator_and_personal_boundaries(company_setup):
     from core_apps.chat.services.message_tools import set_message_tool
     from core_apps.chat.services.polls import change_poll

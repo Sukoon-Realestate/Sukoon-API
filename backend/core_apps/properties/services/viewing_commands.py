@@ -10,6 +10,19 @@ from ..models import Property, PropertyVisit
 from .viewing_access import can_read, group_process
 
 
+def company_notice_audience(visit, recipient):
+    from core_apps.features.services.company.role_context import available
+
+    member = (
+        CompanyMembership.objects.filter(company_id=visit.company_id, user_id=recipient, is_active=True)
+        .select_related("user", "company")
+        .first()
+    )
+    roles = available(member) if member else []
+    role = next((r for r in ("coordinator", "employee") if r in roles), roles[0] if roles else "")
+    return {"company_id": str(member.company.id) if member else "", "company_role": role}
+
+
 def notify(visit, action, existing_notification=None):
     from core_apps.features.planning_models import PlanningEvent
     from .viewing_notifications import recipient_scope
@@ -34,21 +47,23 @@ def notify(visit, action, existing_notification=None):
             ).values_list("user_id", flat=True)
         )
     for recipient in recipients:
+        destination = {
+            "action_type": "view_visit",
+            "event_kind": "viewing_changed",
+            "target_id": str(visit.id),
+            "visit_id": str(visit.id),
+            "workspace": recipient_scope(visit, recipient),
+            "schema_version": "1",
+            "revision": visit.revision,
+            "change": action,
+        }
+        if destination["workspace"] == "company" and visit.company_id:
+            # Company notices are delivered only with the recipient's company role
+            # (event_copy -> audience_current); without it every notice is dropped.
+            destination.update(company_notice_audience(visit, recipient))
         event, _ = PlanningEvent.objects.get_or_create(
             event_key=f"viewing:{visit.id}:{visit.revision}:{action}:{recipient}",
-            defaults={
-                "recipient_id": recipient,
-                "destination": {
-                    "action_type": "view_visit",
-                    "event_kind": "viewing_changed",
-                    "target_id": str(visit.id),
-                    "visit_id": str(visit.id),
-                    "workspace": recipient_scope(visit, recipient),
-                    "schema_version": "1",
-                    "revision": visit.revision,
-                    "change": action,
-                },
-            },
+            defaults={"recipient_id": recipient, "destination": destination},
         )
         if (
             existing_notification

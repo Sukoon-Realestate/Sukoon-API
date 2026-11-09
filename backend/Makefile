@@ -69,6 +69,45 @@ check-owner-tenant: ## Check Django configuration and migration source consisten
 	$(CYCLE_PYTHON) manage.py check --settings=$(CYCLE_SETTINGS)
 	$(CYCLE_PYTHON) manage.py makemigrations --check --dry-run --settings=$(CYCLE_SETTINGS)
 
+# ── Sprint 00 baseline (see sprints/evidence/sprint-00/README.md) ─────────
+# tools/qa/mvp_collection.py (loaded by conftest.py) runs each test in its own release mode:
+# deferred-workflow tests with SUKOON_MVP=False, MVP-only tests with True, the rest per the
+# environment. Both targets therefore run every test. Outputs and private storage go to
+# BASELINE_OUT, never to repository databases or media.
+BASELINE_OUT ?= $(or $(TMPDIR),/tmp/)sukoon-baseline
+BASELINE_ENV = CHAT_PRIVATE_MEDIA_ROOT=$(BASELINE_OUT)/storage/chat SUPPORT_PRIVATE_MEDIA_ROOT=$(BASELINE_OUT)/storage/support \
+	VIRTUAL_TOUR_PRIVATE_ROOT=$(BASELINE_OUT)/storage/tours EVIDENCE_PRIVATE_ROOT=$(BASELINE_OUT)/storage/evidence
+BASELINE_PYTEST = $(CYCLE_PYTHON) -m pytest -p no:cacheprovider \
+	-o addopts="--strict-markers --tb=short" -q -rfE --cov=core_apps --cov-report=
+
+.PHONY: test-collect test-baseline-mvp test-baseline-restoration test-postgres-races route-matrix import-baseline
+test-collect: ## Collection only; must report zero errors
+	$(CYCLE_PYTHON) -m pytest --collect-only -q -p no:cacheprovider
+
+test-baseline-mvp: ## Full suite in production-default MVP scope
+	mkdir -p $(BASELINE_OUT)/mvp
+	$(BASELINE_ENV) SUKOON_MVP=true COVERAGE_FILE=$(BASELINE_OUT)/mvp/.coverage MVP_COLLECTION_REPORT=$(BASELINE_OUT)/mvp/collection.json \
+		$(BASELINE_PYTEST) --junitxml=$(BASELINE_OUT)/mvp/junit.xml
+
+test-baseline-restoration: ## Full suite with every deferred feature enabled
+	mkdir -p $(BASELINE_OUT)/restoration
+	$(BASELINE_ENV) SUKOON_MVP=false COVERAGE_FILE=$(BASELINE_OUT)/restoration/.coverage \
+		$(BASELINE_PYTEST) --junitxml=$(BASELINE_OUT)/restoration/junit.xml
+
+test-postgres-races: ## PostgreSQL-only tests; requires disposable TEST_POSTGRES_* (never a shared DB)
+	@test -n "$(TEST_POSTGRES_DB)" || (echo "Set TEST_POSTGRES_DB/USER/HOST/PORT to a disposable database" && exit 2)
+	mkdir -p $(BASELINE_OUT)/postgres
+	$(BASELINE_ENV) SUKOON_MVP=false $(CYCLE_PYTHON) -m pytest -p no:cacheprovider \
+		-o addopts="--strict-markers --tb=short" -q -rfE --ds=config.settings.postgres_test \
+		--junitxml=$(BASELINE_OUT)/postgres/junit.xml $(or $(PG_TESTS),core_apps)
+
+route-matrix: ## Regenerate sprints/ROUTE_MATRIX.md and its JSON evidence from the URL resolver
+	DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/route_matrix.py \
+		--json sprints/evidence/sprint-00/route-matrix.json --markdown sprints/ROUTE_MATRIX.md
+
+import-baseline: ## Import every project module under test settings
+	DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/import_baseline.py
+
 check:
 	$(PIPENV) run python manage.py check
 
