@@ -26,6 +26,8 @@ class AdminUserFilter(django_filters.FilterSet):
         )
 
     def filter_role(self, queryset, name, value):
+        if not value or value == "all":
+            return queryset
         if value in ["مالك", "landlord", "owner"]:
             return queryset.filter(properties__isnull=False).distinct()
         elif value in ["مستأجر", "tenant"]:
@@ -33,6 +35,8 @@ class AdminUserFilter(django_filters.FilterSet):
         return queryset
 
     def filter_status(self, queryset, name, value):
+        if not value or value == "all":
+            return queryset
         if value in ["suspended", "موقوف"]:
             return queryset.filter(is_active=False)
         elif value in ["active", "نشط"]:
@@ -42,30 +46,41 @@ class AdminUserFilter(django_filters.FilterSet):
         return queryset
 
     def filter_kyc_status(self, queryset, name, value):
+        if not value or value == "all":
+            return queryset
         if value in ["verified", "موثق"]:
             return queryset.filter(is_verified=True)
         elif value in ["pending", "قيد المراجعة"]:
             return queryset.filter(
                 is_verified=False,
-                kyc_submissions__status=KYCSubmission.Status.PENDING,
+                profile__kyc_submissions__status=KYCSubmission.Status.PENDING,
+                profile__kyc_submissions__superseded_at__isnull=True,
             ).distinct()
         elif value in ["rejected", "مرفوض"]:
             return queryset.filter(
                 is_verified=False,
-                kyc_submissions__status=KYCSubmission.Status.REJECTED,
+                profile__kyc_submissions__status=KYCSubmission.Status.REJECTED,
+                profile__kyc_submissions__superseded_at__isnull=True,
             ).distinct()
         return queryset
 
 
 class KYCSubmissionFilter(django_filters.FilterSet):
-    status = django_filters.CharFilter(field_name="status")
+    status = django_filters.CharFilter(method="filter_status")
     user_type = django_filters.CharFilter(method="filter_user_type")
 
     class Meta:
         model = KYCSubmission
         fields = ["status", "user_type"]
 
+    def filter_status(self, queryset, name, value):
+        if not value or value == "all":
+            return queryset
+        return queryset.filter(status=value)
+
     def filter_user_type(self, queryset, name, value):
+        if not value or value == "all":
+            return queryset
         if value in ["مالك", "landlord", "landlords"]:
             return queryset.filter(profile__user__properties__isnull=False).distinct()
         elif value in ["مستأجر", "tenant", "tenants"]:
@@ -75,10 +90,25 @@ class KYCSubmissionFilter(django_filters.FilterSet):
 
 class UserReportFilter(django_filters.FilterSet):
     id = django_filters.UUIDFilter(field_name="id")
-    status = django_filters.CharFilter(field_name="status")
-    automation_level = django_filters.CharFilter(field_name="automation_level")
-    reason_type = django_filters.CharFilter(field_name="reason_type")
+    status = django_filters.CharFilter(method="filter_status")
+    automation_level = django_filters.CharFilter(method="filter_automation_level")
+    reason_type = django_filters.CharFilter(method="filter_reason_type")
 
     class Meta:
         model = UserReport
         fields = ["id", "status", "automation_level", "reason_type"]
+
+    def filter_status(self, queryset, name, value):
+        if not value or value == "all":
+            return queryset
+        return queryset.filter(status=value)
+
+    def filter_automation_level(self, queryset, name, value):
+        if not value or value == "all":
+            return queryset
+        return queryset.filter(automation_level=value)
+
+    def filter_reason_type(self, queryset, name, value):
+        if not value or value == "all":
+            return queryset
+        return queryset.filter(reason_type=value)

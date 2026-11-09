@@ -1,6 +1,38 @@
 # Worklog
 
-## 2026-10-26
+## 2026-11-09
+
+### Admin portal backend implementation and health audit resolution
+- **What:** Completed and audited the whole admin portal backend on `feature/admin-portal-backend`, resolving critical moderation invariants, filter relationships, prefetch optimizations, and comprehensive test coverage.
+- **Why:** Ensure full functionality, security, independent review enforcement, and N+1 query elimination across all domains of the Sukoon admin portal (Users, KYC, Moderation, Staff & Roles, Financials, Audit Logs, Settings).
+- **Details:**
+  - **A6-01 (Moderation Invariants):** `delete_moderation_item` now enforces staff actor authentication with role locks (`system_owner`, `main_admin`, `property_reviewer`), sensitive TOTP verification (`require_sensitive_access`), independent reviewer check (`property.owner_id != reviewer.pk`), retired inventory check, `select_for_update` row locks, `PropertyModerationDecision` creation with revision tracking and idempotency fingerprint, `RentalAuditEvent` creation, and `PlanningEvent` publication for notification routing.
+  - **A6-02 (User & KYC Filters):** Fixed `AdminUserFilter.filter_kyc_status` to correctly query through `profile__kyc_submissions` with non-superseded constraint (`superseded_at__isnull=True`). Handled `"all"` values safely across `role`, `status`, `kyc_status`, `user_type`, and `automation_level`.
+  - **A6-03 (Property Views N+1):** Replaced per-row database queries in `AdminPropertyItemSerializer.get_views` by subquery annotation (`views_count`) in `get_admin_properties_queryset()`.
+  - **A6-04 (KYC Reviewer Pre-computations):** Annotated `is_owner` and `has_warning` with `Exists(...)` in `get_kyc_queue_queryset()`, updated `KYCSubmissionListSerializer` to use annotated attributes, and updated `AdminUserListSerializer.get_kycStatus` to inspect in-memory prefetched non-superseded submissions.
+  - **A6-05 (Financials & Audit DB-level Filtering):** Removed premature `[:500]` truncation before filtering in `get_transactions_list()`, adding DB-level `status_filter` and multi-field search across invoices and users. In `get_audit_logs()`, added DB-level filtering and search across all 7 audit categories including `TicketTransition` (support) and suspended `UserReport` events with human-readable ticket reference targets.
+- **Validation:**
+  - Full backend `admin_api` test suite: 231 passed, 2 skipped, 0 failed in 63.77s.
+  - 5 comprehensive new test suites covering all admin portal endpoints (22 new tests): 22 passed, 0 failed.
+  - Django system check: `System check identified no issues (0 silenced)`.
+  - Frontend admin portal tests: 56 passed, 0 failed in 654ms.
+- **Files:**
+  - `backend/core_apps/admin_api/filters.py`
+  - `backend/core_apps/admin_api/services/moderation_service.py`
+  - `backend/core_apps/admin_api/services/property_service_parts/get_admin_properties_queryset.py`
+  - `backend/core_apps/admin_api/serializers/property_serializers.py`
+  - `backend/core_apps/admin_api/services/kyc_service.py`
+  - `backend/core_apps/admin_api/serializers/kyc_serializers.py`
+  - `backend/core_apps/admin_api/serializers/admin_user_serializers.py`
+  - `backend/core_apps/admin_api/services/financials_service_parts/get_transactions_list.py`
+  - `backend/core_apps/admin_api/services/system_service_parts/get_audit_logs.py`
+  - `backend/core_apps/admin_api/tests/conftest.py`
+  - `backend/core_apps/admin_api/tests/test_admin_portal_users.py`
+  - `backend/core_apps/admin_api/tests/test_admin_portal_kyc.py`
+  - `backend/core_apps/admin_api/tests/test_admin_portal_moderation.py`
+  - `backend/core_apps/admin_api/tests/test_admin_portal_staff_and_roles.py`
+  - `backend/core_apps/admin_api/tests/test_admin_portal_financials_and_audit.py`
+  - `WORKLOG.md`
 
 ### Personal chat inbox and authenticated notification actions
 - **What:** Added per-participant conversation pins, unread reminders without rewinding receipts, unread filtering before pagination, and timed mute expiry. Added authenticated notification reply/read actions scoped to the delivered message, recipient and current membership; replies reuse message idempotency.

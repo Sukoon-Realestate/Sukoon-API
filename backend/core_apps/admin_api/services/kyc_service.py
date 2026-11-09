@@ -11,9 +11,27 @@ def get_kyc_queue_queryset():
     """
     Returns queryset of KYC submissions optimized with related profile and user data.
     """
+    from django.db.models import Exists, OuterRef
+    from core_apps.properties.models import Property
+    from core_apps.admin_api.models import UserReport
+
+    is_owner_subquery = Exists(
+        Property.objects.filter(owner=OuterRef("profile__user"))
+    )
+    has_warning_subquery = Exists(
+        UserReport.objects.filter(
+            reported_user=OuterRef("profile__user"),
+            status=UserReport.Status.ACTIVE,
+        )
+    )
+
     return (
         KYCSubmission.objects.select_related("profile", "profile__user", "reviewer")
         .filter(superseded_at__isnull=True)
+        .annotate(
+            is_owner=is_owner_subquery,
+            has_warning=has_warning_subquery,
+        )
         .order_by("-created_at")
     )
 
