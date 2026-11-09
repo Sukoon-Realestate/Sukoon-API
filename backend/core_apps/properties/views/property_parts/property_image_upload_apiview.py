@@ -111,7 +111,7 @@ class PropertyImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         from core_apps.users.models import User
         from ...services.image_uploads import _authority
 
-        current = User.objects.select_for_update().get(pk=self.request.user.pk)
+        current = User.objects.select_for_update(no_key=True).get(pk=self.request.user.pk)
         image = get_object_or_404(PropertyImage, id=self.kwargs["id"])
         prop = Property.objects.select_for_update().get(pk=image.property_id)
         _authority(current, prop, self.request.auth)

@@ -1,4 +1,11 @@
-"""Reserve and finalize briefly; never hold account/property locks over Cloudinary."""
+"""Reserve and finalize briefly; never hold account/property locks over Cloudinary.
+
+The account row is locked FOR NO KEY UPDATE: it still serializes with session
+revocation (``revoke_all`` takes FOR UPDATE) but does not block the FOR KEY
+SHARE that a concurrent listing write needs to insert rows referencing the
+account while it holds the listing lock. FOR UPDATE here deadlocked with a
+concurrent cover replacement on PostgreSQL (Sprint 02, A2-04 race test).
+"""
 
 import hashlib
 from datetime import timedelta
@@ -54,7 +61,7 @@ def _authority(current, prop, claims, reservation=None):
 
 def _finalize(record_id, resource, user, claims, *, recovery=False):
     with transaction.atomic():
-        current = User.objects.select_for_update().get(pk=user.pk)
+        current = User.objects.select_for_update(no_key=True).get(pk=user.pk)
         record = IdempotencyRecord.objects.get(pk=record_id)
         prop = Property.objects.select_for_update().get(id=record.request_subject_id)
         record = IdempotencyRecord.objects.select_for_update().get(pk=record_id)
@@ -95,7 +102,7 @@ def upload(*, user, claims, property_obj, key, data, require_verified=True):
     operation = f"property.image.upload:{property_obj.id}"
     digest = fingerprint(data)
     with transaction.atomic():
-        current = User.objects.select_for_update().get(pk=user.pk)
+        current = User.objects.select_for_update(no_key=True).get(pk=user.pk)
         prop = Property.objects.select_for_update().get(pk=property_obj.pk)
         _authority(current, prop, claims)
         if require_verified and not current.is_verified:
@@ -111,11 +118,9 @@ def upload(*, user, claims, property_obj, key, data, require_verified=True):
             if record.recovery_status == "confirmed":
                 return record.response_data, record.response_status, True
             raise UploadPending()
-        pending = IdempotencyRecord.objects.filter(
-            operation=operation, recovery_status__in=["pending", "unknown"]
-        ).count()
-        if prop.images.count() + pending >= 25:
-            raise ValidationError("A property cannot have more than 25 images.")
+        from .listing_capacity import require_capacity
+
+        require_capacity(prop)
         public_id = (
             "properties/images/"
             + hashlib.sha256(f"{current.pk}:{operation}:{key}".encode()).hexdigest()
@@ -174,7 +179,7 @@ def reconcile(*, user, claims, property_id, key):
     except cloudinary.exceptions.NotFound:
         if record.created_at < timezone.now() - timedelta(minutes=15):
             with transaction.atomic():
-                current = User.objects.select_for_update().get(pk=user.pk)
+                current = User.objects.select_for_update(no_key=True).get(pk=user.pk)
                 prop = Property.objects.select_for_update().get(id=property_id)
                 stored = IdempotencyRecord.objects.select_for_update().get(pk=record.pk)
                 if stored.recovery_status in ["pending", "unknown"]:

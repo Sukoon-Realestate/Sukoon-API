@@ -3,6 +3,8 @@
 import json
 from django.utils import timezone
 from rest_framework import serializers
+from core_apps.common.command_fields import finite_decimal, is_uuid
+from ....listing_media import LISTING_IMAGE_CAP, measured_seconds
 from ....services import PropertyService
 from ....rental_inventory import normalize_inventory
 
@@ -17,11 +19,10 @@ class PropertyValidationMixin:
         if val_str.lower() in self.VALID_DEPOSIT_CHOICES:
             return val_str.lower()
         try:
-            num = float(val_str)
-            if num < 0:
-                raise ValueError()
+            # "nan"/"inf" were accepted by float(); amounts must be finite.
+            finite_decimal(val_str, field="deposit")
             return val_str
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, serializers.ValidationError):
             raise serializers.ValidationError(
                 "Deposit must be one of: none, half_month, one_month, two_months, or a non-negative amount."
             )
@@ -50,9 +51,11 @@ class PropertyValidationMixin:
                 raise serializers.ValidationError(
                     "amenities must be a valid JSON array."
                 )
-        if not isinstance(value, list):
+        if not isinstance(value, list) or len(value) > 50:
             raise serializers.ValidationError("amenities must be a list of strings.")
         for item in value:
+            if not isinstance(item, str):
+                raise serializers.ValidationError("amenities must be a list of strings.")
             if item not in PropertyService.SUPPORTED_AMENITIES_MAP:
                 raise serializers.ValidationError(f"Unsupported amenity value: {item}")
         return value
@@ -67,10 +70,23 @@ class PropertyValidationMixin:
                 raise serializers.ValidationError(
                     "retained_image_ids must be a valid JSON array."
                 )
-        if not isinstance(value, list):
+        if (
+            not isinstance(value, list)
+            or len(value) > LISTING_IMAGE_CAP
+            or not all(is_uuid(item) for item in value)
+        ):
             raise serializers.ValidationError(
                 "retained_image_ids must be a list of UUIDs."
             )
+        if len({str(item).lower() for item in value}) != len(value):
+            raise serializers.ValidationError("retained_image_ids must not repeat.")
+        return value
+
+    def validate_main_image_id(self, value):
+        if value in (None, ""):
+            return value
+        if not is_uuid(value):
+            raise serializers.ValidationError("main_image_id must be an image UUID.")
         return value
 
     def validate_images_metadata(self, value):
@@ -83,13 +99,25 @@ class PropertyValidationMixin:
                 raise serializers.ValidationError(
                     "images_metadata must be a valid JSON array."
                 )
-        if not isinstance(value, list):
+        if not isinstance(value, list) or len(value) > LISTING_IMAGE_CAP:
             raise serializers.ValidationError("images_metadata must be a list.")
+        seen = set()
         for item in value:
             if not isinstance(item, dict) or "id" not in item:
                 raise serializers.ValidationError(
                     "Each item in images_metadata must be an object with an 'id' field."
                 )
+            if not is_uuid(item["id"]):
+                raise serializers.ValidationError("images_metadata ids must be UUIDs.")
+            if str(item["id"]).lower() in seen:
+                raise serializers.ValidationError("images_metadata ids must not repeat.")
+            seen.add(str(item["id"]).lower())
+            for key, limit in (("name", 255), ("description", 4000)):
+                text = item.get(key)
+                if text is not None and (not isinstance(text, str) or len(text) > limit):
+                    raise serializers.ValidationError(
+                        f"images_metadata {key} must be text of at most {limit} characters."
+                    )
         return value
 
     def validate(self, attrs):
@@ -114,6 +142,19 @@ class PropertyValidationMixin:
             )
         if "district_catalog" in attrs and district:
             attrs["district"] = district.name
+        if not self.instance:
+            # A2-06: edit-only image keys have defined create semantics. Empty
+            # values are ignored (nothing to retain yet); anything else is 400
+            # instead of reaching Property(**data).
+            for key in ("main_image_id", "retained_image_ids", "images_metadata"):
+                if key in attrs and attrs[key] not in (None, "", []):
+                    raise serializers.ValidationError(
+                        {key: "Only valid when editing an existing listing."}
+                    )
+                attrs.pop(key, None)
+        if attrs.get("video") is not None:
+            # The decoded duration is authoritative; the client value is a hint.
+            attrs["video_duration"] = measured_seconds(attrs["video"].sukoon_duration_ms)
         video_duration = attrs.get("video_duration")
         if video_duration is not None and (video_duration < 1 or video_duration > 60):
             raise serializers.ValidationError(

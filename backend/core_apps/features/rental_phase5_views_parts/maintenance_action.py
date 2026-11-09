@@ -2,7 +2,6 @@
 
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.utils.dateparse import parse_datetime
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -17,9 +16,6 @@ from ..models import (
     PrivateAccessRevocation,
 )
 from ..renderers import FeatureJsonRenderer
-from ..rental_serializers_parts.maintenance_cost_decision_serializer import (
-    MaintenanceCostDecisionSerializer,
-)
 from ..services.cycle_permissions import MAINTENANCE_TRANSITIONS, cycle_actions
 from ..services.maintenance_access import access_window_current, appointment_reviewable
 from ..services.commands import money_minor
@@ -36,13 +32,33 @@ from .maintenance_payload import (
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def maintenance_action(request, request_id):
-    action = request.data.get("action") or request.data.get("decision")
-    if action not in MAINTENANCE_ACTIONS or not request.data.get("request_key"):
+    from ..rental_serializers_parts.command_serializers import (
+        MaintenanceActionCommand,
+        validated,
+    )
+
+    data = request.data if hasattr(request.data, "get") else {}
+    action = data.get("action") or data.get("decision")
+    if not isinstance(action, str) or action not in MAINTENANCE_ACTIONS:
         raise ValidationError({"action": "Unsupported action or missing request key."})
+    # A3-02: type every field before the lock, receipt or any write.
+    # Action-specific fields are typed only for the action that uses them, so
+    # values other actions ignored before still do not turn into errors.
+    used = {
+        "propose_appointment": {"appointment_at", "appointment_ends_at"},
+        "propose_cost": {"cost", "cost_payer"},
+        "approve_cost": {"cost_version"},
+        "reject_cost": {"cost_version"},
+    }.get(action, set())
+    ignored = {"appointment_at", "appointment_ends_at", "cost", "cost_payer", "cost_version"} - used
+    command = validated(
+        MaintenanceActionCommand,
+        {key: data.get(key) for key in data if key not in ignored},
+    )
     item = _maintenance(request, request_id)
     operation = f"maintenance.action.{item.id}.{action}"
     replay = replay_operation(
-        request.user, operation, request.data["request_key"], request.data
+        request.user, operation, command["request_key"], request.data
     )
     if replay:
         return Response(replay[0], status=replay[1])
@@ -50,11 +66,14 @@ def maintenance_action(request, request_id):
     with transaction.atomic():
         item = _maintenance(request, request_id, lock=True)
         replay = replay_operation(
-            request.user, operation, request.data["request_key"], request.data
+            request.user, operation, command["request_key"], request.data
         )
         if replay:
             return Response(replay[0], status=replay[1])
-        if int(request.data.get("expected_revision", 0)) != item.revision:
+        from core_apps.common.command_authority import recheck_session
+
+        recheck_session(request)
+        if command["expected_revision"] != item.revision:
             raise RentalConflict(
                 "Maintenance revision conflict.", code="stale_revision"
             )
@@ -76,7 +95,7 @@ def maintenance_action(request, request_id):
                 "Review a new bounded appointment before approving access.",
                 code="appointment_expired",
             )
-        if action == "report_missed" and not str(request.data.get("note", "")).strip():
+        if action == "report_missed" and not command["note"].strip():
             raise ValidationError({"note": "Describe the missed appointment."})
         if action in {"approve_cost", "reject_cost"}:
             responsible = (
@@ -90,10 +109,10 @@ def maintenance_action(request, request_id):
                 raise PermissionDenied(
                     "Only the current responsible payer may decide this cost."
                 )
-            decision = MaintenanceCostDecisionSerializer(data=request.data)
-            decision.is_valid(raise_exception=True)
+            if "cost_version" not in command:
+                raise ValidationError({"cost_version": "This field is required."})
             if (
-                decision.validated_data["cost_version"] != item.cost_version
+                command["cost_version"] != item.cost_version
                 or not item.proposed_cost_minor
                 or item.approved_cost_version == item.cost_version
             ):
@@ -113,9 +132,8 @@ def maintenance_action(request, request_id):
         elif action == "propose_cost":
             from ..services.billing_sources import invalidate_maintenance_cost
             invalidate_maintenance_cost(item)
-            cost = request.data.get("cost", {})
-            amount = money_minor(cost)
-            payer = request.data.get("cost_payer")
+            amount = money_minor(command.get("cost", {}))
+            payer = command.get("cost_payer")
             if payer not in {"owner", "tenant"} or amount <= 0:
                 raise ValidationError(
                     "A positive EGP cost and owner/tenant payer are required."
@@ -129,21 +147,15 @@ def maintenance_action(request, request_id):
                 item.cost_version if action == "approve_cost" else None
             )
         if action == "propose_appointment":
-            if not request.data.get("appointment_at"):
+            if not command.get("appointment_at"):
                 raise ValidationError({"appointment_at": "Required."})
-            item.appointment_at = parse_datetime(request.data["appointment_at"])
-            item.appointment_ends_at = parse_datetime(
-                str(request.data.get("appointment_ends_at", ""))
-            )
-            if not item.appointment_at:
-                raise ValidationError({"appointment_at": "Must be an ISO date-time."})
+            item.appointment_at = command["appointment_at"]
+            item.appointment_ends_at = command.get("appointment_ends_at")
             from django.utils import timezone
 
             if (
-                timezone.is_naive(item.appointment_at)
-                or item.appointment_at <= timezone.now()
+                item.appointment_at <= timezone.now()
                 or not item.appointment_ends_at
-                or timezone.is_naive(item.appointment_ends_at)
                 or item.appointment_ends_at <= item.appointment_at
             ):
                 raise ValidationError(
@@ -171,7 +183,7 @@ def maintenance_action(request, request_id):
             item,
             request.user,
             f"maintenance.{action}",
-            request.data.get("note", ""),
+            command["note"],
             {
                 "appointment_version": item.appointment_version,
                 "access_approved_version": item.access_approved_version,
@@ -188,7 +200,7 @@ def maintenance_action(request, request_id):
             maintenance_request=item,
             actor=request.user,
             action=action,
-            note=request.data.get("note", ""),
+            note=command["note"],
             appointment_at=(
                 item.appointment_at
                 if action in {"propose_appointment", "accept_appointment"}
@@ -211,7 +223,7 @@ def maintenance_action(request, request_id):
         output = remember_mutation(
             user=request.user,
             operation=operation,
-            request_key=request.data["request_key"],
+            request_key=command["request_key"],
             payload=request.data,
             request_subject_id=item.id,
             result_subject_id=item.id,

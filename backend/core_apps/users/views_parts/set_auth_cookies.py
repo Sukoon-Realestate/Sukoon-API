@@ -98,16 +98,33 @@ class CustomTokenRefreshView(TokenRefreshView):
             from core_apps.common.cookie_origin import require_cookie_origin
 
             require_cookie_origin(request)
-        refresh_token = request.COOKIES.get("refresh") or request.data.get("refresh")
+        # A1-07: build a validated command instead of writing into request.data,
+        # which form/multipart parsing makes an immutable QueryDict (and a JSON
+        # array/string body is not a mapping at all).
+        refresh_token = request.COOKIES.get("refresh")
+        if not refresh_token:
+            body = request.data
+            refresh_token = body.get("refresh") if hasattr(body, "get") else None
 
         if not refresh_token:
             return Response(
                 {"detail": "Refresh token not found."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        if not isinstance(refresh_token, str) or len(refresh_token) > 4096:
+            return Response(
+                {"refresh": ["Supply the refresh token as text."]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        request.data["refresh"] = refresh_token
-        refresh_res = super().post(request, *args, **kwargs)
+        from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+
+        serializer = self.get_serializer(data={"refresh": refresh_token})
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as error:
+            raise InvalidToken(error.args[0])
+        refresh_res = Response(serializer.validated_data, status=status.HTTP_200_OK)
 
         if refresh_res.status_code == status.HTTP_200_OK:
             access_token = refresh_res.data.get("access")

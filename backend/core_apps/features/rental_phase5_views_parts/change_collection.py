@@ -5,6 +5,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.dateparse import parse_date
+from core_apps.common.command_fields import parse_revision, require_request_key
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.response import Response
@@ -36,17 +37,18 @@ def change_collection(request, lease_id, kind):
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
-    if int(request.data.get("expected_revision", -1)) != 0 or not request.data.get(
+    if parse_revision(request.data, "expected_revision", default=-1) != 0 or not request.data.get(
         "request_key"
     ):
         raise ValidationError("expected_revision=0 and request_key are required.")
+    require_request_key(request.data)
     operation = f"rental_change.create.{kind}.{lease.id}"
     replay = replay_operation(
         request.user, operation, request.data["request_key"], request.data
     )
     if replay:
         return Response(replay[0], status=replay[1])
-    if int(request.data.get("lease_revision", 0)) != lease.revision:
+    if parse_revision(request.data, "lease_revision", default=0) != lease.revision:
         raise RentalConflict("Lease revision conflict.", code="stale_revision")
 
     def optional_date(field):
@@ -105,7 +107,7 @@ def change_collection(request, lease_id, kind):
         )
         if replay:
             return Response(replay[0], status=replay[1])
-        if int(request.data.get("lease_revision", 0)) != lease.revision:
+        if parse_revision(request.data, "lease_revision", default=0) != lease.revision:
             raise RentalConflict("Lease revision conflict.", code="stale_revision")
         termination_snapshot, termination_values = {}, {}
         if kind == RentalChange.Kind.TERMINATION:

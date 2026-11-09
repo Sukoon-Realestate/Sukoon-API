@@ -8,9 +8,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import MaintenanceEvent, MaintenanceRequest
 from ..renderers import FeatureJsonRenderer
-from ..rental_serializers_parts.maintenance_cost_decision_serializer import (
-    MaintenanceAccessTimesSerializer,
-)
 from ..services.rental_phase2 import remember_mutation, replay_operation
 from .maintenance_payload import (
     _lease,
@@ -33,53 +30,44 @@ def maintenance_requests(request, lease_id):
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
-    required = {
-        "title",
-        "description",
-        "category",
-        "priority",
-        "access_times",
-        "evidence_ids",
-        "request_key",
-        "expected_revision",
-    }
-    if (
-        not required.issubset(request.data)
-        or int(request.data["expected_revision"]) != 0
-    ):
-        raise ValidationError(
-            "Complete maintenance body with expected_revision=0 is required."
-        )
+    from ..rental_serializers_parts.command_serializers import (
+        MaintenanceCreateCommand,
+        validated,
+    )
+
+    # A3-02: the complete body is typed before authority, replay or writes.
+    command = validated(MaintenanceCreateCommand, request.data)
     from ..services.cycle_permissions import cycle_actions
     from rest_framework.exceptions import PermissionDenied
     if "create_maintenance_request" not in cycle_actions(request.user, lease):
         raise PermissionDenied("Maintenance requires an existing serviceable agreement.")
     operation = f"maintenance.create.{lease.id}"
     replay = replay_operation(
-        request.user, operation, request.data["request_key"], request.data
+        request.user, operation, command["request_key"], request.data
     )
     if replay:
         return Response(replay[0], status=replay[1])
-    access = MaintenanceAccessTimesSerializer(data=request.data)
-    access.is_valid(raise_exception=True)
-    evidence = _safe_evidence(lease, request.data["evidence_ids"])
+    evidence = _safe_evidence(lease, command["evidence_ids"])
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True, servicing=True)
         if "create_maintenance_request" not in cycle_actions(request.user, lease):
             raise PermissionDenied("Maintenance requires an existing serviceable agreement.")
         replay = replay_operation(
-            request.user, operation, request.data["request_key"], request.data
+            request.user, operation, command["request_key"], request.data
         )
         if replay:
             return Response(replay[0], status=replay[1])
+        from core_apps.common.command_authority import recheck_session
+
+        recheck_session(request)
         item = MaintenanceRequest.objects.create(
             lease=lease,
             reporter=request.user,
-            title=request.data["title"],
-            description=request.data["description"],
-            category=request.data["category"],
-            priority=request.data["priority"],
-            access_times=access.validated_data["access_times"],
+            title=command["title"],
+            description=command["description"],
+            category=command["category"],
+            priority=command["priority"],
+            access_times=command["access_times"],
         )
         item.evidence.set(evidence)
         MaintenanceEvent.objects.create(
@@ -88,7 +76,7 @@ def maintenance_requests(request, lease_id):
         output = remember_mutation(
             user=request.user,
             operation=operation,
-            request_key=request.data["request_key"],
+            request_key=command["request_key"],
             payload=request.data,
             request_subject_id=lease.id,
             result_subject_id=item.id,

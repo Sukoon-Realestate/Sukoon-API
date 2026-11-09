@@ -5,6 +5,8 @@ from typing import Optional
 from decimal import Decimal
 from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
+from core_apps.common.command_fields import StrictCharField
+from ...listing_media import ListingImageField
 from ...models import Property, PropertyImage, PropertyType
 from .property_collection import PropertyCollectionSerializer, stay_rating
 
@@ -50,12 +52,14 @@ class PropertyImageSerializer(serializers.ModelSerializer):
 
 
 class PropertyImageUploadSerializer(serializers.ModelSerializer):
-    image = CloudinarySerializerField(required=True)
-    name = serializers.CharField(
-        required=False, allow_blank=True, allow_null=True, default=""
+    # A2-06: a URL/public-ID string is a 400 here, before any capacity
+    # reservation or provider call (it used to become a false 503 pending).
+    image = ListingImageField(required=True)
+    name = StrictCharField(
+        required=False, allow_blank=True, allow_null=True, default="", max_length=255
     )
-    description = serializers.CharField(
-        required=False, allow_blank=True, allow_null=True, default=""
+    description = StrictCharField(
+        required=False, allow_blank=True, allow_null=True, default="", max_length=4000
     )
 
     class Meta:
@@ -77,6 +81,9 @@ class PropertyImageUploadSerializer(serializers.ModelSerializer):
 
 
 class PropertyImageUpdateSerializer(serializers.ModelSerializer):
+    name = StrictCharField(required=False, allow_blank=True, max_length=255)
+    description = StrictCharField(required=False, allow_blank=True, max_length=4000)
+
     class Meta:
         model = PropertyImage
         fields = ["name", "description"]

@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from core_apps.admin_api.models import StaffProfile
 from ..models import Lease, PaymentAttempt, RefundRequest
 from ..renderers import FeatureJsonRenderer
+from core_apps.common.command_authority import recheck_session as recheck_session_after_locks
 from ..services.commands import command_identity, money_minor
 from ..services.refunds import validate_allocations
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
@@ -41,19 +42,37 @@ def refund_requests(request):
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
+    from ..rental_serializers_parts.command_serializers import (
+        RefundCreateCommand,
+        validated,
+    )
+
+    # A4-04: type the body first, then select only rental payment attempts.
+    # Subscription/advertising/purchase attempts have no lease and are not
+    # refundable through this rental route: they are indistinguishable from
+    # unknown identities (404), so no other purpose's existence leaks.
+    from rest_framework.exceptions import NotFound
+    from core_apps.common.command_fields import is_uuid
+
+    body = request.data if hasattr(request.data, "get") else {}
+    if not is_uuid(body.get("payment_attempt_id")):
+        raise NotFound()  # cannot name an existing attempt (historical 404)
     attempt = get_object_or_404(
-        PaymentAttempt.objects.select_related("invoice__lease"),
-        id=request.data.get("payment_attempt_id"),
+        PaymentAttempt.objects.select_related("invoice__lease").filter(
+            invoice__lease__isnull=False
+        ),
+        id=body["payment_attempt_id"],
     )
     lease = _lease(request, attempt.invoice.lease.id)
     if request.user != attempt.payer:
         raise PermissionDenied("Only the captured payer can request a refund.")
     request_key, expected_revision = command_identity(request.data)
+    command = validated(RefundCreateCommand, request.data)
     if expected_revision != 0:
         raise ValidationError(
             {"expected_revision": "A new refund starts at revision 0."}
         )
-    if request.data.get("lease_id") and str(request.data["lease_id"]) != str(lease.id):
+    if command.get("lease_id") and str(command["lease_id"]) != str(lease.id):
         raise ValidationError({"lease_id": "Payment belongs to a different lease."})
     operation = f"refund.create.{attempt.id}"
     replay = replay_operation(request.user, operation, request_key, request.data)
@@ -75,6 +94,9 @@ def refund_requests(request):
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])
+        from core_apps.common.command_authority import recheck_session
+
+        recheck_session(request)
         if amount > refundable_balance_minor(attempt):
             raise RentalConflict(
                 "Refund exceeds the remaining refundable capture balance.",
@@ -86,7 +108,7 @@ def refund_requests(request):
             raise RentalConflict(
                 "Only confirmed captures can be refunded.", code="payment_not_captured"
             )
-        if request.data.get("payment_revision", attempt.revision) != attempt.revision:
+        if command.get("payment_revision", attempt.revision) != attempt.revision:
             raise RentalConflict("Payment revision conflict.", code="stale_revision")
         allocations = validate_allocations(
             attempt, amount, request.data.get("allocations")
@@ -97,7 +119,7 @@ def refund_requests(request):
             requester=request.user,
             amount_minor=amount,
             refundable_balance_snapshot_minor=refundable_balance_minor(attempt),
-            reason=request.data.get("reason", ""),
+            reason=command["reason"],
             request_key=request_key,
             allocations=allocations,
         )
@@ -134,12 +156,17 @@ def refund_respond(request, refund_id):
 
     require_financial_actor(request.user, ROLES, "refund.review")
     item = _refund(request, refund_id, allow_operations=True)
-    action = request.data.get("action") or request.data.get("decision")
-    if action not in {"approve", "reject"}:
+    from ..rental_serializers_parts.command_serializers import (
+        RefundRespondCommand,
+        validated,
+    )
+
+    data = request.data if hasattr(request.data, "get") else {}
+    action = data.get("action") or data.get("decision")
+    if not isinstance(action, str) or action not in {"approve", "reject"}:
         raise ValidationError({"action": "Must be approve or reject."})
-    request_key = request.data.get("request_key")
-    if not request_key:
-        raise ValidationError({"request_key": "Required."})
+    command = validated(RefundRespondCommand, request.data)
+    request_key = command["request_key"]
     operation = f"refund.respond.{item.id}"
     with transaction.atomic():
         require_financial_actor(request.user, ROLES, "refund.review", lock=True)
@@ -169,7 +196,8 @@ def refund_respond(request, refund_id):
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])
-        if item.revision != int(request.data.get("expected_revision", 0)):
+        recheck_session_after_locks(request)
+        if item.revision != command["expected_revision"]:
             raise RentalConflict("Refund revision conflict.", code="stale_revision")
         if item.status != RefundRequest.Status.REQUESTED:
             raise RentalConflict("Only a requested refund can be approved or rejected.")

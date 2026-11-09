@@ -1,0 +1,806 @@
+{
+ "baseline": "d46cc2bf + Sprint 01 changes (no Sprint 02 code)",
+ "summary": {
+  "chat.tests.test_command_input_matrix": {
+   "failed_before": 1,
+   "passed_before": 0
+  },
+  "features.tests.test_command_input_matrix": {
+   "failed_before": 61,
+   "passed_before": 26
+  },
+  "properties.tests.test_listing_input_matrix": {
+   "failed_before": 56,
+   "passed_before": 26
+  },
+  "users.tests.test_refresh_inputs": {
+   "failed_before": 9,
+   "passed_before": 5
+  },
+  "chat.tests.test_rich_attachments": {
+   "failed_before": 0,
+   "passed_before": 24
+  }
+ },
+ "tests": {
+  "chat.tests.test_command_input_matrix": {
+   "failed_before": [
+    {
+     "test": "test_chat_commands_never_500_on_malformed_bodies",
+     "reason": "AssertionError: [('post', 'conversations/{c}/messages/create/', '5', 500), ('post', 'conversations/{c}/read/', '5', 500)]"
+    }
+   ],
+   "passed_before": []
+  },
+  "features.tests.test_command_input_matrix": {
+   "failed_before": [
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'expected_revision': None}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'expected_revision': []}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'expected_revision': {}}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'expected_revision': 'oops'}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'title': []}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...ad491924d1\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'title': 123}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...c2fb5913e7\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'title': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...8f33d40646\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'description': {'a': 1}}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...e5c40da44a\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'description': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...272f11ffce\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'category': {'a': 1}}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...47366192d7\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'category': 'Plumb ing'}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...3c1d875b19\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'category': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...c7a623e2eb\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'priority': 'critical'}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...095b6cf6f5\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'priority': None}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'access_times': ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x']}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...3fe6f57fed\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'evidence_ids': 'x'}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'evidence_ids': ['not-a-uuid']}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'evidence_ids': None}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'request_key': None}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...350d29cf62\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'request_key': ''}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...8fdc6e5273\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'request_key': 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...39d6339589\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'request_key': []}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"repl...7cf5463050\",\"lease_id\":"
+    },
+    {
+     "test": "test_maintenance_create_rejects_non_object_bodies[5]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'expected_revision': None}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'expected_revision': True}]",
+     "reason": "AssertionError: (200, b'{\"message\":\"Operation successful.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"propose_appoi...3192-526c-4e60-94d5-098"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'expected_revision': 1.5}]",
+     "reason": "AssertionError: (200, b'{\"message\":\"Operation successful.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"propose_appoi...2e0a-4f57-456c-97bb-48a"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'expected_revision': []}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'expected_revision': {}}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'expected_revision': 'oops'}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'expected_revision': -1}]",
+     "reason": "AssertionError: (409, b'{\"message\":\"Maintenance revision conflict.\",\"data\":null}')"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'note': []}]",
+     "reason": "AssertionError: (200, b'{\"message\":\"Operation successful.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"propose_appoi...ae44-bbd0-4b53-aa27-ee8"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'note': 5}]",
+     "reason": "AssertionError: (200, b'{\"message\":\"Operation successful.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"propose_appoi...c4db-c6a4-40a3-a839-082"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'note': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}]",
+     "reason": "AssertionError: (200, b'{\"message\":\"Operation successful.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"propose_appoi...a4eb-445d-4c46-96f0-efe"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'request_key': ['k']}]",
+     "reason": "AssertionError: (200, b'{\"message\":\"Operation successful.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"propose_appoi...da94-0943-4443-9297-651"
+    },
+    {
+     "test": "test_maintenance_action_rejects_malformed_fields[{'request_key': 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'}]",
+     "reason": "AssertionError: (200, b'{\"message\":\"Operation successful.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"propose_appoi...5d0f-dd04-47bc-b70c-3b8"
+    },
+    {
+     "test": "test_maintenance_appointment_requires_aware_datetimes[{'appointment_at': 5, 'appointment_ends_at': '2030-01-01T11:00:00+02:00'}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'expected_revision': None}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'expected_revision': []}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'expected_revision': {}}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'expected_revision': 'oops'}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'possession_on': 'not-a-date'}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'possession_on': 20260101}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'possession_on': None}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'condition': 5}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"id\":\"b25df131-42d7-486d-8c54-4319f1786fe6\",\"lease_id\":...tus\":\"pending_approval\""
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'condition': True}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"id\":\"d043ca45-0368-4593-84ab-516cde3f6c93\",\"lease_id\":...tus\":\"pending_approval\""
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'condition': None}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'keys': [1, 2]}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"id\":\"7980e920-eb31-4946-aadc-20601ecc9c8c\",\"lease_id\":...tus\":\"pending_approval\""
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'meters': 'text'}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"id\":\"42253e60-a0f9-4dcd-b02e-f5e8ba0d4a30\",\"lease_id\":...tus\":\"pending_approval\""
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'inventory': 5}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"id\":\"34ac9dca-3c6a-42c0-9acd-4ec5e8c2c588\",\"lease_id\":...tus\":\"pending_approval\""
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'inventory': [[[[[['too deep']]]]]]}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"id\":\"9c95323b-8074-4133-b44c-870d6c4ff88a\",\"lease_id\":...tus\":\"pending_approval\""
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'meters': [{'value': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}]}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"id\":\"85f335e8-6401-4948-beec-16f01d632b6d\",\"lease_id\":...tus\":\"pending_approval\""
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'evidence_ids': None}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'evidence_ids': ['x']}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'request_key': None}]",
+     "reason": "AssertionError: (201, b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"id\":\"9cb2ac27-b0bb-46a6-8ebe-9e78ec4d6502\",\"lease_id\":...tus\":\"pending_approval\""
+    },
+    {
+     "test": "test_handover_update_and_respond_typed_and_stale_conflicts",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_dispute_commands_typed_without_writes",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_checkout_command_typed_before_any_lookup",
+     "reason": "AssertionError: (404, b'{\"message\":\"No RentInvoice matches the given query.\",\"data\":null}')"
+    },
+    {
+     "test": "test_refund_requests_select_only_rental_attempts",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_change_collection_revisions_are_typed[{'expected_revision': 'oops'}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_change_collection_revisions_are_typed[{'lease_revision': []}]",
+     "reason": "AssertionError: (500, b'{\"message\":\"An error occurred.\",\"data\":null}')"
+    },
+    {
+     "test": "test_session_revoked_while_waiting_for_lock_rejects_command",
+     "reason": "AssertionError: b'{\"message\":\"Created successfully.\",\"data\":{\"resource\":{\"billing_invoices\":[],\"allowed_actions\":[\"cancel\",\"reply\",\"pr...fc66-4667-a0aa-c7e15682"
+    }
+   ],
+   "passed_before": [
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'expected_revision': True}]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'expected_revision': 1.5}]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'expected_revision': -1}]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'expected_revision': 1}]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'access_times': [1]}]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'access_times': {'a': 1}}]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'access_times': None}]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_malformed_fields_without_writes[{'evidence_ids': [None]}]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_non_object_bodies[body0]"
+    },
+    {
+     "test": "test_maintenance_create_rejects_non_object_bodies[text]"
+    },
+    {
+     "test": "test_maintenance_legacy_contracts_still_work"
+    },
+    {
+     "test": "test_maintenance_appointment_requires_aware_datetimes[{'appointment_at': '2030-01-01T10:00:00', 'appointment_ends_at': '2030-01-01T11:00:00'}]"
+    },
+    {
+     "test": "test_maintenance_appointment_requires_aware_datetimes[{'appointment_at': 'garbage', 'appointment_ends_at': '2030-01-01T11:00:00+02:00'}]"
+    },
+    {
+     "test": "test_maintenance_appointment_requires_aware_datetimes[{'appointment_at': '2030-01-01T10:00:00+02:00', 'appointment_ends_at': []}]"
+    },
+    {
+     "test": "test_maintenance_valid_stale_command_still_conflicts"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'expected_revision': True}]"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'expected_revision': 1.5}]"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'expected_revision': -1}]"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'expected_revision': 1}]"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'kind': 'sideways'}]"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'kind': []}]"
+    },
+    {
+     "test": "test_handover_create_rejects_malformed_fields_without_writes[{'evidence_ids': ['cffc868b-cd32-4219-b743-47f5dd3d8b00', 'cffc868b-cd32-4219-b743-47f5dd3d8b00', 'cffc868b-cd32-4219-b743-47f5dd3d8b00', 'cffc868b-cd32-4219-b743-47f5dd3d8b00', 'cffc868b-cd32-4219-b743-47f5dd3d8b00', 'cffc868b-cd32-4219-b743-47f5dd3d8b00']}]"
+    },
+    {
+     "test": "test_valid_rental_refund_request_still_created"
+    },
+    {
+     "test": "test_change_collection_revisions_are_typed[{'expected_revision': True}]"
+    },
+    {
+     "test": "test_change_collection_revisions_are_typed[{'request_key': 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'}]"
+    },
+    {
+     "test": "test_change_collection_revisions_are_typed[{'request_key': ['k']}]"
+    }
+   ]
+  },
+  "properties.tests.test_listing_input_matrix": {
+   "failed_before": [
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[revision string]",
+     "reason": "ValueError: invalid literal for int() with base 10: 'oops'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[revision list]",
+     "reason": "TypeError: int() argument must be a string, a bytes-like object or a real number, not 'list'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[revision float]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[schema bool]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[rooms object]",
+     "reason": "AttributeError: 'str' object has no attribute 'get'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[room null]",
+     "reason": "AttributeError: 'NoneType' object has no attribute 'get'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[room capacity bool]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[beds string]",
+     "reason": "AttributeError: 'str' object has no attribute 'get'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[bed null]",
+     "reason": "AttributeError: 'NoneType' object has no attribute 'get'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[shared_defaults list]",
+     "reason": "AttributeError: 'list' object has no attribute 'get'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[shared rules numbers]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[smoking string]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[rental_period text]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[offers object]",
+     "reason": "AttributeError: 'str' object has no attribute 'get'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[offer null]",
+     "reason": "AttributeError: 'NoneType' object has no attribute 'get'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[price infinity]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[price overflow]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[price too many digits]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[price too precise]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[terms list]",
+     "reason": "TypeError: cannot convert dictionary update sequence element #0 to a sequence"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[archived string]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[scope list]",
+     "reason": "TypeError: unhashable type: 'list'"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[too deep]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[too large]",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_inventory_rejects_duplicate_persisted_ids_and_keeps_valid_ids_stable",
+     "reason": "Failed: DID NOT RAISE <class 'rest_framework.exceptions.ValidationError'>"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[amenity object]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[deposit nan]",
+     "reason": "AssertionError: b'{\"message\":\"Created successfully.\",\"data\":{\"id\":\"4fd25e5c-62d2-4687-97c5-7f504c8d173f\",\"moderation\":{\"revision\":1,\"b...26-11-09T18:04:18.90677"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[deposit inf]",
+     "reason": "AssertionError: b'{\"message\":\"Created successfully.\",\"data\":{\"id\":\"a58020f4-6317-47d5-93f4-9ba5b60f399c\",\"moderation\":{\"revision\":1,\"b...26-11-09T18:04:18.92669"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[inventory bad revision]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[inventory infinite price]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[update-only main_image_id]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[update-only retained]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[update-only metadata]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[main_image url]",
+     "reason": "AssertionError: b'{\"message\":\"Created successfully.\",\"data\":{\"id\":\"88f7253c-09e9-4ccb-bebd-53d3b27d1803\",\"moderation\":{\"revision\":1,\"b...26-11-09T18:04:19.01308"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[main_image public id]",
+     "reason": "AssertionError: b'{\"message\":\"Created successfully.\",\"data\":{\"id\":\"f4664709-d148-43fe-b026-2e84624f0f75\",\"moderation\":{\"revision\":1,\"b...26-11-09T18:04:19.03663"
+    },
+    {
+     "test": "test_property_create_ignores_empty_update_only_keys",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'images_metadata': [{'id': '{image}', 'name': []}]}]",
+     "reason": "AssertionError: b'{\"message\":\"Property changes submitted for review.\",\"data\":{\"id\":\"1a2a652a-9fa5-49eb-89c6-bcc9564fa50f\",\"moderation\"...26-11-09T18:04:19.08247"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'images_metadata': [{'id': '{image}', 'description': 5}]}]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'images_metadata': [{'id': 'not-a-uuid'}]}]",
+     "reason": "AssertionError: b'{\"message\":\"Property changes submitted for review.\",\"data\":{\"id\":\"e6f65acd-2b02-4b92-a0a2-6fc03e2b31c5\",\"moderation\"...26-11-09T18:04:19.12440"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'images_metadata': [{'id': '{image}'}, {'id': '{image}'}]}]",
+     "reason": "AssertionError: b'{\"message\":\"Property changes submitted for review.\",\"data\":{\"id\":\"35df7941-93b1-4217-b419-ce4c3f9ea23a\",\"moderation\"...26-11-09T18:04:19.14797"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'retained_image_ids': ['{image}', '{image}']}]",
+     "reason": "AssertionError: b'{\"message\":\"Property changes submitted for review.\",\"data\":{\"id\":\"8f39036c-0833-472c-b699-ce7bdb9b8912\",\"moderation\"...26-11-09T18:04:19.18224"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'main_image_id': 'not-a-uuid'}]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'amenities': [{'wifi': True}]}]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[url string]",
+     "reason": "AssertionError: b'{\"message\":\"Upload confirmation is pending. Check the original upload before retrying.\",\"data\":null}'"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[public id string]",
+     "reason": "AssertionError: b'{\"message\":\"Upload confirmation is pending. Check the original upload before retrying.\",\"data\":null}'"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[unsupported data uri]",
+     "reason": "AssertionError: b'{\"message\":\"Upload confirmation is pending. Check the original upload before retrying.\",\"data\":null}'"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[bmp format]",
+     "reason": "AssertionError: b'{\"message\":\"Image uploaded successfully.\",\"data\":{\"id\":\"12929f0a-bbdc-4a2a-b3d0-128333b8515b\",\"image\":\"https://res.c...other\",\"created_at\":\"20"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[pixel bomb]",
+     "reason": "AssertionError: b'{\"message\":\"Image uploaded successfully.\",\"data\":{\"id\":\"c8406074-b58c-4881-a677-d5d2f2c7f479\",\"image\":\"https://res.c...other\",\"created_at\":\"20"
+    },
+    {
+     "test": "test_native_heic_listing_image_still_uploads",
+     "reason": "AssertionError: b'{\"message\":\"Image: Upload a valid image. The file you uploaded was either not an image or a corrupted image.\",\"data\":null}'"
+    },
+    {
+     "test": "test_listing_video_is_decoded_and_measured",
+     "reason": "assert 40 == 3"
+    },
+    {
+     "test": "test_invalid_listing_videos_fail_before_provider[ftyp-only garbage]",
+     "reason": "AssertionError: b'{\"message\":\"Created successfully.\",\"data\":{\"id\":\"6d29bfea-2bdb-44ff-8c0d-459db9e94aa3\",\"moderation\":{\"revision\":1,\"b...26-11-09T18:04:19.54816"
+    },
+    {
+     "test": "test_invalid_listing_videos_fail_before_provider[wrong signature]",
+     "reason": "AssertionError: b'{\"message\":\"Created successfully.\",\"data\":{\"id\":\"72040f62-a88c-42cc-9ee0-c9373dd61ff3\",\"moderation\":{\"revision\":1,\"b...26-11-09T18:04:19.63118"
+    },
+    {
+     "test": "test_invalid_listing_videos_fail_before_provider[over 60 seconds]",
+     "reason": "AssertionError: b'{\"message\":\"Created successfully.\",\"data\":{\"id\":\"fcc1fb1f-65a9-4920-86c1-fb6cc7ef55b0\",\"moderation\":{\"revision\":1,\"b...26-11-09T18:04:19.69052"
+    },
+    {
+     "test": "test_oversized_listing_video_rejected_by_declared_and_actual_bytes",
+     "reason": "AttributeError: module 'core_apps.properties' has no attribute 'listing_media'"
+    },
+    {
+     "test": "test_cover_replacement_at_capacity_is_a_controlled_validation",
+     "reason": "AssertionError: b'{\"message\":\"Property changes submitted for review.\",\"data\":{\"id\":\"420351c8-5562-40e9-943f-66db3d960da1\",\"moderation\"...26-11-09T18:04:19.73795"
+    },
+    {
+     "test": "test_pending_reservations_hold_capacity_for_cover_and_gallery",
+     "reason": "assert (200 == 400)"
+    }
+   ],
+   "passed_before": [
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[revision bool]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[room name list]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[price nan]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[price negative]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[price bool]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[price object]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[room_ids string]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[room_ids numbers]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[inherited string]"
+    },
+    {
+     "test": "test_inventory_rejects_malformed_shapes_with_validation_errors[too many rooms]"
+    },
+    {
+     "test": "test_inventory_preserves_exact_money_and_client_extension_keys"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[amenity number]"
+    },
+    {
+     "test": "test_property_create_rejects_malformed_inputs_without_writes[price infinity]"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'retained_image_ids': ['not-a-uuid']}]"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'retained_image_ids': [{'id': 1}]}]"
+    },
+    {
+     "test": "test_property_patch_rejects_malformed_metadata_without_writes[{'main_image_name': ['x']}]"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[bad base64]"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[not an image]"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[html as jpg]"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[empty]"
+    },
+    {
+     "test": "test_invalid_listing_images_fail_before_reservation_or_provider[truncated jpeg]"
+    },
+    {
+     "test": "test_valid_listing_images_still_upload[jpeg]"
+    },
+    {
+     "test": "test_valid_listing_images_still_upload[png]"
+    },
+    {
+     "test": "test_valid_listing_images_still_upload[webp]"
+    },
+    {
+     "test": "test_valid_listing_images_still_upload[base64-png]"
+    },
+    {
+     "test": "test_invalid_listing_videos_fail_before_provider[empty]"
+    }
+   ]
+  },
+  "users.tests.test_refresh_inputs": {
+   "failed_before": [
+    {
+     "test": "test_body_refresh_works_for_json_and_multipart[multipart]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_form_urlencoded_refresh_works",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_cookie_refresh_with_form_body_does_not_touch_immutable_data",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400[[]]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400[['token']]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400['token']",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400[5]",
+     "reason": "AssertionError: b'{\"message\":\"An error occurred.\",\"data\":null}'"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400[{'refresh': 5}]",
+     "reason": "AssertionError: b'{\"message\":\"Token is invalid\",\"data\":null}'"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400[{'refresh': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}]",
+     "reason": "AssertionError: b'{\"message\":\"Token is invalid\",\"data\":null}'"
+    }
+   ],
+   "passed_before": [
+    {
+     "test": "test_body_refresh_works_for_json_and_multipart[json]"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400[{'refresh': ['a']}]"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400[{'refresh': {'a': 1}}]"
+    },
+    {
+     "test": "test_malformed_refresh_bodies_are_400[{'refresh': True}]"
+    },
+    {
+     "test": "test_invalid_and_revoked_refresh_tokens_stay_401"
+    }
+   ]
+  },
+  "chat.tests.test_rich_attachments": {
+   "failed_before": [],
+   "passed_before": [
+    {
+     "test": "test_arbitrary_files_are_private_named_downloads[\\u0639\\u0642\\u062f \\u0627\\u0644\\u0625\\u064a\\u062c\\u0627\\u0631.pdf-%PDF-1.7\\ncontract\\n%%EOF]"
+    },
+    {
+     "test": "test_arbitrary_files_are_private_named_downloads[records.csv-name,amount\\nRental,2500]"
+    },
+    {
+     "test": "test_arbitrary_files_are_private_named_downloads[archive.zip-PK\\x03\\x04opaque archive bytes]"
+    },
+    {
+     "test": "test_arbitrary_files_are_private_named_downloads[custom.unrecognized-\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a\\x1b\\x1c\\x1d\\x1e\\x1f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\\x7f\\x80\\x81\\x82\\x83\\x84\\x85\\x86\\x87\\x88\\x89\\x8a\\x8b\\x8c\\x8d\\x8e\\x8f\\x90\\x91\\x92\\x93\\x94\\x95\\x96\\x97\\x98\\x99\\x9a\\x9b\\x9c\\x9d\\x9e\\x9f\\xa0\\xa1\\xa2\\xa3\\xa4\\xa5\\xa6\\xa7\\xa8\\xa9\\xaa\\xab\\xac\\xad\\xae\\xaf\\xb0\\xb1\\xb2\\xb3\\xb4\\xb5\\xb6\\xb7\\xb8\\xb9\\xba\\xbb\\xbc\\xbd\\xbe\\xbf\\xc0\\xc1\\xc2\\xc3\\xc4\\xc5\\xc6\\xc7\\xc8\\xc9\\xca\\xcb\\xcc\\xcd\\xce\\xcf\\xd0\\xd1\\xd2\\xd3\\xd4\\xd5\\xd6\\xd7\\xd8\\xd9\\xda\\xdb\\xdc\\xdd\\xde\\xdf\\xe0\\xe1\\xe2\\xe3\\xe4\\xe5\\xe6\\xe7\\xe8\\xe9\\xea\\xeb\\xec\\xed\\xee\\xef\\xf0\\xf1\\xf2\\xf3\\xf4\\xf5\\xf6\\xf7\\xf8\\xf9\\xfa\\xfb\\xfc\\xfd\\xfe\\xff]"
+    },
+    {
+     "test": "test_arbitrary_files_are_private_named_downloads[page.html-<!doctype html><script>alert(1)</script>]"
+    },
+    {
+     "test": "test_arbitrary_files_are_private_named_downloads[vector.svg-<svg xmlns=\"http://www.w3.org/2000/svg\" onload=\"alert(1)\"/>]"
+    },
+    {
+     "test": "test_arbitrary_files_are_private_named_downloads[setup.exe-MZ\\x90\\x00\\x03 opaque executable bytes]"
+    },
+    {
+     "test": "test_file_size_limit_and_empty_file"
+    },
+    {
+     "test": "test_location_roundtrip_replay_and_deleted_projection"
+    },
+    {
+     "test": "test_invalid_coordinates_never_become_a_message[None]"
+    },
+    {
+     "test": "test_invalid_coordinates_never_become_a_message[location1]"
+    },
+    {
+     "test": "test_invalid_coordinates_never_become_a_message[location2]"
+    },
+    {
+     "test": "test_invalid_coordinates_never_become_a_message[location3]"
+    },
+    {
+     "test": "test_invalid_coordinates_never_become_a_message[location4]"
+    },
+    {
+     "test": "test_invalid_coordinates_never_become_a_message[location5]"
+    },
+    {
+     "test": "test_invalid_coordinates_never_become_a_message[location6]"
+    },
+    {
+     "test": "test_invalid_waveforms_are_rejected[value0]"
+    },
+    {
+     "test": "test_invalid_waveforms_are_rejected[value1]"
+    },
+    {
+     "test": "test_invalid_waveforms_are_rejected[value2]"
+    },
+    {
+     "test": "test_invalid_waveforms_are_rejected[value3]"
+    },
+    {
+     "test": "test_invalid_waveforms_are_rejected[value4]"
+    },
+    {
+     "test": "test_invalid_waveforms_are_rejected[waveform]"
+    },
+    {
+     "test": "test_unsupported_provider_media_stays_uncertain_without_external_upload[file-100]"
+    },
+    {
+     "test": "test_unsupported_provider_media_stays_uncertain_without_external_upload[video-11534336]"
+    }
+   ]
+  }
+ }
+}

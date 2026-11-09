@@ -44,27 +44,47 @@ def disputes(request):
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
-    lease = _lease(request, request.data.get("lease_id"), lock=True)
-    request_key = request.data.get("request_key")
-    if not request_key:
-        raise ValidationError({"request_key": "Required."})
+    from ..rental_serializers_parts.command_serializers import (
+        DisputeCreateCommand,
+        validated,
+    )
+
+    from rest_framework.exceptions import NotFound
+    from core_apps.common.command_fields import is_uuid
+
+    # Authority keeps its historical precedence (verification 403, unknown or
+    # foreign lease 404); the complete body is then typed before any write.
+    body = request.data if hasattr(request.data, "get") else {}
+    lease_id = body.get("lease_id")
+    if not is_uuid(lease_id):
+        from ..providers import require_verified_rental_account
+
+        require_verified_rental_account(request.user)
+        raise NotFound()
+    lease = _lease(request, lease_id, lock=True)
+    command = validated(DisputeCreateCommand, request.data)
+    from core_apps.common.command_authority import recheck_session
+
+    recheck_session(request)
+    request_key = command["request_key"]
     operation = f"dispute.create.{lease.id}"
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])
-    kind = request.data.get("subject_kind")
+    kind = command["subject_kind"]
     model = SUBJECT_MODELS.get(kind)
     if not model:
         raise ValidationError({"subject_kind": "Unsupported dispute subject."})
-    subject = get_object_or_404(model, id=request.data.get("subject_id"))
+    subject = get_object_or_404(model, id=command["subject_id"])
     if getattr(subject, "lease_id", None) != lease.pk:
         raise ValidationError({"subject_id": "Subject does not belong to this lease."})
-    evidence_ids = request.data.get("evidence_ids", [])
+    evidence_ids = command["evidence_ids"]
     evidence = list(
         RentalEvidence.objects.filter(
             id__in=evidence_ids,
             lease=lease,
             malware_status=RentalEvidence.MalwareStatus.SAFE,
+            deleted_at__isnull=True,
         )
     )
     if len(evidence) != len(set(evidence_ids)):
@@ -74,7 +94,7 @@ def disputes(request):
         opened_by=request.user,
         subject_kind=kind,
         subject_id=subject.id,
-        reason=request.data.get("reason", ""),
+        reason=command["reason"],
     )
     item.evidence.set(evidence)
     return Response(
@@ -104,11 +124,18 @@ def dispute_detail(request, dispute_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def dispute_respond(request, dispute_id):
+    from ..rental_serializers_parts.command_serializers import (
+        DisputeRespondCommand,
+        validated,
+    )
+
     item = _dispute(request, dispute_id, allow_operations=True)
-    action = request.data.get("action") or request.data.get("decision") or "reply"
-    request_key = request.data.get("request_key")
-    if not request_key:
-        raise ValidationError({"request_key": "Required."})
+    data = request.data if hasattr(request.data, "get") else {}
+    action = data.get("action") or data.get("decision") or "reply"
+    if not isinstance(action, str) or action not in {"reply", "resolve", "reject"}:
+        raise ValidationError({"action": "Unsupported dispute action."})
+    command = validated(DisputeRespondCommand, request.data)
+    request_key = command["request_key"]
     operation = f"dispute.respond.{item.id}.{request.user.id}.{action}"
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
@@ -124,7 +151,10 @@ def dispute_respond(request, dispute_id):
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])
-        if item.revision != int(request.data.get("expected_revision", 0)):
+        from core_apps.common.command_authority import recheck_session
+
+        recheck_session(request)
+        if item.revision != command["expected_revision"]:
             raise RentalConflict("Dispute revision conflict.", code="stale_revision")
         if item.status != RentalDispute.Status.OPEN:
             raise RentalConflict(
@@ -139,7 +169,7 @@ def dispute_respond(request, dispute_id):
                 {
                     "id": str(uuid.uuid4()),
                     "author_id": str(request.user.id),
-                    "note": request.data.get("note", ""),
+                    "note": command["note"],
                     "at": timezone.now().isoformat(),
                 },
             ]
@@ -159,7 +189,7 @@ def dispute_respond(request, dispute_id):
                 if action == "resolve"
                 else RentalDispute.Status.REJECTED
             )
-            item.resolution = request.data.get("note", "")
+            item.resolution = command["note"]
             item.resolved_by = request.user
         else:
             raise ValidationError({"action": "Unsupported dispute action."})

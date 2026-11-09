@@ -39,31 +39,20 @@ def lease_handovers(request, lease_id):
         return Response(
             {"count": len(items), "next": None, "previous": None, "results": items}
         )
-    required = {
-        "kind",
-        "possession_on",
-        "condition",
-        "keys",
-        "meters",
-        "inventory",
-        "evidence_ids",
-        "request_key",
-        "expected_revision",
-    }
-    if not required.issubset(request.data):
-        raise ValidationError({"request": f"Required: {', '.join(sorted(required))}."})
-    if (
-        request.data["kind"] not in RentalHandover.Kind.values
-        or int(request.data["expected_revision"]) != 0
-    ):
-        raise ValidationError("Invalid handover kind or initial revision.")
-    operation = f"handover.create.{lease.id}.{request.data['kind']}"
+    from ..rental_serializers_parts.command_serializers import (
+        HandoverCreateCommand,
+        validated,
+    )
+
+    # A4-03: type the complete body before replay, locks or writes.
+    command = validated(HandoverCreateCommand, request.data)
+    operation = f"handover.create.{lease.id}.{command['kind']}"
     replay = replay_operation(
-        request.user, operation, request.data["request_key"], request.data
+        request.user, operation, command["request_key"], request.data
     )
     if replay:
         return Response(replay[0], status=replay[1])
-    evidence = _validate_evidence(lease, request.data["evidence_ids"])
+    evidence = _validate_evidence(lease, command["evidence_ids"])
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
         if (
@@ -80,30 +69,33 @@ def lease_handovers(request, lease_id):
             Lease.Status.ENDED,
         }:
             raise RentalConflict("Handover requires a paid active agreement.")
-        if request.data["kind"] == "move_in" and lease.status != Lease.Status.ACTIVE:
+        if command["kind"] == "move_in" and lease.status != Lease.Status.ACTIVE:
             raise RentalConflict("Move-in requires an active agreement.")
         replay = replay_operation(
-            request.user, operation, request.data["request_key"], request.data
+            request.user, operation, command["request_key"], request.data
         )
         if replay:
             return Response(replay[0], status=replay[1])
-        if lease.handovers.filter(kind=request.data["kind"]).exists():
+        from core_apps.common.command_authority import recheck_session
+
+        recheck_session(request)
+        if lease.handovers.filter(kind=command["kind"]).exists():
             raise RentalConflict("This handover already exists.")
         handover = RentalHandover.objects.create(
             lease=lease,
-            kind=request.data["kind"],
+            kind=command["kind"],
             status=RentalHandover.Status.PENDING_APPROVAL,
-            possession_on=request.data["possession_on"],
-            condition=request.data["condition"],
-            keys=request.data["keys"],
-            meters=request.data["meters"],
-            inventory=request.data["inventory"],
+            possession_on=command["possession_on"],
+            condition=command["condition"],
+            keys=command["keys"],
+            meters=command["meters"],
+            inventory=command["inventory"],
         )
         handover.evidence.set(evidence)
         output = remember_mutation(
             user=request.user,
             operation=operation,
-            request_key=request.data["request_key"],
+            request_key=command["request_key"],
             payload=request.data,
             request_subject_id=lease.id,
             result_subject_id=handover.id,
@@ -121,10 +113,14 @@ def handover_detail(request, handover_id):
     handover = _handover(request, handover_id)
     if request.method == "GET":
         return Response(handover_payload(handover, request.user))
-    expected = int(request.data.get("expected_revision", 0))
-    request_key = request.data.get("request_key")
-    if not request_key:
-        raise ValidationError({"request_key": "Required."})
+    from ..rental_serializers_parts.command_serializers import (
+        HandoverUpdateCommand,
+        validated,
+    )
+
+    command = validated(HandoverUpdateCommand, request.data)
+    expected = command["expected_revision"]
+    request_key = command["request_key"]
     operation = f"handover.update.{handover.id}"
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
@@ -134,16 +130,17 @@ def handover_detail(request, handover_id):
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])
+        from core_apps.common.command_authority import recheck_session
+
+        recheck_session(request)
         if handover.revision != expected:
             raise RentalConflict("Handover revision conflict.", code="stale_revision")
         if "edit_handover" not in handover_actions(request.user, handover):
             raise RentalConflict("This handover cannot be edited.")
-        evidence = _validate_evidence(
-            handover.lease, request.data.get("evidence_ids", [])
-        )
+        evidence = _validate_evidence(handover.lease, command["evidence_ids"])
         for field in ("possession_on", "condition", "keys", "meters", "inventory"):
-            if field in request.data:
-                setattr(handover, field, request.data[field])
+            if field in command:
+                setattr(handover, field, command[field])
         handover.approvals = []
         handover.status = RentalHandover.Status.PENDING_APPROVAL
         handover.revision += 1

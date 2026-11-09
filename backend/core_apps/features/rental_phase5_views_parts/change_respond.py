@@ -3,6 +3,7 @@
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from core_apps.common.command_fields import parse_revision, require_request_key
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -97,13 +98,17 @@ def change_detail(request, change_id, kind):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def change_respond(request, change_id, kind):
-    action = request.data.get("action") or request.data.get("decision")
-    if action not in {"accept", "reject", "request_changes"} or not request.data.get(
-        "request_key"
+    data = request.data if hasattr(request.data, "get") else {}
+    action = data.get("action") or data.get("decision")
+    if (
+        not isinstance(action, str)
+        or action not in {"accept", "reject", "request_changes"}
+        or not data.get("request_key")
     ):
         raise ValidationError(
             "accept/reject/request_changes and request_key are required."
         )
+    require_request_key(data)
     item = _change(request, change_id, kind)
     if kind == RentalChange.Kind.EXTERNAL_PAYMENT:
         from ..services.financial_authority import require_financial_actor
@@ -126,7 +131,7 @@ def change_respond(request, change_id, kind):
         )
         if replay:
             return Response(replay[0], status=replay[1])
-        if int(request.data.get("expected_revision", 0)) != item.revision:
+        if parse_revision(request.data, "expected_revision", default=0) != item.revision:
             raise RentalConflict("Change revision conflict.", code="stale_revision")
         if item.status not in {
             RentalChange.Status.PROPOSED,

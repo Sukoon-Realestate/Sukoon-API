@@ -110,15 +110,26 @@ def evaluate_owner_payables(lease):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def handover_respond(request, handover_id):
-    action = request.data.get("action") or request.data.get("decision")
-    if action not in {"accept", "dispute"} or not request.data.get("request_key"):
+    from ..rental_serializers_parts.command_serializers import (
+        HandoverRespondCommand,
+        validated,
+    )
+
+    data = request.data if hasattr(request.data, "get") else {}
+    action = data.get("action") or data.get("decision")
+    if (
+        not isinstance(action, str)
+        or action not in {"accept", "dispute"}
+        or not data.get("request_key")
+    ):
         raise ValidationError(
             "accept/dispute, expected_revision, and request_key are required."
         )
+    command = validated(HandoverRespondCommand, request.data)
     handover = _handover(request, handover_id)
     operation = f"handover.respond.{handover.id}.{request.user.id}"
     replay = replay_operation(
-        request.user, operation, request.data["request_key"], request.data
+        request.user, operation, command["request_key"], request.data
     )
     if replay:
         return Response(replay[0], status=replay[1])
@@ -126,11 +137,14 @@ def handover_respond(request, handover_id):
     with transaction.atomic():
         handover = _handover(request, handover_id, lock=True)
         replay = replay_operation(
-            request.user, operation, request.data["request_key"], request.data
+            request.user, operation, command["request_key"], request.data
         )
         if replay:
             return Response(replay[0], status=replay[1])
-        if int(request.data.get("expected_revision", 0)) != handover.revision:
+        from core_apps.common.command_authority import recheck_session
+
+        recheck_session(request)
+        if command["expected_revision"] != handover.revision:
             raise RentalConflict("Handover revision conflict.", code="stale_revision")
         if action not in handover_actions(request.user, handover):
             raise RentalConflict("This handover action is no longer available.")
@@ -175,7 +189,7 @@ def handover_respond(request, handover_id):
         output = remember_mutation(
             user=request.user,
             operation=operation,
-            request_key=request.data["request_key"],
+            request_key=command["request_key"],
             payload=request.data,
             request_subject_id=handover.id,
             result_subject_id=handover.id,

@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from core_apps.common.command_fields import parse_revision, require_request_key
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import PermissionDenied, ValidationError
@@ -22,9 +23,7 @@ from .maintenance_action import change_payload, _change
 @renderer_classes([FeatureJsonRenderer])
 def submit_change_for_signature(request, change_id, kind):
     item = _change(request, change_id, kind)
-    request_key = request.data.get("request_key")
-    if not request_key:
-        raise ValidationError({"request_key": "Required."})
+    request_key = require_request_key(request.data)
     if request.user != item.lease.owner:
         raise PermissionDenied("Only the owner can submit the change.")
     operation = f"rental_change.submit.{item.id}"
@@ -42,7 +41,7 @@ def submit_change_for_signature(request, change_id, kind):
             from ..services.planning_transitions import require_no_departure
 
             require_no_departure(item.lease)
-        if int(request.data.get("expected_revision", 0)) != item.revision:
+        if parse_revision(request.data, "expected_revision", default=0) != item.revision:
             raise RentalConflict("Change revision conflict.", code="stale_revision")
         from ..services.change_terms import require_current_change_base, validate_changed_terms
 
@@ -93,9 +92,7 @@ def submit_change_for_signature(request, change_id, kind):
 @renderer_classes([FeatureJsonRenderer])
 def change_signing_session(request, change_id, kind):
     item = _change(request, change_id, kind)
-    request_key = request.data.get("request_key")
-    if not request_key:
-        raise ValidationError({"request_key": "Required."})
+    request_key = require_request_key(request.data)
     operation = f"rental_change.signing_session.{item.id}.{request.user.id}"
     with transaction.atomic():
         item = _change(request, change_id, kind, lock=True)
@@ -111,7 +108,7 @@ def change_signing_session(request, change_id, kind):
         require_current_change_base(item)
         validate_changed_terms(item.terms)
         if (
-            int(request.data.get("expected_revision", 0)) != item.revision
+            parse_revision(request.data, "expected_revision", default=0) != item.revision
             or str(request.data.get("document_id")) != str(item.document_id)
             or request.data.get("document_hash") != item.document_hash
         ):

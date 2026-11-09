@@ -5,6 +5,7 @@ from decimal import Decimal, InvalidOperation
 from rest_framework.exceptions import ValidationError
 from .inheritable import SCOPES, AVAILABILITY, INHERITABLE, _resolve_id
 from .offer_revision import reviewed_content
+from .inventory_schema import validate_inventory_command
 
 
 def normalize_inventory(value, existing=None):
@@ -15,14 +16,12 @@ def normalize_inventory(value, existing=None):
             value = json.loads(value)
         except (TypeError, ValueError):
             raise ValidationError({"rental_inventory": "Must be valid JSON."})
-    if not isinstance(value, dict) or value.get("schema_version") != 1:
-        raise ValidationError({"rental_inventory": "schema_version 1 is required."})
+    # A2-05: the complete command shape is typed before any normalization.
+    expected_revision = validate_inventory_command(value)
     mode = value.get("mode")
-    if mode not in {"whole", "partial"}:
-        raise ValidationError({"rental_inventory": "mode must be whole or partial."})
     existing = existing or {}
     current_revision = int(existing.get("revision", 0))
-    if int(value.get("expected_revision", 0)) != current_revision:
+    if expected_revision != current_revision:
         raise ValidationError(
             {
                 "rental_inventory": f"inventory_revision_conflict: current revision is {current_revision}."
@@ -146,7 +145,8 @@ def normalize_inventory(value, existing=None):
         resolved = {key: shared_defaults.get(key) for key in inherited}
         resolved.update(terms)
         try:
-            if Decimal(str(resolved.get("price"))) < 0:
+            price = Decimal(str(resolved.get("price")))
+            if not price.is_finite() or price < 0:
                 raise InvalidOperation
         except (InvalidOperation, TypeError):
             raise ValidationError(

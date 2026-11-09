@@ -1,6 +1,7 @@
 import logging
 
 from django.shortcuts import get_object_or_404
+from core_apps.common.command_fields import require_object_body
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
@@ -73,6 +74,8 @@ class MessageCreateAPIView(APIView):
 
     def post(self, request, id):
         conversation = get_object_or_404(Conversation, id=id)
+        # Sprint 02: a JSON array/string/number body is a 400, not a TypeError.
+        require_object_body(request)
         if (
             conversation.kind in {"housing_group", "company_request"}
             or "kind" in request.data

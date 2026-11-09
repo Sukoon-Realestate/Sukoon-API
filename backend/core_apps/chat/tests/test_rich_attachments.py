@@ -73,6 +73,10 @@ def upload(client, base, name, content, kind="file", identity=None, **extra):
         ("records.csv", b"name,amount\nRental,2500"),
         ("archive.zip", b"PK\x03\x04opaque archive bytes"),
         ("custom.unrecognized", bytes(range(256))),
+        # A5-11 policy: names/MIME that a browser would render stay opaque.
+        ("page.html", b"<!doctype html><script>alert(1)</script>"),
+        ("vector.svg", b'<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)"/>'),
+        ("setup.exe", b"MZ\x90\x00\x03 opaque executable bytes"),
     ],
 )
 def test_arbitrary_files_are_private_named_downloads(
@@ -117,6 +121,7 @@ def test_arbitrary_files_are_private_named_downloads(
     assert b"".join(downloaded.streaming_content) == content
     assert downloaded["Content-Disposition"].startswith("attachment;")
     assert downloaded["X-Content-Type-Options"] == "nosniff"
+    assert downloaded["Content-Type"] == "application/octet-stream"
     assert downloaded["Cache-Control"] == "private, no-store"
     assert client_for(superuser).get(path).status_code == 403
     message = Message.objects.get(id=sent.json()["data"]["id"])

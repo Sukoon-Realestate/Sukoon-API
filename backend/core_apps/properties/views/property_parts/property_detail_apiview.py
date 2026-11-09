@@ -94,6 +94,9 @@ class PropertyCreateAPIView(generics.CreateAPIView):
             )
 
         def create_property():
+            from core_apps.common.command_authority import recheck_session
+
+            recheck_session(request)
             self.perform_create(serializer)
             data = serializer.data
             return data, status.HTTP_201_CREATED, serializer.instance.id
@@ -205,6 +208,10 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
                 from ...services.listing_lock import lock_listing
 
                 current = lock_listing(instance.pk)
+                from core_apps.common.command_authority import recheck_session
+
+                # Original session claims still hold after waiting for the lock.
+                recheck_session(request)
                 if current.owner_id != request.user.pk:
                     raise permissions.exceptions.PermissionDenied(
                         "Only the current owner can edit a listing."

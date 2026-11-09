@@ -93,51 +93,15 @@ def inspect(content, mime, *, student=False, digest=None, deep=True):
                 raise ValidationError(
                     {"file": "Student evidence accepts images and PDF only."}
                 )
-            from core_apps.chat.services.rich_media import _run
-
             with tempfile.TemporaryDirectory(prefix="sokoun-evidence-") as folder:
                 path = Path(folder) / ("source." + MIME_EXTENSIONS[mime])
                 path.write_bytes(content)
-                info = json.loads(
-                    _run(
-                        "ffprobe",
-                        ["-show_streams", "-show_format", "-of", "json", str(path)],
-                    )
-                )
-                video = [
-                    s for s in info.get("streams", []) if s.get("codec_type") == "video"
-                ]
-                duration = float(info["format"]["duration"]) * 1000
-                if (
-                    len(video) != 1
-                    or not math.isfinite(duration)
-                    or not 0 < duration <= VIDEO_DURATION_MS
-                ):
-                    raise ValueError()
-                stream = video[0]
-                if (
-                    stream.get("codec_name") not in {"h264", "hevc", "mpeg4"}
-                    or not 0 < stream["width"] * stream["height"] <= 20_000_000
-                ):
-                    raise ValueError()
-                if not any(
-                    x in info["format"].get("format_name", "").split(",")
-                    for x in ("mp4", "mov")
-                ):
-                    raise ValueError()
-                _run(
-                    "ffmpeg",
-                    ["-i", str(path), "-map", "0:v:0", "-f", "null", "-"],
-                    timeout=90,
-                )
                 meta.update(
-                    kind="video",
-                    duration_ms=round(duration),
-                    width=stream["width"],
-                    height=stream["height"],
+                    inspect_video_path(path, max_duration_ms=VIDEO_DURATION_MS)
                 )
     except (
         ValueError,
+        TypeError,
         KeyError,
         OSError,
         UnidentifiedImageError,
@@ -150,3 +114,44 @@ def inspect(content, mime, *, student=False, digest=None, deep=True):
             }
         ) from error
     return meta
+
+
+VIDEO_CODECS = {"h264", "hevc", "mpeg4"}
+VIDEO_MAX_PIXELS = 20_000_000
+
+
+def inspect_video_path(path, *, max_duration_ms):
+    """Bounded decode of one MP4/QuickTime video file (shared policy).
+
+    ``ffprobe`` reads the container; ``ffmpeg`` then decodes the first video
+    stream with a time limit, so the duration, codec, dimensions and container
+    are measured from the bytes rather than trusted from the client. Raises
+    ``ValueError`` for content outside the policy; tool absence surfaces as the
+    chat media ``ChatUnavailable`` (503, fail closed).
+    """
+    from core_apps.chat.services.rich_media import _run
+
+    info = json.loads(
+        _run("ffprobe", ["-show_streams", "-show_format", "-of", "json", str(path)])
+    )
+    video = [s for s in info.get("streams", []) if s.get("codec_type") == "video"]
+    duration = float(info["format"]["duration"]) * 1000
+    if len(video) != 1 or not math.isfinite(duration) or not 0 < duration <= max_duration_ms:
+        raise ValueError("duration")
+    stream = video[0]
+    if (
+        stream.get("codec_name") not in VIDEO_CODECS
+        or not 0 < stream["width"] * stream["height"] <= VIDEO_MAX_PIXELS
+    ):
+        raise ValueError("stream")
+    if not any(
+        x in info["format"].get("format_name", "").split(",") for x in ("mp4", "mov")
+    ):
+        raise ValueError("container")
+    _run("ffmpeg", ["-i", str(path), "-map", "0:v:0", "-f", "null", "-"], timeout=90)
+    return {
+        "kind": "video",
+        "duration_ms": round(duration),
+        "width": stream["width"],
+        "height": stream["height"],
+    }

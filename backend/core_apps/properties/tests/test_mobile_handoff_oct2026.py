@@ -38,10 +38,12 @@ def generate_image_file(name="photo.jpg"):
     return SimpleUploadedFile(name, file.read(), content_type="image/jpeg")
 
 
-def generate_video_file(name="tour.mp4"):
-    return SimpleUploadedFile(
-        name, b"dummy-mp4-video-content-stream", content_type="video/mp4"
-    )
+def generate_video_file(name="tour.mp4", seconds=40):
+    # Sprint 02 (A2-06): listing video bytes are decoded and measured, so the
+    # fixture must be a real MP4 (previously opaque dummy bytes were accepted).
+    from .media_samples import real_mp4
+
+    return real_mp4(seconds, name)
 
 
 @pytest.fixture

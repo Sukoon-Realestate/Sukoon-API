@@ -30,16 +30,21 @@ from .owner_payables import _validated_navigation, apply_fake_payment_event
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def rent_invoice_checkout(request, invoice_id):
+    from ..rental_serializers_parts.command_serializers import (
+        RentCheckoutCommand,
+        validated,
+    )
+
     required = {"invoice_id", "quote_id", "expected_revision", "request_key"}
-    if not required.issubset(request.data):
+    if not hasattr(request.data, "get") or not required.issubset(request.data):
         raise ValidationError({"request": f"Required: {', '.join(sorted(required))}."})
-    if str(request.data["invoice_id"]) != str(invoice_id):
+    # A4-03: typed before any provider capability check, lock or write.
+    command = validated(RentCheckoutCommand, request.data)
+    if str(command["invoice_id"]) != str(invoice_id):
         raise ValidationError({"invoice_id": "Must match the path invoice."})
-    try:
-        request_key = uuid.UUID(str(request.data["request_key"]))
-        quote_id = uuid.UUID(str(request.data["quote_id"]))
-    except ValueError:
-        raise ValidationError("quote_id and request_key must be UUIDs.")
+    request_key = command["request_key"]
+    quote_id = command["quote_id"]
+    expected_revision = command["expected_revision"]
     from ..services.paymob_client import checkout_ready
     from ..models import PaymobPayment
 
@@ -53,19 +58,17 @@ def rent_invoice_checkout(request, invoice_id):
     ):
         from ..services.paymob_payments import checkout, rental_response
 
-        try:
-            expected = int(request.data["expected_revision"])
-        except (ValueError, TypeError):
-            raise ValidationError(
-                {"expected_revision": "An integer revision is required."}
-            )
-        command = {
-            **request.data,
-            "request_key": request_key,
-            "quote_id": quote_id,
-            "expected_revision": expected,
-        }
-        attempt = checkout(request.user, invoice_id, command, rental=True)
+        attempt = checkout(
+            request.user,
+            invoice_id,
+            {
+                **request.data,
+                "request_key": request_key,
+                "quote_id": quote_id,
+                "expected_revision": expected_revision,
+            },
+            rental=True,
+        )
         return Response(rental_response(attempt), status=status.HTTP_201_CREATED)
     operation = f"invoice.checkout.{invoice_id}"
     with transaction.atomic():
@@ -84,13 +87,16 @@ def rent_invoice_checkout(request, invoice_id):
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])
+        from core_apps.common.command_authority import recheck_session
+
+        recheck_session(request)
         if not invoice_payment_allowed(request.user, invoice):
             raise RentalConflict("This invoice is not payable.")
         quote = get_object_or_404(
             PaymentQuote.objects.select_for_update(), id=quote_id, invoice=invoice
         )
         if (
-            int(request.data["expected_revision"]) != invoice.revision
+            expected_revision != invoice.revision
             or quote.invoice_revision != invoice.revision
         ):
             raise RentalConflict("Invoice revision conflict.", code="stale_revision")

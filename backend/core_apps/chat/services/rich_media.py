@@ -118,7 +118,12 @@ def voice_waveform(path):
 
 
 def inspect_file(path):
-    # Arbitrary files are opaque downloads. They are never executed or served inline.
+    # Explicit policy (A5-11, Sprint 02; product sign-off pending): ``kind=file``
+    # is a deliberately opaque download of any type within the byte cap. It is
+    # stored privately, served only to current members as application/octet-stream
+    # with Content-Disposition: attachment and nosniff, never executed, rendered
+    # inline or content-inspected. A future allowlist/malware-scan policy must
+    # quarantine until inspected and block bind/download before approval.
     return (
         Path(path).read_bytes(),
         None,

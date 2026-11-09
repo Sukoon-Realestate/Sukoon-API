@@ -9,7 +9,8 @@ from ...models import City, Governorate, Property, PropertyType, District
 from ..location import PublicUUIDRelatedField
 from ...services import PropertyService
 from ...rental_inventory import normalize_inventory
-from .property_list_serializer import CloudinaryMediaField
+from core_apps.common.command_fields import StrictCharField
+from ...listing_media import ListingImageField, ListingVideoField
 from .property_detail_serializer import PropertyDetailSerializer
 
 
@@ -22,17 +23,18 @@ class PropertySerializer(PropertyValidationMixin, serializers.ModelSerializer):
     price = serializers.DecimalField(
         max_digits=12, decimal_places=2, required=False, default=0
     )
-    main_image = CloudinarySerializerField(required=False, allow_null=True)
+    # A2-06: actual uploads only; provider references are server-owned.
+    main_image = ListingImageField(required=False, allow_null=True)
     main_image_id = serializers.CharField(
-        required=False, allow_null=True, allow_blank=True
+        required=False, allow_null=True, allow_blank=True, max_length=64
     )
-    main_image_name = serializers.CharField(
-        required=False, allow_blank=True, default=""
+    main_image_name = StrictCharField(
+        required=False, allow_blank=True, default="", max_length=255
     )
-    main_image_description = serializers.CharField(
-        required=False, allow_blank=True, default=""
+    main_image_description = StrictCharField(
+        required=False, allow_blank=True, default="", max_length=4000
     )
-    video = CloudinaryMediaField(required=False, allow_null=True)
+    video = ListingVideoField(required=False, allow_null=True)
     video_duration = serializers.IntegerField(
         required=False, allow_null=True, min_value=1, max_value=60
     )

@@ -16,7 +16,11 @@ class PropertyMediaMixin:
         locked_property = Property.objects.select_for_update().get(
             pkid=property_obj.pkid
         )
-        if locked_property.images.count() >= 25:
+        from ..listing_capacity import used_capacity
+        from ...listing_media import LISTING_IMAGE_CAP
+
+        # Pending recoverable uploads hold capacity too (A2-04).
+        if used_capacity(locked_property) >= LISTING_IMAGE_CAP:
             raise ValidationError(
                 {"detail": "A property cannot have more than 25 images."}
             )

@@ -134,6 +134,19 @@ class PropertyUpdateMixin:
 
         # 3. Handle cover photo replacement / selection
         if main_image_file:
+            # A2-04: a new cover is a new image. It shares the gallery's cap,
+            # counted after this command's own removals and including pending
+            # upload reservations, under the listing lock taken above.
+            from ..listing_capacity import require_capacity
+
+            try:
+                require_capacity(property_obj)
+            except ValidationError as error:
+                raise ValidationError(
+                    {
+                        "main_image": f"{error.detail[0]} Remove an image (retained_image_ids) or choose an existing cover (main_image_id)."
+                    }
+                )
             new_name = (
                 (main_image_name or "").strip() if main_image_name is not None else ""
             )
