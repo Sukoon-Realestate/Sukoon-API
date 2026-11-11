@@ -43,7 +43,7 @@ def changed(item, reason):
     from ..rental_lifecycle.cases import open_system_case
     from ..rental_phase6 import evaluate_financial_closure
     from ..rental_lifecycle.common import audit
-    from ...rental_phase4_views_parts.handover_respond import evaluate_owner_payables
+    from ..payable_eligibility import evaluate_owner_payables
     from .projection import blockers
     from django.utils import timezone
 

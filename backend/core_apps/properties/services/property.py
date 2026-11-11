@@ -1,3 +1,4 @@
+from ..amenities import AMENITY_FIELDS
 from typing import Optional
 from decimal import Decimal
 
@@ -41,15 +42,4 @@ class PropertyService(
         "roof": "روف",
     }
 
-    SUPPORTED_AMENITIES_MAP = {
-        "wifi": "has_wifi",
-        "elevator": "has_elevator",
-        "garage": "has_garage",
-        "security": "has_security",
-        "balcony": "has_balcony",
-        "air_conditioning": "has_air_conditioning",
-        "near_metro": "near_metro",
-        "natural_gas": "has_natural_gas",
-        "electricity_meter": "has_electricity_meter",
-        "water_meter": "has_water_meter",
-    }
+    SUPPORTED_AMENITIES_MAP = AMENITY_FIELDS

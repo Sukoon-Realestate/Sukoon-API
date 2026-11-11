@@ -111,7 +111,7 @@ def test_first_page_has_authoritative_metadata(endpoint):
         next_page="2",
     )
     endpoint.service.assert_called_once_with(
-        **{endpoint.service_filter: None, "search": None}
+        **{endpoint.service_filter: None, "search": None, "paginated": True}
     )
     endpoint.users.get.assert_called_once_with(pk=1)
 
@@ -130,7 +130,7 @@ def test_exact_search_does_not_turn_result_length_into_page_size(endpoint):
     )
     assert_page(response, body, rows=endpoint.rows[:1], page=1, total=1, pages=1)
     endpoint.service.assert_called_once_with(
-        **{endpoint.service_filter: endpoint.query_value, "search": "Record 0"}
+        **{endpoint.service_filter: endpoint.query_value, "search": "Record 0", "paginated": True}
     )
 
 

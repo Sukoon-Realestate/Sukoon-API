@@ -523,6 +523,9 @@ def complete_signature(session, *, reconcile=False):
     )
     from ..rental_phase3 import generate_billing_schedule
 
+    from ..document_intents import contract
+
+    contract(lease)
     generate_billing_schedule(lease)
 
 

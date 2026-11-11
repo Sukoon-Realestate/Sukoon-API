@@ -81,19 +81,8 @@ class PropertyStatisticsMixin:
         ):
             visit_requests_count = total_visits_qs.count()
 
-        confirmed_visits = period_visits_qs.filter(
-            status=PropertyVisit.Status.CONFIRMED
-        ).count()
-        rejected_visits = period_visits_qs.filter(
-            status=PropertyVisit.Status.REJECTED
-        ).count()
-        decided_visits = confirmed_visits + rejected_visits
-        if decided_visits > 0:
-            acceptance_rate = round((confirmed_visits / decided_visits) * 100)
-        elif visit_requests_count > 0:
-            acceptance_rate = round((confirmed_visits / visit_requests_count) * 100)
-        else:
-            acceptance_rate = 0
+        from ..owner_statistics import visit_acceptance
+        acceptance_rate, decided_visits = visit_acceptance(period_visits_qs)
 
         # 3. Saved count
         saved_count = property_obj.saves.count() + property_obj.favorites.count()
@@ -183,6 +172,7 @@ class PropertyStatisticsMixin:
             "visit_requests_count": visit_requests_count,
             "views_count": display_views,
             "acceptance_rate": acceptance_rate,
+            "handled_visits_count": decided_visits,
             "saved_count": saved_count,
             "views_last_14_days": views_last_14_days,
             "top_search_criteria": top_search_criteria,

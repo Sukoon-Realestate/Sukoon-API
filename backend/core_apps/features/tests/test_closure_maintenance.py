@@ -73,12 +73,13 @@ def test_start_requires_current_exact_window(approved_window, minutes, allowed):
 
 def test_missed_window_reproposal_needs_new_consent(approved_window):
     owner, tenant, item, start = approved_window
+    missed_key = str(uuid.uuid4())
     with patch("django.utils.timezone.now", return_value=start + timedelta(hours=2)):
-        response = send(tenant, item, "report_missed", request_key="stable-missed")
+        response = send(tenant, item, "report_missed", request_key=missed_key)
         assert response.status_code == 200
         # Replay the original revision/key yields exactly the same event.
         assert (
-            send(tenant, item, "report_missed", request_key="stable-missed").data
+            send(tenant, item, "report_missed", request_key=missed_key).data
             == response.data
         )
         item.refresh_from_db()

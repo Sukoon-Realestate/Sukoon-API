@@ -48,8 +48,8 @@ def test_request_language_controls_owner_copy(auth_client, header, query, expect
     assert data["stats"] == {
         "properties_count": 0, "properties_label": "عقارات" if arabic else "Properties",
         "reviews_count": 0, "reviews_label": "تقييم" if arabic else "Reviews",
-        "acceptance_rate": 100, "acceptance_label": "قبول" if arabic else "Acceptance",
-        "formatted_acceptance_rate": "100%",
+        "acceptance_rate": None, "handled_visits_count": 0, "acceptance_label": "قبول" if arabic else "Acceptance",
+        "formatted_acceptance_rate": None,
     }
     assert data["privacy_notice"] == {"icon": "lock", "text": (
         "رقمك لا يُعرض للمستأجرين – يظهر فقط بعد قبول الزيارة" if arabic else

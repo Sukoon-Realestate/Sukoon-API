@@ -23,7 +23,8 @@ from ..services.rental_phase2 import (
     replay_operation,
     fingerprint,
 )
-from .handover_respond import evaluate_owner_payables, payout_payload
+from ..services.payable_eligibility import evaluate_owner_payables
+from .handover_respond import payout_payload
 
 
 @api_view(["GET"])

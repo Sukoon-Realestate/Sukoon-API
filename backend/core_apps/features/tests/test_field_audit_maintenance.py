@@ -96,16 +96,8 @@ def test_exact_cost_version_validation_replay_and_authorization(phase5_lease):
         response = client.post(command, malformed, format="json")
         assert response.status_code == 400 and response.json()["data"] is None
     assert client_for(owner).post(command, body, format="json").status_code == 403
-    assert (
-        client.post(command, {**body, "cost_version": 2}, format="json").status_code
-        == 409
-    )
-    assert (
-        client.post(
-            command, {**body, "expected_revision": 99}, format="json"
-        ).status_code
-        == 409
-    )
+    assert client.post(command, {**body, "cost_version": 2}, format="json").status_code == 409
+    assert client.post(command, {**body, "expected_revision": 99}, format="json").status_code == 409
     stranger = type(tenant).objects.create_user(
         email="maintenance-stranger@example.com", password="pass"
     )
@@ -204,3 +196,68 @@ def test_missing_null_or_nontext_access_times_are_not_stored(phase5_lease, extra
     )
     assert response.status_code == 400 and response.json()["data"] is None
     assert not MaintenanceRequest.objects.filter(lease=lease).exists()
+
+
+@pytest.mark.parametrize("revision", [None, True, "invalid", [], {}])
+def test_maintenance_revisions_reject_untyped_values_without_writes(
+    phase5_lease, revision  # noqa: F811
+):
+    owner, tenant, lease = phase5_lease
+    item = MaintenanceRequest.objects.create(
+        lease=lease,
+        reporter=tenant,
+        title="Repair",
+        description="Repair",
+        category="plumbing",
+        priority="normal",
+    )
+    path = f"/api/v1/features/v1/maintenance-requests/{item.id}/actions/"
+    response = client_for(owner).post(
+        path,
+        {"action": "acknowledge", "request_key": str(uuid.uuid4()), "expected_revision": revision},
+        format="json",
+    )
+    assert response.status_code == 400
+    item.refresh_from_db()
+    assert item.revision == 1
+    assert not item.events.exists()
+
+
+@pytest.mark.parametrize(
+    "start,end",
+    [
+        (None, None),
+        ({}, []),
+        ("2027-01-01", "2027-01-02"),
+        ("2027-01-01T12:00:00", "2027-01-01T13:00:00"),
+        ("bad", "bad"),
+    ],
+)
+def test_maintenance_dates_are_defined_errors_without_events(
+    phase5_lease, start, end  # noqa: F811
+):
+    owner, tenant, lease = phase5_lease
+    item = MaintenanceRequest.objects.create(
+        lease=lease,
+        reporter=tenant,
+        title="Repair",
+        description="Repair",
+        category="plumbing",
+        priority="normal",
+    )
+    response = client_for(owner).post(
+        f"/api/v1/features/v1/maintenance-requests/{item.id}/actions/",
+        {
+            "action": "propose_appointment",
+            "request_key": str(uuid.uuid4()),
+            "expected_revision": 1,
+            "appointment_at": start,
+            "appointment_ends_at": end,
+        },
+        format="json",
+    )
+    assert response.status_code == 400
+    item.refresh_from_db()
+    assert item.revision == 1
+    assert item.appointment_at is None
+    assert not item.events.exists()

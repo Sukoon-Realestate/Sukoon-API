@@ -121,16 +121,8 @@ def send_group_message(conversation, sender, data):
         conversation=conversation, sender=sender, client_message_id=client_id
     ).first()
     if existing:
-        legacy_match = (
-            conversation.kind == "direct"
-            and not existing.payload_fingerprint
-            and existing.kind == "text"
-            and payload["kind"] == "text"
-            and existing.content == payload["content"]
-            and not payload["attachment_ids"]
-            and not payload["reply_to_message_id"]
-        )
-        if existing.payload_fingerprint != fingerprint and not legacy_match:
+        from .send_receipts import preserve_original_send
+        if preserve_original_send(existing) != fingerprint:
             raise ChatConflict()
         if existing.sequence < participant.visible_from_sequence:
             raise ChatConflict(

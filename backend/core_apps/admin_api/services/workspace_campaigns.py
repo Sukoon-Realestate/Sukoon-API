@@ -56,8 +56,10 @@ def eligible_spaces(user, audience):
         if audience == 'landlords':
             return spaces & {'owner'}
         if audience == 'tenants':
-            personal = PropertyVisit.objects.filter(tenant=user, company__isnull=True,
-                academic_plan__isnull=True, groupprocess__isnull=True).exists()
+            personal = PropertyVisit.objects.filter(
+                tenant=user, company__isnull=True, academic_plan__isnull=True,
+                groupprocess__isnull=True,
+            ).exists()
             return {'individual'} if personal else set()
         return spaces
     if StudentProfile.objects.filter(user=user).exists():
@@ -159,15 +161,19 @@ def preview(actor, data):
     opted_in = NotificationScopePreference.objects.filter(
         promotions_and_updates=True
     ).values("user_id")
-    candidates = list(
-        User.objects.filter(is_active=True)
+    candidates = (
+        User.objects.filter(is_active=True, closed_at__isnull=True)
         .filter(Q(settings__promotions_and_updates=True) | Q(pk__in=opted_in))
-        .order_by("pk")[:5001]
+        .order_by("pk")
     )
-    if len(candidates) > 5000:
-        raise ValidationError("Narrow the audience to at most 5000 accounts.")
     targets = []
-    for user in candidates:
+    # Scan budget and actual eligible-recipient cap are independent. Iterate
+    # without materializing the broad opted-in population.
+    scan_limit = getattr(settings, "ADMIN_CAMPAIGN_SCAN_LIMIT", 100000)
+    recipient_limit = getattr(settings, "ADMIN_CAMPAIGN_RECIPIENT_LIMIT", 5000)
+    for scanned, user in enumerate(candidates.iterator(chunk_size=500), 1):
+        if scanned > scan_limit:
+            raise ValidationError({"audience": "Campaign scan budget exceeded; narrow the audience."})
         spaces = consented_spaces(user, audience)
         if not spaces:
             continue
@@ -178,6 +184,8 @@ def preview(actor, data):
             else None
         )
         targets.append((user, sorted(spaces), scope, device))
+        if len(targets) > recipient_limit:
+            raise ValidationError({"audience": f"Narrow the audience to at most {recipient_limit} eligible accounts."})
     snapshot_digest = fingerprint(
         {
             "content": digest,

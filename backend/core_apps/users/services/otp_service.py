@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.mail import send_mail
+from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError, APIException
@@ -18,9 +19,7 @@ logger = logging.getLogger(__name__)
 
 # * OTP Configuration Constants
 OTP_LENGTH: int = 6
-OTP_EXPIRATION_SECONDS: int = getattr(
-    settings, "OTP_EXPIRATION_SECONDS", 600
-)  # ? 10 minutes
+OTP_EXPIRATION_SECONDS: int = getattr(settings, "OTP_EXPIRATION_SECONDS", 600)  # ? 10 minutes
 OTP_COOLDOWN_SECONDS: int = getattr(settings, "OTP_COOLDOWN_SECONDS", 60)  # ? 1 minute
 MAX_OTP_ATTEMPTS: int = 5
 
@@ -28,7 +27,9 @@ MAX_OTP_ATTEMPTS: int = 5
 class OTPDeliveryUnavailable(APIException):
     status_code = 503
     default_code = "otp_delivery_unconfirmed"
-    default_detail = "Email delivery could not be confirmed. Wait briefly, then request another code."
+    default_detail = (
+        "Email delivery could not be confirmed. Wait briefly, then request another code."
+    )
 
 
 def generate_otp(length: int = OTP_LENGTH) -> str:
@@ -106,6 +107,7 @@ def send_otp_email(email: str, otp: str, user_name: str = "", *, action_expires_
         return False
 
 
+@transaction.atomic
 def create_and_send_otp(user: Any) -> str:
     """
     ? Generates a new OTP, stores it in the cache with attempt tracking,
@@ -115,22 +117,21 @@ def create_and_send_otp(user: Any) -> str:
     if not email:
         raise ValidationError({"email": _("User must have a valid email address.")})
 
-    from django.db import transaction
-
+    user = get_user_model().objects.select_for_update().get(pk=user.pk)
+    if not user.is_active:
+        raise ValidationError({"email": _("This account is inactive.")})
+    email = user.email.strip().lower()
     otp = generate_otp()
     cache_key = f"otp:{email}"
-    # A1-04: every challenge read/write for an account happens under its user row
-    # lock, so a concurrent failed attempt cannot write an older challenge back.
-    with transaction.atomic():
-        user = get_user_model().objects.select_for_update().get(pk=user.pk)
-        cache_data = {
-            "otp": otp,
-            "attempts": 0,
-            "security_epoch": user.security_epoch,
-            "user_id": str(getattr(user, "id", "")),
-            "expires_at": time.time() + OTP_EXPIRATION_SECONDS,
-        }
-        cache.set(cache_key, cache_data, timeout=OTP_EXPIRATION_SECONDS)
+    cache_data = {
+        "otp": otp,
+        "attempts": 0,
+        "security_epoch": user.security_epoch,
+        "user_id": str(getattr(user, "id", "")),
+        "expires_at": time.time() + OTP_EXPIRATION_SECONDS,
+    }
+
+    cache.set(cache_key, cache_data, timeout=OTP_EXPIRATION_SECONDS)
 
     user_name = getattr(user, "get_full_name", "") or getattr(user, "first_name", "")
     if not send_otp_email(email=email, otp=otp, user_name=user_name):
@@ -142,7 +143,27 @@ def create_and_send_otp(user: Any) -> str:
     return otp
 
 
+@transaction.atomic
 def verify_email_otp(email: str, otp: str) -> Any:
+    # Authoritative cache reads/mutations are serialized by the same durable
+    # user lock, including creation and resend. Preserve the public missing-code
+    # response before resolving a user; the record is re-read under the lock.
+    if not email:
+        raise ValidationError({"email": _("Email is required.")})
+    if not otp:
+        raise ValidationError({"otp": _("Verification code is required.")})
+    if cache.get(f"otp:{email.strip().lower()}") is None:
+        raise ValidationError(
+            {"otp": _("The verification code has expired or is invalid. Please request a new one.")}
+        )
+    try:
+        user = get_user_model().objects.select_for_update().get(email__iexact=email.strip().lower())
+    except get_user_model().DoesNotExist:
+        raise ValidationError({"email": _("User with this email does not exist.")})
+    return _verify_email_otp_locked(email, otp, user)
+
+
+def _verify_email_otp_locked(email: str, otp: str, user: Any) -> Any:
     """
     ? Validates the provided OTP against the cached record.
     ? Marks email possession only; identity review is an independent decision.
@@ -154,73 +175,50 @@ def verify_email_otp(email: str, otp: str) -> Any:
 
     normalized_email = email.strip().lower()
     cache_key = f"otp:{normalized_email}"
-    expired = ValidationError(
-        {
-            "otp": _(
-                "The verification code has expired or is invalid. Please request a new one."
-            )
-        }
-    )
-    User = get_user_model()
-    from django.db import transaction
+    record = cache.get(cache_key)
 
-    account = User.objects.filter(email__iexact=normalized_email).only("pk").first()
-    if account is None:
-        if cache.get(cache_key):
-            raise ValidationError({"email": _("User with this email does not exist.")})
-        raise expired
-
-    # A1-04: read, count, compare and consume the challenge under the account's row
-    # lock. Parallel attempts are serialized, so the attempt budget cannot be
-    # exceeded by lost increments and exactly one matching request consumes the code.
-    with transaction.atomic():
-        user = User.objects.select_for_update().get(pk=account.pk)
-        record = cache.get(cache_key)
-        deadline = record.get("expires_at", 0) if record else 0
-        if not record or deadline <= time.time():
-            # Legacy records have no trustworthy original deadline. Require a new
-            # code rather than extending their unknown lifetime during rollout.
-            cache.delete(cache_key)
-            raise expired
-
-        # * Prevent brute-force attempts
-        attempts = record.get("attempts", 0)
-        if attempts >= MAX_OTP_ATTEMPTS:
-            cache.delete(cache_key)
-            raise ValidationError(
-                {
-                    "otp": _(
-                        "Too many failed attempts. Please request a new verification code."
-                    )
-                }
-            )
-
-        cached_otp = str(record.get("otp", ""))
-        submitted_otp = str(otp).strip()
-
-        if not secrets.compare_digest(cached_otp, submitted_otp):
-            record["attempts"] = attempts + 1
-            # The original deadline is preserved; failures never extend it.
-            cache.set(cache_key, record, timeout=max(1, ceil(deadline - time.time())))
-            raise ValidationError({"otp": _("Invalid verification code.")})
-
-        if record.get("security_epoch", 0) != user.security_epoch:
-            cache.delete(cache_key)
-            raise ValidationError(
-                {"otp": _("Request a new verification code after account recovery.")}
-            )
-        if not user.is_active:
-            raise ValidationError({"email": _("This account is inactive.")})
-        # Consume before commit; a concurrent request then finds no challenge.
+    deadline = record.get("expires_at", 0) if record else 0
+    if not record or deadline <= time.time():
+        # Legacy records have no trustworthy original deadline. Require a new
+        # code rather than extending their unknown lifetime during rollout.
         cache.delete(cache_key)
-        cache.delete(f"otp_cooldown:{normalized_email}")
-        user.is_email_verified = True
-        user.save(update_fields=["is_email_verified"])
+        raise ValidationError(
+            {"otp": _("The verification code has expired or is invalid. Please request a new one.")}
+        )
+
+    # * Prevent brute-force attempts
+    attempts = record.get("attempts", 0)
+    if attempts >= MAX_OTP_ATTEMPTS:
+        cache.delete(cache_key)
+        raise ValidationError(
+            {"otp": _("Too many failed attempts. Please request a new verification code.")}
+        )
+
+    cached_otp = str(record.get("otp", ""))
+    submitted_otp = str(otp).strip()
+
+    if not secrets.compare_digest(cached_otp, submitted_otp):
+        record["attempts"] = attempts + 1
+        cache.set(cache_key, record, timeout=max(1, ceil(deadline - time.time())))
+        raise ValidationError({"otp": _("Invalid verification code.")})
+
+    if record.get("security_epoch", 0) != user.security_epoch:
+        cache.delete(cache_key)
+        raise ValidationError({"otp": _("Request a new verification code after account recovery.")})
+    if not user.is_active:
+        raise ValidationError({"email": _("This account is inactive.")})
+    user.is_email_verified = True
+    user.save(update_fields=["is_email_verified"])
+
+    # * Invalidate OTP cache and cooldown
+    cache.delete(cache_key)
+    cache.delete(f"otp_cooldown:{normalized_email}")
 
     logger.info("User %s verified email successfully.", user.id)
     return user
 
 
+@transaction.atomic
 def resend_verification_otp(email: str) -> str:
     """
     ? Resends an OTP to the user if eligible (not verified, not in cooldown).
@@ -232,15 +230,14 @@ def resend_verification_otp(email: str) -> str:
     User = get_user_model()
 
     try:
-        user = User.objects.get(email__iexact=normalized_email)
+        user = User.objects.select_for_update().get(email__iexact=normalized_email)
     except User.DoesNotExist:
         raise ValidationError({"email": _("User with this email does not exist.")})
 
     if user.is_email_verified:
         raise ValidationError({"email": _("This email is already verified.")})
 
-    # * Cooldown check. A1-04: claim the cooldown atomically (cache.add) so
-    # concurrent resends cannot both pass the check and both issue a challenge.
+    # * Cooldown check
     cooldown_key = f"otp_cooldown:{normalized_email}"
     if not cache.add(cooldown_key, True, timeout=OTP_COOLDOWN_SECONDS):
         raise ValidationError(

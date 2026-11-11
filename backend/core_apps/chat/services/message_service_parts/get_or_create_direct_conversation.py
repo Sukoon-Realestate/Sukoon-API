@@ -9,41 +9,17 @@ from django.db import transaction
 from rest_framework import status
 from rest_framework.exceptions import APIException, PermissionDenied, ValidationError
 from core_apps.chat.models import Conversation, ConversationParticipant, Message
+from ..presence import ONLINE_KEY_PREFIX, ONLINE_TTL_SECONDS, set_user_online_status, is_user_online
 
 
 logger = logging.getLogger(__name__)
 
-
-ONLINE_KEY_PREFIX = "chat:user:online:"
-
-
-ONLINE_TTL_SECONDS = 300  # 5 minutes
 
 
 class ChatMessageConflict(APIException):
     status_code = status.HTTP_409_CONFLICT
     default_detail = "client_message_id was already used for different content."
     default_code = "client_message_conflict"
-
-
-def set_user_online_status(user_id: str, is_online: bool) -> None:
-    """Cache online presence for a user in the cache layer."""
-    try:
-        key = f"{ONLINE_KEY_PREFIX}{user_id}"
-        if is_online:
-            cache.set(key, True, timeout=ONLINE_TTL_SECONDS)
-        else:
-            cache.delete(key)
-    except Exception:
-        logger.debug("Failed to set online status for user %s", user_id)
-
-
-def is_user_online(user_id: str) -> bool:
-    """Check whether a user has an active online presence."""
-    try:
-        return bool(cache.get(f"{ONLINE_KEY_PREFIX}{user_id}"))
-    except Exception:
-        return False
 
 
 def direct_message_blocked(first_user, second_user, *, lock=False):

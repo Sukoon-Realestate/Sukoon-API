@@ -7,7 +7,7 @@ from core_apps.profiles.services.profile_service_parts.account_metadata import (
     membership_labels,
 )
 
-from ...models import Property, PropertyVisit, PropertyVisitReview
+from ...models import Property, PropertyVisit
 
 
 class OwnerProfileMixin:
@@ -17,12 +17,11 @@ class OwnerProfileMixin:
         Builds the payload for the Owner Profile screen ("ملفي الشخصي"):
         - owner header: avatar, is_verified, full_name, role_badge ("مالك موثّق"),
           rating info (average_rating, reviews_count, rating_label), member_since_label.
-        - stats: properties_count, reviews_count, acceptance_rate (96% قبول).
+        - stats: properties_count, reviews_count, acceptance_rate (null when no decisions exist).
         - account_details: name, email, phone_number, masked_phone_number.
         - privacy_notice: "رقمك لا يُعرض للمستأجرين – يظهر فقط بعد قبول الزيارة".
         - recent_reviews: list of recent visit reviews.
         """
-        from django.db.models import Avg
         from core_apps.profiles.services.profile_service import (
             mask_phone_number,
         )
@@ -62,17 +61,10 @@ class OwnerProfileMixin:
         average_rating = reputation["average"]
         rating_label = f"{average_rating if average_rating is not None else '—'} ({reviews_count})"
 
-        confirmed_count = PropertyVisit.objects.filter(
-            property__owner=owner, status=PropertyVisit.Status.CONFIRMED
-        ).count()
-        rejected_count = PropertyVisit.objects.filter(
-            property__owner=owner, status=PropertyVisit.Status.REJECTED
-        ).count()
-        total_handled = confirmed_count + rejected_count
-        if total_handled > 0:
-            acceptance_rate = round((confirmed_count / total_handled) * 100)
-        else:
-            acceptance_rate = 96 if properties_count > 0 else 100
+        from ..owner_statistics import visit_acceptance
+        acceptance_rate, total_handled = visit_acceptance(
+            PropertyVisit.objects.filter(property__owner=owner)
+        )
 
         recent_reviews = [{"id": str(r.id), "reviewer_name": "", "rating": r.overall_score, "comment": r.public_comment, "created_at": r.created_at.replace(day=1, hour=0, minute=0, second=0, microsecond=0)} for r in reviews_qs[:5]]
 
@@ -94,8 +86,9 @@ class OwnerProfileMixin:
                 "reviews_count": reviews_count,
                 "reviews_label": account_text("Reviews", "تقييم"),
                 "acceptance_rate": acceptance_rate,
+                "handled_visits_count": total_handled,
                 "acceptance_label": account_text("Acceptance", "قبول"),
-                "formatted_acceptance_rate": f"{acceptance_rate}%",
+                "formatted_acceptance_rate": f"{acceptance_rate}%" if acceptance_rate is not None else None,
             },
             "account_details": {
                 "name": full_name,

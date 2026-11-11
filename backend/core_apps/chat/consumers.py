@@ -1,7 +1,9 @@
+import asyncio
 import logging
 from uuid import UUID
 
 from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from .group_consumer import GroupChatConsumerMixin
 
@@ -25,6 +27,25 @@ class ChatConsumer(GroupChatConsumerMixin, AsyncJsonWebsocketConsumer):
         {"type": "message.read", "payload": {"conversation_id": "<uuid>", "reader_id": "<uuid>"}}
     """
 
+    async def __call__(self, scope, receive, send):
+        try:
+            return await super().__call__(scope, receive, send)
+        finally:
+            # ASGI cancellation/worker shutdown may bypass disconnect entirely.
+            await self._release_presence()
+
+    async def _release_presence(self):
+        if hasattr(self, "presence_task"):
+            self.presence_task.cancel()
+            try:
+                await self.presence_task
+            except asyncio.CancelledError:
+                pass
+        if getattr(self, "presence_registered", False):
+            from core_apps.chat.services.presence import set_user_online_status
+            await database_sync_to_async(set_user_online_status)(str(self.user.id), False, self.channel_name)
+            self.presence_registered = False
+
     async def connect(self):
         user = self.scope.get("user")
         if not user or not user.is_authenticated:
@@ -43,20 +64,36 @@ class ChatConsumer(GroupChatConsumerMixin, AsyncJsonWebsocketConsumer):
 
         from core_apps.chat.services.message_service import set_user_online_status
 
-        await sync_to_async(set_user_online_status)(str(user.id), True)
+        await database_sync_to_async(set_user_online_status)(str(user.id), True, self.channel_name)
+        self.presence_registered = True
+        self.presence_task = asyncio.create_task(self._renew_presence())
+
+    async def _renew_presence(self):
+        from core_apps.chat.services.presence import ONLINE_TTL_SECONDS, set_user_online_status
+        from core_apps.common.ws_auth import _get_user
+        from time import time
+        while True:
+            await asyncio.sleep(ONLINE_TTL_SECONDS / 3)
+            claims = self.scope.get("auth_claims")
+            if claims:
+                current = await _get_user(claims["user_id"], claims)
+                if not current.is_authenticated or claims.get("exp", 0) <= time():
+                    await database_sync_to_async(set_user_online_status)(str(self.user.id), False, self.channel_name)
+                    await self.close(code=4401)
+                    return
+            await database_sync_to_async(set_user_online_status)(str(self.user.id), True, self.channel_name)
 
     async def disconnect(self, close_code):
+        await self._release_presence()
         if hasattr(self, "session_group"):
             await self.channel_layer.group_discard(
                 self.session_group, self.channel_name
             )
         if hasattr(self, "group_name"):
             await self.channel_layer.group_discard(self.group_name, self.channel_name)
-            from core_apps.chat.services.message_service import set_user_online_status
-
-            await sync_to_async(set_user_online_status)(str(self.user.id), False)
 
     async def session_revoked(self, event):
+        await self._release_presence()
         await self.close(code=4401)
 
     async def receive_json(self, content, **kwargs):

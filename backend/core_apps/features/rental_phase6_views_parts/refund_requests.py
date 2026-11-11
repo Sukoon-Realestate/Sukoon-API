@@ -59,7 +59,7 @@ def refund_requests(request):
         raise NotFound()  # cannot name an existing attempt (historical 404)
     attempt = get_object_or_404(
         PaymentAttempt.objects.select_related("invoice__lease").filter(
-            invoice__lease__isnull=False
+            payer=request.user, invoice__lease__isnull=False, invoice__purpose="rent"
         ),
         id=body["payment_attempt_id"],
     )

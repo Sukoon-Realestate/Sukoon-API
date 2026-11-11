@@ -151,6 +151,9 @@ def complete(session):
     if required.issubset(event.signed_by) and change.state != "resolved_unapplied":
         event.status = "signed"
     event.save()
+    from ..document_intents import change as record_change_document
+
+    record_change_document(event)
     if resolving:
         return access.changed(
             item,

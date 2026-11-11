@@ -1,6 +1,9 @@
 """The same housing requirements govern discovery and final submission."""
 
 
+from core_apps.properties.amenities import AMENITY_FIELDS
+
+
 def property_requirements(queryset, criteria):
     if criteria.get("property_type"):
         queryset = queryset.filter(property_type__slug=criteria["property_type"])
@@ -8,7 +11,7 @@ def property_requirements(queryset, criteria):
         queryset = queryset.filter(is_furnished=criteria["furnished"])
     for name in criteria.get("amenities", []):
         queryset = queryset.filter(
-            **{name if name == "near_metro" else f"has_{name}": True}
+            **{AMENITY_FIELDS.get(name, name): True}
         )
     return queryset
 
@@ -34,7 +37,7 @@ def offer_problem(item, prop, snapshot, rent):
     ):
         return "The furnishing requirement is not met."
     if any(
-        not getattr(prop, name if name == "near_metro" else f"has_{name}", False)
+        not getattr(prop, AMENITY_FIELDS.get(name, name), False)
         for name in requirements.get("amenities", [])
     ):
         return "The requested amenities are not available."

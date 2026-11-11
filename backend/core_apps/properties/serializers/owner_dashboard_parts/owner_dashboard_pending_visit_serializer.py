@@ -98,7 +98,8 @@ class OwnerDashboardSerializer(serializers.Serializer):
     owner = OwnerDashboardOwnerSerializer(read_only=True)
     visits_this_week = serializers.IntegerField(read_only=True)
     active_properties = serializers.IntegerField(read_only=True)
-    overall_rating = serializers.FloatField(read_only=True)
+    overall_rating = serializers.FloatField(read_only=True, allow_null=True)
+    reviews_count = serializers.IntegerField(read_only=True)
     pending_requests = serializers.IntegerField(read_only=True)
     pending_visits = OwnerDashboardPendingVisitSerializer(many=True, read_only=True)
 
@@ -155,9 +156,10 @@ class OwnerProfileStatsSerializer(serializers.Serializer):
     properties_label = serializers.CharField(read_only=True, default="عقارات")
     reviews_count = serializers.IntegerField(read_only=True)
     reviews_label = serializers.CharField(read_only=True, default="تقييم")
-    acceptance_rate = serializers.IntegerField(read_only=True)
+    acceptance_rate = serializers.IntegerField(read_only=True, allow_null=True)
+    handled_visits_count = serializers.IntegerField(read_only=True)
     acceptance_label = serializers.CharField(read_only=True, default="قبول")
-    formatted_acceptance_rate = serializers.CharField(read_only=True)
+    formatted_acceptance_rate = serializers.CharField(read_only=True, allow_null=True)
 
 
 class OwnerProfileAccountDetailsSerializer(serializers.Serializer):

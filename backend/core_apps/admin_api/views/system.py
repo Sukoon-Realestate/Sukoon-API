@@ -42,7 +42,7 @@ class AdminAuditLogsAPIView(APIView):
         type_filter = request.query_params.get("type")
         search = request.query_params.get("search")
 
-        logs = get_audit_logs(type_filter=type_filter, search=search)
+        logs = get_audit_logs(type_filter=type_filter, search=search, paginated=True)
 
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(logs, request, view=self)

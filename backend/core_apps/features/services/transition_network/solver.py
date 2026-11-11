@@ -1,5 +1,6 @@
 """Bounded two/three-person proposals using canonical physical resource keys."""
 
+from core_apps.properties.amenities import property_amenities
 import hashlib
 import itertools
 import json
@@ -94,23 +95,6 @@ def source_snapshot(intent):
     }
 
 
-def property_amenities(prop):
-    return sorted(
-        name
-        for name in (
-            "wifi",
-            "elevator",
-            "garage",
-            "security",
-            "balcony",
-            "air_conditioning",
-            "near_metro",
-            "natural_gas",
-            "electricity_meter",
-            "water_meter",
-        )
-        if getattr(prop, "has_" + name, False)
-    )
 
 
 def validate_cycle(intents, sources, endpoint=None):

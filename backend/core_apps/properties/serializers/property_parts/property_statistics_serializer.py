@@ -43,7 +43,8 @@ class PropertyStatisticsSerializer(serializers.Serializer):
     # 4 Main KPI Cards
     visit_requests_count = serializers.IntegerField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
-    acceptance_rate = serializers.IntegerField(read_only=True)
+    acceptance_rate = serializers.IntegerField(read_only=True, allow_null=True)
+    handled_visits_count = serializers.IntegerField(read_only=True)
     saved_count = serializers.IntegerField(read_only=True)
 
     # 14-day views bar chart

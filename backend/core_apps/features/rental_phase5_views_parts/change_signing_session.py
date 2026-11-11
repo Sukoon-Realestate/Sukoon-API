@@ -195,6 +195,9 @@ def complete_change_signature(provider_session_id):
             item.status = RentalChange.Status.SIGNED
             item.revision += 1
         item.save()
+        from ..services.document_intents import change
+
+        change(item)
         from ..services.planning_notifications import record_event
 
         record_event(item, session.signer, f"change.signed.{session.id}")

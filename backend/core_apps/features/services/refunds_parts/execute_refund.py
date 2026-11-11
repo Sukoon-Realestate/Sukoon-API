@@ -223,7 +223,7 @@ def execute_refund(refund, *, actor=None):
         )
         payable.revision += 1
         payable.save()
-    from ...rental_phase4_views import evaluate_owner_payables
+    from ..payable_eligibility import evaluate_owner_payables
     from ..rental_phase6 import evaluate_financial_closure
 
     evaluate_owner_payables(lease)

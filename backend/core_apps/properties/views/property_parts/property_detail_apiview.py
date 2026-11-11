@@ -1,6 +1,5 @@
 """Property: property detail apiview."""
 
-from django.db import transaction
 from django.db.models import Avg, BooleanField, Exists, FloatField, OuterRef, Q, Value
 from django.db.models.functions import Coalesce
 from rest_framework import generics, permissions, status
@@ -201,75 +200,11 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
             raise permissions.exceptions.PermissionDenied(
                 "You are not the owner of this property listing."
             )
-        key = get_idempotency_key(request)
+        from ...services.listing_commands import update_listing
 
-        def update_property():
-            with transaction.atomic():
-                from ...services.listing_lock import lock_listing
-
-                current = lock_listing(instance.pk)
-                from core_apps.common.command_authority import recheck_session
-
-                # Original session claims still hold after waiting for the lock.
-                recheck_session(request)
-                if current.owner_id != request.user.pk:
-                    raise permissions.exceptions.PermissionDenied(
-                        "Only the current owner can edit a listing."
-                    )
-                expected = request.headers.get("If-Unmodified-Since")
-                from django.utils.dateparse import parse_datetime
-
-                try:
-                    matches = (
-                        not expected or parse_datetime(expected) == current.updated_at
-                    )
-                except (ValueError, TypeError):
-                    matches = False
-                if not matches:
-                    from core_apps.common.idempotency import IdempotencyConflict
-
-                    raise IdempotencyConflict(
-                        "Property changed. Reload and review before saving."
-                    )
-                serializer = PropertySerializer(
-                    current,
-                    data=request.data,
-                    partial=True,
-                    context={"request": request},
-                )
-                serializer.is_valid(raise_exception=True)
-                updated = serializer.save()
-                data = PropertyDetailSerializer(
-                    updated, context={"request": request}
-                ).data
-                return (
-                    {"message": "Property changes submitted for review.", **data},
-                    200,
-                    updated.id,
-                )
-
-        payload = (
-            {
-                key: (
-                    request.data.getlist(key)
-                    if len(request.data.getlist(key)) > 1
-                    else request.data.get(key)
-                )
-                for key in request.data
-            }
-            if hasattr(request.data, "getlist")
-            else dict(request.data)
+        data, response_status, replayed = update_listing(
+            instance=instance, actor=request.user, auth_claims=request.auth,
+            command=request.data, expected_updated_at=request.headers.get("If-Unmodified-Since"),
+            key=get_idempotency_key(request), context={"request": request},
         )
-        payload["expected_updated_at"] = request.headers.get("If-Unmodified-Since", "")
-        data, response_status, replayed = execute_idempotent(
-            user=request.user,
-            auth_claims=request.auth,
-            operation=f"property.update:{instance.id}",
-            key=key,
-            payload=payload,
-            action=update_property,
-            request_subject_id=instance.id,
-        )
-        return Response(
-            data, status=response_status, headers=response_headers(replayed)
-        )
+        return Response(data, status=response_status, headers=response_headers(replayed))

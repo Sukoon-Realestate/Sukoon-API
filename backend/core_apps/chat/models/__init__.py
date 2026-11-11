@@ -31,3 +31,5 @@ from .moderation import (
 from .productivity import MessageStar, MessagePin, MessageReadReceipt, ChatQuickReply, MessagePoll, MessagePollVote, ChatForwardBatch
 
 from .transcription import VoiceTranscription
+
+from .presence import ChatPresenceLease

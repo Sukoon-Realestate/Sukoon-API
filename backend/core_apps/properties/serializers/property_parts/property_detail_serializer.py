@@ -6,6 +6,7 @@ from typing import Optional
 from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
 from ...models import Property
+from ...amenities import AMENITY_FIELDS as PROPERTY_AMENITY_FIELDS
 from ...phone_disclosure import counterpart_phone_payload
 from ..location import CitySerializer, GovernorateSerializer
 from .property_list_serializer import CloudinaryMediaField, PropertyImageSerializer
@@ -62,18 +63,7 @@ class PropertyDetailSerializer(PropertyPolicyProjection, PropertyDetailMediaMixi
     rental_inventory = serializers.SerializerMethodField()
     virtual_tours = serializers.SerializerMethodField()
 
-    AMENITY_FIELDS = (
-        ("has_wifi", "wifi"),
-        ("has_elevator", "elevator"),
-        ("has_garage", "garage"),
-        ("has_security", "security"),
-        ("has_balcony", "balcony"),
-        ("has_air_conditioning", "air_conditioning"),
-        ("near_metro", "near_metro"),
-        ("has_natural_gas", "natural_gas"),
-        ("has_electricity_meter", "electricity_meter"),
-        ("has_water_meter", "water_meter"),
-    )
+    AMENITY_FIELDS = tuple((field, name) for name, field in PROPERTY_AMENITY_FIELDS.items())
 
     def get_video_thumbnail_url(self, obj):
         if not obj.video:

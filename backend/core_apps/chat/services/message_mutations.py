@@ -79,6 +79,8 @@ def mutate_message(conversation, user, data):
     if message.revision != expected or message.deleted_at:
         raise ChatConflict("This message changed. Reload it before continuing.")
     event_data = {"operation_id": operation_id, "fingerprint": fingerprint}
+    from .send_receipts import preserve_original_send
+    preserve_original_send(message)
     if kind == "message.delete":
         return delete_group_message(conversation, user, identity, event_data=event_data)
     # Reading history after consent withdrawal does not grant editing authority.

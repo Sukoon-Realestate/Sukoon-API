@@ -9,7 +9,17 @@ from core_apps.admin_api.models import (
 )
 
 
-def get_audit_logs(type_filter=None, search=None):
+def get_audit_logs(type_filter=None, search=None, *, paginated=False, _ids=None):
+    sources = []
+
+    def records(queryset, name, timestamp, prefix):
+        if paginated:
+            sources.append((name, queryset, timestamp, prefix))
+            return ()
+        if _ids is not None:
+            queryset = queryset.filter(pk__in=_ids.get(name, []))
+        return queryset
+
     logs = []
 
     def add(identifier, at, action, kind, target, actor):
@@ -35,11 +45,19 @@ def get_audit_logs(type_filter=None, search=None):
         "users": "مستخدم",
         "support": "دعم",
     }
-    target_badge = mapping.get(str(type_filter).lower(), type_filter) if type_filter and type_filter != "all" else None
+    target_badge = (
+        mapping.get(str(type_filter).lower(), type_filter)
+        if type_filter and type_filter != "all"
+        else None
+    )
 
     # 1. KYC
     if target_badge is None or target_badge == "KYC":
-        qs = KYCSubmission.objects.filter(reviewed_at__isnull=False).select_related("reviewer").order_by("-reviewed_at")
+        qs = (
+            KYCSubmission.objects.filter(reviewed_at__isnull=False)
+            .select_related("reviewer")
+            .order_by("-reviewed_at")
+        )
         if search:
             s = search.strip()
             qs = qs.filter(
@@ -50,7 +68,7 @@ def get_audit_logs(type_filter=None, search=None):
                 | Q(rejection_reason__icontains=s)
                 | Q(notes__icontains=s)
             )
-        for item in qs:
+        for item in records(qs, "kyc", "reviewed_at", "kyc-"):
             add(
                 f"kyc-{item.id}",
                 item.reviewed_at,
@@ -66,11 +84,9 @@ def get_audit_logs(type_filter=None, search=None):
         if search:
             s = search.strip()
             qs = qs.filter(
-                Q(actor__email__icontains=s)
-                | Q(action__icontains=s)
-                | Q(reason__icontains=s)
+                Q(actor__email__icontains=s) | Q(action__icontains=s) | Q(reason__icontains=s)
             )
-        for item in qs:
+        for item in records(qs, "staff", "created_at", "staff-"):
             add(
                 f"staff-{item.pk}",
                 item.created_at,
@@ -90,7 +106,7 @@ def get_audit_logs(type_filter=None, search=None):
                 | Q(actor__first_name__icontains=s)
                 | Q(actor__last_name__icontains=s)
             )
-        for item in qs:
+        for item in records(qs, "settings", "created_at", "settings-"):
             add(
                 f"settings-{item.pk}",
                 item.created_at,
@@ -102,7 +118,11 @@ def get_audit_logs(type_filter=None, search=None):
 
     # 4. Reports
     if target_badge is None or target_badge == "بلاغ":
-        qs = UserReport.objects.filter(reviewed_by__isnull=False).select_related("reviewed_by").order_by("-updated_at")
+        qs = (
+            UserReport.objects.filter(reviewed_by__isnull=False)
+            .select_related("reviewed_by")
+            .order_by("-updated_at")
+        )
         if search:
             s = search.strip()
             qs = qs.filter(
@@ -111,7 +131,7 @@ def get_audit_logs(type_filter=None, search=None):
                 | Q(reason__icontains=s)
                 | Q(notes__icontains=s)
             )
-        for item in qs:
+        for item in records(qs, "reports", "updated_at", "report-"):
             add(
                 f"report-{item.id}",
                 item.updated_at,
@@ -125,15 +145,17 @@ def get_audit_logs(type_filter=None, search=None):
     if target_badge is None or target_badge == "عقار":
         from core_apps.features.models import RentalAuditEvent
 
-        qs = RentalAuditEvent.objects.filter(subject_kind="property").select_related("actor").order_by("-created_at")
+        qs = (
+            RentalAuditEvent.objects.filter(subject_kind="property")
+            .select_related("actor")
+            .order_by("-created_at")
+        )
         if search:
             s = search.strip()
             qs = qs.filter(
-                Q(actor__email__icontains=s)
-                | Q(action__icontains=s)
-                | Q(reason__icontains=s)
+                Q(actor__email__icontains=s) | Q(action__icontains=s) | Q(reason__icontains=s)
             )
-        for item in qs:
+        for item in records(qs, "property", "created_at", "property-"):
             add(
                 f"property-{item.id}",
                 item.created_at,
@@ -145,7 +167,11 @@ def get_audit_logs(type_filter=None, search=None):
 
     # 6. Users (Suspension / reactivation events)
     if target_badge is None or target_badge == "مستخدم":
-        qs = UserReport.objects.filter(status=UserReport.Status.SUSPENDED).select_related("reviewed_by", "reported_user").order_by("-updated_at")
+        qs = (
+            UserReport.objects.filter(status=UserReport.Status.SUSPENDED)
+            .select_related("reviewed_by", "reported_user")
+            .order_by("-updated_at")
+        )
         if search:
             s = search.strip()
             qs = qs.filter(
@@ -154,7 +180,7 @@ def get_audit_logs(type_filter=None, search=None):
                 | Q(reason__icontains=s)
                 | Q(notes__icontains=s)
             )
-        for item in qs:
+        for item in records(qs, "users", "updated_at", "user-suspend-"):
             add(
                 f"user-suspend-{item.id}",
                 item.updated_at,
@@ -178,8 +204,10 @@ def get_audit_logs(type_filter=None, search=None):
                     | Q(reason__icontains=s)
                     | Q(ticket__reference__icontains=s)
                 )
-            for item in qs:
-                target_ref = item.ticket.reference if getattr(item, "ticket", None) else str(item.ticket_id)
+            for item in records(qs, "support", "created_at", "support-"):
+                target_ref = (
+                    item.ticket.reference if getattr(item, "ticket", None) else str(item.ticket_id)
+                )
                 add(
                     f"support-{item.id}",
                     item.created_at,
@@ -192,16 +220,11 @@ def get_audit_logs(type_filter=None, search=None):
             pass
 
     if target_badge:
-        logs = [
-            row
-            for row in logs
-            if row["typeBadge"] == target_badge
-        ]
-    if search:
-        s_cf = search.casefold()
-        logs = [
-            row
-            for row in logs
-            if s_cf in " ".join(str(v) for v in row.values()).casefold()
-        ]
-    return sorted(logs, key=lambda row: row["time"], reverse=True)
+        logs = [row for row in logs if row["typeBadge"] == target_badge]
+    if paginated:
+        from ..history_page import HistoryPage
+
+        return HistoryPage(
+            sources, lambda ids: get_audit_logs(type_filter=type_filter, search=search, _ids=ids)
+        )
+    return sorted(logs, key=lambda row: (row["time"], row["id"]), reverse=True)

@@ -59,6 +59,8 @@ def send_message(
                 "Messaging consent is not active for this connection."
             )
 
+    from ..send_receipts import preserve_original_send, text_fingerprint
+    fingerprint = text_fingerprint(content)
     if client_message_id:
         existing = Message.objects.filter(
             conversation=conversation,
@@ -67,9 +69,8 @@ def send_message(
         ).first()
         if existing:
             if (
-                existing.content != content
-                or existing.kind != "text"
-                or existing.reply_to_id
+                preserve_original_send(existing) != fingerprint
+                or existing.sequence < conversation.participant_set.get(user=sender).visible_from_sequence
             ):
                 raise ChatMessageConflict()
             return existing
@@ -85,6 +86,7 @@ def send_message(
                 sender=sender,
                 content=content,
                 client_message_id=client_message_id,
+                payload_fingerprint=fingerprint,
                 sequence=conversation.last_sequence + 1,
             )
     except IntegrityError:
@@ -95,7 +97,7 @@ def send_message(
             sender=sender,
             client_message_id=client_message_id,
         )
-        if message.content != content or message.kind != "text" or message.reply_to_id:
+        if preserve_original_send(message) != fingerprint:
             raise ChatMessageConflict()
         return message
 

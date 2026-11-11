@@ -9,15 +9,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import (
     DepositAgreement,
-    OwnerPaymentProfile,
     RentalHandover,
     RentalPayout,
 )
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from ..services.rental_notes import record_response_note, validated_note
-from ..services.rental_phase3 import post_ledger_transaction
 from ..services.lease_permissions import handover_actions
+from ..services.payable_eligibility import evaluate_owner_payables
 from .handover_payload import _money, _lease, handover_payload, _handover
 from .lease_handovers import deposit_payload
 
@@ -31,79 +30,6 @@ def lease_deposit(request, lease_id):
     # separate charge, especially after the combined invoice was already paid.
     deposit = get_object_or_404(DepositAgreement, lease=lease)
     return Response(deposit_payload(deposit))
-
-
-def evaluate_owner_payables(lease):
-    move_in = lease.handovers.filter(
-        kind=RentalHandover.Kind.MOVE_IN, status=RentalHandover.Status.ACCEPTED
-    ).exists()
-    for payable in lease.owner_payables.select_for_update():
-        profile = OwnerPaymentProfile.objects.filter(
-            owner_id=payable.invoice.beneficiary_id or lease.owner_id
-        ).first()
-        if payable.payout_status in {
-            "submitted",
-            "processing",
-            "succeeded",
-            "cancelled",
-        }:
-            continue
-        previous = (
-            payable.settlement_status,
-            payable.payout_status,
-            payable.blocking_reasons,
-        )
-        from ..services.chargebacks.projection import (
-            payable_funding_ready,
-            payable_funding_sources,
-        )
-
-        funded = payable_funding_ready(payable)
-        if funded:
-            payable.settlement_status = "settled"
-        reasons = []
-        if not funded:
-            reasons.append(
-                "A chargeback of the original cash source requires canonical financial reconciliation."
-                if any(
-                    attempt.payment_status == "chargedback"
-                    for attempt in payable_funding_sources(payable)
-                )
-                else "The original cash source requires canonical financial reconciliation."
-            )
-        if payable.settlement_status != "settled":
-            reasons.append("PSP settlement is pending.")
-        if not move_in:
-            reasons.append("Move-in is not accepted.")
-        if not profile or not profile.payout_ready:
-            reasons.append("Owner beneficiary is not ready.")
-        if not profile or "rental-policy-v1" not in profile.accepted_policy_versions:
-            reasons.append("Required policy is not accepted.")
-        if lease.refund_requests.filter(
-            status__in=["requested", "approved", "processing"]
-        ).exists():
-            reasons.append("A refund is awaiting resolution.")
-        payable.blocking_reasons = reasons
-        payable.payout_status = "ready" if not reasons else "held"
-        if previous != (
-            payable.settlement_status,
-            payable.payout_status,
-            payable.blocking_reasons,
-        ):
-            payable.revision += 1
-            payable.save()
-        if not reasons and payable.commission_minor:
-            post_ledger_transaction(
-                reference=f"commission-earned:{payable.id}",
-                kind="commission_earned",
-                lease=lease,
-                invoice=payable.invoice,
-                attempt=payable.payment_attempt,
-                entries=[
-                    ("commission_reserve", "debit", payable.commission_minor),
-                    ("commission_revenue", "credit", payable.commission_minor),
-                ],
-            )
 
 
 @api_view(["POST"])

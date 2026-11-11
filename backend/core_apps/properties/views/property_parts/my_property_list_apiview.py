@@ -12,7 +12,6 @@ from ...models import Property
 from ...permissions import IsOwner, IsOwnerOrReadOnly
 from ...serializers import (
     MyPropertyListSerializer,
-    PropertyDetailSerializer,
     PropertySerializer,
 )
 from ...services import PropertyService
@@ -140,20 +139,17 @@ class PropertyUpdateAPIView(generics.UpdateAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
-    def patch(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(
-            instance, data=request.data, partial=True, context={"request": request}
+    def update(self, request, *args, **kwargs):
+        from core_apps.common.idempotency import request_key, response_headers
+        from ...services.listing_commands import update_listing
+
+        data, response_status, replayed = update_listing(
+            instance=self.get_object(), actor=request.user, auth_claims=request.auth,
+            command=request.data, expected_updated_at=request.headers.get("If-Unmodified-Since"),
+            key=request_key(request), context={"request": request},
+            partial=kwargs.get("partial", False),
         )
-        serializer.is_valid(raise_exception=True)
-        updated_instance = serializer.save()
-        data = PropertyDetailSerializer(
-            updated_instance, context={"request": request}
-        ).data
-        return Response(
-            {"message": "Property changes submitted for review.", **data},
-            status=status.HTTP_200_OK,
-        )
+        return Response(data, status=response_status, headers=response_headers(replayed))
 
 
 class PropertyDeleteAPIView(generics.DestroyAPIView):

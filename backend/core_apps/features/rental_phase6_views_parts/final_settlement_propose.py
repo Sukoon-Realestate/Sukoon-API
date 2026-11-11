@@ -59,7 +59,7 @@ def settlement_payload(item, user=None):
         "billing_invoices": source_invoices("settlement", item.id),
         "allowed_actions": cycle_actions(user, item),
         "blocking_reasons": [error[1]] if error else [],
-        "id": str(item.id),
+        "id": str(item.id) if item.id else None,
         "lease_id": str(item.lease.id),
         "revision": item.revision,
         "status": item.status,
@@ -87,9 +87,13 @@ def _settlement(lease):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def final_settlement_detail(request, lease_id):
-    return Response(
-        settlement_payload(_settlement(_lease(request, lease_id)), request.user)
-    )
+    lease = _lease(request, lease_id)
+    item = FinalSettlement.objects.filter(lease=lease).first()
+    if item is None:
+        # An absent draft is a virtual initial state. Only propose persists it.
+        item = FinalSettlement(lease=lease)
+        item.id = None
+    return Response(settlement_payload(item, request.user))
 
 
 @api_view(["POST"])

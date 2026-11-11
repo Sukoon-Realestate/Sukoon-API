@@ -5,7 +5,17 @@ from core_apps.features.models import PaymentAttempt, RefundRequest
 from .get_financial_summary import money
 
 
-def get_transactions_list(status_filter=None, search=None):
+def get_transactions_list(status_filter=None, search=None, *, paginated=False, _ids=None):
+    sources = []
+
+    def records(queryset, name, timestamp, prefix):
+        if paginated:
+            sources.append((name, queryset, timestamp, prefix))
+            return ()
+        if _ids is not None:
+            queryset = queryset.filter(pk__in=_ids.get(name, []))
+        return queryset
+
     rows = []
     expected = {"paid": "مدفوع", "pending": "معلق", "refunded": "مسترد"}.get(
         status_filter, status_filter
@@ -15,9 +25,9 @@ def get_transactions_list(status_filter=None, search=None):
     include_refunds = expected is None or expected == "all" or expected == "مسترد"
 
     if include_payments:
-        pay_qs = PaymentAttempt.objects.select_related(
-            "invoice__lease__owner", "payer"
-        ).order_by("-created_at")
+        pay_qs = PaymentAttempt.objects.select_related("invoice__lease__owner", "payer").order_by(
+            "-created_at"
+        )
 
         if expected == "مدفوع":
             pay_qs = pay_qs.filter(payment_status="captured")
@@ -36,15 +46,21 @@ def get_transactions_list(status_filter=None, search=None):
                 | Q(invoice__lease__owner__email__icontains=s)
             )
 
-        for attempt in pay_qs:
-            lease = attempt.invoice.lease if hasattr(attempt, "invoice") and attempt.invoice else None
+        for attempt in records(pay_qs, "payments", "created_at", ""):
+            lease = (
+                attempt.invoice.lease if hasattr(attempt, "invoice") and attempt.invoice else None
+            )
             landlord_name = ""
             if lease and lease.owner:
                 landlord_name = lease.owner.get_full_name or lease.owner.email
             tenant_name = ""
             if attempt.payer:
                 tenant_name = attempt.payer.get_full_name or attempt.payer.email
-            invoice_ref = attempt.invoice.reference if hasattr(attempt, "invoice") and attempt.invoice else str(attempt.id)
+            invoice_ref = (
+                attempt.invoice.reference
+                if hasattr(attempt, "invoice") and attempt.invoice
+                else str(attempt.id)
+            )
             rows.append(
                 {
                     "id": str(attempt.id),
@@ -58,8 +74,7 @@ def get_transactions_list(status_filter=None, search=None):
                         if attempt.payment_status == "captured"
                         else (
                             "معلق"
-                            if attempt.payment_status
-                            in {"created", "pending", "authorized"}
+                            if attempt.payment_status in {"created", "pending", "authorized"}
                             else attempt.payment_status
                         )
                     ),
@@ -86,15 +101,14 @@ def get_transactions_list(status_filter=None, search=None):
                 | Q(payment_attempt__payer__email__icontains=s)
             )
 
-        for refund in refund_qs:
+        for refund in records(refund_qs, "refunds", "created_at", ""):
             landlord_name = ""
             if refund.lease and refund.lease.owner:
                 landlord_name = refund.lease.owner.get_full_name or refund.lease.owner.email
             tenant_name = ""
             if refund.payment_attempt and refund.payment_attempt.payer:
                 tenant_name = (
-                    refund.payment_attempt.payer.get_full_name
-                    or refund.payment_attempt.payer.email
+                    refund.payment_attempt.payer.get_full_name or refund.payment_attempt.payer.email
                 )
             rows.append(
                 {
@@ -112,11 +126,11 @@ def get_transactions_list(status_filter=None, search=None):
 
     if expected and expected != "all":
         rows = [row for row in rows if row["status"] == expected]
-    if search:
-        s_cf = search.casefold()
-        rows = [
-            row
-            for row in rows
-            if s_cf in " ".join(str(value) for value in row.values()).casefold()
-        ]
-    return sorted(rows, key=lambda row: row["at"], reverse=True)
+    if paginated:
+        from ..history_page import HistoryPage
+
+        return HistoryPage(
+            sources,
+            lambda ids: get_transactions_list(status_filter=status_filter, search=search, _ids=ids),
+        )
+    return sorted(rows, key=lambda row: (row["at"], row["id"]), reverse=True)

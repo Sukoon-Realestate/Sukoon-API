@@ -113,6 +113,8 @@ def capture_replacement(attempt, invoice):
     receipt, _ = PaymentReceipt.objects.get_or_create(payment_attempt=attempt)
     invoice.receipt_id = receipt.id
     invoice.save(update_fields=["receipt_id", "updated_at"])
+    from ..document_intents import receipt as record_receipt_document
+    record_receipt_document(invoice, receipt.id)
     if excess:
         row.excess_refund = create_excess_refund(item, attempt, row.id, excess)
         row.save(update_fields=["excess_refund", "updated_at"])

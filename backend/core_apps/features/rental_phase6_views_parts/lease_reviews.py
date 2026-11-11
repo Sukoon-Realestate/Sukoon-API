@@ -14,7 +14,7 @@ from rest_framework.decorators import (
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from ..models import RentalChange, RentalDocument, RentalHandover, RentalReview
+from ..models import RentalDocument, RentalHandover, RentalReview
 from ..providers import get_rental_provider
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
@@ -52,35 +52,6 @@ def document_lease(
 @renderer_classes([FeatureJsonRenderer])
 def lease_documents(request, lease_id):
     lease = document_lease(request, lease_id)
-    if lease.document_id:
-        RentalDocument.objects.get_or_create(
-            lease=lease,
-            document_type=RentalDocument.DocumentType.CONTRACT,
-            source_reference=str(lease.document_id),
-            defaults={"requested_by": request.user, "title": "Rental agreement"},
-        )
-    for invoice in lease.invoices.exclude(receipt_id__isnull=True):
-        RentalDocument.objects.get_or_create(
-            lease=lease,
-            document_type=RentalDocument.DocumentType.RECEIPT,
-            source_reference=str(invoice.receipt_id),
-            defaults={
-                "requested_by": request.user,
-                "title": f"Receipt record {invoice.reference} (JSON)",
-            },
-        )
-    for change in lease.rental_changes.filter(
-        status__in=[RentalChange.Status.SIGNED, RentalChange.Status.APPLIED]
-    ):
-        RentalDocument.objects.get_or_create(
-            lease=lease,
-            document_type=RentalDocument.DocumentType.CHANGE,
-            source_reference=str(change.id),
-            defaults={
-                "requested_by": request.user,
-                "title": f"{change.get_kind_display()} {change.id}",
-            },
-        )
     documents = lease.private_documents.all()
     if lease.renter_company_id:
         from ..services.company.tenancy_access import financial_read, commercial_read
@@ -91,10 +62,11 @@ def lease_documents(request, lease_id):
         if financial_read(lease, request.user):
             types += ["receipt", "settlement", "statement"]
         documents = documents.filter(document_type__in=types)
-    results = [document_payload(x) for x in documents]
-    return Response(
-        {"count": len(results), "next": None, "previous": None, "results": results}
-    )
+    from core_apps.common.pagination import StandardResultsSetPagination
+
+    paginator = StandardResultsSetPagination()
+    page = paginator.paginate_queryset(documents.order_by("-created_at", "-id"), request)
+    return paginator.get_paginated_response([document_payload(x) for x in page])
 
 
 @api_view(["GET"])

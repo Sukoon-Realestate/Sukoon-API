@@ -329,6 +329,9 @@ def process_rental_changes(self):
                     document_hash=change.document_hash,
                     activated_at=now,
                 )
+                from ..services.document_intents import contract
+
+                contract(renewal)
                 change.result_lease = renewal
                 change.save(update_fields=["result_lease", "updated_at"])
                 reserve_inventory_days(
@@ -349,5 +352,8 @@ def process_rental_changes(self):
             change.applied_at = now
             change.revision += 1
             change.save()
+            from ..services.document_intents import change as record_change_document
+
+            record_change_document(change)
             applied += 1
     return {"expired_signing_sessions": expired_sessions, "applied": applied}

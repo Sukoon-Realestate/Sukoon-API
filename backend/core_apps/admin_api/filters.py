@@ -1,5 +1,5 @@
 import django_filters
-from django.db.models import Q
+from django.db.models import Q, OuterRef, Subquery
 from django.contrib.auth import get_user_model
 from core_apps.admin_api.models import KYCSubmission, UserReport
 
@@ -50,18 +50,22 @@ class AdminUserFilter(django_filters.FilterSet):
             return queryset
         if value in ["verified", "موثق"]:
             return queryset.filter(is_verified=True)
-        elif value in ["pending", "قيد المراجعة"]:
-            return queryset.filter(
-                is_verified=False,
-                profile__kyc_submissions__status=KYCSubmission.Status.PENDING,
-                profile__kyc_submissions__superseded_at__isnull=True,
-            ).distinct()
-        elif value in ["rejected", "مرفوض"]:
-            return queryset.filter(
-                is_verified=False,
-                profile__kyc_submissions__status=KYCSubmission.Status.REJECTED,
-                profile__kyc_submissions__superseded_at__isnull=True,
-            ).distinct()
+        statuses = {
+            "pending": KYCSubmission.Status.PENDING,
+            "قيد المراجعة": KYCSubmission.Status.PENDING,
+            "rejected": KYCSubmission.Status.REJECTED,
+            "مرفوض": KYCSubmission.Status.REJECTED,
+        }
+        if value in statuses:
+            # Older databases can contain several non-superseded rows. Pick one
+            # deterministic current submission instead of matching any history.
+            current = KYCSubmission.objects.filter(
+                profile__user_id=OuterRef("pk"),
+                superseded_at__isnull=True,
+            ).order_by("-created_at", "-pk")
+            return queryset.annotate(
+                _current_kyc_status=Subquery(current.values("status")[:1])
+            ).filter(is_verified=False, _current_kyc_status=statuses[value])
         return queryset
 
 

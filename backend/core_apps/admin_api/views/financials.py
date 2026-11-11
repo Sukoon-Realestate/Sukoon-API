@@ -40,7 +40,7 @@ class AdminTransactionListAPIView(APIView):
         status_filter = request.query_params.get("status")
         search = request.query_params.get("search")
 
-        txns = get_transactions_list(status_filter=status_filter, search=search)
+        txns = get_transactions_list(status_filter=status_filter, search=search, paginated=True)
 
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(txns, request, view=self)

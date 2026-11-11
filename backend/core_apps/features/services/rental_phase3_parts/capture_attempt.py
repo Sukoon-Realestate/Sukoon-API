@@ -94,6 +94,8 @@ def _capture_attempt(attempt):
         receipt, _ = PaymentReceipt.objects.get_or_create(payment_attempt=attempt)
         invoice.receipt_id = receipt.id
         invoice.save(update_fields=["receipt_id", "updated_at"])
+        from ..document_intents import receipt as record_receipt_document
+        record_receipt_document(invoice, receipt.id)
         return attempt
     deposit = (
         DepositAgreement.objects.select_for_update().filter(invoice=invoice).first()
@@ -163,6 +165,8 @@ def _capture_attempt(attempt):
     receipt, _ = PaymentReceipt.objects.get_or_create(payment_attempt=attempt)
     invoice.receipt_id = receipt.id
     invoice.save(update_fields=["receipt_id", "updated_at"])
+    from ..document_intents import receipt as record_receipt_document
+    record_receipt_document(invoice, receipt.id)
     if invoice.billing_period:
         invoice.billing_period.status = BillingPeriod.Status.PAID
         invoice.billing_period.save(update_fields=["status", "updated_at"])

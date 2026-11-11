@@ -143,23 +143,28 @@ def schedule(item, now):
     return "send", None
 
 
-def summary_authorized(notice):
+def authorized_source(notice):
+    """Any eligible device may establish source access; dispatch rechecks each device."""
     from .push_delivery import allowed
+    sources = PushDelivery.objects.filter(notification=notice, device__is_active=True).select_related(
+        "notification__user", "device__auth_session").order_by("pk")
+    return next((source for source in sources.iterator() if allowed(source)), None)
+
+
+def summary_authorized(notice):
     policy = NotificationDeliveryPolicy.objects.filter(user=notice.user).first()
     if policy is None:
         return False
     for hold in NotificationDigestHold.objects.filter(summary=notice).select_related("notification__user"):
         if policy.modes.get(category(hold.notification), "immediate") != "daily":
             continue
-        source = PushDelivery.objects.filter(notification=hold.notification, device__is_active=True).select_related(
-            "notification__user", "device__auth_session").first()
-        if source and allowed(source):
+        if authorized_source(hold.notification):
             return True
     return False
 
 
 def build_digests(*, now=None):
-    from .push_delivery import allowed, queue_notification
+    from .push_delivery import queue_notification
     from .notification_service import NotificationService
     now = now or timezone.now()
     count = 0
@@ -178,9 +183,10 @@ def build_digests(*, now=None):
             for hold in holds:
                 if policy.modes.get(category(hold.notification), "immediate") != "daily":
                     continue
-                source = PushDelivery.objects.filter(notification=hold.notification, device__is_active=True).select_related(
-                    "notification__user", "device__auth_session").first()
-                if source is None or not allowed(source) or PushDelivery.objects.filter(notification=hold.notification, accepted_at__isnull=False).exists():
+                source = authorized_source(hold.notification)
+                if source is None or PushDelivery.objects.filter(
+                    notification=hold.notification, accepted_at__isnull=False
+                ).exists():
                     hold.state = "suppressed"; hold.save(update_fields=["state", "updated_at"])
                     continue
                 if hold.policy_revision != policy.revision:

@@ -486,3 +486,7 @@ def apply_signed(item, change):
     event.status, event.applied_at = "applied", timezone.now()
     event.revision += 1
     event.save()
+    from ..document_intents import contract, change as record_change_document
+
+    contract(item.lease)
+    record_change_document(event)

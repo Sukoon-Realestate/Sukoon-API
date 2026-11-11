@@ -372,6 +372,10 @@ def finish_accounting(item):
         raise
     if result.status != "succeeded":
         review(item, "accounting_pending")
+    else:
+        PaymobRefund.objects.filter(
+            pk=item.pk, status="confirmed", failure_code="accounting_pending"
+        ).update(failure_code="")
     return result
 
 

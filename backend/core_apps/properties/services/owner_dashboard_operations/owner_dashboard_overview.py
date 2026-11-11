@@ -35,11 +35,15 @@ class OwnerDashboardOverviewMixin:
             .order_by("-created_at", "-pk")
         )
 
+        from core_apps.features.services.reputation.visibility import summary
+        reputation = summary("person_landlord", owner.id)
+
         return {
             "owner": owner,
             "visits_this_week": visits_this_week,
             "active_properties": active_properties,
-            "overall_rating": 0.0,
+            "overall_rating": reputation["average"],
+            "reviews_count": reputation["review_count"],
             "pending_requests": pending_requests,
             "pending_visits": pending_visits,
         }

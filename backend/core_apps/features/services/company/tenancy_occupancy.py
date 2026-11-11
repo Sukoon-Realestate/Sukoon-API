@@ -118,7 +118,7 @@ def apply_handover(item, change):
         item.preparation.booking.assignments.filter(
             occupancy_status="arrival_pending"
         ).update(occupancy_status="cancelled")
-    from ...rental_phase4_views_parts.handover_respond import evaluate_owner_payables
+    from ..payable_eligibility import evaluate_owner_payables
 
     evaluate_owner_payables(lease)
 

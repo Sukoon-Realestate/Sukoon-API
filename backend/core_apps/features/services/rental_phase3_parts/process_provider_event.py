@@ -55,7 +55,7 @@ def _settle_attempt(attempt):
         settlement_status="settled",
         updated_at=timezone.now(),
     )
-    from ...rental_phase4_views import evaluate_owner_payables
+    from ..payable_eligibility import evaluate_owner_payables
 
     replacement = getattr(attempt, "chargeback_replacement", None)
     if replacement:

@@ -35,3 +35,10 @@ A5-09/A5-10/A5-12/A5-15; A6-02/A6-05/A6-08.
   have focused regression cases. Provider/network behavior is tested through controlled adapters before staging acceptance.
 - Read-only document/catalog GETs have zero creation/repair writes. Intentional security/bug contract changes are documented
   separately from the later mechanical CBV changes.
+
+## Implementation record — 2026-11-11
+
+Implementation, validation evidence, intentional bug-contract corrections, and unmet acceptance
+items are recorded in [Sprint 03 results](evidence/sprint-03/README.md). Work stops at this sprint.
+Existing databases and production were not changed by this task; the presence migration and
+historical document backfill are recorded deployment follow-ups.

@@ -1158,7 +1158,8 @@ class TestOwnerDashboard:
         assert data["owner"]["is_verified"] is True
         assert data["visits_this_week"] == 4
         assert data["active_properties"] == 1
-        assert data["overall_rating"] == 0.0
+        assert data["overall_rating"] is None
+        assert data["reviews_count"] == 0
         assert data["pending_requests"] == 3
 
         pending = data["pending_visits"]

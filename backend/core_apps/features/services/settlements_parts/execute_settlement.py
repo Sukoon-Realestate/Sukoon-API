@@ -194,7 +194,7 @@ def execute_settlement(item):
             "updated_at",
         ]
     )
-    from ...rental_phase4_views import evaluate_owner_payables
+    from ..payable_eligibility import evaluate_owner_payables
 
     evaluate_owner_payables(lease)
     return item

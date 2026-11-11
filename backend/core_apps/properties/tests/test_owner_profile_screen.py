@@ -102,6 +102,7 @@ class TestOwnerProfileScreenAPI:
         assert stats["reviews_count"] == 0
         assert stats["reviews_label"] == "تقييم"
         assert stats["acceptance_rate"] == 100
+        assert stats["handled_visits_count"] == 1
         assert stats["acceptance_label"] == "قبول"
 
         # Account details assertions
