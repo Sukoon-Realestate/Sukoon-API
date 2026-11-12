@@ -125,23 +125,35 @@ def match_version(revision, etag):
 
 
 def public_property(prop):
-    """A2-02: the canonical publication policy for tour availability, sessions,
-    exchange, manifests, credential renewal and byte grants.
-
-    Units use the catalog predicate (status, retirement, moderation block, owner
-    restriction, pending/complete account closure). Building/complex containers apply
-    the same account rules to their manager plus their own authority review.
-    """
+    """Recheck canonical unit or current container/manager publication authority."""
     from core_apps.properties.services.public_access import public_properties
 
     if isinstance(prop, Property):
         return public_properties(Property.objects.filter(pk=prop.pk)).exists()
-    if not account_may_publish(prop.manager_id):
-        return False
+    from core_apps.chat.models import AccountRestriction
+    from core_apps.users.models import AccountClosureRequest
+
     return (
-        not prop.archived
-        and prop.authority_status == "verified"
-        and bool(prop.authority_reviewed_by_id and prop.authority_reference)
+        type(prop)
+        .objects.filter(
+            pk=prop.pk,
+            archived=False,
+            authority_status="verified",
+            authority_reviewed_by__isnull=False,
+            manager__closed_at__isnull=True,
+        )
+        .exclude(authority_reference="")
+        .exclude(
+            manager_id__in=AccountRestriction.objects.filter(
+                state__in=["pending_review", "permanent"]
+            ).values("user_id")
+        )
+        .exclude(
+            manager_id__in=AccountClosureRequest.objects.filter(active=True).values(
+                "user_id"
+            )
+        )
+        .exists()
     )
 
 
