@@ -1,0 +1,2667 @@
+[
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/account-closure",
+    "file": "core_apps/users/closure_views.py",
+    "handler": "core_apps.users.closure_views.current",
+    "line": 39,
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/account-closure/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/features/tests/test_closure_continuation.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/account-closure",
+    "file": "core_apps/users/closure_views.py",
+    "handler": "core_apps.users.closure_views.receipt",
+    "line": 93,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/account-closure/receipt/",
+    "signals": [
+      "receipt"
+    ],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/account-closure",
+    "file": "core_apps/users/closure_views.py",
+    "handler": "core_apps.users.closure_views.queue",
+    "line": 59,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/account-closure/review/",
+    "signals": [
+      "headers"
+    ],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/account-closure",
+    "file": "core_apps/users/closure_views.py",
+    "handler": "core_apps.users.closure_views.review",
+    "line": 76,
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/account-closure/<uuid:identity>/review/",
+    "signals": [
+      "authority"
+    ],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/features/tests/test_closure_continuation.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/account-closure",
+    "file": "core_apps/users/closure_views.py",
+    "handler": "core_apps.users.closure_views.withdraw",
+    "line": 50,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/account-closure/<uuid:identity>/withdraw/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/features/tests/test_closure_continuation.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.security",
+    "line": 72,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.initial_enrollment",
+    "line": 59,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/initial-enrollment/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.staff_identities",
+    "line": 41,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/staff-identities/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.document_staff_identity",
+    "line": 48,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.recoveries",
+    "line": 79,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/recoveries/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.queue",
+    "line": 99,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/review/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.decide",
+    "line": 106,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.respond",
+    "line": 90,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.enroll",
+    "line": 115,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/totp_views.py",
+    "handler": "core_apps.users.totp_views.confirm",
+    "line": 122,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/email-change",
+    "file": "core_apps/users/email_change_views.py",
+    "handler": "core_apps.users.email_change_views.start",
+    "line": 19,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/email-change/start/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/users/tests/test_email_change.py"
+    ],
+    "throttles": "EmailChangeThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/email-change/<uuid:identity>/<str:action>/"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/email-change",
+    "file": "core_apps/users/email_change_views.py",
+    "handler": "core_apps.users.email_change_views.change",
+    "line": 27,
+    "methods": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "mvp_allowed": {
+      "DELETE": true,
+      "GET": true,
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/email-change/<uuid:identity>/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/users/tests/test_mvp_email_change_binding.py",
+      "core_apps/users/tests/test_email_change.py"
+    ],
+    "throttles": "EmailChangeThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/email-change/<uuid:identity>/"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/email-change",
+    "file": "core_apps/users/email_change_views.py",
+    "handler": "core_apps.users.email_change_views.change",
+    "line": 27,
+    "methods": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "mvp_allowed": {
+      "DELETE": true,
+      "GET": true,
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/email-change/<uuid:identity>/<str:action>/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/users/tests/test_mvp_email_change_binding.py",
+      "core_apps/users/tests/test_email_change.py"
+    ],
+    "throttles": "EmailChangeThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/security_views.py",
+    "handler": "core_apps.users.security_views.challenges",
+    "line": 20,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/challenges/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/features/tests/test_business_policy_private_export.py",
+      "core_apps/features/tests/test_rental_statement_delivery.py",
+      "core_apps/common/test_mobile_locale.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/security_views.py",
+    "handler": "core_apps.users.security_views.verify",
+    "line": 29,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/challenges/<uuid:identity>/verify/",
+    "signals": [],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/features/tests/test_business_policy_private_export.py",
+      "core_apps/features/tests/test_rental_statement_delivery.py",
+      "core_apps/common/test_mobile_locale.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/security_views.py",
+    "handler": "core_apps.users.security_views.sessions",
+    "line": 41,
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/sessions/",
+    "signals": [
+      "headers",
+      "lock",
+      "receipt"
+    ],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/users/tests/test_security_recovery.py",
+      "core_apps/users/tests/test_device_management.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/security",
+    "file": "core_apps/users/security_views.py",
+    "handler": "core_apps.users.security_views.session_metadata",
+    "line": 97,
+    "methods": [
+      "PATCH"
+    ],
+    "mvp_allowed": {
+      "PATCH": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/security/sessions/current/",
+    "signals": [
+      "headers"
+    ],
+    "style": "decorated FBV",
+    "tests": [
+      "core_apps/users/tests/test_device_management.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^o",
+    "file": "core_apps/users/views_parts/set_auth_cookies.py",
+    "handler": "core_apps.users.views_parts.set_auth_cookies.CustomProviderAuthView",
+    "line": 126,
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "name": "provider-auth",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "ProviderAuthSerializer",
+    "route": "api/v1/auth/^o/(?P<provider>\\S+)/$",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/register",
+    "file": "core_apps/users/views_parts/verify_email_apiview.py",
+    "handler": "core_apps.users.views_parts.verify_email_apiview.UserRegisterAPIView",
+    "line": 31,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-register",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "CreateUserSerializer",
+    "route": "api/v1/auth/register/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_otp_views.py",
+      "core_apps/users/tests/test_email_change.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/complete-register",
+    "file": "core_apps/users/views_parts/verify_email_apiview.py",
+    "handler": "core_apps.users.views_parts.verify_email_apiview.CompleteRegisterAPIView",
+    "line": 128,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "complete-register",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "CompleteRegisterSerializer",
+    "route": "api/v1/auth/complete-register/",
+    "signals": [
+      "upload"
+    ],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_complete_register.py",
+      "core_apps/profiles/tests/test_identity_media.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/verify-email/",
+      "api/v1/auth/verify-otp/"
+    ],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/verify",
+    "file": "core_apps/users/views_parts/verify_email_apiview.py",
+    "handler": "core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView",
+    "line": 65,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "verify-email",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "VerifyEmailSerializer",
+    "route": "api/v1/auth/verify/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_otp_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/verify/",
+      "api/v1/auth/verify-otp/"
+    ],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/verify-email",
+    "file": "core_apps/users/views_parts/verify_email_apiview.py",
+    "handler": "core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView",
+    "line": 65,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "VerifyEmailSerializer",
+    "route": "api/v1/auth/verify-email/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_otp_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/verify/",
+      "api/v1/auth/verify-email/"
+    ],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/verify-otp",
+    "file": "core_apps/users/views_parts/verify_email_apiview.py",
+    "handler": "core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView",
+    "line": 65,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "VerifyEmailSerializer",
+    "route": "api/v1/auth/verify-otp/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/resend-otp",
+    "file": "core_apps/users/views_parts/verify_email_apiview.py",
+    "handler": "core_apps.users.views_parts.verify_email_apiview.ResendOtpAPIView",
+    "line": 101,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "resend-otp",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "ResendOtpSerializer",
+    "route": "api/v1/auth/resend-otp/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_otp_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/login",
+    "file": "core_apps/users/views_parts/set_auth_cookies.py",
+    "handler": "core_apps.users.views_parts.set_auth_cookies.CustomTokenObtainPairView",
+    "line": 62,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "login",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "\u2014",
+    "request_schema": "CanonicalTokenObtainPairSerializer",
+    "route": "api/v1/auth/login/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/features/tests/test_full_cycle_http.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/common/test_mobile_locale.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py",
+      "core_apps/users/tests/test_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/token/refresh/"
+    ],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/refresh",
+    "file": "core_apps/users/views_parts/set_auth_cookies.py",
+    "handler": "core_apps.users.views_parts.set_auth_cookies.CustomTokenRefreshView",
+    "line": 86,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "refresh",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "\u2014",
+    "request_schema": "CanonicalTokenRefreshSerializer",
+    "route": "api/v1/auth/refresh/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_otp_views.py",
+      "core_apps/users/tests/test_sprint03_recovery.py",
+      "core_apps/users/tests/test_security_recovery.py",
+      "core_apps/users/tests/test_views.py",
+      "core_apps/users/tests/test_social_views.py",
+      "core_apps/users/tests/test_device_management.py",
+      "core_apps/users/tests/test_administrative_suspension.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/refresh/"
+    ],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/token",
+    "file": "core_apps/users/views_parts/set_auth_cookies.py",
+    "handler": "core_apps.users.views_parts.set_auth_cookies.CustomTokenRefreshView",
+    "line": 86,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "token-refresh",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "\u2014",
+    "request_schema": "CanonicalTokenRefreshSerializer",
+    "route": "api/v1/auth/token/refresh/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/logout",
+    "file": "core_apps/users/views_parts/set_auth_cookies.py",
+    "handler": "core_apps.users.views_parts.set_auth_cookies.LogoutAPIView",
+    "line": 147,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/logout/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/profiles/delete-account/"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/delete-account",
+    "file": "core_apps/users/views_parts/user_delete_apiview.py",
+    "handler": "core_apps.users.views_parts.user_delete_apiview.UserDeleteAPIView",
+    "line": 139,
+    "methods": [
+      "POST",
+      "DELETE"
+    ],
+    "mvp_allowed": {
+      "DELETE": true,
+      "POST": true
+    },
+    "name": "user-delete",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/delete-account/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_account_closure.py",
+      "core_apps/users/tests/test_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/users",
+    "file": "core_apps/users/views_parts/verify_email_apiview.py",
+    "handler": "core_apps.users.views_parts.verify_email_apiview.SetPasswordAPIView",
+    "line": 158,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-set-password",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "SetUserPasswordSerializer",
+    "route": "api/v1/auth/users/set_password/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_set_password.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/google",
+    "file": "core_apps/users/views_parts/user_delete_apiview.py",
+    "handler": "core_apps.users.views_parts.user_delete_apiview.GoogleAuthView",
+    "line": 25,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "google-login",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "GoogleAuthSerializer",
+    "route": "api/v1/auth/google/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_social_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/apple",
+    "file": "core_apps/users/views_parts/user_delete_apiview.py",
+    "handler": "core_apps.users.views_parts.user_delete_apiview.AppleAuthView",
+    "line": 57,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "apple-login",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "AppleAuthSerializer",
+    "route": "api/v1/auth/apple/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_social_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "\u2014",
+    "family": "api/auth/facebook",
+    "file": "core_apps/users/views_parts/user_delete_apiview.py",
+    "handler": "core_apps.users.views_parts.user_delete_apiview.FacebookAuthView",
+    "line": 94,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "facebook-login",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "AllowAny",
+    "request_schema": "FacebookAuthSerializer",
+    "route": "api/v1/auth/facebook/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_social_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "name": "user-list",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users\\.(?P{}[a-z0-9]+)",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "name": "user-list",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-activation",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/activation/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-activation",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "DELETE",
+      "GET",
+      "PATCH",
+      "PUT"
+    ],
+    "mvp_allowed": {
+      "DELETE": true,
+      "GET": true,
+      "PATCH": true,
+      "PUT": true
+    },
+    "name": "user-me",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/me/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "DELETE",
+      "GET",
+      "PATCH",
+      "PUT"
+    ],
+    "mvp_allowed": {
+      "DELETE": true,
+      "GET": true,
+      "PATCH": true,
+      "PUT": true
+    },
+    "name": "user-me",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-resend-activation",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/resend_activation/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-resend-activation",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-reset-password",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/reset_password/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-reset-password",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-reset-password-confirm",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/reset_password_confirm/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-reset-password-confirm",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-reset-username",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/reset_email/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-reset-username",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-reset-username-confirm",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/reset_email_confirm/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-reset-username-confirm",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-set-password",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/set_password/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-set-password",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-set-username",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/set_email/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "user-set-username",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "DELETE",
+      "GET",
+      "PATCH",
+      "PUT"
+    ],
+    "mvp_allowed": {
+      "DELETE": true,
+      "GET": true,
+      "PATCH": true,
+      "PUT": true
+    },
+    "name": "user-detail",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/(?P<id>[^/.]+)/$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/^users/$",
+      "api/v1/auth/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/activation/$",
+      "api/v1/auth/^users/activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/me/$",
+      "api/v1/auth/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/resend_activation/$",
+      "api/v1/auth/^users/resend_activation\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password/$",
+      "api/v1/auth/^users/reset_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_password_confirm/$",
+      "api/v1/auth/^users/reset_password_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email/$",
+      "api/v1/auth/^users/reset_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/reset_email_confirm/$",
+      "api/v1/auth/^users/reset_email_confirm\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_password/$",
+      "api/v1/auth/^users/set_password\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/set_email/$",
+      "api/v1/auth/^users/set_email\\.(?P<format>[a-z0-9]+)/?$",
+      "api/v1/auth/^users/(?P<id>[^/.]+)/$"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth/^users",
+    "file": "core_apps/users/rest_urls.py",
+    "handler": "core_apps.users.rest_urls.CanonicalUserViewSet",
+    "line": 7,
+    "methods": [
+      "DELETE",
+      "GET",
+      "PATCH",
+      "PUT"
+    ],
+    "mvp_allowed": {
+      "DELETE": true,
+      "GET": true,
+      "PATCH": true,
+      "PUT": true
+    },
+    "name": "user-detail",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "CurrentUserOrAdmin",
+    "request_schema": "UserSerializer",
+    "route": "api/v1/auth/^users/(?P<id>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF viewset",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/<drf_format_suffix:format>"
+    ],
+    "area": null,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth",
+    "file": ".venv/lib/python3.11/site-packages/rest_framework/routers.py",
+    "handler": "rest_framework.routers.APIRootView",
+    "line": 314,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "api-root",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/",
+    "signals": [],
+    "style": "framework-generated DRF CBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/"
+    ],
+    "area": null,
+    "authentication": "CookieAuthentication",
+    "family": "api/auth",
+    "file": ".venv/lib/python3.11/site-packages/rest_framework/routers.py",
+    "handler": "rest_framework.routers.APIRootView",
+    "line": 314,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "api-root",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/auth/<drf_format_suffix:format>",
+    "signals": [],
+    "style": "framework-generated DRF CBV",
+    "tests": [],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/identity_expiry_views.py",
+    "handler": "core_apps.profiles.identity_expiry_views.IdentityExpiryAPIView",
+    "line": 25,
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "name": "identity-expiry",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "ExpiryInput",
+    "route": "api/v1/profiles/identity-expiry/",
+    "signals": [
+      "headers",
+      "lock",
+      "receipt"
+    ],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/profiles/tests/test_identity_expiry.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/identity_recovery.py",
+    "handler": "core_apps.profiles.identity_recovery.IdentityOperationResolveAPIView",
+    "line": 8,
+    "methods": [
+      "POST"
+    ],
+    "mvp_allowed": {
+      "POST": true
+    },
+    "name": "identity-operation-resolve",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/",
+    "signals": [
+      "headers",
+      "receipt"
+    ],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/profiles/tests/test_identity_corrections.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/identity_views.py",
+    "handler": "core_apps.profiles.identity_views.IdentityMediaAPIView",
+    "line": 12,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "identity-media",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/profiles/identity-media/<slug:field>/",
+    "signals": [
+      "authority"
+    ],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/profiles/tests/test_identity_media.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/profile_edit_apiview.py",
+    "handler": "core_apps.profiles.views_parts.profile_edit_apiview.ProfileListAPIView",
+    "line": 31,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "profile-list",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "ProfileSerializer",
+    "route": "api/v1/profiles/all/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/profiles/tests/test_views.py",
+      "core_apps/profiles/tests/test_audit_privacy.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/profile_edit_apiview.py",
+    "handler": "core_apps.profiles.views_parts.profile_edit_apiview.ProfileDetailAPIView",
+    "line": 53,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "profile-detail",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "ProfileSerializer",
+    "route": "api/v1/profiles/user/my-profile/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/common/test_api_budgets.py",
+      "core_apps/profiles/tests/test_views.py",
+      "core_apps/profiles/tests/test_identity_media.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/profile_edit_apiview.py",
+    "handler": "core_apps.profiles.views_parts.profile_edit_apiview.ProfileUpdateAPIView",
+    "line": 67,
+    "methods": [
+      "GET",
+      "PUT",
+      "PATCH"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "PATCH": true,
+      "PUT": true
+    },
+    "name": "profile-update",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "UpdateProfileSerializer",
+    "route": "api/v1/profiles/user/update/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/profiles/tests/test_views.py",
+      "core_apps/profiles/tests/test_audit_privacy.py",
+      "core_apps/profiles/tests/test_identity_media.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/profile_edit_apiview.py",
+    "handler": "core_apps.profiles.views_parts.profile_edit_apiview.MyAccountDetailAPIView",
+    "line": 86,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "my-account",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "MyAccountScreenSerializer",
+    "route": "api/v1/profiles/my-account/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/features/tests/test_billing_contract_guards.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/common/test_api_budgets.py",
+      "core_apps/properties/tests/test_workspace_account_handoff.py",
+      "core_apps/profiles/tests/test_contract_projection.py",
+      "core_apps/profiles/tests/test_my_account_locale.py",
+      "core_apps/profiles/tests/test_screen_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/profile_edit_apiview.py",
+    "handler": "core_apps.profiles.views_parts.profile_edit_apiview.AccountSummaryDetailAPIView",
+    "line": 104,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": false
+    },
+    "name": "account-summary",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "AccountSummaryScreenSerializer",
+    "route": "api/v1/profiles/account-summary/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/features/tests/test_billing_contract_guards.py",
+      "core_apps/profiles/tests/test_screen_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/profile_edit_apiview.py",
+    "handler": "core_apps.profiles.views_parts.profile_edit_apiview.ProfileEditAPIView",
+    "line": 122,
+    "methods": [
+      "GET",
+      "PUT",
+      "PATCH"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "PATCH": true,
+      "PUT": true
+    },
+    "name": "profile-edit",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "ProfileEditSerializer",
+    "route": "api/v1/profiles/edit/",
+    "signals": [
+      "upload"
+    ],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/properties/tests/test_workspace_account_handoff.py",
+      "core_apps/profiles/tests/test_mvp_profile_authority.py",
+      "core_apps/profiles/tests/test_screen_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/user_settings_apiview.py",
+    "handler": "core_apps.profiles.views_parts.user_settings_apiview.UserSettingsAPIView",
+    "line": 25,
+    "methods": [
+      "GET",
+      "PUT",
+      "PATCH"
+    ],
+    "mvp_allowed": {
+      "GET": true,
+      "PATCH": true,
+      "PUT": true
+    },
+    "name": "user-settings",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "UserSettingsSerializer",
+    "route": "api/v1/profiles/settings/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/common/test_api_budgets.py",
+      "core_apps/profiles/tests/test_mvp_profile_authority.py",
+      "core_apps/profiles/tests/test_settings_api.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/user_settings_apiview.py",
+    "handler": "core_apps.profiles.views_parts.user_settings_apiview.VerificationStatusAPIView",
+    "line": 138,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "verification-status",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "VerificationStatusSerializer",
+    "route": "api/v1/profiles/verification-status/",
+    "signals": [
+      "headers"
+    ],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/profiles/tests/test_mvp_review_note_privacy.py",
+      "core_apps/profiles/tests/test_verification_and_contracts.py",
+      "core_apps/profiles/tests/test_identity_corrections.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/user_settings_apiview.py",
+    "handler": "core_apps.profiles.views_parts.user_settings_apiview.TenantContractsListAPIView",
+    "line": 156,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": false
+    },
+    "name": "tenant-contracts-list",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "TenantContractSerializer",
+    "route": "api/v1/profiles/contracts/",
+    "signals": [
+      "headers"
+    ],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/profiles/tests/test_contract_projection.py",
+      "core_apps/profiles/tests/test_my_account_locale.py",
+      "core_apps/profiles/tests/test_verification_and_contracts.py",
+      "core_apps/profiles/tests/test_screen_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [
+      "api/v1/auth/delete-account/"
+    ],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/users/views_parts/user_delete_apiview.py",
+    "handler": "core_apps.users.views_parts.user_delete_apiview.UserDeleteAPIView",
+    "line": 139,
+    "methods": [
+      "POST",
+      "DELETE"
+    ],
+    "mvp_allowed": {
+      "DELETE": true,
+      "POST": true
+    },
+    "name": "profile-delete-account",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "\u2014",
+    "route": "api/v1/profiles/delete-account/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/users/tests/test_account_closure.py",
+      "core_apps/users/tests/test_views.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/user_settings_apiview.py",
+    "handler": "core_apps.profiles.views_parts.user_settings_apiview.OwnerUnreadCountsAPIView",
+    "line": 75,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "owner-unread-counts",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "OwnerUnreadCountsSerializer",
+    "route": "api/v1/profiles/owner/unread-counts/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/features/tests/test_request_counts.py",
+      "core_apps/profiles/tests/test_mvp_record_counts.py",
+      "core_apps/profiles/tests/test_unread_counts_and_my_rates.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/user_settings_apiview.py",
+    "handler": "core_apps.profiles.views_parts.user_settings_apiview.TenantUnreadCountsAPIView",
+    "line": 96,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": true
+    },
+    "name": "tenant-unread-counts",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "TenantUnreadCountsSerializer",
+    "route": "api/v1/profiles/tenant/unread-counts/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/features/tests/test_company_role_contexts.py",
+      "core_apps/features/tests/test_housing_group_management.py",
+      "core_apps/features/tests/test_request_counts.py",
+      "core_apps/profiles/tests/test_mvp_record_counts.py",
+      "core_apps/profiles/tests/test_unread_counts_and_my_rates.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  },
+  {
+    "aliases": [],
+    "area": 1,
+    "authentication": "CookieAuthentication",
+    "family": "api/profiles",
+    "file": "core_apps/profiles/views_parts/user_settings_apiview.py",
+    "handler": "core_apps.profiles.views_parts.user_settings_apiview.TenantMyRatesListAPIView",
+    "line": 120,
+    "methods": [
+      "GET"
+    ],
+    "mvp_allowed": {
+      "GET": false
+    },
+    "name": "tenant-my-rates",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "permissions": "IsAuthenticated",
+    "request_schema": "TenantMyRateSerializer",
+    "route": "api/v1/profiles/my-rates/",
+    "signals": [],
+    "style": "DRF CBV",
+    "tests": [
+      "core_apps/profiles/tests/test_unread_counts_and_my_rates.py"
+    ],
+    "throttles": "AnonRateThrottle, UserRateThrottle"
+  }
+]

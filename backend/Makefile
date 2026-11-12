@@ -201,3 +201,10 @@ test-sprint04-performance: ## Sprint 04 budgets; use scratch CYCLE_SETTINGS/BASE
 sprint04-coverage: ## Regenerate the 795-route performance evidence ledger without database access
 	DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint04_coverage.py \
 		--output sprints/evidence/sprint-04/route-coverage.json
+
+.PHONY: test-sprint05-identity
+test-sprint05-identity: ## Identity CBV/service contracts; supply isolated CYCLE_SETTINGS and BASELINE_OUT
+	mkdir -p $(BASELINE_OUT)/sprint-05
+	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-05/junit.xml \
+		core_apps/users core_apps/profiles

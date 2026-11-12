@@ -1278,3 +1278,11 @@ Integrated correctness and recovery changes onto current main while preserving S
 ### Sprint 04 integration
 
 Integrated the prepared performance implementation, regression tests, additive purge-marker migration and coverage generator. Sprint 04 remains partially accepted: API-wide measurement and resource/lock budgets are unfinished, as detailed in its sanitized evidence summary. No deployment or existing-database operation is included.
+
+## 2026-11-12
+
+### Publish Sprint 05 identity architecture
+- **What:** Converted identity function routes into explicit CBVs, extracted account/session/password/expiry services, prepared bounded closure/recovery reads and added compatible opt-in pagination. Preserved current authority, closure/evidence obligations and existing aliases.
+- **Integration:** Based on origin/main at `0640a1d2`; retained newer cookie-origin, media provenance, deletion-permission and safe social-adoption rules. Excluded unrelated Sprint 03/04 working changes.
+- **Validation:** Isolated identity/profile suite: 1,449 passed, 19 PostgreSQL-only skips. Cookie-origin/shared response contracts: 94 passed. Django checks, migration consistency and whitespace passed. No new migrations or dependencies.
+- **Boundary:** No production/database/deployment action. Raw implementation diagnostics remain local; publication contains reviewed source, contract fixtures and this validation summary. Live-provider/device/deployment signoff remains Sprint 12.

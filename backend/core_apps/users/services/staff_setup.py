@@ -30,16 +30,9 @@ from . import totp, totp_recovery
 def identity_projection(user, identity=None):
     identity = identity or StaffSecurityIdentity.objects.filter(user=user).first()
     factor = TotpFactor.objects.filter(user=user).first()
-    return {
-        "user_id": str(user.id),
-        "email": user.email,
-        "name": user.get_full_name,
-        "documented": bool(identity),
-        "configured": bool(factor and factor.confirmed_at and factor.secret_ciphertext),
-        "recovery_pending": totp.pending_recovery(user),
-        "identity_reference": identity.evidence_reference if identity else "",
-        "known_channel_reference": identity.known_channel_reference if identity else "",
-    }
+    from ..selectors import staff_identity_projection
+
+    return staff_identity_projection(user, identity, factor, totp.pending_recovery(user))
 
 
 def _notice(user, actor, subject, action):
@@ -81,14 +74,10 @@ def identities(request):
     user, _, profile = totp_recovery._actor(request)
     if not totp_recovery._is_owner(user, profile):
         raise PermissionDenied("System-owner authority is required.")
-    staff = (
-        User.objects.filter(is_active=True)
-        .filter(Q(staff_profile__is_active=True) | Q(is_superuser=True))
-        .exclude(pk=user.pk)
-        .order_by("email")
-        .distinct()
-    )
-    return {"results": [identity_projection(target) for target in staff]}
+    from ..selectors import staff_identities
+
+    result = staff_identities(user, request.query_params if hasattr(request, "query_params") else None)
+    return result if isinstance(result, dict) else {"results": result}
 
 
 @transaction.atomic

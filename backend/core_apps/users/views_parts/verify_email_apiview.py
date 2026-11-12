@@ -183,6 +183,7 @@ class SetPasswordAPIView(generics.GenericAPIView):
             user=request.user,
             current_password=serializer.validated_data["current_password"],
             new_password=serializer.validated_data["new_password"],
+            auth_claims=request.auth,
         )
 
         return Response(

@@ -1,10 +1,9 @@
 """Djoser social adapters share the same revocable issuer as native login."""
 
-from .sessions import issue_refresh
+from .sessions import issue_token_pair
 
 
 class BoundTokenStrategy:
     @classmethod
     def obtain(cls, user):
-        refresh = issue_refresh(user)
-        return {"access": str(refresh.access_token), "refresh": str(refresh), "user": user}
+        return {**issue_token_pair(user), "user": user}

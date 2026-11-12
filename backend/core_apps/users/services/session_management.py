@@ -147,3 +147,37 @@ def revoke_selected(request):
         action=apply,
         auth_claims=request.auth,
     )
+
+
+class SessionActionInput(serializers.Serializer):
+    action = serializers.ChoiceField(
+        choices=["revoke_all", "revoke_session", "revoke_others"],
+        error_messages={key: "Use revoke_all, revoke_session or revoke_others."
+                        for key in ("required", "null", "invalid_choice")},
+    )
+
+
+def revoke_sessions(request):
+    """Dispatch the established account-session command under current authority."""
+    body = SessionActionInput(data=request.data)
+    body.is_valid(raise_exception=True)
+    action = body.validated_data["action"]
+    if action in {"revoke_session", "revoke_others"}:
+        return revoke_selected(request)
+    if action != "revoke_all":
+        raise serializers.ValidationError(
+            {"action": "Use revoke_all, revoke_session or revoke_others."}
+        )
+    return revoke_every_session(request.user, request.auth)
+
+
+@transaction.atomic
+def revoke_every_session(user, claims):
+    """Account lock precedes session/device revocation, including legacy clients."""
+    from .sessions import revoke_all
+
+    current = User.objects.select_for_update().get(pk=user.pk)
+    if claims:
+        validate_session(current, claims)
+    revoke_all(current, actor=current, action="session.revoke_all")
+    return {"status": "revoked"}, 200, False

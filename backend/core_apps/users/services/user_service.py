@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 # * User registration service
 @transaction.atomic
-def register_user(validated_data: dict) -> Any:
+def register_user(validated_data: dict, *, dispatch_otp=True, require_activation=False) -> Any:
     """
     ? Creates a new user instance, populates profile fields,
     ? and generates & dispatches an email OTP verification code.
@@ -33,6 +33,10 @@ def register_user(validated_data: dict) -> Any:
             raise ValidationError({"email": "This email is unavailable."})
         raise
 
+    if require_activation:
+        user.is_active = False
+        user.save(update_fields=["is_active"])
+
     update_fields = []
     if hasattr(user, "profile"):
         if birth_date:
@@ -44,10 +48,11 @@ def register_user(validated_data: dict) -> Any:
         if update_fields:
             user.profile.save(update_fields=update_fields)
 
-    create_and_send_otp(user)
+    if dispatch_otp:
+        create_and_send_otp(user)
 
     logger.info(
-        "Registered user %s and dispatched verification OTP.",
+        "Registered user %s.",
         user.id,
     )
     return user
@@ -159,8 +164,9 @@ def complete_user_registration(
 
 # * Change user password service
 @transaction.atomic
-@transaction.atomic
-def change_user_password(user: Any, current_password: str, new_password: str) -> None:
+def change_user_password(
+    user: Any, current_password: str, new_password: str, *, auth_claims=None
+) -> None:
     """
     Validates current password, checks usability for social accounts,
     and revokes sessions after a password change.
@@ -172,7 +178,15 @@ def change_user_password(user: Any, current_password: str, new_password: str) ->
 
     from core_apps.users.models import User
 
+    snapshot = user
     user = User.objects.select_for_update().get(pk=user.pk)
+    from rest_framework_simplejwt.exceptions import AuthenticationFailed
+    from .sessions import validate_session
+
+    if not user.is_active or user.closed_at or user.security_epoch != snapshot.security_epoch:
+        raise AuthenticationFailed("Session revoked. Sign in again.", code="session_revoked")
+    if auth_claims is not None:
+        validate_session(user, auth_claims)
     if not user.has_usable_password():
         raise ValidationError(
             {
@@ -188,9 +202,7 @@ def change_user_password(user: Any, current_password: str, new_password: str) ->
     except DjangoValidationError as exc:
         raise ValidationError({"new_password": list(exc.messages)})
 
-    user.set_password(new_password)
-    user.save(update_fields=["password"])
-    from .sessions import revoke_all
+    from .passwords import apply_password
 
-    revoke_all(user, action="password.change")
+    apply_password(user, new_password)
     logger.info("Password changed and sessions revoked")

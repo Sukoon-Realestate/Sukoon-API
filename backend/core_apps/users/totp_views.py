@@ -1,5 +1,5 @@
+from .http import IdentityAPIView as APIView
 from rest_framework import serializers
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from core_apps.common.renderers import GenericJsonRenderer
@@ -38,29 +38,38 @@ class StaffIdentityBody(serializers.Serializer):
     identity_matched = serializers.BooleanField()
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def staff_identities(request):
-    return response(staff_setup.identities(request))
+class StaffIdentityListAPIView(APIView):
+    name = "Staff Identities"  # Preserve OPTIONS metadata.
+    http_method_names = ['get', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def get(self, request):
+        return response(staff_setup.identities(request))
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def document_staff_identity(request, identity):
-    body = StaffIdentityBody(data=request.data)
-    body.is_valid(raise_exception=True)
-    return response(
-        staff_setup.document_identity(request, identity, body.validated_data)
-    )
+class StaffIdentityDocumentAPIView(APIView):
+    name = "Document Staff Identity"  # Preserve OPTIONS metadata.
+    http_method_names = ['post', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request, identity):
+        body = StaffIdentityBody(data=request.data)
+        body.is_valid(raise_exception=True)
+        return response(
+            staff_setup.document_identity(request, identity, body.validated_data)
+        )
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def initial_enrollment(request):
-    return response(staff_setup.enroll(request))
+class StaffInitialEnrollmentAPIView(APIView):
+    name = "Initial Enrollment"  # Preserve OPTIONS metadata.
+    http_method_names = ['post', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request):
+        return response(staff_setup.enroll(request))
 
 
 def response(value, status=200):
@@ -69,61 +78,83 @@ def response(value, status=200):
     )
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def security(request):
-    return response(totp_recovery.status(request))
+class TotpSecurityAPIView(APIView):
+    name = "Security"  # Preserve OPTIONS metadata.
+    http_method_names = ['get', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def get(self, request):
+        return response(totp_recovery.status(request))
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def recoveries(request):
-    body = RecoveryBody(data=request.data)
-    body.is_valid(raise_exception=True)
-    return response(
-        totp_recovery.create_request(request, body.validated_data["reason"]), 201
-    )
+class TotpRecoveryCreateAPIView(APIView):
+    name = "Recoveries"  # Preserve OPTIONS metadata.
+    http_method_names = ['post', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request):
+        body = RecoveryBody(data=request.data)
+        body.is_valid(raise_exception=True)
+        return response(
+            totp_recovery.create_request(request, body.validated_data["reason"]), 201
+        )
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def respond(request, identity):
-    body = RecoveryResponseBody(data=request.data)
-    body.is_valid(raise_exception=True)
-    return response(totp_recovery.respond(request, identity, body.validated_data))
+class TotpRecoveryRespondAPIView(APIView):
+    name = "Respond"  # Preserve OPTIONS metadata.
+    http_method_names = ['post', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request, identity):
+        body = RecoveryResponseBody(data=request.data)
+        body.is_valid(raise_exception=True)
+        return response(totp_recovery.respond(request, identity, body.validated_data))
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def queue(request):
-    return response({"results": totp_recovery.review_queue(request)})
+class TotpRecoveryQueueAPIView(APIView):
+    name = "Queue"  # Preserve OPTIONS metadata.
+    http_method_names = ['get', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def get(self, request):
+        result = totp_recovery.review_queue(request)
+        return response(result if isinstance(result, dict) else {"results": result})
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def decide(request, identity):
-    body = DecisionBody(data=request.data)
-    body.is_valid(raise_exception=True)
-    return response(totp_recovery.decide(request, identity, body.validated_data))
+class TotpRecoveryDecisionAPIView(APIView):
+    name = "Decide"  # Preserve OPTIONS metadata.
+    http_method_names = ['post', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request, identity):
+        body = DecisionBody(data=request.data)
+        body.is_valid(raise_exception=True)
+        return response(totp_recovery.decide(request, identity, body.validated_data))
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def enroll(request, identity):
-    return response(totp_recovery.enroll(request, identity))
+class TotpRecoveryEnrollAPIView(APIView):
+    name = "Enroll"  # Preserve OPTIONS metadata.
+    http_method_names = ['post', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request, identity):
+        return response(totp_recovery.enroll(request, identity))
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def confirm(request, identity):
-    body = serializers.CharField(min_length=6, max_length=6).run_validation(
-        request.data.get("code")
-    )
-    return response(totp_recovery.confirm(request, identity, body))
+class TotpEnrollmentConfirmAPIView(APIView):
+    name = "Confirm"  # Preserve OPTIONS metadata.
+    http_method_names = ['post', 'options']
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request, identity):
+        body = serializers.CharField(min_length=6, max_length=6).run_validation(
+            request.data.get("code")
+        )
+        return response(totp_recovery.confirm(request, identity, body))

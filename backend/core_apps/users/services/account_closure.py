@@ -37,10 +37,10 @@ def projection(item, *, review=False):
         "decision_reason": item.decision_reason,
         "created_at": item.created_at.isoformat(),
         "completed_at": item.completed_at.isoformat() if item.completed_at else None,
-        "erasure_pending": item.accountprofileerasurefile_set.filter(
-            deleted_at__isnull=True
-        ).exists(),
-        "blockers": blockers(item.user) if item.active else [],
+        "erasure_pending": (item.prepared_erasure if hasattr(item, "prepared_erasure") else
+                            item.accountprofileerasurefile_set.filter(deleted_at__isnull=True).exists()),
+        "blockers": (item.prepared_blockers if hasattr(item, "prepared_blockers") else
+                     (blockers(item.user) if item.active else [])),
         "history": [
             {
                 "action": d.action,
@@ -49,17 +49,31 @@ def projection(item, *, review=False):
                 "at": d.created_at.isoformat(),
                 "blockers": d.blockers,
             }
-            for d in item.decisions.order_by("created_at")
+            for d in (item.prepared_history if hasattr(item, "prepared_history") else
+                      item.decisions.order_by("created_at"))
         ],
     }
+    if hasattr(item, "prepared_history_page"):
+        value["history_page"] = item.prepared_history_page
     if review:
         value.update(user_id=str(item.user.id), account_name=item.user.get_full_name)
     return value
 
 
-def summary(user):
+def summary(user, *, history=None):
+    from .closure_reads import prepare_projections
+
     item = latest(user)
+    if item:
+        prepare_projections([item], page=history)
+    events = (AccountClosureDecision.objects.filter(request__user=user)
+              .select_related("request").order_by("created_at", "pk"))
+    metadata = {}
+    if history:
+        metadata["history_page"] = history.metadata(events.count())
+        events = events[history.offset:history.offset + history.size]
     return {
+        **metadata,
         "account_id": str(user.id),
         "request": projection(item),
         "expected_revision": item.revision if item else 0,
@@ -72,9 +86,7 @@ def summary(user):
                 "reason": event.reason,
                 "at": event.created_at.isoformat(),
             }
-            for event in AccountClosureDecision.objects.filter(request__user=user)
-            .select_related("request")
-            .order_by("created_at")
+            for event in events
         ],
     }
 
@@ -376,3 +388,31 @@ def decide(request, identity, data):
         return projection(item, review=True), 200, item.id
 
     return _run(request, f"account.closure.review:{identity}", data, apply)
+
+
+def resolve_receipt(request, operation):
+    """Fence a lost command before another attempt; never replay its effects."""
+    from core_apps.common.idempotency import resolve_or_close, request_key
+    from rest_framework import serializers
+
+    if not operation.startswith("account.closure."):
+        raise serializers.ValidationError("Unsupported account operation.")
+    if operation.startswith("account.closure.review:"):
+        require_reviewer(request)
+    record = resolve_or_close(
+        user=request.user, operation=operation, key=request_key(request),
+        auth_claims=request.auth or {},
+    )
+    return {
+        "state": record.recovery_status,
+        "response": record.response_data,
+        "status_code": record.response_status,
+    }
+
+
+def closure_required():
+    """All retired destructive aliases share the reviewed-closure decision."""
+    return {
+        "message": "راجع طلب حذف الحساب من إعدادات الحساب. / Use the account closure review in account settings.",
+        "code": "account_closure_review_required",
+    }

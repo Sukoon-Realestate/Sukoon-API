@@ -1,13 +1,13 @@
-from django.db import transaction
+"""HTTP adapters for challenges and revocable account sessions."""
 from rest_framework import serializers
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from .http import IdentityAPIView as APIView
+
+from core_apps.common.idempotency import response_headers
 from core_apps.common.renderers import GenericJsonRenderer
-from .services import sensitive_actions
-from .services.sessions import revoke_all
-from .models import AuthSession, User
-from django.utils import timezone
+from .services import sensitive_actions, session_management
+from .selectors import active_sessions
 
 
 class ChallengeBody(serializers.Serializer):
@@ -17,89 +17,73 @@ class ChallengeBody(serializers.Serializer):
     payload = serializers.DictField()
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def challenges(request):
-    body = ChallengeBody(data=request.data)
-    body.is_valid(raise_exception=True)
-    return Response(sensitive_actions.begin(request, body.validated_data), status=201)
+class AssertionField(serializers.Field):
+    """Preserve the provider assertion's exact bytes and established error."""
+
+    def run_validation(self, value=serializers.empty):
+        if not isinstance(value, str) or not 1 <= len(value) <= 16384:
+            raise serializers.ValidationError("A provider assertion is required.")
+        return value
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def verify(request, identity):
-    assertion = request.data.get("assertion")
-    if not isinstance(assertion, str) or not 1 <= len(assertion) <= 16384:
-        raise serializers.ValidationError(
-            {"assertion": "A provider assertion is required."}
+class AssertionBody(serializers.Serializer):
+    assertion = AssertionField(required=False)
+
+    def validate(self, data):
+        if "assertion" not in data:
+            raise serializers.ValidationError({"assertion": "A provider assertion is required."})
+        return data
+
+
+class SecurityChallengeAPIView(APIView):
+    name = "Challenges"  # Preserve OPTIONS metadata.
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request):
+        body = ChallengeBody(data=request.data)
+        body.is_valid(raise_exception=True)
+        return Response(sensitive_actions.begin(request, body.validated_data), status=201)
+
+
+class SecurityChallengeVerifyAPIView(APIView):
+    name = "Verify"  # Preserve OPTIONS metadata.
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request, identity):
+        body = AssertionBody(data=request.data)
+        body.is_valid(raise_exception=True)
+        return Response(sensitive_actions.verify(request, identity, body.validated_data["assertion"]))
+
+
+class AuthSessionListAPIView(APIView):
+    name = "Sessions"  # Preserve OPTIONS metadata.
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def get(self, request):
+        return Response(
+            active_sessions(request.user, request.auth, request.query_params),
+            headers={"Cache-Control": "private, no-store"},
         )
-    return Response(sensitive_actions.verify(request, identity, assertion))
+
+    def post(self, request):
+        data, code, replayed = session_management.revoke_sessions(request)
+        return Response(data, status=code, headers=response_headers(replayed))
 
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def sessions(request):
-    if request.method == "POST":
-        action = request.data.get("action")
-        if action in {"revoke_session", "revoke_others"}:
-            from .services.session_management import revoke_selected
-            from core_apps.common.idempotency import response_headers
+class AuthSessionMetadataAPIView(APIView):
+    name = "Session Metadata"  # Preserve OPTIONS metadata.
+    http_method_names = ["patch", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
 
-            data, code, replayed = revoke_selected(request)
-            return Response(data, status=code, headers=response_headers(replayed))
-        if action != "revoke_all":
-            raise serializers.ValidationError(
-                {"action": "Use revoke_all, revoke_session or revoke_others."}
-            )
-        with transaction.atomic():
-            current = User.objects.select_for_update().get(pk=request.user.pk)
-            if request.auth:
-                from .services.sessions import validate_session
-
-                validate_session(current, request.auth)
-            revoke_all(
-                current,
-                actor=current,
-                action="session.revoke_all",
-            )
-        return Response({"status": "revoked"})
-    return Response(
-        {
-            "sensitive_actions_frozen": request.user.sensitive_actions_frozen,
-            "results": [
-                {
-                    "id": str(item.id),
-                    "created_at": item.created_at.isoformat(),
-                    "expires_at": item.expires_at.isoformat(),
-                    "current": str(item.id) == (request.auth or {}).get("session_id"),
-                    "client_platform": item.client_platform or "",
-                    "device_model": item.device_model or "",
-                    "os_version": item.os_version or "",
-                    "app_version": item.app_version or "",
-                    "last_seen_at": (
-                        item.last_seen_at.isoformat() if item.last_seen_at else ""
-                    ),
-                }
-                for item in AuthSession.objects.filter(
-                    user=request.user,
-                    revoked_at__isnull=True,
-                    expires_at__gt=timezone.now(),
-                )
-            ],
-        },
-        headers={"Cache-Control": "private, no-store"},
-    )
-
-
-@api_view(["PATCH"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def session_metadata(request):
-    from .services.session_management import update_metadata
-
-    return Response(
-        update_metadata(request), headers={"Cache-Control": "private, no-store"}
-    )
+    def patch(self, request):
+        return Response(
+            session_management.update_metadata(request),
+            headers={"Cache-Control": "private, no-store"},
+        )

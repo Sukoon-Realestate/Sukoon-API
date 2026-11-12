@@ -139,6 +139,17 @@ class CustomTokenRefreshView(TokenRefreshView):
 
 
 class CustomProviderAuthView(ProviderAuthView):
+    def initial(self, request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
+        from ..services.provider_registry import require_supported_provider
+
+        if request.method == "GET":
+            from djoser.conf import settings as djoser_settings
+
+            if request.query_params.get("redirect_uri") not in djoser_settings.SOCIAL_AUTH_ALLOWED_REDIRECT_URIS:
+                return  # Preserve the inherited redirect validation's error precedence.
+        require_supported_provider(kwargs.get("provider"))
+
     def post(self, request: Request, *args, **kwargs) -> Response:
         from rest_framework.exceptions import NotFound
         from social_core.exceptions import MissingBackend
@@ -182,10 +193,9 @@ class LogoutAPIView(APIView):
 
 
 def _issue_jwt(user) -> dict:
-    from ..services.sessions import issue_refresh
+    from ..services.sessions import issue_token_pair
 
-    refresh = issue_refresh(user)
-    return {"access": str(refresh.access_token), "refresh": str(refresh)}
+    return issue_token_pair(user)
 
 
 def _user_payload(user) -> dict:
