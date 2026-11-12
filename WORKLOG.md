@@ -1286,3 +1286,23 @@ Integrated the prepared performance implementation, regression tests, additive p
 - **Integration:** Based on origin/main at `0640a1d2`; retained newer cookie-origin, media provenance, deletion-permission and safe social-adoption rules. Excluded unrelated Sprint 03/04 working changes.
 - **Validation:** Isolated identity/profile suite: 1,449 passed, 19 PostgreSQL-only skips. Cookie-origin/shared response contracts: 94 passed. Django checks, migration consistency and whitespace passed. No new migrations or dependencies.
 - **Boundary:** No production/database/deployment action. Raw implementation diagnostics remain local; publication contains reviewed source, contract fixtures and this validation summary. Live-provider/device/deployment signoff remains Sprint 12.
+
+
+### Sprint 03–05 main integration validation — 2026-11-12
+
+Integrated Sprint 03 correctness/recovery, Sprint 04 performance work and Sprint 05 identity CBVs on main `0640a1d2`, retaining its newer Sprint 01/02 protections. The original development checkout remains intact.
+
+| Validation | Result |
+|---|---|
+| Full MVP regression, 5,877 cases | 5,390 passed, 477 skipped, 10 expected failures |
+| Full restoration regression, 5,877 cases | 5,390 passed, 477 skipped, 10 expected failures |
+| Disposable PostgreSQL identity/profile and Sprint 03/04 regressions | 1,565 passed, 4 intentional unsupported-avatar-alias skips |
+| Disposable PostgreSQL real HTTP journeys | 12 passed |
+| Django checks, migration source consistency, diff whitespace | Passed |
+| Route/method/alias identities | All 795 patterns preserved |
+
+The initial full runs each reported 12 setup errors because sandbox permissions blocked temporary localhost test-server sockets. All 12 affected cases were rerun with local socket access in each mode: seven passed and five correctly skipped as PostgreSQL-only. Replacing those setup-error results yields the complete-mode counts above, with zero remaining assertion failures or setup errors. All 12 journeys then passed on disposable PostgreSQL. Raw logs, XML and local environment diagnostics remain outside the public repository.
+
+No application code changed after these validation runs started; subsequent changes only clarify documentation and record results. Tests used scratch settings with environment files disabled, isolated databases/storage and a new private PostgreSQL cluster. That cluster was stopped after validation. No existing database, production server, deployment, migration or historical backfill was targeted. Prior concurrent development-database activity remains documented locally; session-wide byte-for-byte preservation cannot be certified.
+
+Remaining acceptance: Sprint 04 is still partial (20 routes have partial service probes; 775 lack measurements; full resource/history/provider/lock budgets and solver snapshot/revalidation work remain unfinished). Legacy Sprint 03 tombstones without receipts/edit history fail closed. Sprint 05 retains user-approved legacy full-list responses with optional bounded pagination, so legacy output remains data-dependent. Final live-provider/device/load/deployment signoff remains Sprint 12. Additive migrations are committed but have not been applied to existing databases. Work stops after Sprint 05.

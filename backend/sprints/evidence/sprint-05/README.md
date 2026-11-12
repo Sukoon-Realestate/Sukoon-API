@@ -1,6 +1,6 @@
 # Sprint 05 publication evidence
 
-This branch contains Sprint 05 identity CBVs, service boundaries, prepared reads,
+The isolated Sprint 05 publication contains identity CBVs, service boundaries, prepared reads,
 compatible opt-in pagination and current-authority safeguards. It is based on
 origin/main at `0640a1d2` and preserves newer cookie-origin protection, media
 provenance, deletion permissions and safe social-adoption rules.
@@ -43,7 +43,7 @@ provenance and social-adoption credential/session revocation. Unsupported OAuth
 provider POST retains main's 404; GET retains redirect validation precedence.
 The signed-provider test permits the newer base's additional adoption epoch.
 
-Only Sprint 05 source, guidance, contract fixtures and this sanitized validation
-summary are included. Historical combined-workspace full-suite/PostgreSQL
+The isolated Sprint 05 commit includes its source, guidance, contract fixtures and this sanitized validation
+summary. Main additionally integrates Sprint 03 and Sprint 04; combined results are recorded in WORKLOG.md. Historical combined-workspace full-suite/PostgreSQL
 results are retained locally and are not presented as isolated-publication runs.
 Final live-provider/device/load/deployment signoff remains Sprint 12.
