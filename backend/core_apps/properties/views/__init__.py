@@ -22,7 +22,7 @@ from .property import (
     PropertyUpdateAPIView,
     PropertyStatisticsAPIView,
     PropertyToggleVisibilityAPIView,
-    confirm_property_availability,
+    ConfirmPropertyAvailabilityAPIView,
 )
 from .visit import (
     PropertyVisitCreateAPIView,

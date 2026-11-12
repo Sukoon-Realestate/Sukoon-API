@@ -28,3 +28,20 @@ viewer if converting it; preserve CSP/template behavior. Preserve streaming PUT 
   Cairo DST slot boundaries and request ordering pass focused cases and necessary PostgreSQL races.
 - Page/query/payload budgets, headers, no-store/nosniff/referrer controls, status/error envelopes and supported aliases
   remain stable. Do not remove the explicit legacy client-update responses without client approval.
+
+## Implementation record — 2026-11-12
+
+Implemented the 17 property and 42 custom-decorated tour endpoint definitions as
+explicit classes, covering 85 converted aliases in the 127-pattern scoped API
+inventory; the two HTML viewer routes now use a Django View. Domain commands own
+image ordering, weekly/dated availability, appointment receipts/arrival/time
+proposals, capture selection/session/room/job/coaching mutations and credential
+lifecycle. Tour receipt execution supplies the locked current actor. Prepared
+review, owner-tour and capture selectors batch nested data and authority facts.
+Public listing eligibility applies to new and already-issued tour credentials
+and signed bytes, with private previews authorized separately.
+
+The [Sprint 06 evidence report](evidence/sprint-06/README.md) records the integrated
+publication checks, compatibility limits and worker coverage. Source-derived and
+synthetic contract fixtures are published; raw diagnostics remain local. Publication
+preserves the later main-branch performance/security fixes. Sprint 07 was not started.

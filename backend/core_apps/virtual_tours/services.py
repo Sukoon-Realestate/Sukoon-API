@@ -10,20 +10,19 @@ from .validation import validate_authoring
 def revision_payload(revision):
     public_reason = ""
     if revision.review_state == "rejected":
-        public_reason = (
-            revision.prepared_review_reason or ""
-            if hasattr(revision, "prepared_review_reason")
-            else (
-                revision.reviews.filter(
-                    decision="rejected",
-                    source_hash=revision.source_hash,
-                )
-                .order_by("-created_at", "-pk")
-                .values_list("public_reason", flat=True)
-                .first()
-                or ""
+        if hasattr(revision, "prepared_review_reason"):
+            public_reason = revision.prepared_review_reason or ""
+        elif hasattr(revision, "prepared_reviews"):
+            public_reason = next(
+                (event.public_reason for event in revision.prepared_reviews
+                 if event.decision == "rejected" and event.source_hash == revision.source_hash),
+                "",
             )
-        )
+        else:
+            public_reason = (
+                revision.reviews.filter(decision="rejected", source_hash=revision.source_hash)
+                .order_by("-created_at", "-pk").values_list("public_reason", flat=True).first() or ""
+            )
     return {
         "id": str(revision.id),
         "tour_id": str(revision.tour.id),
@@ -59,7 +58,11 @@ def revision_payload(revision):
 
 
 def tour_payload(tour):
-    latest = tour.revisions.order_by("-created_at").first()
+    latest = (
+        (tour.prepared_revisions[0] if tour.prepared_revisions else None)
+        if hasattr(tour, "prepared_revisions")
+        else tour.revisions.order_by("-created_at").first()
+    )
     return {
         "id": str(tour.id),
         "property_id": str(tour.property.id) if tour.property_id else None,

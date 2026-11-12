@@ -4,29 +4,40 @@ from . import capture_views as views
 base = "property-captures/<uuid:session_id>/"
 asset = base + "uploads/<uuid:asset_id>/"
 urlpatterns = [
-    path("properties/capture-capabilities/", views.capabilities),
-    path("properties/<uuid:property_id>/capture-sessions/", views.sessions),
-    path(base, views.session_detail),
-    path(base + "rooms/", views.rooms),
-    path(base + "coach-sessions/", views.coach),
-    path(base + "coach-sessions/<uuid:coach_id>/close/", views.close_coach),
-    path(base + "uploads/", views.reserve),
-    path(asset, views.upload),
-    path(asset + "parts/<int:index>/", views.part),
-    path(asset + "complete/", views.complete),
-    path(base + "manifests/", views.manifests),
-    path(base + "processing-jobs/", views.jobs),
-    path(base + "processing-jobs/<uuid:job_id>/", views.job),
-    path(base + "processing-jobs/<uuid:job_id>/retry/", views.retry_job),
-    path(base + "processing-jobs/<uuid:job_id>/select-outputs/", views.select_outputs),
+    path("properties/capture-capabilities/", views.CapabilitiesAPIView.as_view()),
+    path(
+        "properties/<uuid:property_id>/capture-sessions/",
+        views.SessionsAPIView.as_view(),
+    ),
+    path(base, views.SessionDetailAPIView.as_view()),
+    path(base + "rooms/", views.RoomsAPIView.as_view()),
+    path(base + "coach-sessions/", views.CoachAPIView.as_view()),
+    path(
+        base + "coach-sessions/<uuid:coach_id>/close/",
+        views.CloseCoachAPIView.as_view(),
+    ),
+    path(base + "uploads/", views.ReserveAPIView.as_view()),
+    path(asset, views.UploadAPIView.as_view()),
+    path(asset + "parts/<int:index>/", views.PartAPIView.as_view()),
+    path(asset + "complete/", views.CompleteAPIView.as_view()),
+    path(base + "manifests/", views.ManifestsAPIView.as_view()),
+    path(base + "processing-jobs/", views.JobsAPIView.as_view()),
+    path(base + "processing-jobs/<uuid:job_id>/", views.JobAPIView.as_view()),
+    path(
+        base + "processing-jobs/<uuid:job_id>/retry/", views.RetryJobAPIView.as_view()
+    ),
+    path(
+        base + "processing-jobs/<uuid:job_id>/select-outputs/",
+        views.SelectOutputsAPIView.as_view(),
+    ),
     path(
         base
         + "processing-jobs/<uuid:job_id>/stations/<uuid:station_id>/<str:resource>/",
-        views.station_resource,
+        views.StationResourceAPIView.as_view(),
     ),
     path(
         base
         + "processing-jobs/<uuid:job_id>/components/<uuid:component_id>/<str:resource>/",
-        views.component_resource,
+        views.ComponentResourceAPIView.as_view(),
     ),
 ]

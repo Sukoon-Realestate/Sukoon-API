@@ -219,3 +219,10 @@ test-sprint12-local-contracts: ## Offline staging security and scratch-environme
 	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
 		--ds=$(CYCLE_SETTINGS) core_apps/common/test_settings_environment.py \
 		core_apps/common/test_staging_acceptance_settings.py core_apps/common/test_performance_probe.py
+
+.PHONY: test-sprint06-properties-tours
+test-sprint06-properties-tours: ## Property/tour contracts and domain regressions; use isolated settings/storage
+	mkdir -p $(BASELINE_OUT)/sprint-06
+	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-06/junit.xml \
+		core_apps/properties core_apps/virtual_tours

@@ -61,7 +61,7 @@ from ..services import PropertyService
 
 from .property_parts.property_filter_options_apiview import (
     logger,
-    confirm_property_availability,
+    ConfirmPropertyAvailabilityAPIView,
     get_client_ip,
     PropertyPagination,
     PropertyTypeListAPIView,

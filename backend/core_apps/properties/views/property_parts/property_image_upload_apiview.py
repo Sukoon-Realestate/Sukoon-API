@@ -1,11 +1,10 @@
 """Property: property image upload apiview."""
 
+from ...services.image_details import update_image, delete_image
 from django.shortcuts import get_object_or_404
-from django.db import transaction
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from core_apps.common.idempotency import (
-    execute_idempotent,
     request_key as get_idempotency_key,
     response_headers,
 )
@@ -36,31 +35,32 @@ class PropertyImageUploadAPIView(generics.CreateAPIView):
         property_obj = get_object_or_404(
             Property.objects.all(), id=self.kwargs["property_id"]
         )
-        if property_obj.owner != request.user and not getattr(
-            request.user, "is_staff", False
+        if property_obj.owner != request.user and (
+            not getattr(request.user, "is_staff", False)
         ):
             raise permissions.exceptions.PermissionDenied(
                 "You are not the owner of this property listing."
             )
         request_key = get_idempotency_key(request)
-        if request_key and not request.user.is_verified:
+        if request_key and (not request.user.is_verified):
             raise permissions.exceptions.PermissionDenied(
                 "Identity verification is required for recoverable image uploads."
             )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         from ...services.image_uploads import upload
         import uuid
-        data, response_status, replayed = upload(
-            user=request.user, claims=request.auth, property_obj=property_obj,
-            key=request_key or str(uuid.uuid4()), data=serializer.validated_data,
+
+        (data, response_status, replayed) = upload(
+            user=request.user,
+            claims=request.auth,
+            property_obj=property_obj,
+            key=request_key or str(uuid.uuid4()),
+            data=serializer.validated_data,
             require_verified=bool(request_key),
         )
         return Response(
-            data,
-            status=response_status,
-            headers=response_headers(replayed),
+            data, status=response_status, headers=response_headers(replayed)
         )
 
 
@@ -88,6 +88,7 @@ class PropertyImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         from ...services.public_access import public_properties
         from django.db.models import Q
+
         if self.request.user.is_staff:
             return super().get_queryset()
         allowed = Q(property__in=public_properties())
@@ -106,25 +107,21 @@ class PropertyImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
             )
         return obj
 
-
-    def _lock_write(self):
-        from core_apps.users.models import User
-        from ...services.image_uploads import _authority
-
-        current = User.objects.select_for_update(no_key=True).get(pk=self.request.user.pk)
-        image = get_object_or_404(PropertyImage, id=self.kwargs["id"])
-        prop = Property.objects.select_for_update().get(pk=image.property_id)
-        _authority(current, prop, self.request.auth)
-
-    @transaction.atomic
     def update(self, request, *args, **kwargs):
-        self._lock_write()
-        return super().update(request, *args, **kwargs)
+        return Response(
+            update_image(
+                request.user,
+                self.kwargs["id"],
+                request.data,
+                auth=request.auth,
+                partial=kwargs.pop("partial", False),
+                context=self.get_serializer_context(),
+            )
+        )
 
-    @transaction.atomic
     def destroy(self, request, *args, **kwargs):
-        self._lock_write()
-        return super().destroy(request, *args, **kwargs)
+        delete_image(request.user, self.kwargs["id"], auth=request.auth)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PropertyStatisticsAPIView(generics.RetrieveAPIView):

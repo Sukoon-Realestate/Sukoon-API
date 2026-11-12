@@ -8,13 +8,25 @@ from .listing_lock import lock_listing
 
 
 def update_listing(
-    *, instance, actor, auth_claims, command, expected_updated_at, key, context, partial=True
+    *,
+    instance,
+    actor,
+    auth_claims,
+    command,
+    expected_updated_at,
+    key,
+    context,
+    partial=True,
 ):
     # Fingerprint original inputs, including file bytes, before validation assigns
     # inventory identities or the mutable listing changes.
     payload = (
         {
-            name: (command.getlist(name) if len(command.getlist(name)) > 1 else command.get(name))
+            name: (
+                command.getlist(name)
+                if len(command.getlist(name)) > 1
+                else command.get(name)
+            )
             for name in command
         }
         if hasattr(command, "getlist")
@@ -44,12 +56,20 @@ def update_listing(
             except (ValueError, TypeError):
                 matches = False
             if not matches:
-                raise IdempotencyConflict("Property changed. Reload and review before saving.")
-            serializer = PropertySerializer(current, data=command, partial=partial, context=context)
+                raise IdempotencyConflict(
+                    "Property changed. Reload and review before saving."
+                )
+            serializer = PropertySerializer(
+                current, data=command, partial=partial, context=context
+            )
             serializer.is_valid(raise_exception=True)
             updated = serializer.save()
             data = PropertyDetailSerializer(updated, context=context).data
-            return {"message": "Property changes submitted for review.", **data}, 200, updated.id
+            return (
+                {"message": "Property changes submitted for review.", **data},
+                200,
+                updated.id,
+            )
 
     return execute_idempotent(
         user=actor,
@@ -60,3 +80,28 @@ def update_listing(
         action=apply,
         request_subject_id=instance.id,
     )
+
+
+@transaction.atomic
+def confirm_availability(actor, property_id, auth=None):
+    from django.shortcuts import get_object_or_404
+    from django.utils import timezone
+    from core_apps.users.models import User
+    from core_apps.users.services.sessions import validate_session
+    from ..models import Property
+
+    current = User.objects.select_for_update().get(pk=actor.pk)
+    if auth:
+        validate_session(current, auth)
+    if not current.is_active or current.closed_at:
+        raise PermissionDenied()
+    prop = get_object_or_404(
+        Property.objects.select_for_update(), id=property_id, owner=current
+    )
+    prop.availability_confirmed_at = timezone.now()
+    prop.save(update_fields=["availability_confirmed_at", "updated_at"])
+    return {
+        "id": str(prop.id),
+        "availability_confirmed_at": prop.availability_confirmed_at.isoformat(),
+        "status": "confirmed",
+    }

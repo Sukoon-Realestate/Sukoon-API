@@ -6,15 +6,7 @@ from django.db.models import Sum
 from PIL import Image, UnidentifiedImageError
 from . import storage, capture_reconstruction
 from .capture_models import CaptureAsset, CaptureManifestRevision, CaptureProcessingJob
-from .capture_validation import (
-    frame,
-    manifest,
-    fields,
-    identifier,
-    PART_BYTES,
-    MAX_ASSET,
-    MODES,
-)
+from .capture_validation import frame, manifest, fields, PART_BYTES, MAX_ASSET, MODES
 from .errors import require
 from .policy import digest
 
@@ -27,7 +19,8 @@ def job_payload(job):
         for name, resource in station.get("resources", {}).items():
             resource.pop("blob", None)
             resource["path"] = (
-                f"property-captures/{job.manifest.session.id}/processing-jobs/{job.id}/stations/{station['id']}/{name}/"
+                f"property-captures/{job.manifest.session.id}/processing-jobs/{job.id}/"
+                f"stations/{station['id']}/{name}/"
             )
     for component in outputs.get("walkthrough3d", {}).get("components", []):
         for name, resource in component.get("resources", {}).items():
@@ -158,12 +151,21 @@ def session_payload(session):
         "revision": session.revision,
         "policyVersion": session.policy_version,
         "coachOptIn": session.coach_opt_in,
-        "coveragePlan": latest_manifest.document.get("coveragePlan") if latest_manifest else None,
+        "coveragePlan": (
+            latest_manifest.document.get("coveragePlan") if latest_manifest else None
+        ),
         "rooms": [
             {"id": str(r.client_id), "label": r.label, "confirmed": r.confirmed}
             for r in (session.prepared_rooms if hasattr(session, "prepared_rooms") else session.rooms.all())
         ],
-        "jobs": [job_payload(j) for j in jobs[:20]],
+        "jobs": [
+            job_payload(j)
+            for j in (
+                session.prepared_jobs
+                if hasattr(session, "prepared_jobs")
+                else jobs[:20]
+            )
+        ],
         "outputs": list(MODES),
         "partBytes": PART_BYTES,
         "maxSessionBytes": settings.CAPTURE_MAX_SESSION_BYTES,

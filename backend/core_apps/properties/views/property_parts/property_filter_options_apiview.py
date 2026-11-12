@@ -1,39 +1,29 @@
-"""Property: property filter options apiview."""
-
+"Property: property filter options apiview."
+from ...services.listing_commands import confirm_availability
+from rest_framework.views import APIView
 import logging
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from rest_framework import generics, permissions
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.response import Response
 from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
-from ...models import Property, PropertyType
+from ...models import PropertyType
 from ...serializers import AvailablePlacesQuerySerializer, PropertyTypeSerializer
 from ...services import PropertyService
-
 
 logger = logging.getLogger(__name__)
 
 
-@api_view(["POST"])
-@permission_classes([permissions.IsAuthenticated])
-@renderer_classes([GenericJsonRenderer])
-def confirm_property_availability(request, property_id):
-    property_obj = get_object_or_404(Property, id=property_id, owner=request.user)
-    property_obj.availability_confirmed_at = timezone.now()
-    property_obj.save(update_fields=["availability_confirmed_at", "updated_at"])
-    return Response(
-        {
-            "id": str(property_obj.id),
-            "availability_confirmed_at": property_obj.availability_confirmed_at.isoformat(),
-            "status": "confirmed",
-        }
-    )
+class ConfirmPropertyAvailabilityAPIView(APIView):
+    http_method_names = ["post", "options"]
+    name = "Confirm Property Availability"
+    permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+
+    def post(self, request, property_id):
+        return Response(confirm_availability(request.user, property_id, request.auth))
 
 
 def get_client_ip(request):
-    # ? Behind a proxy the real client IP is the first entry of X-Forwarded-For
     x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
     if x_forwarded_for:
         return x_forwarded_for.split(",")[0].strip()
@@ -66,8 +56,6 @@ class PropertyTypeListAPIView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
     def list(self, request, *args, **kwargs):
-        # This is a selector catalog. Return all active choices in its existing
-        # results envelope, as filter-options already does, without hiding page 2.
         values = self.get_serializer(self.get_queryset(), many=True).data
         return Response(
             {"count": len(values), "next": None, "previous": None, "results": values}

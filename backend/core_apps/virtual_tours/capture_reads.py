@@ -113,3 +113,33 @@ def session_summary(session):
         "detailPath": f"property-captures/{session.id}/",
         "jobsPath": f"property-captures/{session.id}/processing-jobs/",
     }
+
+
+def session_rows(user, property_id):
+    from .policy import owner_property
+
+    prop = owner_property(user, property_id)
+    return prop.capture_sessions.filter(owner=user, deleted_at=None).select_related(
+        "property").order_by("-created_at", "-updated_at", "-pk")
+
+
+def collection(user, property_id):
+    from .capture_services import session_payload
+
+    return {"sessions": [session_payload(row) for row in prepare_sessions(session_rows(user, property_id)[:20])]}
+
+
+def detail(user, session_id):
+    from .selectors import owned
+    from .capture_services import session_payload
+
+    return session_payload(prepare_sessions([owned(user, session_id)])[0])
+
+
+def job_rows(user, session_id):
+    from .selectors import owned
+
+    session = owned(user, session_id)
+    return CaptureProcessingJob.objects.filter(manifest__session=session).select_related(
+        "manifest__session").defer("outputs", "diagnostics", "manifest__document").order_by(
+        "-manifest__revision", "-created_at", "-pk")

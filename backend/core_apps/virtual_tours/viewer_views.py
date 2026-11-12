@@ -6,7 +6,8 @@ from pathlib import Path
 from django.conf import settings
 from django.http import FileResponse, Http404
 from django.views.decorators.clickjacking import xframe_options_sameorigin
-from django.views.decorators.http import require_safe
+from django.views import View
+from django.utils.decorators import method_decorator
 
 CSP = (
     "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; "
@@ -17,23 +18,25 @@ CSP = (
 )
 
 
-@require_safe
-@xframe_options_sameorigin
-def viewer(request, filename=None):
-    if filename is not None and not re.fullmatch(
-        r"[A-Za-z0-9_-]+\.(?:js|css|wasm)", filename
-    ):
-        raise Http404
-    root = Path(settings.VIRTUAL_TOUR_VIEWER_ROOT).resolve()
-    target = root / "assets" / filename if filename else root / "index.html"
-    if not target.is_file() or root not in target.resolve().parents:
-        raise Http404
-    response = FileResponse(target.open("rb"))
-    response["Content-Security-Policy"] = CSP
-    response["Referrer-Policy"] = "no-referrer"
-    response["X-Content-Type-Options"] = "nosniff"
-    response["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
-    response["Cache-Control"] = (
-        "public, max-age=31536000, immutable" if filename else "no-cache"
-    )
-    return response
+@method_decorator(xframe_options_sameorigin, name="dispatch")
+class TourViewerView(View):
+    http_method_names = ["get", "head"]
+
+    def get(self, request, filename=None):
+        if filename is not None and not re.fullmatch(
+            r"[A-Za-z0-9_-]+\.(?:js|css|wasm)", filename
+        ):
+            raise Http404
+        root = Path(settings.VIRTUAL_TOUR_VIEWER_ROOT).resolve()
+        target = root / "assets" / filename if filename else root / "index.html"
+        if not target.is_file() or root not in target.resolve().parents:
+            raise Http404
+        response = FileResponse(target.open("rb"))
+        response["Content-Security-Policy"] = CSP
+        response["Referrer-Policy"] = "no-referrer"
+        response["X-Content-Type-Options"] = "nosniff"
+        response["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        response["Cache-Control"] = (
+            "public, max-age=31536000, immutable" if filename else "no-cache"
+        )
+        return response

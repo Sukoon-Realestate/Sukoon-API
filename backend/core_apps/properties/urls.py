@@ -1,11 +1,15 @@
 from .views.public_owner import PublicOwnerProfileView, PublicOwnerListingsView
-from .views.home_visit_reminder import home_visit_reminder
+from .views.home_visit_reminder import HomeVisitReminderAPIView
 from .views.operation_recovery import PropertyOperationRecovery
 from django.urls import path
 from .views.districts import DistrictListAPIView
-from .views.viewing_commands import viewing_command, viewing_receipt, resolve_viewing_command
-from .views.viewing_representatives import representatives
-from .views.post_visit_decision import post_visit_decision
+from .views.viewing_commands import (
+    ViewingCommandAPIView,
+    ViewingReceiptAPIView,
+    ResolveViewingCommandAPIView,
+)
+from .views.viewing_representatives import RepresentativesAPIView
+from .views.post_visit_decision import PostVisitDecisionAPIView
 from .views.ownership_proof import PropertyOwnershipProofAPIView
 
 from .views import (
@@ -45,35 +49,70 @@ from .views import (
     SavedPropertyCreateAPIView,
     SavedPropertyDeleteAPIView,
     SavedPropertyListAPIView,
-    confirm_property_availability,
+    ConfirmPropertyAvailabilityAPIView,
 )
 
-from .views.image_order import order_images
-from .views.owner_availability import owner_availability
-from .views.hidden_listings import hidden_listings
-from .views.saved_search_reads import acknowledge_saved_search
-from .views.owner_draft_review import owner_draft_review
-from .views.availability_closures import availability_closures
-from .views.viewing_times import viewing_times
-from .views.viewing_arrival import viewing_arrival
-from .views.viewing_day_plan import viewing_day_plan
-from .views.viewing_message_context import viewing_message_context
+from .views.image_order import OrderImagesAPIView
+from .views.owner_availability import OwnerAvailabilityAPIView
+from .views.hidden_listings import HiddenListingsAPIView
+from .views.saved_search_reads import AcknowledgeSavedSearchAPIView
+from .views.owner_draft_review import OwnerDraftReviewAPIView
+from .views.availability_closures import AvailabilityClosuresAPIView
+from .views.viewing_times import ViewingTimesAPIView
+from .views.viewing_arrival import ViewingArrivalAPIView
+from .views.viewing_day_plan import ViewingDayPlanAPIView
+from .views.viewing_message_context import ViewingMessageContextAPIView
 
 urlpatterns = [
-    path('<uuid:property_id>/ownership-proof/', PropertyOwnershipProofAPIView.as_view(), name='property-ownership-proof'),
-    path('visits/<uuid:visit_id>/message-context/',viewing_message_context,name='viewing-message-context'),
-    path('visits/day-plan/', viewing_day_plan, name='viewing-day-plan'),
-    path('visits/<uuid:visit_id>/arrival/', viewing_arrival, name='viewing-arrival'),
-    path('visits/<uuid:visit_id>/time-proposals/', viewing_times, name='viewing-time-proposals'),
-    path('owner/properties/<uuid:property_id>/availability/closures/', availability_closures, name='availability-closures'),
-    path("owner/properties/<uuid:property_id>/draft-review/", owner_draft_review, name="owner-draft-review"),
-    path("saved-search-reads/<uuid:read_id>/ack/", acknowledge_saved_search, name="saved-search-read-ack"),
-    path("hidden-listings/", hidden_listings, name="hidden-listings"),
-    path("owner/properties/<uuid:property_id>/availability/", owner_availability),
+    path(
+        "<uuid:property_id>/ownership-proof/",
+        PropertyOwnershipProofAPIView.as_view(),
+        name="property-ownership-proof",
+    ),
+    path(
+        "visits/<uuid:visit_id>/message-context/",
+        ViewingMessageContextAPIView.as_view(),
+        name="viewing-message-context",
+    ),
+    path("visits/day-plan/", ViewingDayPlanAPIView.as_view(), name="viewing-day-plan"),
+    path(
+        "visits/<uuid:visit_id>/arrival/",
+        ViewingArrivalAPIView.as_view(),
+        name="viewing-arrival",
+    ),
+    path(
+        "visits/<uuid:visit_id>/time-proposals/",
+        ViewingTimesAPIView.as_view(),
+        name="viewing-time-proposals",
+    ),
+    path(
+        "owner/properties/<uuid:property_id>/availability/closures/",
+        AvailabilityClosuresAPIView.as_view(),
+        name="availability-closures",
+    ),
+    path(
+        "owner/properties/<uuid:property_id>/draft-review/",
+        OwnerDraftReviewAPIView.as_view(),
+        name="owner-draft-review",
+    ),
+    path(
+        "saved-search-reads/<uuid:read_id>/ack/",
+        AcknowledgeSavedSearchAPIView.as_view(),
+        name="saved-search-read-ack",
+    ),
+    path("hidden-listings/", HiddenListingsAPIView.as_view(), name="hidden-listings"),
+    path(
+        "owner/properties/<uuid:property_id>/availability/",
+        OwnerAvailabilityAPIView.as_view(),
+    ),
     path("owners/<uuid:identity>/profile/", PublicOwnerProfileView.as_view()),
     path("owners/<uuid:identity>/listings/", PublicOwnerListingsView.as_view()),
-    path("visits/home-reminder/", home_visit_reminder, name="home-visit-reminder"),
-    path("<uuid:property_id>/images/order/", order_images),
+    path(
+        "visits/home-reminder/",
+        HomeVisitReminderAPIView.as_view(),
+        name="home-visit-reminder",
+    ),
+    path("<uuid:property_id>/images/order/", OrderImagesAPIView.as_view()),
     path(
         "operation-recovery/",
         PropertyOperationRecovery.as_view(),
@@ -81,12 +120,24 @@ urlpatterns = [
     ),
     path(
         "viewing-companies/<uuid:company_id>/representatives/",
-        representatives,
+        RepresentativesAPIView.as_view(),
         name="viewing-representatives",
     ),
-    path("visits/creation-receipt/", viewing_receipt, name="viewing-creation-receipt"),
-    path("visits/<uuid:id>/commands/", viewing_command, name="viewing-command"),
-    path("visits/<uuid:id>/commands/resolve/", resolve_viewing_command, name="viewing-command-resolve"),
+    path(
+        "visits/creation-receipt/",
+        ViewingReceiptAPIView.as_view(),
+        name="viewing-creation-receipt",
+    ),
+    path(
+        "visits/<uuid:id>/commands/",
+        ViewingCommandAPIView.as_view(),
+        name="viewing-command",
+    ),
+    path(
+        "visits/<uuid:id>/commands/resolve/",
+        ResolveViewingCommandAPIView.as_view(),
+        name="viewing-command-resolve",
+    ),
     path(
         "cities/<uuid:city_id>/districts/",
         DistrictListAPIView.as_view(),
@@ -94,7 +145,7 @@ urlpatterns = [
     ),
     path(
         "visits/<uuid:id>/post-visit-decision/",
-        post_visit_decision,
+        PostVisitDecisionAPIView.as_view(),
         name="post-visit-decision",
     ),
     path("governorates/", GovernorateListAPIView.as_view(), name="governorate-list"),
@@ -118,8 +169,6 @@ urlpatterns = [
     path("owner/profile/", OwnerProfileAPIView.as_view(), name="owner-profile"),
     path("owner/revenues/", OwnerRevenuesAPIView.as_view(), name="owner-revenues"),
     path("owner/earnings/", OwnerRevenuesAPIView.as_view(), name="owner-earnings"),
-
-
     path(
         "owner/visits/requests/",
         OwnerVisitRequestListAPIView.as_view(),
@@ -151,10 +200,9 @@ urlpatterns = [
         SavedPropertyDeleteAPIView.as_view(),
         name="saved-property-delete",
     ),
-
     path(
         "<uuid:property_id>/confirm-availability/",
-        confirm_property_availability,
+        ConfirmPropertyAvailabilityAPIView.as_view(),
         name="property-confirm-availability",
     ),
     path(

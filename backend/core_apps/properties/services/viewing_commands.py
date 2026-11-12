@@ -14,13 +14,21 @@ def company_notice_audience(visit, recipient):
     from core_apps.features.services.company.role_context import available
 
     member = (
-        CompanyMembership.objects.filter(company_id=visit.company_id, user_id=recipient, is_active=True)
+        CompanyMembership.objects.filter(
+            company_id=visit.company_id, user_id=recipient, is_active=True
+        )
         .select_related("user", "company")
         .first()
     )
     roles = available(member) if member else []
-    role = next((r for r in ("coordinator", "employee") if r in roles), roles[0] if roles else "")
-    return {"company_id": str(member.company.id) if member else "", "company_role": role}
+    role = next(
+        (r for r in ("coordinator", "employee") if r in roles),
+        roles[0] if roles else "",
+    )
+    return {
+        "company_id": str(member.company.id) if member else "",
+        "company_role": role,
+    }
 
 
 def notify(visit, action, existing_notification=None):

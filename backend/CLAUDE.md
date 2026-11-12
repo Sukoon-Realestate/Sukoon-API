@@ -81,3 +81,29 @@ recheck object permission against the fresh actor. Activation revalidates the
 link after acquiring the account lock and refuses closed accounts. Native and
 inherited password changes recheck current session/account authority inside the
 mutation transaction. Do not reintroduce a stale `User.save()` in an adapter.
+
+
+## Property and tour adapters after Sprint 06
+
+Property/appointment URLs and tour/capture/review/viewer APIs use explicit method
+classes. Keep their legacy names, methods, renderers, errors and aliases. Tour
+transport policies live in `virtual_tours.http`; credential/byte endpoints disable
+account authentication and keep `RawPartParser` streaming. Upload parsing must
+remain lazy until grant/resource authority has been checked.
+
+`virtual_tours.operations.mutate` accepts explicit actor/claims/key/body/ETag and
+passes its locked current actor to authoring/capture commands. Always execute
+those command bodies through that durable receipt boundary. Listing/image and
+appointment services own their account/listing/appointment locks, revisions,
+replay and committed notifications. Do not move state transitions into adapters.
+`public_access.public_properties` is the canonical property publication predicate;
+tour sessions and signed bytes recheck it on every public access. Private previews
+retain separate current owner/reviewer checks.
+
+Tour review/owner/capture selectors prepare page data and batch security/retry/
+revision facts. Capture reads retain 20 sessions, 20 jobs per session and two
+selected revisions per job; review pages retain 20 rows. Complete legacy review
+histories remain compatible and data-dependent. Do not silently truncate them.
+Use `make test-sprint06-properties-tours CYCLE_SETTINGS=<scratch_settings>`;
+PostgreSQL processes must each use a distinct disposable TEST database name.
+See `sprints/evidence/sprint-06/README.md` for reproduction and limits.

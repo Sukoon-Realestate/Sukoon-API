@@ -8,13 +8,12 @@ from .models import TourOperation
 from .policy import digest
 
 
-def mutate(request, action, resource, execute):
+def mutate(*, user, auth, key, body, etag, action, resource, execute):
     """Serialize per account so concurrent retries cannot execute twice.
 
     All effects are transactional or immutable files; jobs dispatch on commit.
     Receipts have a 30-day life and permanent deduplication tombstones.
     """
-    key = request.headers.get("Idempotency-Key", "")
     require(
         bool(re.fullmatch(r"[A-Za-z0-9_-]{8,100}", key)),
         "idempotency_key_required",
@@ -25,17 +24,17 @@ def mutate(request, action, resource, execute):
         {
             "action": action,
             "resource": str(resource),
-            "body": request.data,
-            "if_match": request.headers.get("If-Match", ""),
+            "body": body,
+            "if_match": etag,
         }
     )
     with transaction.atomic():
-        current = get_user_model().objects.select_for_update().get(pk=request.user.pk)
+        current = get_user_model().objects.select_for_update().get(pk=user.pk)
         from core_apps.users.services.sessions import validate_session
 
-        validate_session(current, request.auth or {})
-        request.user = current
-        previous = TourOperation.objects.filter(user=request.user, key=key).first()
+        validate_session(current, auth or {})
+        user = current
+        previous = TourOperation.objects.filter(user=user, key=key).first()
         if previous:
             require(
                 previous.request_hash == request_hash,
@@ -55,14 +54,14 @@ def mutate(request, action, resource, execute):
                 True,
             )
         operation = TourOperation.objects.create(
-            user=request.user,
+            user=user,
             key=key,
             action=action,
             resource=str(resource),
             request_hash=request_hash,
             expires_at=timezone.now() + timedelta(days=30),
         )
-        result, status = execute()
+        result, status = execute(current)
         operation.result, operation.http_status, operation.status = (
             result,
             status,

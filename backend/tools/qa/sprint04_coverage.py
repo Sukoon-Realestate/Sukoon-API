@@ -25,9 +25,9 @@ def evidence(row):
         return ["saved-search-itemized"]
     if handler.endswith(".PropertyReviewListAPIView"):
         return ["public-property-reviews"]
-    if handler.endswith("capture_views.sessions"):
+    if handler.endswith(("capture_views.sessions", "capture_views.SessionsAPIView")):
         return ["capture-sessions", "capture-session-summary"]
-    if handler.endswith("capture_views.jobs"):
+    if handler.endswith(("capture_views.jobs", "capture_views.JobsAPIView")):
         return ["capture-job-history"]
     if handler.endswith("owner_advertisement_collection"):
         return ["advertising-owner"]
@@ -53,7 +53,7 @@ def evidence(row):
         ]
     if "admin/system/notifications/" in route:
         return ["campaign-history"]
-    if handler.endswith(".owner_availability") or handler.endswith(".viewing_time_proposals"):
+    if handler.endswith((".owner_availability", ".OwnerAvailabilityAPIView", ".viewing_time_proposals")):
         return ["appointment-availability"]
     if handler.endswith(".PublicReputationSummaryView"):
         return ["public-payment-reliability"]
