@@ -17,6 +17,10 @@ sys.path.insert(0, str(ROOT))
 
 def evidence(row):
     handler, route = row["handler"], row["route"]
+    if handler.endswith(".AdminSupportDetailAPIView"):
+        return ["support-staff-thread", "support-bounded-thread"]
+    if handler.endswith(".TicketDetailAPIView"):
+        return ["support-information", "support-bounded-thread"]
     if handler.endswith(".PropertyListAPIView"):
         return ["saved-search-itemized"]
     if handler.endswith(".PropertyReviewListAPIView"):
@@ -53,7 +57,9 @@ def evidence(row):
         return ["appointment-availability"]
     if handler.endswith(".PublicReputationSummaryView"):
         return ["public-payment-reliability"]
-    if handler.endswith(".MessageListAPIView") or handler.endswith(".GroupMessageContextAPIView"):
+    if handler.endswith(".MessageListAPIView"):
+        return ["group-message-history", "legacy-direct-message-history"]
+    if handler.endswith(".GroupMessageContextAPIView"):
         return ["group-message-history"]
     if handler.endswith(
         (

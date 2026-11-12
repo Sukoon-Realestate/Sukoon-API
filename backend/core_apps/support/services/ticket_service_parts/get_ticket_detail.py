@@ -11,7 +11,7 @@ from .create_ticket import logger, TicketClosedConflict
 
 
 def get_ticket_detail(
-    user: Any, ticket_id: str, workspace: Optional[str] = None
+    user: Any, ticket_id: str, workspace: Optional[str] = None, *, read_params=None
 ) -> Ticket:
     """
     Retrieves full ticket detail ensuring account ownership and workspace scoping.
@@ -19,7 +19,6 @@ def get_ticket_detail(
     """
     qs = (
         Ticket.objects.select_related("user")
-        .prefetch_related("messages", "messages__attachments")
         .filter(user=user)
     )
 
@@ -38,6 +37,11 @@ def get_ticket_detail(
         if ticket.workspace != normalized_workspace:
             raise Ticket.DoesNotExist("Ticket does not belong to requested workspace.")
 
+    from core_apps.support.services.read_pages import ReadPages, prepare_messages
+
+    pages = ReadPages.parse(read_params) if read_params is not None else None
+    ticket.read_bounds = pages
+    prepare_messages(ticket, pages)
     return ticket
 
 

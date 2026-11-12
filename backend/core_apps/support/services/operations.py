@@ -197,7 +197,7 @@ def receipt(user, ticket_id, key, action, *, close=False, auth_claims=None):
     )
 
 
-def projection(ticket, user, *, detail=False):
+def projection(ticket, user, *, detail=False, read_params=None):
     assigned = ticket.assigned_to
     value = {
         "id": str(ticket.id),
@@ -223,6 +223,16 @@ def projection(ticket, user, *, detail=False):
     from .information import projection as information_projection, eligible
     from .staff_replies import can_resolve_inquiry
 
+    from .read_pages import ReadPages, prepare_messages
+
+    pages = ReadPages.parse(read_params) if read_params is not None else None
+    ticket.read_bounds = pages
+    messages = prepare_messages(ticket, pages)
+    notes = ticket.internal_notes.select_related("actor").order_by("created_at", "pk")
+    transitions = ticket.transitions.select_related("actor", "assignee").order_by("created_at", "pk")
+    if pages:
+        notes = pages.select("internal_notes", notes)
+        transitions = pages.select("transitions", transitions)
     independent = user.pk != ticket.user_id
     can_write = True
     try:
@@ -238,7 +248,7 @@ def projection(ticket, user, *, detail=False):
     value.update(
         information_requests=information_projection(ticket),
         messages=TicketMessageSerializer(
-            ticket.messages.order_by("created_at", "pk"), many=True
+            messages, many=True
         ).data,
         rental_context=ticket.rental_context,
         internal_notes=[
@@ -248,9 +258,7 @@ def projection(ticket, user, *, detail=False):
                 "actor": note.actor.get_full_name or note.actor.email,
                 "created_at": note.created_at.isoformat(),
             }
-            for note in ticket.internal_notes.select_related("actor").order_by(
-                "created_at"
-            )
+            for note in notes
         ],
         transitions=[
             {
@@ -266,9 +274,7 @@ def projection(ticket, user, *, detail=False):
                     else None
                 ),
             }
-            for row in ticket.transitions.select_related("actor", "assignee").order_by(
-                "created_at"
-            )
+            for row in transitions
         ],
         actions={
             "request_information": responsible and not closed and eligible(ticket),
@@ -289,4 +295,6 @@ def projection(ticket, user, *, detail=False):
             "note": independent and can_write,
         },
     )
+    if pages:
+        value["pages"] = pages.metadata
     return value

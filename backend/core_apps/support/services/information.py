@@ -39,31 +39,45 @@ def projection(ticket):
 
     if not eligible(ticket):
         return []
+    from .read_pages import child_counts
+
+    pages = getattr(ticket, "read_bounds", None)
+    requests = ticket.information_requests.select_related("source_message", "answer").order_by("created_at", "pk")
+    if pages:
+        requests = pages.select("information_requests", requests.order_by("created_at", "pk"))
+    history = TicketInformationEvent.objects.select_related("answer").order_by("created_at", "pk")
+    versions = TicketEvidenceSubmission.objects.select_related("message").order_by("version")
+    if pages:
+        history = pages.specs["history"].slice(history)
+        versions = pages.specs["evidence_versions"].slice(versions)
     rows = list(
-        ticket.information_requests.select_related("source_message", "answer")
+        requests.select_related("source_message", "answer")
         .prefetch_related(
             Prefetch(
                 "history",
-                queryset=TicketInformationEvent.objects.select_related(
-                    "answer"
-                ).order_by("created_at", "pk"),
+                queryset=history,
                 to_attr="prepared_history",
             ),
             Prefetch(
                 "evidence_versions",
-                queryset=TicketEvidenceSubmission.objects.select_related(
-                    "message"
-                ).order_by("version"),
+                queryset=versions,
                 to_attr="prepared_versions",
             ),
         )
-        .order_by("created_at", "pk")
     )
+    if pages:
+        ids = [row.pk for row in rows]
+        history_counts = child_counts(TicketInformationEvent, "request_id", ids)
+        version_counts = child_counts(TicketEvidenceSubmission, "request_id", ids)
     available = information_evidence.availability_for(
         [item for row in rows for item in row.prepared_versions]
     )
     return [
         {
+            **({"pages": {
+                "history": pages.specs["history"].metadata(history_counts.get(row.pk, 0)),
+                "evidence_versions": pages.specs["evidence_versions"].metadata(version_counts.get(row.pk, 0)),
+            }} if pages else {}),
             "id": str(row.id),
             "revision": row.revision,
             "prompt": row.prompt,

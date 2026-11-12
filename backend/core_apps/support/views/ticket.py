@@ -117,6 +117,7 @@ class TicketDetailAPIView(generics.RetrieveAPIView):
                 user=self.request.user,
                 ticket_id=ticket_id,
                 workspace=workspace,
+                read_params=self.request.query_params,
             )
         except Ticket.DoesNotExist:
             raise Http404("Ticket not found or access denied.")
@@ -159,9 +160,13 @@ class TicketReplyAPIView(APIView):
                         from rest_framework.exceptions import ValidationError
                         raise ValidationError("Retain the original operation key before answering.")
                     from core_apps.support.services.information import answer
-                    updated_ticket = answer(user=request.user, ticket_id=id, workspace=workspace,
-                        request_id=information_id, expected_revision=serializer.validated_data["information_revision"],
-                        body=serializer.validated_data["body"], attachment_ids=serializer.validated_data.get("attachment_ids", []))
+                    updated_ticket = answer(
+                        user=request.user, ticket_id=id, workspace=workspace,
+                        request_id=information_id,
+                        expected_revision=serializer.validated_data["information_revision"],
+                        body=serializer.validated_data["body"],
+                        attachment_ids=serializer.validated_data.get("attachment_ids", []),
+                    )
                 else:
                     updated_ticket = add_ticket_reply(
                         user=request.user,

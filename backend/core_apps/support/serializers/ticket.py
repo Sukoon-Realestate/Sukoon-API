@@ -3,11 +3,22 @@ from rest_framework import serializers
 from core_apps.support.models import Ticket, TicketAttachment, TicketMessage
 
 
+class PreparedRelationSerializer(serializers.ListSerializer):
+    """Keep nested serializer contracts while using an authorized prepared page."""
+
+    def get_attribute(self, instance):
+        name = f"prepared_{self.field_name}"
+        if hasattr(instance, name):
+            return getattr(instance, name)
+        return super().get_attribute(instance)
+
+
 class TicketAttachmentSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     class Meta:
         model = TicketAttachment
+        list_serializer_class = PreparedRelationSerializer
         fields = ["id", "name", "url", "status", "media_metadata"]
         read_only_fields = fields
 
@@ -21,10 +32,17 @@ class TicketAttachmentSerializer(serializers.ModelSerializer):
 
 
 class TicketMessageSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        value = super().to_representation(instance)
+        if hasattr(instance, "read_pages"):
+            value["pages"] = instance.read_pages
+        return value
+
     attachments = TicketAttachmentSerializer(many=True, read_only=True)
 
     class Meta:
         model = TicketMessage
+        list_serializer_class = PreparedRelationSerializer
         fields = ["id", "sender", "body", "created_at", "attachments"]
         read_only_fields = fields
 
@@ -47,10 +65,20 @@ class TicketListSerializer(serializers.ModelSerializer):
 
 class TicketDetailSerializer(serializers.ModelSerializer):
     information_requests = serializers.SerializerMethodField()
+
     def get_information_requests(self, obj):
         from core_apps.support.services.information import projection
         return projection(obj)
+
     messages = TicketMessageSerializer(many=True, read_only=True)
+
+    def to_representation(self, instance):
+        value = super().to_representation(instance)
+        pages = getattr(instance, "read_bounds", None)
+        if pages:
+            value["pages"] = pages.metadata
+        return value
+
     rental_context = serializers.SerializerMethodField()
 
     def get_rental_context(self, obj):

@@ -52,9 +52,32 @@ class MessageListAPIView(ListAPIView):
         _, participant, _ = authorize(conversation, self.request.user)
         return (
             visible_messages(conversation, participant)
+            .select_related(None).prefetch_related(None)
             .select_related("sender", "sender__profile")
+            .defer("mentions", "system_data", "location", "property_reference")
             .order_by("created_at")
         )
+
+    def get_serializer(self, *args, **kwargs):
+        # ListAPIView authorizes and paginates before reaching this hook. Presence
+        # is one current, page-scoped read; rich chat keeps its own projection.
+        if args and kwargs.get("many"):
+            from django.utils import timezone
+            from core_apps.chat.models import ChatPresenceLease
+
+            rows = list(args[0])
+            args = (rows, *args[1:])
+            ids = {row.sender.id for row in rows}
+            try:
+                online = set(ChatPresenceLease.objects.filter(
+                    user_id__in=ids, expires_at__gt=timezone.now(),
+                ).values_list("user_id", flat=True)) if ids else set()
+            except Exception:
+                # Preserve the serializer's existing unavailable-presence fallback.
+                online = set()
+            context = kwargs.setdefault("context", self.get_serializer_context())
+            context["participant_presence"] = {str(pk): pk in online for pk in ids}
+        return super().get_serializer(*args, **kwargs)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

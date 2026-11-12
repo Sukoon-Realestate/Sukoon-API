@@ -41,7 +41,10 @@ class ParticipantSerializer(serializers.Serializer):
         return ""
 
     def get_is_online(self, user) -> bool:
-        # ? Check online status cached in Redis or fallback to False
+        presence = self.context.get("participant_presence", {})
+        if str(user.id) in presence:
+            return presence[str(user.id)]
+        # Other projections resolve current renewable presence as before.
         try:
             from core_apps.chat.services.message_service import is_user_online
 

@@ -14,7 +14,11 @@ from core_apps.users.models import User
 class SupportCommand(serializers.Serializer):
     expected_revision = serializers.IntegerField(min_value=1)
     action = serializers.ChoiceField(
-        choices=["claim", "assign", "escalate", "note", "reply", "resolve", "request_information", "accept_information", "return_information", "withdraw_information", "request_evidence", "mark_evidence_conflicting"]
+        choices=[
+            "claim", "assign", "escalate", "note", "reply", "resolve",
+            "request_information", "accept_information", "return_information",
+            "withdraw_information", "request_evidence", "mark_evidence_conflicting",
+        ]
     )
     reason = serializers.CharField(max_length=1000)
     assignee_id = serializers.UUIDField(required=False)
@@ -38,7 +42,7 @@ class AdminSupportDetailAPIView(APIView):
         if not ticket:
             raise NotFound()
         return Response(
-            operations.projection(ticket, user, detail=True),
+            operations.projection(ticket, user, detail=True, read_params=request.query_params),
             headers={"Cache-Control": "private, no-store"},
         )
 

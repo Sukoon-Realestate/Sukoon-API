@@ -34,3 +34,5 @@ Still needed for real signoff: a separate HTTPS staging server with sandbox Goog
 ## Final read-schema recheck
 
 After the saved-search read migrations, the real local worker/scheduler/interruption and two-process shared-Redis/ASGI checks passed again. A fresh final-schema backup/restore matched 367 table row counts. The saved-search format flag is part of the runtime configuration identity; activation/rollback must follow the [read-format rollout notes](../sprint-04/read-followup-2026-11-12.md). These checks remain local and do not grant external release acceptance.
+
+The [support/chat read follow-up](../sprint-04/support-followup-2026-11-12.md) adds local regression and boundary evidence. Full backend runs plus exact loopback setup reruns/additional cases resolve to 5,500 passes, 490 skips and ten expected failures in each mode. Complete chat and support PostgreSQL checks also pass. These add no real-provider, physical-device, staged load or deployed TLS/rollback signoff.

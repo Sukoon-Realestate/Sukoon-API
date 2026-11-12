@@ -200,7 +200,8 @@ test-sprint04-performance: ## Sprint 04 budgets; use scratch CYCLE_SETTINGS/BASE
 		core_apps/advertising/tests/test_sprint04_performance.py core_apps/virtual_tours/tests/test_sprint04_capture_reads.py \
 		core_apps/features/tests/test_sprint04_solver_commit.py core_apps/features/tests/test_sprint04_tender_commit.py \
 		core_apps/properties/tests/test_sprint04_public_reviews.py core_apps/properties/tests/test_sprint04_saved_search_locking.py \
-		core_apps/properties/tests/test_sprint04_saved_search_items.py
+		core_apps/properties/tests/test_sprint04_saved_search_items.py \
+		core_apps/support/tests/test_sprint04_thread_reads.py core_apps/chat/tests/test_sprint04_legacy_history.py
 
 sprint04-coverage: ## Regenerate the 795-route performance evidence ledger without database access
 	DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint04_coverage.py \
