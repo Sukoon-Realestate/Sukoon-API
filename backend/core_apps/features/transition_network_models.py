@@ -42,6 +42,8 @@ class TransitionMatchRun(TimeStampedModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     revision = models.PositiveIntegerField(default=1)
     input_revision = models.PositiveIntegerField()
+    # Nullable during rolling deployment so old workers can still insert runs.
+    input_snapshot = models.JSONField(default=dict, null=True, blank=True)
     status = models.CharField(max_length=24, default="queued")
     result_status = models.CharField(max_length=24, default="unknown")
     searched_count = models.PositiveIntegerField(default=0)

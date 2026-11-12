@@ -196,7 +196,9 @@ test-sprint04-performance: ## Sprint 04 budgets; use scratch CYCLE_SETTINGS/BASE
 		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-04/junit.xml \
 		core_apps/admin_api/tests/test_sprint04_performance.py core_apps/properties/tests/test_sprint04_performance.py \
 		core_apps/features/tests/test_sprint04_performance.py core_apps/features/tests/test_sprint04_postgres.py \
-		core_apps/chat/tests/test_sprint04_performance.py core_apps/support/tests/test_sprint04_performance.py
+		core_apps/chat/tests/test_sprint04_performance.py core_apps/support/tests/test_sprint04_performance.py \
+		core_apps/advertising/tests/test_sprint04_performance.py core_apps/virtual_tours/tests/test_sprint04_capture_reads.py \
+		core_apps/features/tests/test_sprint04_solver_commit.py core_apps/features/tests/test_sprint04_tender_commit.py
 
 sprint04-coverage: ## Regenerate the 795-route performance evidence ledger without database access
 	DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint04_coverage.py \
@@ -208,3 +210,9 @@ test-sprint05-identity: ## Identity CBV/service contracts; supply isolated CYCLE
 	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
 		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-05/junit.xml \
 		core_apps/users core_apps/profiles
+
+.PHONY: test-sprint12-local-contracts
+test-sprint12-local-contracts: ## Offline staging security and scratch-environment isolation; no deployment
+	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=$(CYCLE_SETTINGS) core_apps/common/test_settings_environment.py \
+		core_apps/common/test_staging_acceptance_settings.py core_apps/common/test_performance_probe.py

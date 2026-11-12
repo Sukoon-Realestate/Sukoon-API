@@ -40,9 +40,7 @@ from .owner_advertisement_collection import advertisement_payload
 def mock_payment(request, advertisement_id):
     serializer = MockPaymentSerializer(data=request.data)
     if not serializer.is_valid():
-        return finalize(
-            validation_error_response(serializer, request), request, private=True
-        )
+        return finalize(validation_error_response(serializer, request), request, private=True)
     try:
         advertisement, _, _ = activate_with_mock_payment(
             request.user,
@@ -52,13 +50,11 @@ def mock_payment(request, advertisement_id):
         )
     except AdvertisingServiceError as error:
         return finalize(error_response(error, request), request, private=True)
-    advertisement = Advertisement.objects.select_related(
-        "operation", "payment", "property__owner"
-    ).get(pk=advertisement.pk)
+    advertisement = Advertisement.objects.select_related("operation", "payment", "property__owner").get(
+        pk=advertisement.pk
+    )
     return finalize(
-        envelope(
-            advertisement_payload(request, advertisement), message(request, "paid")
-        ),
+        envelope(advertisement_payload(request, advertisement), message(request, "paid")),
         request,
         private=True,
     )
@@ -83,9 +79,9 @@ def operation_detail(request, operation_id):
             }
             response = envelope(data, message(request, "not_found"))
         elif operation.state == AdvertisementOperation.State.FOUND:
-            advertisement = Advertisement.objects.select_related(
-                "operation", "payment", "property__owner"
-            ).get(operation=operation)
+            advertisement = Advertisement.objects.select_related("operation", "payment", "property__owner").get(
+                operation=operation
+            )
             data = {
                 "operation_id": operation_id,
                 "state": "found",
@@ -121,27 +117,22 @@ def tenant_home_placement(request):
         .select_related("owner", "property__owner", "operation", "payment", "media")
         .order_by("-starts_at", "-id")
     )
+    from ..selectors import with_fulfillment
+
+    candidates = with_fulfillment(candidates)
     results = []
     nearest_end = None
     for advertisement in candidates.iterator():
         if not is_publicly_eligible(advertisement, now):
             continue
-        results.append(
-            advertisement_payload(request, advertisement, public=True, now=now)
-        )
-        nearest_end = (
-            min(nearest_end, advertisement.ends_at)
-            if nearest_end
-            else advertisement.ends_at
-        )
+        results.append(advertisement_payload(request, advertisement, public=True, now=now))
+        nearest_end = min(nearest_end, advertisement.ends_at) if nearest_end else advertisement.ends_at
         if len(results) == 20:
             break
     ttl = 60
     if nearest_end:
         ttl = min(ttl, max(0, (nearest_end - now).total_seconds()))
-    response = envelope(
-        {"server_now": iso8601(now), "results": results}, message(request, "active")
-    )
+    response = envelope({"server_now": iso8601(now), "results": results}, message(request, "active"))
     return finalize(response, request, public_ttl=ttl)
 
 
@@ -150,17 +141,14 @@ def tenant_home_placement(request):
 @renderer_classes([AdvertisingJsonRenderer])
 def advertisement_media(request, advertisement_id):
     advertisement = get_object_or_404(
-        Advertisement.objects.select_related(
-            "media", "owner", "payment", "property__owner"
-        ),
+        Advertisement.objects.select_related("media", "owner", "payment", "property__owner"),
         id=advertisement_id,
         media__isnull=False,
     )
     now = timezone.now()
     is_public = is_publicly_eligible(advertisement, now)
     if not media_is_available(advertisement) or (
-        not is_public
-        and (not request.user.is_authenticated or request.user != advertisement.owner)
+        not is_public and (not request.user.is_authenticated or request.user != advertisement.owner)
     ):
         return finalize(
             error_response(

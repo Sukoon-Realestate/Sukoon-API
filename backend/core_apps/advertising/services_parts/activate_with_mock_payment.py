@@ -11,9 +11,7 @@ from .ensure_media_persisted import (
 )
 
 
-def activate_with_mock_payment(
-    owner, advertisement_id, operation_id, payment_mode, *, invoice=None, attempt=None
-):
+def activate_with_mock_payment(owner, advertisement_id, operation_id, payment_mode, *, invoice=None, attempt=None):
     with transaction.atomic():
         advertisement = (
             Advertisement.objects.select_for_update()
@@ -41,9 +39,7 @@ def activate_with_mock_payment(
                 "Only simulated payment is available.",
                 errors={"payment_mode": ["unsupported"]},
             )
-        existing = MockAdvertisementPayment.objects.filter(
-            advertisement=advertisement
-        ).first()
+        existing = MockAdvertisementPayment.objects.filter(advertisement=advertisement).first()
         if existing:
             if (
                 existing.operation_id != operation_id
@@ -61,9 +57,7 @@ def activate_with_mock_payment(
         from core_apps.features.providers import checkout_available
 
         if not checkout_available():
-            raise AdvertisingServiceError(
-                "Simulated payment is unavailable.", status_code=403
-            )
+            raise AdvertisingServiceError("Simulated payment is unavailable.", status_code=403)
         if (
             invoice is None
             or attempt is None
@@ -96,9 +90,7 @@ def activate_with_mock_payment(
         now = timezone.now()
         snapshot = advertisement.plan_snapshot
         advertisement.starts_at = now
-        advertisement.ends_at = calendar_expiry(
-            now, snapshot["duration_unit"], int(snapshot["duration_count"])
-        )
+        advertisement.ends_at = calendar_expiry(now, snapshot["duration_unit"], int(snapshot["duration_count"]))
         advertisement.activated_at = now
         advertisement.expiration_processed_at = None
         advertisement.status = Advertisement.Status.ACTIVE
@@ -130,9 +122,10 @@ def is_publicly_eligible(advertisement, now=None):
         and payment.status == MockAdvertisementPayment.STATUS_SUCCEEDED
         and payment.payment_mode == MockAdvertisementPayment.MODE_MOCK
     )
-    confirmed = (
-        confirmed
-        or PaymentFulfillment.objects.filter(
+    confirmed = confirmed or (
+        advertisement.prepared_fulfillment
+        if hasattr(advertisement, "prepared_fulfillment")
+        else PaymentFulfillment.objects.filter(
             invoice__purpose="advertising",
             invoice__purchase_snapshot__subject_id=str(advertisement.id),
             invoice__payer=advertisement.owner,

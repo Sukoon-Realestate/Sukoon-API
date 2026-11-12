@@ -33,7 +33,8 @@ def job_payload(job):
         for name, resource in component.get("resources", {}).items():
             resource.pop("blob", None)
             resource["path"] = (
-                f"property-captures/{job.manifest.session.id}/processing-jobs/{job.id}/components/{component['id']}/{name}/"
+                f"property-captures/{job.manifest.session.id}/processing-jobs/{job.id}/"
+                f"components/{component['id']}/{name}/"
             )
     return {
         "id": str(job.id),
@@ -47,18 +48,19 @@ def job_payload(job):
         "cancelRequested": job.cancel_requested,
         **retry_status(job),
         "selectedRevisions": [
-            revision_payload(r) for r in job.tour_revisions.order_by("-created_at")[:2]
+            revision_payload(r)
+            for r in (
+                job.prepared_revisions
+                if hasattr(job, "prepared_revisions")
+                else job.tour_revisions.order_by("-created_at", "-pk")[:2]
+            )
         ],
     }
 
 
 def retry_status(job):
-    next_job = CaptureProcessingJob.objects.filter(retry_of=job).first()
-    modes = [
-        mode
-        for mode in MODES
-        if job.outputs.get(mode, {}).get("status") in {"failed", "needsProcessing"}
-    ]
+    next_job = getattr(job, "retry_job", None)
+    modes = [mode for mode in MODES if job.outputs.get(mode, {}).get("status") in {"failed", "needsProcessing"}]
     reason = ""
     if next_job:
         reason = "retry_exists"
@@ -106,10 +108,7 @@ def retry(job, body):
     for mode in MODES:
         if outputs.get(mode, {}).get("status") not in {"failed", "needsProcessing"}:
             continue
-        if (
-            mode == "walkthrough3d"
-            and not capture_reconstruction.runtime_status()["available"]
-        ):
+        if mode == "walkthrough3d" and not capture_reconstruction.runtime_status()["available"]:
             continue
         outputs[mode] = {"status": "pending"}
         queued.append(mode)
@@ -137,11 +136,19 @@ def retry(job, body):
 
 
 def session_payload(session):
-    latest_manifest = session.manifests.order_by("-revision").first()
+    latest_manifest = (
+        session.prepared_manifest
+        if hasattr(session, "prepared_manifest")
+        else session.manifests.order_by("-revision").first()
+    )
     jobs = (
-        CaptureProcessingJob.objects.filter(manifest__session=session)
-        .select_related("manifest")
-        .order_by("-manifest__revision", "-created_at")
+        session.prepared_jobs
+        if hasattr(session, "prepared_jobs")
+        else (
+            CaptureProcessingJob.objects.filter(manifest__session=session)
+            .select_related("manifest")
+            .order_by("-manifest__revision", "-created_at")
+        )
     )
     return {
         "id": str(session.id),
@@ -154,7 +161,7 @@ def session_payload(session):
         "coveragePlan": latest_manifest.document.get("coveragePlan") if latest_manifest else None,
         "rooms": [
             {"id": str(r.client_id), "label": r.label, "confirmed": r.confirmed}
-            for r in session.rooms.all()
+            for r in (session.prepared_rooms if hasattr(session, "prepared_rooms") else session.rooms.all())
         ],
         "jobs": [job_payload(j) for j in jobs[:20]],
         "outputs": list(MODES),
@@ -206,8 +213,7 @@ def reserve(session, body):
         return asset_payload(previous), 200
     total = session.assets.aggregate(total=Sum("size"))["total"] or 0
     require(
-        total + size <= settings.CAPTURE_MAX_SESSION_BYTES
-        and session.assets.count() < 5000,
+        total + size <= settings.CAPTURE_MAX_SESSION_BYTES and session.assets.count() < 5000,
         "STORAGE_INSUFFICIENT",
         "The session upload budget is exhausted.",
         413,
@@ -224,8 +230,7 @@ def reserve(session, body):
 
 def receive_part(asset, index, stream):
     require(
-        asset.state in ("open", "verified")
-        and 1 <= index <= math.ceil(asset.size / PART_BYTES),
+        asset.state in ("open", "verified") and 1 <= index <= math.ceil(asset.size / PART_BYTES),
         "MANIFEST_INVALID",
         "Invalid upload part.",
     )
@@ -274,8 +279,7 @@ def complete(asset):
             source = storage.read_path(part["blob"])
             data = source.read_bytes()
             require(
-                len(data) == part["size"]
-                and hashlib.sha256(data).hexdigest() == part["sha256"],
+                len(data) == part["size"] and hashlib.sha256(data).hexdigest() == part["sha256"],
                 "ASSET_NOT_VERIFIED",
                 "A stored upload part failed integrity verification.",
             )
@@ -291,8 +295,7 @@ def complete(asset):
         with Image.open(storage.read_path(key)) as image:
             require(
                 image.format == "JPEG"
-                and image.size
-                == (asset.metadata["image"]["width"], asset.metadata["image"]["height"])
+                and image.size == (asset.metadata["image"]["width"], asset.metadata["image"]["height"])
                 and image.getexif().get(274, 1) == 1,
                 "MANIFEST_INVALID",
                 "Original pixels do not match their calibration.",
@@ -313,8 +316,7 @@ def finalize(session, body):
     if previous:
         return {"revision": previous.revision, "sha256": previous.sha256}, 200
     require(
-        type(body["expectedRevision"]) is int
-        and body["expectedRevision"] == session.revision,
+        type(body["expectedRevision"]) is int and body["expectedRevision"] == session.revision,
         "capture_revision_conflict",
         "Refresh the session before finalizing this capture.",
         409,

@@ -6,23 +6,30 @@ from ..models import BillingSourceLink, InvoiceLine, RentInvoice
 from .rental_phase2 import RentalConflict
 
 
+def source_invoice_map(kind, identities):
+    """Prepare invoice links for an authorized page without per-item queries."""
+    identities = list(identities)
+    if not identities:
+        return {}
+    result = {}
+    for link in BillingSourceLink.objects.filter(source_kind=kind, source_id__in=identities).select_related("invoice"):
+        result.setdefault(str(link.source_id), []).append(
+            {
+                "id": str(link.invoice.id),
+                "reference": link.invoice.reference,
+                "family": "rental" if link.invoice.purpose == "rent" else "billing",
+            }
+        )
+    return result
+
+
 def source_invoices(kind, identity):
-    return [
-        {
-            "id": str(link.invoice.id),
-            "reference": link.invoice.reference,
-            "family": "rental" if link.invoice.purpose == "rent" else "billing",
-        }
-        for link in BillingSourceLink.objects.filter(
-            source_kind=kind, source_id=identity
-        ).select_related("invoice")
-    ]
+    key = str(BillingSourceLink._meta.get_field("source_id").to_python(identity))
+    return source_invoice_map(kind, [identity]).get(key, [])
 
 
 def invalidate_maintenance_cost(item):
-    links = BillingSourceLink.objects.filter(
-        source_kind="maintenance", source_id=item.id
-    ).select_related("invoice")
+    links = BillingSourceLink.objects.filter(source_kind="maintenance", source_id=item.id).select_related("invoice")
     for link in links:
         invoice = RentInvoice.objects.select_for_update().get(pk=link.invoice_id)
         if invoice.status == "cancelled":
@@ -41,20 +48,14 @@ def maintenance_invoice(item, actor):
     # Caller holds the canonical lease/maintenance locks and has accepted the
     # exact cost version using the current responsible payer's authority.
     if item.approved_cost_version != item.cost_version or not item.proposed_cost_minor:
-        raise RentalConflict(
-            "Accept the current cost before invoicing it.", code="invoice_changed"
-        )
+        raise RentalConflict("Accept the current cost before invoicing it.", code="invoice_changed")
     existing = BillingSourceLink.objects.filter(
         source_kind="maintenance", source_id=item.id, source_version=item.cost_version
     ).first()
     if existing:
         return existing.invoice
     organization = item.lease.renter_company if item.cost_payer == "company" else None
-    payer = (
-        item.lease.owner
-        if item.cost_payer == "owner"
-        else actor if organization else item.lease.tenant
-    )
+    payer = item.lease.owner if item.cost_payer == "owner" else actor if organization else item.lease.tenant
     invoice = RentInvoice.objects.create(
         purpose="maintenance",
         payer=payer,
@@ -97,9 +98,7 @@ def maintenance_invoice(item, actor):
 def validate_maintenance_invoice(invoice):
     from ..models import MaintenanceRequest
 
-    item = MaintenanceRequest.objects.filter(
-        id=invoice.purchase_snapshot.get("subject_id")
-    ).first()
+    item = MaintenanceRequest.objects.filter(id=invoice.purchase_snapshot.get("subject_id")).first()
     if (
         not item
         or item.status == "cancelled"
@@ -107,9 +106,7 @@ def validate_maintenance_invoice(invoice):
         or item.approved_cost_version != item.cost_version
         or item.proposed_cost_minor != invoice.amount_minor
     ):
-        raise RentalConflict(
-            "The accepted maintenance cost changed.", code="invoice_changed"
-        )
+        raise RentalConflict("The accepted maintenance cost changed.", code="invoice_changed")
 
 
 def promotion_invoice(campaign, option):
@@ -142,9 +139,7 @@ def promotion_invoice(campaign, option):
         exponent=invoice.exponent,
         source={"description_ar": option.title_ar, "quantity": 1},
     )
-    BillingSourceLink.objects.create(
-        invoice=invoice, source_kind="promotion", source_id=campaign.id
-    )
+    BillingSourceLink.objects.create(invoice=invoice, source_kind="promotion", source_id=campaign.id)
     return invoice
 
 
@@ -153,22 +148,16 @@ def validate_promotion(invoice):
     from ..catalog_models import PromotionOption
     from core_apps.properties.models import Property
 
-    campaign = BoostCampaign.objects.select_related("property").get(
-        id=invoice.purchase_snapshot["subject_id"]
-    )
+    campaign = BoostCampaign.objects.select_related("property").get(id=invoice.purchase_snapshot["subject_id"])
     if (
         campaign.owner_id != invoice.payer_id
         or campaign.property.owner_id != invoice.payer_id
         or campaign.status != "pending"
         or campaign.property.status != Property.Status.VERIFIED
         or not campaign.property.is_verified
-        or not PromotionOption.objects.filter(
-            id=campaign.option_id, active=True
-        ).exists()
+        or not PromotionOption.objects.filter(id=campaign.option_id, active=True).exists()
     ):
-        raise RentalConflict(
-            "The promotion is no longer eligible.", code="fulfillment_pending"
-        )
+        raise RentalConflict("The promotion is no longer eligible.", code="fulfillment_pending")
     return campaign
 
 
@@ -178,8 +167,6 @@ def activate_promotion(invoice):
     campaign = validate_promotion(invoice)
     campaign.status = "active"
     campaign.starts_at = timezone.now()
-    campaign.ends_at = campaign.starts_at + timedelta(
-        days=invoice.purchase_snapshot["duration_days"]
-    )
+    campaign.ends_at = campaign.starts_at + timedelta(days=invoice.purchase_snapshot["duration_days"])
     campaign.expiration_processed_at = None
     campaign.save(update_fields=["status", "starts_at", "ends_at", "expiration_processed_at", "updated_at"])

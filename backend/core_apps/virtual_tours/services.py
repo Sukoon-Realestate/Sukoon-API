@@ -10,9 +10,20 @@ from .validation import validate_authoring
 def revision_payload(revision):
     public_reason = ""
     if revision.review_state == "rejected":
-        public_reason = (revision.reviews.filter(
-            decision="rejected", source_hash=revision.source_hash,
-        ).order_by("-created_at", "-pk").values_list("public_reason", flat=True).first() or "")
+        public_reason = (
+            revision.prepared_review_reason or ""
+            if hasattr(revision, "prepared_review_reason")
+            else (
+                revision.reviews.filter(
+                    decision="rejected",
+                    source_hash=revision.source_hash,
+                )
+                .order_by("-created_at", "-pk")
+                .values_list("public_reason", flat=True)
+                .first()
+                or ""
+            )
+        )
     return {
         "id": str(revision.id),
         "tour_id": str(revision.tour.id),
@@ -25,9 +36,7 @@ def revision_payload(revision):
         "source_hash": revision.source_hash,
         "stage": revision.stage,
         "report": revision.report,
-        "capture_job_id": (
-            str(revision.capture_job.id) if revision.capture_job_id else None
-        ),
+        "capture_job_id": (str(revision.capture_job.id) if revision.capture_job_id else None),
         "assets": [
             {
                 "id": str(a.id),
@@ -59,9 +68,7 @@ def tour_payload(tour):
         "kind": tour.kind,
         "disabled": tour.disabled,
         "deleted": tour.deleted,
-        "active_revision_id": (
-            str(tour.active_revision.id) if tour.active_revision_id else None
-        ),
+        "active_revision_id": (str(tour.active_revision.id) if tour.active_revision_id else None),
         "latest_revision": revision_payload(latest) if latest else None,
     }
 
@@ -93,10 +100,7 @@ def create_tour(prop, body):
         if prop.main_image:
             images.add(str(prop.main_image))
         require(
-            10 <= len(images) <= 25
-            and prop.video
-            and prop.video_duration
-            and 1 <= prop.video_duration <= 60,
+            10 <= len(images) <= 25 and prop.video and prop.video_duration and 1 <= prop.video_duration <= 60,
             "listing_media_incomplete",
             "Complete the property's required photos and video before preparing a tour.",
             409,
@@ -108,11 +112,7 @@ def create_tour(prop, body):
             "Upload the asset's common-area photos before preparing a tour.",
             409,
         )
-    existing = (
-        PropertyVirtualTour.objects.select_for_update()
-        .filter(**target, kind=body["kind"])
-        .first()
-    )
+    existing = PropertyVirtualTour.objects.select_for_update().filter(**target, kind=body["kind"]).first()
     if existing and existing.deleted:
         # Restore authoring access only. Previously approved bytes stay unpublished
         # until a new immutable revision passes review.
@@ -156,9 +156,7 @@ def clone_revision(tour, body):
             404,
         )
     require(
-        not tour.revisions.filter(review_state="not_submitted")
-        .exclude(id=source.id if source else None)
-        .exists(),
+        not tour.revisions.filter(review_state="not_submitted").exclude(id=source.id if source else None).exists(),
         "draft_exists",
         "Resume the existing draft.",
         409,
@@ -270,8 +268,7 @@ def submit_review(revision, body, etag):
 
         publishable(revision)
     require(
-        set(body) == {"source_hash"}
-        and body["source_hash"] == revision.source_hash == expected,
+        set(body) == {"source_hash"} and body["source_hash"] == revision.source_hash == expected,
         "source_changed",
         "Refresh and process the current content before submitting.",
         409,
@@ -305,8 +302,11 @@ def review(revision, user, body):
             403,
         )
     require(
-        set(body) in ({"decision", "expected_source_hash", "reason"},
-                      {"decision", "expected_source_hash", "reason", "public_reason"})
+        set(body)
+        in (
+            {"decision", "expected_source_hash", "reason"},
+            {"decision", "expected_source_hash", "reason", "public_reason"},
+        )
         and body["decision"] in ("approved", "rejected"),
         "invalid_review",
         "Provide decision, expected_source_hash and reason.",
@@ -318,7 +318,8 @@ def review(revision, user, body):
     )
     public_reason = body.get("public_reason", "")
     require(
-        isinstance(public_reason, str) and len(public_reason.strip()) <= 2000
+        isinstance(public_reason, str)
+        and len(public_reason.strip()) <= 2000
         and (body["decision"] != "rejected" or bool(public_reason.strip())),
         "public_review_reason_required",
         "Provide a correction reason visible to the owner when rejecting a tour.",
@@ -341,9 +342,7 @@ def review(revision, user, body):
         "Content or inventory changed after processing.",
         409,
     )
-    require(
-        revision.variants.exists(), "not_ready", "No processed variants exist.", 409
-    )
+    require(revision.variants.exists(), "not_ready", "No processed variants exist.", 409)
     revision.review_state = body["decision"]
     revision.save(update_fields=["review_state", "updated_at"])
     TourReviewEvent.objects.create(
@@ -356,9 +355,7 @@ def review(revision, user, body):
     )
     if body["decision"] == "approved":
         tour = PropertyVirtualTour.objects.select_for_update().get(pk=revision.tour_id)
-        require(
-            not tour.deleted, "tour_deleted", "A deleted tour cannot be published.", 409
-        )
+        require(not tour.deleted, "tour_deleted", "A deleted tour cannot be published.", 409)
         tour.active_revision, tour.disabled = revision, False
         tour.save(update_fields=["active_revision", "disabled", "updated_at"])
     from .notifications import record_tour

@@ -33,9 +33,7 @@ from .language import (
 
 
 def banner_url(request, advertisement):
-    return request.build_absolute_uri(
-        reverse("advertising:advertisement-media", args=[advertisement.id])
-    )
+    return request.build_absolute_uri(reverse("advertising:advertisement-media", args=[advertisement.id]))
 
 
 def payment_payload(payment):
@@ -50,15 +48,13 @@ def payment_payload(payment):
     }
 
 
-def advertisement_payload(request, advertisement, *, public=False, now=None):
+def advertisement_payload(request, advertisement, *, public=False, now=None, invoice_map=None):
     data = {
         "id": str(advertisement.id),
         "title": advertisement.title,
         "description": advertisement.description,
         "banner_url": banner_url(request, advertisement),
-        "property_id": (
-            str(advertisement.property.id) if advertisement.property_id else None
-        ),
+        "property_id": (str(advertisement.property.id) if advertisement.property_id else None),
         "offer_id": advertisement.offer_id or None,
         "status": effective_status(advertisement, now),
         "starts_at": iso8601(advertisement.starts_at),
@@ -66,7 +62,12 @@ def advertisement_payload(request, advertisement, *, public=False, now=None):
     }
     if not public:
         from core_apps.features.services.billing_sources import source_invoices
-        data["billing_invoices"] = source_invoices("advertising", advertisement.id)
+
+        data["billing_invoices"] = (
+            source_invoices("advertising", advertisement.id)
+            if invoice_map is None
+            else invoice_map.get(str(advertisement.id), [])
+        )
         data.update(
             {
                 "operation_id": advertisement.operation.operation_id,
@@ -110,6 +111,10 @@ def owner_advertisement_collection(request):
             page = paginator.page(page_number)
         except EmptyPage:
             page = []
+        page = list(page)
+        from core_apps.features.services.billing_sources import source_invoice_map
+
+        invoice_map = source_invoice_map("advertising", [item.id for item in page])
         payload = {
             "count": paginator.count,
             "page": page_number,
@@ -117,36 +122,26 @@ def owner_advertisement_collection(request):
             "total_pages": paginator.num_pages,
             "next": page_number + 1 if page_number < paginator.num_pages else None,
             "previous": page_number - 1 if page_number > 1 else None,
-            "results": [advertisement_payload(request, item) for item in page],
+            "results": [advertisement_payload(request, item, invoice_map=invoice_map) for item in page],
         }
-        return finalize(
-            envelope(payload, message(request, "owners")), request, private=True
-        )
+        return finalize(envelope(payload, message(request, "owners")), request, private=True)
 
     serializer = AdvertisementCreateSerializer(data=request.data)
     if not serializer.is_valid():
-        record_rejected_operation(
-            request.user, request.data.get("operation_id"), serializer.errors
-        )
-        return finalize(
-            validation_error_response(serializer, request), request, private=True
-        )
+        record_rejected_operation(request.user, request.data.get("operation_id"), serializer.errors)
+        return finalize(validation_error_response(serializer, request), request, private=True)
     try:
-        advertisement, created = create_advertisement(
-            request.user, serializer.validated_data, language(request)
-        )
+        advertisement, created = create_advertisement(request.user, serializer.validated_data, language(request))
     except AdvertisingServiceError as error:
         if error.errors not in (
             {"operation_id": ["idempotency_conflict"]},
             {"operation_id": ["operation_processing"]},
         ):
-            record_rejected_operation(
-                request.user, serializer.validated_data["operation_id"], error.errors
-            )
+            record_rejected_operation(request.user, serializer.validated_data["operation_id"], error.errors)
         return finalize(error_response(error, request), request, private=True)
-    advertisement = Advertisement.objects.select_related(
-        "operation", "payment", "property__owner"
-    ).get(pk=advertisement.pk)
+    advertisement = Advertisement.objects.select_related("operation", "payment", "property__owner").get(
+        pk=advertisement.pk
+    )
     response = envelope(
         advertisement_payload(request, advertisement),
         message(request, "created"),
@@ -165,9 +160,7 @@ def owner_advertisement_detail(request, advertisement_id):
         owner=request.user,
     )
     return finalize(
-        envelope(
-            advertisement_payload(request, advertisement), message(request, "detail")
-        ),
+        envelope(advertisement_payload(request, advertisement), message(request, "detail")),
         request,
         private=True,
     )

@@ -58,3 +58,7 @@ query plans, data-preservation checks and every outstanding work package. The so
 The all-family budget, bounded-history and shared-lock/solver criteria are not complete. Do not mark Sprint 04 accepted
 or infer readiness for later sprints from the passing local probes. Existing database/production operations were not
 part of implementation; the report records the concurrently changed development-database hash separately.
+
+## Follow-up — 2026-11-12
+
+Capture projections/compact history, advertising proof/invoice batches and transition/tender search/commit boundaries now have additional local evidence. [Follow-up results](evidence/sprint-04/followup-2026-11-12.md) record passing regression/race gates, comparable measurements and every remaining criterion. The ledger has 24 partial-probe patterns and 771 unmeasured patterns; Sprint 04 remains partially accepted.

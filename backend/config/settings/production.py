@@ -3,11 +3,11 @@ from dotenv import load_dotenv
 
 from .base import *  # noqa
 
-from .base import BASE_DIR
+from .base import BASE_DIR, REDIS_URL
 
 local_env_file = path.join(BASE_DIR, ".envs", ".env.local")
 
-if path.isfile(local_env_file):
+if getenv("DOTENV_DISABLED", "").lower() not in {"1", "true", "yes"} and path.isfile(local_env_file):
     load_dotenv(local_env_file)
 
 DEBUG = getenv("DEBUG", "False") == "True"

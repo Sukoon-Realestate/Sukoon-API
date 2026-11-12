@@ -98,15 +98,10 @@ def calculate(run):
     ):
         run.status = "source_changed"
         run.result = {"optimality_proven": False, "feasible_count": 0}
-        return
+        return []
     request = SimpleNamespace(user=run.created_by)
     requirements = {x["participant_id"]: x for x in run.snapshot.private_requirements}
-    people = {
-        str(x.id): x
-        for x in User.objects.filter(
-            id__in=requirements, is_active=True, is_verified=True
-        )
-    }
+    people = {str(x.id): x for x in User.objects.filter(id__in=requirements, is_active=True, is_verified=True)}
     lines = list(
         TenderBidLine.objects.filter(bid__id__in=[b["id"] for b in run.input["bids"]])
         .select_related("bid", "offer__property", "offer__owner")
@@ -115,25 +110,14 @@ def calculate(run):
     )
     truncated = len(lines) > MAX_LINES
     lines = lines[:MAX_LINES]
-    from core_apps.properties.models import Property
-
-    list(
-        Property.objects.select_for_update()
-        .filter(pk__in={line.offer.property_id for line in lines})
-        .order_by("pk")
-    )
     choices, prepared = defaultdict(list), {}
     excluded = 0
     # Inspect every bounded canonical selection once, not in the search loop.
     for line in lines:
         try:
-            prop, selected = selection(request, line.offer.selection)
+            prop, selected = selection(request, line.offer.selection, lock=False)
             rent, deposit = offer_money(selected)
-            if (
-                prop.owner_id != line.bid.owner_id
-                or not prop.is_ownership_verified
-                or prop.retired_at
-            ):
+            if prop.owner_id != line.bid.owner_id or not prop.is_ownership_verified or prop.retired_at:
                 raise ValueError
             if rent != line.offer.rent_minor or deposit != line.offer.deposit_minor:
                 raise ValueError
@@ -145,9 +129,7 @@ def calculate(run):
             continue
         prepared[str(line.id)] = (line, prop, selected, keys, deposit)
         for person, req in requirements.items():
-            start, end = date.fromisoformat(req["start_on"]), date.fromisoformat(
-                req["end_on"]
-            )
+            start, end = date.fromisoformat(req["start_on"]), date.fromisoformat(req["end_on"])
             if (
                 person not in people
                 or req["rental_scope"] != selected["rental_scope"]
@@ -159,9 +141,7 @@ def calculate(run):
                 continue
             try:
                 assert_available(prop, selected, start, end)
-                validate_occupants(
-                    prop, selected, [people[person]], start, end, occupant_count=1
-                )
+                validate_occupants(prop, selected, [people[person]], start, end, occupant_count=1)
             except (APIException, Http404):
                 continue
             choices[person].append(str(line.id))
@@ -177,17 +157,11 @@ def calculate(run):
             return
         if index < len(ordered):
             person, req = ordered[index], requirements[ordered[index]]
-            start, end = date.fromisoformat(req["start_on"]), date.fromisoformat(
-                req["end_on"]
-            )
+            start, end = date.fromisoformat(req["start_on"]), date.fromisoformat(req["end_on"])
             for key in choices[person]:
                 line, prop, selected, physical, _ = prepared[key]
                 # Each quoted line is a distinct unit, never extra quantity from reusing it.
-                if any(
-                    key == old[1]
-                    or (physical & old[2] and start < old[4] and old[3] < end)
-                    for old in occupied
-                ):
+                if any(key == old[1] or (physical & old[2] and start < old[4] and old[3] < end) for old in occupied):
                     continue
                 visit(
                     index + 1,
@@ -230,17 +204,34 @@ def calculate(run):
         candidates.append(
             (
                 score,
-                [
-                    {"participant_id": person, "line_id": key}
-                    for person, key in assigned
-                ],
+                [{"participant_id": person, "line_id": key} for person, key in assigned],
             )
         )
         candidates.sort(key=lambda item: item[0])
         del candidates[MAX_ALTERNATIVES:]
 
     visit(0, [], [])
-    for _, proposed in candidates:
+    run.result = {
+        "states_explored": min(visited, MAX_NODES),
+        "node_limit": MAX_NODES,
+        "candidate_lines": len(lines),
+        "excluded_lines": excluded,
+        "feasible_count": 0,
+        "search_limited": limited,
+        "optimality_proven": not limited,
+        "ranking": ["participant_coverage", "monthly_rent", "deposit"],
+        "reserves_inventory": False,
+        "currency": "EGP",
+        "price_period": "monthly",
+    }
+    return [proposed for _, proposed in candidates]
+
+
+def persist_options(run, proposals):
+    """Recheck the bounded finalists under fresh source locks, then publish once."""
+    request, tender = SimpleNamespace(user=run.created_by), run.tender
+    count = 0
+    for proposed in proposals:
         try:
             allocations, missing = validate_package(request, tender, proposed)
         except (APIException, Http404):
@@ -251,30 +242,12 @@ def calculate(run):
             allocations=allocations,
             unallocated_ids=missing,
             digest=fingerprint(
-                {
-                    "snapshot": run.snapshot.digest,
-                    "allocations": allocations,
-                    "mode": "independent_participants",
-                }
+                {"snapshot": run.snapshot.digest, "allocations": allocations, "mode": "independent_participants"}
             ),
             total_rent_minor=sum(x["rent_minor"] for x in allocations),
             total_deposit_minor=sum(x["deposit_minor"] for x in allocations),
         )
         run.packages.add(package)
-    count = run.packages.count()
-    run.status = (
-        "feasible" if count else ("limit_reached" if limited else "no_feasible_package")
-    )
-    run.result = {
-        "states_explored": min(visited, MAX_NODES),
-        "node_limit": MAX_NODES,
-        "candidate_lines": len(lines),
-        "excluded_lines": excluded,
-        "feasible_count": count,
-        "search_limited": limited,
-        "optimality_proven": not limited,
-        "ranking": ["participant_coverage", "monthly_rent", "deposit"],
-        "reserves_inventory": False,
-        "currency": "EGP",
-        "price_period": "monthly",
-    }
+        count += 1
+    run.status = "feasible" if count else "limit_reached" if run.result["search_limited"] else "no_feasible_package"
+    run.result["feasible_count"] = count

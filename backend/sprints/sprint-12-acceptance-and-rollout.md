@@ -36,3 +36,7 @@ the supported API surface. This is a future implementation/release stage; the au
 
 **Deployment authorization:** this plan does not itself deploy, send provider transactions, erase real media or modify
 user data. Those operations need the concrete release/migration task and its established authorization.
+
+## Local preparation — 2026-11-12
+
+[Local checks and remaining external gates](evidence/sprint-12/LOCAL_ACCEPTANCE.md) record real disposable worker/scheduler and two-process Redis/ASGI recovery, scoped loopback load, mobile identity contracts, scratch backup/restore and an opt-in HTTPS staging profile. These do not satisfy real provider, physical-device, deployed TLS or API-wide load signoff. No deployment or production change was performed.

@@ -21,7 +21,7 @@ APPS_DIR = BASE_DIR / "core_apps"
 
 local_env_file = path.join(BASE_DIR, ".envs", ".env.local")
 
-if path.isfile(local_env_file):
+if getenv("DOTENV_DISABLED", "").lower() not in {"1", "true", "yes"} and path.isfile(local_env_file):
     load_dotenv(local_env_file)
 
 ADVANCED_HOUSING_ENABLED_SERVICES = advanced_services_from_env(

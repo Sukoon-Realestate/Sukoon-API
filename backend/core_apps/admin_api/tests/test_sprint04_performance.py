@@ -1,10 +1,5 @@
 """Sprint 04 prepared projections and query budgets on repeatable fixtures."""
 
-import json
-import os
-import time
-import tracemalloc
-from pathlib import Path
 from uuid import uuid4
 
 import pytest
@@ -29,26 +24,7 @@ from core_apps.properties.models import Property, PropertyType, City, Governorat
 pytestmark = pytest.mark.django_db
 
 
-def measured(name, size, operation):
-    tracemalloc.start()
-    started = time.perf_counter()
-    with CaptureQueriesContext(connection) as queries:
-        result = operation()
-    elapsed = time.perf_counter() - started
-    _, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-    report = dict(
-        case=name,
-        size=size,
-        queries=len(queries),
-        seconds=elapsed,
-        peak_python_bytes=peak,
-        payload_bytes=len(json.dumps(result, default=str).encode()),
-    )
-    if os.environ.get("SPRINT04_METRICS"):
-        with Path(os.environ["SPRINT04_METRICS"]).open("a") as stream:
-            stream.write(json.dumps(report) + "\n")
-    return result, report
+from tools.qa.performance import measured
 
 
 @pytest.mark.parametrize("size", [5, 40, 100])
@@ -70,23 +46,14 @@ def test_admin_property_page(size, user):
     )
     ct = ContentType.objects.get_for_model(Property)
     ContentView.objects.bulk_create(
-        [
-            ContentView(content_type=ct, object_id=row.pkid, last_viewed=timezone.now())
-            for row in rows
-        ]
+        [ContentView(content_type=ct, object_id=row.pkid, last_viewed=timezone.now()) for row in rows]
     )
     data, report = measured(
         "admin-properties",
         size,
-        lambda: list(
-            AdminPropertyItemSerializer(
-                get_admin_properties_queryset()[:size], many=True
-            ).data
-        ),
+        lambda: list(AdminPropertyItemSerializer(get_admin_properties_queryset()[:size], many=True).data),
     )
-    assert len(data) == size and all(
-        row["views"] == 1 and row["imagesCount"] == 0 for row in data
-    )
+    assert len(data) == size and all(row["views"] == 1 and row["imagesCount"] == 0 for row in data)
     assert report["queries"] <= 2
 
 
@@ -114,9 +81,7 @@ def test_campaign_summary_query_budget(size, user):
             request_key=uuid4(),
             preview_digest="test",
         )
-        CampaignRecipient.objects.create(
-            campaign=campaign, user=user, workspace="individual"
-        )
+        CampaignRecipient.objects.create(campaign=campaign, user=user, workspace="individual")
     data, report = measured("campaign-history", size, get_push_campaigns)
     assert len(data) == size
     assert all(row["recipientCount"] == row["receiptCount"] == 1 for row in data)
@@ -135,29 +100,20 @@ def test_prepared_kyc_and_reports(size, user, another_user):
         UserReportListSerializer,
     )
 
-    KYCSubmission.objects.bulk_create(
-        [KYCSubmission(profile=user.profile) for _ in range(size)]
-    )
+    KYCSubmission.objects.bulk_create([KYCSubmission(profile=user.profile) for _ in range(size)])
     UserReport.objects.bulk_create(
-        [
-            UserReport(reported_user=user, reporter=another_user, reason="Budget")
-            for _ in range(size)
-        ]
+        [UserReport(reported_user=user, reporter=another_user, reason="Budget") for _ in range(size)]
     )
     for name, query, serializer in [
         ("kyc", get_kyc_queue_queryset, KYCSubmissionListSerializer),
         ("reports", get_reports_queryset, UserReportListSerializer),
     ]:
-        data, report = measured(
-            name, size, lambda: list(serializer(query()[:size], many=True).data)
-        )
+        data, report = measured(name, size, lambda: list(serializer(query()[:size], many=True).data))
         assert len(data) == size and report["queries"] <= 1
 
 
 @pytest.mark.parametrize("size", [1, 25])
-@pytest.mark.parametrize(
-    "kind", ["cities", "districts", "campuses", "subscription_plans", "plan_benefits"]
-)
+@pytest.mark.parametrize("kind", ["cities", "districts", "campuses", "subscription_plans", "plan_benefits"])
 @pytest.mark.mvp_deferred
 def test_content_projection_fetch_plan(kind, size, settings):
     from core_apps.admin_api.services import content_registry as registry
@@ -167,16 +123,9 @@ def test_content_projection_fetch_plan(kind, size, settings):
     region = Governorate.objects.create(name="Registry region")
     city = City.objects.create(name="Registry city", governorate=region)
     if kind == "cities":
-        City.objects.bulk_create(
-            [
-                City(name=f"City {i}", slug=f"city-{i}", governorate=region)
-                for i in range(size)
-            ]
-        )
+        City.objects.bulk_create([City(name=f"City {i}", slug=f"city-{i}", governorate=region) for i in range(size)])
     elif kind == "districts":
-        District.objects.bulk_create(
-            [District(name=f"District {i}", city=city) for i in range(size)]
-        )
+        District.objects.bulk_create([District(name=f"District {i}", city=city) for i in range(size)])
     elif kind == "campuses":
         university = University.objects.create(name_ar="جامعة", name_en="University")
         Campus.objects.bulk_create(
@@ -212,18 +161,14 @@ def test_content_projection_fetch_plan(kind, size, settings):
             feature = CommerceFeature.objects.create(
                 code="budget", workspace="tenant", label_en="Budget", label_ar="ميزة"
             )
-            PlanBenefit.objects.bulk_create(
-                [PlanBenefit(plan=plan, feature=feature) for plan in plans]
-            )
+            PlanBenefit.objects.bulk_create([PlanBenefit(plan=plan, feature=feature) for plan in plans])
     data, report = measured(
         "content-" + kind,
         size,
         lambda: [
             registry.projection(kind, row)
             for row in (
-                registry.queryset(kind)
-                if hasattr(registry, "queryset")
-                else registry.spec(kind).model.objects.all()
+                registry.queryset(kind) if hasattr(registry, "queryset") else registry.spec(kind).model.objects.all()
             ).order_by("pk")[:size]
         ],
     )
@@ -234,16 +179,10 @@ def test_campaign_summaries_preserve_deleted_account_and_delivery_totals(user):
     from core_apps.admin_api.models import CampaignDelivery
     from core_apps.admin_api.services.push_campaigns import payload
 
-    item = PushCampaign.objects.create(
-        creator=user, title="Totals", body="Body", audience="all", request_key=uuid4()
-    )
-    first = CampaignRecipient.objects.create(
-        campaign=item, user=user, workspace="tenant"
-    )
+    item = PushCampaign.objects.create(creator=user, title="Totals", body="Body", audience="all", request_key=uuid4())
+    first = CampaignRecipient.objects.create(campaign=item, user=user, workspace="tenant")
     CampaignRecipient.objects.create(campaign=item, user=user, workspace="owner")
-    removed = CampaignRecipient.objects.create(
-        campaign=item, user=None, workspace="tenant"
-    )
+    removed = CampaignRecipient.objects.create(campaign=item, user=None, workspace="tenant")
     CampaignDelivery.objects.create(recipient=first, state="accepted_by_provider")
     CampaignDelivery.objects.create(recipient=removed, state="delivery_unknown")
     value = payload(item)

@@ -43,6 +43,7 @@ def stop(process):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--template", required=True)
+    parser.add_argument("--postgres-host", default="127.0.0.1")
     parser.add_argument("--postgres-port", type=int, default=55446)
     parser.add_argument("--postgres-user", default="plan_tester")
     args = parser.parse_args()
@@ -61,7 +62,7 @@ def main():
     broker = f"redis://127.0.0.1:{redis_port}/0"
     redis = Redis.from_url(broker, decode_responses=True)
     admin = psycopg2.connect(
-        host="127.0.0.1",
+        host=args.postgres_host,
         port=args.postgres_port,
         user=args.postgres_user,
         dbname="postgres",
@@ -118,8 +119,17 @@ def main():
         }
         settings_file.write_text(
             f"""from config.settings.postgres_test import *
+from pathlib import Path
 from kombu import Queue
+SCRATCH_ROOT = Path({str(output)!r})
+MEDIA_ROOT = str(SCRATCH_ROOT / "media")
+STATIC_ROOT = str(SCRATCH_ROOT / "static")
+CHAT_PRIVATE_MEDIA_ROOT = str(SCRATCH_ROOT / "chat")
+SUPPORT_PRIVATE_MEDIA_ROOT = str(SCRATCH_ROOT / "support")
+VIRTUAL_TOUR_PRIVATE_ROOT = str(SCRATCH_ROOT / "tours")
+EVIDENCE_PRIVATE_ROOT = str(SCRATCH_ROOT / "evidence")
 ALLOWED_HOSTS = ["testserver", "127.0.0.1", "localhost"]
+SUKOON_MVP = False
 REDIS_URL = CELERY_BROKER_URL = CELERY_RESULT_BACKEND = {broker!r}
 CELERY_BROKER_USE_SSL = CELERY_REDIS_BACKEND_USE_SSL = None
 CELERY_TASK_ALWAYS_EAGER = False
@@ -147,10 +157,11 @@ ADVANCED_HOUSING_ENABLED_SERVICES = ["collective_tender_planning"]
 """
         )
         os.environ.update(
+            DOTENV_DISABLED="1",
             DJANGO_SETTINGS_MODULE="cycle_worker_settings",
             TEST_POSTGRES_DB=database,
             TEST_POSTGRES_USER=args.postgres_user,
-            TEST_POSTGRES_HOST="127.0.0.1",
+            TEST_POSTGRES_HOST=args.postgres_host,
             TEST_POSTGRES_PORT=str(args.postgres_port),
             PYTHONPATH=os.pathsep.join([str(output), str(root)]),
             SOKOUN_WORKER_PROFILE="general",
@@ -211,16 +222,12 @@ ADVANCED_HOUSING_ENABLED_SERVICES = ["collective_tender_planning"]
             )
 
         def completed(identity):
-            return TenderPackageRun.objects.filter(
-                id=identity, status="feasible"
-            ).exists()
+            return TenderPackageRun.objects.filter(id=identity, status="feasible").exists()
 
         worker = launch_worker()
         until(lambda: completed(first["id"]), "worker consumes the queued construction")
         summary["queued_job_processed"] = True
-        app.send_task("core_apps.common.tasks.background_probe", queue=queue).get(
-            timeout=10
-        )
+        app.send_task("core_apps.common.tasks.background_probe", queue=queue).get(timeout=10)
         app.send_task(
             "core_apps.features.tasks_parts.expire_rental_sources_and_holds.process_planning_jobs",
             queue=queue,
@@ -232,7 +239,7 @@ ADVANCED_HOUSING_ENABLED_SERVICES = ["collective_tender_planning"]
 
         second = start(s, tender)
         holder = psycopg2.connect(
-            host="127.0.0.1",
+            host=args.postgres_host,
             port=args.postgres_port,
             user=args.postgres_user,
             dbname=database,
@@ -247,7 +254,8 @@ ADVANCED_HOUSING_ENABLED_SERVICES = ["collective_tender_planning"]
         def worker_blocked():
             with admin.cursor() as cursor:
                 cursor.execute(
-                    "SELECT count(*) FROM pg_stat_activity WHERE datname=%s AND application_name=%s AND wait_event_type='Lock'",
+                    "SELECT count(*) FROM pg_stat_activity WHERE datname=%s "
+                    "AND application_name=%s AND wait_event_type='Lock'",
                     (database, database),
                 )
                 return cursor.fetchone()[0] > 0
@@ -268,17 +276,10 @@ ADVANCED_HOUSING_ENABLED_SERVICES = ["collective_tender_planning"]
         )
         current = TenderPackageRun.objects.get(id=second["id"])
         count = current.packages.count()
-        notices = PlanningEvent.objects.filter(
-            destination__source_id=second["id"]
-        ).count()
-        app.send_task(
-            "features.process_tender_packages", args=[second["id"]], queue=queue
-        ).get(timeout=15)
+        notices = PlanningEvent.objects.filter(destination__source_id=second["id"]).count()
+        app.send_task("features.process_tender_packages", args=[second["id"]], queue=queue).get(timeout=15)
         assert current.packages.count() == count
-        assert (
-            PlanningEvent.objects.filter(destination__source_id=second["id"]).count()
-            == notices
-        )
+        assert PlanningEvent.objects.filter(destination__source_id=second["id"]).count() == notices
         summary["interrupted_job_recovered_once"] = True
 
         log = (output / "beat.log").open("wb")
@@ -294,6 +295,8 @@ ADVANCED_HOUSING_ENABLED_SERVICES = ["collective_tender_planning"]
                 "--loglevel=INFO",
                 "--schedule",
                 str(output / "beat-state"),
+                "--pidfile",
+                str(output / "beat.pid"),
             ],
             cwd=root,
             stdout=log,
@@ -301,18 +304,12 @@ ADVANCED_HOUSING_ENABLED_SERVICES = ["collective_tender_planning"]
             env=os.environ.copy(),
         )
         until(
-            lambda: not execution_report(
-                redis, expected_sha=settings.SOKOUN_RELEASE_SHA
-            )["failures"],
+            lambda: not execution_report(redis, expected_sha=settings.SOKOUN_RELEASE_SHA)["failures"],
             "beat/broker/worker scheduled evidence",
         )
         report = execution_report(redis, expected_sha=settings.SOKOUN_RELEASE_SHA)
-        summary["scheduled_probe_verified"] = all(
-            row["verified"] for row in report["tasks"]
-        )
-        summary["scheduled_tasks_verified"] = [
-            row["schedule"] for row in report["tasks"]
-        ]
+        summary["scheduled_probe_verified"] = all(row["verified"] for row in report["tasks"])
+        summary["scheduled_tasks_verified"] = [row["schedule"] for row in report["tasks"]]
         summary["result"] = "passed"
         print(json.dumps(summary, sort_keys=True), flush=True)
     finally:
@@ -330,9 +327,7 @@ ADVANCED_HOUSING_ENABLED_SERVICES = ["collective_tender_planning"]
                     "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname=%s",
                     (database,),
                 )
-                cursor.execute(
-                    sql.SQL("DROP DATABASE {}").format(sql.Identifier(database))
-                )
+                cursor.execute(sql.SQL("DROP DATABASE {}").format(sql.Identifier(database)))
         admin.close()
         for log in logs:
             log.close()

@@ -46,8 +46,7 @@ def select_outputs(request, session_id, job_id):
         )
         document = request.data["authoring"]
         require(
-            isinstance(document, dict)
-            and document.get("kind") in ("model_3d", "panorama_360"),
+            isinstance(document, dict) and document.get("kind") in ("model_3d", "panorama_360"),
             "invalid_kind",
             "Choose a capture output kind.",
         )
@@ -58,20 +57,14 @@ def select_outputs(request, session_id, job_id):
         )
         if not tour:
             create_tour(session.property, {"kind": document["kind"]})
-            tour = PropertyVirtualTour.objects.get(
-                property=session.property, kind=document["kind"]
-            )
+            tour = PropertyVirtualTour.objects.get(property=session.property, kind=document["kind"])
         require(
             not tour.deleted,
             "tour_deleted",
             "Restore authoring access before selecting outputs.",
             409,
         )
-        revision = (
-            tour.revisions.filter(review_state="not_submitted")
-            .order_by("-created_at")
-            .first()
-        )
+        revision = tour.revisions.filter(review_state="not_submitted").order_by("-created_at").first()
         if revision and revision.authoring:
             require(
                 revision.capture_job_id == job.pk and revision.authoring == document,
@@ -131,16 +124,21 @@ def capabilities(request):
 def sessions(request, property_id):
     prop = owner_property(request.user, property_id)
     if request.method == "GET":
-        return Response(
-            {
-                "sessions": [
-                    services.session_payload(s)
-                    for s in prop.capture_sessions.filter(
-                        owner=request.user, deleted_at=None
-                    )[:20]
-                ]
-            }
+        from .capture_reads import prepare_sessions, session_summary, summary_rows
+        from core_apps.common.pagination import StandardResultsSetPagination
+
+        rows = (
+            prop.capture_sessions.filter(owner=request.user, deleted_at=None)
+            .select_related("property")
+            .order_by("-created_at", "-updated_at", "-pk")
         )
+        if request.query_params.get("summary") == "true":
+            pagination = StandardResultsSetPagination()
+            page = pagination.paginate_queryset(summary_rows(rows), request)
+            response = pagination.get_paginated_response([session_summary(row) for row in page])
+            response["Cache-Control"] = "private, no-store"
+            return response
+        return Response({"sessions": [services.session_payload(row) for row in prepare_sessions(rows[:20])]})
     require(
         settings.PROPERTY_CAPTURE_ENABLED,
         "CAPTURE_UNSUPPORTED",
@@ -191,13 +189,9 @@ def session_detail(request, session_id):
     def execute():
         session = owned(request, session_id, True)
         if request.method == "DELETE":
-            require(
-                not request.data, "MANIFEST_INVALID", "Delete accepts an empty body."
-            )
+            require(not request.data, "MANIFEST_INVALID", "Delete accepts an empty body.")
             session.deleted_at, session.state = timezone.now(), "cancelled"
-            CaptureProcessingJob.objects.filter(manifest__session=session).update(
-                cancel_requested=True
-            )
+            CaptureProcessingJob.objects.filter(manifest__session=session).update(cancel_requested=True)
             # Tombstone immediately revokes all delivery and new work. The retention
             # worker removes physical objects after any active lease has stopped.
         else:
@@ -236,8 +230,7 @@ def rooms(request, session_id):
     def execute():
         session = owned(request, session_id, True)
         require(
-            session.rooms.filter(client_id=request.data["id"]).exists()
-            or session.rooms.count() < 40,
+            session.rooms.filter(client_id=request.data["id"]).exists() or session.rooms.count() < 40,
             "MANIFEST_INVALID",
             "The room limit is reached.",
         )
@@ -279,11 +272,7 @@ def upload(request, session_id, asset_id):
 @parser_classes([RawPartParser])
 def part(request, session_id, asset_id, index):
     with transaction.atomic():
-        return Response(
-            services.receive_part(
-                asset_for(request, session_id, asset_id, True), index, request.data
-            )
-        )
+        return Response(services.receive_part(asset_for(request, session_id, asset_id, True), index, request.data))
 
 
 @endpoint(["POST"])
@@ -307,8 +296,24 @@ def manifests(request, session_id):
     )
 
 
-@endpoint(["POST"])
+@endpoint(["GET", "POST"])
 def jobs(request, session_id):
+    if request.method == "GET":
+        from .capture_reads import job_summary
+        from core_apps.common.pagination import StandardResultsSetPagination
+
+        session = owned(request, session_id)
+        rows = (
+            CaptureProcessingJob.objects.filter(manifest__session=session)
+            .select_related("manifest__session")
+            .defer("outputs", "diagnostics", "manifest__document")
+            .order_by("-manifest__revision", "-created_at", "-pk")
+        )
+        pagination = StandardResultsSetPagination()
+        page = pagination.paginate_queryset(rows, request)
+        response = pagination.get_paginated_response([job_summary(row) for row in page])
+        response["Cache-Control"] = "private, no-store"
+        return response
     return mutation(
         request,
         "capture.process",
@@ -373,21 +378,13 @@ def station_resource(request, session_id, job_id, station_id, resource):
         404,
     )
     station = next(
-        (
-            s
-            for s in job.outputs.get("panorama360", {}).get("stations", [])
-            if s["id"] == str(station_id)
-        ),
+        (s for s in job.outputs.get("panorama360", {}).get("stations", []) if s["id"] == str(station_id)),
         None,
     )
-    require(
-        station is not None, "resource_missing", "Capture preview unavailable.", 404
-    )
+    require(station is not None, "resource_missing", "Capture preview unavailable.", 404)
     value = station.get("resources", {}).get(resource)
     require(value is not None, "resource_missing", "Capture preview unavailable.", 404)
-    return FileResponse(
-        storage.read_path(value["blob"]).open("rb"), content_type="image/png"
-    )
+    return FileResponse(storage.read_path(value["blob"]).open("rb"), content_type="image/png")
 
 
 @endpoint(["GET"])
@@ -421,9 +418,7 @@ def component_resource(request, session_id, job_id, component_id, resource):
         ),
         None,
     )
-    require(
-        component is not None, "resource_missing", "Capture preview unavailable.", 404
-    )
+    require(component is not None, "resource_missing", "Capture preview unavailable.", 404)
     value = component.get("resources", {}).get(resource)
     require(value is not None, "resource_missing", "Capture preview unavailable.", 404)
     content_type = value.get("mediaType", "application/octet-stream")
@@ -433,9 +428,7 @@ def component_resource(request, session_id, job_id, component_id, resource):
         "application/octet-stream",
     ):
         content_type = "application/octet-stream"
-    return FileResponse(
-        storage.read_path(value["blob"]).open("rb"), content_type=content_type
-    )
+    return FileResponse(storage.read_path(value["blob"]).open("rb"), content_type=content_type)
 
 
 @endpoint(["POST"])
@@ -466,16 +459,13 @@ def coach(request, session_id):
         )
         records = CaptureCoachSession.objects.filter(session__owner=request.user)
         require(
-            not records.filter(
-                expires_at__gt=now, state__in=["provisioning", "active"]
-            ).exists(),
+            not records.filter(expires_at__gt=now, state__in=["provisioning", "active"]).exists(),
             "COACH_SESSION_ACTIVE",
             "A previous coaching connection is still expiring. Retry shortly.",
             409,
         )
         require(
-            records.filter(created_at__gte=now - timedelta(days=1)).count()
-            < settings.COACH_DAILY_SESSION_LIMIT,
+            records.filter(created_at__gte=now - timedelta(days=1)).count() < settings.COACH_DAILY_SESSION_LIMIT,
             "COACH_BUDGET_EXHAUSTED",
             "Coaching budget is exhausted. Local guidance still works.",
             429,
@@ -490,9 +480,7 @@ def coach(request, session_id):
         # Consent/deletion may have changed while contacting the provider.
         session.refresh_from_db()
         require(
-            session.deleted_at is None
-            and session.state == "capturing"
-            and session.coach_opt_in,
+            session.deleted_at is None and session.state == "capturing" and session.coach_opt_in,
             "COACH_UNAVAILABLE",
             "Capture changed before coaching connected.",
             409,

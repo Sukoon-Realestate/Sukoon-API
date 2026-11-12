@@ -17,9 +17,15 @@ sys.path.insert(0, str(ROOT))
 
 def evidence(row):
     handler, route = row["handler"], row["route"]
-    if handler.endswith(".AdminPropertyListAPIView") or handler.endswith(
-        ".AdminPropertyListView"
-    ):
+    if handler.endswith("capture_views.sessions"):
+        return ["capture-sessions", "capture-session-summary"]
+    if handler.endswith("capture_views.jobs"):
+        return ["capture-job-history"]
+    if handler.endswith("owner_advertisement_collection"):
+        return ["advertising-owner"]
+    if handler.endswith("tenant_home_placement"):
+        return ["advertising-rejection"]
+    if handler.endswith(".AdminPropertyListAPIView") or handler.endswith(".AdminPropertyListView"):
         return ["admin-properties"]
     if handler.endswith(".AdminKYCListAPIView"):
         return ["kyc"]
@@ -39,15 +45,11 @@ def evidence(row):
         ]
     if "admin/system/notifications/" in route:
         return ["campaign-history"]
-    if handler.endswith(".owner_availability") or handler.endswith(
-        ".viewing_time_proposals"
-    ):
+    if handler.endswith(".owner_availability") or handler.endswith(".viewing_time_proposals"):
         return ["appointment-availability"]
     if handler.endswith(".PublicReputationSummaryView"):
         return ["public-payment-reliability"]
-    if handler.endswith(".MessageListAPIView") or handler.endswith(
-        ".GroupMessageContextAPIView"
-    ):
+    if handler.endswith(".MessageListAPIView") or handler.endswith(".GroupMessageContextAPIView"):
         return ["group-message-history"]
     if handler.endswith(
         (
@@ -64,16 +66,38 @@ def evidence(row):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--observations", type=Path, action="append", default=[])
     args = parser.parse_args()
+    observations = {}
+    for path in args.observations:
+        for line in path.read_text().splitlines():
+            record = json.loads(line)
+            observations.setdefault(record["case"], []).append(
+                {
+                    key: record[key]
+                    for key in (
+                        "size",
+                        "queries",
+                        "seconds",
+                        "cpu_seconds",
+                        "peak_python_bytes",
+                        "payload_bytes",
+                        "payload_measure",
+                        "http_calls",
+                        "storage_exists_calls",
+                        "transaction_spans",
+                        "max_transaction_seconds",
+                    )
+                    if key in record
+                }
+            )
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.test")
     import django
 
     django.setup()
     from tools.qa.route_matrix import build
 
-    baseline = json.loads(
-        (ROOT / "sprints/evidence/sprint-00/route-matrix.json").read_text()
-    )["routes"]
+    baseline = json.loads((ROOT / "sprints/evidence/sprint-00/route-matrix.json").read_text())["routes"]
     current = build()
 
     def identity(row):
@@ -84,16 +108,13 @@ def main():
     for row in current:
         probes = evidence(row)
         rows.append(
-            {
-                key: row[key]
-                for key in ("route", "name", "methods", "family", "handler", "aliases")
-            }
+            {key: row[key] for key in ("route", "name", "methods", "family", "handler", "aliases")}
             | {
                 "probe_cases": probes,
+                "observations": {key: observations[key] for key in probes if key in observations},
                 "status": "partial-service-probe" if probes else "unmeasured",
                 "remaining": (
-                    "HTTP/auth/rejection/nested-history/provider/lock "
-                    "and full family budgets remain unaccepted."
+                    "HTTP/auth/rejection/nested-history/provider/lock " "and full family budgets remain unaccepted."
                 ),
             }
         )
