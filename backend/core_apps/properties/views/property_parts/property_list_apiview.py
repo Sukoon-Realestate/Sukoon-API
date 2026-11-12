@@ -20,11 +20,12 @@ class VisiblePropertyListMixin:
         response = super().finalize_response(request, response, *args, **kwargs)
         metadata = getattr(request, "saved_search_metadata", None)
         if metadata and response.status_code < 400 and isinstance(response.data, dict):
-            snapshot = request.saved_search_snapshot
-            response.data["saved_search_read"] = {**metadata, "changes": {
-                str(row["id"]): snapshot.changes[str(row["id"])]
-                for row in response.data.get("results", [])
-                if isinstance(row, dict) and str(row.get("id")) in snapshot.changes}}
+            from ...services.saved_search_reads import changes_for_page
+
+            identities = [
+                row["id"] for row in response.data.get("results", []) if isinstance(row, dict) and "id" in row
+            ]
+            response.data["saved_search_read"] = {**metadata, "changes": changes_for_page(request, identities)}
         if request.user.is_authenticated:
             response["Cache-Control"] = "private, no-store"
         return response
@@ -57,9 +58,7 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.filter(
-            status=Property.Status.VERIFIED, retired_at__isnull=True
-        )
+        Property.objects.filter(status=Property.Status.VERIFIED, retired_at__isnull=True)
         .select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .annotate(
@@ -101,6 +100,7 @@ class PropertyListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
         queryset = self.filter_queryset(self.get_queryset())
         if request.query_params.get("ordering") == "personalized":
             from core_apps.features.experience.discovery import rank
+
             queryset = rank(queryset, request)
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -154,9 +154,7 @@ class PropertyNewListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.filter(
-            status=Property.Status.VERIFIED, retired_at__isnull=True
-        )
+        Property.objects.filter(status=Property.Status.VERIFIED, retired_at__isnull=True)
         .select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .annotate(
@@ -196,9 +194,7 @@ class PropertyNewListAPIView(VisiblePropertyListMixin, generics.ListAPIView):
             from ...services.search_suggestions import search_suggestions
 
             response.data["search_suggestions"] = search_suggestions(self)
-        if hasattr(request, "student_offer_matches") and isinstance(
-            response.data, dict
-        ):
+        if hasattr(request, "student_offer_matches") and isinstance(response.data, dict):
             response.data["student_search_version"] = 1
             if getattr(request, "rental_search_version", None):
                 response.data["rental_search_version"] = 1

@@ -12,10 +12,13 @@ from .test_views import _create_published_property
 pytestmark = pytest.mark.django_db
 
 
+@pytest.fixture(autouse=True, params=[False, True])
+def saved_search_storage_mode(settings, request):
+    settings.SAVED_SEARCH_ITEMIZED_READS = request.param
+
+
 def read(client, **kwargs):
-    return client.get(
-        reverse("property-list"), {"saved_search_id": "stable-notebook-id", **kwargs}
-    )
+    return client.get(reverse("property-list"), {"saved_search_id": "stable-notebook-id", **kwargs})
 
 
 def ack(client, response):
@@ -29,9 +32,7 @@ def ack(client, response):
     )
 
 
-def test_read_does_not_advance_watermark_until_ack_and_rename_keeps_baseline(
-    api_client, user
-):
+def test_read_does_not_advance_watermark_until_ack_and_rename_keeps_baseline(api_client, user):
     _create_published_property(owner=user)
     api_client.force_authenticate(user=user)
     first = read(api_client, saved_search_name="Old name")
@@ -49,9 +50,7 @@ def test_read_does_not_advance_watermark_until_ack_and_rename_keeps_baseline(
     assert SavedSearchVisit.objects.get(user=user).last_read_at == baseline
 
 
-def test_new_updated_and_republished_revisions_use_current_authorized_rows(
-    api_client, user
-):
+def test_new_updated_and_republished_revisions_use_current_authorized_rows(api_client, user):
     old = _create_published_property(owner=user)
     removed = _create_published_property(owner=user)
     api_client.force_authenticate(user=user)
@@ -72,14 +71,10 @@ def test_new_updated_and_republished_revisions_use_current_authorized_rows(
     if os.environ.get("MVP_FIXTURE_DIR"):
         directory = Path(os.environ["MVP_FIXTURE_DIR"])
         directory.mkdir(parents=True, exist_ok=True)
-        (directory / "saved_search_delta.json").write_text(
-            json.dumps(current.data, indent=2) + "\n", encoding="utf-8"
-        )
+        (directory / "saved_search_delta.json").write_text(json.dumps(current.data, indent=2) + "\n", encoding="utf-8")
 
 
-def test_snapshot_pagination_excludes_later_arrivals_and_rejects_changed_rows(
-    api_client, user
-):
+def test_snapshot_pagination_excludes_later_arrivals_and_rejects_changed_rows(api_client, user):
     for index in range(3):
         _create_published_property(owner=user, title=f"Fixture {index}")
     api_client.force_authenticate(user=user)
@@ -107,18 +102,14 @@ def test_definition_change_and_expired_window_require_new_baselines(api_client, 
     assert changed.data["saved_search_read"]["changes"] == {}
     assert SavedSearchVisit.objects.get(user=user).last_read_at is None
     assert ack(api_client, changed).status_code == 200
-    SavedSearchVisit.objects.filter(user=user).update(
-        last_read_at=timezone.now() - timedelta(days=31)
-    )
+    SavedSearchVisit.objects.filter(user=user).update(last_read_at=timezone.now() - timedelta(days=31))
     expired = read(api_client, has_wifi="true", new_updated_only="true")
     assert expired.status_code == 200
     assert expired.data["saved_search_read"]["baseline_state"] == "window_expired"
     assert expired.data["saved_search_read"]["changes"] == {}
 
 
-def test_old_ack_cannot_overwrite_newer_read_and_accounts_are_isolated(
-    api_client, user, another_user
-):
+def test_old_ack_cannot_overwrite_newer_read_and_accounts_are_isolated(api_client, user, another_user):
     _create_published_property(owner=user)
     api_client.force_authenticate(user=user)
     older = read(api_client)
@@ -132,11 +123,16 @@ def test_old_ack_cannot_overwrite_newer_read_and_accounts_are_isolated(
     assert read(api_client).data["saved_search_read"]["baseline_state"] == "first_visit"
 
 
-def test_cleanup_keeps_successful_watermark(api_client, user):
+def test_cleanup_keeps_successful_watermark(api_client, user, settings):
     _create_published_property(owner=user)
     api_client.force_authenticate(user=user)
     response = read(api_client)
     assert ack(api_client, response).status_code == 200
     SavedSearchRead.objects.update(expires_at=timezone.now() - timedelta(days=31))
-    assert purge_saved_search_reads.run() > 0
+    purged = purge_saved_search_reads.run()
+    if settings.SAVED_SEARCH_ITEMIZED_READS:
+        assert purged == 0
+    else:
+        assert purged > 0
+    assert read(api_client).data["saved_search_read"]["new_count"] == 0
     assert SavedSearchVisit.objects.get(user=user).last_read_at is not None

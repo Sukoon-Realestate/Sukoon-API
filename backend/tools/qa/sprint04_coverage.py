@@ -17,6 +17,10 @@ sys.path.insert(0, str(ROOT))
 
 def evidence(row):
     handler, route = row["handler"], row["route"]
+    if handler.endswith(".PropertyListAPIView"):
+        return ["saved-search-itemized"]
+    if handler.endswith(".PropertyReviewListAPIView"):
+        return ["public-property-reviews"]
     if handler.endswith("capture_views.sessions"):
         return ["capture-sessions", "capture-session-summary"]
     if handler.endswith("capture_views.jobs"):

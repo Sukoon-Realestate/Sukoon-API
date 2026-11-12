@@ -52,6 +52,7 @@ def configuration_identity():
         "environment": settings.RENTAL_RUNTIME_ENVIRONMENT,
         "provider_mode": settings.RENTAL_PROVIDER_BACKEND,
         "eager_tasks": settings.CELERY_TASK_ALWAYS_EAGER,
+        "saved_search_itemized_reads": getattr(settings, "SAVED_SEARCH_ITEMIZED_READS", False),
         "database_fingerprint": hashlib.sha256(
             json.dumps(target, sort_keys=True).encode()
         ).hexdigest(),
@@ -123,7 +124,10 @@ class LeaseScheduler(Scheduler):
         entry.options = {
             **original,
             "task_id": task_id,
-            "headers": {**original.get("headers", {}), "sokoun_schedule": entry.name, "sokoun_dispatched_at": marker["dispatched_at"]},
+            "headers": {
+                **original.get("headers", {}), "sokoun_schedule": entry.name,
+                "sokoun_dispatched_at": marker["dispatched_at"],
+            },
         }
         try:
             return super().apply_async(

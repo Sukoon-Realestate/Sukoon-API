@@ -12,6 +12,9 @@ class SavedSearchVisit(TimeStampedModel):
     revision = models.PositiveIntegerField(default=1)
     last_read_at = models.DateTimeField(null=True, blank=True)
     versions = models.JSONField(default=dict)
+    acknowledged_read = models.ForeignKey(
+        "SavedSearchRead", null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
+    )
 
     class Meta:
         constraints = [
@@ -23,9 +26,7 @@ class SavedSearchVisit(TimeStampedModel):
 
 
 class SavedSearchRead(TimeStampedModel):
-    visit = models.ForeignKey(
-        SavedSearchVisit, on_delete=models.CASCADE, related_name="reads"
-    )
+    visit = models.ForeignKey(SavedSearchVisit, on_delete=models.CASCADE, related_name="reads")
     definition_hash = models.CharField(max_length=64)
     base_revision = models.PositiveIntegerField()
     versions = models.JSONField(default=dict)
@@ -34,3 +35,27 @@ class SavedSearchRead(TimeStampedModel):
     read_at = models.DateTimeField()
     expires_at = models.DateTimeField()
     acknowledged_at = models.DateTimeField(null=True, blank=True)
+    # Nullable defaults allow older workers to insert legacy receipts during rollout.
+    itemized = models.BooleanField(default=False, null=True)
+    items_ready = models.BooleanField(default=True, null=True)
+
+    class Meta:
+        ordering = ["-created_at", "-updated_at"]
+        indexes = [models.Index(fields=["expires_at", "pkid"], name="saved_read_expiry_idx")]
+
+
+class SavedSearchReadItem(models.Model):
+    pkid = models.BigAutoField(primary_key=True)
+    read = models.ForeignKey(SavedSearchRead, on_delete=models.CASCADE, related_name="items", db_index=False)
+    property_identity = models.UUIDField()
+    review_revision = models.PositiveIntegerField()
+    modified_at = models.DateTimeField()
+    change = models.CharField(max_length=8, default="")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["read", "property_identity"], name="unique_saved_read_property"),
+            models.CheckConstraint(
+                check=models.Q(change__in=["", "new", "updated"]), name="saved_read_item_change_valid"
+            ),
+        ]

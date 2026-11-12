@@ -7,3 +7,5 @@ Acceptance remains open: 20 of 795 route patterns have partial service probes; 7
 Combined validation is recorded in WORKLOG.md. Raw environment, database and runtime diagnostics remain local. Tests use disposable resources; no existing databases or production operations are targeted. Earlier concurrent development database activity prevents certifying byte-for-byte preservation across the full earlier session.
 
 Follow-up implementation, comparable measurements and remaining criteria: [2026-11-12 follow-up](followup-2026-11-12.md).
+
+Further read/memory/lock work and rollback notes: [public reviews and saved searches](read-followup-2026-11-12.md).

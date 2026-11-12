@@ -30,3 +30,7 @@ Use freshly created disposable PostgreSQL settings/template and private storage 
 - `python tools/qa/verify_chat_network.py --template <owned_template> --postgres-host <private_socket> --postgres-port <port> --postgres-user <test_role> --multi-worker --load-requests 120` exercises two owned ASGI processes, shared Redis and bounded HTTP load.
 
 Still needed for real signoff: a separate HTTPS staging server with sandbox Google/Apple/email/storage/payment/signing configuration, test accounts and physical devices; native capture/media tests; storage persistence/failure recovery against the chosen real service; all-family representative load; actual ingress/TLS/cookie/origin observations; dependency/security and client compatibility review; controlled migration rollout, observation and recovery evidence. No credentials should be pasted into this report. Nothing in these scripts deploys the API or grants acceptance to untested providers/devices.
+
+## Final read-schema recheck
+
+After the saved-search read migrations, the real local worker/scheduler/interruption and two-process shared-Redis/ASGI checks passed again. A fresh final-schema backup/restore matched 367 table row counts. The saved-search format flag is part of the runtime configuration identity; activation/rollback must follow the [read-format rollout notes](../sprint-04/read-followup-2026-11-12.md). These checks remain local and do not grant external release acceptance.

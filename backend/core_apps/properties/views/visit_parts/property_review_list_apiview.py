@@ -59,24 +59,12 @@ class PropertyReviewListAPIView(generics.ListAPIView):
         )
 
     def list(self, request, *args, **kwargs):
-        from core_apps.features.services.reputation.visibility import summary, subject_rows
-        from rest_framework.response import Response
-        property_obj = self.get_property()
-        aggregate = summary("property_visit", property_obj.id)
-        rows = subject_rows("property_visit", property_obj.id)
-        from core_apps.features.models import ReviewSection
-        imported = ReviewSection.objects.filter(legacy_source="property_visit_review").values("legacy_id")
-        old_rows = PropertyVisitReview.objects.filter(visit__property=property_obj).exclude(id__in=imported).order_by("-created_at")
-        legacy_payloads = [{"_sort": r.created_at, "id": str(r.id), "overall_rating": r.overall_rating, "comment": r.comment, "reviewer": {"name": "", "avatar": ""}, "verification_basis": "legacy_unverified", "created_at": r.created_at.strftime("%Y-%m-01T00:00:00Z")} for r in old_rows]
-        page = None
-        result = [{"_sort": r.created_at, "id": str(r.id), "overall_rating": r.overall_score, "comment": r.public_comment, "reviewer": {"name": "", "avatar": ""}, "verification_basis": r.verification_basis, "created_at": r.created_at.strftime("%Y-%m-01T00:00:00Z")} for r in (page if page is not None else rows)]
-        # Pagination owns the combined historical/new collection exactly once.
-        combined = sorted(result + legacy_payloads, key=lambda r: (r["_sort"], r["id"]), reverse=True)
-        for item in combined:
-            item.pop("_sort", None)
-        page = self.paginate_queryset(combined)
-        response = self.get_paginated_response(page)
-        response.data["summary"] = {"total_reviews": aggregate["review_count"], "average_rating": aggregate["average"], "context_type": "viewing"}
+        from ...services.public_review_reads import public_visit_page_source, review_card
+
+        rows, summary = public_visit_page_source(self.get_property())
+        page = self.paginate_queryset(rows)
+        response = self.get_paginated_response([review_card(row) for row in page])
+        response.data["summary"] = summary
         response["Cache-Control"] = "private, no-store"
         return response
 
@@ -92,24 +80,12 @@ class OwnerVisitRequestPagination(PropertyVisitPagination):
         response = super().get_paginated_response(data)
         request = getattr(self, "request", None)
         if request and request.user.is_authenticated:
-            counts = PropertyVisit.objects.filter(
-                property__owner=request.user
-            ).aggregate(
-                new=models.Count(
-                    "id", filter=models.Q(status=PropertyVisit.Status.PENDING)
-                ),
-                pending=models.Count(
-                    "id", filter=models.Q(status=PropertyVisit.Status.PENDING)
-                ),
-                confirmed=models.Count(
-                    "id", filter=models.Q(status=PropertyVisit.Status.CONFIRMED)
-                ),
-                rejected=models.Count(
-                    "id", filter=models.Q(status=PropertyVisit.Status.REJECTED)
-                ),
-                canceled=models.Count(
-                    "id", filter=models.Q(status=PropertyVisit.Status.CANCELED)
-                ),
+            counts = PropertyVisit.objects.filter(property__owner=request.user).aggregate(
+                new=models.Count("id", filter=models.Q(status=PropertyVisit.Status.PENDING)),
+                pending=models.Count("id", filter=models.Q(status=PropertyVisit.Status.PENDING)),
+                confirmed=models.Count("id", filter=models.Q(status=PropertyVisit.Status.CONFIRMED)),
+                rejected=models.Count("id", filter=models.Q(status=PropertyVisit.Status.REJECTED)),
+                canceled=models.Count("id", filter=models.Q(status=PropertyVisit.Status.CANCELED)),
                 all=models.Count("id"),
             )
             counts["completed"] = 0
@@ -152,6 +128,6 @@ class OwnerVisitRequestDetailAPIView(generics.RetrieveAPIView):
     lookup_field = "id"
 
     def get_queryset(self):
-        return PropertyVisit.objects.filter(
-            property__owner=self.request.user
-        ).select_related("tenant", "tenant__profile", "property")
+        return PropertyVisit.objects.filter(property__owner=self.request.user).select_related(
+            "tenant", "tenant__profile", "property"
+        )

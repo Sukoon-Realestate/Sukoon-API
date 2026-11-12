@@ -18,7 +18,7 @@ from .visit import (
 )
 from .moderation import PropertyModerationDecision
 from .hidden_listing import HiddenListingPreference
-from .saved_search_visit import SavedSearchVisit, SavedSearchRead
+from .saved_search_visit import SavedSearchVisit, SavedSearchRead, SavedSearchReadItem
 from .availability_closure import AvailabilityClosure
 from .viewing_time_proposal import ViewingTimeProposal
 from .viewing_arrival import ViewingArrival
