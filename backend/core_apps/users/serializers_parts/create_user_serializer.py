@@ -70,19 +70,13 @@ class CreateUserSerializer(UserCreatePasswordRetypeSerializer):
         return attrs
 
     def create(self, validated_data):
-        birth_date = validated_data.pop("birth_date", None)
-        phone_number = validated_data.pop("phone_number", None)
-        user = super().create(validated_data)
-        update_fields = []
-        if birth_date:
-            user.profile.birth_date = birth_date
-            update_fields.append("birth_date")
-        if phone_number:
-            user.profile.phone_number = phone_number
-            update_fields.append("phone_number")
-        if update_fields:
-            user.profile.save(update_fields=update_fields)
-        return user
+        from ..services.user_service import register_user
+        from djoser.conf import settings
+
+        # Djoser's user_registered signal dispatches its OTP exactly once.
+        return register_user(
+            validated_data, dispatch_otp=False, require_activation=settings.SEND_ACTIVATION_EMAIL
+        )
 
 
 class CustomUserSerializer(PrivateJourneySerializerMixin, UserSerializer):

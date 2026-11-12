@@ -104,3 +104,27 @@ def revoke_current(user, claims):
         subject_id=sid,
         decision="revoked",
     )
+
+
+def issue_token_pair(user):
+    refresh = issue_refresh(user)
+    return {"access": str(refresh.access_token), "refresh": str(refresh)}
+
+
+@transaction.atomic
+def refresh_bound_session(attrs, token_class=RefreshToken):
+    """Rotate only a current bound session, updating its server-owned lifetime."""
+    from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+
+    token = token_class(attrs["refresh"])
+    user = User.objects.select_for_update().filter(id=token.get("user_id")).first()
+    if user is None:
+        raise AuthenticationFailed("Session unavailable.")
+    validate_session(user, token)
+    result = TokenRefreshSerializer().validate(attrs)
+    rotated = token_class(result.get("refresh", attrs["refresh"]))
+    if rotated.get("session_id"):
+        AuthSession.objects.filter(
+            id=rotated["session_id"], user=user, revoked_at__isnull=True
+        ).update(expires_at=datetime.fromtimestamp(rotated["exp"], tz=dt_timezone.utc))
+    return result

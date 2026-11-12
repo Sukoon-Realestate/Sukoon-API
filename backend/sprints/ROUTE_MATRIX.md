@@ -5,7 +5,7 @@ instead of editing by hand. Per-route detail (methods, auth/permission/throttle/
 schema hints, MVP availability per method, aliases, signals and referencing test files) is in
 [evidence/sprint-00/route-matrix.json](evidence/sprint-00/route-matrix.json).
 
-**795 API patterns**, 193 sharing a handler with another pattern (aliases/format variants). Styles: 526 decorated FBV, 243 DRF CBV, 22 DRF viewset, 2 plain function, 2 framework-generated DRF CBV.
+**795 API patterns**, 193 sharing a handler with another pattern (aliases/format variants). Styles: 504 decorated FBV, 265 DRF CBV, 22 DRF viewset, 2 plain function, 2 framework-generated DRF CBV.
 
 How to read the columns:
 
@@ -27,7 +27,7 @@ How to read the columns:
 | `api/admin/dashboard` | 2 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 2 | CookieAuthentication | IsAdminStaff | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/admin/financials` | 2 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 2 | CookieAuthentication | IsFinancialStaff | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/admin/followups` | 1 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
-| `api/admin/kyc` | 9 | Area 6 — Admin/shared/config | 10 | 6 | GET, POST | DRF CBV 9 | CookieAuthentication | IsIdentityReviewer | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
+| `api/admin/kyc` | 9 | Area 6 — Admin/shared/config | 10 | 6 | GET, POST | DRF CBV 9 | CookieAuthentication | IsIdentityReviewer | 0 | 0 | 0 | 0 | 0 | 0 | 3 |
 | `api/admin/moderation` | 4 | Area 6 — Admin/shared/config | 10 | 2 | GET, POST | DRF CBV 4 | CookieAuthentication | IsPropertyReviewer | 0 | 0 | 2 | 0 | 0 | 0 | 1 |
 | `api/admin/permissions` | 1 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAdminStaff | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/admin/properties` | 14 | Area 6 — Admin/shared/config | 10 | 9 | GET, POST | DRF CBV 13; decorated FBV 1 | CookieAuthentication | IsAuthenticated<br>IsPropertyReviewer | 0 | 1 | 1 | 0 | 3 | 0 | 0 |
@@ -40,20 +40,20 @@ How to read the columns:
 | `api/admin/reviews` | 4 | Area 2 — Properties/visits/tours | 06 | 0 | GET, POST | DRF CBV 2; decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 2 |
 | `api/admin/session` | 1 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
 | `api/admin/settings` | 1 | Area 6 — Admin/shared/config | 10 | 0 | GET, POST | DRF CBV 1 | CookieAuthentication | IsSystemOwner | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/admin/staff` | 5 | Area 6 — Admin/shared/config | 10 | 2 | DELETE, GET, POST | DRF CBV 5 | CookieAuthentication | IsAdminStaff<br>IsSystemOwner | 0 | 0 | 0 | 0 | 0 | 0 | 3 |
+| `api/admin/staff` | 5 | Area 6 — Admin/shared/config | 10 | 2 | DELETE, GET, POST | DRF CBV 5 | CookieAuthentication | IsAdminStaff<br>IsSystemOwner | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/admin/support` | 5 | Area 6 — Admin/shared/config | 10 | 0 | GET, POST | DRF CBV 5 | CookieAuthentication | IsSupportStaff | 0 | 0 | 2 | 0 | 2 | 0 | 1 |
 | `api/admin/system` | 6 | Area 6 — Admin/shared/config | 10 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsSystemOwner | 0 | 0 | 0 | 0 | 1 | 0 | 1 |
-| `api/admin/users` | 7 | Area 6 — Admin/shared/config | 10 | 6 | GET, POST | DRF CBV 7 | CookieAuthentication | IsUserManager | 0 | 0 | 0 | 0 | 0 | 0 | 6 |
+| `api/admin/users` | 7 | Area 6 — Admin/shared/config | 10 | 6 | GET, POST | DRF CBV 7 | CookieAuthentication | IsUserManager | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | `api/advertising` | 7 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 7 | CookieAuthentication | AllowAny<br>IsAuthenticated | 7 | 1 | 3 | 0 | 1 | 1 | 7 |
 | `api/auth` | 2 | Framework-generated (router root); owned with Area 1 | — | 2 | GET | framework-generated DRF CBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | `api/auth/^o` | 1 | Area 1 — Identity/profiles | 05 | 0 | GET, POST | DRF CBV 1 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/auth/^users` | 21 | Area 1 — Identity/profiles | 05 | 21 | DELETE, GET, PATCH, POST, PUT | DRF viewset 21 | CookieAuthentication | CurrentUserOrAdmin | 0 | 21 | 21 | 0 | 0 | 0 | 21 |
-| `api/auth/^users\.(?P{}[a-z0-9]+)` | 1 | Area 1 — Identity/profiles | 05 | 1 | GET, POST | DRF viewset 1 | CookieAuthentication | CurrentUserOrAdmin | 0 | 1 | 1 | 0 | 0 | 0 | 1 |
-| `api/auth/account-closure` | 5 | Area 1 — Identity/profiles | 05 | 0 | GET, POST | decorated FBV 5 | CookieAuthentication | IsAuthenticated | 0 | 0 | 1 | 1 | 1 | 0 | 2 |
+| `api/auth/^users` | 21 | Area 1 — Identity/profiles | 05 | 21 | DELETE, GET, PATCH, POST, PUT | DRF viewset 21 | CookieAuthentication | CurrentUserOrAdmin | 0 | 0 | 0 | 21 | 0 | 0 | 21 |
+| `api/auth/^users\.(?P{}[a-z0-9]+)` | 1 | Area 1 — Identity/profiles | 05 | 1 | GET, POST | DRF viewset 1 | CookieAuthentication | CurrentUserOrAdmin | 0 | 0 | 0 | 1 | 0 | 0 | 1 |
+| `api/auth/account-closure` | 5 | Area 1 — Identity/profiles | 05 | 0 | GET, POST | DRF CBV 5 | CookieAuthentication | IsAuthenticated | 0 | 0 | 1 | 0 | 1 | 0 | 2 |
 | `api/auth/apple` | 1 | Area 1 — Identity/profiles | 05 | 0 | POST | DRF CBV 1 | — | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/auth/complete-register` | 1 | Area 1 — Identity/profiles | 05 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
 | `api/auth/delete-account` | 1 | Area 1 — Identity/profiles | 05 | 1 | DELETE, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/auth/email-change` | 3 | Area 1 — Identity/profiles | 05 | 2 | DELETE, GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/auth/email-change` | 3 | Area 1 — Identity/profiles | 05 | 2 | DELETE, GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/auth/facebook` | 1 | Area 1 — Identity/profiles | 05 | 0 | POST | DRF CBV 1 | — | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/auth/google` | 1 | Area 1 — Identity/profiles | 05 | 0 | POST | DRF CBV 1 | — | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/auth/login` | 1 | Area 1 — Identity/profiles | 05 | 0 | POST | DRF CBV 1 | — | — | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -61,7 +61,7 @@ How to read the columns:
 | `api/auth/refresh` | 1 | Area 1 — Identity/profiles | 05 | 1 | POST | DRF CBV 1 | — | — | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/auth/register` | 1 | Area 1 — Identity/profiles | 05 | 0 | POST | DRF CBV 1 | — | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/auth/resend-otp` | 1 | Area 1 — Identity/profiles | 05 | 0 | POST | DRF CBV 1 | — | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/auth/security` | 14 | Area 1 — Identity/profiles | 05 | 0 | GET, PATCH, POST | decorated FBV 14 | CookieAuthentication | IsAuthenticated | 0 | 1 | 1 | 0 | 2 | 0 | 10 |
+| `api/auth/security` | 14 | Area 1 — Identity/profiles | 05 | 0 | GET, PATCH, POST | DRF CBV 14 | CookieAuthentication | IsAuthenticated | 0 | 0 | 1 | 0 | 2 | 0 | 10 |
 | `api/auth/token` | 1 | Area 1 — Identity/profiles | 05 | 1 | POST | DRF CBV 1 | — | — | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/auth/users` | 1 | Area 1 — Identity/profiles | 05 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/auth/verify` | 1 | Area 1 — Identity/profiles | 05 | 1 | POST | DRF CBV 1 | — | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -202,7 +202,7 @@ How to read the columns:
 | `api/notifications` | 9 | Area 5 — Communication/support | 09 | 0 | DELETE, GET, PATCH, POST, PUT | DRF CBV 9 | CookieAuthentication | IsAuthenticated | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
 | `api/pages` | 5 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 5 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
 | `api/payments` | 3 | Area 4 — Commerce/providers/advertising | 08 | 0 | (adapter-defined), POST | decorated FBV 1; plain function 2 | — | AllowAny<br>— | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
-| `api/profiles` | 16 | Area 1 — Identity/profiles | 05 | 1 | DELETE, GET, PATCH, POST, PUT | DRF CBV 16 | CookieAuthentication | IsAuthenticated | 3 | 1 | 2 | 1 | 4 | 1 | 0 |
+| `api/profiles` | 16 | Area 1 — Identity/profiles | 05 | 1 | DELETE, GET, PATCH, POST, PUT | DRF CBV 16 | CookieAuthentication | IsAuthenticated | 3 | 0 | 2 | 0 | 4 | 1 | 0 |
 | `api/properties` | 71 | Area 2 — Properties/visits/tours | 06 | 12 | DELETE, GET, PATCH, POST, PUT | DRF CBV 41; decorated FBV 30 | CookieAuthentication | AllowAny<br>IsAuthenticated<br>IsAuthenticated, IsOwner<br>IsAuthenticated, IsOwnerOrReadOnly<br>IsAuthenticated, IsTenantOrPropertyOwner<br>IsAuthenticatedOrReadOnly | 5 | 14 | 15 | 11 | 13 | 0 | 3 |
 | `api/property-captures` | 15 | Area 2 — Properties/visits/tours | 06 | 0 | DELETE, GET, PATCH, POST, PUT | decorated FBV 15 | CookieAuthentication | IsAuthenticated | 0 | 6 | 0 | 0 | 0 | 0 | 0 |
 | `api/residential-assets` | 20 | Area 2 — Properties/visits/tours | 06 | 20 | DELETE, GET, PATCH, POST | decorated FBV 20 | CookieAuthentication | AllowAny<br>IsAuthenticated | 0 | 0 | 0 | 0 | 2 | 0 | 10 |

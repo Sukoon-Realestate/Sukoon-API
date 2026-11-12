@@ -7,37 +7,37 @@ from rest_framework.routers import DefaultRouter
 class CanonicalUserViewSet(UserViewSet):
     from .services.recovery_tokens import recovery_token_generator as token_generator
 
-    # Djoser's identity/token validation remains authoritative. Validate again
-    # under the account lock so a reset link cannot be replayed concurrently.
     from rest_framework.decorators import action
 
     @action(["post"], detail=False)
     def reset_password_confirm(self, request, *args, **kwargs):
-        from django.db import transaction
-        from .models import User
-        from .services.sessions import revoke_all
+        from rest_framework.response import Response
+        from .services.passwords import reset_inherited_password
 
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        with transaction.atomic():
-            user = User.objects.select_for_update().get(pk=serializer.user.pk)
-            response = super().reset_password_confirm(request, *args, **kwargs)
-            if response.status_code == 204:
-                revoke_all(user, action="password.reset")
-            return response
+        reset_inherited_password(request, self.get_serializer)
+        return Response(status=204)
 
     @action(["post"], detail=False)
     def set_password(self, request, *args, **kwargs):
-        from django.db import transaction
-        from .models import User
-        from .services.sessions import revoke_all
+        from rest_framework.response import Response
+        from .services.passwords import change_inherited_password
 
-        with transaction.atomic():
-            request.user = User.objects.select_for_update().get(pk=request.user.pk)
-            response = super().set_password(request, *args, **kwargs)
-            if response.status_code == 204:
-                revoke_all(request.user, action="password.change")
-            return response
+        change_inherited_password(request, self.get_serializer)
+        return Response(status=204)
+
+    def perform_update(self, serializer, *args, **kwargs):
+        from .services.inherited_accounts import update_account
+
+        update_account(self.request, serializer, sender=self.__class__,
+                       check_permissions=self.check_object_permissions)
+
+    @action(["post"], detail=False)
+    def activation(self, request, *args, **kwargs):
+        from rest_framework.response import Response
+        from .services.inherited_accounts import activate_account
+
+        activate_account(request, self.get_serializer, sender=self.__class__)
+        return Response(status=204)
 
     @action(["post"], detail=False, url_path="set_email")
     def set_username(self, request, *args, **kwargs):
@@ -47,23 +47,12 @@ class CanonicalUserViewSet(UserViewSet):
             "Contact changes require approved verification of the new contact."
         )
 
-    # A1-02: Djoser's destroy (reached by DELETE users/<id>/, users/me/ and their
-    # router format-suffix variants, for self and staff alike) physically deleted
-    # the account outside reviewed closure. Every alias now answers like the other
-    # retired delete routes. The object is resolved first, so Djoser's existing
-    # permission answers (401 anonymous, 403 non-owner) are unchanged.
     def destroy(self, request, *args, **kwargs):
-        from rest_framework import status
         from rest_framework.response import Response
+        from .services.account_closure import closure_required
 
         self.get_object()
-        return Response(
-            {
-                "message": "راجع طلب حذف الحساب من إعدادات الحساب. / Use the account closure review in account settings.",
-                "code": "account_closure_review_required",
-            },
-            status=status.HTTP_409_CONFLICT,
-        )
+        return Response(closure_required(), status=409)
 
     def perform_destroy(self, instance):
         from rest_framework.exceptions import PermissionDenied

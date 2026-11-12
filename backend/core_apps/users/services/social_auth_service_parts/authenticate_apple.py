@@ -73,6 +73,7 @@ def _verify_apple(identity_token: str) -> dict:
                 algorithms=["RS256"],
                 audience=aud,
                 issuer="https://appleid.apple.com",
+                options={"require": ["exp", "iat", "sub"]},
             )
             return claims
         except jwt.PyJWTError as exc:
@@ -94,7 +95,7 @@ def authenticate_apple(identity_token: str, first_name: str = "", last_name: str
     email_verified = str(claims.get("email_verified", "false")).lower() == "true"
     return get_or_create_social_user(
         provider=SocialAccount.PROVIDER_APPLE,
-        provider_uid=claims["sub"],
+        provider_uid=claims.get("sub"),
         email=email,
         email_verified=email_verified,
         first_name=first_name,

@@ -188,3 +188,10 @@ test-paymob-payments:
 .PHONY: test-subscription-sandbox
 test-subscription-sandbox: ## Account-scoped subscription sandbox and existing Paymob boundaries
 	$(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_subscription_sandbox.py core_apps/features/tests/test_paymob_invoice_payments.py core_apps/features/tests/test_commerce_v1.py core_apps/features/tests/test_billing_subscriptions.py --ds=$(COMMERCE_TEST_SETTINGS) --create-db
+
+.PHONY: test-sprint05-identity
+test-sprint05-identity: ## Identity CBV/service contracts; supply isolated CYCLE_SETTINGS and BASELINE_OUT
+	mkdir -p $(BASELINE_OUT)/sprint-05
+	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-05/junit.xml \
+		core_apps/users core_apps/profiles

@@ -1,0 +1,5254 @@
+{
+  "api/v1/auth/account-closure/|GET|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "private, no-store",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "account_id": "__request_user_id__",
+        "request": null,
+        "expected_revision": 0,
+        "new_business_restricted": false,
+        "history": []
+      }
+    }
+  },
+  "api/v1/auth/account-closure/|GET|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "private, no-store",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "account_id": "__request_user_id__",
+        "request": null,
+        "expected_revision": 0,
+        "new_business_restricted": false,
+        "history": []
+      }
+    }
+  },
+  "api/v1/auth/account-closure/|GET|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "private, no-store",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "account_id": "__request_user_id__",
+        "request": null,
+        "expected_revision": 0,
+        "new_business_restricted": false,
+        "history": []
+      }
+    }
+  },
+  "api/v1/auth/account-closure/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: هذا الحقل مطلوب.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Current",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Current",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Current",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/receipt/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This field may not be null.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/receipt/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "لا يمكن لهذا الحقل ان يكون فارغاً null.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/receipt/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This field may not be null.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/receipt/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/receipt/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Receipt",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/receipt/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Receipt",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/receipt/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Receipt",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/receipt/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/review/|GET|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/review/|GET|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/review/|GET|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/review/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/review/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Queue",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/review/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Queue",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/review/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Queue",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/review/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|GET|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|GET|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|GET|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|POST|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|POST|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|POST|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This action requires a current authorized staff role.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Review",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Review",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Review",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: هذا الحقل مطلوب.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Withdraw",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Withdraw",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Withdraw",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/|GET|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/|GET|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/|GET|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Security",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Security",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Security",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|POST|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|POST|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|POST|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Initial Enrollment",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Initial Enrollment",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Initial Enrollment",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/|GET|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/|GET|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/|GET|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Staff Identities",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Staff Identities",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Staff Identities",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Person Reference: This field is required. Evidence Reference: This field is required. Known Channel Reference: This field is required. Verification Method: This field is required. Identity Matched: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Person Reference: هذا الحقل مطلوب. Evidence Reference: هذا الحقل مطلوب. Known Channel Reference: هذا الحقل مطلوب. Verification Method: هذا الحقل مطلوب.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Person Reference: This field is required. Evidence Reference: This field is required. Known Channel Reference: This field is required. Verification Method: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Document Staff Identity",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Document Staff Identity",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Document Staff Identity",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Reason: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Reason: هذا الحقل مطلوب.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Reason: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Recoveries",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Recoveries",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Recoveries",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/review/|GET|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/review/|GET|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/review/|GET|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/review/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/review/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Queue",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/review/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Queue",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/review/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Queue",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/review/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: This field is required. Decision: This field is required. Reason: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: هذا الحقل مطلوب. Decision: هذا الحقل مطلوب. Reason: هذا الحقل مطلوب.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Expected Revision: This field is required. Decision: This field is required. Reason: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Decide",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Decide",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Decide",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Reason: This field is required. Expected Revision: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Reason: هذا الحقل مطلوب. Expected Revision: هذا الحقل مطلوب.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Reason: This field is required. Expected Revision: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Respond",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Respond",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Respond",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|POST|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|POST|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|POST|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "A current staff session is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Enroll",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Enroll",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Enroll",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This field may not be null.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "لا يمكن لهذا الحقل ان يكون فارغاً null.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "This field may not be null.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Confirm",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Confirm",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Confirm",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/start/|POST|True|json|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Sign in again before changing email.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/start/|POST|True|multipart|ar": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "سجل الدخول مجددًا قبل تغيير البريد.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/start/|POST|True|urlencoded|en": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "permission_denied",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Sign in again before changing email.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/start/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/start/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Start",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/start/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Start",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/start/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Start",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/start/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|GET|True|json|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|GET|True|multipart|ar": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "غير موجود.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|GET|True|urlencoded|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|POST|True|json|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|POST|True|multipart|ar": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "غير موجود.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|POST|True|urlencoded|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|DELETE|True|json|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|DELETE|True|multipart|ar": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "غير موجود.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|DELETE|True|urlencoded|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|DELETE|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Change",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Change",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Change",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|GET|True|json|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|GET|True|multipart|ar": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "غير موجود.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|GET|True|urlencoded|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|POST|True|json|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|POST|True|multipart|ar": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "غير موجود.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|POST|True|urlencoded|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|DELETE|True|json|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|DELETE|True|multipart|ar": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "غير موجود.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|DELETE|True|urlencoded|en": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "not_found",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Not found.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|DELETE|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Change",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Change",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Change",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Action: This field is required. Resource Id: This field is required. Resource Revision: This field is required. Payload: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Action: هذا الحقل مطلوب. Resource Id: هذا الحقل مطلوب. Resource Revision: هذا الحقل مطلوب.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Action: This field is required. Resource Id: This field is required. Resource Revision: This field is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Challenges",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/challenges/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Challenges",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/challenges/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Challenges",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/challenges/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Assertion: A provider assertion is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Assertion: A provider assertion is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Assertion: A provider assertion is required.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Verify",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Verify",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Verify",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/|GET|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "private, no-store",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "sensitive_actions_frozen": false,
+        "results": []
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/|GET|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "private, no-store",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "sensitive_actions_frozen": false,
+        "results": []
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/|GET|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "private, no-store",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "sensitive_actions_frozen": false,
+        "results": []
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/|GET|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/|POST|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Action: Use revoke_all, revoke_session or revoke_others.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/|POST|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Action: Use revoke_all, revoke_session or revoke_others.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/|POST|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "invalid",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Action: Use revoke_all, revoke_session or revoke_others.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/|POST|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Sessions",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Sessions",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Sessions",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/current/|PATCH|True|json|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "reauthentication_required",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Sign in again to identify this session.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/current/|PATCH|True|multipart|ar": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "reauthentication_required",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Sign in again to identify this session.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/current/|PATCH|True|urlencoded|en": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-App-Error-Code": "reauthentication_required",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Sign in again to identify this session.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/current/|PATCH|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/security/sessions/current/|OPTIONS|True|json|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Session Metadata",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/current/|OPTIONS|True|multipart|ar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "تمت العملية بنجاح.",
+      "data": {
+        "name": "Session Metadata",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/current/|OPTIONS|True|urlencoded|en": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More"
+    },
+    "body": {
+      "message": "Operation successful.",
+      "data": {
+        "name": "Session Metadata",
+        "description": "",
+        "renders": [
+          "application/json"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "api/v1/auth/security/sessions/current/|OPTIONS|False|json|en": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "Access-Control-Expose-Headers": "X-App-Error-Code, X-Correlation-ID, X-Page, X-Per-Page, X-Total-Count, X-Total-Pages, X-Next-Page, X-Previous-Page, Retry-After, Content-Language, X-Chat-Older-Cursor, X-Chat-Event-Cursor, X-Chat-Has-More",
+      "Cache-Control": "private, no-store"
+    },
+    "body": {
+      "message": "Authentication credentials were not provided.",
+      "data": null
+    }
+  },
+  "api/v1/auth/account-closure/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/receipt/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/receipt/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/receipt/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/receipt/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/review/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/review/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/review/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/review/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/review/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/account-closure/<uuid:identity>/withdraw/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/initial-enrollment/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/staff-identities/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/staff-identities/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/staff-identities/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/staff-identities/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/review/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/review/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/review/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/review/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/review/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/start/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/start/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/start/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/start/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/<uuid:identity>/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/email-change/<uuid:identity>/<str:action>/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/challenges/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/challenges/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/challenges/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/challenges/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/challenges/<uuid:identity>/verify/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/sessions/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/sessions/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/sessions/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/sessions/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/sessions/current/|HEAD|True|json|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/sessions/current/|HEAD|True|multipart|ar": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/sessions/current/|HEAD|True|urlencoded|en": {
+    "status": 405,
+    "headers": {
+      "X-App-Error-Code": "method_not_allowed",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ]
+    },
+    "body": null
+  },
+  "api/v1/auth/security/sessions/current/|HEAD|False|json|en": {
+    "status": 401,
+    "headers": {
+      "WWW-Authenticate": "Bearer realm=\"api\"",
+      "X-App-Error-Code": "not_authenticated",
+      "Allow": [
+        "OPTIONS",
+        "PATCH"
+      ]
+    },
+    "body": null
+  }
+}

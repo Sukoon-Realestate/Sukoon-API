@@ -28,3 +28,22 @@ or retire it through the supported-client deprecation decision. Do not duplicate
   contract matrix, including intentional security changes from earlier sprints.
 - Unit/domain and HTTP tests cover current and stale authority, duplicate/lost responses, time boundaries and supported
   uploads; relevant read paths meet Sprint 04 budgets. Repository guidance/examples show the resulting architecture.
+
+## Execution record — 2026-11-12
+
+Completed for backend implementation and local acceptance with the user's compatibility decision:
+add bounded pagination while preserving legacy full-list/history responses.
+
+- All 78 identity patterns and 109 declared method entries are accounted for; zero project-owned identity function callbacks.
+- Thin CBVs delegate to named account/session/challenge/password/expiry commands and prepared read selectors.
+- Current session/account/object authority is revalidated under locks for inherited updates, activation and password changes.
+- Closure/evidence obligations, independent factors, social identity proof and retained route aliases remain protected.
+- Opt-in collection/history pagination and prepared closure/recovery queries have regression gates; exact counts and legacy
+  complete output remain data-dependent under the chosen compatibility contract.
+- The isolated publication branch retains origin/main's newer cookie-origin, media provenance, deletion permission and safe
+  social adoption policies. Identity/profile tests: 1,449 passed, 19 PostgreSQL-only skips. Shared contracts: 94 passed.
+- Django checks, migration consistency and whitespace pass. No production/database/deployment action, new migration or
+  dependency update is part of publication. No later implementation sprint is included.
+
+See [sanitized publication evidence](evidence/sprint-05/README.md). Raw local diagnostics are not part of this publication.
+Live-provider/device/load/deployment signoff remains Sprint 12, as the sprint plan specifies.

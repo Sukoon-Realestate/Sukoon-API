@@ -41,6 +41,8 @@ def get_or_create_social_user(
     2. Existing User with the same verified email → auto-link.
     3. Create a new User.
     """
+    if not isinstance(provider_uid, str) or not provider_uid or len(provider_uid) > 255:
+        raise ValidationError("Social identity is unavailable.")
     UserModel = _get_user_model()
 
     try:
@@ -126,6 +128,7 @@ def _verify_google(token: str) -> dict:
 
     from google.oauth2 import id_token as google_id_token
     from google.auth.transport import requests as google_requests
+    from google.auth.exceptions import GoogleAuthError
 
     last_error = None
     for client_id in settings.GOOGLE_CLIENT_IDS:
@@ -136,7 +139,7 @@ def _verify_google(token: str) -> dict:
                 audience=client_id,
             )
             return claims
-        except ValueError as exc:
+        except (ValueError, GoogleAuthError, KeyError) as exc:
             last_error = exc
 
     logger.warning("Google ID token verification failed: %s", last_error)
@@ -151,7 +154,7 @@ def authenticate_google(token: str):
     claims = _verify_google(token)
     return get_or_create_social_user(
         provider=SocialAccount.PROVIDER_GOOGLE,
-        provider_uid=claims["sub"],
+        provider_uid=claims.get("sub"),
         email=claims.get("email", ""),
         email_verified=claims.get("email_verified", False),
         first_name=claims.get("given_name", ""),
@@ -192,7 +195,7 @@ def authenticate_facebook(token: str):
     email_verified = bool(email)
     return get_or_create_social_user(
         provider=SocialAccount.PROVIDER_FACEBOOK,
-        provider_uid=claims["id"],
+        provider_uid=claims.get("id"),
         email=email,
         email_verified=email_verified,
         first_name=claims.get("first_name", ""),

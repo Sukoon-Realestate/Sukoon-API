@@ -105,3 +105,30 @@ def event_copy(event):
         raise NotFound()
     return {"title": "Identity document reminder", "body": "Open your private identity settings to review the expiry date you entered.",
             "category": "identity_expiry", "notification_type": "general"}
+
+
+@transaction.atomic
+def current_expiry(user):
+    return projection(locked_profile(user))
+
+
+@transaction.atomic
+def save_expiry(user, key, payload):
+    """Validate and save under account/card locks, including receipt replays."""
+    from rest_framework import serializers
+    from core_apps.common.idempotency import execute_idempotent
+
+    profile = locked_profile(user)
+    if not key:
+        raise serializers.ValidationError({"Idempotency-Key": "Required for recoverable saves."})
+    from .expiry_inputs import ExpiryInput
+
+    command = ExpiryInput(data=payload)
+    command.is_valid(raise_exception=True)
+    data = command.validated_data
+    if card_version(profile) != data["document_version"]:
+        raise IdempotencyConflict("Identity card changed. Refresh before saving.")
+    return execute_idempotent(
+        user=user, operation="identity.expiry", key=key, payload=data,
+        action=lambda: (update(profile, data), 200, str(profile.id)),
+    )

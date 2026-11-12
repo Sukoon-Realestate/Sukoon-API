@@ -584,6 +584,7 @@ DJOSER = {
     "DOMAIN": getenv("DOMAIN", "sukoon-app-y4j5r.ondigitalocean.app"),
     "SITE_NAME": getenv("SITE_NAME", "sukoon.com"),
     "DEFAULT_HTTP_PROTOCOL": "https",
+    "SOCIAL_AUTH_TOKEN_STRATEGY": "core_apps.users.services.social_tokens.BoundTokenStrategy",
     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": getenv("REDIRECT_URIS", "").split(","),
     "SERIALIZERS": {
         "user_create": "core_apps.users.serializers.CreateUserSerializer",

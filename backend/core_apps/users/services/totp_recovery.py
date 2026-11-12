@@ -108,9 +108,12 @@ def projection(item, *, review=False):
                 "revision": row.revision,
                 "created_at": row.created_at.isoformat(),
             }
-            for row in item.decisions.order_by("created_at")
+            for row in (item.prepared_history if hasattr(item, "prepared_history") else
+                        item.decisions.order_by("created_at"))
         ],
     }
+    if hasattr(item, "prepared_history_page"):
+        value["decisions_page"] = item.prepared_history_page
     if review:
         value.update(
             user_id=str(item.user.id),
@@ -123,40 +126,9 @@ def projection(item, *, review=False):
 
 
 def _review_available(item):
-    identities = (
-        StaffSecurityIdentity.objects.select_related("user")
-        .filter(user__is_active=True)
-        .exclude(evidence_reference="")
-        .exclude(known_channel_reference="")
-        .exclude(person_reference="")
-    )
-    for identity in identities:
-        user = identity.user
-        if (
-            user.pk == item.user_id
-            or identity.person_reference == item.person_reference
-        ):
-            continue
-        profile = StaffProfile.objects.filter(user=user).first()
-        if profile and not profile.is_active:
-            continue
-        if not _is_owner(user, profile) and not (
-            item.owner_request
-            and profile
-            and profile.role_name == "security_recovery_reviewer"
-            and identity.designated_owner_reviewer
-            and str(identity.id) in item.designated_reviewer_ids
-        ):
-            continue
-        if user.sensitive_actions_frozen or totp.pending_recovery(user):
-            continue
-        if (
-            TotpFactor.objects.filter(user=user, confirmed_at__isnull=False)
-            .exclude(secret_ciphertext="")
-            .exists()
-        ):
-            return True
-    return False
+    from .recovery_reads import review_available
+
+    return review_available(item)
 
 
 @transaction.atomic
@@ -168,6 +140,11 @@ def status(request):
     recovery = (
         TotpRecoveryRequest.objects.filter(user=user).order_by("-created_at").first()
     )
+    if recovery and hasattr(request, "query_params"):
+        from ..read_pages import history_page
+        from .recovery_reads import prepare_projections
+
+        prepare_projections([recovery], page=history_page(request.query_params))
     return {
         "configured": bool(factor and factor.confirmed_at and factor.secret_ciphertext),
         "restricted": user.sensitive_actions_frozen
@@ -303,16 +280,17 @@ def review_queue(request):
         not profile or profile.role_name != "security_recovery_reviewer"
     ):
         raise PermissionDenied("Recovery review authority is required.")
-    result = []
-    for item in TotpRecoveryRequest.objects.filter(active=True).select_related(
-        "user", "identity"
-    ):
-        try:
-            _can_review(user, profile, item)
-        except PermissionDenied:
-            continue
-        result.append(projection(item, review=True))
-    return result
+    from .recovery_reads import authorized_rows, prepare_projections
+    from ..read_pages import collection_requested, collection_page, history_page
+
+    rows = authorized_rows(user, profile)
+    params = request.query_params if hasattr(request, "query_params") else {}
+    metadata = None
+    if collection_requested(params):
+        rows, metadata = collection_page(rows, params)
+    rows = prepare_projections(rows, page=history_page(params))
+    result = [projection(item, review=True) for item in rows]
+    return {**metadata, "results": result} if metadata is not None else result
 
 
 @transaction.atomic

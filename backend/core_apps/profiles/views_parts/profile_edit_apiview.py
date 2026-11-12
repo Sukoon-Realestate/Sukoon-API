@@ -4,7 +4,6 @@ import logging
 from typing import List
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
-from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, permissions, status
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
@@ -20,6 +19,7 @@ from ..serializers import (
     UpdateProfileSerializer,
 )
 from ..services import ProfileService
+from ..selectors import current_profile
 
 
 logger = logging.getLogger(__name__)
@@ -58,10 +58,7 @@ class ProfileDetailAPIView(generics.RetrieveAPIView):
         return Profile.objects.select_related("user").all()
 
     def get_object(self) -> Profile:
-        try:
-            return self.get_queryset().get(user=self.request.user)
-        except Profile.DoesNotExist:
-            raise Http404("Profile is Not found for this user!")
+        return current_profile(self.request.user)
 
 
 class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):

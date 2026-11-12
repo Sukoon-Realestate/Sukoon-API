@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 
-def blockers(user):
+def blocker_queries(user):
     from core_apps.features import models as rental
     from core_apps.features.company_models import CompanyMembership, EmployeeAssignment
     from core_apps.features.company_contract_models import CompanyMandate
@@ -24,9 +24,7 @@ def blockers(user):
     result = []
 
     def add(code, label, query):
-        count = query.count()
-        if count:
-            result.append({"code": code, "label": label, "count": count})
+        result.append((code, label, query))
 
     add(
         "lease",
@@ -59,7 +57,8 @@ def blockers(user):
         "payment",
         "نتيجة دفع معلقة / Pending payment result",
         rental.PaymentAttempt.objects.filter(
-            Q(payer=user) | Q(invoice__in=invoices),
+            Q(payer=user) | Q(invoice__payer=user) | Q(invoice__beneficiary=user)
+            | Q(invoice__lease__tenant=user) | Q(invoice__lease__owner=user),
             payment_status__in=["created", "pending", "authorized"],
         ),
     )
@@ -75,7 +74,7 @@ def blockers(user):
         "refund",
         "استرداد غير مكتمل / Unfinished refund",
         rental.RefundRequest.objects.filter(
-            Q(requester=user) | Q(lease__in=leases)
+            Q(requester=user) | Q(lease__tenant=user) | Q(lease__owner=user)
         ).exclude(status__in=["succeeded", "rejected"]),
     )
     add(
@@ -93,19 +92,21 @@ def blockers(user):
     add(
         "dispute",
         "نزاع قائم / Open dispute",
-        rental.RentalDispute.objects.filter(lease__in=leases, status="open"),
+        rental.RentalDispute.objects.filter((Q(lease__tenant=user) | Q(lease__owner=user)), status="open"),
     )
     add(
         "chargeback",
         "اعتراض مالي قائم / Open chargeback",
         rental.RentalChargeback.objects.filter(
-            payment_attempt__invoice__in=invoices, outcome="open"
+            (Q(payment_attempt__invoice__payer=user) | Q(payment_attempt__invoice__beneficiary=user)
+             | Q(payment_attempt__invoice__lease__tenant=user) | Q(payment_attempt__invoice__lease__owner=user)),
+            outcome="open"
         ),
     )
     add(
         "settlement",
         "تسوية لم تكتمل / Unfinished settlement",
-        rental.FinalSettlement.objects.filter(lease__in=leases).exclude(
+        rental.FinalSettlement.objects.filter(Q(lease__tenant=user) | Q(lease__owner=user)).exclude(
             execution_status="executed"
         ),
     )
@@ -113,8 +114,9 @@ def blockers(user):
         "operation",
         "متابعة تشغيلية مفتوحة / Open operational follow-up",
         rental.RentalOperationalCase.objects.filter(
-            Q(lease__in=leases)
-            | Q(payment_attempt__invoice__in=invoices)
+            Q(lease__tenant=user) | Q(lease__owner=user)
+            | Q(payment_attempt__invoice__payer=user) | Q(payment_attempt__invoice__beneficiary=user)
+            | Q(payment_attempt__invoice__lease__tenant=user) | Q(payment_attempt__invoice__lease__owner=user)
             | Q(opened_by=user)
         ).exclude(status="resolved"),
     )
@@ -141,34 +143,62 @@ def blockers(user):
         ),
     )
     # A company's sole administrator must transfer their existing responsibility.
-    sole_admin = []
-    for member in CompanyMembership.objects.filter(
+    from django.db.models import Exists, OuterRef
+
+    other_admins = CompanyMembership.objects.filter(
+        company_id=OuterRef("company_id"), is_active=True, is_admin=True
+    ).exclude(user_id=OuterRef("user_id"))
+    sole_admin = CompanyMembership.objects.filter(
         user=user, is_active=True, is_admin=True
-    ):
-        if (
-            not CompanyMembership.objects.filter(
-                company=member.company, is_active=True, is_admin=True
-            )
-            .exclude(user=user)
-            .exists()
-        ):
-            sole_admin.append(member.pk)
+    ).annotate(other_admin=Exists(other_admins)).filter(other_admin=False)
     add(
         "company_admin",
         "نقل مسؤولية إدارة الشركة / Transfer company administration",
-        CompanyMembership.objects.filter(pk__in=sole_admin),
+        sole_admin,
     )
     add(
         "staff_authority",
         "إغلاق صلاحية الموظف أولًا / Close staff authority first",
         StaffProfile.objects.filter(user=user, is_active=True),
     )
-    if user.is_superuser or user.is_staff:
-        result.append(
-            {
+    return result
+
+
+def blockers_for_users(users):
+    """Correlated counts use each relation type once, without per-user SQL calls.
+
+    No cached authority is reused across requests. All counts are evaluated in
+    the same statement; command callers retain their account lock and live checks.
+    """
+    from django.db.models import Count, OuterRef, Subquery, Value, IntegerField
+    from django.db.models.functions import Coalesce
+    from ..models import User
+
+    users = list(users)
+    if not users:
+        return {}
+    definitions = blocker_queries(OuterRef("pk"))
+    annotations = {}
+    for code, _, query in definitions:
+        count = (query.order_by().annotate(group=Value(1)).values("group")
+                 .annotate(total=Count("pk")).values("total"))
+        annotations["blocker_" + code] = Coalesce(
+            Subquery(count, output_field=IntegerField()), Value(0)
+        )
+    prepared = User.objects.filter(pk__in=[user.pk for user in users]).annotate(**annotations)
+    result = {}
+    for user in prepared:
+        values = [{"code": code, "label": label, "count": getattr(user, "blocker_" + code)}
+                  for code, label, _ in definitions if getattr(user, "blocker_" + code)]
+        if user.is_superuser or user.is_staff:
+            values.append({
                 "code": "staff_account",
                 "label": "نقل صلاحيات الإدارة أولًا / Transfer administrative authority first",
                 "count": 1,
-            }
-        )
+            })
+        result[user.pk] = values
     return result
+
+
+def blockers(user):
+    return blockers_for_users([user])[user.pk]

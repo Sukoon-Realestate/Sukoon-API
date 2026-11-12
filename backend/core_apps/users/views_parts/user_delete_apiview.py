@@ -143,9 +143,8 @@ class UserDeleteAPIView(APIView):
     renderer_classes = [GenericJsonRenderer]
 
     def delete(self, request):
-        return Response({
-            "message": "راجع طلب حذف الحساب من إعدادات الحساب. / Use the account closure review in account settings.",
-            "code": "account_closure_review_required",
-        }, status=status.HTTP_409_CONFLICT)
+        from ..services.account_closure import closure_required
+
+        return Response(closure_required(), status=status.HTTP_409_CONFLICT)
 
     post = delete

@@ -4,7 +4,9 @@ Resolved in a temporary source copy with database connections forbidden. Baselin
 795 registered API patterns include aliases/format variants; this is not 795 independently tested endpoints. Empty declarations
 and AllowAny are not vulnerability verdicts: inner service, signature, object and workspace checks must be traced.
 
-Styles: 526 decorated-function routes, 267 authored/class routes, two plain provider callback functions. DRF-generated
+After Sprint 05: 504 decorated-function routes, 289 authored/class routes, two plain provider callback functions.
+Identity rows were refreshed on 2026-11-11; the remaining rows retain their audit baseline.
+All 78 identity patterns now resolve to explicit classes; see [Sprint 05 evidence](evidence/sprint-05/README.md). DRF-generated
 `WrappedAPIView` callbacks are classified by their original function, not mistaken for authored CBVs.
 
 Each route family must add its schema, role/authority, error/retry, query/payload and client-parity evidence before completion.
@@ -17,84 +19,84 @@ Declared methods exclude HEAD/OPTIONS. Framework/native admin internals are outs
 | `api/v1/payments/paymob/test-checkout/` | POST | [core_apps.common.paymob_checkout.test_checkout](../core_apps/common/paymob_checkout.py#L50) | decorated FBV | AllowAny | 4 |
 | `api/v1/payments/paymob/webhook/` | inspect adapter | [core_apps.common.paymob_views.webhook](../core_apps/common/paymob_views.py#L34) | plain function | inspect adapter | 4 |
 | `api/v1/payments/paymob/return/` | inspect adapter | [core_apps.common.paymob_views.payment_return](../core_apps/common/paymob_views.py#L73) | plain function | inspect adapter | 4 |
-| `api/v1/auth/account-closure/` | GET, POST | [core_apps.users.closure_views.current](../core_apps/users/closure_views.py#L39) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/account-closure/receipt/` | POST | [core_apps.users.closure_views.receipt](../core_apps/users/closure_views.py#L93) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/account-closure/review/` | GET | [core_apps.users.closure_views.queue](../core_apps/users/closure_views.py#L59) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/account-closure/<uuid:identity>/review/` | GET, POST | [core_apps.users.closure_views.review](../core_apps/users/closure_views.py#L76) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/account-closure/<uuid:identity>/withdraw/` | POST | [core_apps.users.closure_views.withdraw](../core_apps/users/closure_views.py#L50) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/` | GET | [core_apps.users.totp_views.security](../core_apps/users/totp_views.py#L72) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/initial-enrollment/` | POST | [core_apps.users.totp_views.initial_enrollment](../core_apps/users/totp_views.py#L59) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/staff-identities/` | GET | [core_apps.users.totp_views.staff_identities](../core_apps/users/totp_views.py#L41) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/` | POST | [core_apps.users.totp_views.document_staff_identity](../core_apps/users/totp_views.py#L48) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/recoveries/` | POST | [core_apps.users.totp_views.recoveries](../core_apps/users/totp_views.py#L79) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/review/` | GET | [core_apps.users.totp_views.queue](../core_apps/users/totp_views.py#L99) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/recoveries/<uuid:identity>/review/` | POST | [core_apps.users.totp_views.decide](../core_apps/users/totp_views.py#L106) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/` | POST | [core_apps.users.totp_views.respond](../core_apps/users/totp_views.py#L90) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/` | POST | [core_apps.users.totp_views.enroll](../core_apps/users/totp_views.py#L115) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/` | POST | [core_apps.users.totp_views.confirm](../core_apps/users/totp_views.py#L122) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/email-change/start/` | POST | [core_apps.users.email_change_views.start](../core_apps/users/email_change_views.py#L19) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/email-change/<uuid:identity>/` | GET, DELETE, POST | [core_apps.users.email_change_views.change](../core_apps/users/email_change_views.py#L27) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/email-change/<uuid:identity>/<str:action>/` | GET, DELETE, POST | [core_apps.users.email_change_views.change](../core_apps/users/email_change_views.py#L27) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/challenges/` | POST | [core_apps.users.security_views.challenges](../core_apps/users/security_views.py#L20) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/challenges/<uuid:identity>/verify/` | POST | [core_apps.users.security_views.verify](../core_apps/users/security_views.py#L29) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/sessions/` | GET, POST | [core_apps.users.security_views.sessions](../core_apps/users/security_views.py#L41) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/security/sessions/current/` | PATCH | [core_apps.users.security_views.session_metadata](../core_apps/users/security_views.py#L97) | decorated FBV | IsAuthenticated | 1 |
-| `api/v1/auth/^o/(?P<provider>\S+)/$` | GET, POST | [core_apps.users.views_parts.set_auth_cookies.CustomProviderAuthView](../core_apps/users/views_parts/set_auth_cookies.py#L125) | CBV | AllowAny | 1 |
-| `api/v1/auth/register/` | POST | [core_apps.users.views_parts.verify_email_apiview.UserRegisterAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L31) | CBV | AllowAny | 1 |
-| `api/v1/auth/complete-register/` | POST | [core_apps.users.views_parts.verify_email_apiview.CompleteRegisterAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L128) | CBV | IsAuthenticated | 1 |
-| `api/v1/auth/verify/` | POST | [core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L65) | CBV | AllowAny | 1 |
-| `api/v1/auth/verify-email/` | POST | [core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L65) | CBV | AllowAny | 1 |
-| `api/v1/auth/verify-otp/` | POST | [core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L65) | CBV | AllowAny | 1 |
-| `api/v1/auth/resend-otp/` | POST | [core_apps.users.views_parts.verify_email_apiview.ResendOtpAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L101) | CBV | AllowAny | 1 |
-| `api/v1/auth/login/` | POST | [core_apps.users.views_parts.set_auth_cookies.CustomTokenObtainPairView](../core_apps/users/views_parts/set_auth_cookies.py#L66) | CBV | inspect adapter | 1 |
-| `api/v1/auth/refresh/` | POST | [core_apps.users.views_parts.set_auth_cookies.CustomTokenRefreshView](../core_apps/users/views_parts/set_auth_cookies.py#L92) | CBV | inspect adapter | 1 |
-| `api/v1/auth/token/refresh/` | POST | [core_apps.users.views_parts.set_auth_cookies.CustomTokenRefreshView](../core_apps/users/views_parts/set_auth_cookies.py#L92) | CBV | inspect adapter | 1 |
-| `api/v1/auth/logout/` | POST | [core_apps.users.views_parts.set_auth_cookies.LogoutAPIView](../core_apps/users/views_parts/set_auth_cookies.py#L148) | CBV | IsAuthenticated | 1 |
-| `api/v1/auth/delete-account/` | POST, DELETE | [core_apps.users.views_parts.user_delete_apiview.UserDeleteAPIView](../core_apps/users/views_parts/user_delete_apiview.py#L139) | CBV | IsAuthenticated | 1 |
-| `api/v1/auth/users/set_password/` | POST | [core_apps.users.views_parts.verify_email_apiview.SetPasswordAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L158) | CBV | IsAuthenticated | 1 |
-| `api/v1/auth/google/` | POST | [core_apps.users.views_parts.user_delete_apiview.GoogleAuthView](../core_apps/users/views_parts/user_delete_apiview.py#L25) | CBV | AllowAny | 1 |
-| `api/v1/auth/apple/` | POST | [core_apps.users.views_parts.user_delete_apiview.AppleAuthView](../core_apps/users/views_parts/user_delete_apiview.py#L57) | CBV | AllowAny | 1 |
-| `api/v1/auth/facebook/` | POST | [core_apps.users.views_parts.user_delete_apiview.FacebookAuthView](../core_apps/users/views_parts/user_delete_apiview.py#L94) | CBV | AllowAny | 1 |
-| `api/v1/auth/^users/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/activation/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/activation\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/me/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/me\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/resend_activation/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/resend_activation\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/reset_password/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/reset_password\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/reset_password_confirm/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/reset_password_confirm\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/reset_email/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/reset_email\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/reset_email_confirm/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/reset_email_confirm\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/set_password/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/set_password\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/set_email/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/set_email\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/(?P<id>[^/.]+)/$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/^users/(?P<id>[^/.]+)\.(?P<format>[a-z0-9]+)/?$` | inspect adapter | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | CBV | CurrentUserOrAdmin | 1 |
-| `api/v1/auth/` | GET | `rest_framework.routers.APIRootView` | CBV | IsAuthenticated | Boundary/framework |
-| `api/v1/auth/<drf_format_suffix:format>` | GET | `rest_framework.routers.APIRootView` | CBV | IsAuthenticated | Boundary/framework |
-| `api/v1/profiles/identity-expiry/` | GET, POST | [core_apps.profiles.identity_expiry_views.IdentityExpiryAPIView](../core_apps/profiles/identity_expiry_views.py#L25) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/` | POST | [core_apps.profiles.identity_recovery.IdentityOperationResolveAPIView](../core_apps/profiles/identity_recovery.py#L8) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/identity-media/<slug:field>/` | GET | [core_apps.profiles.identity_views.IdentityMediaAPIView](../core_apps/profiles/identity_views.py#L12) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/all/` | GET | [core_apps.profiles.views_parts.profile_edit_apiview.ProfileListAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L31) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/user/my-profile/` | GET | [core_apps.profiles.views_parts.profile_edit_apiview.ProfileDetailAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L53) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/user/update/` | GET, PUT, PATCH | [core_apps.profiles.views_parts.profile_edit_apiview.ProfileUpdateAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L67) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/my-account/` | GET | [core_apps.profiles.views_parts.profile_edit_apiview.MyAccountDetailAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L86) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/account-summary/` | GET | [core_apps.profiles.views_parts.profile_edit_apiview.AccountSummaryDetailAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L104) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/edit/` | GET, PUT, PATCH | [core_apps.profiles.views_parts.profile_edit_apiview.ProfileEditAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L122) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/settings/` | GET, PUT, PATCH | [core_apps.profiles.views_parts.user_settings_apiview.UserSettingsAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L25) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/verification-status/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.VerificationStatusAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L138) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/contracts/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.TenantContractsListAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L156) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/delete-account/` | POST, DELETE | [core_apps.users.views_parts.user_delete_apiview.UserDeleteAPIView](../core_apps/users/views_parts/user_delete_apiview.py#L139) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/owner/unread-counts/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.OwnerUnreadCountsAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L75) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/tenant/unread-counts/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.TenantUnreadCountsAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L96) | CBV | IsAuthenticated | 1 |
-| `api/v1/profiles/my-rates/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.TenantMyRatesListAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L120) | CBV | IsAuthenticated | 1 |
+| `api/v1/auth/account-closure/` | GET, POST | [core_apps.users.closure_views.AccountClosureAPIView](../core_apps/users/closure_views.py#L41) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/account-closure/receipt/` | POST | [core_apps.users.closure_views.AccountClosureReceiptAPIView](../core_apps/users/closure_views.py#L102) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/account-closure/review/` | GET | [core_apps.users.closure_views.AccountClosureQueueAPIView](../core_apps/users/closure_views.py#L68) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/account-closure/<uuid:identity>/review/` | GET, POST | [core_apps.users.closure_views.AccountClosureReviewAPIView](../core_apps/users/closure_views.py#L86) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/account-closure/<uuid:identity>/withdraw/` | POST | [core_apps.users.closure_views.AccountClosureWithdrawAPIView](../core_apps/users/closure_views.py#L56) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/` | GET | [core_apps.users.totp_views.TotpSecurityAPIView](../core_apps/users/totp_views.py#L81) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/initial-enrollment/` | POST | [core_apps.users.totp_views.StaffInitialEnrollmentAPIView](../core_apps/users/totp_views.py#L65) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/staff-identities/` | GET | [core_apps.users.totp_views.StaffIdentityListAPIView](../core_apps/users/totp_views.py#L41) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/staff-identities/<uuid:identity>/document/` | POST | [core_apps.users.totp_views.StaffIdentityDocumentAPIView](../core_apps/users/totp_views.py#L51) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/recoveries/` | POST | [core_apps.users.totp_views.TotpRecoveryCreateAPIView](../core_apps/users/totp_views.py#L91) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/review/` | GET | [core_apps.users.totp_views.TotpRecoveryQueueAPIView](../core_apps/users/totp_views.py#L117) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/recoveries/<uuid:identity>/review/` | POST | [core_apps.users.totp_views.TotpRecoveryDecisionAPIView](../core_apps/users/totp_views.py#L128) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/recoveries/<uuid:identity>/respond/` | POST | [core_apps.users.totp_views.TotpRecoveryRespondAPIView](../core_apps/users/totp_views.py#L105) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/recoveries/<uuid:identity>/enroll/` | POST | [core_apps.users.totp_views.TotpRecoveryEnrollAPIView](../core_apps/users/totp_views.py#L140) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/totp/enrollments/<uuid:identity>/confirm/` | POST | [core_apps.users.totp_views.TotpEnrollmentConfirmAPIView](../core_apps/users/totp_views.py#L150) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/email-change/start/` | POST | [core_apps.users.email_change_views.EmailChangeStartAPIView](../core_apps/users/email_change_views.py#L14) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/email-change/<uuid:identity>/` | GET, POST, DELETE | [core_apps.users.email_change_views.EmailChangeAPIView](../core_apps/users/email_change_views.py#L25) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/email-change/<uuid:identity>/<str:action>/` | GET, POST, DELETE | [core_apps.users.email_change_views.EmailChangeAPIView](../core_apps/users/email_change_views.py#L25) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/challenges/` | POST | [core_apps.users.security_views.SecurityChallengeAPIView](../core_apps/users/security_views.py#L38) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/challenges/<uuid:identity>/verify/` | POST | [core_apps.users.security_views.SecurityChallengeVerifyAPIView](../core_apps/users/security_views.py#L50) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/sessions/` | GET, POST | [core_apps.users.security_views.AuthSessionListAPIView](../core_apps/users/security_views.py#L62) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/security/sessions/current/` | PATCH | [core_apps.users.security_views.AuthSessionMetadataAPIView](../core_apps/users/security_views.py#L79) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/^o/(?P<provider>\S+)/$` | GET, POST | [core_apps.users.views_parts.set_auth_cookies.CustomProviderAuthView](../core_apps/users/views_parts/set_auth_cookies.py#L126) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/register/` | POST | [core_apps.users.views_parts.verify_email_apiview.UserRegisterAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L31) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/complete-register/` | POST | [core_apps.users.views_parts.verify_email_apiview.CompleteRegisterAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L128) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/verify/` | POST | [core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L65) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/verify-email/` | POST | [core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L65) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/verify-otp/` | POST | [core_apps.users.views_parts.verify_email_apiview.VerifyEmailAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L65) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/resend-otp/` | POST | [core_apps.users.views_parts.verify_email_apiview.ResendOtpAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L101) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/login/` | POST | [core_apps.users.views_parts.set_auth_cookies.CustomTokenObtainPairView](../core_apps/users/views_parts/set_auth_cookies.py#L62) | DRF CBV | — | 1 |
+| `api/v1/auth/refresh/` | POST | [core_apps.users.views_parts.set_auth_cookies.CustomTokenRefreshView](../core_apps/users/views_parts/set_auth_cookies.py#L86) | DRF CBV | — | 1 |
+| `api/v1/auth/token/refresh/` | POST | [core_apps.users.views_parts.set_auth_cookies.CustomTokenRefreshView](../core_apps/users/views_parts/set_auth_cookies.py#L86) | DRF CBV | — | 1 |
+| `api/v1/auth/logout/` | POST | [core_apps.users.views_parts.set_auth_cookies.LogoutAPIView](../core_apps/users/views_parts/set_auth_cookies.py#L153) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/delete-account/` | POST, DELETE | [core_apps.users.views_parts.user_delete_apiview.UserDeleteAPIView](../core_apps/users/views_parts/user_delete_apiview.py#L139) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/users/set_password/` | POST | [core_apps.users.views_parts.verify_email_apiview.SetPasswordAPIView](../core_apps/users/views_parts/verify_email_apiview.py#L158) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/google/` | POST | [core_apps.users.views_parts.user_delete_apiview.GoogleAuthView](../core_apps/users/views_parts/user_delete_apiview.py#L25) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/apple/` | POST | [core_apps.users.views_parts.user_delete_apiview.AppleAuthView](../core_apps/users/views_parts/user_delete_apiview.py#L57) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/facebook/` | POST | [core_apps.users.views_parts.user_delete_apiview.FacebookAuthView](../core_apps/users/views_parts/user_delete_apiview.py#L94) | DRF CBV | AllowAny | 1 |
+| `api/v1/auth/^users/$` | GET, POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users\.(?P<format>[a-z0-9]+)/?$` | GET, POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/activation/$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/activation\.(?P<format>[a-z0-9]+)/?$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/me/$` | DELETE, GET, PATCH, PUT | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/me\.(?P<format>[a-z0-9]+)/?$` | DELETE, GET, PATCH, PUT | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/resend_activation/$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/resend_activation\.(?P<format>[a-z0-9]+)/?$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/reset_password/$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/reset_password\.(?P<format>[a-z0-9]+)/?$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/reset_password_confirm/$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/reset_password_confirm\.(?P<format>[a-z0-9]+)/?$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/reset_email/$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/reset_email\.(?P<format>[a-z0-9]+)/?$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/reset_email_confirm/$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/reset_email_confirm\.(?P<format>[a-z0-9]+)/?$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/set_password/$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/set_password\.(?P<format>[a-z0-9]+)/?$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/set_email/$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/set_email\.(?P<format>[a-z0-9]+)/?$` | POST | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/(?P<id>[^/.]+)/$` | DELETE, GET, PATCH, PUT | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/^users/(?P<id>[^/.]+)\.(?P<format>[a-z0-9]+)/?$` | DELETE, GET, PATCH, PUT | [core_apps.users.rest_urls.CanonicalUserViewSet](../core_apps/users/rest_urls.py#L7) | DRF viewset | CurrentUserOrAdmin | 1 |
+| `api/v1/auth/` | GET | [rest_framework.routers.APIRootView](../.venv/lib/python3.11/site-packages/rest_framework/routers.py#L314) | framework-generated DRF CBV | IsAuthenticated | 1 |
+| `api/v1/auth/<drf_format_suffix:format>` | GET | [rest_framework.routers.APIRootView](../.venv/lib/python3.11/site-packages/rest_framework/routers.py#L314) | framework-generated DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/identity-expiry/` | GET, POST | [core_apps.profiles.identity_expiry_views.IdentityExpiryAPIView](../core_apps/profiles/identity_expiry_views.py#L9) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/identity-operations/<uuid:operation_id>/resolve/` | POST | [core_apps.profiles.identity_recovery.IdentityOperationResolveAPIView](../core_apps/profiles/identity_recovery.py#L8) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/identity-media/<slug:field>/` | GET | [core_apps.profiles.identity_views.IdentityMediaAPIView](../core_apps/profiles/identity_views.py#L9) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/all/` | GET | [core_apps.profiles.views_parts.profile_edit_apiview.ProfileListAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L31) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/user/my-profile/` | GET | [core_apps.profiles.views_parts.profile_edit_apiview.ProfileDetailAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L53) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/user/update/` | GET, PUT, PATCH | [core_apps.profiles.views_parts.profile_edit_apiview.ProfileUpdateAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L64) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/my-account/` | GET | [core_apps.profiles.views_parts.profile_edit_apiview.MyAccountDetailAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L83) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/account-summary/` | GET | [core_apps.profiles.views_parts.profile_edit_apiview.AccountSummaryDetailAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L101) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/edit/` | GET, PUT, PATCH | [core_apps.profiles.views_parts.profile_edit_apiview.ProfileEditAPIView](../core_apps/profiles/views_parts/profile_edit_apiview.py#L119) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/settings/` | GET, PUT, PATCH | [core_apps.profiles.views_parts.user_settings_apiview.UserSettingsAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L25) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/verification-status/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.VerificationStatusAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L138) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/contracts/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.TenantContractsListAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L156) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/delete-account/` | POST, DELETE | [core_apps.users.views_parts.user_delete_apiview.UserDeleteAPIView](../core_apps/users/views_parts/user_delete_apiview.py#L139) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/owner/unread-counts/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.OwnerUnreadCountsAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L75) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/tenant/unread-counts/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.TenantUnreadCountsAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L96) | DRF CBV | IsAuthenticated | 1 |
+| `api/v1/profiles/my-rates/` | GET | [core_apps.profiles.views_parts.user_settings_apiview.TenantMyRatesListAPIView](../core_apps/profiles/views_parts/user_settings_apiview.py#L120) | DRF CBV | IsAuthenticated | 1 |
 | `api/v1/homepage/` | GET | [core_apps.properties.views.property_parts.property_list_apiview.PropertyListAPIView](../core_apps/properties/views/property_parts/property_list_apiview.py#L51) | CBV | AllowAny | 2 |
 | `api/v1/properties/<uuid:property_id>/ownership-proof/` | GET | [core_apps.properties.views.ownership_proof.PropertyOwnershipProofAPIView](../core_apps/properties/views/ownership_proof.py#L11) | CBV | IsAuthenticated | 2 |
 | `api/v1/properties/visits/<uuid:visit_id>/message-context/` | GET | [core_apps.properties.views.viewing_message_context.viewing_message_context](../core_apps/properties/views/viewing_message_context.py#L12) | decorated FBV | IsAuthenticated | 2 |
