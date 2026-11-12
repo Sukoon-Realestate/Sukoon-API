@@ -6,7 +6,12 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, ValidationError
-from core_apps.properties.models import Property, PropertyType
+from core_apps.properties.models import (
+    Property,
+    PropertyType,
+    PropertyImage,
+    PropertyVisit,
+)
 from core_apps.properties.catalog_labels import property_type_label
 from core_apps.admin_api.models import UserReport
 
@@ -52,12 +57,26 @@ def get_admin_properties_queryset(
         .values("c")
     )
 
+    image_counts = (
+        PropertyImage.objects.filter(property_id=OuterRef("pk"))
+        .order_by()
+        .values("property_id")
+        .annotate(c=Count("pk"))
+        .values("c")
+    )
+    visit_counts = (
+        PropertyVisit.objects.filter(property_id=OuterRef("pk"))
+        .order_by()
+        .values("property_id")
+        .annotate(c=Count("pk"))
+        .values("c")
+    )
+
     qs = (
         Property.objects.select_related("owner", "property_type", "governorate", "city")
-        .prefetch_related("images")
         .annotate(
-            images_count=Count("images", distinct=True),
-            visits_count=Count("visits", distinct=True),
+            images_count=Coalesce(Subquery(image_counts), 0),
+            visits_count=Coalesce(Subquery(visit_counts), 0),
             views_count=Coalesce(Subquery(views_subquery), 0),
         )
         .order_by("-created_at")

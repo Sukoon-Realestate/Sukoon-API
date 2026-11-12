@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.db.models import Avg, Count, OuterRef, Subquery
+from .reporting_counts import interval_counts
 from core_apps.properties.models import Property
 from core_apps.properties.models.visit import PropertyVisit, PropertyVisitReview
 from core_apps.admin_api.models import KYCSubmission
@@ -114,6 +115,14 @@ def get_analytics_stats(period_days=30):
     ]
 
     # ? Daily / Monthly trend chart
+    intervals = [
+        (
+            period_start + timedelta(days=offset),
+            min(period_start + timedelta(days=offset + 1), now),
+        )
+        for offset in range(period_days)
+    ]
+    counts = interval_counts(visits, "created_at", intervals)
     daily_chart = []
     for offset in range(period_days):
         start = period_start + timedelta(days=offset)
@@ -123,9 +132,7 @@ def get_analytics_stats(period_days=30):
                 "label": start.strftime("%Y-%m-%d"),
                 "from": start.isoformat(),
                 "through": end.isoformat(),
-                "value": visits.filter(
-                    created_at__gte=start, created_at__lt=end
-                ).count(),
+                "value": counts[offset],
             }
         )
 

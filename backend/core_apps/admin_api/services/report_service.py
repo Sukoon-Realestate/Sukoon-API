@@ -1,5 +1,7 @@
 import logging
 from django.db import transaction
+from django.db.models import Exists, OuterRef
+from core_apps.properties.models import Property
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError, NotFound
 from core_apps.admin_api.models import UserReport
@@ -13,7 +15,14 @@ def get_reports_queryset():
     Returns optimized queryset of user reports for administrative review.
     """
     return (
-        UserReport.objects.select_related("reported_user", "reporter", "reviewed_by")
+        UserReport.objects.select_related(
+            "reported_user", "reporter", "reviewed_by", "chat_case"
+        )
+        .annotate(
+            reported_is_owner=Exists(
+                Property.objects.filter(owner_id=OuterRef("reported_user_id"))
+            )
+        )
         .order_by("-created_at")
     )
 
@@ -28,20 +37,26 @@ def take_report_action(report_id, action, reviewer, notes=""):
     except (UserReport.DoesNotExist, ValueError):
         raise NotFound(f"User Report with ID {report_id} was not found.")
 
-    if hasattr(report, 'chat_case'):
-        raise ValidationError('Rental chat cases require the versioned policy review endpoint.')
+    if hasattr(report, "chat_case"):
+        raise ValidationError(
+            "Rental chat cases require the versioned policy review endpoint."
+        )
     if action == "suspend_user":
         report.status = UserReport.Status.SUSPENDED
         suspend_user(report.reported_user.id, reviewer, reason=report.reason)
     elif action == "ban_user":
         report.status = UserReport.Status.BANNED
-        suspend_user(report.reported_user.id, reviewer, reason=f"حظر نهائي: {report.reason}")
+        suspend_user(
+            report.reported_user.id, reviewer, reason=f"حظر نهائي: {report.reason}"
+        )
     elif action == "dismiss":
         report.status = UserReport.Status.DISMISSED
     elif action == "mark_active":
         report.status = UserReport.Status.ACTIVE
     else:
-        raise ValidationError(f"Invalid action '{action}'. Valid actions: suspend_user, ban_user, dismiss, mark_active.")
+        raise ValidationError(
+            f"Invalid action '{action}'. Valid actions: suspend_user, ban_user, dismiss, mark_active."
+        )
 
     report.reviewed_by = reviewer if reviewer.is_authenticated else None
     report.reviewed_at = timezone.now()
@@ -55,14 +70,19 @@ def take_report_action(report_id, action, reviewer, notes=""):
 
 # * Report and Support Metrics Services
 
+
 def get_report_metrics():
     """
     Returns aggregated counts for user reports by status.
     """
     active_count = UserReport.objects.filter(status=UserReport.Status.ACTIVE).count()
-    suspended_count = UserReport.objects.filter(status=UserReport.Status.SUSPENDED).count()
+    suspended_count = UserReport.objects.filter(
+        status=UserReport.Status.SUSPENDED
+    ).count()
     banned_count = UserReport.objects.filter(status=UserReport.Status.BANNED).count()
-    dismissed_count = UserReport.objects.filter(status=UserReport.Status.DISMISSED).count()
+    dismissed_count = UserReport.objects.filter(
+        status=UserReport.Status.DISMISSED
+    ).count()
     total_count = UserReport.objects.count()
 
     return {
@@ -76,23 +96,33 @@ def get_report_metrics():
 
 def get_support_tickets_queryset():
     from core_apps.support.models import Ticket
-    return Ticket.objects.select_related("user", "assigned_to").order_by("-updated_at", "-id")
+
+    return Ticket.objects.select_related("user", "assigned_to").order_by(
+        "-updated_at", "-id"
+    )
 
 
 def get_support_metrics():
     from core_apps.support.models import Ticket
     from django.db.models import Avg, F
+
     today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
     tickets = Ticket.objects.all()
     duration = tickets.filter(resolved_at__isnull=False).aggregate(
         duration=Avg(F("resolved_at") - F("created_at"))
     )["duration"]
     return {
-        "avgResolutionTime": f"{duration.total_seconds() / 3600:.1f}h" if duration else "غير متاح",
-        "solvedToday": tickets.filter(status__in=["resolved", "closed"], resolved_at__gte=today_start).count(),
+        "avgResolutionTime": (
+            f"{duration.total_seconds() / 3600:.1f}h" if duration else "غير متاح"
+        ),
+        "solvedToday": tickets.filter(
+            status__in=["resolved", "closed"], resolved_at__gte=today_start
+        ).count(),
         "inProgress": tickets.filter(status="in_progress").count(),
         "openTickets": tickets.filter(status="open").count(),
-        "escalated": tickets.filter(escalated=True, status__in=["open", "in_progress"]).count(),
+        "escalated": tickets.filter(
+            escalated=True, status__in=["open", "in_progress"]
+        ).count(),
     }
 
 
@@ -109,7 +139,11 @@ def get_reports_overview_stats():
     ).count()
 
     solved_today = UserReport.objects.filter(
-        status__in=[UserReport.Status.DISMISSED, UserReport.Status.BANNED, UserReport.Status.SUSPENDED],
+        status__in=[
+            UserReport.Status.DISMISSED,
+            UserReport.Status.BANNED,
+            UserReport.Status.SUSPENDED,
+        ],
         reviewed_at__gte=today_start,
         reviewed_at__lte=now,
     ).count()
@@ -128,23 +162,50 @@ def get_reports_overview_stats():
     }
 
     dispute_reasons = [
-        {"title": "رد الأمانة والاحتيال", "count": reason_counts["fraud"], "color": "bg-rose-500"},
-        {"title": "دقة المعلومات والوصف", "count": reason_counts["misleading"], "color": "bg-amber-500"},
-        {"title": "إساءة وسلوك غير لائق", "count": reason_counts["abusive"], "color": "bg-blue-500"},
-        {"title": "إعلانات مزعجة وتكرار", "count": reason_counts["spam"], "color": "bg-teal-500"},
-        {"title": "أسباب أخرى", "count": reason_counts["other"], "color": "bg-slate-500"},
+        {
+            "title": "رد الأمانة والاحتيال",
+            "count": reason_counts["fraud"],
+            "color": "bg-rose-500",
+        },
+        {
+            "title": "دقة المعلومات والوصف",
+            "count": reason_counts["misleading"],
+            "color": "bg-amber-500",
+        },
+        {
+            "title": "إساءة وسلوك غير لائق",
+            "count": reason_counts["abusive"],
+            "color": "bg-blue-500",
+        },
+        {
+            "title": "إعلانات مزعجة وتكرار",
+            "count": reason_counts["spam"],
+            "color": "bg-teal-500",
+        },
+        {
+            "title": "أسباب أخرى",
+            "count": reason_counts["other"],
+            "color": "bg-slate-500",
+        },
     ]
 
     # ? Recent property visits for booking log
     from core_apps.properties.models.visit import PropertyVisit
-    recent_visits_qs = PropertyVisit.objects.filter(created_at__lte=now).select_related("property", "tenant").order_by("-created_at")[:6]
+
+    recent_visits_qs = (
+        PropertyVisit.objects.filter(created_at__lte=now)
+        .select_related("property", "tenant")
+        .order_by("-created_at")[:6]
+    )
     booking_log = []
     for visit in recent_visits_qs:
-        booking_log.append({
-            "id": str(visit.id),
-            "title": visit.property.title,
-            "status": visit.get_status_display(),
-        })
+        booking_log.append(
+            {
+                "id": str(visit.id),
+                "title": visit.property.title,
+                "status": visit.get_status_display(),
+            }
+        )
 
     return {
         "avgResolutionTime": "غير متاح",

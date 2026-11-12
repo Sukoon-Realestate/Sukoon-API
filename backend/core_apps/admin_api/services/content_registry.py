@@ -170,6 +170,19 @@ def validated(kind, values, instance=None):
     return serializer.validated_data
 
 
+def queryset(kind):
+    """Fetch the registered scalar relations before projecting a catalog page."""
+    entry = spec(kind)
+    relations = [
+        name for name in entry.fields if entry.model._meta.get_field(name).is_relation
+    ]
+    return (
+        entry.model.objects.select_related(*relations)
+        if relations
+        else entry.model.objects.all()
+    )
+
+
 def projection(kind, instance):
     entry = spec(kind)
     relations = {}

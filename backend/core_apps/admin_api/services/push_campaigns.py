@@ -4,7 +4,7 @@ import uuid
 from datetime import timedelta
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Count, F, Q
+from django.db.models import Count, F, Q, Max, Case, When, IntegerField
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework.exceptions import APIException, ValidationError
@@ -19,7 +19,8 @@ from ..permissions import require_staff_actor
 def users(audience):
     result = User.objects.filter(is_active=True, settings__promotions_and_updates=True)
     from core_apps.common.mvp_scope import enabled
-    if enabled() and audience in {'students', 'companies'}:
+
+    if enabled() and audience in {"students", "companies"}:
         return result.none()
     if audience == "verified":
         result = result.filter(is_verified=True)
@@ -32,7 +33,11 @@ def users(audience):
 
 def devices(audience):
     return DeviceToken.objects.filter(is_active=True, user__in=users(audience)).filter(
-        Q(auth_session__isnull=True, user__security_epoch=0, user__requires_bound_session=False)
+        Q(
+            auth_session__isnull=True,
+            user__security_epoch=0,
+            user__requires_bound_session=False,
+        )
         | Q(
             auth_session__isnull=False,
             auth_session__revoked_at__isnull=True,
@@ -53,13 +58,10 @@ def registration(device):
     )
 
 
-def payload(item):
+def payload(item, *, summary=None):
     from .workspace_campaigns import allowed_audiences
-    counts = dict(
-        CampaignDelivery.objects.filter(recipient__campaign=item)
-        .values_list("state")
-        .annotate(total=Count("pk"))
-    )
+
+    facts = summary if summary is not None else prepare_summaries([item])[item.pk]
     return {
         "id": str(item.id),
         "title": item.title,
@@ -69,21 +71,84 @@ def payload(item):
         "revision": item.revision,
         "preview_digest": item.preview_digest,
         "request_key": str(item.request_key),
-        "recipientCount": item.recipients.values("user_id").distinct().count(),
-        "receiptCount": item.recipients.count(),
-        "workspaceCounts": dict(
-            item.recipients.values_list("workspace").annotate(total=Count("pk"))
-        ),
-        "pushAccountCount": CampaignDelivery.objects.filter(recipient__campaign=item)
-        .values("recipient__user_id")
-        .distinct()
-        .count(),
-        "deliveryCounts": counts,
+        **facts,
         "openRate": None,
         "timeAgo": item.created_at.isoformat(),
-        "can_confirm": item.state == "preview" and settings.ADMIN_CAMPAIGNS_ENABLED and item.audience in allowed_audiences(),
+        "can_confirm": item.state == "preview"
+        and settings.ADMIN_CAMPAIGNS_ENABLED
+        and item.audience in allowed_audiences(),
         "delivery_semantics": "Provider acceptance is not device delivery. Unknown results are not retried.",
     }
+
+
+def prepare_summaries(items):
+    """Four grouped queries for an already bounded campaign page; never a cross-request cache."""
+    items = list(items)
+    if not items:
+        return {}
+    identities = [item.pk for item in items]
+    facts = {
+        pk: {
+            "recipientCount": 0,
+            "receiptCount": 0,
+            "workspaceCounts": {},
+            "pushAccountCount": 0,
+            "deliveryCounts": {},
+        }
+        for pk in identities
+    }
+    for row in (
+        CampaignRecipient.objects.filter(campaign_id__in=identities)
+        .order_by()
+        .values("campaign_id")
+        .annotate(
+            accounts=Count("user_id", distinct=True)
+            + Max(
+                Case(
+                    When(user_id__isnull=True, then=1),
+                    default=0,
+                    output_field=IntegerField(),
+                )
+            ),
+            receipts=Count("pk"),
+        )
+    ):
+        facts[row["campaign_id"]].update(
+            recipientCount=row["accounts"], receiptCount=row["receipts"]
+        )
+    for row in (
+        CampaignRecipient.objects.filter(campaign_id__in=identities)
+        .order_by()
+        .values("campaign_id", "workspace")
+        .annotate(total=Count("pk"))
+    ):
+        facts[row["campaign_id"]]["workspaceCounts"][row["workspace"]] = row["total"]
+    for row in (
+        CampaignDelivery.objects.filter(recipient__campaign_id__in=identities)
+        .order_by()
+        .values("recipient__campaign_id")
+        .annotate(
+            accounts=Count("recipient__user_id", distinct=True)
+            + Max(
+                Case(
+                    When(recipient__user_id__isnull=True, then=1),
+                    default=0,
+                    output_field=IntegerField(),
+                )
+            )
+        )
+    ):
+        facts[row["recipient__campaign_id"]]["pushAccountCount"] = row["accounts"]
+    for row in (
+        CampaignDelivery.objects.filter(recipient__campaign_id__in=identities)
+        .order_by()
+        .values("recipient__campaign_id", "state")
+        .annotate(total=Count("pk"))
+    ):
+        facts[row["recipient__campaign_id"]]["deliveryCounts"][row["state"]] = row[
+            "total"
+        ]
+    return facts
 
 
 @transaction.atomic
@@ -98,6 +163,7 @@ def transition(actor, identity, data, *, cancel=False):
         return item  # Original confirmation recovery cannot restart delivery.
     if not cancel:
         from .workspace_campaigns import require_active_audience
+
         require_active_audience(item.audience)
     if (
         type(data.get("expected_revision")) is not int

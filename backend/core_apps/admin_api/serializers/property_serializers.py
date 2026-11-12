@@ -90,10 +90,10 @@ class AdminPropertyItemSerializer(serializers.ModelSerializer):
         return f"منذ {mins} دقيقة" if mins > 0 else "منذ لحظات"
 
     def get_imagesCount(self, obj):
-        return getattr(obj, "images_count", obj.images.count())
+        return obj.images_count if hasattr(obj, "images_count") else obj.images.count()
 
     def get_riskLevel(self, obj):
-        images_count = getattr(obj, "images_count", obj.images.count())
+        images_count = self.get_imagesCount(obj)
         if images_count == 0:
             return "عالي الخطر"
         elif images_count < 3:

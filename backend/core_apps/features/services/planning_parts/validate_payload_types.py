@@ -81,26 +81,41 @@ def criteria_payload(value, *, catalog=None):
     }
 
 
-def purge_expired_discovery():
+def purge_expired_discovery(*, batch_size=500):
+    """Scrub at most one resumable batch per resource; receipts and marker commit together."""
+    from django.db import transaction
     from ...models import IdempotencyRecord
     from ...planning_models import CommuteSearch, TenantAssistantTurn
 
+    if type(batch_size) is not int or not 1 <= batch_size <= 500:
+        raise ValueError("Use a discovery purge batch size between 1 and 500.")
     now = timezone.now()
-    searches = CommuteSearch.objects.filter(expires_at__lte=now)
-    turns = TenantAssistantTurn.objects.filter(expires_at__lte=now)
-    identifiers = list(searches.values_list("id", flat=True)) + list(
-        turns.values_list("id", flat=True)
-    )
-    IdempotencyRecord.objects.filter(result_subject_id__in=identifiers).update(
-        response_data={
-            "code": "private_result_expired",
-            "message": "This private result expired. Submit a fresh request.",
-        },
-        response_status=410,
-    )
-    searches.update(query={}, matches=[])
-    turns.update(reply={}, session_id="")
-    return len(identifiers)
+    count = 0
+    for model, redaction in (
+        (CommuteSearch, {"query": {}, "matches": []}),
+        (TenantAssistantTurn, {"reply": {}, "session_id": ""}),
+    ):
+        with transaction.atomic():
+            identifiers = list(
+                model.objects.select_for_update()
+                .filter(expires_at__lte=now, private_purged_at__isnull=True)
+                .order_by("expires_at", "pk")
+                .values_list("id", flat=True)[:batch_size]
+            )
+            if not identifiers:
+                continue
+            IdempotencyRecord.objects.filter(result_subject_id__in=identifiers).update(
+                response_data={
+                    "code": "private_result_expired",
+                    "message": "This private result expired. Submit a fresh request.",
+                },
+                response_status=410,
+            )
+            count += model.objects.filter(id__in=identifiers).update(
+                **redaction,
+                private_purged_at=now,
+            )
+    return count
 
 
 def validate_payload_types(value, depth=0):

@@ -81,11 +81,22 @@ class CommuteSearch(TimeStampedModel):
     matches = models.JSONField(default=list)
     unknown_count = models.PositiveIntegerField(default=0)
     expires_at = models.DateTimeField()
+    private_purged_at = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=20, default="succeeded")
     processed_count = models.PositiveIntegerField(default=0)
     total_count = models.PositiveIntegerField(default=0)
     failure_code = models.CharField(max_length=60, blank=True, default="")
     started_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at", "-updated_at"]
+        indexes = [
+            models.Index(
+                fields=["expires_at", "pkid"],
+                condition=models.Q(private_purged_at__isnull=True),
+                name="commute_pending_purge_idx",
+            )
+        ]
 
 
 class TenantAssistantTurn(TimeStampedModel):
@@ -97,7 +108,18 @@ class TenantAssistantTurn(TimeStampedModel):
     )
     reply = models.JSONField(default=dict)
     expires_at = models.DateTimeField()
+    private_purged_at = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=20, default="succeeded")
+
+    class Meta:
+        ordering = ["-created_at", "-updated_at"]
+        indexes = [
+            models.Index(
+                fields=["expires_at", "pkid"],
+                condition=models.Q(private_purged_at__isnull=True),
+                name="assistant_pending_purge_idx",
+            )
+        ]
 
 
 class GroupJoinRequest(TimeStampedModel):

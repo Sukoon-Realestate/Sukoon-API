@@ -29,11 +29,13 @@ def record_event(conversation, kind, *, message=None, actor=None, data=None):
     )
     if message is not None and kind in MODERATED_MESSAGE_EVENTS:
         from core_apps.chat.moderation.queue import enqueue
+
         enqueue(message)
     transaction.on_commit(
         lambda: _publish_committed_event(
             event.pk,
-            immediate_push=conversation.kind == "direct" or bool(message and message.mentions),
+            immediate_push=conversation.kind == "direct"
+            or bool(message and message.mentions),
         )
     )
     return event
@@ -74,9 +76,13 @@ def _wake_worker():
         logger.warning("Chat fanout wakeup failed; event remains queued.")
 
 
-def event_payload(event, user):
+def event_payload(event, user, *, authorized=None, roster=None, properties=None):
     try:
-        conversation, participant, member = authorize(event.conversation, user)
+        conversation, participant, member = (
+            authorized
+            if authorized is not None
+            else authorize(event.conversation, user)
+        )
     except APIException:
         if event.kind == "conversation.access_revoked" and event.data.get(
             "user_id"
@@ -97,12 +103,18 @@ def event_payload(event, user):
         ),
     }
     if event.kind in {"mentions.updated", "message.star"}:
-        if event.data.get("user_id") != str(user.id) or event.data.get("membership_period") != str(participant.membership_period):
+        if event.data.get("user_id") != str(user.id) or event.data.get(
+            "membership_period"
+        ) != str(participant.membership_period):
             return None
     if event.message:
         if event.message.sequence < participant.visible_from_sequence:
             return None
-        payload.update(message_payload(event.message, participant, member))
+        payload.update(
+            message_payload(
+                event.message, participant, member, roster=roster, properties=properties
+            )
+        )
     elif event.kind == "conversation.updated":
         payload["conversation"] = summary(conversation, user)
     elif event.kind == "message.read":
@@ -110,9 +122,21 @@ def event_payload(event, user):
         from .group_access import eligible_participants
 
         reader = (
-            eligible_participants(conversation)
+            next(
+                (
+                    row
+                    for row in roster
+                    if row.user_id == event.actor_id
+                    and str(row.membership_period)
+                    == event.data.get("membership_period")
+                ),
+                None,
+            )
+            if roster is not None
+            else eligible_participants(conversation)
             .filter(
-                user=event.actor, membership_period=event.data.get("membership_period")
+                user_id=event.actor_id,
+                membership_period=event.data.get("membership_period"),
             )
             .first()
         )

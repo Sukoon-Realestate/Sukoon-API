@@ -3,7 +3,7 @@
 from datetime import timedelta
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from django.db.models import Q
+from django.db.models import Q, Exists, OuterRef
 from rest_framework.exceptions import NotFound
 from .visibility import sections, published, summarize_rows
 from .policy import CRITERIA
@@ -13,6 +13,7 @@ from ...models import (
     RentalDispute,
     Company,
     RefundRequest,
+    PaymentAttempt,
 )
 from ..rent_payment_reminders import effective_due
 
@@ -36,36 +37,52 @@ def payment_reliability(kind, identity, *, now=None):
             due_at__isnull=False,
         )
         .exclude(status__in=["scheduled", "cancelled", "written_off"])
-        .select_related("lease")
-        .prefetch_related("payment_allocations__payment_attempt", "payment_attempts")
+        .annotate(
+            uncertain_payment=Exists(
+                PaymentAttempt.objects.filter(
+                    invoice_id=OuterRef("pk"),
+                    payment_status__in=[
+                        "created",
+                        "pending",
+                        "authorized",
+                        "chargedback",
+                    ],
+                )
+            ),
+            financial_case=Exists(
+                RentalOperationalCase.objects.filter(
+                    Q(payment_attempt__invoice_id=OuterRef("pk"))
+                    | Q(refund__payment_attempt__invoice_id=OuterRef("pk"))
+                ).exclude(status="resolved")
+            ),
+            disputed=Exists(
+                RentalDispute.objects.filter(
+                    lease_id=OuterRef("lease_id"),
+                    subject_kind="invoice",
+                    subject_id=OuterRef("id"),
+                    status="open",
+                )
+            ),
+            refunded_or_pending=Exists(
+                RefundRequest.objects.filter(
+                    payment_attempt__invoice_id=OuterRef("pk"),
+                    status__in=["requested", "approved", "processing", "succeeded"],
+                )
+            ),
+        )
+        .prefetch_related("payment_allocations__payment_attempt")
     )
     eligible = on_time = late = unpaid = excluded = 0
-    for invoice in invoices:
+    for invoice in invoices.iterator(chunk_size=250):
         due = effective_due(invoice)
         if not due or due > now or due < now - timedelta(days=365):
             continue
-        uncertain_payment = invoice.payment_attempts.filter(
-            payment_status__in=["created", "pending", "authorized", "chargedback"]
-        ).exists()
-        financial_case = (
-            RentalOperationalCase.objects.filter(
-                Q(payment_attempt__invoice=invoice)
-                | Q(refund__payment_attempt__invoice=invoice)
-            )
-            .exclude(status="resolved")
-            .exists()
-        )
-        disputed = RentalDispute.objects.filter(
-            lease=invoice.lease,
-            subject_kind="invoice",
-            subject_id=invoice.id,
-            status="open",
-        ).exists()
-        refunded_or_pending = RefundRequest.objects.filter(
-            payment_attempt__invoice=invoice,
-            status__in=["requested", "approved", "processing", "succeeded"],
-        ).exists()
-        if uncertain_payment or financial_case or disputed or refunded_or_pending:
+        if (
+            invoice.uncertain_payment
+            or invoice.financial_case
+            or invoice.disputed
+            or invoice.refunded_or_pending
+        ):
             excluded += 1
             continue
         obligation = (

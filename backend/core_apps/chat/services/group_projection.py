@@ -45,20 +45,31 @@ def attachment_payload(attachment):
     }
 
 
-def message_payload(message, participant, membership, *, properties=None):
+def message_payload(message, participant, membership, *, properties=None, roster=None):
     from .property_sharing import property_card
     from .reactions import reaction_payload
     from .mentions import mentions_payload
     from .message_tools import star_payload, can_pin
     from .polls import poll_payload
+
     deleted = message.deleted_at is not None
-    readers = (
-        eligible_participants(message.conversation)
-        .filter(
-            visible_from_sequence__lte=message.sequence,
+    if roster is None:
+        readers = (
+            eligible_participants(message.conversation)
+            .filter(visible_from_sequence__lte=message.sequence)
+            .exclude(user_id=message.sender_id)
         )
-        .exclude(user_id=message.sender_id)
-    )
+        read_count = readers.filter(last_read_sequence__gte=message.sequence).count()
+        eligible_count = readers.count()
+    else:
+        readers = [
+            row
+            for row in roster
+            if row.user_id != message.sender_id
+            and row.visible_from_sequence <= message.sequence
+        ]
+        read_count = sum(row.last_read_sequence >= message.sequence for row in readers)
+        eligible_count = len(readers)
     permitted = (
         []
         if deleted or message.kind == "system" or "reply" not in actions(membership)
@@ -78,7 +89,11 @@ def message_payload(message, participant, membership, *, properties=None):
         and "send_message" in actions(membership)
     ):
         permitted.append("edit_message")
-    if not deleted and message.kind != "system" and "send_message" in actions(membership):
+    if (
+        not deleted
+        and message.kind != "system"
+        and "send_message" in actions(membership)
+    ):
         permitted.append("react")
     if not deleted and message.kind not in {"system", "poll"}:
         permitted.append("forward")
@@ -88,7 +103,9 @@ def message_payload(message, participant, membership, *, properties=None):
             permitted.append("pin")
         if message.sender_id == participant.user_id:
             permitted.append("message_info")
-        if message.kind == "poll" and (message.sender_id == participant.user_id or membership.role == "admin"):
+        if message.kind == "poll" and (
+            message.sender_id == participant.user_id or membership.role == "admin"
+        ):
             permitted.append("close_poll")
     reply = None
     if message.reply_to_id and not deleted:
@@ -102,9 +119,12 @@ def message_payload(message, participant, membership, *, properties=None):
                 "kind": original.kind,
                 "sender_name": sender_payload(original.sender)["name"],
                 "content_preview": original.content[:160],
-                "attachment_name": next((a.original_name for a in original.attachments.all()), ""),
-                "attachments": [attachment_payload(a) for a in original.attachments.all()],
-
+                "attachment_name": next(
+                    (a.original_name for a in original.attachments.all()), ""
+                ),
+                "attachments": [
+                    attachment_payload(a) for a in original.attachments.all()
+                ],
             }
     return {
         "id": str(message.id),
@@ -117,13 +137,15 @@ def message_payload(message, participant, membership, *, properties=None):
         "status": "sent",
         "content": "" if deleted else message.content,
         "location": None if deleted else message.location,
-        "property": None if deleted else property_card(message.property_reference, properties),
+        "property": (
+            None if deleted else property_card(message.property_reference, properties)
+        ),
         "sender": sender_payload(message.sender),
         "created_at": message.created_at.isoformat(),
         "is_deleted": deleted,
         "is_forwarded": message.is_forwarded and not deleted,
         **star_payload(message, participant),
-        "poll": poll_payload(message, participant),
+        "poll": poll_payload(message, participant, roster=roster),
         "revision": message.revision,
         "reactions_revision": message.reactions_revision,
         "reactions": reaction_payload(message, participant),
@@ -131,10 +153,19 @@ def message_payload(message, participant, membership, *, properties=None):
         "edited_at": (
             message.edited_at.isoformat() if message.edited_at and not deleted else None
         ),
-        "edit_history": [] if deleted else [
-            {"revision": edit.revision, "before": edit.before, "after": edit.after, "edited_at": edit.created_at.isoformat()}
-            for edit in message.edits.all()
-        ],
+        "edit_history": (
+            []
+            if deleted
+            else [
+                {
+                    "revision": edit.revision,
+                    "before": edit.before,
+                    "after": edit.after,
+                    "edited_at": edit.created_at.isoformat(),
+                }
+                for edit in message.edits.all()
+            ]
+        ),
         "delete_before": (message.created_at + timedelta(hours=1)).isoformat(),
         "reply_to": reply,
         "attachments": (
@@ -145,10 +176,8 @@ def message_payload(message, participant, membership, *, properties=None):
         "system": (
             message.system_data if message.kind == "system" and not deleted else None
         ),
-        "read_by_count": readers.filter(
-            last_read_sequence__gte=message.sequence
-        ).count(),
-        "eligible_reader_count": readers.count(),
+        "read_by_count": read_count,
+        "eligible_reader_count": eligible_count,
         "allowed_actions": permitted,
     }
 

@@ -46,7 +46,12 @@ class UserReportListSerializer(serializers.ModelSerializer):
         return str(obj.reported_user.id)
 
     def get_userType(self, obj):
-        return "مالك" if obj.reported_user.properties.exists() else "مستأجر"
+        is_owner = (
+            obj.reported_is_owner
+            if hasattr(obj, "reported_is_owner")
+            else obj.reported_user.properties.exists()
+        )
+        return "مالك" if is_owner else "مستأجر"
 
     def get_reporter(self, obj):
         if not obj.reporter:
@@ -85,4 +90,5 @@ class UserReportActionSerializer(serializers.Serializer):
 class SupportTicketSerializer(serializers.BaseSerializer):
     def to_representation(self, instance):
         from core_apps.support.services.operations import projection
+
         return projection(instance, self.context["request"].user)

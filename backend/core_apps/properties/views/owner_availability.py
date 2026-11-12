@@ -1,4 +1,5 @@
 """Owner-only weekly availability. Slots never confirm a viewing request."""
+
 from datetime import datetime, timedelta
 import re
 
@@ -14,7 +15,7 @@ from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.users.models import User
 from core_apps.users.services.sessions import validate_session
 from ..models import OwnerAvailabilitySlot, Property, PropertyVisit
-from ..services.availability_closures import slot_in_closure
+from ..services.availability_closures import slot_in_closure, closure_intervals
 
 
 def _input(data):
@@ -23,26 +24,53 @@ def _input(data):
     except (ValueError, TypeError):
         raise ValidationError("Select a valid week.")
     today = timezone.localdate()
-    if week.weekday() != 0 or week < today - timedelta(days=today.weekday()) or week > today + timedelta(days=180):
+    if (
+        week.weekday() != 0
+        or week < today - timedelta(days=today.weekday())
+        or week > today + timedelta(days=180)
+    ):
         raise ValidationError("Choose a Monday within the next 180 days.")
     pattern = data.get("slots")
     if not isinstance(pattern, list) or not 1 <= len(pattern) <= 56:
         raise ValidationError("Supply between 1 and 56 weekly slots.")
     normalized = set()
     for item in pattern:
-        if (not isinstance(item, dict) or type(item.get("weekday")) is not int
-                or not 1 <= item["weekday"] <= 7 or not isinstance(item.get("time"), str)
-                or not re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d", item["time"])):
+        if (
+            not isinstance(item, dict)
+            or type(item.get("weekday")) is not int
+            or not 1 <= item["weekday"] <= 7
+            or not isinstance(item.get("time"), str)
+            or not re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d", item["time"])
+        ):
             raise ValidationError("Each slot needs a weekday and a 24-hour time.")
         normalized.add((item["weekday"], item["time"]))
     return week, sorted(normalized)
 
 
 def _preview(prop, week, pattern):
-    existing = {(slot.date, slot.time.strftime("%H:%M")): slot.is_enabled for slot in OwnerAvailabilitySlot.objects.filter(property=prop, date__gte=week, date__lt=week + timedelta(days=7))}
-    visits = set(PropertyVisit.objects.filter(property__owner_id=prop.owner_id, status=PropertyVisit.Status.CONFIRMED,
-        visit_date__gte=week, visit_date__lt=week + timedelta(days=7), visit_time__isnull=False).values_list("visit_date", "visit_time"))
+    existing = {
+        (slot.date, slot.time.strftime("%H:%M")): slot.is_enabled
+        for slot in OwnerAvailabilitySlot.objects.filter(
+            property=prop, date__gte=week, date__lt=week + timedelta(days=7)
+        )
+    }
+    visits = set(
+        PropertyVisit.objects.filter(
+            property__owner_id=prop.owner_id,
+            status=PropertyVisit.Status.CONFIRMED,
+            visit_date__gte=week,
+            visit_date__lt=week + timedelta(days=7),
+            visit_time__isnull=False,
+        ).values_list("visit_date", "visit_time")
+    )
     busy = {(day, time.strftime("%H:%M")) for day, time in visits}
+    from ..services.viewing_times import instant
+
+    intervals = closure_intervals(
+        prop,
+        instant(week, datetime.min.time()),
+        instant(week + timedelta(days=7), datetime.min.time()),
+    )
     now = timezone.localtime()
     slots = []
     for weekday, time in pattern:
@@ -52,13 +80,19 @@ def _preview(prop, week, pattern):
             status = "past"
         elif (day, time) in busy:
             status = "busy"
-        elif slot_in_closure(prop, day, datetime.strptime(time, '%H:%M').time()):
-            status = 'closed'
+        elif slot_in_closure(
+            prop, day, datetime.strptime(time, "%H:%M").time(), intervals=intervals
+        ):
+            status = "closed"
         elif (day, time) in existing:
             status = "existing" if existing[day, time] else "disabled"
         slots.append({"date": day.isoformat(), "time": time, "status": status})
-    return {"protocol": 1, "week_start": week.isoformat(), "slots": slots,
-        "revision": fingerprint({"property": str(prop.id), "slots": slots})}
+    return {
+        "protocol": 1,
+        "week_start": week.isoformat(),
+        "slots": slots,
+        "revision": fingerprint({"property": str(prop.id), "slots": slots}),
+    }
 
 
 @api_view(["POST", "PUT"])
@@ -79,10 +113,17 @@ def owner_availability(request, property_id):
         preview = _preview(prop, week, pattern)
         if request.method == "PUT":
             if request.data.get("revision") != preview["revision"]:
-                raise IdempotencyConflict("Availability changed. Preview the week again.")
+                raise IdempotencyConflict(
+                    "Availability changed. Preview the week again."
+                )
             for item in preview["slots"]:
                 if item["status"] == "new":
-                    OwnerAvailabilitySlot.objects.get_or_create(property=prop, owner=current,
-                        date=item["date"], time=item["time"], defaults={"is_enabled": True})
+                    OwnerAvailabilitySlot.objects.get_or_create(
+                        property=prop,
+                        owner=current,
+                        date=item["date"],
+                        time=item["time"],
+                        defaults={"is_enabled": True},
+                    )
             preview = _preview(prop, week, pattern)
         return Response(preview)

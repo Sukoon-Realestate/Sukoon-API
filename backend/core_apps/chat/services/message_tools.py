@@ -1,6 +1,7 @@
 """Private bookmarks, shared pins and honest per-message reading times."""
 
 from datetime import timedelta
+from itertools import islice
 import hashlib
 import json
 from django.db import transaction
@@ -22,7 +23,9 @@ class MessageToolBody(serializers.Serializer):
 
 def visible_message(conversation, participant, identity):
     return get_object_or_404(
-        visible_messages(conversation, participant).exclude(kind="system"), id=identity, deleted_at__isnull=True
+        visible_messages(conversation, participant).exclude(kind="system"),
+        id=identity,
+        deleted_at__isnull=True,
     )
 
 
@@ -41,7 +44,8 @@ def star_payload(message, participant):
         (
             s
             for s in message.stars.all()
-            if s.user_id == participant.user_id and s.membership_period == participant.membership_period
+            if s.user_id == participant.user_id
+            and s.membership_period == participant.membership_period
         ),
         None,
     )
@@ -91,16 +95,24 @@ def set_message_tool(conversation, user, identity, data, *, pin=False):
     if pin and not can_pin(conversation, participant, member):
         raise PermissionDenied("Only group administrators can pin messages.")
     fingerprint = hashlib.sha256(
-        json.dumps([str(identity), "pin" if pin else "star", values], default=str, sort_keys=True).encode()
+        json.dumps(
+            [str(identity), "pin" if pin else "star", values],
+            default=str,
+            sort_keys=True,
+        ).encode()
     ).hexdigest()
     receipt = ChatEvent.objects.filter(
-        conversation=conversation, actor=user, data__operation_id=str(values["operation_id"])
+        conversation=conversation,
+        actor=user,
+        data__operation_id=str(values["operation_id"]),
     ).first()
     if receipt and receipt.data.get("fingerprint") != fingerprint:
         raise ChatConflict()
     if not receipt:
         if pin:
-            MessagePin.objects.filter(message__conversation=conversation, expires_at__lte=timezone.now()).delete()
+            MessagePin.objects.filter(
+                message__conversation=conversation, expires_at__lte=timezone.now()
+            ).delete()
             if values["enabled"]:
                 active = MessagePin.objects.filter(
                     message__conversation=conversation, message__deleted_at__isnull=True
@@ -111,7 +123,8 @@ def set_message_tool(conversation, user, identity, data, *, pin=False):
                     message=message,
                     defaults={
                         "pinned_by": user,
-                        "expires_at": timezone.now() + timedelta(hours=values["duration_hours"]),
+                        "expires_at": timezone.now()
+                        + timedelta(hours=values["duration_hours"]),
                     },
                 )
             else:
@@ -140,29 +153,41 @@ def set_message_tool(conversation, user, identity, data, *, pin=False):
             },
         )
     message.refresh_from_db()
-    return summary(conversation, user) if pin else message_payload(message, participant, member)
+    return (
+        summary(conversation, user)
+        if pin
+        else message_payload(message, participant, member)
+    )
 
 
 def record_reads(conversation, participant, through, read_at):
     rows = (
         visible_messages(conversation, participant)
-        .filter(sequence__gt=participant.last_read_sequence, sequence__lte=through, deleted_at__isnull=True)
+        .filter(
+            sequence__gt=participant.last_read_sequence,
+            sequence__lte=through,
+            deleted_at__isnull=True,
+        )
         .exclude(sender_id=participant.user_id)
         .exclude(kind="system")
     )
-    MessageReadReceipt.objects.bulk_create(
-        [
-            MessageReadReceipt(
-                message_id=pk,
-                user_id=participant.user_id,
-                membership_period=participant.membership_period,
-                read_at=read_at,
-            )
-            for pk in rows.values_list("pk", flat=True)
-        ],
-        batch_size=500,
-        ignore_conflicts=True,
+    identities = (
+        rows.order_by("pk").values_list("pk", flat=True).iterator(chunk_size=500)
     )
+    while batch := list(islice(identities, 500)):
+        MessageReadReceipt.objects.bulk_create(
+            [
+                MessageReadReceipt(
+                    message_id=pk,
+                    user_id=participant.user_id,
+                    membership_period=participant.membership_period,
+                    read_at=read_at,
+                )
+                for pk in batch
+            ],
+            batch_size=500,
+            ignore_conflicts=True,
+        )
 
 
 def message_readers(conversation, user, identity):
@@ -170,15 +195,17 @@ def message_readers(conversation, user, identity):
     message = visible_message(conversation, participant, identity)
     if message.sender_id != user.pk:
         raise PermissionDenied("Only the sender can view message reading details.")
-    return message, eligible_participants(conversation).filter(visible_from_sequence__lte=message.sequence).exclude(
-        user=user
-    ).select_related("user").order_by("pk")
+    return message, eligible_participants(conversation).filter(
+        visible_from_sequence__lte=message.sequence
+    ).exclude(user=user).select_related("user").order_by("pk")
 
 
 def reader_payload(message, reader):
     from .group_projection import sender_payload
 
-    receipt = message.read_receipts.filter(user_id=reader.user_id, membership_period=reader.membership_period).first()
+    receipt = message.read_receipts.filter(
+        user_id=reader.user_id, membership_period=reader.membership_period
+    ).first()
     return {
         "user": sender_payload(reader.user),
         "is_read": reader.last_read_sequence >= message.sequence,

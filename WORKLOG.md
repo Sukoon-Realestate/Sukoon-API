@@ -1274,3 +1274,7 @@
 ## 2026-11-12 — Sprint 03 integration
 
 Integrated correctness and recovery changes onto current main while preserving Sprint 01/02 authorization, cookie and typed input contracts. Summary and remaining acceptance items: backend/sprints/evidence/sprint-03/README.md. Public evidence excludes local logs and environment diagnostics. Combined validation is recorded below after integration.
+
+### Sprint 04 integration
+
+Integrated the prepared performance implementation, regression tests, additive purge-marker migration and coverage generator. Sprint 04 remains partially accepted: API-wide measurement and resource/lock budgets are unfinished, as detailed in its sanitized evidence summary. No deployment or existing-database operation is included.

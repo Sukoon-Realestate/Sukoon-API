@@ -2,6 +2,8 @@
 
 from datetime import timedelta
 from django.utils import timezone
+from django.db.models import Exists, OuterRef
+from ..reporting_counts import interval_counts
 from core_apps.properties.models import Property
 from core_apps.admin_api.models import KYCSubmission, UserReport
 from .get_executive_dashboard_stats import User, _format_time_ago
@@ -40,71 +42,24 @@ def get_dashboard_overview_stats():
     # User monthly registration trend (last 30 days partitioned into 6 intervals)
     chart_data = []
     interval_days = 5
+    counts = interval_counts(
+        User.objects.all(),
+        "date_joined",
+        [
+            (
+                month_ago + timedelta(days=i * interval_days),
+                month_ago + timedelta(days=(i + 1) * interval_days),
+            )
+            for i in range(6)
+        ],
+    )
     for i in range(6):
         start_date = month_ago + timedelta(days=i * interval_days)
-        end_date = start_date + timedelta(days=interval_days)
-        count = User.objects.filter(
-            date_joined__gte=start_date, date_joined__lt=end_date
-        ).count()
+        count = counts[i]
         day_label = start_date.strftime("%d %b")
         chart_data.append({"label": day_label, "value": count})
 
-    # Recent activities (composite feed)
-    recent_activities = []
-
-    # 1. Recent registered users
-    recent_users = User.objects.filter(date_joined__lt=now).order_by("-date_joined")[:4]
-    for u in recent_users:
-        recent_activities.append(
-            {
-                "id": f"user-{u.id}",
-                "title": f"تسجيل مستخدم جديد: {u.get_full_name or u.email}",
-                "time": _format_time_ago(u.date_joined),
-                "occurred_at": u.date_joined.isoformat(),
-                "role": "مستخدم" if not u.properties.exists() else "صاحب عقار مدرج",
-                "roleType": "tenant" if not u.properties.exists() else "landlord",
-                "iconType": "user",
-            }
-        )
-
-    # 2. Recent properties
-    recent_props = (
-        Property.objects.filter(created_at__lt=now)
-        .select_related("owner")
-        .order_by("-created_at")[:3]
-    )
-    for p in recent_props:
-        recent_activities.append(
-            {
-                "id": f"prop-{p.id}",
-                "title": f"إضافة عقار جديد: {p.title}",
-                "time": _format_time_ago(p.created_at),
-                "occurred_at": p.created_at.isoformat(),
-                "role": p.owner.get_full_name or p.owner.email,
-                "roleType": "property",
-                "iconType": "building",
-            }
-        )
-
-    # 3. Recent KYC submissions
-    recent_kycs = (
-        KYCSubmission.objects.filter(created_at__lt=now)
-        .select_related("profile__user")
-        .order_by("-created_at")[:3]
-    )
-    for k in recent_kycs:
-        user_name = k.profile.user.get_full_name or k.profile.user.email
-        recent_activities.append(
-            {
-                "id": f"kyc-{k.id}",
-                "title": f"طلب توثيق جديد من {user_name}",
-                "time": _format_time_ago(k.created_at),
-                "occurred_at": k.created_at.isoformat(),
-                "role": "توثيق KYC",
-                "roleType": "admin",
-                "iconType": "shield",
-            }
-        )
+    recent_activities = get_recent_activities(now)
 
     return {
         "period": {
@@ -155,3 +110,71 @@ def get_dashboard_overview_stats():
             recent_activities, key=lambda item: item["occurred_at"], reverse=True
         )[:8],
     }
+
+
+def get_recent_activities(now):
+    """The bounded activity feed shared by overview and executive dashboards."""
+    # Recent activities (composite feed)
+    recent_activities = []
+
+    # 1. Recent registered users
+    recent_users = (
+        User.objects.filter(date_joined__lt=now)
+        .annotate(
+            has_properties=Exists(Property.objects.filter(owner_id=OuterRef("pk")))
+        )
+        .order_by("-date_joined")[:4]
+    )
+    for u in recent_users:
+        recent_activities.append(
+            {
+                "id": f"user-{u.id}",
+                "title": f"تسجيل مستخدم جديد: {u.get_full_name or u.email}",
+                "time": _format_time_ago(u.date_joined),
+                "occurred_at": u.date_joined.isoformat(),
+                "role": "مستخدم" if not u.has_properties else "صاحب عقار مدرج",
+                "roleType": "tenant" if not u.has_properties else "landlord",
+                "iconType": "user",
+            }
+        )
+
+    # 2. Recent properties
+    recent_props = (
+        Property.objects.filter(created_at__lt=now)
+        .select_related("owner")
+        .order_by("-created_at")[:3]
+    )
+    for p in recent_props:
+        recent_activities.append(
+            {
+                "id": f"prop-{p.id}",
+                "title": f"إضافة عقار جديد: {p.title}",
+                "time": _format_time_ago(p.created_at),
+                "occurred_at": p.created_at.isoformat(),
+                "role": p.owner.get_full_name or p.owner.email,
+                "roleType": "property",
+                "iconType": "building",
+            }
+        )
+
+    # 3. Recent KYC submissions
+    recent_kycs = (
+        KYCSubmission.objects.filter(created_at__lt=now)
+        .select_related("profile__user")
+        .order_by("-created_at")[:3]
+    )
+    for k in recent_kycs:
+        user_name = k.profile.user.get_full_name or k.profile.user.email
+        recent_activities.append(
+            {
+                "id": f"kyc-{k.id}",
+                "title": f"طلب توثيق جديد من {user_name}",
+                "time": _format_time_ago(k.created_at),
+                "occurred_at": k.created_at.isoformat(),
+                "role": "توثيق KYC",
+                "roleType": "admin",
+                "iconType": "shield",
+            }
+        )
+
+    return recent_activities

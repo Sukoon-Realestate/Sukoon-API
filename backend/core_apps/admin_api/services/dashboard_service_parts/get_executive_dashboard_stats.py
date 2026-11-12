@@ -3,6 +3,7 @@
 import logging
 from datetime import timedelta
 from django.utils import timezone
+from ..reporting_counts import date_counts
 from django.contrib.auth import get_user_model
 from core_apps.properties.models import Property
 from core_apps.admin_api.models import KYCSubmission, UserReport
@@ -13,7 +14,7 @@ User = get_user_model()
 
 
 def get_executive_dashboard_stats():
-    from .get_dashboard_overview_stats import get_dashboard_overview_stats
+    from .get_dashboard_overview_stats import get_recent_activities
 
     now = timezone.now()
     today = timezone.localdate(now) if timezone.is_aware(now) else now.date()
@@ -53,6 +54,13 @@ def get_executive_dashboard_stats():
         }
         for title, count, icon in values
     ]
+    first_day = today - timedelta(days=29)
+    registration_counts = date_counts(
+        User.objects.filter(date_joined__lt=now), "date_joined", first_day, today
+    )
+    report_counts = date_counts(
+        UserReport.objects.filter(created_at__lt=now), "created_at", first_day, today
+    )
     registrations, reports = [], []
     for offset in range(30):
         day = today - timedelta(days=29 - offset)
@@ -65,17 +73,13 @@ def get_executive_dashboard_stats():
         registrations.append(
             {
                 **common,
-                "value": User.objects.filter(
-                    date_joined__date=day, date_joined__lt=now
-                ).count(),
+                "value": registration_counts.get(day, 0),
             }
         )
         reports.append(
             {
                 **common,
-                "value": UserReport.objects.filter(
-                    created_at__date=day, created_at__lt=now
-                ).count(),
+                "value": report_counts.get(day, 0),
             }
         )
     return {
@@ -95,7 +99,11 @@ def get_executive_dashboard_stats():
             "pending": pending,
             "suspended": User.objects.filter(is_active=False).count(),
         },
-        "executiveActivities": get_dashboard_overview_stats()["recent_activities"],
+        "executiveActivities": sorted(
+            get_recent_activities(now),
+            key=lambda item: item["occurred_at"],
+            reverse=True,
+        )[:8],
     }
 
 

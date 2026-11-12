@@ -5,7 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from core_apps.chat.models import ChatEvent, Conversation
-from core_apps.chat.services.group_access import authorize, visible_messages
+from core_apps.chat.services.group_access import (
+    authorize,
+    visible_messages,
+    eligible_participants,
+)
 from core_apps.chat.services.group_cursors import (
     decode_cursor,
     encode_cursor,
@@ -34,15 +38,28 @@ def history_response(conversation, user, query):
                 sequence__lt=before,
                 sequence__lte=snapshot,
             )
-            .select_related("sender", "reply_to__sender")
-            .prefetch_related("attachments", "edits", "reactions")
+            .select_related("sender__profile", "reply_to__sender__profile")
+            .prefetch_related(
+                "attachments__conversation",
+                "reply_to__attachments__conversation",
+                "edits",
+                "reactions",
+            )
             .order_by("-sequence")[: count + 1]
         )
         more = len(rows) > count
         rows = rows[:count]
+        roster = list(eligible_participants(conversation))
+        for message in rows:
+            message.conversation = conversation
         properties = properties_for_messages(rows)
         response = Response(
-            [message_payload(m, participant, member, properties=properties) for m in reversed(rows)]
+            [
+                message_payload(
+                    m, participant, member, properties=properties, roster=roster
+                )
+                for m in reversed(rows)
+            ]
         )
         response["X-Chat-Older-Cursor"] = (
             encode_cursor(
@@ -127,7 +144,16 @@ class GroupMessageContextAPIView(APIView):
             get_object_or_404(Conversation, id=id), request.user, lock=True
         )
         count = page_limit(request.query_params)
-        visible = visible_messages(conversation, participant).select_related("sender", "reply_to__sender").prefetch_related("attachments", "edits", "reactions")
+        visible = (
+            visible_messages(conversation, participant)
+            .select_related("sender__profile", "reply_to__sender__profile")
+            .prefetch_related(
+                "attachments__conversation",
+                "reply_to__attachments__conversation",
+                "edits",
+                "reactions",
+            )
+        )
         target = get_object_or_404(visible, id=message_id)
         older = list(
             visible.filter(sequence__lt=target.sequence).order_by("-sequence")[
@@ -140,8 +166,18 @@ class GroupMessageContextAPIView(APIView):
             ]
         )
         rows = list(reversed(older)) + newer
+        roster = list(eligible_participants(conversation))
+        for message in rows:
+            message.conversation = conversation
         properties = properties_for_messages(rows)
-        response = Response([message_payload(m, participant, member, properties=properties) for m in rows])
+        response = Response(
+            [
+                message_payload(
+                    m, participant, member, properties=properties, roster=roster
+                )
+                for m in rows
+            ]
+        )
         more = visible.filter(sequence__lt=rows[0].sequence).exists()
         response["X-Chat-Older-Cursor"] = (
             encode_cursor(
@@ -166,7 +202,7 @@ class GroupEventsAPIView(APIView):
 
     @transaction.atomic
     def get(self, request, id):
-        conversation, participant, _ = authorize(
+        conversation, participant, member = authorize(
             get_object_or_404(Conversation, id=id), request.user, lock=True
         )
         count = page_limit(request.query_params)
@@ -182,17 +218,47 @@ class GroupEventsAPIView(APIView):
         rows = list(
             ChatEvent.objects.filter(
                 conversation=conversation, sequence__gt=cursor["n"]
-            ).order_by("sequence")[: count + 1]
+            )
+            .select_related(
+                "conversation",
+                "actor",
+                "message__sender__profile",
+                "message__reply_to__sender__profile",
+                "message__poll",
+            )
+            .prefetch_related(
+                "message__attachments__conversation",
+                "message__reply_to__attachments__conversation",
+                "message__edits",
+                "message__reactions",
+                "message__stars",
+                "message__poll__votes",
+            )
+            .order_by("sequence")[: count + 1]
         )
         if any(
             row.sequence != cursor["n"] + index + 1 for index, row in enumerate(rows)
         ) or (not rows and cursor["n"] < conversation.last_event_sequence):
             raise ChatResync()
         more, rows = len(rows) > count, rows[:count]
+        roster = list(eligible_participants(conversation))
+        messages = [event.message for event in rows if event.message_id]
+        for message in messages:
+            message.conversation = conversation
+        properties = properties_for_messages(messages)
         result = [
             payload
             for event in rows
-            if (payload := event_payload(event, request.user)) is not None
+            if (
+                payload := event_payload(
+                    event,
+                    request.user,
+                    authorized=(conversation, participant, member),
+                    roster=roster,
+                    properties=properties,
+                )
+            )
+            is not None
         ]
         response = Response(result)
         response["X-Chat-Event-Cursor"] = encode_cursor(

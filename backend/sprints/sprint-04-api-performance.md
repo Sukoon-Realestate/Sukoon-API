@@ -46,3 +46,15 @@ are demonstrably correct; never cache a private projection across users/workspac
   transaction revalidates versions and invariants; race tests prove correctness on disposable PostgreSQL.
 - Before/after evidence includes runtime versions/settings, fixture sizes, protocol and failures. Do not extrapolate
   APIClient latency into production SLOs; final controlled staging/load acceptance is Sprint 12.
+
+## Implementation record — 2026-11-11
+
+**Partial implementation; acceptance remains open.** Prepared admin/content/campaign reads, grouped reporting,
+slot closure windows, reputation exclusion facts, chat history/event context, evidence availability and resumable
+indexed discovery cleanup now have focused performance/recovery evidence. Route identities remain unchanged.
+
+The [implementation report](evidence/sprint-04/README.md) records comparable measurements, validation,
+query plans, data-preservation checks and every outstanding work package. The source coverage tool links 20 patterns to partial service probes and leaves 775 unmeasured; it grants no artificial exceptions.
+The all-family budget, bounded-history and shared-lock/solver criteria are not complete. Do not mark Sprint 04 accepted
+or infer readiness for later sprints from the passing local probes. Existing database/production operations were not
+part of implementation; the report records the concurrently changed development-database hash separately.
