@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from django.db import transaction
+from django.views import View
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
@@ -13,7 +13,7 @@ from .models import (
     TourOperation,
     TourUploadSession,
 )
-from .services import review
+from .admin_commands import review_revision, disable_viewing
 from .errors import TourError
 
 
@@ -46,7 +46,7 @@ class TourAdmin(ReadOnlyTourAdmin):
 
     @admin.action(description="Disable viewing immediately")
     def disable_viewing(self, request, queryset):
-        queryset.update(disabled=True)
+        disable_viewing(request.user, queryset.values_list("pk", flat=True))
 
 
 @admin.register(TourRevision)
@@ -75,13 +75,38 @@ class RevisionAdmin(ReadOnlyTourAdmin):
         return [
             path(
                 "<int:object_id>/review/",
-                self.admin_site.admin_view(self.review_console),
+                self.admin_site.admin_view(
+                    TourRevisionReviewView.as_view(model_admin=self)
+                ),
                 name="virtual-tour-review",
             )
         ] + super().get_urls()
 
-    def review_console(self, request, object_id):
-        if not self.has_view_permission(request):
+
+@admin.register(TourReviewEvent)
+class ReviewAdmin(ReadOnlyTourAdmin):
+    list_display = ("revision", "reviewer", "decision", "created_at")
+
+
+@admin.register(TourOperation)
+class OperationAdmin(ReadOnlyTourAdmin):
+    list_display = ("id", "user", "action", "status", "created_at")
+    exclude = ("key",)
+
+
+@admin.register(TourUploadSession)
+class UploadAdmin(ReadOnlyTourAdmin):
+    list_display = ("id", "revision", "role", "size", "state", "expires_at")
+    exclude = ("parts",)
+
+
+class TourRevisionReviewView(View):
+    """Native admin transport; retains legacy methods, session and CSRF wrapper."""
+
+    model_admin = None
+
+    def dispatch(self, request, object_id, *args, **kwargs):
+        if not self.model_admin.has_view_permission(request):
             from django.core.exceptions import PermissionDenied
 
             raise PermissionDenied
@@ -104,59 +129,37 @@ class RevisionAdmin(ReadOnlyTourAdmin):
                     response = JsonResponse(data)
                     response["Cache-Control"] = "private, no-store"
                     return response
-                with transaction.atomic():
-                    from .review_access import reviewer
-
-                    reviewer(request.user, write=True, lock=True)
-                    locked = (
-                        TourRevision.objects.select_for_update(of=("self",))
-                        .select_related("tour__property")
-                        .get(pk=object_id)
-                    )
-                    review(
-                        locked,
-                        request.user,
-                        {
-                            "decision": request.POST.get("decision"),
-                            "expected_source_hash": request.POST.get("source_hash"),
-                            "reason": request.POST.get("reason", ""),
-                            "public_reason": request.POST.get("public_reason", ""),
-                        },
-                    )
-                self.message_user(request, "Review decision saved.", messages.SUCCESS)
+                review_revision(
+                    request.user,
+                    object_id,
+                    {
+                        "decision": request.POST.get("decision"),
+                        "expected_source_hash": request.POST.get("source_hash"),
+                        "reason": request.POST.get("reason", ""),
+                        "public_reason": request.POST.get("public_reason", ""),
+                    },
+                )
+                self.model_admin.message_user(
+                    request, "Review decision saved.", messages.SUCCESS
+                )
                 return redirect(request.path)
             except TourError as error:
                 if request.POST.get("action") == "preview":
                     return JsonResponse(
                         {"error": str(error.detail)}, status=error.status_code
                     )
-                self.message_user(request, str(error.detail), messages.ERROR)
+                self.model_admin.message_user(
+                    request, str(error.detail), messages.ERROR
+                )
         return TemplateResponse(
             request,
             "admin/virtual_tours/review.html",
             {
-                **self.admin_site.each_context(request),
+                **self.model_admin.admin_site.each_context(request),
                 "title": "Review property tour",
                 "revision": revision,
                 "variants": revision.variants.all(),
-                "can_review": self.has_change_permission(request, revision)
+                "can_review": self.model_admin.has_change_permission(request, revision)
                 and revision.review_state == "pending",
             },
         )
-
-
-@admin.register(TourReviewEvent)
-class ReviewAdmin(ReadOnlyTourAdmin):
-    list_display = ("revision", "reviewer", "decision", "created_at")
-
-
-@admin.register(TourOperation)
-class OperationAdmin(ReadOnlyTourAdmin):
-    list_display = ("id", "user", "action", "status", "created_at")
-    exclude = ("key",)
-
-
-@admin.register(TourUploadSession)
-class UploadAdmin(ReadOnlyTourAdmin):
-    list_display = ("id", "revision", "role", "size", "state", "expires_at")
-    exclude = ("parts",)

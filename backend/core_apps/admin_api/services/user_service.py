@@ -1,4 +1,6 @@
 import logging
+import uuid
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
@@ -24,10 +26,6 @@ def get_admin_users_queryset():
         )
         .order_by("-date_joined")
     )
-
-
-import uuid
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 def _get_user_by_identifier(user_id, prefetch=False):
@@ -172,7 +170,7 @@ def suspend_user(user_id, admin_user, reason="إيقاف إداري"):
         notes=f"تم إيقاف الحساب بواسطة {admin_user.email}",
     )
 
-    logger.info(f"User {user.email} suspended by {admin_user.email}")
+    logger.info("account_suspended actor=%s", admin_user.pk)
     return user
 
 
@@ -205,5 +203,5 @@ def unsuspend_user(user_id, admin_user):
         reported_user=user, status=UserReport.Status.SUSPENDED
     ).update(status=UserReport.Status.ACTIVE)
 
-    logger.info(f"User {user.email} reactivated by {admin_user.email}")
+    logger.info("account_reactivated actor=%s", admin_user.pk)
     return user

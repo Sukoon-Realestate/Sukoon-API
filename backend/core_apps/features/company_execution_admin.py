@@ -2,6 +2,7 @@
 
 import uuid
 from django.contrib import admin, messages
+from django.views import View
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
@@ -40,12 +41,20 @@ class CompanyExecutionAdmin(FinancialHistoryAdmin):
         return [
             path(
                 "<int:object_id>/execution-review/",
-                self.admin_site.admin_view(self.review),
+                self.admin_site.admin_view(
+                    CompanyExecutionReviewView.as_view(model_admin=self)
+                ),
                 name="company-execution-review",
             )
         ] + super().get_urls()
 
-    def review(self, request, object_id):
+
+class CompanyExecutionReviewView(View):
+    """Native admin transport; retains legacy methods, session and CSRF wrapper."""
+
+    model_admin = None
+
+    def dispatch(self, request, object_id, *args, **kwargs):
         from django.http import HttpResponse
 
         item = get_object_or_404(CompanyMandate, pk=object_id)
@@ -87,20 +96,22 @@ class CompanyExecutionAdmin(FinancialHistoryAdmin):
                     authorize=authorize,
                     execute=execute,
                 )
-                self.message_user(
+                self.model_admin.message_user(
                     request,
                     "Execution evidence recorded. Prepare fresh participant reviews using this mandate revision.",
                     messages.SUCCESS,
                 )
                 return redirect(request.path)
             except APIException as error:
-                self.message_user(request, str(error.detail), messages.ERROR)
+                self.model_admin.message_user(
+                    request, str(error.detail), messages.ERROR
+                )
                 item.refresh_from_db()
         response = TemplateResponse(
             request,
             "admin/company/execution_review.html",
             {
-                **self.admin_site.each_context(request),
+                **self.model_admin.admin_site.each_context(request),
                 "title": "Verify company execution authority",
                 "item": item,
                 "request_key": request.POST.get("request_key") or str(uuid.uuid4()),

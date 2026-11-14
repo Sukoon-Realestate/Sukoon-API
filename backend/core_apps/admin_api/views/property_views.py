@@ -80,6 +80,7 @@ class AdminPropertyDecisionAPIView(APIView):
             reviewer=request.user,
             action=self.action,
             request_key=request_key(request),
+            auth_claims=request.auth,
             **serializer.validated_data,
         )
         return Response(result, status=code, headers=response_headers(replayed))

@@ -255,3 +255,18 @@ test-sprint09-communication: ## Communication CBVs/commands/reads; supply isolat
 
 sprint09-coverage: ## Reconcile all communication aliases and transport policies, without database access
 	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint09_inventory.py
+
+.PHONY: test-sprint10-admin-shared sprint10-coverage
+test-sprint10-admin-shared: ## Admin/shared command, HTTP, query and native admin checks; use isolated settings/storage
+	mkdir -p $(BASELINE_OUT)/sprint-10
+	$(BASELINE_ENV) DOTENV_DISABLED=1 $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-10/junit.xml \
+		core_apps/admin_api core_apps/common core_apps/properties/tests/test_review_versions.py \
+		core_apps/properties/tests/test_property_admin_moderation.py core_apps/virtual_tours/tests \
+		core_apps/support/tests/test_durable_storage.py core_apps/support/tests/test_upload_recovery.py \
+		core_apps/features/tests/test_business_policies.py core_apps/features/tests/test_chargeback_resolution.py core_apps/features/tests/test_chargeback_company.py \
+		core_apps/features/tests/test_company_tenancy.py core_apps/features/tests/test_portfolio_owner_workflows.py \
+		core_apps/features/tests/test_reputation_admin.py
+
+sprint10-coverage: ## Check global explicit callbacks, API transport parity and shared-service imports without database access
+	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint10_inventory.py

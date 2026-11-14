@@ -1,5 +1,6 @@
 import uuid
 from django.contrib import admin, messages
+from django.views import View
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.urls import path, reverse
@@ -76,12 +77,25 @@ class ChargebackAdmin(ChargebackHistoryAdmin):
         return [
             path(
                 "<int:object_id>/review/",
-                self.admin_site.admin_view(self.review),
+                self.admin_site.admin_view(
+                    ChargebackReviewView.as_view(model_admin=self)
+                ),
                 name="chargeback-review",
             )
         ] + super().get_urls()
 
-    def review(self, request, object_id):
+
+admin.site.register(
+    [ChargebackReplacementPayment, ChargebackRestoration], ChargebackHistoryAdmin
+)
+
+
+class ChargebackReviewView(View):
+    """Native admin transport; retains legacy methods, session and CSRF wrapper."""
+
+    model_admin = None
+
+    def dispatch(self, request, object_id, *args, **kwargs):
         item = get_object_or_404(RentalChargeback, pk=object_id)
         try:
             item = operations.detail(request.user, item.id)
@@ -109,7 +123,7 @@ class ChargebackAdmin(ChargebackHistoryAdmin):
                     item.id,
                     body.validated_data,
                 )
-                self.message_user(
+                self.model_admin.message_user(
                     request,
                     "The exact excess refund was approved. Execute its original instruction through the protected "
                     "refund operation; approval is not returned money.",
@@ -121,7 +135,7 @@ class ChargebackAdmin(ChargebackHistoryAdmin):
                 from django.core.exceptions import PermissionDenied
 
                 raise PermissionDenied
-            self.message_user(request, str(error.detail), messages.ERROR)
+            self.model_admin.message_user(request, str(error.detail), messages.ERROR)
             item.refresh_from_db()
         from .services.rental_lifecycle.common import staff_role
 
@@ -132,7 +146,7 @@ class ChargebackAdmin(ChargebackHistoryAdmin):
             request,
             "admin/features/chargeback_review.html",
             {
-                **self.admin_site.each_context(request),
+                **self.model_admin.admin_site.each_context(request),
                 "title": "Inspect chargeback evidence",
                 "item": item,
                 "projection": payload(item),
@@ -144,8 +158,3 @@ class ChargebackAdmin(ChargebackHistoryAdmin):
         )
         response["Cache-Control"] = "private, no-store"
         return response
-
-
-admin.site.register(
-    [ChargebackReplacementPayment, ChargebackRestoration], ChargebackHistoryAdmin
-)

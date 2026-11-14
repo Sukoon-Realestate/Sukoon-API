@@ -154,6 +154,8 @@ def prepare_summaries(items):
 @transaction.atomic
 def transition(actor, identity, data, *, cancel=False):
     require_staff_actor(actor, {StaffProfile.RoleName.SYSTEM_OWNER}, lock=True)
+    if not isinstance(data, dict):
+        raise ValidationError("Supply a campaign command object.")
     item = get_object_or_404(PushCampaign.objects.select_for_update(), id=identity)
     if data.get("preview_digest") != item.preview_digest:
         raise IdempotencyConflict("The preview differs. Review the original campaign.")

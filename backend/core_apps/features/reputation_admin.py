@@ -4,6 +4,7 @@ import uuid
 
 from django import forms
 from django.contrib import admin, messages
+from django.views import View
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
@@ -146,25 +147,49 @@ class ReputationOperatorAdmin(admin.ModelAdmin):
         return "admin:reputation-" + self.model._meta.model_name + "-inspect"
 
     def get_urls(self):
+        change_name = (
+            f"{self.model._meta.app_label}_{self.model._meta.model_name}_change"
+        )
+        base = [entry for entry in super().get_urls() if entry.name != change_name]
         return [
             path(
+                "<path:object_id>/change/",
+                self.admin_site.admin_view(
+                    ReputationChangeRedirectView.as_view(model_admin=self)
+                ),
+                name=change_name,
+            ),
+            path(
                 "<uuid:object_id>/inspect/",
-                self.admin_site.admin_view(self.inspect),
+                self.admin_site.admin_view(
+                    ReputationInspectView.as_view(model_admin=self)
+                ),
                 name=self.review_name.split(":", 1)[1],
-            )
-        ] + super().get_urls()
+            ),
+        ] + base
 
-    def change_view(self, request, object_id, form_url="", extra_context=None):
-        # Never expose model fields through the generic admin object page.
-        if not self.has_view_permission(request):
-            raise PermissionDenied
-        item = get_object_or_404(self.get_queryset(request), pk=object_id)
-        return redirect(reverse(self.review_name, args=[item.id]))
 
-    def inspect(self, request, object_id):
-        if not self.permitted(request.user):
+@admin.register(ReviewSection)
+class ReviewSectionAdmin(ReputationOperatorAdmin):
+    list_display = ("id", "content_state", "revision", "inspect_link")
+    list_filter = ("content_state", "subject_kind")
+
+
+@admin.register(ReviewReport, ReviewAppeal)
+class ReviewCaseAdmin(ReputationOperatorAdmin):
+    list_display = ("id", "state", "revision", "inspect_link")
+    list_filter = ("state",)
+
+
+class ReputationInspectView(View):
+    """Native admin transport; retains legacy methods, session and CSRF wrapper."""
+
+    model_admin = None
+
+    def dispatch(self, request, object_id, *args, **kwargs):
+        if not self.model_admin.permitted(request.user):
             raise PermissionDenied
-        item = get_object_or_404(self.get_queryset(request), id=object_id)
+        item = get_object_or_404(self.model_admin.get_queryset(request), id=object_id)
         section = (
             item
             if isinstance(item, ReviewSection)
@@ -213,9 +238,10 @@ class ReputationOperatorAdmin(admin.ModelAdmin):
                         moderation.resolve_appeal(request.user, item.id, body)
                     else:
                         moderation.resolve_report(request.user, item.id, body)
-                    self.message_user(
+                    self.model_admin.message_user(
                         request,
-                        "Canonical decision recorded. Publication still depends on the original time and eligibility gates.",
+                        "Canonical decision recorded. Publication still depends on "
+                        "the original time and eligibility gates.",
                         messages.SUCCESS,
                     )
                     return redirect(request.path)
@@ -227,9 +253,9 @@ class ReputationOperatorAdmin(admin.ModelAdmin):
             request,
             "admin/reputation/inspect.html",
             {
-                **self.admin_site.each_context(request),
+                **self.model_admin.admin_site.each_context(request),
                 "title": "Reputation operator review",
-                "opts": self.model._meta,
+                "opts": self.model_admin.model._meta,
                 "record_id": item.id,
                 "access_form": access,
                 "decision_form": decision,
@@ -252,13 +278,14 @@ class ReputationOperatorAdmin(admin.ModelAdmin):
         return response
 
 
-@admin.register(ReviewSection)
-class ReviewSectionAdmin(ReputationOperatorAdmin):
-    list_display = ("id", "content_state", "revision", "inspect_link")
-    list_filter = ("content_state", "subject_kind")
+class ReputationChangeRedirectView(View):
+    """Native admin transport; retains legacy methods, session and CSRF wrapper."""
 
+    model_admin = None
 
-@admin.register(ReviewReport, ReviewAppeal)
-class ReviewCaseAdmin(ReputationOperatorAdmin):
-    list_display = ("id", "state", "revision", "inspect_link")
-    list_filter = ("state",)
+    def dispatch(self, request, object_id, *args, **kwargs):
+        # Never expose model fields through the generic admin object page.
+        if not self.model_admin.has_view_permission(request):
+            raise PermissionDenied
+        item = get_object_or_404(self.model_admin.get_queryset(request), pk=object_id)
+        return redirect(reverse(self.model_admin.review_name, args=[item.id]))

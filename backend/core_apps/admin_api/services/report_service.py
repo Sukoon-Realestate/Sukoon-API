@@ -3,7 +3,7 @@ from django.db import transaction
 from django.db.models import Exists, OuterRef
 from core_apps.properties.models import Property
 from django.utils import timezone
-from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework.exceptions import ValidationError, NotFound, PermissionDenied
 from core_apps.admin_api.models import UserReport
 from core_apps.admin_api.services.user_service import suspend_user
 
@@ -28,15 +28,31 @@ def get_reports_queryset():
 
 
 @transaction.atomic
-def take_report_action(report_id, action, reviewer, notes=""):
+def take_report_action(report_id, action, reviewer, notes="", *, auth_claims=None):
     """
     Executes an administrative resolution action on a user report.
     """
+    from core_apps.admin_api.permissions import require_staff_actor
+
+    reviewer = require_staff_actor(reviewer, lock=True)
+    from core_apps.common.command_authority import recheck_actor_session
+
+    recheck_actor_session(reviewer, auth_claims)
+    if not isinstance(notes, str) or len(notes) > 4000:
+        raise ValidationError(
+            {"notes": "Supply report notes of at most 4000 characters."}
+        )
     try:
-        report = UserReport.objects.select_related("reported_user").get(id=report_id)
+        report = (
+            UserReport.objects.select_for_update(of=("self",))
+            .select_related("reported_user")
+            .get(id=report_id)
+        )
     except (UserReport.DoesNotExist, ValueError):
         raise NotFound(f"User Report with ID {report_id} was not found.")
 
+    if reviewer.pk in {report.reported_user_id, report.reporter_id}:
+        raise PermissionDenied("Report decisions require an independent reviewer.")
     if hasattr(report, "chat_case"):
         raise ValidationError(
             "Rental chat cases require the versioned policy review endpoint."
@@ -64,7 +80,9 @@ def take_report_action(report_id, action, reviewer, notes=""):
         report.notes = notes
     report.save(update_fields=["status", "reviewed_by", "reviewed_at", "notes"])
 
-    logger.info(f"Report {report.id} updated with action {action} by {reviewer.email}")
+    logger.info(
+        "report_decided report=%s action=%s actor=%s", report.id, action, reviewer.pk
+    )
     return report
 
 

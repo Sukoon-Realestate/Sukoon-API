@@ -16,9 +16,7 @@ def get_kyc_queue_queryset():
     from core_apps.properties.models import Property
     from core_apps.admin_api.models import UserReport
 
-    is_owner_subquery = Exists(
-        Property.objects.filter(owner=OuterRef("profile__user"))
-    )
+    is_owner_subquery = Exists(Property.objects.filter(owner=OuterRef("profile__user")))
     has_warning_subquery = Exists(
         UserReport.objects.filter(
             reported_user=OuterRef("profile__user"),
@@ -103,10 +101,16 @@ def get_kyc_detail(submission_id):
         "selfieUrl": media_url("confirmation_selfi"),
         "evidenceDigest": submission.evidence_digest,
         "documentDecisions": submission.document_decisions,
-        "documentFields": [wire for wire, field in {
-            "national_id": "national_id", "front_id_image": "id_face",
-            "back_id_image": "id_back", "selfie_image": "confirmation_selfi",
-        }.items() if evidence.get(field)],
+        "documentFields": [
+            wire
+            for wire, field in {
+                "national_id": "national_id",
+                "front_id_image": "id_face",
+                "back_id_image": "id_back",
+                "selfie_image": "confirmation_selfi",
+            }.items()
+            if evidence.get(field)
+        ],
         "canReview": bool(
             submission.evidence_digest
             and not submission.superseded_at
@@ -137,13 +141,20 @@ def approve_kyc_submission(submission_id, reviewer):
     submission.reviewed_at = timezone.now()
     submission.rejection_reason = ""
     from core_apps.profiles.identity_status import DOCUMENT_FIELDS
+
     submission.document_decisions = {
         wire: {"status": "approved", "reason": ""}
         for wire, field in DOCUMENT_FIELDS.items()
         if submission.evidence_snapshot.get(field)
     }
     submission.save(
-        update_fields=["status", "reviewer", "reviewed_at", "rejection_reason", "document_decisions"]
+        update_fields=[
+            "status",
+            "reviewer",
+            "reviewed_at",
+            "rejection_reason",
+            "document_decisions",
+        ]
     )
 
     # Update User verification flag
@@ -151,39 +162,50 @@ def approve_kyc_submission(submission_id, reviewer):
     user.is_verified = True
     user.save(update_fields=["is_verified"])
 
-    logger.info(
-        f"KYC {submission.id} for user {user.email} approved by {reviewer.email}"
-    )
+    logger.info("kyc_approved submission=%s actor=%s", submission.id, reviewer.pk)
     return submission
 
 
 @transaction.atomic
 def reject_kyc_submission(
-    submission_id, reviewer, reason="المستندات غير واضحة أو غير مطابقة", *, document_decisions=None
+    submission_id,
+    reviewer,
+    reason="المستندات غير واضحة أو غير مطابقة",
+    *,
+    document_decisions=None,
 ):
     """
     Rejects a KYC submission with a mandatory reason.
     """
     submission, reviewer = _reviewable_submission(submission_id, reviewer)
 
-    if not reason.strip():
+    if not isinstance(reason, str) or not reason.strip() or len(reason) > 2000:
         raise ValidationError("A rejection reason is required.")
 
     from core_apps.profiles.identity_status import DOCUMENT_FIELDS
+
     decisions = document_decisions or {}
     if decisions:
         if not isinstance(decisions, dict) or set(decisions) - set(DOCUMENT_FIELDS):
             raise ValidationError("Unknown identity document.")
         for wire, item in decisions.items():
-            if (not isinstance(item, dict) or set(item) - {"status", "reason"}
+            if (
+                not isinstance(item, dict)
+                or set(item) - {"status", "reason"}
                 or item.get("status") not in {"approved", "rejected"}
-                or not submission.evidence_snapshot.get(DOCUMENT_FIELDS[wire])):
+                or not submission.evidence_snapshot.get(DOCUMENT_FIELDS[wire])
+            ):
                 raise ValidationError("Invalid identity document decision.")
             if item["status"] == "rejected" and not str(item.get("reason", "")).strip():
-                raise ValidationError("A rejection reason is required for each rejected document.")
+                raise ValidationError(
+                    "A rejection reason is required for each rejected document."
+                )
         if not any(item["status"] == "rejected" for item in decisions.values()):
             raise ValidationError("Select at least one rejected document.")
-        if any(submission.evidence_snapshot.get(field) and wire not in decisions for wire, field in DOCUMENT_FIELDS.items()):
+        if any(
+            submission.evidence_snapshot.get(field) and wire not in decisions
+            for wire, field in DOCUMENT_FIELDS.items()
+        ):
             raise ValidationError("Review every submitted identity document.")
     else:
         decisions = {
@@ -198,7 +220,13 @@ def reject_kyc_submission(
     submission.rejection_reason = reason
     submission.document_decisions = decisions
     submission.save(
-        update_fields=["status", "reviewer", "reviewed_at", "rejection_reason", "document_decisions"]
+        update_fields=[
+            "status",
+            "reviewer",
+            "reviewed_at",
+            "rejection_reason",
+            "document_decisions",
+        ]
     )
 
     # Mark user unverified
@@ -206,9 +234,7 @@ def reject_kyc_submission(
     user.is_verified = False
     user.save(update_fields=["is_verified"])
 
-    logger.info(
-        f"KYC {submission.id} for user {user.email} rejected by {reviewer.email}"
-    )
+    logger.info("kyc_rejected submission=%s actor=%s", submission.id, reviewer.pk)
     return submission
 
 

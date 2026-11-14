@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="12" skipped="16" tests="311" time="273.709" timestamp="2026-11-14T16:25:57.746938+02:00" hostname="Zeyads-MacBook-Air.local"><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[disabled-dismiss]" time="150.524" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[disabled-mark_active]" time="0.013" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[frozen-dismiss]" time="0.012" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[frozen-mark_active]" time="0.010" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[removed-dismiss]" time="0.008" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[removed-mark_active]" time="0.011" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_non_suspension_retains_broad_staff_scope[support]" time="0.018" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_non_suspension_retains_broad_staff_scope[support_supervisor]" time="0.013" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_non_suspension_retains_broad_staff_scope[kyc_reviewer]" time="0.012" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_non_suspension_retains_broad_staff_scope[main_admin]" time="0.017" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_moderation_alias_replay_rechecks_role_and_factor[legacy]" time="0.643" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_moderation_alias_replay_rechecks_role_and_factor[canonical]" time="0.030" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_moderation_command_fences_original_session_on_replay" time="0.024" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_legacy_moderation_rejects_malformed_command[payload0]" time="0.014" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_legacy_moderation_rejects_malformed_command[payload1]" time="0.016" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_legacy_moderation_rejects_malformed_command[payload2]" time="0.012" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_legacy_moderation_rejects_malformed_command[payload3]" time="0.011" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_audit_database_failure_is_not_an_empty_history" time="0.007" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_native_content_requires_current_domain_role" time="0.012" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_campaign_preview_batch_budget[1]" time="0.045" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_campaign_preview_batch_budget[20]" time="0.056" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_campaign_preview_batch_budget[100]" time="0.155" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[all-True]" time="0.012"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[all-False]" time="0.012"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[landlords-True]" time="0.011"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[landlords-False]" time="0.011"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[tenants-True]" time="0.012"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[tenants-False]" time="0.023"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[verified-True]" time="0.017"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[verified-False]" time="0.011"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[students-True]" time="0.012"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[students-False]" time="0.014"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[companies-True]" time="0.015"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[companies-False]" time="0.013"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    HousingRequest.objects.create(user=user)
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_role_summary_uses_one_grouped_query" time="0.008" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_public_endpoint_has_no_unpublished_defaults_or_approval_identity" time="0.044" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_membership_or_staff_without_policy_authority_cannot_publish" time="0.046" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_invalid_values_do_not_publish[case_hours-True]" time="0.010" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_invalid_values_do_not_publish[case_hours-0]" time="0.014" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_invalid_values_do_not_publish[case_hours-169]" time="0.012" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_invalid_values_do_not_publish[urgent_case_hours-73]" time="0.012" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_unknown_rules_backdating_and_deferred_recovery_are_rejected[change0]" time="0.014" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_unknown_rules_backdating_and_deferred_recovery_are_rejected[change1]" time="0.010" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_unknown_rules_backdating_and_deferred_recovery_are_rejected[change2]" time="0.013" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_unknown_rules_backdating_and_deferred_recovery_are_rejected[change3]" time="0.013" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_replay_stale_head_and_published_record_immutability" time="0.022" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_revoked_or_frozen_admin_cannot_replay_publication" time="0.018" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_case_deadlines_use_new_versions_without_rewriting_existing_cases" time="0.020" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_review_request_is_discoverable_bounded_and_preserves_canonical_effects" time="0.083" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_new_period_limit_has_a_real_consumer_and_bound_terms_stay_original" time="0.021" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_admin_page_uses_reviewed_head_and_preserves_form_on_conflict" time="0.361" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_all_supported_families_publish_and_disclose_without_external_dependencies" time="0.059" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_private_legacy_policy_is_not_exposed_as_public_history" time="0.019" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_policy_pack_command_is_dry_by_default_and_idempotent" time="0.080" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_published_hold_policy_changes_new_hold_not_existing_extension" time="0.069" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_new_request_cannot_outgrow_configured_reservation_window" time="0.012" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_won_without_received_cash_does_not_pay_invoice_or_resolve" time="0.158" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_restored_cash_closes_original_chargeback_without_second_allocation" time="0.176" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_lost_requires_real_replacement_and_settlement_not_a_note" time="0.264" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_late_cash_and_replacement_create_exact_excess_refund_without_overpayment[False]" time="0.441" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_late_cash_and_replacement_create_exact_excess_refund_without_overpayment[True]" time="0.457" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_duplicate_cash_reference_and_conflicting_identity_are_bounded" time="0.227" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_unsigned_final_fact_cannot_create_money" time="0.160" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_original_source_fields_are_immutable" time="0.126" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_case_closure_cannot_skip_chargeback_funding" time="0.302" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_excess_approval_is_independent_replay_safe_and_provider_absence_retains_debt" time="0.429" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_prior_refund_overlap_is_not_recharged_or_restored_twice[full_restoration]" time="0.205" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_prior_refund_overlap_is_not_recharged_or_restored_twice[overlap_then_replacement]" time="0.362" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_full_dispute_rejects_partial_or_second_episode_without_new_effect" time="0.112" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_replacement_refund_reduces_retained_funding_and_original_payable_once" time="0.389" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_admin_review_is_reachable_and_does_not_execute_money" time="0.473" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_final_fact_before_opening_replays_only_after_exact_original_evidence" time="0.189" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_chargeback_preserves_original_payout_history[submitted]" time="0.183" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_chargeback_preserves_original_payout_history[processing]" time="0.181" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_chargeback_preserves_original_payout_history[succeeded]" time="0.171" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_chargeback_preserves_original_payout_history[cancelled]" time="0.180" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_rejected_pending_fact_cannot_prevent_original_debit" time="0.094" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_only_current_independent_finance_can_read_or_replay_approval" time="0.363" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_approval_rejects_stale_chargeback_revision" time="0.339" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_all_chargeback_admin_history_requires_current_finance_and_independence" time="0.586" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_authenticated_webhook_ingress_final_facts_and_provider_boundary" time="0.243" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_pending_replacement_refund_reserves_original_payable_before_dispatch" time="0.280" /><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_chargeback_is_not_reenabled_by_payable_recalculation" time="0.099" /><testcase classname="core_apps.features.tests.test_chargeback_company" name="test_company_closed_chargeback_restoration_closes_without_inventory_or_second_payable[restored]" time="2.988" /><testcase classname="core_apps.features.tests.test_chargeback_company" name="test_company_closed_chargeback_restoration_closes_without_inventory_or_second_payable[replacement]" time="2.868" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_company_is_canonical_debtor_and_create_replays" time="1.441" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_company_private_projection_and_preparation_handoff" time="1.429" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_unsigned_cancel_releases_all_units_and_budget" time="1.498" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_provider_absence_never_marks_review_as_signature" time="1.772" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_signing_and_capture_activate_exact_company_inventory" time="2.404" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_paid_company_preparation_remains_readable_after_hold_commit" time="2.327" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_employees_and_coordinators_cannot_pay_company_invoice" time="2.362" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_termination_choices_follow_current_date_and_command_boundaries" time="3.759" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_possession_employee_departure_and_return_are_independent" time="3.106" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_replacement_requires_all_people_then_actual_departure" time="3.787" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_replacement_decline_preserves_existing_stay" time="3.283" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_company_maintenance_unit_privacy_access_cost_and_resolution" time="4.005" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_unsigned_expiry_releases_whole_portfolio_but_signature_uncertainty_does_not" time="1.548" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_late_signature_is_recorded_for_reconciliation_and_duplicate_is_idempotent" time="1.846" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_company_receipt_has_no_historical_private_projection_and_revocation_blocks_replay" time="1.565" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_termination_at_billing_boundary_and_full_original_capture_refund" time="3.263" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_admin_cannot_operate_legacy_contract_authority_endpoint" time="2.245" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_revoked_payer_cannot_replay_quote_or_checkout" time="2.983" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_checkout_recovery_requires_current_company_payer" time="2.174" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_operator_authority_review_is_independent_and_admin_form_uses_same_command" time="0.310" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_company_new_business_off_keeps_existing_obligation_servicing" time="2.425" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_habitability_restriction_after_capture_blocks_company_move_in" time="2.269" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_settlement_rejects_malformed_evidence_without_500" time="2.084" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_expired_source_hides_commit_controls_but_keeps_recovery" time="1.607" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_signed_unpaid_company_can_end_bilaterally_without_automatic_debt_erasure" time="2.480" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_chargeback_reopens_company_projection_and_original_budget_without_inventory_reallocation" time="2.075" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_company_statements_keep_actual_debtor_and_revoke_old_private_links" time="2.368" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_expired_pending_signature_cannot_be_replaced_with_new_unknown_operation" time="2.790" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_authority_succession_cannot_make_owner_a_company_counterparty[signer]" time="2.185" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_authority_succession_cannot_make_owner_a_company_counterparty[payer]" time="2.858" /><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_authority_succession_cannot_make_owner_a_company_counterparty[coordinator]" time="2.698" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_edit_asset_facts_private_fields_and_mode_validation" time="0.037" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_bulk_inheritance_preserves_explicit_values_and_tracks_resets" time="0.101" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_bulk_stale_unit_partial_results_and_idempotent_api" time="0.000"><skipped type="pytest.skip" message="Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/features/tests/test_portfolio_owner_workflows.py:118: Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test</skipped></testcase><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_bulk_and_topology_cannot_mutate_company_held_inventory" time="0.190" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_split_preserves_history_and_new_ids_and_blocks_legacy_reactivation" time="0.135" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_merge_retains_both_originals" time="0.063" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_move_preserves_ids_and_requires_destination_authority" time="0.067" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_new_hold_after_preview_blocks_apply" time="0.202" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_media_intent_resume_digest_private_evidence_and_review" time="0.071" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_container_tours_reuse_canonical_records_and_do_not_expose_child_rooms" time="0.054" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_changed_child_defaults_invalidate_complex_bulk_preview" time="0.057" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_private_asset_edits_do_not_change_commercial_approval" time="0.181" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_public_scope_fact_changes_require_new_approval" time="0.153" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_whole_topology_change_rolls_back_on_duplicate_target_code" time="0.066" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_preview_history_is_owner_scoped_and_recoverable" time="0.049" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_media_reviews_are_independent_and_removed_evidence_stays_in_history" time="0.500" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_unsupported_bulk_money_and_hidden_topology_fields_rejected" time="0.004" /><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_admin_media_inspection_checks_reviewer_role" time="0.091" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_unreasoned_read_and_generic_change_never_expose_content" time="0.094" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_reasoned_read_is_audited_and_escaped" time="0.088" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_explicit_moderation_permission_is_sufficient_but_staff_alone_is_not" time="0.082" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_source_party_is_excluded_even_with_superuser_access" time="0.101" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_csrf_and_missing_reason_prevent_commands" time="0.134" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_approval_preserves_time_gate_score_and_original_wording" time="0.067" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_stale_and_invalid_redaction_leave_original_unchanged" time="0.156" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_report_resolution_reuses_receipt_and_is_visible_only_to_reporter" time="0.198" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_appeal_requires_second_moderator_and_keeps_original_score" time="0.110" /><testcase classname="core_apps.features.tests.test_reputation_admin" name="test_reply_decision_uses_reply_revision_without_mutating_section_score" time="0.116" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_scope_idempotency_and_no_public_blob" time="0.103" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_real_bytes_checksum_and_part_conflict" time="0.092" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_manifest_cross_session_and_immutable_job" time="0.117" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_late_worker_cannot_publish_deleted_capture" time="0.109" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_stale_lease_fences_old_worker" time="0.099" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_coach_consent_budget_and_secret_never_persisted" time="0.078" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_partial_panorama_does_not_become_full_tour" time="0.040"><skipped type="pytest.skip" message="could not import 'cv2': No module named 'cv2'">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/virtual_tours/tests/test_capture.py:305: could not import 'cv2': No module named 'cv2'</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_multipart_resume_and_missing_parts" time="0.257" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_private_generated_image_requires_owner_and_keeps_blob_internal" time="0.117" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_private_reconstruction_preview_requires_owner_and_keeps_blob_internal" time="0.121" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_crashing_jobs_have_a_finite_retry_budget" time="0.110" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_disabled_capture_blocks_new_cost_but_allows_status_and_cancellation" time="0.157" /><testcase classname="core_apps.virtual_tours.tests.test_capture_config" name="test_strict_preflight_requires_successful_requested_provider_probe[unreachable]" time="0.050" /><testcase classname="core_apps.virtual_tours.tests.test_capture_config" name="test_strict_preflight_requires_successful_requested_provider_probe[no_live]" time="0.045" /><testcase classname="core_apps.virtual_tours.tests.test_capture_config" name="test_strict_preflight_requires_successful_requested_provider_probe[live]" time="0.005"><skipped type="pytest.skip" message="Capture readiness needs OpenCV (not in Pipfile.lock)">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/virtual_tours/tests/test_capture_config.py:29: Capture readiness needs OpenCV (not in Pipfile.lock)</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_capture_config" name="test_strict_preflight_does_not_report_disabled_capture_as_ready" time="0.042" /><testcase classname="core_apps.virtual_tours.tests.test_capture_delivery" name="test_selection_private_preview_version_negotiation_review_and_revocation" time="0.120" /><testcase classname="core_apps.virtual_tours.tests.test_capture_delivery" name="test_scope_cannot_crop_a_component_and_incomplete_panorama_is_rejected" time="0.042" /><testcase classname="core_apps.virtual_tours.tests.test_capture_delivery" name="test_bad_quality_can_be_previewed_but_not_submitted_and_no_fake_walk" time="0.046" /><testcase classname="core_apps.virtual_tours.tests.test_capture_delivery" name="test_gaussian_integrity_and_retention" time="0.047" /><testcase classname="core_apps.virtual_tours.tests.test_capture_plan" name="test_private_plan_manifest_uses_existing_upload_receipt_and_never_publishes" time="0.097" /><testcase classname="core_apps.virtual_tours.tests.test_capture_plan" name="test_plan_cannot_relabel_physical_capture_or_claim_missing_evidence[cross_room]" time="0.085" /><testcase classname="core_apps.virtual_tours.tests.test_capture_plan" name="test_plan_cannot_relabel_physical_capture_or_claim_missing_evidence[duplicate_station]" time="0.078" /><testcase classname="core_apps.virtual_tours.tests.test_capture_plan" name="test_plan_cannot_relabel_physical_capture_or_claim_missing_evidence[no_evidence]" time="0.079" /><testcase classname="core_apps.virtual_tours.tests.test_capture_plan" name="test_plan_cannot_relabel_physical_capture_or_claim_missing_evidence[invalid_state]" time="0.108" /><testcase classname="core_apps.virtual_tours.tests.test_capture_plan" name="test_plan_cannot_relabel_physical_capture_or_claim_missing_evidence[invalid_attempt]" time="0.110" /><testcase classname="core_apps.virtual_tours.tests.test_capture_plan" name="test_plan_cannot_relabel_physical_capture_or_claim_missing_evidence[invalid_room_type]" time="0.082" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_container_revocation_wins_over_cached_fields[ResidentialBuilding-change0]" time="0.009" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_container_revocation_wins_over_cached_fields[ResidentialBuilding-change1]" time="0.010" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_container_revocation_wins_over_cached_fields[ResidentialBuilding-change2]" time="0.011" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_container_revocation_wins_over_cached_fields[ResidentialBuilding-change3]" time="0.009" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_container_revocation_wins_over_cached_fields[ResidentialComplex-change0]" time="0.009" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_container_revocation_wins_over_cached_fields[ResidentialComplex-change1]" time="0.009" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_container_revocation_wins_over_cached_fields[ResidentialComplex-change2]" time="0.009" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_container_revocation_wins_over_cached_fields[ResidentialComplex-change3]" time="0.009" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_manager_replacement_is_checked[ResidentialBuilding]" time="0.007" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_current_manager_replacement_is_checked[ResidentialComplex]" time="0.007" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_eligible_container_and_current_manager_state_use_one_query[ResidentialBuilding]" time="0.007" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_eligible_container_and_current_manager_state_use_one_query[ResidentialComplex]" time="0.007" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_pending_manager_closure_and_withdrawal_are_current[ResidentialBuilding]" time="0.007" /><testcase classname="core_apps.virtual_tours.tests.test_container_publication_freshness" name="test_pending_manager_closure_and_withdrawal_are_current[ResidentialComplex]" time="0.008" /><testcase classname="core_apps.virtual_tours.tests.test_models_and_boundaries" name="test_real_khronos_and_rapier_processing" time="0.662" /><testcase classname="core_apps.virtual_tours.tests.test_models_and_boundaries" name="test_model_external_uris_scale_and_ungrounded_spawn_are_rejected" time="0.269" /><testcase classname="core_apps.virtual_tours.tests.test_models_and_boundaries" name="test_model_preparation_capability_requires_real_worker_validators" time="0.004" /><testcase classname="core_apps.virtual_tours.tests.test_models_and_boundaries" name="test_adding_a_bed_invalidates_room_package_but_price_does_not" time="0.018" /><testcase classname="core_apps.virtual_tours.tests.test_models_and_boundaries" name="test_unpublish_revokes_existing_credentials_and_preview_is_owner_only" time="0.062" /><testcase classname="core_apps.virtual_tours.tests.test_models_and_boundaries" name="test_reviewer_console_requires_staff_and_hash_bound_decision" time="0.172" /><testcase classname="core_apps.virtual_tours.tests.test_mvp_capture_resume" name="test_capture_retry_preserves_success_and_links_exact_original_without_duplicate" time="0.052" /><testcase classname="core_apps.virtual_tours.tests.test_mvp_capture_resume" name="test_unavailable_reconstruction_retry_keeps_original_outputs_and_creates_nothing" time="0.029" /><testcase classname="core_apps.virtual_tours.tests.test_mvp_review_authority" name="test_tour_reviewer_cannot_use_another_account_of_the_same_person" time="0.053" /><testcase classname="core_apps.virtual_tours.tests.test_mvp_review_authority" name="test_private_staff_tour_session_rechecks_revoked_permission_on_each_read" time="0.064" /><testcase classname="core_apps.virtual_tours.tests.test_mvp_review_authority" name="test_tour_approval_does_not_approve_or_publish_pending_property" time="0.054" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_old_update_reads_current_tour_and_original_revision" time="0.060" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_outbox_retry_rechecks_owner_and_exact_source[owner]" time="0.074" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_outbox_retry_rechecks_owner_and_exact_source[retired]" time="0.067" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_outbox_retry_rechecks_owner_and_exact_source[deleted]" time="0.080" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_outbox_retry_rechecks_owner_and_exact_source[target]" time="0.083" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_result_and_event_rollback_together_and_repeated_worker_no_duplicate" time="0.054" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_capture_result_keeps_manifest_and_job_no_implicit_3d_success" time="0.037" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_final_cancellation_after_heartbeat_fences_result" time="0.028" /><testcase classname="core_apps.virtual_tours.tests.test_owner_updates" name="test_exhausted_worker_creates_one_followup" time="0.023" /><testcase classname="core_apps.virtual_tours.tests.test_place_offers" name="test_resolve_current_room_offer_private_and_no_booking" time="0.059" /><testcase classname="core_apps.virtual_tours.tests.test_place_offers" name="test_offer_changes_do_not_destroy_tour_context[unavailable]" time="0.055" /><testcase classname="core_apps.virtual_tours.tests.test_place_offers" name="test_offer_changes_do_not_destroy_tour_context[archived]" time="0.058" /><testcase classname="core_apps.virtual_tours.tests.test_place_offers" name="test_offer_changes_do_not_destroy_tour_context[identity]" time="0.056" /><testcase classname="core_apps.virtual_tours.tests.test_place_offers" name="test_shared_foreign_and_incorrect_bed_links_rejected" time="0.052" /><testcase classname="core_apps.virtual_tours.tests.test_place_offers" name="test_revoked_and_superseded_sessions_cannot_resolve" time="0.052" /><testcase classname="core_apps.virtual_tours.tests.test_place_offers" name="test_preview_is_passive_and_linked_component_never_inferred" time="0.055" /><testcase classname="core_apps.virtual_tours.tests.test_processing_lease" name="test_reclaimed_attempt_cannot_publish_or_fail_new_worker[False]" time="0.048" /><testcase classname="core_apps.virtual_tours.tests.test_processing_lease" name="test_reclaimed_attempt_cannot_publish_or_fail_new_worker[True]" time="0.049" /><testcase classname="core_apps.virtual_tours.tests.test_processing_lease" name="test_progress_renews_lease_and_stale_worker_stops_after_recovery" time="0.047" /><testcase classname="core_apps.virtual_tours.tests.test_processing_lease" name="test_interruption_attempts_remain_bounded" time="0.049" /><testcase classname="core_apps.virtual_tours.tests.test_processing_lease" name="test_current_attempt_completes_once_and_clears_lease" time="0.047" /><testcase classname="core_apps.virtual_tours.tests.test_recovery_and_concurrency" name="test_deleted_tour_can_be_restored_without_publishing" time="0.041" /><testcase classname="core_apps.virtual_tours.tests.test_recovery_and_concurrency" name="test_invalid_revision_and_session_inputs_are_validation_errors" time="0.037" /><testcase classname="core_apps.virtual_tours.tests.test_remote_storage" name="test_remote_upload_completion_survives_loss_of_api_local_files" time="0.048" /><testcase classname="core_apps.virtual_tours.tests.test_sprint04_capture_reads" name="test_capture_page_prepares_nested_jobs_and_revisions[1]" time="0.081" /><testcase classname="core_apps.virtual_tours.tests.test_sprint04_capture_reads" name="test_capture_page_prepares_nested_jobs_and_revisions[10]" time="0.087" /><testcase classname="core_apps.virtual_tours.tests.test_sprint04_capture_reads" name="test_capture_page_prepares_nested_jobs_and_revisions[100]" time="0.287" /><testcase classname="core_apps.virtual_tours.tests.test_sprint04_capture_reads" name="test_capture_job_and_revision_limits_are_per_parent" time="0.072" /><testcase classname="core_apps.virtual_tours.tests.test_sprint04_capture_reads" name="test_capture_list_authorizes_before_preparing" time="0.032" /><testcase classname="core_apps.virtual_tours.tests.test_sprint04_capture_reads" name="test_compact_sessions_and_jobs_do_not_expand_large_outputs" time="0.091" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_issued_public_session_and_signed_bytes_recheck_canonical_publication[moderation]" time="0.068" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_issued_public_session_and_signed_bytes_recheck_canonical_publication[retirement]" time="0.067" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_issued_public_session_and_signed_bytes_recheck_canonical_publication[closure]" time="0.059" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_issued_public_session_and_signed_bytes_recheck_canonical_publication[closed]" time="0.063" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_reviewer_page_has_constant_queries_and_no_sql_in_projection[1]" time="0.025" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_reviewer_page_has_constant_queries_and_no_sql_in_projection[20]" time="0.029" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_reviewer_page_has_constant_queries_and_no_sql_in_projection[100]" time="0.032" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_owner_tours_prefetch_latest_assets_and_history" time="0.033" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_domain_create_and_receipt_retry_do_not_require_http" time="0.027" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_capture_collection_batches_nested_jobs_and_revisions[1]" time="0.035" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_capture_collection_batches_nested_jobs_and_revisions[20]" time="0.049" /><testcase classname="core_apps.virtual_tours.tests.test_sprint06_boundaries" name="test_capture_collection_batches_nested_jobs_and_revisions[100]" time="0.112" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_public_correction_validation_is_localized_without_translating_staff_notes" time="0.003" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_new_tour_rejection_requires_explicit_owner_visible_reason[]" time="0.052" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_new_tour_rejection_requires_explicit_owner_visible_reason[   ]" time="0.058" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_new_tour_rejection_requires_explicit_owner_visible_reason[None]" time="0.054" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_new_tour_rejection_requires_explicit_owner_visible_reason[public_reason3]" time="0.045" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_new_tour_rejection_requires_explicit_owner_visible_reason[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]" time="0.047" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_owner_gets_only_current_public_correction_and_retry_keeps_one_review" time="0.101" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_legacy_private_rejection_and_other_source_hash_never_become_public" time="0.053" /><testcase classname="core_apps.virtual_tours.tests.test_tour_correction_reason" name="test_existing_django_review_console_keeps_public_and_private_reasons_separate" time="0.099" /><testcase classname="core_apps.virtual_tours.tests.test_tour_publication_policy" name="test_pending_closure_denies_existing_and_new_public_access_and_withdrawal_restores" time="0.088" /><testcase classname="core_apps.virtual_tours.tests.test_tour_publication_policy" name="test_other_unpublished_states_deny_public_sessions[change0]" time="0.057" /><testcase classname="core_apps.virtual_tours.tests.test_tour_publication_policy" name="test_other_unpublished_states_deny_public_sessions[change1]" time="0.057" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_creation_replay_conflict_and_account_isolation" time="0.036" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_expired_receipt_remains_a_tombstone" time="0.029" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_media_cycle_must_be_complete" time="0.032" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_edit_concurrency_immutability_and_cross_revision_assets" time="0.045" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_graph_rejects_missing_return_and_unknown_fields" time="0.044" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_upload_resume_checksum_and_immutable_completed_bytes" time="0.047" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_real_panorama_processing_and_stale_worker" time="6.097" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_approval_requires_matching_hash_and_keeps_previous_active" time="0.051" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_bootstrap_once_resource_scope_and_hidden_property_revocation" time="0.070" /><testcase classname="core_apps.virtual_tours.tests.test_tours" name="test_partial_scope_rejects_foreign_room_price_change_does_not_invalidate" time="0.017" /><testcase classname="core_apps.features.tests.test_business_policies" name="test_independent_administrators_cannot_overwrite_the_same_reviewed_head" time="0.137"><skipped type="pytest.skip" message="Concurrent row-lock races require PostgreSQL">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/features/tests/test_cycle_concurrency.py:21: Concurrent row-lock races require PostgreSQL</skipped></testcase><testcase classname="core_apps.features.tests.test_chargeback_resolution" name="test_replacement_capture_and_cash_restoration_serialize_without_overpayment" time="0.000"><skipped type="pytest.skip" message="Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/features/tests/test_chargeback_resolution.py:412: Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test</skipped></testcase><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_duplicate_company_create_and_cancel_serialize_without_double_effect" time="1.391"><skipped type="pytest.skip" message="Concurrent row-lock races require PostgreSQL">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/features/tests/test_cycle_concurrency.py:21: Concurrent row-lock races require PostgreSQL</skipped></testcase><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_final_approval_and_payer_revocation_share_company_lock" time="2.022"><skipped type="pytest.skip" message="Concurrent row-lock races require PostgreSQL">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/features/tests/test_cycle_concurrency.py:21: Concurrent row-lock races require PostgreSQL</skipped></testcase><testcase classname="core_apps.features.tests.test_company_tenancy" name="test_global_employee_assignment_guard_serializes_competing_writes" time="1.385"><skipped type="pytest.skip" message="Concurrent row-lock races require PostgreSQL">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/features/tests/test_cycle_concurrency.py:21: Concurrent row-lock races require PostgreSQL</skipped></testcase><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_concurrent_move_and_whole_building_hold_cannot_both_succeed" time="0.273"><skipped type="pytest.skip" message="Concurrent row-lock races require PostgreSQL">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/features/tests/test_cycle_concurrency.py:21: Concurrent row-lock races require PostgreSQL</skipped></testcase><testcase classname="core_apps.features.tests.test_portfolio_owner_workflows" name="test_competing_bulk_apply_cannot_overwrite_twice" time="0.316"><skipped type="pytest.skip" message="Concurrent row-lock races require PostgreSQL">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/features/tests/test_cycle_concurrency.py:21: Concurrent row-lock races require PostgreSQL</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_postgres_capture_reservations_and_worker_claims_are_exclusive" time="0.179"><skipped type="pytest.skip" message="Requires PostgreSQL row locking">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/virtual_tours/tests/test_capture.py:504: Requires PostgreSQL row locking</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_polling_worker" name="test_polling_worker_builds_queued_panorama_once_and_recovers_interruption" time="7.779" /><testcase classname="core_apps.virtual_tours.tests.test_recovery_and_concurrency" name="test_postgres_concurrent_replays_create_once" time="0.163"><skipped type="pytest.skip" message="Requires PostgreSQL row locking">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/virtual_tours/tests/test_recovery_and_concurrency.py:48: Requires PostgreSQL row locking</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_recovery_and_concurrency" name="test_postgres_competing_draft_versions_do_not_overwrite" time="0.171"><skipped type="pytest.skip" message="Requires PostgreSQL row locking">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/virtual_tours/tests/test_recovery_and_concurrency.py:72: Requires PostgreSQL row locking</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_sprint06_selection_races" name="test_selection_races_keep_one_immutable_draft[same_receipt]" time="0.162"><skipped type="pytest.skip" message="Capture selection races require PostgreSQL row locks">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/virtual_tours/tests/test_sprint06_selection_races.py:20: Capture selection races require PostgreSQL row locks</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_sprint06_selection_races" name="test_selection_races_keep_one_immutable_draft[same_selection]" time="0.154"><skipped type="pytest.skip" message="Capture selection races require PostgreSQL row locks">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/virtual_tours/tests/test_sprint06_selection_races.py:20: Capture selection races require PostgreSQL row locks</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_sprint06_selection_races" name="test_selection_races_keep_one_immutable_draft[competing_selection]" time="0.150"><skipped type="pytest.skip" message="Capture selection races require PostgreSQL row locks">/Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/virtual_tours/tests/test_sprint06_selection_races.py:20: Capture selection races require PostgreSQL row locks</skipped></testcase><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;0]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;1]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;2]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;3]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;4]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;5]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;6]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;7]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;8]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;9]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_capture" name="test_invalid_camera_evidence_is_rejected[&lt;lambda&gt;10]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_cloudinary_storage" name="test_large_source_survives_cache_loss_and_commits_manifest_last" time="0.028" /><testcase classname="core_apps.virtual_tours.tests.test_cloudinary_storage" name="test_tile_survives_cache_loss_without_public_media_url" time="0.004" /><testcase classname="core_apps.virtual_tours.tests.test_cloudinary_storage" name="test_corruption_never_becomes_a_cached_asset" time="0.003" /><testcase classname="core_apps.virtual_tours.tests.test_cloudinary_storage" name="test_partial_upload_has_no_committed_manifest_or_local_success" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_cloudinary_storage" name="test_manifest_cannot_supply_a_download_url_or_cross_namespace" time="0.003" /><testcase classname="core_apps.virtual_tours.tests.test_cloudinary_storage" name="test_cleanup_only_removes_old_unreferenced_tour_assets" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_cloudinary_storage" name="test_download_is_signed_short_lived_and_bounded" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_contract_export" name="test_exported_contracts_and_http_methods_match_registered_routes" time="0.087" /><testcase classname="core_apps.virtual_tours.tests.test_inline_runtime" name="test_asgi_lifespan_starts_only_explicit_inline_processor_and_stops[inline-True]" time="0.005" /><testcase classname="core_apps.virtual_tours.tests.test_inline_runtime" name="test_asgi_lifespan_starts_only_explicit_inline_processor_and_stops[celery-False]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_inline_runtime" name="test_asgi_lifespan_starts_only_explicit_inline_processor_and_stops[polling-False]" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_inline_runtime" name="test_inline_dispatch_uses_durable_queue" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_panorama_quality" name="test_exposure_is_bounded_and_never_fills_unknown_pixels" time="0.015" /><testcase classname="core_apps.virtual_tours.tests.test_panorama_quality" name="test_ghosting_and_global_wrap_discontinuity_fail_quality" time="0.003" /><testcase classname="core_apps.virtual_tours.tests.test_polling_worker" name="test_polling_dispatch_leaves_job_in_durable_outbox" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_polling_worker" name="test_worker_requires_explicit_mode" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_processor_lock" name="test_process_lock_is_exclusive_and_released_on_close" time="0.082" /><testcase classname="core_apps.virtual_tours.tests.test_remote_storage" name="test_remote_tiles_survive_loss_of_worker_local_files" time="0.005" /><testcase classname="core_apps.virtual_tours.tests.test_remote_storage" name="test_remote_cleanup_is_prefix_and_reference_scoped" time="0.002" /><testcase classname="core_apps.virtual_tours.tests.test_viewer_host" name="test_viewer_has_same_origin_review_and_strict_security_headers" time="0.006" /><testcase classname="core_apps.virtual_tours.tests.test_viewer_host" name="test_viewer_does_not_expose_other_files[/tours/assets/secret.json]" time="0.004" /><testcase classname="core_apps.virtual_tours.tests.test_viewer_host" name="test_viewer_does_not_expose_other_files[/tours/assets/.env]" time="0.003" /><testcase classname="core_apps.virtual_tours.tests.test_viewer_host" name="test_viewer_does_not_expose_other_files[/tours/assets/missing.js]" time="0.004" /><testcase classname="core_apps.virtual_tours.tests.test_viewer_host" name="test_viewer_does_not_expose_other_files[/tours/assets/%2e%2e%2fsecret.js]" time="0.004" /><testcase classname="core_apps.virtual_tours.tests.test_viewer_host" name="test_viewer_does_not_expose_other_files[/tours/assets/link.js]" time="0.004" /><testcase classname="core_apps.virtual_tours.tests.test_viewer_host" name="test_viewer_missing_bundle_and_writes_fail_closed" time="0.012" /></testsuite></testsuites>

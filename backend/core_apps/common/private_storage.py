@@ -10,6 +10,7 @@ import os
 import tempfile
 from pathlib import Path
 
+from cloudinary.exceptions import Error as CloudinaryError
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from rest_framework.exceptions import APIException
@@ -117,6 +118,7 @@ class DurablePrivateStorage(FileSystemStorage):
     def ensure_remote(self, name):
         """Copy once and verify from a fresh download, bypassing the local cache."""
         from core_apps.virtual_tours import cloudinary_storage as remote
+        from core_apps.virtual_tours.errors import TourError
 
         if not self.remote:
             raise PrivateStorageUnavailable(
@@ -142,7 +144,7 @@ class DurablePrivateStorage(FileSystemStorage):
                     )
         except PrivateStorageUnavailable:
             raise
-        except Exception as error:
+        except (OSError, TourError, CloudinaryError) as error:
             raise PrivateStorageUnavailable() from error
         return digest
 
@@ -186,10 +188,11 @@ class DurablePrivateStorage(FileSystemStorage):
     def delete(self, name):
         if self.remote:
             from core_apps.virtual_tours import cloudinary_storage as remote
+            from core_apps.virtual_tours.errors import TourError
 
             try:
                 remote.remove(self.identity(name), prefix=self.prefix)
-            except Exception as error:
+            except (OSError, TourError, CloudinaryError) as error:
                 raise PrivateStorageUnavailable() from error
         super().delete(name)
 

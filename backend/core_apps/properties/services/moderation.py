@@ -135,6 +135,7 @@ def decide(
     request_key,
     reason="",
     internal_note="",
+    auth_claims=None,
 ):
     reviewer = require_staff_actor(
         reviewer, {"system_owner", "main_admin", "property_reviewer"}, lock=True
@@ -153,6 +154,11 @@ def decide(
         raise ValidationError(
             "Review the current listing and retain its version and operation key."
         )
+    if not all(
+        isinstance(value, str)
+        for value in (expected_version, request_key, reason, internal_note)
+    ):
+        raise ValidationError("Supply a version, operation key and text review notes.")
     reason, internal_note = reason.strip(), internal_note.strip()
     if action != "approve" and not reason:
         raise ValidationError({"reason": "Explain the decision to the owner."})
@@ -264,4 +270,5 @@ def decide(
         },
         request_subject_id=prop.id,
         action=apply,
+        auth_claims=auth_claims,
     )

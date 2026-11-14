@@ -84,7 +84,9 @@ def get_audit_logs(type_filter=None, search=None, *, paginated=False, _ids=None)
         if search:
             s = search.strip()
             qs = qs.filter(
-                Q(actor__email__icontains=s) | Q(action__icontains=s) | Q(reason__icontains=s)
+                Q(actor__email__icontains=s)
+                | Q(action__icontains=s)
+                | Q(reason__icontains=s)
             )
         for item in records(qs, "staff", "created_at", "staff-"):
             add(
@@ -98,7 +100,9 @@ def get_audit_logs(type_filter=None, search=None, *, paginated=False, _ids=None)
 
     # 3. System / Platform settings
     if target_badge is None or target_badge == "نظام":
-        qs = PlatformPreferenceAudit.objects.select_related("actor").order_by("-created_at")
+        qs = PlatformPreferenceAudit.objects.select_related("actor").order_by(
+            "-created_at"
+        )
         if search:
             s = search.strip()
             qs = qs.filter(
@@ -153,7 +157,9 @@ def get_audit_logs(type_filter=None, search=None, *, paginated=False, _ids=None)
         if search:
             s = search.strip()
             qs = qs.filter(
-                Q(actor__email__icontains=s) | Q(action__icontains=s) | Q(reason__icontains=s)
+                Q(actor__email__icontains=s)
+                | Q(action__icontains=s)
+                | Q(reason__icontains=s)
             )
         for item in records(qs, "property", "created_at", "property-"):
             add(
@@ -192,32 +198,33 @@ def get_audit_logs(type_filter=None, search=None, *, paginated=False, _ids=None)
 
     # 7. Support (Ticket transitions)
     if target_badge is None or target_badge == "دعم":
-        try:
-            from core_apps.support.models import TicketTransition
+        from core_apps.support.models import TicketTransition
 
-            qs = TicketTransition.objects.select_related("actor", "ticket").order_by("-created_at")
-            if search:
-                s = search.strip()
-                qs = qs.filter(
-                    Q(actor__email__icontains=s)
-                    | Q(action__icontains=s)
-                    | Q(reason__icontains=s)
-                    | Q(ticket__reference__icontains=s)
-                )
-            for item in records(qs, "support", "created_at", "support-"):
-                target_ref = (
-                    item.ticket.reference if getattr(item, "ticket", None) else str(item.ticket_id)
-                )
-                add(
-                    f"support-{item.id}",
-                    item.created_at,
-                    f"Ticket action: {item.action}",
-                    "دعم",
-                    target_ref,
-                    item.actor,
-                )
-        except Exception:
-            pass
+        qs = TicketTransition.objects.select_related("actor", "ticket").order_by(
+            "-created_at"
+        )
+        if search:
+            s = search.strip()
+            qs = qs.filter(
+                Q(actor__email__icontains=s)
+                | Q(action__icontains=s)
+                | Q(reason__icontains=s)
+                | Q(ticket__reference__icontains=s)
+            )
+        for item in records(qs, "support", "created_at", "support-"):
+            target_ref = (
+                item.ticket.reference
+                if getattr(item, "ticket", None)
+                else str(item.ticket_id)
+            )
+            add(
+                f"support-{item.id}",
+                item.created_at,
+                f"Ticket action: {item.action}",
+                "دعم",
+                target_ref,
+                item.actor,
+            )
 
     if target_badge:
         logs = [row for row in logs if row["typeBadge"] == target_badge]
@@ -225,6 +232,9 @@ def get_audit_logs(type_filter=None, search=None, *, paginated=False, _ids=None)
         from ..history_page import HistoryPage
 
         return HistoryPage(
-            sources, lambda ids: get_audit_logs(type_filter=type_filter, search=search, _ids=ids)
+            sources,
+            lambda ids: get_audit_logs(
+                type_filter=type_filter, search=search, _ids=ids
+            ),
         )
     return sorted(logs, key=lambda row: (row["time"], row["id"]), reverse=True)

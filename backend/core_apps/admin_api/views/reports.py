@@ -49,7 +49,11 @@ class AdminReportActionAPIView(APIView):
         notes = serializer.validated_data.get("notes", "")
 
         take_report_action(
-            report_id=report_id, action=action, reviewer=request.user, notes=notes
+            report_id=report_id,
+            action=action,
+            reviewer=request.user,
+            notes=notes,
+            auth_claims=request.auth,
         )
         return Response(
             {"message": f"تم تطبيق الإجراء '{action}' على البلاغ بنجاح."},
@@ -66,6 +70,7 @@ class AdminReportMetricsAPIView(APIView):
 
     def get(self, request):
         from core_apps.admin_api.services.report_service import get_report_metrics
+
         data = get_report_metrics()
         return Response(data, status=status.HTTP_200_OK)
 
@@ -73,7 +78,7 @@ class AdminReportMetricsAPIView(APIView):
 class AdminSupportTicketsListAPIView(generics.ListAPIView):
     """
     Returns a paginated list of support tickets with optional tab filter.
-    
+
     Query Params:
     - tab: all | high | landlord | tenant
     """
@@ -82,13 +87,19 @@ class AdminSupportTicketsListAPIView(generics.ListAPIView):
     serializer_class = None
 
     def get_serializer_class(self):
-        from core_apps.admin_api.serializers.report_serializers import SupportTicketSerializer
+        from core_apps.admin_api.serializers.report_serializers import (
+            SupportTicketSerializer,
+        )
+
         return SupportTicketSerializer
 
     def get_queryset(self):
-        from core_apps.admin_api.services.report_service import get_support_tickets_queryset
+        from core_apps.admin_api.services.report_service import (
+            get_support_tickets_queryset,
+        )
+
         qs = get_support_tickets_queryset()
-        
+
         tab = self.request.query_params.get("tab")
         if tab == "high":
             qs = qs.filter(escalated=True, status__in=["open", "in_progress"])
@@ -96,7 +107,7 @@ class AdminSupportTicketsListAPIView(generics.ListAPIView):
             qs = qs.filter(workspace="owner")
         elif tab == "tenant":
             qs = qs.exclude(workspace__in=["owner", "account"])
-            
+
         return qs
 
 
@@ -109,6 +120,7 @@ class AdminSupportMetricsAPIView(APIView):
 
     def get(self, request):
         from core_apps.admin_api.services.report_service import get_support_metrics
+
         data = get_support_metrics()
         return Response(data, status=status.HTTP_200_OK)
 
@@ -126,14 +138,16 @@ class AdminReportsOverviewAPIView(APIView):
             get_reports_overview_stats,
             get_reports_queryset,
         )
-        from core_apps.admin_api.serializers.report_serializers import OverviewTicketSerializer
+        from core_apps.admin_api.serializers.report_serializers import (
+            OverviewTicketSerializer,
+        )
 
         stats = get_reports_overview_stats()
-        
+
         # ? Get recent tickets for the table
         recent_tickets_qs = get_reports_queryset()[:20]
         serializer = OverviewTicketSerializer(recent_tickets_qs, many=True)
-        
+
         return Response(
             {
                 "measured_at": stats["measured_at"],
@@ -149,4 +163,3 @@ class AdminReportsOverviewAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
-

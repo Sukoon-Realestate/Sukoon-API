@@ -64,6 +64,7 @@ def delete_moderation_item(
     *,
     expected_version=None,
     request_key=None,
+    auth_claims=None,
 ):
     """Legacy moderation-queue "delete": a canonical ``block`` decision (A6-01).
 
@@ -108,6 +109,7 @@ def delete_moderation_item(
         reason=reason,
         internal_note=internal_note
         or f"Removed via moderation delete route by {reviewer.email}",
+        auth_claims=auth_claims,
     )
     logger.info("Property %s blocked via legacy moderation route", property_obj.id)
     return result, code, replayed

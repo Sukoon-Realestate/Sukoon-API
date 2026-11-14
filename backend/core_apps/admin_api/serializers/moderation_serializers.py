@@ -60,3 +60,20 @@ class ModerationMetricsSerializer(serializers.Serializer):
     misleadingDesc = serializers.IntegerField()
     phoneNumInPhotos = serializers.IntegerField()
     inappropriateContent = serializers.IntegerField()
+
+
+class LegacyModerationCommand(serializers.Serializer):
+    expected_version = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        allow_null=True,
+        max_length=200,
+        trim_whitespace=False,
+    )
+
+    def validate_expected_version(self, value):
+        # CharField alone coerces numbers, which are never valid review versions.
+        raw = self.initial_data.get("expected_version")
+        if raw is not None and not isinstance(raw, str):
+            raise serializers.ValidationError("Supply the reviewed listing version.")
+        return value

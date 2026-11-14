@@ -76,14 +76,20 @@ def get_roles_summary():
     """
     Returns summary statistics for each defined staff role.
     """
+    from django.db.models import Count
+
+    counts = dict(
+        StaffProfile.objects.filter(is_active=True)
+        .order_by()
+        .values_list("role_name")
+        .annotate(total=Count("pk"))
+    )
     roles_meta = [
         {
             "id": "system_owner",
             "name": "مالك النظام (Owner)",
             "subtext": "إدارة الفريق والمنصة مع الالتزام بضوابط الاستقلال والسياسات",
-            "userCount": StaffProfile.objects.filter(
-                role_name="system_owner", is_active=True
-            ).count(),
+            "userCount": counts.get("system_owner", 0),
             "color": "bg-rose-500",
             "badges": ["وصول كامل", "صلاحيات أمنية"],
         },
@@ -91,9 +97,7 @@ def get_roles_summary():
             "id": "main_admin",
             "name": "مشرف رئيسي (Main Admin)",
             "subtext": "إدارة العمليات والمحتوى والمستخدمين",
-            "userCount": StaffProfile.objects.filter(
-                role_name="main_admin", is_active=True
-            ).count(),
+            "userCount": counts.get("main_admin", 0),
             "color": "bg-teal-500",
             "badges": ["إدارة المستخدمين", "العقارات"],
         },
@@ -101,9 +105,7 @@ def get_roles_summary():
             "id": "kyc_reviewer",
             "name": "مراجع KYC",
             "subtext": "فحص الهويات والتحقق من المستخدمين",
-            "userCount": StaffProfile.objects.filter(
-                role_name="kyc_reviewer", is_active=True
-            ).count(),
+            "userCount": counts.get("kyc_reviewer", 0),
             "color": "bg-blue-500",
             "badges": ["فحص المستندات"],
         },
@@ -111,9 +113,7 @@ def get_roles_summary():
             "id": "property_reviewer",
             "name": "مراجع عقارات",
             "subtext": "مراجعة إعلانات العقارات والموافقة",
-            "userCount": StaffProfile.objects.filter(
-                role_name="property_reviewer", is_active=True
-            ).count(),
+            "userCount": counts.get("property_reviewer", 0),
             "color": "bg-amber-500",
             "badges": ["مراجعة العقارات"],
         },
@@ -121,9 +121,7 @@ def get_roles_summary():
             "id": "support",
             "name": "دعم العملاء",
             "subtext": "استقبال التذاكر والرد على الاستفسارات",
-            "userCount": StaffProfile.objects.filter(
-                role_name="support", is_active=True
-            ).count(),
+            "userCount": counts.get("support", 0),
             "color": "bg-purple-500",
             "badges": ["التذاكر"],
         },
@@ -144,9 +142,7 @@ def get_roles_summary():
                 "id": role,
                 "name": label,
                 "subtext": "صلاحية تشغيلية تخضع للتحقق والسياسة المعتمدة",
-                "userCount": StaffProfile.objects.filter(
-                    role_name=role, is_active=True
-                ).count(),
+                "userCount": counts.get(role, 0),
                 "color": "bg-slate-500",
                 "badges": ["صلاحية محددة"],
             }
@@ -225,7 +221,7 @@ def invite_staff_member(email, name, role_name, *, actor, reason):
 
         _invalidate(user)
 
-    logger.info(f"Staff member {email} created/updated with role {canonical_role}")
+    logger.info("staff_granted role=%s actor=%s", canonical_role, actor.pk)
     StaffAuthorityAudit.objects.create(
         actor=actor,
         target=user,
@@ -264,7 +260,7 @@ def remove_staff_member(staff_id, *, actor, reason):
 
     _invalidate(user)
 
-    logger.info(f"Staff member {user.email} removed from staff privileges")
+    logger.info("staff_revoked actor=%s", actor.pk)
     StaffAuthorityAudit.objects.create(
         actor=actor,
         target=user,

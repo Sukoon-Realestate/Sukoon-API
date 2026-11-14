@@ -55,8 +55,9 @@ the existing policy key. Never improve speed by dropping fresh revocation/partic
   imports only after checking side effects and registries. Do not delete a function solely because text search finds no caller.
 - New dependencies and schema changes are small reviewed changes with compatibility and forward-migration plans.
 
-Update the repository guidance in a documentation change: the backend `CLAUDE.md` still says function-only views,
-`apps/` and `Project.settings`, which conflict with the actual project and this user-approved CBV target.
+Repository guidance now follows this target in `backend/CLAUDE.md`. Sprint 10 records the concrete shared interfaces
+and supported native admin differences in [SHARED_CONTRACTS.md](SHARED_CONTRACTS.md), with actual settings, worker,
+storage and recovery command boundaries in [OPERATIONS.md](OPERATIONS.md).
 
 ## Architecture acceptance
 

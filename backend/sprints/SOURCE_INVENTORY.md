@@ -2179,3 +2179,18 @@ the working tree's prior sprint changes. See the Sprint 09 evidence README for
 commands, focused and integrated validation, source checks and unmet acceptance.
 The baseline audit tables above remain historical evidence rather than a claim
 of a new full semantic audit.
+
+## Sprint 10 supplement (2026-11-14)
+
+Admin/shared implementation and selected native admin adapters were reviewed and
+validated in this sprint; the historical audit tables above remain the baseline.
+New production modules are `admin_api/services/campaign_audience.py` (Area 6,
+prepared preview reads) and `admin_api/serializers/commands.py` (Area 6, shared
+command containers), plus `virtual_tours/admin_commands.py` (Area 6, native
+tour review transaction and emergency suppression). Health/associations and custom KYC, policy, chargeback,
+mandate, portfolio, reputation and tour admin callbacks now use explicit classes.
+The runtime resolver reconciles 795 API patterns plus native/non-API callbacks;
+framework-owned Django admin internals are classified separately. Shared domain
+imports do not depend on project views. See `evidence/sprint-10/route-coverage.json`,
+`SHARED_CONTRACTS.md`, `OPERATIONS.md` and the Sprint 10 evidence README for actual
+behavioral, query, engine and operational acceptance limits.

@@ -175,3 +175,25 @@ Run `make test-sprint09-communication CYCLE_SETTINGS=<isolated_settings>
 BASELINE_OUT=<scratch_directory>` and `make sprint09-coverage`. Sprint 09 has
 remaining acceptance limits, including compatible unbounded modes and moderated/group inbox
 query work; see `sprints/evidence/sprint-09/README.md`.
+
+## Admin/shared boundaries after Sprint 10
+
+Admin APIs retain thin explicit classes; all custom native admin HTTP routes now
+use Django `View` classes inside `admin_site.admin_view` (session and CSRF remain
+Django-owned). Property moderation aliases/native forms call the same command;
+carry JWT claims into that command and recheck current role/factor before replay.
+Report commands recheck current staff themselves; retain broad non-suspension
+support scope. Native admin checks disabled staff and sensitive writes globally.
+
+Shared contracts, native workflow exceptions and receipt/storage ownership rules:
+`sprints/SHARED_CONTRACTS.md`. Actual Pipenv/settings/process/backup instructions:
+`sprints/OPERATIONS.md`. Campaign previews use SQL audience predicates and prepared
+500-account batches; those preview facts never authorize delivery. Complete
+transaction/audit reads use `HistoryPage`; dashboard audit samples must slice its
+SQL page rather than materializing the full history. Query failures must not be
+reported as empty successful history.
+
+Run `make test-sprint10-admin-shared CYCLE_SETTINGS=<scratch-module>
+BASELINE_OUT=<scratch-root>` and `make sprint10-coverage`. See
+`sprints/evidence/sprint-10/README.md` for results and remaining acceptance limits.
+Runtime/deployment/restore signoff remains Sprint 12; stop after the requested sprint.

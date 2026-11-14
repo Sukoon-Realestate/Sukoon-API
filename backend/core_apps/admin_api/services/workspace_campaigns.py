@@ -24,16 +24,27 @@ AUDIENCES = {"all", "tenants", "landlords", "verified", "students", "companies"}
 
 def allowed_audiences():
     from core_apps.common.mvp_scope import enabled
-    return sorted(AUDIENCES - {'students', 'companies'} if enabled() else AUDIENCES)
+
+    return sorted(AUDIENCES - {"students", "companies"} if enabled() else AUDIENCES)
 
 
 def require_active_audience(audience):
     from core_apps.common.mvp_scope import enabled
-    if enabled() and isinstance(audience, str) and audience in {'students', 'companies'}:
-        raise PermissionDenied('This campaign audience is deferred for the MVP release.', code='mvp_feature_deferred')
+
+    if (
+        enabled()
+        and isinstance(audience, str)
+        and audience in {"students", "companies"}
+    ):
+        raise PermissionDenied(
+            "This campaign audience is deferred for the MVP release.",
+            code="mvp_feature_deferred",
+        )
 
 
 def eligible_spaces(user, audience):
+    if hasattr(user, "campaign_spaces"):
+        return set(user.campaign_spaces)
     from core_apps.features.models import Lease, RentalInterest
     from core_apps.features.planning_models import HousingRequest
     from core_apps.features.student_models import StudentProfile
@@ -50,17 +61,20 @@ def eligible_spaces(user, audience):
     if Property.objects.filter(owner=user).exists():
         spaces.add("owner")
     from core_apps.common.mvp_scope import enabled
+
     if enabled():
-        if audience in {'students', 'companies'}:
+        if audience in {"students", "companies"}:
             return set()
-        if audience == 'landlords':
-            return spaces & {'owner'}
-        if audience == 'tenants':
+        if audience == "landlords":
+            return spaces & {"owner"}
+        if audience == "tenants":
             personal = PropertyVisit.objects.filter(
-                tenant=user, company__isnull=True, academic_plan__isnull=True,
+                tenant=user,
+                company__isnull=True,
+                academic_plan__isnull=True,
                 groupprocess__isnull=True,
             ).exists()
-            return {'individual'} if personal else set()
+            return {"individual"} if personal else set()
         return spaces
     if StudentProfile.objects.filter(user=user).exists():
         spaces.add("student")
@@ -103,6 +117,12 @@ def valid_devices(user):
 
 
 def consented_spaces(user, audience):
+    if hasattr(user, "campaign_preferences"):
+        return {
+            scope
+            for scope, row in user.campaign_preferences.items()
+            if row.promotions_and_updates
+        }
     return {
         scope
         for scope in eligible_spaces(user, audience)
@@ -111,6 +131,18 @@ def consented_spaces(user, audience):
 
 
 def push_scope(user, spaces):
+    if hasattr(user, "campaign_preferences"):
+        choices = [
+            row
+            for scope, row in user.campaign_preferences.items()
+            if scope in spaces
+            and row.push_enabled
+            and row.promotions_and_updates
+            and row.last_used_at
+        ]
+        choices.sort(key=lambda row: row.scope)
+        choices.sort(key=lambda row: row.last_used_at, reverse=True)
+        return choices[0].scope if choices else None
     # No fabricated "last workspace" for an account without recorded use.
     return (
         NotificationScopePreference.objects.filter(
@@ -131,6 +163,12 @@ def preview(actor, data):
     from .push_campaigns import registration
 
     actor = require_staff_actor(actor, {"system_owner"}, lock=True)
+    if not isinstance(data, dict):
+        raise ValidationError("Supply a campaign command object.")
+    from core_apps.admin_api.serializers.commands import CampaignPreviewCommand
+
+    command = CampaignPreviewCommand(data=data)
+    command.is_valid(raise_exception=True)
     title, body, audience = (
         data.get("title"),
         data.get("body"),
@@ -171,21 +209,25 @@ def preview(actor, data):
     # without materializing the broad opted-in population.
     scan_limit = getattr(settings, "ADMIN_CAMPAIGN_SCAN_LIMIT", 100000)
     recipient_limit = getattr(settings, "ADMIN_CAMPAIGN_RECIPIENT_LIMIT", 5000)
-    for scanned, user in enumerate(candidates.iterator(chunk_size=500), 1):
+    from .campaign_audience import batches
+
+    for scanned, user in enumerate(batches(candidates, audience), 1):
         if scanned > scan_limit:
-            raise ValidationError({"audience": "Campaign scan budget exceeded; narrow the audience."})
+            raise ValidationError(
+                {"audience": "Campaign scan budget exceeded; narrow the audience."}
+            )
         spaces = consented_spaces(user, audience)
         if not spaces:
             continue
         scope = push_scope(user, spaces)
-        device = (
-            valid_devices(user).order_by("-updated_at", "-pk").first()
-            if scope
-            else None
-        )
+        device = user.campaign_device if scope else None
         targets.append((user, sorted(spaces), scope, device))
         if len(targets) > recipient_limit:
-            raise ValidationError({"audience": f"Narrow the audience to at most {recipient_limit} eligible accounts."})
+            raise ValidationError(
+                {
+                    "audience": f"Narrow the audience to at most {recipient_limit} eligible accounts."
+                }
+            )
     snapshot_digest = fingerprint(
         {
             "content": digest,
@@ -204,17 +246,21 @@ def preview(actor, data):
         audience=audience,
         preview_digest=snapshot_digest,
     )
+    recipients, deliveries = [], []
     for user, spaces, scope, device in targets:
         for workspace in spaces:
-            recipient = CampaignRecipient.objects.create(
-                campaign=item, user=user, workspace=workspace
-            )
+            recipient = CampaignRecipient(campaign=item, user=user, workspace=workspace)
+            recipients.append(recipient)
             if workspace == scope and device:
-                CampaignDelivery.objects.create(
-                    recipient=recipient,
-                    device=device,
-                    registration_digest=registration(device),
+                deliveries.append(
+                    CampaignDelivery(
+                        recipient=recipient,
+                        device=device,
+                        registration_digest=registration(device),
+                    )
                 )
+    CampaignRecipient.objects.bulk_create(recipients, batch_size=500)
+    CampaignDelivery.objects.bulk_create(deliveries, batch_size=500)
     return item
 
 

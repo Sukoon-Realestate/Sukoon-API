@@ -8,13 +8,13 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 from core_apps.properties.views import PropertyListAPIView
-from core_apps.common.runtime_views import health
+from core_apps.common.runtime_views import HealthView
 from core_apps.common import paymob_views
-from core_apps.common.paymob_checkout import test_checkout
+from core_apps.common.paymob_checkout import TestCheckoutView
 from core_apps.virtual_tours.viewer_views import TourViewerView
 from core_apps.common.app_associations import (
-    android_asset_links,
-    apple_app_site_association,
+    AndroidAssetLinksView,
+    AppleAppSiteAssociationView,
 )
 
 
@@ -40,7 +40,7 @@ urlpatterns = [
     ),
     path(
         "api/v1/payments/paymob/test-checkout/",
-        test_checkout,
+        TestCheckoutView.as_view(),
         name="paymob-test-checkout",
     ),
     path(
@@ -53,13 +53,15 @@ urlpatterns = [
         paymob_views.PaymobReturnView.as_view(),
         name="paymob-return",
     ),
-    path("health/", health, name="runtime-health"),
+    path("health/", HealthView.as_view(), name="runtime-health"),
     path(
-        ".well-known/assetlinks.json", android_asset_links, name="android-asset-links"
+        ".well-known/assetlinks.json",
+        AndroidAssetLinksView.as_view(),
+        name="android-asset-links",
     ),
     path(
         ".well-known/apple-app-site-association",
-        apple_app_site_association,
+        AppleAppSiteAssociationView.as_view(),
         name="apple-app-site-association",
     ),
     path(

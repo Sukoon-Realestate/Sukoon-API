@@ -6,6 +6,7 @@ from core_apps.admin_api.permissions import IsPropertyReviewer
 from core_apps.admin_api.serializers.moderation_serializers import (
     ModerationItemSerializer,
     ModerationMetricsSerializer,
+    LegacyModerationCommand,
 )
 from core_apps.admin_api.services.moderation_service import (
     get_moderation_items_queryset,
@@ -51,12 +52,15 @@ class AdminModerationDeleteAPIView(APIView):
     def post(self, request, property_id):
         from core_apps.common.idempotency import request_key, response_headers
 
-        data = request.data if isinstance(request.data, dict) else {}
+        command = LegacyModerationCommand(data=request.data)
+        command.is_valid(raise_exception=True)
+        data = command.validated_data
         _, _, replayed = delete_moderation_item(
             property_id,
             request.user,
             expected_version=data.get("expected_version") or None,
             request_key=request_key(request),
+            auth_claims=request.auth,
         )
         return Response(
             {"message": "تم حذف المحتوى المخالف بنجاح."},

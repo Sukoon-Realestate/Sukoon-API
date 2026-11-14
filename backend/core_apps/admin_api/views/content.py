@@ -1,6 +1,5 @@
 from django.core.paginator import Paginator, InvalidPage
 from rest_framework.generics import get_object_or_404
-from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError, MethodNotAllowed
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,17 +10,7 @@ from core_apps.common.content_models import ContentEditAudit
 from core_apps.common.idempotency import request_key, response_headers
 
 
-class ContentCommand(serializers.Serializer):
-    expected_revision = serializers.JSONField()
-    reason = serializers.CharField(max_length=500)
-    values = serializers.DictField()
-
-    def validate_expected_revision(self, value):
-        if type(value) is int and 0 <= value <= 2147483647:
-            return value
-        if isinstance(value, str) and 1 <= len(value) <= 32:
-            return value
-        raise serializers.ValidationError("Supply the reviewed catalog revision.")
+from core_apps.admin_api.serializers.commands import ContentCommand
 
 
 class AdminContentAPIView(APIView):

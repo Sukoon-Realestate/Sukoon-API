@@ -9,7 +9,12 @@ def require_staff_actor(user, roles=None, *, lock=False, allow_recovery=False):
     query = get_user_model().objects
     if lock:
         query = query.select_for_update()
-    current = query.get(pk=user.pk)
+    try:
+        current = query.get(pk=user.pk)
+    except get_user_model().DoesNotExist as error:
+        raise PermissionDenied(
+            "Current active administrative authority is required."
+        ) from error
     profiles = StaffProfile.objects
     if lock:
         profiles = profiles.select_for_update()

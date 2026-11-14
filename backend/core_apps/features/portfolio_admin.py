@@ -2,6 +2,7 @@
 
 import uuid
 from django.contrib import admin, messages
+from django.views import View
 from django.core.exceptions import PermissionDenied
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -46,17 +47,27 @@ class MediaInspection(FinancialHistoryAdmin):
         return [
             path(
                 "<int:object_id>/review/",
-                self.admin_site.admin_view(self.review_console),
+                self.admin_site.admin_view(
+                    PortfolioMediaReviewView.as_view(model_admin=self)
+                ),
                 name="portfolio-media-review",
             ),
             path(
                 "<int:object_id>/image/",
-                self.admin_site.admin_view(self.image),
+                self.admin_site.admin_view(
+                    PortfolioMediaImageView.as_view(model_admin=self)
+                ),
                 name="portfolio-media-image",
             ),
         ] + super().get_urls()
 
-    def image(self, request, object_id):
+
+class PortfolioMediaImageView(View):
+    """Native admin transport; retains legacy methods, session and CSRF wrapper."""
+
+    model_admin = None
+
+    def dispatch(self, request, object_id, *args, **kwargs):
         require_reviewer(request.user)
         item = get_object_or_404(
             ResidentialMedia.objects.exclude(blob=""), pk=object_id
@@ -68,7 +79,13 @@ class MediaInspection(FinancialHistoryAdmin):
         response["X-Content-Type-Options"] = "nosniff"
         return response
 
-    def review_console(self, request, object_id):
+
+class PortfolioMediaReviewView(View):
+    """Native admin transport; retains legacy methods, session and CSRF wrapper."""
+
+    model_admin = None
+
+    def dispatch(self, request, object_id, *args, **kwargs):
         require_reviewer(request.user)
         item = get_object_or_404(ResidentialMedia, pk=object_id)
         if request.method == "POST":
@@ -83,19 +100,21 @@ class MediaInspection(FinancialHistoryAdmin):
                 )
                 body.is_valid(raise_exception=True)
                 portfolio_media.review(request.user, item.id, body.validated_data)
-                self.message_user(
+                self.model_admin.message_user(
                     request,
                     "Review saved. Asset authority remains a separate scoped decision.",
                     messages.SUCCESS,
                 )
                 return redirect(request.path)
             except APIException as error:
-                self.message_user(request, str(error.detail), messages.ERROR)
+                self.model_admin.message_user(
+                    request, str(error.detail), messages.ERROR
+                )
         response = TemplateResponse(
             request,
             "admin/portfolio/media_review.html",
             {
-                **self.admin_site.each_context(request),
+                **self.model_admin.admin_site.each_context(request),
                 "title": "Review residential media",
                 "item": item,
                 "request_key": str(uuid.uuid4()),

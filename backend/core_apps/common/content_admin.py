@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.db import transaction
-from .content_models import PublicContentPage
+from django.core.exceptions import PermissionDenied as NativePermissionDenied
+from rest_framework.exceptions import PermissionDenied
+from .content_models import PublicContentPage, ReleaseNote
 
 
 class ManagedContentAdmin(admin.ModelAdmin):
@@ -8,6 +10,12 @@ class ManagedContentAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         with transaction.atomic():
+            from core_apps.admin_api.permissions import require_staff_actor
+
+            try:
+                actor = require_staff_actor(request.user, {"system_owner"}, lock=True)
+            except PermissionDenied as error:
+                raise NativePermissionDenied(str(error.detail)) from error
             from core_apps.admin_api.services.content_registry import (
                 REGISTRY,
                 projection,
@@ -28,7 +36,7 @@ class ManagedContentAdmin(admin.ModelAdmin):
                 kind=kind,
                 object_id=str(obj.pk),
                 revision=obj.revision,
-                actor=request.user,
+                actor=actor,
                 reason="Django content administration",
                 before=before,
                 after=projection(kind, obj),
@@ -45,9 +53,6 @@ class PublicContentPageAdmin(ManagedContentAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         return (*self.readonly_fields, "slug") if obj else self.readonly_fields
-
-
-from .content_models import ReleaseNote
 
 
 @admin.register(ReleaseNote)

@@ -3,6 +3,7 @@
 import uuid
 from django import forms
 from django.contrib import admin, messages
+from django.views import View
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.urls import path
@@ -44,12 +45,20 @@ class BusinessPolicyAdmin(admin.ModelAdmin):
         return [
             path(
                 "publish/",
-                self.admin_site.admin_view(self.publish),
+                self.admin_site.admin_view(
+                    PolicyPublicationView.as_view(model_admin=self)
+                ),
                 name="business-policy-publish",
             )
         ] + super().get_urls()
 
-    def publish(self, request):
+
+class PolicyPublicationView(View):
+    """Native admin transport; retains legacy methods, session and CSRF wrapper."""
+
+    model_admin = None
+
+    def dispatch(self, request, *args, **kwargs):
         from django.core.exceptions import PermissionDenied
 
         try:
@@ -80,7 +89,7 @@ class BusinessPolicyAdmin(admin.ModelAdmin):
             except APIException as error:
                 form.add_error(None, str(error.detail))
             else:
-                self.message_user(
+                self.model_admin.message_user(
                     request,
                     "A new policy version was published. Accepted records retain their original snapshots.",
                     messages.SUCCESS,
@@ -90,8 +99,8 @@ class BusinessPolicyAdmin(admin.ModelAdmin):
             request,
             "admin/features/policy_publish.html",
             {
-                **self.admin_site.each_context(request),
-                "opts": self.model._meta,
+                **self.model_admin.admin_site.each_context(request),
+                "opts": self.model_admin.model._meta,
                 "title": "Publish a prospective business policy",
                 "form": form,
                 "definition": template,

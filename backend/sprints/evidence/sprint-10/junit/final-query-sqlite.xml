@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="13" skipped="0" tests="115" time="153.608" timestamp="2026-11-14T16:27:23.315423+02:00" hostname="Zeyads-MacBook-Air.local"><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[disabled-dismiss]" time="144.445" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[disabled-mark_active]" time="0.007" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[frozen-dismiss]" time="0.007" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[frozen-mark_active]" time="0.007" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[removed-dismiss]" time="0.011" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_service_rechecks_stale_actor[removed-mark_active]" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_non_suspension_retains_broad_staff_scope[support]" time="0.011" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_non_suspension_retains_broad_staff_scope[support_supervisor]" time="0.010" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_non_suspension_retains_broad_staff_scope[kyc_reviewer]" time="0.010" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_report_non_suspension_retains_broad_staff_scope[main_admin]" time="0.012" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_moderation_alias_replay_rechecks_role_and_factor[legacy]" time="0.927" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_moderation_alias_replay_rechecks_role_and_factor[canonical]" time="0.031" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_moderation_command_fences_original_session_on_replay" time="0.022" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_legacy_moderation_rejects_malformed_command[payload0]" time="0.010" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_legacy_moderation_rejects_malformed_command[payload1]" time="0.012" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_legacy_moderation_rejects_malformed_command[payload2]" time="0.011" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_legacy_moderation_rejects_malformed_command[payload3]" time="0.012" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_audit_database_failure_is_not_an_empty_history" time="0.003" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_native_content_requires_current_domain_role" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_campaign_preview_batch_budget[1]" time="0.036" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_campaign_preview_batch_budget[20]" time="0.057" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_campaign_preview_batch_budget[100]" time="0.158" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[all-True]" time="0.010"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[all-False]" time="0.012"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[landlords-True]" time="0.011"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[landlords-False]" time="0.011"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[tenants-True]" time="0.011"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[tenants-False]" time="0.014"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[verified-True]" time="0.015"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[verified-False]" time="0.017"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[students-True]" time="0.012"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[students-False]" time="0.011"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[companies-True]" time="0.011"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_prepared_campaign_spaces_match_current_service[companies-False]" time="0.010"><failure message="django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   sqlite3.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at
+
+The above exception was the direct cause of the following exception:
+core_apps/admin_api/tests/test_sprint10_boundaries.py:231: in test_prepared_campaign_spaces_match_current_service
+    from django.utils import timezone
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+core_apps/users/services/new_business.py:73: in save
+    return super().save(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/sqlite3/base.py:328: in execute
+    return super().execute(query, params)
+E   django.db.utils.IntegrityError: NOT NULL constraint failed: features_housingrequest.expires_at</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_role_summary_uses_one_grouped_query" time="0.005" /><testcase classname="core_apps.admin_api.tests.test_sprint10_boundaries" name="test_native_content_supported_form_save_records_revision_and_audit" time="0.006"><failure message="django.core.exceptions.ValidationError: {'slug': [&quot;Value 'sprint10-native' is not a valid choice.&quot;]}">core_apps/admin_api/tests/test_sprint10_boundaries.py:257: in test_native_content_supported_form_save_records_revision_and_audit
+    request.user = superuser
+core_apps/common/content_admin.py:28: in save_model
+    obj.full_clean()
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1502: in full_clean
+    raise ValidationError(errors)
+E   django.core.exceptions.ValidationError: {'slug': ["Value 'sprint10-native' is not a valid choice."]}</failure></testcase><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_admin_property_page[5]" time="0.031" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_admin_property_page[40]" time="0.063" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_admin_property_page[100]" time="0.122" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_analytics_query_budget[7]" time="0.045" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_analytics_query_budget[30]" time="0.073" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_analytics_query_budget[90]" time="0.161" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_executive_query_budget" time="0.037" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_campaign_summary_query_budget[1]" time="0.018" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_campaign_summary_query_budget[10]" time="0.021" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_campaign_summary_query_budget[100]" time="0.070" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_prepared_kyc_and_reports[1]" time="0.035" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_prepared_kyc_and_reports[20]" time="0.054" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_prepared_kyc_and_reports[100]" time="0.162" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[cities-1]" time="0.020" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[cities-25]" time="0.090" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[districts-1]" time="0.025" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[districts-25]" time="0.061" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[campuses-1]" time="0.013" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[campuses-25]" time="0.057" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[subscription_plans-1]" time="0.007" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[subscription_plans-25]" time="0.047" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[plan_benefits-1]" time="0.009" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_content_projection_fetch_plan[plan_benefits-25]" time="0.033" /><testcase classname="core_apps.admin_api.tests.test_sprint04_performance" name="test_campaign_summaries_preserve_deleted_account_and_delivery_totals" time="0.010" /><testcase classname="core_apps.admin_api.tests.test_sprint03_history" name="test_current_kyc_filters_ignore_superseded_and_return_distinct" time="0.012" /><testcase classname="core_apps.admin_api.tests.test_sprint03_history" name="test_payment_history_past_500_stable_pages_search_and_bounded_hydration" time="0.208" /><testcase classname="core_apps.admin_api.tests.test_sprint03_history" name="test_audit_history_past_100_and_cross_source_stable_totals" time="0.056" /><testcase classname="core_apps.admin_api.tests.test_sprint03_history" name="test_campaign_cap_counts_eligible_accounts_and_scan_budget_separately" time="0.023" /><testcase classname="core_apps.admin_api.tests.test_sprint03_history" name="test_campaign_large_opted_in_population_small_eligible_audience" time="0.746" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_totals_chart_regions_and_ratings_use_same_exclusive_cutoff[7]" time="0.024" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_totals_chart_regions_and_ratings_use_same_exclusive_cutoff[30]" time="0.032" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_totals_chart_regions_and_ratings_use_same_exclusive_cutoff[90]" time="0.050" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_no_visit_region_does_not_create_demand_and_status_does_not_claim_availability" time="0.024" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[0]" time="0.005" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[-1]" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[1]" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[365]" time="0.005" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[99999999999999999]" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[]" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[today]" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[7.0]" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_unsupported_period_rejected_before_querying[07]" time="0.006" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_supported_period_returns_real_empty_data[7]" time="0.015" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_supported_period_returns_real_empty_data[30]" time="0.023" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_supported_period_returns_real_empty_data[90]" time="0.042" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_supported_period_returns_real_empty_data[None]" time="0.022" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_current_authority_required_even_when_request_user_has_cached_profile" time="0.025" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_analytics_denies_ordinary_users_and_anonymous_requests" time="0.008" /><testcase classname="core_apps.admin_api.tests.test_analytics_periods" name="test_executive_cutoff_pending_queue_and_status_labels_are_consistent" time="0.031" /><testcase classname="core_apps.admin_api.tests.test_workspace_campaigns" name="test_four_receipts_one_push_latest_enabled_space_and_independent_read" time="0.067" /><testcase classname="core_apps.admin_api.tests.test_workspace_campaigns" name="test_changed_membership_and_push_preference_rechecked" time="0.051" /><testcase classname="core_apps.admin_api.tests.test_workspace_campaigns" name="test_cancel_after_partial_send_preserves_delivered_receipts" time="0.098" /><testcase classname="core_apps.admin_api.tests.test_workspace_campaigns" name="test_tenant_audience_uses_actual_relationship_not_absence_of_property" time="0.022" /><testcase classname="core_apps.admin_api.tests.test_workspace_campaigns" name="test_no_recorded_workspace_use_creates_receipt_without_inventing_push_target" time="0.021" /><testcase classname="core_apps.admin_api.tests.test_push_campaigns" name="test_preview_and_confirmation_recovery_do_not_duplicate_sends" time="0.037" /><testcase classname="core_apps.admin_api.tests.test_push_campaigns" name="test_unknown_provider_result_and_interrupted_send_are_never_replayed" time="0.031" /><testcase classname="core_apps.admin_api.tests.test_push_campaigns" name="test_opt_out_registration_change_and_cancel_stop_remaining_delivery" time="0.052" /><testcase classname="core_apps.admin_api.tests.test_push_campaigns" name="test_confirmation_is_gated_and_permissions_are_fresh" time="0.023" /><testcase classname="core_apps.admin_api.tests.test_push_campaigns" name="test_known_credential_outage_preserves_queued_delivery" time="0.023" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_raw_health_preserves_method_contract[GET]" time="0.003" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_raw_health_preserves_method_contract[HEAD]" time="0.003" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_raw_health_preserves_method_contract[POST]" time="0.004" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_raw_health_preserves_method_contract[PUT]" time="0.004" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_raw_health_preserves_method_contract[DELETE]" time="0.004" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_raw_health_preserves_method_contract[OPTIONS]" time="0.003" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_raw_health_preserves_method_contract[PATCH]" time="0.003" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_raw_health_preserves_method_contract[TRACE]" time="0.003" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_disabled_staff_profile_cannot_open_native_admin_or_log_in" time="0.524" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_native_admin_write_checks_sensitive_factor_after_request_snapshot" time="0.112" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[POST-AndroidAssetLinksView]" time="0.033" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[POST-AppleAppSiteAssociationView]" time="0.002" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[HEAD-AndroidAssetLinksView]" time="0.022" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[HEAD-AppleAppSiteAssociationView]" time="0.001" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[OPTIONS-AndroidAssetLinksView]" time="0.001" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[OPTIONS-AppleAppSiteAssociationView]" time="0.002" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[PUT-AndroidAssetLinksView]" time="0.014" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[PUT-AppleAppSiteAssociationView]" time="0.012" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[DELETE-AndroidAssetLinksView]" time="0.017" /><testcase classname="core_apps.common.test_sprint10_adapters" name="test_association_adapters_retain_get_only_allow_header[DELETE-AppleAppSiteAssociationView]" time="0.038" /></testsuite></testsuites>

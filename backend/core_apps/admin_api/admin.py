@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.urls import path, reverse
 from django.utils.html import format_html
+from django.views import View
 from rest_framework.exceptions import APIException
 
 from .models import KYCSubmission, PlatformPreferenceAudit
@@ -57,20 +58,28 @@ class KYCSubmissionAdmin(admin.ModelAdmin):
         return [
             path(
                 "<int:object_id>/identity-media/<str:field>/",
-                self.admin_site.admin_view(self.identity_media_view),
+                self.admin_site.admin_view(
+                    KYCIdentityMediaView.as_view(model_admin=self)
+                ),
                 name="admin_api_kycsubmission_media",
             ),
             path(
                 "<int:object_id>/review/",
-                self.admin_site.admin_view(self.review_view),
+                self.admin_site.admin_view(KYCReviewView.as_view(model_admin=self)),
                 name="admin_api_kycsubmission_review",
             ),
         ] + super().get_urls()
 
-    def identity_media_view(self, request, object_id, field):
+
+class KYCIdentityMediaView(View):
+    """Native session/CSRF wrapper, with the same current evidence gateway."""
+
+    model_admin = None
+
+    def dispatch(self, request, object_id, field, *args, **kwargs):
         from core_apps.profiles.identity_media import IDENTITY_FIELDS, identity_bytes
 
-        if not self.has_view_permission(request):
+        if not self.model_admin.has_view_permission(request):
             raise PermissionDenied
         if request.method != "GET":
             return HttpResponseNotAllowed(["GET"])
@@ -84,8 +93,18 @@ class KYCSubmissionAdmin(admin.ModelAdmin):
                 str(error.detail), status=error.status_code, content_type="text/plain"
             )
 
-    def review_view(self, request, object_id):
-        if not self.has_view_permission(request):
+
+class KYCReviewView(View):
+    """Native ModelAdmin presentation; commands own all review invariants.
+
+    Dispatch retains the historical read response for every non-POST method.
+    The enclosing admin_view retains session authentication and CSRF protection.
+    """
+
+    model_admin = None
+
+    def dispatch(self, request, object_id, *args, **kwargs):
+        if not self.model_admin.has_view_permission(request):
             raise PermissionDenied
         submission = get_object_or_404(KYCSubmission, pk=object_id)
         reason = request.POST.get("reason", "")
@@ -99,14 +118,16 @@ class KYCSubmissionAdmin(admin.ModelAdmin):
                         submission.id, reviewer=request.user, reason=reason
                     )
                 else:
-                    self.message_user(
+                    self.model_admin.message_user(
                         request, "اختر الموافقة أو الرفض.", messages.ERROR
                     )
                     return redirect(request.path)
             except APIException as error:
-                self.message_user(request, str(error.detail), messages.ERROR)
+                self.model_admin.message_user(
+                    request, str(error.detail), messages.ERROR
+                )
             else:
-                self.message_user(
+                self.model_admin.message_user(
                     request, "تم حفظ قرار مراجعة التوثيق بنجاح.", messages.SUCCESS
                 )
                 return redirect(request.path)
@@ -125,8 +146,8 @@ class KYCSubmissionAdmin(admin.ModelAdmin):
             request,
             "admin/admin_api/kyc_review.html",
             {
-                **self.admin_site.each_context(request),
-                "opts": self.model._meta,
+                **self.model_admin.admin_site.each_context(request),
+                "opts": self.model_admin.model._meta,
                 "title": "مراجعة طلب توثيق الهوية",
                 "submission": detail,
                 "reason": reason,

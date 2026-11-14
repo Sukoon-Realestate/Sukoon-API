@@ -16,7 +16,9 @@ from core_apps.admin_api.models import (
 from core_apps.admin_api.services.financials_service_parts.get_transactions_list import (
     get_transactions_list,
 )
-from core_apps.admin_api.services.system_service_parts.get_audit_logs import get_audit_logs
+from core_apps.admin_api.services.system_service_parts.get_audit_logs import (
+    get_audit_logs,
+)
 from core_apps.admin_api.services import workspace_campaigns
 from core_apps.features.models import PaymentAttempt, PaymentQuote, RentInvoice
 from core_apps.profiles.models import UserSettings
@@ -35,7 +37,9 @@ def test_current_kyc_filters_ignore_superseded_and_return_distinct(user, another
     KYCSubmission.objects.create(profile=another_user.profile, status="rejected")
     qs = User.objects.all()
     assert list(AdminUserFilter({"kyc_status": "pending"}, queryset=qs).qs) == [user]
-    assert list(AdminUserFilter({"kyc_status": "rejected"}, queryset=qs).qs) == [another_user]
+    assert list(AdminUserFilter({"kyc_status": "rejected"}, queryset=qs).qs) == [
+        another_user
+    ]
     User.objects.filter(pk=user.pk).update(is_verified=True)
     assert not AdminUserFilter({"kyc_status": "pending"}, queryset=qs).qs.exists()
     assert list(AdminUserFilter({"kyc_status": "verified"}, queryset=qs).qs) == [user]
@@ -76,7 +80,9 @@ def test_payment_history_past_500_stable_pages_search_and_bounded_hydration(
         ]
     )
     PaymentAttempt.objects.update(created_at=timezone.now() - timedelta(days=500))
-    page = get_transactions_list(search="historical-invoice", status_filter="paid", paginated=True)
+    page = get_transactions_list(
+        search="historical-invoice", status_filter="paid", paginated=True
+    )
     assert page.count() == 505
     with django_assert_num_queries(2):
         first = page[:10]
@@ -93,7 +99,10 @@ def test_audit_history_past_100_and_cross_source_stable_totals(
     StaffAuthorityAudit.objects.bulk_create(
         [
             StaffAuthorityAudit(
-                actor=user, target=another_user, action="history-target", reason="past cap"
+                actor=user,
+                target=another_user,
+                action="history-target",
+                reason="past cap",
             )
             for _ in range(105)
         ]
@@ -129,7 +138,9 @@ def test_campaign_cap_counts_eligible_accounts_and_scan_budget_separately(
     }
     item = workspace_campaigns.preview(superuser, command)
     assert item.recipients.count() == 1
-    monkeypatch.setattr(workspace_campaigns, "consented_spaces", lambda *args: {"individual"})
+    monkeypatch.setattr(
+        workspace_campaigns, "consented_spaces", lambda *args: {"individual"}
+    )
     with pytest.raises(ValidationError, match="eligible accounts"):
         workspace_campaigns.preview(superuser, {**command, "request_key": str(uuid4())})
     settings.ADMIN_CAMPAIGN_SCAN_LIMIT = 1
@@ -139,7 +150,9 @@ def test_campaign_cap_counts_eligible_accounts_and_scan_budget_separately(
     assert PushCampaign.objects.count() == 1
 
 
-def test_campaign_large_opted_in_population_small_eligible_audience(superuser, monkeypatch):
+def test_campaign_large_opted_in_population_small_eligible_audience(
+    superuser, make_property
+):
     users = User.objects.bulk_create(
         [
             User(
@@ -155,11 +168,7 @@ def test_campaign_large_opted_in_population_small_eligible_audience(superuser, m
         [UserSettings(user=account, promotions_and_updates=True) for account in users]
     )
     target = users[-1].pk
-    monkeypatch.setattr(
-        workspace_campaigns,
-        "consented_spaces",
-        lambda account, audience: {"individual"} if account.pk == target else set(),
-    )
+    make_property(owner=users[-1], title="Only eligible landlord beyond former cap")
     item = workspace_campaigns.preview(
         superuser,
         {

@@ -21,8 +21,13 @@ def operation_name(kind, identity):
 @transaction.atomic
 def edit(user, kind, identity, data, key, auth_claims=None):
     user = require_staff_actor(user, {"system_owner"}, lock=True)
+    from core_apps.admin_api.serializers.commands import ContentCommand
+
+    command = ContentCommand(data=data)
+    command.is_valid(raise_exception=True)
+    data = command.validated_data
     entry = spec(kind)
-    content_mvp.require_workspace(data.get('values', {}))
+    content_mvp.require_workspace(data.get("values", {}))
     if not key:
         raise ValidationError("Retain an operation key before saving content.")
     try:
@@ -49,8 +54,10 @@ def edit(user, kind, identity, data, key, auth_claims=None):
                 "Content changed. Review the current version before saving.",
                 code="stale_revision",
             )
-        if identity and hasattr(item, 'workspace'):
-            content_mvp.require_workspace({'workspace': getattr(item, 'workspace', None)})
+        if identity and hasattr(item, "workspace"):
+            content_mvp.require_workspace(
+                {"workspace": getattr(item, "workspace", None)}
+            )
         before = projection(kind, item) if identity else {}
         values = validated(kind, data["values"], item if identity else None)
         for name, value in values.items():
@@ -99,7 +106,7 @@ def edit(user, kind, identity, data, key, auth_claims=None):
         action=apply,
         auth_claims=auth_claims,
     )
-    content_mvp.require_workspace(result[0].get('values', {}))
+    content_mvp.require_workspace(result[0].get("values", {}))
     return result
 
 
@@ -115,8 +122,8 @@ def recover(user, kind, identity, key, auth_claims=None):
     )
     # Recheck staff authority after the user lock, including receipt retrieval.
     require_staff_actor(user, {"system_owner"})
-    if row.recovery_status == 'confirmed':
-        content_mvp.require_workspace(row.response_data.get('values', {}))
+    if row.recovery_status == "confirmed":
+        content_mvp.require_workspace(row.response_data.get("values", {}))
     return {
         "status": row.recovery_status,
         "receipt": row.response_data if row.recovery_status == "confirmed" else None,

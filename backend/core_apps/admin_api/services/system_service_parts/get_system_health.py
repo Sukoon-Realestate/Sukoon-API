@@ -1,6 +1,6 @@
 """A bounded local database check; uninstrumented services remain unknown."""
 
-from django.db import connection
+from django.db import connection, DatabaseError
 from django.utils import timezone
 from rest_framework.exceptions import APIException, ValidationError
 from .get_audit_logs import get_audit_logs
@@ -15,7 +15,7 @@ def get_system_health():
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
             database_ok = cursor.fetchone() == (1,)
-    except Exception:
+    except DatabaseError:
         database_ok = False
     incidents = []
     if database_ok:
@@ -54,7 +54,7 @@ def get_system_health():
         },
         "telemetry": report,
         "incidents": incidents,
-        "auditLogs": get_audit_logs()[:6],
+        "auditLogs": get_audit_logs(paginated=True)[:6],
         "apiPerformanceData": [],
         "internalAdminNotes": [
             "Missing samples remain unknown. Provider delivery and backup restoration require separate evidence."

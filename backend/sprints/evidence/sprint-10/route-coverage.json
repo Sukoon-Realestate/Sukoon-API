@@ -1,0 +1,817 @@
+{
+  "api_patterns": 795,
+  "global_transport_metadata_parity": true,
+  "project_function_callbacks_remaining": [],
+  "scoped_patterns": 92,
+  "scoped_routes": [
+    {
+      "route": "api/v1/payments/paymob/test-checkout/",
+      "name": "paymob-test-checkout",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.common.paymob_checkout.TestCheckoutView"
+    },
+    {
+      "route": "api/v1/payments/paymob/webhook/",
+      "name": "paymob-webhook",
+      "style": "Django CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.common.paymob_views.PaymobWebhookView"
+    },
+    {
+      "route": "api/v1/payments/paymob/return/",
+      "name": "paymob-return",
+      "style": "Django CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.common.paymob_views.PaymobReturnView"
+    },
+    {
+      "route": "health/",
+      "name": "runtime-health",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.common.runtime_views.HealthView"
+    },
+    {
+      "route": ".well-known/assetlinks.json",
+      "name": "android-asset-links",
+      "style": "Django CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.common.app_associations.AndroidAssetLinksView"
+    },
+    {
+      "route": ".well-known/apple-app-site-association",
+      "name": "apple-app-site-association",
+      "style": "Django CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.common.app_associations.AppleAppSiteAssociationView"
+    },
+    {
+      "route": "api/v1/pages/release-notes/",
+      "name": "release-notes",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.common.release_views.ReleaseNotesAPIView"
+    },
+    {
+      "route": "api/v1/pages/about-us/",
+      "name": "page-about-us",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.common.pages_views.AboutUsPageAPIView"
+    },
+    {
+      "route": "api/v1/pages/privacy-policy/",
+      "name": "page-privacy-policy",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.common.pages_views.PrivacyPolicyPageAPIView"
+    },
+    {
+      "route": "api/v1/pages/terms/",
+      "name": "page-terms",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.common.pages_views.TermsPageAPIView"
+    },
+    {
+      "route": "api/v1/pages/<str:slug>/",
+      "name": "page-dynamic",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.common.pages_views.StaticPageAPIView"
+    },
+    {
+      "route": "api/v1/admin/content/",
+      "name": "admin-content",
+      "style": "DRF CBV",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.content.AdminContentAPIView"
+    },
+    {
+      "route": "api/v1/admin/content/<slug:kind>/receipts/<uuid:key>/",
+      "name": "admin-content-receipt",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.content.AdminContentReceiptAPIView"
+    },
+    {
+      "route": "api/v1/admin/content/<slug:kind>/",
+      "name": "admin-content-list",
+      "style": "DRF CBV",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.content.AdminContentAPIView"
+    },
+    {
+      "route": "api/v1/admin/content/<slug:kind>/<str:identity>/",
+      "name": "admin-content-detail",
+      "style": "DRF CBV",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.content.AdminContentAPIView"
+    },
+    {
+      "route": "api/v1/admin/system/notifications/preview/",
+      "name": "admin-campaign-preview",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.system.AdminCampaignPreviewAPIView"
+    },
+    {
+      "route": "api/v1/admin/system/notifications/<uuid:campaign_id>/",
+      "name": "admin-campaign-detail",
+      "style": "DRF CBV",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.system.AdminCampaignDetailAPIView"
+    },
+    {
+      "route": "api/v1/admin/session/",
+      "name": "admin-session",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.session.AdminSessionAPIView"
+    },
+    {
+      "route": "api/v1/admin/followups/",
+      "name": "admin-followups",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.followups.AdminFollowupsAPIView"
+    },
+    {
+      "route": "api/v1/admin/dashboard/",
+      "name": "admin-dashboard-stats",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.dashboard.AdminDashboardStatsView"
+    },
+    {
+      "route": "api/v1/admin/dashboard/executive/",
+      "name": "admin-executive-dashboard",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.dashboard.AdminExecutiveDashboardStatsView"
+    },
+    {
+      "route": "api/v1/admin/settings/",
+      "name": "admin-settings",
+      "style": "DRF CBV",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.settings.AdminPlatformSettingsAPIView"
+    },
+    {
+      "route": "api/v1/admin/users/",
+      "name": "admin-users-list",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.users.AdminUserListAPIView"
+    },
+    {
+      "route": "api/v1/admin/users/<uuid:user_id>/",
+      "name": "admin-user-detail",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.users.AdminUserDetailAPIView"
+    },
+    {
+      "route": "api/v1/admin/users/<str:user_id>/",
+      "name": "admin-user-detail-str",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.users.AdminUserDetailAPIView"
+    },
+    {
+      "route": "api/v1/admin/users/<uuid:user_id>/suspend/",
+      "name": "admin-user-suspend",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.users.AdminUserSuspendAPIView"
+    },
+    {
+      "route": "api/v1/admin/users/<str:user_id>/suspend/",
+      "name": "admin-user-suspend-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.users.AdminUserSuspendAPIView"
+    },
+    {
+      "route": "api/v1/admin/users/<uuid:user_id>/unsuspend/",
+      "name": "admin-user-unsuspend",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.users.AdminUserUnsuspendAPIView"
+    },
+    {
+      "route": "api/v1/admin/users/<str:user_id>/unsuspend/",
+      "name": "admin-user-unsuspend-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.users.AdminUserUnsuspendAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/<uuid:submission_id>/media/<slug:field>/",
+      "name": "admin-kyc-media",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCIdentityMediaAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/",
+      "name": "admin-kyc-list",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCListAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/metrics/",
+      "name": "admin-kyc-metrics",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCMetricsAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/<uuid:submission_id>/",
+      "name": "admin-kyc-detail",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCDetailAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/<str:submission_id>/",
+      "name": "admin-kyc-detail-str",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCDetailAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/<uuid:submission_id>/approve/",
+      "name": "admin-kyc-approve",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCApproveAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/<str:submission_id>/approve/",
+      "name": "admin-kyc-approve-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCApproveAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/<uuid:submission_id>/reject/",
+      "name": "admin-kyc-reject",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCRejectAPIView"
+    },
+    {
+      "route": "api/v1/admin/kyc/<str:submission_id>/reject/",
+      "name": "admin-kyc-reject-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.kyc.AdminKYCRejectAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/",
+      "name": "admin-properties-list",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyListAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/metrics/",
+      "name": "admin-properties-metrics",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyMetricsAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<uuid:property_id>/",
+      "name": "admin-property-detail",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyDetailAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<str:property_id>/",
+      "name": "admin-property-detail-str",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyDetailAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<uuid:property_id>/approve/",
+      "name": "admin-property-approve",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyApproveAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<str:property_id>/approve/",
+      "name": "admin-property-approve-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyApproveAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<uuid:property_id>/reject/",
+      "name": "admin-property-reject",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyRejectAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<str:property_id>/reject/",
+      "name": "admin-property-reject-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyRejectAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<uuid:property_id>/revision/",
+      "name": "admin-property-revision",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyRevisionAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<str:property_id>/revision/",
+      "name": "admin-property-revision-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyRevisionAPIView"
+    },
+    {
+      "route": "api/v1/admin/moderation/",
+      "name": "admin-moderation-list",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.moderation.AdminModerationListAPIView"
+    },
+    {
+      "route": "api/v1/admin/moderation/metrics/",
+      "name": "admin-moderation-metrics",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.moderation.AdminModerationMetricsAPIView"
+    },
+    {
+      "route": "api/v1/admin/moderation/<uuid:property_id>/delete/",
+      "name": "admin-moderation-delete",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.moderation.AdminModerationDeleteAPIView"
+    },
+    {
+      "route": "api/v1/admin/moderation/<str:property_id>/delete/",
+      "name": "admin-moderation-delete-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.moderation.AdminModerationDeleteAPIView"
+    },
+    {
+      "route": "api/v1/admin/reports/",
+      "name": "admin-reports-list",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.reports.AdminReportListAPIView"
+    },
+    {
+      "route": "api/v1/admin/reports/metrics/",
+      "name": "admin-reports-metrics",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.reports.AdminReportMetricsAPIView"
+    },
+    {
+      "route": "api/v1/admin/reports/overview/",
+      "name": "admin-reports-overview",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.reports.AdminReportsOverviewAPIView"
+    },
+    {
+      "route": "api/v1/admin/reports/<uuid:report_id>/action/",
+      "name": "admin-report-action",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.reports.AdminReportActionAPIView"
+    },
+    {
+      "route": "api/v1/admin/reports/<str:report_id>/action/",
+      "name": "admin-report-action-str",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.reports.AdminReportActionAPIView"
+    },
+    {
+      "route": "api/v1/admin/support/",
+      "name": "admin-support-list",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.reports.AdminSupportTicketsListAPIView"
+    },
+    {
+      "route": "api/v1/admin/support/metrics/",
+      "name": "admin-support-metrics",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.reports.AdminSupportMetricsAPIView"
+    },
+    {
+      "route": "api/v1/admin/support/team/",
+      "name": "admin-support-team",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.support.AdminSupportTeamAPIView"
+    },
+    {
+      "route": "api/v1/admin/support/<uuid:ticket_id>/",
+      "name": "admin-support-detail",
+      "style": "DRF CBV",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.support.AdminSupportDetailAPIView"
+    },
+    {
+      "route": "api/v1/admin/support/<uuid:ticket_id>/receipts/<uuid:key>/",
+      "name": "admin-support-receipt",
+      "style": "DRF CBV",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.support.AdminSupportReceiptAPIView"
+    },
+    {
+      "route": "api/v1/admin/analytics/",
+      "name": "admin-analytics-stats",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.analytics.AdminAnalyticsStatsAPIView"
+    },
+    {
+      "route": "api/v1/admin/financials/summary/",
+      "name": "admin-financials-summary",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.financials.AdminFinancialSummaryAPIView"
+    },
+    {
+      "route": "api/v1/admin/financials/transactions/",
+      "name": "admin-financials-transactions",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.financials.AdminTransactionListAPIView"
+    },
+    {
+      "route": "api/v1/admin/system/health/",
+      "name": "admin-system-health",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.system.AdminSystemHealthAPIView"
+    },
+    {
+      "route": "api/v1/admin/system/logs/",
+      "name": "admin-system-logs",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.system.AdminAuditLogsAPIView"
+    },
+    {
+      "route": "api/v1/admin/system/notifications/",
+      "name": "admin-system-notifications",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.system.AdminPushCampaignsAPIView"
+    },
+    {
+      "route": "api/v1/admin/system/notifications/send/",
+      "name": "admin-system-notifications-send",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.system.AdminSendPushNotificationAPIView"
+    },
+    {
+      "route": "api/v1/admin/staff/",
+      "name": "admin-staff-list",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.staff.AdminStaffListAPIView"
+    },
+    {
+      "route": "api/v1/admin/staff/roles/",
+      "name": "admin-roles-summary",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.staff.AdminRolesSummaryAPIView"
+    },
+    {
+      "route": "api/v1/admin/staff/invite/",
+      "name": "admin-staff-invite",
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.staff.AdminStaffInviteAPIView"
+    },
+    {
+      "route": "api/v1/admin/staff/<uuid:staff_id>/",
+      "name": "admin-staff-delete",
+      "style": "DRF CBV",
+      "methods": [
+        "DELETE"
+      ],
+      "handler": "core_apps.admin_api.views.staff.AdminStaffDeleteAPIView"
+    },
+    {
+      "route": "api/v1/admin/staff/<str:staff_id>/",
+      "name": "admin-staff-delete-str",
+      "style": "DRF CBV",
+      "methods": [
+        "DELETE"
+      ],
+      "handler": "core_apps.admin_api.views.staff.AdminStaffDeleteAPIView"
+    },
+    {
+      "route": "api/v1/admin/permissions/",
+      "name": "admin-permissions-matrix",
+      "style": "DRF CBV",
+      "methods": [
+        "GET"
+      ],
+      "handler": "core_apps.admin_api.views.staff.AdminPermissionsMatrixAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<uuid:property_id>/block/",
+      "name": null,
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyBlockAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<uuid:property_id>/unblock/",
+      "name": null,
+      "style": "DRF CBV",
+      "methods": [
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyUnblockAPIView"
+    },
+    {
+      "route": "api/v1/admin/properties/<uuid:property_id>/receipts/<uuid:key>/",
+      "name": null,
+      "style": "DRF CBV",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "handler": "core_apps.admin_api.views.property_views.AdminPropertyReceiptAPIView"
+    },
+    {
+      "route": "admin/admin_api/kycsubmission/<int:object_id>/identity-media/<str:field>/",
+      "name": "admin_api_kycsubmission_media",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.admin_api.admin.KYCIdentityMediaView"
+    },
+    {
+      "route": "admin/admin_api/kycsubmission/<int:object_id>/review/",
+      "name": "admin_api_kycsubmission_review",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.admin_api.admin.KYCReviewView"
+    },
+    {
+      "route": "admin/features/policydecision/publish/",
+      "name": "business-policy-publish",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.business_policy_admin.PolicyPublicationView"
+    },
+    {
+      "route": "admin/features/rentalchargeback/<int:object_id>/review/",
+      "name": "chargeback-review",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.chargeback_admin.ChargebackReviewView"
+    },
+    {
+      "route": "admin/features/companymandate/<int:object_id>/execution-review/",
+      "name": "company-execution-review",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.company_execution_admin.CompanyExecutionReviewView"
+    },
+    {
+      "route": "admin/properties/residentialmedia/<int:object_id>/review/",
+      "name": "portfolio-media-review",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.portfolio_admin.PortfolioMediaReviewView"
+    },
+    {
+      "route": "admin/properties/residentialmedia/<int:object_id>/image/",
+      "name": "portfolio-media-image",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.portfolio_admin.PortfolioMediaImageView"
+    },
+    {
+      "route": "admin/features/reviewsection/<path:object_id>/change/",
+      "name": "features_reviewsection_change",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.reputation_admin.ReputationChangeRedirectView"
+    },
+    {
+      "route": "admin/features/reviewsection/<uuid:object_id>/inspect/",
+      "name": "reputation-reviewsection-inspect",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.reputation_admin.ReputationInspectView"
+    },
+    {
+      "route": "admin/features/reviewreport/<path:object_id>/change/",
+      "name": "features_reviewreport_change",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.reputation_admin.ReputationChangeRedirectView"
+    },
+    {
+      "route": "admin/features/reviewreport/<uuid:object_id>/inspect/",
+      "name": "reputation-reviewreport-inspect",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.reputation_admin.ReputationInspectView"
+    },
+    {
+      "route": "admin/features/reviewappeal/<path:object_id>/change/",
+      "name": "features_reviewappeal_change",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.reputation_admin.ReputationChangeRedirectView"
+    },
+    {
+      "route": "admin/features/reviewappeal/<uuid:object_id>/inspect/",
+      "name": "reputation-reviewappeal-inspect",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.features.reputation_admin.ReputationInspectView"
+    },
+    {
+      "route": "admin/virtual_tours/tourrevision/<int:object_id>/review/",
+      "name": "virtual-tour-review",
+      "style": "Django CBV",
+      "methods": [],
+      "handler": "core_apps.virtual_tours.admin.TourRevisionReviewView"
+    }
+  ],
+  "framework_admin_callbacks": 956,
+  "shared_project_view_imports": [],
+  "limits": "Resolver/source evidence; positive authorization and effects require behavioral tests. Framework-owned admin callbacks remain framework-owned, including subclass ModelAdmin hooks."
+}
