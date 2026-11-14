@@ -1,0 +1,5141 @@
+{
+  "patterns": 383,
+  "converted_patterns": 336,
+  "function_callbacks_remaining": 0,
+  "global_patterns": 795,
+  "global_transport_parity": true,
+  "domain_extraction_complete": false,
+  "state_write_signals_remaining": [
+    {
+      "file": "core_apps/features/advanced_execution_views.py",
+      "class": "ActionView",
+      "method": "post",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/advanced_tender_views.py",
+      "class": "TendersView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/advanced_tender_views.py",
+      "class": "ConstructionRunsView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/company_saved_views.py",
+      "class": "CollectionView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/company_saved_views.py",
+      "class": "ActionView",
+      "method": "post",
+      "signals": [
+        "update"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/discovery.py",
+      "class": "SettingsViewView",
+      "method": "get",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/discovery.py",
+      "class": "SettingsViewView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "delete",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/discovery.py",
+      "class": "SettingsViewView",
+      "method": "delete",
+      "signals": [
+        "atomic",
+        "delete",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/discovery.py",
+      "class": "InteractionView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "delete"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/preparation.py",
+      "class": "TasksView",
+      "method": "get",
+      "signals": [
+        "atomic",
+        "update"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/preparation.py",
+      "class": "TasksView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/quality.py",
+      "class": "CreateView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/quality.py",
+      "class": "DetailView",
+      "method": "get",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/quality.py",
+      "class": "DetailView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/views.py",
+      "class": "PersonalPreferencesView",
+      "method": "get",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/experience/views.py",
+      "class": "PersonalPreferencesView",
+      "method": "post",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/housing_scenario_views.py",
+      "class": "ScenariosView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/housing_scenario_views.py",
+      "class": "ScenarioActionView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/living_lab_views.py",
+      "class": "LivingLabDetailView",
+      "method": "get",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/living_lab_views.py",
+      "class": "LivingLabRequirementsView",
+      "method": "get",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/living_lab_views.py",
+      "class": "LivingLabActionView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_condition_views_parts/condition_report_action.py",
+      "class": "ConditionReportsView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_condition_views_parts/condition_report_action.py",
+      "class": "ConditionReportActionView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/commute_results.py",
+      "class": "CommuteCancelView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/commute_searches.py",
+      "class": "CommuteSearchesView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/tenant_assistant_turns.py",
+      "class": "TenantAssistantTurnsView",
+      "method": "post",
+      "signals": [
+        "create",
+        "delete"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/group_invitation_join.py",
+      "class": "GroupInvitationJoinView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/group_invitation_join.py",
+      "class": "GroupJoinRequestView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/group_join_decision.py",
+      "class": "GroupJoinDecisionView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/group_join_decision.py",
+      "class": "OwnerGroupApplicationActionView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/group_payload.py",
+      "class": "GroupInvitationCreateView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/housing_group_action.py",
+      "class": "HousingGroupActionView",
+      "method": "post",
+      "signals": [
+        "save",
+        "update"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/housing_groups.py",
+      "class": "HousingGroupsView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/housing_offers.py",
+      "class": "HousingOffersView",
+      "method": "post",
+      "signals": [
+        "create",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/housing_offers.py",
+      "class": "HousingOfferActionView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/housing_request_action.py",
+      "class": "HousingRequestActionView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/housing_requests.py",
+      "class": "HousingRequestsView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views_parts/profile_values.py",
+      "class": "LifestyleProfileView",
+      "method": "post",
+      "signals": [
+        "create",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views_parts/roommate_candidate_action.py",
+      "class": "RoommateCandidatesView",
+      "method": "get",
+      "signals": [
+        "update"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views_parts/roommate_candidate_action.py",
+      "class": "RoommateCandidateActionView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "create",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views_parts/roommate_connection_action.py",
+      "class": "RoommateConnectionActionView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_transition_views_parts/reconcile_transitions.py",
+      "class": "ReplacementCandidateConsentView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/planning_transition_views_parts/transition_detail_action.py",
+      "class": "TransitionDetailActionView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/reservations.py",
+      "class": "ReservationHoldView",
+      "method": "get",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/create_structured_signing_session.py",
+      "class": "LeaseSubmitForSignatureView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/rental_interests.py",
+      "class": "RentalInterestsView",
+      "method": "post",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/rental_interests.py",
+      "class": "RentalInterestRespondView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/tenancy_invitation_revoke.py",
+      "class": "TenancyInvitationRevokeView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/update_structured_lease.py",
+      "class": "LeaseReviewView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+      "class": "RentalEvidenceUploadView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/change_respond.py",
+      "class": "ChangeRespondView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/change_signing_session.py",
+      "class": "SubmitChangeForSignatureView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/change_signing_session.py",
+      "class": "ChangeSigningSessionView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+      "class": "DisputesView",
+      "method": "get",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+      "class": "DisputesView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+      "class": "DisputeRespondView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/final_settlement_propose.py",
+      "class": "FinalSettlementProposeView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/final_settlement_respond.py",
+      "class": "FinalSettlementRespondView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+      "class": "RentalStatementCreateView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_summary_views.py",
+      "class": "SummaryGrantsView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/rental_summary_views.py",
+      "class": "RevokeSummaryView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/reputation_views.py",
+      "class": "ReviewOpportunityView",
+      "method": "patch",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/reputation_views.py",
+      "class": "ReviewDraftView",
+      "method": "get",
+      "signals": [
+        "delete"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/reputation_views.py",
+      "class": "ReviewDraftView",
+      "method": "put",
+      "signals": [
+        "create",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/reputation_views.py",
+      "class": "ReviewDraftView",
+      "method": "delete",
+      "signals": [
+        "delete"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/reputation_views.py",
+      "class": "ReputationGrantsView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/reputation_views.py",
+      "class": "ReviewResolveCaseView",
+      "method": "post",
+      "signals": [
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/shared_housing_views.py",
+      "class": "PlansView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/signing_views.py",
+      "class": "SigningCallbackView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/signing_views.py",
+      "class": "SigningStatusView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/student_verification_views.py",
+      "class": "StudentEvidenceUploadView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/transition_network_views.py",
+      "class": "IntentsView",
+      "method": "post",
+      "signals": [
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/boost_campaigns.py",
+      "class": "SearchAlertsView",
+      "method": "get",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/boost_campaigns.py",
+      "class": "SearchAlertsView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/boost_campaigns.py",
+      "class": "SearchAlertDetailView",
+      "method": "patch",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/boost_campaigns.py",
+      "class": "SearchAlertDetailView",
+      "method": "delete",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/lease_cancel.py",
+      "class": "LeaseCancelView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "delete",
+        "save",
+        "update"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/leases.py",
+      "class": "LeasesView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "create",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/tenancy_invitation_recovery.py",
+      "class": "TenancyInvitationCreateResolveView",
+      "method": "post",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/tenancy_invitation_recovery.py",
+      "class": "TenancyInvitationResponseResolveView",
+      "method": "post",
+      "signals": [
+        "atomic"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/tenancy_invitation_respond.py",
+      "class": "TenancyInvitationRespondView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "save"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/views_parts/tenancy_invitations.py",
+      "class": "TenancyInvitationsView",
+      "method": "post",
+      "signals": [
+        "atomic",
+        "create"
+      ],
+      "review_status": "domain-extraction-pending"
+    },
+    {
+      "file": "core_apps/features/workspace_views.py",
+      "class": "SummaryView",
+      "method": "get",
+      "signals": [
+        "update"
+      ],
+      "review_status": "domain-extraction-pending"
+    }
+  ],
+  "routes": [
+    {
+      "route": "api/v1/features/v1/experience/capabilities/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.experience.views.capabilities",
+      "handler": "core_apps.features.experience.views.CapabilitiesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/preferences/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.experience.views.personal_preferences",
+      "handler": "core_apps.features.experience.views.PersonalPreferencesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/preparation-tasks/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.experience.preparation.tasks",
+      "handler": "core_apps.features.experience.preparation.TasksView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/action-center/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.experience.action_center.action_center",
+      "handler": "core_apps.features.experience.action_center.ActionCenterView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/listing-assessments/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.experience.quality.create",
+      "handler": "core_apps.features.experience.quality.CreateView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/listing-assessments/<uuid:identity>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.experience.quality.detail",
+      "handler": "core_apps.features.experience.quality.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/discovery-preferences/",
+      "methods": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.features.experience.discovery.settings_view",
+      "handler": "core_apps.features.experience.discovery.SettingsViewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/discovery-interactions/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.experience.discovery.interaction",
+      "handler": "core_apps.features.experience.discovery.InteractionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/viewings/<uuid:identity>/calendar/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.experience.calendar.viewing_calendar",
+      "handler": "core_apps.features.experience.calendar.ViewingCalendarView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/suggestions/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.experience.suggestions.suggestions",
+      "handler": "core_apps.features.experience.suggestions.SuggestionsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/experience/alternatives/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.experience.suggestions.alternatives",
+      "handler": "core_apps.features.experience.suggestions.AlternativesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/signing/provider-events/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.signing_views.signing_callback",
+      "handler": "core_apps.features.signing_views.SigningCallbackView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/signing/documents/<uuid:document_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.signing_views.signing_status",
+      "handler": "core_apps.features.signing_views.SigningStatusView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/export/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.listing_suggestions.owner_analytics_export",
+      "handler": "core_apps.features.views_parts.listing_suggestions.OwnerAnalyticsExportView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-documents/<uuid:document_id>/content/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.document_content",
+      "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.DocumentContentView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/habitability/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.habitability.assessment",
+      "handler": "core_apps.features.rental_lifecycle_views.habitability.AssessmentView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/continuation-items/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.continuation_views.continuation_items",
+      "handler": "core_apps.features.continuation_views.ContinuationItemsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/advanced-executions/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.advanced_execution_views.inbox",
+      "handler": "core_apps.features.advanced_execution_views.InboxView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.advanced_execution_views.detail",
+      "handler": "core_apps.features.advanced_execution_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/advanced-executions/<uuid:execution_id>/<str:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_execution_views.action",
+      "handler": "core_apps.features.advanced_execution_views.ActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-tender-sources/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.sources",
+      "handler": "core_apps.features.advanced_tender_views.SourcesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-tenders/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.tenders",
+      "handler": "core_apps.features.advanced_tender_views.TendersView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.tender_detail",
+      "handler": "core_apps.features.advanced_tender_views.TenderDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/bids/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.bids",
+      "handler": "core_apps.features.advanced_tender_views.BidsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/package-runs/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.packages",
+      "handler": "core_apps.features.advanced_tender_views.PackagesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/automatic-package-runs/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.construction_runs",
+      "handler": "core_apps.features.advanced_tender_views.ConstructionRunsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-tenders/<uuid:tender_id>/<str:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.tender_action",
+      "handler": "core_apps.features.advanced_tender_views.TenderActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-bids/<uuid:bid_id>/withdraw/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.withdraw_bid",
+      "handler": "core_apps.features.advanced_tender_views.WithdrawBidView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-bids/<uuid:bid_id>/clarifications/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.clarifications",
+      "handler": "core_apps.features.advanced_tender_views.ClarificationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-packages/<uuid:package_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.package_detail",
+      "handler": "core_apps.features.advanced_tender_views.PackageDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-packages/<uuid:package_id>/consents/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.package_consent",
+      "handler": "core_apps.features.advanced_tender_views.PackageConsentView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-packages/<uuid:package_id>/prepare/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.prepare_package",
+      "handler": "core_apps.features.advanced_tender_views.PreparePackageView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-package-runs/<uuid:run_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.construction_detail",
+      "handler": "core_apps.features.advanced_tender_views.ConstructionDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-package-runs/<uuid:run_id>/dispatch/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.advanced_tender_views.construction_retry",
+      "handler": "core_apps.features.advanced_tender_views.ConstructionRetryView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/configuration/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/disclosures/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/scenario-runs/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/amendments/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-application/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-tender/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/living-labs/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_labs",
+      "handler": "core_apps.features.living_lab_views.LivingLabsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_detail",
+      "handler": "core_apps.features.living_lab_views.LivingLabDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/my-requirements/",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_requirements",
+      "handler": "core_apps.features.living_lab_views.LivingLabRequirementsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/runs/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/responses/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/withdraw/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/close/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/living-labs/<uuid:lab_id>/prepare-cost-proposal/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.living_lab_views.living_lab_action",
+      "handler": "core_apps.features.living_lab_views.LivingLabActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/housing-scenario-decisions/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.decision_inbox",
+      "handler": "core_apps.features.housing_scenario_views.DecisionInboxView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-scenario-comparisons/<uuid:comparison_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.comparison_detail",
+      "handler": "core_apps.features.housing_scenario_views.ComparisonDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-scenario-runs/<uuid:run_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.scenario_run",
+      "handler": "core_apps.features.housing_scenario_views.ScenarioRunView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-scenario-runs/<uuid:run_id>/cancel/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.scenario_run",
+      "handler": "core_apps.features.housing_scenario_views.ScenarioRunView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-scenario-decisions/<uuid:decision_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.scenario_decision",
+      "handler": "core_apps.features.housing_scenario_views.ScenarioDecisionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-scenario-decisions/<uuid:decision_id>/<str:action>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.scenario_decision",
+      "handler": "core_apps.features.housing_scenario_views.ScenarioDecisionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/housing-scenarios/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.scenarios",
+      "handler": "core_apps.features.housing_scenario_views.ScenariosView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/housing-scenario-sources/<str:kind>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.scenario_sources",
+      "handler": "core_apps.features.housing_scenario_views.ScenarioSourcesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-scenarios/<uuid:scenario_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.scenario_detail",
+      "handler": "core_apps.features.housing_scenario_views.ScenarioDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-scenarios/<uuid:scenario_id>/<str:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.housing_scenario_views.scenario_action",
+      "handler": "core_apps.features.housing_scenario_views.ScenarioActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-planning-context/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.context",
+      "handler": "core_apps.features.transition_network_views.ContextView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/move-intents/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.intents",
+      "handler": "core_apps.features.transition_network_views.IntentsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/move-intents/<uuid:intent_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.intent_detail",
+      "handler": "core_apps.features.transition_network_views.IntentDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/move-intents/<uuid:intent_id>/runs/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.runs",
+      "handler": "core_apps.features.transition_network_views.RunsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/move-intents/<uuid:intent_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.intent_action",
+      "handler": "core_apps.features.transition_network_views.IntentActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/transition-match-runs/<uuid:run_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.run_detail",
+      "handler": "core_apps.features.transition_network_views.RunDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/transition-candidates/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.candidates",
+      "handler": "core_apps.features.transition_network_views.CandidatesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/transition-candidates/<uuid:candidate_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.candidate_detail",
+      "handler": "core_apps.features.transition_network_views.CandidateDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/transition-candidates/<uuid:candidate_id>/interest/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.candidate_interest",
+      "handler": "core_apps.features.transition_network_views.CandidateInterestView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/transition-plans/<uuid:candidate_id>/prepare/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.transition_network_views.prepare",
+      "handler": "core_apps.features.transition_network_views.PrepareView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/owner-achievements/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.OwnerAchievementsView",
+      "handler": "core_apps.features.reputation_views.OwnerAchievementsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/owner-achievements/<uuid:identity>/acknowledge/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.OwnerAchievementAcknowledgeView",
+      "handler": "core_apps.features.reputation_views.OwnerAchievementAcknowledgeView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/subjects/<str:kind>/<uuid:identity>/public-summary/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.PublicReputationSummaryView",
+      "handler": "core_apps.features.reputation_views.PublicReputationSummaryView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/capabilities/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewCapabilitiesView",
+      "handler": "core_apps.features.reputation_views.ReviewCapabilitiesView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/opportunities/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewOpportunitiesView",
+      "handler": "core_apps.features.reputation_views.ReviewOpportunitiesView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/opportunities/<uuid:identity>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewOpportunityView",
+      "handler": "core_apps.features.reputation_views.ReviewOpportunityView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/opportunities/<uuid:identity>/draft/",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewDraftView",
+      "handler": "core_apps.features.reputation_views.ReviewDraftView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/opportunities/<uuid:identity>/submit/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewSubmitView",
+      "handler": "core_apps.features.reputation_views.ReviewSubmitView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/operations/by-key/<str:request_key>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewOperationView",
+      "handler": "core_apps.features.reputation_views.ReviewOperationView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/mine/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewCollectionView",
+      "handler": "core_apps.features.reputation_views.ReviewCollectionView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/received/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewCollectionView",
+      "handler": "core_apps.features.reputation_views.ReviewCollectionView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/subjects/<str:kind>/<uuid:identity>/summary/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewSubjectView",
+      "handler": "core_apps.features.reputation_views.ReviewSubjectView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/subjects/<str:kind>/<uuid:identity>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewSubjectView",
+      "handler": "core_apps.features.reputation_views.ReviewSubjectView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/eligibility-requests/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewEligibilityRequestView",
+      "handler": "core_apps.features.reputation_views.ReviewEligibilityRequestView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/<uuid:identity>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewDetailView",
+      "handler": "core_apps.features.reputation_views.ReviewDetailView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/<uuid:identity>/reply/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewActionView",
+      "handler": "core_apps.features.reputation_views.ReviewActionView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/<uuid:identity>/withdraw/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewActionView",
+      "handler": "core_apps.features.reputation_views.ReviewActionView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/<uuid:identity>/reports/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewActionView",
+      "handler": "core_apps.features.reputation_views.ReviewActionView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/replies/<uuid:identity>/withdraw/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewReplyWithdrawView",
+      "handler": "core_apps.features.reputation_views.ReviewReplyWithdrawView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/moderation-decisions/<uuid:identity>/appeals/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewAppealView",
+      "handler": "core_apps.features.reputation_views.ReviewAppealView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/cases/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewCaseHistoryView",
+      "handler": "core_apps.features.reputation_views.ReviewCaseHistoryView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/cases/<uuid:identity>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewCaseView",
+      "handler": "core_apps.features.reputation_views.ReviewCaseView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reputation-grants/recipients/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReputationRecipientsView",
+      "handler": "core_apps.features.reputation_views.ReputationRecipientsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reputation-grants/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReputationGrantsView",
+      "handler": "core_apps.features.reputation_views.ReputationGrantsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/revoke/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReputationGrantView",
+      "handler": "core_apps.features.reputation_views.ReputationGrantView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/summary/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReputationGrantView",
+      "handler": "core_apps.features.reputation_views.ReputationGrantView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reputation-grants/<uuid:identity>/preview/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReputationGrantPreviewView",
+      "handler": "core_apps.features.reputation_views.ReputationGrantPreviewView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/portfolios/<str:kind>/<uuid:identity>/summary/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.PortfolioReviewsView",
+      "handler": "core_apps.features.reputation_experience_views.PortfolioReviewsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/portfolios/<str:kind>/<uuid:identity>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.PortfolioReviewsView",
+      "handler": "core_apps.features.reputation_experience_views.PortfolioReviewsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/properties/<uuid:identity>/portfolios/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.PropertyPortfolioLinksView",
+      "handler": "core_apps.features.reputation_experience_views.PropertyPortfolioLinksView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/company-bindings/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.CompanyBindingsView",
+      "handler": "core_apps.features.reputation_experience_views.CompanyBindingsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/company-bindings/<uuid:identity>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.CompanyBindingView",
+      "handler": "core_apps.features.reputation_experience_views.CompanyBindingView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/company-bindings/<uuid:identity>/authorities/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.CompanyAuthoritiesView",
+      "handler": "core_apps.features.reputation_experience_views.CompanyAuthoritiesView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/company-bindings/<uuid:identity>/assignments/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.CompanyAssignmentsView",
+      "handler": "core_apps.features.reputation_experience_views.CompanyAssignmentsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/employee-assignments/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.CompanyAssignmentsView",
+      "handler": "core_apps.features.reputation_experience_views.CompanyAssignmentsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/employee-assignments/<uuid:identity>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.EmployeeOccupancyView",
+      "handler": "core_apps.features.reputation_experience_views.EmployeeOccupancyView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/occupancy-confirmations/<uuid:identity>/confirm/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.EmployeeOccupancyConfirmView",
+      "handler": "core_apps.features.reputation_experience_views.EmployeeOccupancyConfirmView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/ownership-transitions/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.OwnershipTransitionsView",
+      "handler": "core_apps.features.reputation_experience_views.OwnershipTransitionsView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/ownership-transitions/<uuid:identity>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.OwnershipTransitionView",
+      "handler": "core_apps.features.reputation_experience_views.OwnershipTransitionView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reviews/experience-choices/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.ExperienceChoicesView",
+      "handler": "core_apps.features.reputation_experience_views.ExperienceChoicesView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/responsibility-assignments/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_responsibility_views.collection",
+      "handler": "core_apps.features.company_responsibility_views.CollectionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/responsibility-assignments/<uuid:tenancy_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_responsibility_views.detail",
+      "handler": "core_apps.features.company_responsibility_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/responsibility-assignments/<uuid:tenancy_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_responsibility_views.action",
+      "handler": "core_apps.features.company_responsibility_views.ActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/role-work/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_views.role_work",
+      "handler": "core_apps.features.company_views.RoleWorkView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/role-contexts/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_views.role_contexts",
+      "handler": "core_apps.features.company_views.RoleContextsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-terms-negotiations/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_negotiation_views.negotiations",
+      "handler": "core_apps.features.company_negotiation_views.NegotiationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-terms-negotiations/<uuid:negotiation_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_negotiation_views.detail",
+      "handler": "core_apps.features.company_negotiation_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-terms-negotiations/<uuid:negotiation_id>/<slug:action>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_negotiation_views.detail",
+      "handler": "core_apps.features.company_negotiation_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/negotiation/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_negotiation_views.start",
+      "handler": "core_apps.features.company_negotiation_views.StartView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/workspace-summary/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.workspace_views.summary",
+      "handler": "core_apps.features.workspace_views.SummaryView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/saved-lists/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_saved_views.collection",
+      "handler": "core_apps.features.company_saved_views.CollectionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_saved_views.detail",
+      "handler": "core_apps.features.company_saved_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/items/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_saved_views.items",
+      "handler": "core_apps.features.company_saved_views.ItemsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/rename/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_saved_views.action",
+      "handler": "core_apps.features.company_saved_views.ActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/archive/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_saved_views.action",
+      "handler": "core_apps.features.company_saved_views.ActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/add/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_saved_views.action",
+      "handler": "core_apps.features.company_saved_views.ActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-saved-lists/<uuid:list_id>/remove/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_saved_views.action",
+      "handler": "core_apps.features.company_saved_views.ActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/rental-summary/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_rental_value_views.rental_summary",
+      "handler": "core_apps.features.company_rental_value_views.RentalSummaryView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/housing-report/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_rental_value_views.housing_report",
+      "handler": "core_apps.features.company_rental_value_views.HousingReportView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-requirements/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_rental_value_views.catalog",
+      "handler": "core_apps.features.company_rental_value_views.CatalogView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-housing-requests/<uuid:request_id>/assistance/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_rental_value_views.assistance",
+      "handler": "core_apps.features.company_rental_value_views.AssistanceView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/staff-batches/import-preview/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_rental_value_views.import_preview",
+      "handler": "core_apps.features.company_rental_value_views.ImportPreviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-tenancies/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_tenancy_views.collection",
+      "handler": "core_apps.features.company_tenancy_views.CollectionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-tenancies/<uuid:tenancy_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_tenancy_views.detail",
+      "handler": "core_apps.features.company_tenancy_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-tenancies/<uuid:tenancy_id>/resolve-operation/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_tenancy_views.resolve_operation",
+      "handler": "core_apps.features.company_tenancy_views.ResolveOperationView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-tenancies/<uuid:tenancy_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_tenancy_views.action",
+      "handler": "core_apps.features.company_tenancy_views.ActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-contract-preparations/<uuid:preparation_id>/agreement/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_tenancy_views.create",
+      "handler": "core_apps.features.company_tenancy_views.CreateView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/execution-review/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_tenancy_views.verify_mandate",
+      "handler": "core_apps.features.company_tenancy_views.VerifyMandateView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/mandates/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_contract_views.mandates",
+      "handler": "core_apps.features.company_contract_views.MandatesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-mandates/<uuid:mandate_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_contract_views.mandate_action",
+      "handler": "core_apps.features.company_contract_views.MandateActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/contract-preparation/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_contract_views.preparation",
+      "handler": "core_apps.features.company_contract_views.PreparationView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-contract-preparations/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_contract_views.preparations",
+      "handler": "core_apps.features.company_contract_views.PreparationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-contract-preparations/<uuid:preparation_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_contract_views.detail",
+      "handler": "core_apps.features.company_contract_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-contract-preparations/<uuid:preparation_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_contract_views.preparation_action",
+      "handler": "core_apps.features.company_contract_views.PreparationActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/changes/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.portfolio_views.change_history",
+      "handler": "core_apps.features.portfolio_views.ChangeHistoryView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/bulk-edit/preview/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.portfolio_views.preview",
+      "handler": "core_apps.features.portfolio_views.PreviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/topology/preview/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.portfolio_views.preview",
+      "handler": "core_apps.features.portfolio_views.PreviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-changes/<uuid:change_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.portfolio_views.change",
+      "handler": "core_apps.features.portfolio_views.ChangeView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/media/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.portfolio_views.media_collection",
+      "handler": "core_apps.features.portfolio_views.MediaCollectionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-media/<uuid:media_id>/",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.features.portfolio_views.media_detail",
+      "handler": "core_apps.features.portfolio_views.MediaDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-media/<uuid:media_id>/bytes/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.portfolio_views.media_bytes",
+      "handler": "core_apps.features.portfolio_views.MediaBytesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-media/<uuid:media_id>/review/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.portfolio_views.media_review",
+      "handler": "core_apps.features.portfolio_views.MediaReviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/housing-requests/<uuid:request_id>/discussion/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_chat_views.discussion",
+      "handler": "core_apps.features.company_chat_views.DiscussionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/approval-route/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_work_views.approval_route",
+      "handler": "core_apps.features.company_work_views.ApprovalRouteView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/work-items/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_work_views.work",
+      "handler": "core_apps.features.company_work_views.WorkView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/reassign/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_work_views.reassign",
+      "handler": "core_apps.features.company_work_views.ReassignView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/account-contexts/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.contexts",
+      "handler": "core_apps.features.company_staff_views.ContextsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/planning-staff/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.planning_people",
+      "handler": "core_apps.features.company_staff_views.PlanningPeopleView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/staff/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.roster",
+      "handler": "core_apps.features.company_staff_views.RosterView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/staff/<uuid:staff_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.detail",
+      "handler": "core_apps.features.company_staff_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/staff/<uuid:staff_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.activation",
+      "handler": "core_apps.features.company_staff_views.ActivationView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/staff-batches/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.batch",
+      "handler": "core_apps.features.company_staff_views.BatchView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/staff-batches/<uuid:batch_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.batch_detail",
+      "handler": "core_apps.features.company_staff_views.BatchDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-access/preview/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.access_preview",
+      "handler": "core_apps.features.company_staff_views.AccessPreviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-access/contact-proof/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.request_contact_proof",
+      "handler": "core_apps.features.company_staff_views.RequestContactProofView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-access/contact-proof/<uuid:proof_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.verify_contact_proof",
+      "handler": "core_apps.features.company_staff_views.VerifyContactProofView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-access/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_staff_views.access_response",
+      "handler": "core_apps.features.company_staff_views.AccessResponseView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-capabilities/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_views.capabilities",
+      "handler": "core_apps.features.company_views.CapabilitiesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.companies",
+      "handler": "core_apps.features.company_views.CompaniesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-invitations/accept/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.accept_invitation",
+      "handler": "core_apps.features.company_views.AcceptInvitationView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-invitations/<uuid:invitation_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_views.invitation_detail",
+      "handler": "core_apps.features.company_views.InvitationDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_views.company_detail",
+      "handler": "core_apps.features.company_views.CompanyDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/members/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_views.members",
+      "handler": "core_apps.features.company_views.MembersView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/occupants/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_admin_views.occupants",
+      "handler": "core_apps.features.company_admin_views.OccupantsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/budget/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_admin_views.company_budget",
+      "handler": "core_apps.features.company_admin_views.CompanyBudgetView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-housing-requests/<uuid:request_id>/coordinator/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_admin_views.reassign_coordinator",
+      "handler": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-authority/<slug:kind>/<uuid:identity>/review/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_admin_views.authority_review",
+      "handler": "core_apps.features.company_admin_views.AuthorityReviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/members/<uuid:membership_id>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.member_action",
+      "handler": "core_apps.features.company_views.MemberActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/invitations/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.invitations",
+      "handler": "core_apps.features.company_views.InvitationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/companies/<uuid:company_id>/housing-requests/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.housing_requests",
+      "handler": "core_apps.features.company_views.HousingRequestsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-housing-requests/<uuid:request_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.housing_request",
+      "handler": "core_apps.features.company_views.HousingRequestView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-housing-requests/<uuid:request_id>/items/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.select_offer",
+      "handler": "core_apps.features.company_views.SelectOfferView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/company-booking-items/<uuid:item_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.item_action",
+      "handler": "core_apps.features.company_views.ItemActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-assets/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.containers",
+      "handler": "core_apps.features.company_views.ContainersView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.company_views.container_detail",
+      "handler": "core_apps.features.company_views.ContainerDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-assets/<slug:kind>/<uuid:asset_id>/attach-unit/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.attach_unit",
+      "handler": "core_apps.features.company_views.AttachUnitView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-unit-templates/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_views.unit_templates",
+      "handler": "core_apps.features.company_views.UnitTemplatesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-unit-batches/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.batch_units",
+      "handler": "core_apps.features.company_views.BatchUnitsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/residential-unit-batches/<uuid:batch_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.company_views.batch_detail",
+      "handler": "core_apps.features.company_views.BatchDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/portfolio-offers/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.portfolio_offers",
+      "handler": "core_apps.features.company_views.PortfolioOffersView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/portfolio-offers/<uuid:offer_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.company_views.portfolio_offer_action",
+      "handler": "core_apps.features.company_views.PortfolioOfferActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/terms-proposals/<uuid:proposal_id>/propose-answer/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.terms.propose_answer",
+      "handler": "core_apps.features.rental_lifecycle_views.terms.ProposeAnswerView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/operations/verification-claims/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.claims.verification_claims",
+      "handler": "core_apps.features.rental_lifecycle_views.claims.VerificationClaimsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/operations/verification-claims/<uuid:claim_id>/revoke/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.claims.revoke_claim",
+      "handler": "core_apps.features.rental_lifecycle_views.claims.RevokeClaimView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/operations/rental-cases/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.cases.rental_cases",
+      "handler": "core_apps.features.rental_lifecycle_views.cases.RentalCasesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/operations/rental-cases/<uuid:case_id>/actions/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.cases.rental_case",
+      "handler": "core_apps.features.rental_lifecycle_views.cases.RentalCaseView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_bookings",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/submit/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/consents/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/withdraw/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/application-profile/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.applications.application_profile",
+      "handler": "core_apps.features.rental_lifecycle_views.applications.ApplicationProfileView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/application-profile/versions/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.applications.application_version",
+      "handler": "core_apps.features.rental_lifecycle_views.applications.ApplicationVersionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/application-profile/versions/<uuid:version_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.applications.application_version_detail",
+      "handler": "core_apps.features.rental_lifecycle_views.applications.ApplicationVersionDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/application-shares/preview/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.applications.application_share_review",
+      "handler": "core_apps.features.rental_lifecycle_views.applications.ApplicationShareReviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/application-shares/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.applications.application_shares",
+      "handler": "core_apps.features.rental_lifecycle_views.applications.ApplicationSharesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/application-shares/<uuid:share_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.applications.application_share",
+      "handler": "core_apps.features.rental_lifecycle_views.applications.ApplicationShareView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/application-shares/<uuid:share_id>/revoke/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.applications.application_share",
+      "handler": "core_apps.features.rental_lifecycle_views.applications.ApplicationShareView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-summary/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.decisions.property_decision",
+      "handler": "core_apps.features.rental_lifecycle_views.decisions.PropertyDecisionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/properties/<uuid:property_id>/decision-facts/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.decisions.property_fact",
+      "handler": "core_apps.features.rental_lifecycle_views.decisions.PropertyFactView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/properties/<uuid:property_id>/availability-confirmation/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.decisions.availability_confirmation",
+      "handler": "core_apps.features.rental_lifecycle_views.decisions.AvailabilityConfirmationView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/availability-blocks/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.reservations.reservation_holds",
+      "handler": "core_apps.features.rental_lifecycle_views.reservations.ReservationHoldsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reservation-holds/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.reservations.reservation_holds",
+      "handler": "core_apps.features.rental_lifecycle_views.reservations.ReservationHoldsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.reservations.reservation_hold",
+      "handler": "core_apps.features.rental_lifecycle_views.reservations.ReservationHoldView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/extend/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.reservations.reservation_hold",
+      "handler": "core_apps.features.rental_lifecycle_views.reservations.ReservationHoldView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/reservation-holds/<uuid:hold_id>/release/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.reservations.reservation_hold",
+      "handler": "core_apps.features.rental_lifecycle_views.reservations.ReservationHoldView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/deals/<uuid:subject_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.deals.rental_deal",
+      "handler": "core_apps.features.rental_lifecycle_views.deals.RentalDealView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/owner-application-queue/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.deals.owner_application_queue",
+      "handler": "core_apps.features.rental_lifecycle_views.deals.OwnerApplicationQueueView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/move-in-cases/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.cases.rental_cases",
+      "handler": "core_apps.features.rental_lifecycle_views.cases.RentalCasesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-cases/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.cases.rental_cases",
+      "handler": "core_apps.features.rental_lifecycle_views.cases.RentalCasesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.cases.rental_case",
+      "handler": "core_apps.features.rental_lifecycle_views.cases.RentalCaseView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-cases/<uuid:case_id>/actions/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.cases.rental_case",
+      "handler": "core_apps.features.rental_lifecycle_views.cases.RentalCaseView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/edit/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/counter/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/accept/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/reject/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/request-changes/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-booking-proposals/<uuid:booking_id>/terms/withdraw/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_lifecycle_views.group_bookings.group_booking",
+      "handler": "core_apps.features.rental_lifecycle_views.group_bookings.GroupBookingView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/shared-rental-summaries/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_summary_views.summary_grants",
+      "handler": "core_apps.features.rental_summary_views.SummaryGrantsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-sharing-options/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_summary_views.summary_options",
+      "handler": "core_apps.features.rental_summary_views.SummaryOptionsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/summary-grants/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_summary_views.summary_grants",
+      "handler": "core_apps.features.rental_summary_views.SummaryGrantsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-summary-grants/<uuid:grant_id>/revoke/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_summary_views.revoke_summary",
+      "handler": "core_apps.features.rental_summary_views.RevokeSummaryView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/student-evidence/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.student_verification_views.student_evidence",
+      "handler": "core_apps.features.student_verification_views.StudentEvidenceView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/student-evidence/upload/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_verification_views.student_evidence_upload",
+      "handler": "core_apps.features.student_verification_views.StudentEvidenceUploadView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/student-evidence/<uuid:evidence_id>/metadata/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.student_verification_views.student_evidence_metadata",
+      "handler": "core_apps.features.student_verification_views.StudentEvidenceMetadataView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/student-evidence/<uuid:evidence_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.student_verification_views.student_evidence",
+      "handler": "core_apps.features.student_verification_views.StudentEvidenceView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/operations/student-verifications/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_verification_views.student_review",
+      "handler": "core_apps.features.student_verification_views.StudentReviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/operations/student-verifications/<uuid:profile_id>/review/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_verification_views.student_review",
+      "handler": "core_apps.features.student_verification_views.StudentReviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/student-profile/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_views.student_profile",
+      "handler": "core_apps.features.student_views.StudentProfileView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/campuses/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.student_views.campuses",
+      "handler": "core_apps.features.student_views.CampusesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/academic-plans/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_views.academic_plans",
+      "handler": "core_apps.features.student_views.AcademicPlansView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.student_views.academic_plan",
+      "handler": "core_apps.features.student_views.AcademicPlanView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/history/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.student_views.plan_history",
+      "handler": "core_apps.features.student_views.PlanHistoryView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/publication-preview/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.student_views.plan_preview",
+      "handler": "core_apps.features.student_views.PlanPreviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/arrangements/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_views.living_arrangements",
+      "handler": "core_apps.features.student_views.LivingArrangementsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/academic-plans/<uuid:plan_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_views.plan_action",
+      "handler": "core_apps.features.student_views.PlanActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/student-arrangements/<uuid:arrangement_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_views.living_arrangement",
+      "handler": "core_apps.features.student_views.LivingArrangementView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/student-arrangements/<uuid:arrangement_id>/<slug:action>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_views.living_arrangement",
+      "handler": "core_apps.features.student_views.LivingArrangementView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/properties/<uuid:property_id>/student-policies/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.student_views.student_offer_policy",
+      "handler": "core_apps.features.student_views.StudentOfferPolicyView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/decision-notebook/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.decision_views.notebook",
+      "handler": "core_apps.features.decision_views.NotebookView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/decision-notebook/resolve/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.decision_views.resolve",
+      "handler": "core_apps.features.decision_views.ResolveView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/planning-home/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_home_views.planning_home",
+      "handler": "core_apps.features.planning_home_views.PlanningHomeView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/open-housing-groups/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_invitation_join.open_groups",
+      "handler": "core_apps.features.planning_group_views_parts.group_invitation_join.OpenGroupsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-join-requests/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_invitation_join.my_group_join_requests",
+      "handler": "core_apps.features.planning_group_views_parts.group_invitation_join.MyGroupJoinRequestsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-join-requests/<uuid:join_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_invitation_join.group_join_detail",
+      "handler": "core_apps.features.planning_group_views_parts.group_invitation_join.GroupJoinDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/join-requests/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_invitation_join.group_join_request",
+      "handler": "core_apps.features.planning_group_views_parts.group_invitation_join.GroupJoinRequestView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-join-requests/<uuid:join_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_join_decision.group_join_decision",
+      "handler": "core_apps.features.planning_group_views_parts.group_join_decision.GroupJoinDecisionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/owner-group-applications/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_join_decision.owner_group_applications",
+      "handler": "core_apps.features.planning_group_views_parts.group_join_decision.OwnerGroupApplicationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-applications/<uuid:application_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_join_decision.owner_group_application_detail",
+      "handler": "core_apps.features.planning_group_views_parts.group_join_decision.OwnerGroupApplicationDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-applications/<uuid:application_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_join_decision.owner_group_application_action",
+      "handler": "core_apps.features.planning_group_views_parts.group_join_decision.OwnerGroupApplicationActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/lifestyle-profile/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_roommate_views_parts.profile_values.lifestyle_profile",
+      "handler": "core_apps.features.planning_roommate_views_parts.profile_values.LifestyleProfileView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/roommate-candidates/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_roommate_views_parts.roommate_candidate_action.roommate_candidates",
+      "handler": "core_apps.features.planning_roommate_views_parts.roommate_candidate_action.RoommateCandidatesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/roommate-connections/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_roommate_views_parts.roommate_candidate_action.roommate_connections",
+      "handler": "core_apps.features.planning_roommate_views_parts.roommate_candidate_action.RoommateConnectionsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/roommate-candidates/<uuid:candidate_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_roommate_views_parts.roommate_candidate_action.roommate_candidate_action",
+      "handler": "core_apps.features.planning_roommate_views_parts.roommate_candidate_action.RoommateCandidateActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/roommate-connections/<uuid:connection_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_roommate_views_parts.roommate_connection_action.roommate_connection_action",
+      "handler": "core_apps.features.planning_roommate_views_parts.roommate_connection_action.RoommateConnectionActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-groups/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.housing_groups.housing_groups",
+      "handler": "core_apps.features.planning_group_views_parts.housing_groups.HousingGroupsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.housing_groups.housing_group_detail",
+      "handler": "core_apps.features.planning_group_views_parts.housing_groups.HousingGroupDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/invitations/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_payload.group_invitation_create",
+      "handler": "core_apps.features.planning_group_views_parts.group_payload.GroupInvitationCreateView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.housing_group_action.housing_group_action",
+      "handler": "core_apps.features.planning_group_views_parts.housing_group_action.HousingGroupActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-invitations/preview/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_payload.group_invitation_preview",
+      "handler": "core_apps.features.planning_group_views_parts.group_payload.GroupInvitationPreviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-invitations/join/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_invitation_join.group_invitation_join",
+      "handler": "core_apps.features.planning_group_views_parts.group_invitation_join.GroupInvitationJoinView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/group-invitations/<uuid:invitation_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_group_views_parts.group_payload.group_invitation_detail",
+      "handler": "core_apps.features.planning_group_views_parts.group_payload.GroupInvitationDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-requests/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_requests.housing_requests",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_requests.HousingRequestsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-demand/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_requests.housing_demand",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_requests.HousingDemandView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/owner-housing-offers/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.owner_housing_offers.owner_housing_offers",
+      "handler": "core_apps.features.planning_housing_views_parts.owner_housing_offers.OwnerHousingOffersView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_requests.housing_request_detail",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_requests.HousingRequestDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/changes/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_requests.housing_request_changes",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_requests.HousingRequestChangesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-offers/<uuid:offer_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_offers.housing_offer_detail",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_offers.HousingOfferDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offers/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_offers.housing_offers",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_offers.HousingOffersView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_offer_inventory.housing_offer_inventory",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_offer_inventory.HousingOfferInventoryView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-requests/<uuid:request_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_request_action.housing_request_action",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_request_action.HousingRequestActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/housing-offers/<uuid:offer_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_housing_views_parts.housing_offers.housing_offer_action",
+      "handler": "core_apps.features.planning_housing_views_parts.housing_offers.HousingOfferActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-report-context/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_condition_views_parts.condition_report_context.condition_report_context",
+      "handler": "core_apps.features.planning_condition_views_parts.condition_report_context.ConditionReportContextView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/condition-reports/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_condition_views_parts.condition_report_action.condition_reports",
+      "handler": "core_apps.features.planning_condition_views_parts.condition_report_action.ConditionReportsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/condition-reports/<uuid:report_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_condition_views_parts.condition_report_action.condition_report_detail",
+      "handler": "core_apps.features.planning_condition_views_parts.condition_report_action.ConditionReportDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/condition-reports/<uuid:report_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_condition_views_parts.condition_report_action.condition_report_action",
+      "handler": "core_apps.features.planning_condition_views_parts.condition_report_action.ConditionReportActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/move-out-notices/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.move_out_notices",
+      "handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.MoveOutNoticesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-requests/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.replacement_requests",
+      "handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.ReplacementRequestsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/replacement-candidates/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.reconcile_transitions.replacement_candidates",
+      "handler": "core_apps.features.planning_transition_views_parts.reconcile_transitions.ReplacementCandidatesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/move-out-notices/<uuid:transition_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.transition_detail_action",
+      "handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.TransitionDetailActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/move-out-notices/<uuid:transition_id>/<slug:action>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.transition_detail_action",
+      "handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.TransitionDetailActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/replacement-requests/<uuid:transition_id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.transition_detail_action",
+      "handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.TransitionDetailActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/replacement-requests/<uuid:transition_id>/candidate-consent/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.reconcile_transitions.replacement_candidate_consent",
+      "handler": "core_apps.features.planning_transition_views_parts.reconcile_transitions.ReplacementCandidateConsentView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/replacement-requests/<uuid:transition_id>/<slug:action>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.transition_detail_action",
+      "handler": "core_apps.features.planning_transition_views_parts.transition_detail_action.TransitionDetailActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/replacement-invitations/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_transition_views_parts.reconcile_transitions.replacement_invitations",
+      "handler": "core_apps.features.planning_transition_views_parts.reconcile_transitions.ReplacementInvitationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/commute-searches/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_discovery_views_parts.commute_searches.commute_searches",
+      "handler": "core_apps.features.planning_discovery_views_parts.commute_searches.CommuteSearchesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_discovery_views_parts.commute_searches.commute_detail",
+      "handler": "core_apps.features.planning_discovery_views_parts.commute_searches.CommuteDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/cancel/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_discovery_views_parts.commute_results.commute_cancel",
+      "handler": "core_apps.features.planning_discovery_views_parts.commute_results.CommuteCancelView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/commute-searches/<uuid:search_id>/results/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.planning_discovery_views_parts.commute_results.commute_results",
+      "handler": "core_apps.features.planning_discovery_views_parts.commute_results.CommuteResultsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/tenant-assistant/turns/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.planning_discovery_views_parts.tenant_assistant_turns.tenant_assistant_turns",
+      "handler": "core_apps.features.planning_discovery_views_parts.tenant_assistant_turns.TenantAssistantTurnsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/shared-housing-plans/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.shared_housing_views.plans",
+      "handler": "core_apps.features.shared_housing_views.PlansView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/shared-housing-plans/<uuid:plan_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.shared_housing_views.detail",
+      "handler": "core_apps.features.shared_housing_views.DetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/shared-housing-plans/<uuid:plan_id>/proposals/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.shared_housing_views.proposals",
+      "handler": "core_apps.features.shared_housing_views.ProposalsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/shared-housing-plans/<uuid:plan_id>/proposals/<uuid:proposal_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.shared_housing_views.proposal_action",
+      "handler": "core_apps.features.shared_housing_views.ProposalActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/shared-housing-plans/<uuid:plan_id>/<slug:action>/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.shared_housing_views.action",
+      "handler": "core_apps.features.shared_housing_views.ActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/shared-housing-demand/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.shared_housing_views.demand",
+      "handler": "core_apps.features.shared_housing_views.DemandView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/owner-shared-housing-applications/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.shared_housing_views.applications",
+      "handler": "core_apps.features.shared_housing_views.ApplicationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-capabilities/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.rental_operation_lookup.rental_capabilities",
+      "handler": "core_apps.features.views_parts.rental_operation_lookup.RentalCapabilitiesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/planning-capabilities/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.planning_capabilities.planning_capabilities",
+      "handler": "core_apps.features.views_parts.planning_capabilities.PlanningCapabilitiesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-operations/<uuid:request_key>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.rental_operation_lookup.rental_operation_lookup",
+      "handler": "core_apps.features.views_parts.rental_operation_lookup.RentalOperationLookupView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/configuration/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.planning_capabilities.configuration",
+      "handler": "core_apps.features.views_parts.planning_capabilities.ConfigurationView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/search-alerts/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.boost_campaigns.search_alerts",
+      "handler": "core_apps.features.views_parts.boost_campaigns.SearchAlertsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/search-alerts/<uuid:alert_id>/",
+      "methods": [
+        "GET",
+        "PATCH",
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.features.views_parts.boost_campaigns.search_alert_detail",
+      "handler": "core_apps.features.views_parts.boost_campaigns.SearchAlertDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/owner-analytics/<uuid:property_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.listing_suggestions.owner_analytics",
+      "handler": "core_apps.features.views_parts.listing_suggestions.OwnerAnalyticsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/listing-suggestions/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.listing_suggestions.listing_suggestions",
+      "handler": "core_apps.features.views_parts.listing_suggestions.ListingSuggestionsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/lease-configuration/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.lease_configuration.lease_configuration",
+      "handler": "core_apps.features.views_parts.lease_configuration.LeaseConfigurationView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-interests/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.rental_interests.rental_interests",
+      "handler": "core_apps.features.rental_phase2_views_parts.rental_interests.RentalInterestsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-interests/<uuid:interest_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.rental_interests.rental_interest_detail",
+      "handler": "core_apps.features.rental_phase2_views_parts.rental_interests.RentalInterestDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-interests/<uuid:interest_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.rental_interests.rental_interest_respond",
+      "handler": "core_apps.features.rental_phase2_views_parts.rental_interests.RentalInterestRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/terms-proposals/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.terms_proposals.terms_proposals",
+      "handler": "core_apps.features.rental_phase2_views_parts.terms_proposals.TermsProposalsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/terms-proposals/<uuid:proposal_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.terms_proposals.terms_proposal_detail",
+      "handler": "core_apps.features.rental_phase2_views_parts.terms_proposals.TermsProposalDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/terms-proposals/<uuid:proposal_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.create_interest_invitation.terms_proposal_respond",
+      "handler": "core_apps.features.rental_phase2_views_parts.create_interest_invitation.TermsProposalRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/lease-tenants/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.lease_configuration.lease_tenants",
+      "handler": "core_apps.features.views_parts.lease_configuration.LeaseTenantsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/tenancy-invitations/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.tenancy_invitations.tenancy_invitations",
+      "handler": "core_apps.features.views_parts.tenancy_invitations.TenancyInvitationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/tenancy-invitations/create/resolve/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.tenancy_invitation_recovery.tenancy_invitation_create_resolve",
+      "handler": "core_apps.features.views_parts.tenancy_invitation_recovery.TenancyInvitationCreateResolveView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/resolve/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.tenancy_invitation_recovery.tenancy_invitation_response_resolve",
+      "handler": "core_apps.features.views_parts.tenancy_invitation_recovery.TenancyInvitationResponseResolveView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.tenancy_invitation_respond.tenancy_invitation_detail",
+      "handler": "core_apps.features.views_parts.tenancy_invitation_respond.TenancyInvitationDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.tenancy_invitation_respond.tenancy_invitation_respond",
+      "handler": "core_apps.features.views_parts.tenancy_invitation_respond.TenancyInvitationRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/tenancy-invitations/<uuid:invitation_id>/revoke/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.tenancy_invitation_revoke.tenancy_invitation_revoke",
+      "handler": "core_apps.features.rental_phase2_views_parts.tenancy_invitation_revoke.TenancyInvitationRevokeView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.leases.leases",
+      "handler": "core_apps.features.views_parts.leases.LeasesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.views_parts.leases.lease_detail",
+      "handler": "core_apps.features.views_parts.leases.LeaseDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/signing-session/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.lease_cancel.lease_signing_session",
+      "handler": "core_apps.features.views_parts.lease_cancel.LeaseSigningSessionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/review/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.update_structured_lease.lease_review",
+      "handler": "core_apps.features.rental_phase2_views_parts.update_structured_lease.LeaseReviewView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/submit-for-signature/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.create_structured_signing_session.lease_submit_for_signature",
+      "handler": "core_apps.features.rental_phase2_views_parts.create_structured_signing_session.LeaseSubmitForSignatureView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/timeline/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.lease_billing_schedule.lease_timeline",
+      "handler": "core_apps.features.rental_phase2_views_parts.lease_billing_schedule.LeaseTimelineView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/billing-schedule/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase2_views_parts.lease_billing_schedule.lease_billing_schedule",
+      "handler": "core_apps.features.rental_phase2_views_parts.lease_billing_schedule.LeaseBillingScheduleView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/cancel/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.views_parts.lease_cancel.lease_cancel",
+      "handler": "core_apps.features.views_parts.lease_cancel.LeaseCancelView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rent-invoices/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.lease_cancel.rent_invoices",
+      "handler": "core_apps.features.views_parts.lease_cancel.RentInvoicesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.views_parts.lease_cancel.rent_invoice_detail",
+      "handler": "core_apps.features.views_parts.lease_cancel.RentInvoiceDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase4_views_parts.lease_handovers.lease_handovers",
+      "handler": "core_apps.features.rental_phase4_views_parts.lease_handovers.LeaseHandoversView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.rental_phase4_views_parts.lease_handovers.handover_detail",
+      "handler": "core_apps.features.rental_phase4_views_parts.lease_handovers.HandoverDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/handovers/<uuid:handover_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase4_views_parts.handover_respond.handover_respond",
+      "handler": "core_apps.features.rental_phase4_views_parts.handover_respond.HandoverRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-attachments/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.rental_evidence_upload",
+      "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.RentalEvidenceUploadView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-attachments/<uuid:evidence_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.rental_evidence_detail",
+      "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.RentalEvidenceDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-attachments/<uuid:evidence_id>/content/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.rental_evidence_content",
+      "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.RentalEvidenceContentView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-attachments/<uuid:evidence_id>/download/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.rental_evidence_download",
+      "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.RentalEvidenceDownloadView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/maintenance-requests/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.maintenance_requests.maintenance_requests",
+      "handler": "core_apps.features.rental_phase5_views_parts.maintenance_requests.MaintenanceRequestsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.maintenance_requests.maintenance_detail",
+      "handler": "core_apps.features.rental_phase5_views_parts.maintenance_requests.MaintenanceDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/maintenance-requests/<uuid:request_id>/actions/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.maintenance_action.maintenance_action",
+      "handler": "core_apps.features.rental_phase5_views_parts.maintenance_action.MaintenanceActionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/amendments/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.amendments",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.AmendmentsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/renewals/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.renewals",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.RenewalsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/termination-requests/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.terminations",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.TerminationsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/payment-extension-requests/<uuid:change_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_detail",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/payment-extension-requests/<uuid:change_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_respond",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/amendments/<uuid:change_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_detail",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/amendments/<uuid:change_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_respond",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/amendments/<uuid:change_id>/submit-for-signature/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_signing_session.submit_change_for_signature",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_signing_session.SubmitChangeForSignatureView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/amendments/<uuid:change_id>/signing-session/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_signing_session.change_signing_session",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_signing_session.ChangeSigningSessionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/renewals/<uuid:change_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_detail",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/renewals/<uuid:change_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_respond",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/renewals/<uuid:change_id>/submit-for-signature/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_signing_session.submit_change_for_signature",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_signing_session.SubmitChangeForSignatureView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/renewals/<uuid:change_id>/signing-session/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_signing_session.change_signing_session",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_signing_session.ChangeSigningSessionView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/termination-requests/<uuid:change_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_detail",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/termination-requests/<uuid:change_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_respond",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/external-payment-claims/<uuid:change_id>/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_detail",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/external-payment-claims/<uuid:change_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase5_views_parts.change_respond.change_respond",
+      "handler": "core_apps.features.rental_phase5_views_parts.change_respond.ChangeRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.final_settlement_propose.final_settlement_detail",
+      "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_propose.FinalSettlementDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/propose/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.final_settlement_propose.final_settlement_propose",
+      "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_propose.FinalSettlementProposeView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.final_settlement_respond.final_settlement_respond",
+      "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_respond.FinalSettlementRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/disputes/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.disputes.disputes",
+      "handler": "core_apps.features.rental_phase6_views_parts.disputes.DisputesView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/disputes/<uuid:dispute_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.disputes.dispute_detail",
+      "handler": "core_apps.features.rental_phase6_views_parts.disputes.DisputeDetailView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/disputes/<uuid:dispute_id>/responses/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.disputes.dispute_respond",
+      "handler": "core_apps.features.rental_phase6_views_parts.disputes.DisputeRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/disputes/<uuid:dispute_id>/respond/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.disputes.dispute_respond",
+      "handler": "core_apps.features.rental_phase6_views_parts.disputes.DisputeRespondView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/documents/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.lease_documents",
+      "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.LeaseDocumentsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-documents/<uuid:document_id>/download/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.document_download",
+      "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.DocumentDownloadView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/rental-statements/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.rental_statement_create",
+      "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.RentalStatementCreateView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.lease_reviews",
+      "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.LeaseReviewsView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/features/v1/leases/<uuid:lease_id>/rental-center/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.rental_phase6_views_parts.rental_center.rental_center",
+      "handler": "core_apps.features.rental_phase6_views_parts.rental_center.RentalCenterView",
+      "previous_style": "decorated FBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/admin/reviews/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewModerationQueueView",
+      "handler": "core_apps.features.reputation_views.ReviewModerationQueueView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/admin/review-cases/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewOperatorCasesView",
+      "handler": "core_apps.features.reputation_views.ReviewOperatorCasesView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/admin/review-cases/<uuid:identity>/resolve/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewResolveCaseView",
+      "handler": "core_apps.features.reputation_views.ReviewResolveCaseView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/admin/reviews/<uuid:identity>/decisions/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewModerateView",
+      "handler": "core_apps.features.reputation_views.ReviewModerateView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/admin/review-appeals/<uuid:identity>/resolve/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_views.ReviewResolveAppealView",
+      "handler": "core_apps.features.reputation_views.ReviewResolveAppealView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/admin/review-recovery/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.ReviewRecoveryView",
+      "handler": "core_apps.features.reputation_experience_views.ReviewRecoveryView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    },
+    {
+      "route": "api/v1/admin/review-windows/<uuid:identity>/extend/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.features.reputation_experience_views.ReviewWindowExtensionView",
+      "handler": "core_apps.features.reputation_experience_views.ReviewWindowExtensionView",
+      "previous_style": "DRF CBV",
+      "style": "DRF CBV",
+      "transport_metadata_unchanged": true
+    }
+  ]
+}

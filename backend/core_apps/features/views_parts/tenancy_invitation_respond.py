@@ -1,10 +1,12 @@
 """Views: tenancy invitation respond."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -37,101 +39,137 @@ def _participant_invitation(request, invitation_id):
     return invitation
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def tenancy_invitation_detail(request, invitation_id):
-    invitation = _participant_invitation(request, invitation_id)
-    refresh_effective_status(invitation)
-    return Response(
-        TenancyInvitationSerializer(invitation, context={"request": request}).data
-    )
+class TenancyInvitationDetailView(FeatureAPIView):
+    name = "Tenancy Invitation Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "tenancy_invitation_respond",
+            "tenancy_invitation_detail",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def tenancy_invitation_respond(request, invitation_id):
-    visible = _participant_invitation(request, invitation_id)
-    if request.user != visible.tenant:
-        raise PermissionDenied("Only the addressed tenant can respond.")
-    if not request.user.is_active or not request.user.is_verified:
-        raise PermissionDenied("A verified active tenant account is required.")
-    serializer = TenancyInvitationResponseSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    data_in = serializer.validated_data
-    operation = f"tenancy_invitation.respond.{invitation_id}"
-    replay = _replay(request.user, operation, data_in["request_key"], request.data)
-    if replay:
-        return replay
-    with transaction.atomic():
-        # Match creation, inventory edits and lease consumption: property first.
-        get_object_or_404(Property.objects.select_for_update(), pk=visible.property_id)
-        invitation = get_object_or_404(
-            TenancyInvitation.objects.select_for_update(of=("self",)).select_related(
-                "property", "property__owner", "owner", "tenant"
-            ),
-            id=invitation_id,
-            tenant=request.user,
+    def get(self, request, invitation_id):
+        invitation = _participant_invitation(request, invitation_id)
+        refresh_effective_status(invitation)
+        return Response(
+            TenancyInvitationSerializer(invitation, context={"request": request}).data
         )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+tenancy_invitation_detail = TenancyInvitationDetailView.as_view()
+
+
+class TenancyInvitationRespondView(FeatureAPIView):
+    name = "Tenancy Invitation Respond"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "tenancy_invitation_respond",
+            "tenancy_invitation_respond",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, invitation_id):
+        visible = _participant_invitation(request, invitation_id)
+        if request.user != visible.tenant:
+            raise PermissionDenied("Only the addressed tenant can respond.")
+        if not request.user.is_active or not request.user.is_verified:
+            raise PermissionDenied("A verified active tenant account is required.")
+        serializer = TenancyInvitationResponseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data_in = serializer.validated_data
+        operation = f"tenancy_invitation.respond.{invitation_id}"
         replay = _replay(request.user, operation, data_in["request_key"], request.data)
         if replay:
             return replay
-        refresh_effective_status(invitation)
-        if (
-            invitation.status != TenancyInvitation.Status.PENDING
-            or invitation.lease_id
-            or invitation.consumed_at
-        ):
-            return Response(
-                {"message": "This invitation can no longer be answered."},
-                status=status.HTTP_409_CONFLICT,
+        with transaction.atomic():
+            # Match creation, inventory edits and lease consumption: property first.
+            get_object_or_404(
+                Property.objects.select_for_update(), pk=visible.property_id
             )
-        if data_in["revision"] != invitation.revision:
-            raise InvitationConflict("Invitation revision conflict.")
-        if data_in["decision"] == TenancyInvitation.Status.ACCEPTED:
-            problem = current_invitation_problem(invitation)
-            if problem:
+            invitation = get_object_or_404(
+                TenancyInvitation.objects.select_for_update(
+                    of=("self",)
+                ).select_related("property", "property__owner", "owner", "tenant"),
+                id=invitation_id,
+                tenant=request.user,
+            )
+            replay = _replay(
+                request.user, operation, data_in["request_key"], request.data
+            )
+            if replay:
+                return replay
+            refresh_effective_status(invitation)
+            if (
+                invitation.status != TenancyInvitation.Status.PENDING
+                or invitation.lease_id
+                or invitation.consumed_at
+            ):
                 return Response(
-                    {
-                        "code": problem,
-                        "message": localized(
-                            request,
-                            "Acceptance is paused while the property is reviewed. Refresh after approval and review the current terms.",
-                            "القبول متوقف أثناء مراجعة العقار. حدّث الدعوة بعد الاعتماد وراجع الشروط الحالية.",
-                        ),
-                    },
+                    {"message": "This invitation can no longer be answered."},
                     status=status.HTTP_409_CONFLICT,
                 )
-        now = timezone.now()
-        invitation.status = data_in["decision"]
-        invitation.revision += 1
-        invitation.responded_by = request.user
-        fields = ["status", "revision", "responded_by", "updated_at"]
-        if invitation.status == TenancyInvitation.Status.ACCEPTED:
-            invitation.accepted_at = now
-            fields.append("accepted_at")
-        else:
-            invitation.rejected_at = now
-            fields.append("rejected_at")
-        invitation.save(update_fields=fields)
-        output = TenancyInvitationSerializer(
-            invitation, context={"request": request}
-        ).data
-        _remember(
-            request.user,
-            operation,
-            data_in["request_key"],
-            request.data,
-            output,
-            200,
-            request_subject_id=invitation.id,
-            result_subject_id=invitation.id,
-            result_revision=invitation.revision,
-            is_rental_operation=True,
-        )
-        create_notification_for_response(request, invitation)
-    return Response(output)
+            if data_in["revision"] != invitation.revision:
+                raise InvitationConflict("Invitation revision conflict.")
+            if data_in["decision"] == TenancyInvitation.Status.ACCEPTED:
+                problem = current_invitation_problem(invitation)
+                if problem:
+                    return Response(
+                        {
+                            "code": problem,
+                            "message": localized(
+                                request,
+                                "Acceptance is paused while the property is reviewed. Refresh after approval and review the current terms.",
+                                "القبول متوقف أثناء مراجعة العقار. حدّث الدعوة بعد الاعتماد وراجع الشروط الحالية.",
+                            ),
+                        },
+                        status=status.HTTP_409_CONFLICT,
+                    )
+            now = timezone.now()
+            invitation.status = data_in["decision"]
+            invitation.revision += 1
+            invitation.responded_by = request.user
+            fields = ["status", "revision", "responded_by", "updated_at"]
+            if invitation.status == TenancyInvitation.Status.ACCEPTED:
+                invitation.accepted_at = now
+                fields.append("accepted_at")
+            else:
+                invitation.rejected_at = now
+                fields.append("rejected_at")
+            invitation.save(update_fields=fields)
+            output = TenancyInvitationSerializer(
+                invitation, context={"request": request}
+            ).data
+            _remember(
+                request.user,
+                operation,
+                data_in["request_key"],
+                request.data,
+                output,
+                200,
+                request_subject_id=invitation.id,
+                result_subject_id=invitation.id,
+                result_revision=invitation.revision,
+                is_rental_operation=True,
+            )
+            create_notification_for_response(request, invitation)
+        return Response(output)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+tenancy_invitation_respond = TenancyInvitationRespondView.as_view()
 
 
 def _lease_queryset(user, workspace):

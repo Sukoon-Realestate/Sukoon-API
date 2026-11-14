@@ -226,3 +226,12 @@ test-sprint06-properties-tours: ## Property/tour contracts and domain regression
 	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
 		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-06/junit.xml \
 		core_apps/properties core_apps/virtual_tours
+
+.PHONY: test-sprint07-housing sprint07-coverage
+test-sprint07-housing: ## Housing CBV/policy, domain and adjacent feature regressions; isolated settings/storage required
+	mkdir -p $(BASELINE_OUT)/sprint-07
+	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-07/junit.xml core_apps/features/tests
+
+sprint07-coverage: ## Reconcile every scoped alias and global transport contract, without database access
+	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint07_inventory.py

@@ -1,14 +1,20 @@
+from functools import partial
+from .services.housing_tenders import entry_commands as entry_commands
+
 """HTTP boundary for the bounded, sealed collective-tender pilot."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
+
 from django.db.models import Q, F
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
-from .advanced_tender_models import HousingTender, OwnerBid, PackageCandidate
+from .advanced_tender_models import HousingTender
 from .planning_models import HousingGroup, HousingRequest
 from .services.planning import (
-    planning_api,
     require_planning,
     mutate,
     page,
@@ -30,45 +36,87 @@ from .services.housing_tenders.projections import (
 )
 
 
-@planning_api(["GET"], None)
-def sources(request):
-    """Typed canonical source picker; no user-entered UUIDs or inferred membership."""
-    groups = HousingGroup.objects.filter(
-        status="active",
-        memberships__user=request.user,
-        memberships__status="active",
-        memberships__role="admin",
-    )
-    if request.query_params.get("group_id"):
-        groups = groups.filter(id=request.query_params["group_id"])
-    demand = (
-        HousingRequest.objects.filter(
-            user=request.user, status="published", expires_at__gt=timezone.now()
+class SourcesView(FeatureAPIView):
+    "Typed canonical source picker; no user-entered UUIDs or inferred membership."
+    name = "Sources"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "sources",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        groups = HousingGroup.objects.filter(
+            status="active",
+            memberships__user=request.user,
+            memberships__status="active",
+            memberships__role="admin",
         )
-        .filter(Q(academic_plan__isnull=True) | Q(academic_plan__group__in=groups))
-        .select_related("academic_plan")
-    )
-    if not groups.exists():
-        demand = demand.none()
-    return page(
-        request,
-        demand.order_by("-created_at", "pkid"),
-        lambda item: {
-            "id": str(item.id),
-            "title": item.title,
-            "revision": item.revision,
-            "groups": [
-                {"id": str(g.id), "name": g.name, "roster_revision": g.roster_revision}
-                for g in groups
-                if not item.academic_plan_id or item.academic_plan.group_id == g.pk
-            ],
-        },
-    )
+        if request.query_params.get("group_id"):
+            groups = groups.filter(id=request.query_params["group_id"])
+        demand = (
+            HousingRequest.objects.filter(
+                user=request.user, status="published", expires_at__gt=timezone.now()
+            )
+            .filter(Q(academic_plan__isnull=True) | Q(academic_plan__group__in=groups))
+            .select_related("academic_plan")
+        )
+        if not groups.exists():
+            demand = demand.none()
+        return page(
+            request,
+            demand.order_by("-created_at", "pkid"),
+            lambda item: {
+                "id": str(item.id),
+                "title": item.title,
+                "revision": item.revision,
+                "groups": [
+                    {
+                        "id": str(g.id),
+                        "name": g.name,
+                        "roster_revision": g.roster_revision,
+                    }
+                    for g in groups
+                    if not item.academic_plan_id or item.academic_plan.group_id == g.pk
+                ],
+            },
+        )
 
 
-@planning_api(["GET", "POST"], None)
-def tenders(request):
-    if request.method == "GET":
+# Stable callable import for integrations; URLs use the explicit class.
+sources = SourcesView.as_view()
+
+
+class TendersView(FeatureAPIView):
+    name = "Tenders"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "tenders",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "tenders",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
         memberships = HousingGroup.objects.filter(
             memberships__user=request.user, memberships__status="active"
         )
@@ -100,52 +148,108 @@ def tenders(request):
             ),
             lambda x: tender_payload(x, request.user),
         )
-    require_planning(request.user, CAPABILITY)
-    return mutate(
-        request,
-        "housing_tender.create",
-        lambda: None,
-        lambda _, revision: commands.create(request.user, request.data),
-        lambda x: tender_payload(x, request.user),
-        creating=True,
-    )
+
+    def post(self, request):
+        require_planning(request.user, CAPABILITY)
+        return mutate(
+            request,
+            "housing_tender.create",
+            lambda: None,
+            lambda _, revision: commands.create(request.user, request.data),
+            lambda x: tender_payload(x, request.user),
+            creating=True,
+        )
 
 
-@planning_api(["GET"], None)
-def tender_detail(request, tender_id):
-    return Response(tender_payload(get_tender(request.user, tender_id), request.user))
+# Stable callable import for integrations; URLs use the explicit class.
+tenders = TendersView.as_view()
 
 
-@planning_api(["POST"], CAPABILITY)
-def tender_action(request, tender_id, action):
-    def apply(item, revision):
-        if action == "requirements":
-            return commands.respond(request.user, item, request.data)
-        if action == "publish":
-            return commands.publish(request.user, item)
-        if action == "amend":
-            return commands.amend(request.user, item, request.data)
-        if action == "withdraw":
-            commands.require_action(request.user, item, action)
-            item.status = "withdrawn"
-            item.revision += 1
-            item.save()
-            return item
-        raise NotFound()
+class TenderDetailView(FeatureAPIView):
+    name = "Tender Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "tender_detail",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-    return mutate(
-        request,
-        f"housing_tender.{action}.{tender_id}",
-        lambda: get_tender(request.user, tender_id, lock=True),
-        apply,
-        lambda x: tender_payload(x, request.user),
-    )
+    def get(self, request, tender_id):
+        return Response(
+            tender_payload(get_tender(request.user, tender_id), request.user)
+        )
 
 
-@planning_api(["GET", "POST"], None)
-def bids(request, tender_id):
-    parent = get_tender(request.user, tender_id)
-    if request.method == "GET":
+# Stable callable import for integrations; URLs use the explicit class.
+tender_detail = TenderDetailView.as_view()
+
+
+class TenderActionView(FeatureAPIView):
+    name = "Tender Action"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "tender_action",
+            boundary="planning",
+            capability=CAPABILITY,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, tender_id, action):
+        apply = partial(
+            entry_commands.tender_action_post_apply,
+            action=action,
+            actor=request.user,
+            receipt_data=request.data,
+        )
+
+        return mutate(
+            request,
+            f"housing_tender.{action}.{tender_id}",
+            lambda: get_tender(request.user, tender_id, lock=True),
+            apply,
+            lambda x: tender_payload(x, request.user),
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+tender_action = TenderActionView.as_view()
+
+
+class BidsView(FeatureAPIView):
+    name = "Bids"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "bids",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "bids",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, tender_id):
+        parent = get_tender(request.user, tender_id)
         items = (
             parent.bids.all()
             if admin(request.user, parent)
@@ -158,47 +262,85 @@ def bids(request, tender_id):
             ).order_by("-created_at", "pkid"),
             lambda x: bid_payload(x, request.user),
         )
-    require_planning(request.user, CAPABILITY)
-    return mutate(
-        request,
-        f"housing_bid.create.{tender_id}",
-        lambda: get_tender(request.user, tender_id, lock=True),
-        lambda item, revision: commands.bid(request, item),
-        lambda x: bid_payload(x, request.user),
-        creating=True,
-    )
+
+    def post(self, request, tender_id):
+        get_tender(request.user, tender_id)
+        require_planning(request.user, CAPABILITY)
+        return mutate(
+            request,
+            f"housing_bid.create.{tender_id}",
+            lambda: get_tender(request.user, tender_id, lock=True),
+            lambda item, revision: commands.bid(request, item),
+            lambda x: bid_payload(x, request.user),
+            creating=True,
+        )
 
 
-@planning_api(["POST"], CAPABILITY)
-def withdraw_bid(request, bid_id):
-    def load():
-        item = get_object_or_404(OwnerBid, id=bid_id, owner=request.user)
-        get_tender(request.user, item.tender.id, lock=True)
-        return OwnerBid.objects.select_for_update().get(pk=item.pk)
-
-    def apply(item, revision):
-        if item.status != "submitted":
-            raise PermissionDenied("This quote can no longer be withdrawn.")
-        item.status = "withdrawn"
-        item.revision += 1
-        item.save()
-        return item
-
-    return mutate(
-        request,
-        f"housing_bid.withdraw.{bid_id}",
-        load,
-        apply,
-        lambda x: bid_payload(x, request.user),
-    )
+# Stable callable import for integrations; URLs use the explicit class.
+bids = BidsView.as_view()
 
 
-@planning_api(["GET", "POST"], None)
-def packages(request, tender_id):
-    parent = get_tender(request.user, tender_id)
-    if not member(request.user, parent):
-        raise NotFound()
-    if request.method == "GET":
+class WithdrawBidView(FeatureAPIView):
+    name = "Withdraw Bid"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "withdraw_bid",
+            boundary="planning",
+            capability=CAPABILITY,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, bid_id):
+        load = partial(
+            entry_commands.withdraw_bid_post_load, actor=request.user, bid_id=bid_id
+        )
+
+        apply = partial(entry_commands.withdraw_bid_post_apply)
+
+        return mutate(
+            request,
+            f"housing_bid.withdraw.{bid_id}",
+            load,
+            apply,
+            lambda x: bid_payload(x, request.user),
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+withdraw_bid = WithdrawBidView.as_view()
+
+
+class PackagesView(FeatureAPIView):
+    name = "Packages"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "packages",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "packages",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, tender_id):
+        parent = get_tender(request.user, tender_id)
+        if not member(request.user, parent):
+            raise NotFound()
         return page(
             request,
             parent.packages.select_related(
@@ -206,154 +348,302 @@ def packages(request, tender_id):
             ).order_by("-created_at", "pkid"),
             lambda x: package_payload(x, request.user),
         )
-    require_planning(request.user, CAPABILITY)
-    return mutate(
-        request,
-        f"housing_package.create.{tender_id}",
-        lambda: get_tender(request.user, tender_id, lock=True),
-        lambda item, revision: commands.package(request, item),
-        lambda x: package_payload(x, request.user),
-        creating=True,
-    )
+
+    def post(self, request, tender_id):
+        parent = get_tender(request.user, tender_id)
+        if not member(request.user, parent):
+            raise NotFound()
+        require_planning(request.user, CAPABILITY)
+        return mutate(
+            request,
+            f"housing_package.create.{tender_id}",
+            lambda: get_tender(request.user, tender_id, lock=True),
+            lambda item, revision: commands.package(request, item),
+            lambda x: package_payload(x, request.user),
+            creating=True,
+        )
 
 
-@planning_api(["GET"], None)
-def package_detail(request, package_id):
-    return Response(
-        package_payload(get_package(request.user, package_id), request.user)
-    )
+# Stable callable import for integrations; URLs use the explicit class.
+packages = PackagesView.as_view()
 
 
-@planning_api(["POST"], CAPABILITY)
-def package_consent(request, package_id):
-    return mutate(
-        request,
-        f"housing_package.consent.{package_id}",
-        lambda: get_package(request.user, package_id, lock=True),
-        lambda item, revision: commands.consent(request, item),
-        lambda x: package_payload(x, request.user),
-    )
+class PackageDetailView(FeatureAPIView):
+    name = "Package Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "package_detail",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, package_id):
+        return Response(
+            package_payload(get_package(request.user, package_id), request.user)
+        )
 
 
-@planning_api(["POST"], None)
-def prepare_package(request, package_id):
-    from .services.housing_tenders.execution import build
-    from .services.advanced_execution.projections import payload
-
-    require_planning(request.user, "collective_tender_execution")
-    return mutate(
-        request,
-        f"housing_package.prepare.{package_id}",
-        lambda: get_package(request.user, package_id, lock=True),
-        lambda item, _: build(request.user, item, request.data),
-        lambda item: payload(item, request.user),
-    )
+# Stable callable import for integrations; URLs use the explicit class.
+package_detail = PackageDetailView.as_view()
 
 
-@planning_api(["GET", "POST"], None)
-def construction_runs(request, tender_id):
-    from .services.housing_tenders import construction
+class PackageConsentView(FeatureAPIView):
+    name = "Package Consent"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "package_consent",
+            boundary="planning",
+            capability=CAPABILITY,
+            typed=False,
+        ),
+    }
 
-    tender = get_tender(request.user, tender_id)
-    if not admin(request.user, tender):
-        raise NotFound()
-    if request.method == "GET":
+    def post(self, request, package_id):
+        return mutate(
+            request,
+            f"housing_package.consent.{package_id}",
+            lambda: get_package(request.user, package_id, lock=True),
+            lambda item, revision: commands.consent(request, item),
+            lambda x: package_payload(x, request.user),
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+package_consent = PackageConsentView.as_view()
+
+
+class PreparePackageView(FeatureAPIView):
+    name = "Prepare Package"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "prepare_package",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, package_id):
+        from .services.housing_tenders.execution import build
+        from .services.advanced_execution.projections import payload
+
+        require_planning(request.user, "collective_tender_execution")
+        return mutate(
+            request,
+            f"housing_package.prepare.{package_id}",
+            lambda: get_package(request.user, package_id, lock=True),
+            lambda item, _: build(request.user, item, request.data),
+            lambda item: payload(item, request.user),
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+prepare_package = PreparePackageView.as_view()
+
+
+class ConstructionRunsView(FeatureAPIView):
+    name = "Construction Runs"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "construction_runs",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "construction_runs",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, tender_id):
+        from .services.housing_tenders import construction
+
+        tender = get_tender(request.user, tender_id)
+        if not admin(request.user, tender):
+            raise NotFound()
         return page(
             request,
             tender.package_runs.order_by("-created_at", "pkid"),
             lambda item: construction.payload(item, request.user),
         )
-    require_planning(request.user, CAPABILITY)
-    return mutate(
-        request,
-        f"housing_tender.construct.{tender_id}",
-        lambda: get_tender(request.user, tender_id, lock=True),
-        lambda item, _: construction.create(request, item),
-        lambda item: construction.payload(item, request.user),
-        creating=True,
-    )
+
+    def post(self, request, tender_id):
+        from .services.housing_tenders import construction
+
+        tender = get_tender(request.user, tender_id)
+        if not admin(request.user, tender):
+            raise NotFound()
+        require_planning(request.user, CAPABILITY)
+        return mutate(
+            request,
+            f"housing_tender.construct.{tender_id}",
+            lambda: get_tender(request.user, tender_id, lock=True),
+            lambda item, _: construction.create(request, item),
+            lambda item: construction.payload(item, request.user),
+            creating=True,
+        )
 
 
-@planning_api(["GET"], None)
-def construction_detail(request, run_id):
-    from .services.housing_tenders.construction import get_run, payload
-
-    return Response(payload(get_run(request.user, run_id), request.user))
+# Stable callable import for integrations; URLs use the explicit class.
+construction_runs = ConstructionRunsView.as_view()
 
 
-@planning_api(["POST"], CAPABILITY)
-def construction_retry(request, run_id):
-    from django.db import transaction
-    from .services.housing_tenders.construction import get_run, payload
-    from .services.housing_tenders.jobs import enqueue
+class ConstructionDetailView(FeatureAPIView):
+    name = "Construction Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "construction_detail",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-    def apply(item, _):
-        if item.status != "queued":
-            raise PermissionDenied(
-                "Only a queued package search can be dispatched again."
-            )
-        item.revision += 1
-        item.save(update_fields=["revision", "updated_at"])
-        transaction.on_commit(lambda: enqueue(str(item.id)))
-        return item
+    def get(self, request, run_id):
+        from .services.housing_tenders.construction import get_run, payload
 
-    return mutate(
-        request,
-        f"housing_tender.dispatch.{run_id}",
-        lambda: get_run(request.user, run_id, lock=True),
-        apply,
-        lambda item: payload(item, request.user),
-    )
+        return Response(payload(get_run(request.user, run_id), request.user))
 
 
-@planning_api(["GET", "POST"], None)
-def clarifications(request, bid_id):
-    from .advanced_tender_models import TenderBidClarification
-    from .services.planning import check_revision, text_field
-    from .services.housing_tenders.access import subject
+# Stable callable import for integrations; URLs use the explicit class.
+construction_detail = ConstructionDetailView.as_view()
 
-    def serialize(item):
-        return {
-            "id": str(item.id),
-            "revision": 1,
-            "bid_id": str(item.bid.id),
-            "bid_revision": item.bid_revision,
-            "text": item.text,
-            "author_role": (
-                "owner" if item.author_id == item.bid.owner_id else "coordinator"
-            ),
-            "created_at": item.created_at.isoformat(),
-            "amends_terms": False,
-        }
 
-    def load():
-        item = get_object_or_404(OwnerBid.objects.select_related("tender"), id=bid_id)
-        subject(request.user, item.id)
-        return item
+class ConstructionRetryView(FeatureAPIView):
+    name = "Construction Retry"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "construction_retry",
+            boundary="planning",
+            capability=CAPABILITY,
+            typed=False,
+        ),
+    }
 
-    item = load()
-    if request.method == "GET":
+    def post(self, request, run_id):
+        from django.db import transaction
+        from .services.housing_tenders.construction import get_run, payload
+        from .services.housing_tenders.jobs import enqueue
+
+        apply = partial(
+            entry_commands.construction_retry_post_apply,
+            enqueue=enqueue,
+            transaction=transaction,
+        )
+
+        return mutate(
+            request,
+            f"housing_tender.dispatch.{run_id}",
+            lambda: get_run(request.user, run_id, lock=True),
+            apply,
+            lambda item: payload(item, request.user),
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+construction_retry = ConstructionRetryView.as_view()
+
+
+class ClarificationsView(FeatureAPIView):
+    name = "Clarifications"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "advanced_tender_views",
+            "clarifications",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "advanced_tender_views",
+            "clarifications",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, bid_id):
+        from .services.housing_tenders.access import subject
+
+        serialize = partial(entry_commands.clarifications_get_serialize)
+        load = partial(
+            entry_commands.clarifications_get_load,
+            actor=request.user,
+            bid_id=bid_id,
+            subject=subject,
+        )
+        item = load()
         return page(
             request,
             item.clarifications.select_related("bid").order_by("created_at", "pkid"),
             serialize,
         )
-    require_planning(request.user, CAPABILITY)
 
-    def apply(item, _):
-        check_revision(item.revision, request.data.get("bid_revision"))
-        return TenderBidClarification.objects.create(
-            bid=item,
-            author=request.user,
-            bid_revision=item.revision,
-            text=text_field(request.data, "text", required=True, limit=1600),
+    def post(self, request, bid_id):
+        from .advanced_tender_models import TenderBidClarification
+        from .services.planning import check_revision, text_field
+        from .services.housing_tenders.access import subject
+
+        serialize = partial(entry_commands.clarifications_post_serialize)
+        load = partial(
+            entry_commands.clarifications_post_load,
+            actor=request.user,
+            bid_id=bid_id,
+            subject=subject,
+        )
+        load()
+        require_planning(request.user, CAPABILITY)
+        apply = partial(
+            entry_commands.clarifications_post_apply,
+            TenderBidClarification=TenderBidClarification,
+            actor=request.user,
+            check_revision=check_revision,
+            receipt_data=request.data,
+            text_field=text_field,
+        )
+        return mutate(
+            request,
+            f"housing_bid.clarification.{bid_id}",
+            load,
+            apply,
+            serialize,
+            creating=True,
         )
 
-    return mutate(
-        request,
-        f"housing_bid.clarification.{bid_id}",
-        load,
-        apply,
-        serialize,
-        creating=True,
-    )
+
+# Stable callable import for integrations; URLs use the explicit class.
+clarifications = ClarificationsView.as_view()

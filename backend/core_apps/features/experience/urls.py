@@ -1,22 +1,26 @@
 from django.urls import path
 from . import views
-from .preparation import tasks
-from .action_center import action_center
+from .preparation import TasksView
+from .action_center import ActionCenterView
 from . import quality
 from . import discovery
-from .calendar import viewing_calendar
+from .calendar import ViewingCalendarView
 from . import suggestions
 
 urlpatterns = [
-    path('experience/capabilities/', views.capabilities),
-    path('experience/preferences/', views.personal_preferences),
-    path('experience/preparation-tasks/', tasks),
-    path('action-center/', action_center),
-    path('experience/listing-assessments/', quality.create),
-    path('experience/listing-assessments/<uuid:identity>/', quality.detail),
-    path('experience/discovery-preferences/', discovery.settings_view),
-    path('experience/discovery-interactions/', discovery.interaction),
-    path('experience/viewings/<uuid:identity>/calendar/', viewing_calendar),
-    path('experience/suggestions/', suggestions.suggestions),
-    path('experience/alternatives/', suggestions.alternatives),
+    path("experience/capabilities/", views.CapabilitiesView.as_view()),
+    path("experience/preferences/", views.PersonalPreferencesView.as_view()),
+    path("experience/preparation-tasks/", TasksView.as_view()),
+    path("action-center/", ActionCenterView.as_view()),
+    path("experience/listing-assessments/", quality.CreateView.as_view()),
+    path(
+        "experience/listing-assessments/<uuid:identity>/", quality.DetailView.as_view()
+    ),
+    path("experience/discovery-preferences/", discovery.SettingsViewView.as_view()),
+    path("experience/discovery-interactions/", discovery.InteractionView.as_view()),
+    path(
+        "experience/viewings/<uuid:identity>/calendar/", ViewingCalendarView.as_view()
+    ),
+    path("experience/suggestions/", suggestions.SuggestionsView.as_view()),
+    path("experience/alternatives/", suggestions.AlternativesView.as_view()),
 ]

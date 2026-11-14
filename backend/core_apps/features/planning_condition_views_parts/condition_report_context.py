@@ -1,5 +1,10 @@
 """Planning condition views: condition report context."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
+
 import re
 import uuid
 from django.db.models import Q
@@ -12,7 +17,7 @@ from core_apps.common.translation import translate_message
 from ..models import Lease, PrivateAccessRevocation, RentalEvidence
 from ..planning_models import ConditionReport
 from ..rental_phase4_views import evidence_payload
-from ..services.planning import display_name, planning_api, selection_payload
+from ..services.planning import display_name, selection_payload
 from ..services.rental_phase2 import RentalConflict
 
 
@@ -79,9 +84,13 @@ def report_payload(item, user):
         "baseline_id": str(item.baseline.id) if item.baseline_id else "",
         "baseline_revision": item.baseline_revision,
         "baseline_inspected_on": item.baseline_snapshot.get("inspected_on", ""),
-        "baseline_evidence": [evidence_payload(x) for x in RentalEvidence.objects.filter(
-            lease_id=item.lease_id, id__in=item.baseline_snapshot.get("evidence_ids", [])
-        )],
+        "baseline_evidence": [
+            evidence_payload(x)
+            for x in RentalEvidence.objects.filter(
+                lease_id=item.lease_id,
+                id__in=item.baseline_snapshot.get("evidence_ids", []),
+            )
+        ],
         "baseline_items": item.baseline_snapshot.get(
             "items", item.baseline.items if item.baseline_id else []
         ),
@@ -129,70 +138,88 @@ def lease_selection(lease):
     return selection_payload(result)
 
 
-@planning_api(["GET"], "condition_reports")
-def condition_report_context(request, lease_id):
-    lease = participant_lease(request.user, lease_id)
-    if lease.legacy_read_only or not lease.offer_id:
-        raise RentalConflict(
-            "Reconcile legacy accommodation before creating condition reports."
+class ConditionReportContextView(FeatureAPIView):
+    name = "Condition Report Context"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "condition_report_context",
+            "condition_report_context",
+            boundary="planning",
+            capability="condition_reports",
+            typed=False,
+        ),
+    }
+
+    def get(self, request, lease_id):
+        lease = participant_lease(request.user, lease_id)
+        if lease.legacy_read_only or not lease.offer_id:
+            raise RentalConflict(
+                "Reconcile legacy accommodation before creating condition reports."
+            )
+        kind = request.query_params.get(
+            "kind", "move_out" if lease.occupancy_status == "occupied" else "move_in"
         )
-    kind = request.query_params.get(
-        "kind", "move_out" if lease.occupancy_status == "occupied" else "move_in"
-    )
-    if kind not in {"move_in", "move_out"}:
-        raise ValidationError({"kind": "Use move_in or move_out."})
-    selection = lease_selection(lease)
-    baseline = baseline_for(lease, kind)
-    rooms = list(
-        zip(selection.get("room_ids", []), selection.get("room_names", []))
-    ) or [(str(lease.property.id), lease.property.title)]
-    items = [
-        {
-            "id": str(uuid.uuid5(lease.id, f"surface:{identifier}")),
-            "space": name,
-            "label": translate_message("Walls and floors"),
-            "kind": "surface",
-            "condition": "notInspected",
-            "note": "",
-            "reading": "",
-            "unit": "",
-            "quantity": None,
-            "evidence_ids": [],
-        }
-        for identifier, name in rooms
-    ]
-    if baseline:
+        if kind not in {"move_in", "move_out"}:
+            raise ValidationError({"kind": "Use move_in or move_out."})
+        selection = lease_selection(lease)
+        baseline = baseline_for(lease, kind)
+        rooms = list(
+            zip(selection.get("room_ids", []), selection.get("room_names", []))
+        ) or [(str(lease.property.id), lease.property.title)]
         items = [
             {
-                **x,
+                "id": str(uuid.uuid5(lease.id, f"surface:{identifier}")),
+                "space": name,
+                "label": translate_message("Walls and floors"),
+                "kind": "surface",
                 "condition": "notInspected",
                 "note": "",
                 "reading": "",
+                "unit": "",
                 "quantity": None,
                 "evidence_ids": [],
             }
-            for x in baseline.items
+            for identifier, name in rooms
         ]
-    return Response(
-        {
-            "id": "",
-            "lease_id": str(lease.id),
-            "kind": kind,
-            "status": "draft",
-            "revision": 0,
-            "inspected_on": str(timezone.localdate()),
-            "selection": selection,
-            "items": items,
-            "evidence": [],
-            "acknowledgements": [],
-            "baseline_id": str(baseline.id) if baseline else "",
-            "baseline_revision": baseline.revision if baseline else 0,
-            "baseline_items": baseline.items if baseline else [],
-            "history": [],
-            "allowed_actions": ["create"],
-            "blocking_reasons": [],
-        }
-    )
+        if baseline:
+            items = [
+                {
+                    **x,
+                    "condition": "notInspected",
+                    "note": "",
+                    "reading": "",
+                    "quantity": None,
+                    "evidence_ids": [],
+                }
+                for x in baseline.items
+            ]
+        return Response(
+            {
+                "id": "",
+                "lease_id": str(lease.id),
+                "kind": kind,
+                "status": "draft",
+                "revision": 0,
+                "inspected_on": str(timezone.localdate()),
+                "selection": selection,
+                "items": items,
+                "evidence": [],
+                "acknowledgements": [],
+                "baseline_id": str(baseline.id) if baseline else "",
+                "baseline_revision": baseline.revision if baseline else 0,
+                "baseline_items": baseline.items if baseline else [],
+                "history": [],
+                "allowed_actions": ["create"],
+                "blocking_reasons": [],
+            }
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+condition_report_context = ConditionReportContextView.as_view()
 
 
 def _acknowledgement(user, revision, status="accepted", note=""):

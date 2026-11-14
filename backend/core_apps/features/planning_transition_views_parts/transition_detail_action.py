@@ -1,5 +1,10 @@
 """Planning transition views: transition detail action."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
+
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.response import Response
@@ -11,7 +16,6 @@ from ..services.planning import (
     display_name,
     mutate,
     page,
-    planning_api,
     require_planning,
     text_field,
 )
@@ -97,23 +101,99 @@ def _transition_list(request, lease_id, kind):
     )
 
 
-@planning_api(["GET", "POST"], "move_out_notices")
-def move_out_notices(request, lease_id):
-    return _transition_list(request, lease_id, "moveOutNotice")
+class MoveOutNoticesView(FeatureAPIView):
+    name = "Move Out Notices"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "transition_detail_action",
+            "move_out_notices",
+            boundary="planning",
+            capability="move_out_notices",
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "transition_detail_action",
+            "move_out_notices",
+            boundary="planning",
+            capability="move_out_notices",
+            typed=False,
+        ),
+    }
+
+    def get(self, request, lease_id):
+        return _transition_list(request, lease_id, "moveOutNotice")
+
+    def post(self, request, lease_id):
+        return _transition_list(request, lease_id, "moveOutNotice")
 
 
-@planning_api(["GET", "POST"], "replacements")
-def replacement_requests(request, lease_id):
-    return _transition_list(request, lease_id, "replacement")
+# Stable callable import for integrations; URLs use the explicit class.
+move_out_notices = MoveOutNoticesView.as_view()
 
 
-@planning_api(["GET", "POST"], None)
-def transition_detail_action(request, transition_id, kind, action=None):
-    # Notice and replacement switches remain independent of housing groups.
-    require_planning(
-        request.user, "move_out_notices" if kind == "moveOutNotice" else "replacements"
-    )
-    if request.method == "GET":
+class ReplacementRequestsView(FeatureAPIView):
+    name = "Replacement Requests"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "transition_detail_action",
+            "replacement_requests",
+            boundary="planning",
+            capability="replacements",
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "transition_detail_action",
+            "replacement_requests",
+            boundary="planning",
+            capability="replacements",
+            typed=False,
+        ),
+    }
+
+    def get(self, request, lease_id):
+        return _transition_list(request, lease_id, "replacement")
+
+    def post(self, request, lease_id):
+        return _transition_list(request, lease_id, "replacement")
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+replacement_requests = ReplacementRequestsView.as_view()
+
+
+class TransitionDetailActionView(FeatureAPIView):
+    name = "Transition Detail Action"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "transition_detail_action",
+            "transition_detail_action",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "transition_detail_action",
+            "transition_detail_action",
+            boundary="planning",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, transition_id, kind, action=None):
+        require_planning(
+            request.user,
+            "move_out_notices" if kind == "moveOutNotice" else "replacements",
+        )
         if action:
             raise NotFound()
         return Response(
@@ -122,53 +202,70 @@ def transition_detail_action(request, transition_id, kind, action=None):
             )
         )
 
-    def apply(item, revision):
-        if action not in transition_actions(request.user, item):
-            raise PermissionDenied("This transition action is not available to you.")
-        if (
-            request.data.get("action") != action
-            or request.data.get("kind") != kind
-            or str(request.data.get("lease_id")) != str(item.lease.id)
-        ):
-            raise ValidationError("Kind, action and lease must match the transition.")
-        if action == "acknowledge":
-            item.status = "acknowledged"
-        elif action == "nominate":
-            _nominate(request, item)
-        elif action == "approve_availability":
-            from ..services.planning_transitions import require_no_renewal
-
-            require_no_renewal(item.lease)
-            item.availability_approved = True
-        elif action == "approve_candidate":
-            from ..services.planning_transitions import require_no_renewal
-
-            require_no_renewal(item.lease)
-            candidate = get_object_or_404(_candidates(item.lease), pk=item.candidate_id)
-            check_revision(candidate.revision, item.candidate_revision)
-            if not item.candidate_consented:
-                raise RentalConflict(
-                    "The current candidate has not consented.", code="consent_required"
-                )
-            item.candidate_approved = True
-            item.status = "signatures_pending"
-        else:
-            item.status = {
-                "withdraw": "withdrawn",
-                "decline": "declined",
-                "cancel": "cancelled",
-            }[action]
-        item.history.append(
-            f"{action} by {display_name(request.user)} at revision {item.revision + 1}."
+    def post(self, request, transition_id, kind, action=None):
+        require_planning(
+            request.user,
+            "move_out_notices" if kind == "moveOutNotice" else "replacements",
         )
-        item.revision += 1
-        item.save()
-        return item
 
-    return mutate(
-        request,
-        f"transition.{action}.{transition_id}",
-        lambda: transition_for(request.user, transition_id, kind, lock=True),
-        apply,
-        lambda x: transition_payload(x, request.user),
-    )
+        def apply(item, revision):
+            if action not in transition_actions(request.user, item):
+                raise PermissionDenied(
+                    "This transition action is not available to you."
+                )
+            if (
+                request.data.get("action") != action
+                or request.data.get("kind") != kind
+                or str(request.data.get("lease_id")) != str(item.lease.id)
+            ):
+                raise ValidationError(
+                    "Kind, action and lease must match the transition."
+                )
+            if action == "acknowledge":
+                item.status = "acknowledged"
+            elif action == "nominate":
+                _nominate(request, item)
+            elif action == "approve_availability":
+                from ..services.planning_transitions import require_no_renewal
+
+                require_no_renewal(item.lease)
+                item.availability_approved = True
+            elif action == "approve_candidate":
+                from ..services.planning_transitions import require_no_renewal
+
+                require_no_renewal(item.lease)
+                candidate = get_object_or_404(
+                    _candidates(item.lease), pk=item.candidate_id
+                )
+                check_revision(candidate.revision, item.candidate_revision)
+                if not item.candidate_consented:
+                    raise RentalConflict(
+                        "The current candidate has not consented.",
+                        code="consent_required",
+                    )
+                item.candidate_approved = True
+                item.status = "signatures_pending"
+            else:
+                item.status = {
+                    "withdraw": "withdrawn",
+                    "decline": "declined",
+                    "cancel": "cancelled",
+                }[action]
+            item.history.append(
+                f"{action} by {display_name(request.user)} at revision {item.revision + 1}."
+            )
+            item.revision += 1
+            item.save()
+            return item
+
+        return mutate(
+            request,
+            f"transition.{action}.{transition_id}",
+            lambda: transition_for(request.user, transition_id, kind, lock=True),
+            apply,
+            lambda x: transition_payload(x, request.user),
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+transition_detail_action = TransitionDetailActionView.as_view()

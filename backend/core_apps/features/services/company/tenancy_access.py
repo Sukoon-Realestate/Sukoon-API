@@ -196,8 +196,14 @@ def get(user, identity, *, lock=False):
     return item
 
 
-def visible(user):
-    ordinary = CompanyTenancy.objects.filter(
+def visible(user, *, company_id=None, lease_id=None):
+    """Apply validated scope before evaluating current disclosure authority."""
+    base = CompanyTenancy.objects.all()
+    if company_id is not None:
+        base = base.filter(lease__renter_company__id=company_id)
+    if lease_id is not None:
+        base = base.filter(lease__id=lease_id)
+    ordinary = base.filter(
         Q(lease__owner=user)
         | Q(preparation__booking__assignments__employee=user)
         | (
@@ -219,7 +225,7 @@ def visible(user):
     # Keep the open state and named responsibility on the same related change.
     # Chaining separate filters can join a closed assignment to another open
     # change and accidentally restore the former reviewer's discovery access.
-    invited = CompanyTenancy.objects.filter(
+    invited = base.filter(
         Q(
             lease__renter_company__memberships__user=user,
             lease__renter_company__memberships__is_active=True,
@@ -247,21 +253,19 @@ def visible(user):
         external_roles |= Q(
             changes__snapshot__required__financial_reviewer=str(user.id)
         )
-    external = CompanyTenancy.objects.filter(
-        external_roles, changes__state__in=OPEN_REVIEW
-    )
+    external = base.filter(external_roles, changes__state__in=OPEN_REVIEW)
     # Ownership depends on every exact source unit, not only the invitation or
     # a company membership. Reuse the detail authority check for this narrow
     # candidate set rather than grant disclosure from a historical snapshot.
     ownership_candidates = (
-        CompanyTenancy.objects.filter(
+        base.filter(
             changes__state__in=OPEN_REVIEW,
             changes__snapshot__required__new_owner=str(user.id),
         )
         .distinct()
         .select_related("lease")
     )
-    incoming_owner = CompanyTenancy.objects.filter(
+    incoming_owner = base.filter(
         pk__in=[
             item.pk for item in ownership_candidates if "new_owner" in roles(item, user)
         ]

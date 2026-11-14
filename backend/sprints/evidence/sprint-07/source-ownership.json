@@ -1,0 +1,3854 @@
+{
+  "coverage": "all feature Python sources except tests/migrations/cache; no filename keyword filter",
+  "new_models": 0,
+  "new_apps": 0,
+  "new_schema_migrations": 0,
+  "sources": [
+    {
+      "file": "core_apps/features/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/advanced_execution_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/advanced_execution_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/advanced_execution_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/advanced_tender_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/advanced_tender_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/advanced_tender_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/apps.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/beneficiary_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/billing_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/billing_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/billing_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/billing_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/billing_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/business_policy_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/business_policy_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/case_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/catalog_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/catalog_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/chargeback_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/chargeback_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/commerce_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/commerce_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_admin_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_chat_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_contract_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_contract_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_contract_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_execution_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_negotiation_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_negotiation_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_negotiation_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_rental_value_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_responsibility_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_saved_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_saved_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_service_form.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_staff_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_staff_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_staff_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_tenancy_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_tenancy_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/company_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/company_work_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/continuation_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/decision_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/decision_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/action_center.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/calendar.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/discovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/media.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/preparation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/quality.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/suggestions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/sync.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/experience/views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/housing_scenario_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/housing_scenario_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/housing_scenario_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/http.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/living_lab_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/living_lab_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/living_lab_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/management/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/billing_qa.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/backfill_rental_document_intents.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/backfill_review_ancestry.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/configure_advanced_mock.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/configure_rental_lifecycle_policy.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/import_student_catalog.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/migrate_legacy_reviews.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/management/commands/prepare_billing_qa.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/prepare_owner_tenant_cycle_qa.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/prepare_rental_device_qa.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/process_advanced_housing_jobs.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/process_payment_fulfillments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/process_paymob_payouts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/process_paymob_refunds.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/process_transition_matches.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/publish_business_policies.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/purge_living_lab_private_data.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/reconcile_cancelled_rental_closure.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/reconcile_legacy_rentals.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/reconcile_paymob_payments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/reconcile_rental_inventory.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/reconcile_reviews.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/management/commands/recover_review_outage.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/rent_payment_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/rental_closure_status.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/seed_commerce_test_catalog.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/seed_review_demo.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/commands/verify_paymob_sandbox.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/management/cycle_qa.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/mock_provider_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/model_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/agreements.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/application_profiles.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/chargebacks.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/condition.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/decision_facts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/documents.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/group_bookings.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/habitability.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/invoices.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/ledger.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/maintenance_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/marketplace.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/offers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/operational_cases.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/owner_achievements.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/owner_payments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/payments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/policy_decisions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/recovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/rental_experiences.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/reputation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/reservations.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/settlements.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/model_parts/summary_sharing.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/pagination.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/payment_resume_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/paymob_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/permissions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/planning_condition_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_condition_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_condition_views_parts/condition_report_action.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_condition_views_parts/condition_report_context.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_condition_views_parts/report_snapshot.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/assistant_context.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/assistant_grounding.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/assistant_reply.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/catalog_matches.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/commute_results.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/commute_searches.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/mock_duration.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_discovery_views_parts/tenant_assistant_turns.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/dispatch_process.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/group_invitation_join.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/group_join_decision.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/group_payload.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/housing_group_action.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/housing_groups.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/invitation_from_token.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_group_views_parts/process_payload.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_home_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_housing_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/housing_offer_inventory.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/housing_offers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/housing_request_action.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/housing_requests.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_housing_views_parts/owner_housing_offers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/planning_models_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/planning_models_parts/housing_request_change.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/planning_models_parts/roommate_connection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/planning_models_parts/tenancy_transition.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views_parts/profile_values.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views_parts/roommate_candidate_action.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_roommate_views_parts/roommate_connection_action.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_transition_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_transition_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_transition_views_parts/reconcile_transitions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_transition_views_parts/transition_detail_action.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_transition_views_parts/transition_projection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/planning_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/portfolio_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/portfolio_fields.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/portfolio_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/portfolio_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/providers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/purchase_routing_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/refund_operations.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/renderers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/applications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/cases.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/claims.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/common.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/deals.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/decisions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/group_bookings.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/habitability.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/reservations.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_lifecycle_views/terms.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/apply_fake_rental_event.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/create_interest_invitation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/create_structured_lease.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/create_structured_signing_session.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/lease_billing_schedule.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/owner_onboarding_session.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/owner_payment_profile.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/rental_interests.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/tenancy_invitation_revoke.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/terms_proposals.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase2_views_parts/update_structured_lease.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase3_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase3_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_checkout.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_payments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_quote.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/handover_payload.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/handover_respond.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/lease_handovers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/operations_execute_payout.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/operations_reconcile_payout.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/change_collection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/change_respond.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/change_signing_session.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/maintenance_action.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/maintenance_payload.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase5_views_parts/maintenance_requests.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/final_settlement_propose.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/final_settlement_respond.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/refund_execute.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/refund_requests.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_phase6_views_parts/rental_center.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/rental_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_serializers_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_serializers_parts/command_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_serializers_parts/lease_phase2_serializer.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_serializers_parts/maintenance_cost_decision_serializer.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_serializers_parts/owner_payment_profile_serializer.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_serializers_parts/rental_interest_serializer.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_serializers_parts/termination_notice_serializer.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/rental_summary_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/reputation_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/reputation_experience_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/reputation_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/reputation_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/serializers_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/serializers_parts/lease_serializer.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/serializers_parts/rent_invoice_serializer.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/serializers_parts/tenancy_invitation_serializer.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/canonical.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/engine.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/plans.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/progress.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/projections.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/provider.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_execution/registry.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_housing_access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_housing_jobs.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/advanced_planning_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/beneficiary_confirmation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/beneficiary_details.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/billing_advertising.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/billing_catalog.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/billing_invoices.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/billing_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/billing_payments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/billing_projection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/billing_settlement.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/billing_sources.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/business_policies.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/business_policy_catalog.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/business_policy_mvp.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/change_terms.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/change_versions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/chargebacks/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/chargebacks/facts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/chargebacks/funding.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/chargebacks/operations.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/chargebacks/projection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/chargebacks/refunds.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/commerce_access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/commerce_expiration.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/commerce_expiration_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/commute_jobs.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/activation_delivery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/administration.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/administration_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/approval_routing.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/assignment_locks.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/bookings.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/contact_proof.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/contexts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/continuation_capabilities.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/contract_access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/contract_preparation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/contract_projection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/contract_snapshot.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/discovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/grant_security.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/housing_report.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/listing_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/mandates.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/membership.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/membership_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/negotiation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/negotiation_access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/negotiation_binding.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/negotiation_projection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/offers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/portfolio.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/portfolio_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/portfolio_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/portfolio_media.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/portfolio_topology.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/projections.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/read_snapshot.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/rental_summary.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/request_period.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/request_versions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/responsibility_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/responsibility_management.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/role_cases.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/role_context.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/role_evidence.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/role_housing.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/role_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/role_projections.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/role_routes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/role_work.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/saved_lists.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/service_requests.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/sourcing.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/staff.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/staff_import.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_adjustments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_closure.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_commercial.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_continuation_projection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_continuation_signing.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_contracts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_events.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_expiry.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_initial_recovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_maintenance.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_occupancy.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_operation_recovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_ownership.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_projection.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_reads.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/tenancy_resolution.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/viewing_handoff.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/company/work_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/cycle_permissions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/decision_notebooks.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/document_intents.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/entitlements.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/evidence_projection.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/evidence_storage.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/financial_authority.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/fulfillment_cases.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/group_application_listing_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/group_booking_listing_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/group_process_events.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/group_visit_listing_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/handover_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/handover_reads.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_offer_matching.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_offer_source_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_request_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_request_reviews.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/assumptions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/decisions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/entry_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/execution.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/execution_canonical.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/jobs.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/projections.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/routes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/snapshots.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_scenarios/solver.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/construction.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/entry_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/execution.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/jobs.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/pricing.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/housing_tenders/projections.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/lease_permissions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/legal_lifecycle.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/lifestyle_matching.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/lifestyle_matching_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/lifestyle_matching_parts/disclosure_scope.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/lifestyle_matching_parts/profile_extensions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/listing_assistant.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/listing_suggestion_commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/journeys.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/policies.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/projections.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/retention.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/living_lab/solver.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/maintenance_access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/maintenance_reads.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/negotiation_terms.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/owner_achievements.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/payable_eligibility.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/payment_fulfillment.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/payment_resume.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/payment_session_proof.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/paymob_client.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/paymob_payments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/paymob_payout_client.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/paymob_payout_targets.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/paymob_payouts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/paymob_refunds.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/payout_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/personal_maintenance.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_home.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_notifications_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_notifications_parts/deliver_planning_events.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_notifications_parts/event_copy.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_notifications_parts/record_event.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_parts/criteria.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_parts/districts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_parts/selection_payload.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_parts/validate_payload_types.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_providers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_providers_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_providers_parts/extract_criteria.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_providers_parts/route_matrix.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/planning_transitions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/platform_rent_payments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/policy_registry.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/private_rental_documents.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/promotion_commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/purchase_routing.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/purchase_service_state.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/refund_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/refunds.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/refunds_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/refunds_parts/execute_refund.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/refunds_parts/remaining_components.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rent_payment_recipients.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rent_payment_reminders.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_application_records.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_foundation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_foundation_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_foundation_parts/capabilities_for.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_foundation_parts/get_authorized_rental_subject.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/applications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/applications_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/capabilities.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/case_commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/cases.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/cases_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/claims.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/claims_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/common.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/consents.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/deals.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/decisions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/decisions_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/discovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/group_bookings.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/group_bookings_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/group_terms.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/habitability.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/habitability_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/inventory.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/jobs.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/journey.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/locks.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/provider_instructions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/reservations.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/reservations_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/terms.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_lifecycle/terms_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_notes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase2.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase2_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase2_parts/remember_mutation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase2_parts/reserve_inventory_days.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase3.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase3_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase3_parts/capture_attempt.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase3_parts/issue_invoice.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase3_parts/payment_attempt_payload.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase3_parts/process_provider_event.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_phase6.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/rental_statement_delivery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/ancestry.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/case_history.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/company_authority.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/company_bindings.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/company_generation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/corporate_experience.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/eligibility.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/employee_occupancy.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/generation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/grants.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/legacy.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/moderation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/policy.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/public_summary.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/recovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/responsibility.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/rollups.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/submission.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/tasks.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/reputation/visibility.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/request_counts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/search_alert_delivery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/settlement_notes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/settlements.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/settlements_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/settlements_parts/apply_credit.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/settlements_parts/execute_settlement.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/settlements_parts/financial_snapshot.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/settlements_parts/prepare_settlement.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/shared_housing/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/shared_housing/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/shared_housing/commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/shared_housing/counts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/shared_housing/projections.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/shared_housing/validation.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/signing_completion.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/signing_documents.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/signing_jobs.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/signwell_client.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/store_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/store_payments.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/applications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/arrangements.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/discovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/entry_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/groups.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/plans.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/policies.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/profiles.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/progress.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/publication.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/student_housing/verification_commands.py",
+      "new_module": true,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/tenancy_invitations.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/tenancy_invitations_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/tenancy_invitations_parts/notify_after_commit.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/tenancy_invitations_parts/resolve_offer_snapshot.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/tenancy_invitations_parts/validate_accounts.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/termination_notice.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/access.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/commands.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/commit.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/execution.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/jobs.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/projections.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/solver.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/transition_network/vacancies.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/services/version_comparison.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/shared_housing_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/shared_housing_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/signing_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/signing_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/student_admin.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/student_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/student_serializers.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/student_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/student_verification_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/student_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/subscription_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/tasks.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/tasks_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/tasks_parts/expire_rental_sources_and_holds.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/tasks_parts/process_rental_changes.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/tasks_parts/process_rental_closure.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/tasks_parts/rent_payment_notifications.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/tasks_parts/rental_statement_delivery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/transition_network_models.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/transition_network_urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/transition_network_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/urls.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": false
+    },
+    {
+      "file": "core_apps/features/views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/__init__.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/boost_campaigns.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/lease_cancel.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/lease_configuration.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/leases.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/listing_suggestions.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/planning_capabilities.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/rent_invoice_checkout.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/rental_operation_lookup.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/tenancy_invitation_list.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/tenancy_invitation_recovery.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/tenancy_invitation_respond.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/views_parts/tenancy_invitations.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    },
+    {
+      "file": "core_apps/features/workspace_views.py",
+      "new_module": false,
+      "ownership": "features (existing model/retention owner; see SOURCE_RETENTION.md)",
+      "transport_or_helper_review_required": true
+    }
+  ]
+}

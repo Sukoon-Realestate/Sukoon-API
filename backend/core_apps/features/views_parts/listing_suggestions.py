@@ -1,12 +1,14 @@
 """Views: listing suggestions."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from core_apps.common.locale_middleware import resolve_request_language
 
 from datetime import timedelta
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -18,6 +20,7 @@ from ..renderers import FeatureJsonRenderer
 def analytics_snapshot(request, property_id):
     property_obj = get_object_or_404(Property, id=property_id, owner=request.user)
     from ..services.entitlements import enforce
+
     enforce(request.user, "advanced_analytics", "owner")
     language = resolve_request_language(request)
     is_arabic = language.lower().startswith("ar")
@@ -40,64 +43,78 @@ def analytics_snapshot(request, property_id):
         property=property_obj, created_at__gte=since
     ).count()
     return {
-            "property_id": str(property_obj.id),
-            "period_days": period_days,
-            "measured_at": timezone.now().isoformat(),
-            "methodology": (
-                "مشاهدات العقار الفريدة المسجلة وطلبات المعاينة خلال فترة التقرير المحددة بتوقيت القاهرة."
-                if is_arabic
-                else "Unique stored property views and created visit requests in the "
-                "selected Africa/Cairo reporting window."
-            ),
-            "metrics": [
-                {
-                    "key": "unique_views",
-                    "label": "الزوار الفريدون" if is_arabic else "Unique visitors",
-                    "value": views,
-                    "unit": "count",
-                    "definition": (
-                        "سجلات مشاهدات العقار المميزة خلال الفترة المحددة."
-                        if is_arabic
-                        else "Stored distinct property view records in the period."
-                    ),
-                },
-                {
-                    "key": "viewing_conversion",
-                    "label": (
-                        "معدل طلب المعاينة" if is_arabic else "Viewing request rate"
-                    ),
-                    "value": conversion,
-                    "unit": "percent",
-                    "definition": (
-                        "عدد طلبات المعاينة خلال الفترة مقسومًا على عدد المشاهدات الفريدة المسجلة."
-                        if is_arabic
-                        else "Visit requests created in the period divided by unique stored views."
-                    ),
-                },
-                {
-                    "key": "saved_count",
-                    "label": "مرات الحفظ" if is_arabic else "Saves",
-                    "value": saved,
-                    "unit": "count",
-                    "definition": (
-                        "مرات حفظ العقار الجديدة خلال الفترة المحددة."
-                        if is_arabic
-                        else "New saves in the period."
-                    ),
-                },
-            ],
-            "export_url": "",
-            "export_available": True,
+        "property_id": str(property_obj.id),
+        "period_days": period_days,
+        "measured_at": timezone.now().isoformat(),
+        "methodology": (
+            "مشاهدات العقار الفريدة المسجلة وطلبات المعاينة خلال فترة التقرير المحددة بتوقيت القاهرة."
+            if is_arabic
+            else "Unique stored property views and created visit requests in the "
+            "selected Africa/Cairo reporting window."
+        ),
+        "metrics": [
+            {
+                "key": "unique_views",
+                "label": "الزوار الفريدون" if is_arabic else "Unique visitors",
+                "value": views,
+                "unit": "count",
+                "definition": (
+                    "سجلات مشاهدات العقار المميزة خلال الفترة المحددة."
+                    if is_arabic
+                    else "Stored distinct property view records in the period."
+                ),
+            },
+            {
+                "key": "viewing_conversion",
+                "label": ("معدل طلب المعاينة" if is_arabic else "Viewing request rate"),
+                "value": conversion,
+                "unit": "percent",
+                "definition": (
+                    "عدد طلبات المعاينة خلال الفترة مقسومًا على عدد المشاهدات الفريدة المسجلة."
+                    if is_arabic
+                    else "Visit requests created in the period divided by unique stored views."
+                ),
+            },
+            {
+                "key": "saved_count",
+                "label": "مرات الحفظ" if is_arabic else "Saves",
+                "value": saved,
+                "unit": "count",
+                "definition": (
+                    "مرات حفظ العقار الجديدة خلال الفترة المحددة."
+                    if is_arabic
+                    else "New saves in the period."
+                ),
+            },
+        ],
+        "export_url": "",
+        "export_available": True,
     }
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def owner_analytics(request, property_id):
-    response = Response(analytics_snapshot(request, property_id))
-    response["Cache-Control"] = "private, no-store"
-    return response
+class OwnerAnalyticsView(FeatureAPIView):
+    name = "Owner Analytics"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "listing_suggestions",
+            "owner_analytics",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, property_id):
+        response = Response(analytics_snapshot(request, property_id))
+        response["Cache-Control"] = "private, no-store"
+        return response
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+owner_analytics = OwnerAnalyticsView.as_view()
 
 
 def csv_cell(value):
@@ -109,32 +126,98 @@ def csv_cell(value):
     return text
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def owner_analytics_export(request, property_id):
-    import csv
-    import io
-    from django.http import HttpResponse
+class OwnerAnalyticsExportView(FeatureAPIView):
+    name = "Owner Analytics Export"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    action_policies = {
+        "get": ActionPolicy(
+            "listing_suggestions",
+            "owner_analytics_export",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-    data = analytics_snapshot(request, property_id)
-    output = io.StringIO(newline="")
-    fields = ["property_id", "period_days", "measured_at", "methodology", "metric", "label", "value", "unit", "value_known", "definition"]
-    writer = csv.writer(output)
-    writer.writerow(fields)
-    for metric in data["metrics"]:
-        writer.writerow([csv_cell(value) for value in [data["property_id"], data["period_days"], data["measured_at"], data["methodology"], metric["key"], metric["label"], metric["value"], metric["unit"], metric["value"] is not None, metric["definition"]]])
-    response = HttpResponse(("\ufeff" + output.getvalue()).encode("utf-8"), content_type="text/csv; charset=utf-8")
-    response["Content-Disposition"] = f'attachment; filename="sokoun-analytics-{property_id}-{data["period_days"]}d.csv"'
-    response["Cache-Control"] = "private, no-store"
-    response["X-Content-Type-Options"] = "nosniff"
-    return response
+    def get(self, request, property_id):
+        import csv
+        import io
+        from django.http import HttpResponse
+
+        data = analytics_snapshot(request, property_id)
+        output = io.StringIO(newline="")
+        fields = [
+            "property_id",
+            "period_days",
+            "measured_at",
+            "methodology",
+            "metric",
+            "label",
+            "value",
+            "unit",
+            "value_known",
+            "definition",
+        ]
+        writer = csv.writer(output)
+        writer.writerow(fields)
+        for metric in data["metrics"]:
+            writer.writerow(
+                [
+                    csv_cell(value)
+                    for value in [
+                        data["property_id"],
+                        data["period_days"],
+                        data["measured_at"],
+                        data["methodology"],
+                        metric["key"],
+                        metric["label"],
+                        metric["value"],
+                        metric["unit"],
+                        metric["value"] is not None,
+                        metric["definition"],
+                    ]
+                ]
+            )
+        response = HttpResponse(
+            ("\ufeff" + output.getvalue()).encode("utf-8"),
+            content_type="text/csv; charset=utf-8",
+        )
+        response["Content-Disposition"] = (
+            f'attachment; filename="sokoun-analytics-{property_id}-{data["period_days"]}d.csv"'
+        )
+        response["Cache-Control"] = "private, no-store"
+        response["X-Content-Type-Options"] = "nosniff"
+        return response
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def listing_suggestions(request):
-    from ..services.listing_suggestion_commands import create
+# Stable callable import for integrations; URLs use the explicit class.
+owner_analytics_export = OwnerAnalyticsExportView.as_view()
 
-    data, response_status = create(request.user, request.data, auth_claims=request.auth)
-    return Response(data, status=response_status)
+
+class ListingSuggestionsView(FeatureAPIView):
+    name = "Listing Suggestions"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "listing_suggestions",
+            "listing_suggestions",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request):
+        from ..services.listing_suggestion_commands import create
+
+        data, response_status = create(
+            request.user, request.data, auth_claims=request.auth
+        )
+        return Response(data, status=response_status)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+listing_suggestions = ListingSuggestionsView.as_view()

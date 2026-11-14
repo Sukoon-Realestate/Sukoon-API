@@ -155,6 +155,84 @@
   "served_by": "",
   "status": 404
  },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ anonymous mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ anonymous mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_authenticated",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 401
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ staff mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ staff mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ tenant mvp=off": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 404
+ },
+ "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/ tenant mvp=on": {
+  "cache_control": "private, no-store",
+  "content_type": "application/json",
+  "data": "NoneType",
+  "envelope": [
+   "data",
+   "message"
+  ],
+  "error_code": "not_found",
+  "route": "api/v1/property-captures/<uuid:session_id>/processing-jobs/",
+  "served_by": "",
+  "status": 404
+ },
  "GET /api/v1/property-captures/00000000-0000-4000-8000-000000000000/processing-jobs/00000000-0000-4000-8000-000000000000/ anonymous mvp=off": {
   "cache_control": "private, no-store",
   "content_type": "application/json",

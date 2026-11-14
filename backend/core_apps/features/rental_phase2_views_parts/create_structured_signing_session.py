@@ -1,15 +1,17 @@
 """Rental phase2 views: create structured signing session."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from datetime import timedelta
 from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ..models import Lease, RentalInventoryDayLock, SigningSession
+from ..models import Lease, SigningSession
 from ..providers import mock_completion_metadata, get_rental_provider
 from ..renderers import FeatureJsonRenderer
 from ..rental_serializers import (
@@ -30,80 +32,100 @@ from .owner_payment_profile import (
 )
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def lease_submit_for_signature(request, lease_id):
-    lease = _participant_lease(request, lease_id)
-    if request.user != lease.owner:
-        raise PermissionDenied("Only the owner can submit the agreement.")
-    serializer = RentalDecisionSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    data = serializer.validated_data
-    operation = f"rental_agreement.submit_signature.{lease_id}"
-    replay = _replay_response(
-        request.user, operation, data["request_key"], request.data
-    )
-    if replay:
-        return replay
-    with transaction.atomic():
-        lease = _participant_lease(request, lease_id, lock=True)
-        assert_owner_ready(request.user, lease.property)
+class LeaseSubmitForSignatureView(FeatureAPIView):
+    name = "Lease Submit For Signature"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "create_structured_signing_session",
+            "lease_submit_for_signature",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, lease_id):
+        lease = _participant_lease(request, lease_id)
+        if request.user != lease.owner:
+            raise PermissionDenied("Only the owner can submit the agreement.")
+        serializer = RentalDecisionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        operation = f"rental_agreement.submit_signature.{lease_id}"
         replay = _replay_response(
             request.user, operation, data["request_key"], request.data
         )
         if replay:
             return replay
-        if lease.status != Lease.Status.DRAFT:
-            raise RentalConflict(
-                "Only a reviewed draft can be submitted for signature.",
-                code="invalid_state",
+        with transaction.atomic():
+            lease = _participant_lease(request, lease_id, lock=True)
+            assert_owner_ready(request.user, lease.property)
+            replay = _replay_response(
+                request.user, operation, data["request_key"], request.data
             )
-        from core_apps.chat.moderation.policy import require_business_participants
+            if replay:
+                return replay
+            if lease.status != Lease.Status.DRAFT:
+                raise RentalConflict(
+                    "Only a reviewed draft can be submitted for signature.",
+                    code="invalid_state",
+                )
+            from core_apps.chat.moderation.policy import require_business_participants
 
-        require_business_participants(lease.owner, lease.tenant)
-        if data["decision"] != "submit_for_signature":
-            raise ValidationError({"decision": "Must be submit_for_signature."})
-        if data["expected_revision"] != lease.revision:
-            raise RentalConflict("Lease revision conflict.", code="stale_revision")
-        required = {str(lease.owner.id), str(lease.tenant.id)}
-        if not required.issubset(set(lease.reviewed_by)):
-            raise RentalConflict("Both participants must review the current agreement.")
-        if not lease.hold_expires_at or lease.hold_expires_at <= timezone.now():
-            raise RentalConflict("The inventory hold expired.", code="hold_expired")
-        from ..services.rental_lifecycle.inventory import hold_coverage
+            require_business_participants(lease.owner, lease.tenant)
+            if data["decision"] != "submit_for_signature":
+                raise ValidationError({"decision": "Must be submit_for_signature."})
+            if data["expected_revision"] != lease.revision:
+                raise RentalConflict("Lease revision conflict.", code="stale_revision")
+            required = {str(lease.owner.id), str(lease.tenant.id)}
+            if not required.issubset(set(lease.reviewed_by)):
+                raise RentalConflict(
+                    "Both participants must review the current agreement."
+                )
+            if not lease.hold_expires_at or lease.hold_expires_at <= timezone.now():
+                raise RentalConflict("The inventory hold expired.", code="hold_expired")
+            from ..services.rental_lifecycle.inventory import hold_coverage
 
-        if not hold_coverage(lease):
-            raise RentalConflict("The inventory hold expired.", code="hold_expired")
-        document = get_rental_provider().generate_agreement(
-            lease.id, lease.revision, lease.terms
-        )
-        lease.document_id = document.document_id
-        lease.document_hash = document.digest
-        lease.status = Lease.Status.PENDING_SIGNATURES
-        lease.revision += 1
-        lease.save(
-            update_fields=[
-                "document_id",
-                "document_hash",
-                "status",
-                "revision",
-                "updated_at",
-            ]
-        )
-        _event(lease, request.user, "signature_requested", "Submitted for signature")
-        resource = LeasePhase2Serializer(lease, context={"request": request}).data
-        output = remember_mutation(
-            user=request.user,
-            operation=operation,
-            request_key=data["request_key"],
-            payload=request.data,
-            request_subject_id=lease.id,
-            result_subject_id=lease.id,
-            result_revision=lease.revision,
-            resource=resource,
-        )
-    return Response(output)
+            if not hold_coverage(lease):
+                raise RentalConflict("The inventory hold expired.", code="hold_expired")
+            document = get_rental_provider().generate_agreement(
+                lease.id, lease.revision, lease.terms
+            )
+            lease.document_id = document.document_id
+            lease.document_hash = document.digest
+            lease.status = Lease.Status.PENDING_SIGNATURES
+            lease.revision += 1
+            lease.save(
+                update_fields=[
+                    "document_id",
+                    "document_hash",
+                    "status",
+                    "revision",
+                    "updated_at",
+                ]
+            )
+            _event(
+                lease, request.user, "signature_requested", "Submitted for signature"
+            )
+            resource = LeasePhase2Serializer(lease, context={"request": request}).data
+            output = remember_mutation(
+                user=request.user,
+                operation=operation,
+                request_key=data["request_key"],
+                payload=request.data,
+                request_subject_id=lease.id,
+                result_subject_id=lease.id,
+                result_revision=lease.revision,
+                resource=resource,
+            )
+        return Response(output)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+lease_submit_for_signature = LeaseSubmitForSignatureView.as_view()
 
 
 def create_structured_signing_session(request, lease_id):

@@ -8,128 +8,177 @@ from . import planning_housing_views as housing
 from . import planning_roommate_views as roommates
 from . import planning_transition_views as transitions
 from . import decision_views
-from .planning_home_views import planning_home
+from .planning_home_views import PlanningHomeView
 from .planning_housing_views_parts.housing_offer_inventory import (
-    housing_offer_inventory,
+    HousingOfferInventoryView,
 )
 
 
 urlpatterns = [
-    path("decision-notebook/", decision_views.notebook),
-    path("decision-notebook/resolve/", decision_views.resolve),
+    path("decision-notebook/", decision_views.NotebookView.as_view()),
+    path("decision-notebook/resolve/", decision_views.ResolveView.as_view()),
     path("housing-groups/<uuid:group_id>/chat/", GroupChatSummaryAPIView.as_view()),
-    path("planning-home/", planning_home),
-    path("open-housing-groups/", groups.open_groups),
-    path("group-join-requests/", groups.my_group_join_requests),
-    path("group-join-requests/<uuid:join_id>/", groups.group_join_detail),
-    path("housing-groups/<uuid:group_id>/join-requests/", groups.group_join_request),
+    path("planning-home/", PlanningHomeView.as_view()),
+    path("open-housing-groups/", groups.OpenGroupsView.as_view()),
+    path("group-join-requests/", groups.MyGroupJoinRequestsView.as_view()),
+    path("group-join-requests/<uuid:join_id>/", groups.GroupJoinDetailView.as_view()),
     path(
-        "group-join-requests/<uuid:join_id>/<slug:action>/", groups.group_join_decision
+        "housing-groups/<uuid:group_id>/join-requests/",
+        groups.GroupJoinRequestView.as_view(),
     ),
-    path("owner-group-applications/", groups.owner_group_applications),
+    path(
+        "group-join-requests/<uuid:join_id>/<slug:action>/",
+        groups.GroupJoinDecisionView.as_view(),
+    ),
+    path("owner-group-applications/", groups.OwnerGroupApplicationsView.as_view()),
     path(
         "group-applications/<uuid:application_id>/",
-        groups.owner_group_application_detail,
+        groups.OwnerGroupApplicationDetailView.as_view(),
     ),
     path(
         "group-applications/<uuid:application_id>/<slug:action>/",
-        groups.owner_group_application_action,
+        groups.OwnerGroupApplicationActionView.as_view(),
     ),
-    path("lifestyle-profile/", roommates.lifestyle_profile),
-    path("roommate-candidates/", roommates.roommate_candidates),
-    path("roommate-connections/", roommates.roommate_connections),
+    path("lifestyle-profile/", roommates.LifestyleProfileView.as_view()),
+    path("roommate-candidates/", roommates.RoommateCandidatesView.as_view()),
+    path("roommate-connections/", roommates.RoommateConnectionsView.as_view()),
     path(
         "roommate-candidates/<uuid:candidate_id>/<slug:action>/",
-        roommates.roommate_candidate_action,
+        roommates.RoommateCandidateActionView.as_view(),
     ),
     path(
         "roommate-connections/<uuid:connection_id>/<slug:action>/",
-        roommates.roommate_connection_action,
+        roommates.RoommateConnectionActionView.as_view(),
     ),
-    path("housing-groups/", groups.housing_groups),
-    path("housing-groups/<uuid:group_id>/", groups.housing_group_detail),
-    path("housing-groups/<uuid:group_id>/invitations/", groups.group_invitation_create),
-    path("housing-groups/<uuid:group_id>/<slug:action>/", groups.housing_group_action),
-    path("group-invitations/preview/", groups.group_invitation_preview),
-    path("group-invitations/join/", groups.group_invitation_join),
-    path("group-invitations/<uuid:invitation_id>/", groups.group_invitation_detail),
-    path("housing-requests/", housing.housing_requests),
-    path("housing-demand/", housing.housing_demand),
-    path("owner-housing-offers/", housing.owner_housing_offers),
-    path("housing-requests/<uuid:request_id>/", housing.housing_request_detail),
-    path("housing-requests/<uuid:request_id>/changes/", housing.housing_request_changes),
-    path("housing-offers/<uuid:offer_id>/", housing.housing_offer_detail),
-    path("housing-requests/<uuid:request_id>/offers/", housing.housing_offers),
+    path("housing-groups/", groups.HousingGroupsView.as_view()),
+    path("housing-groups/<uuid:group_id>/", groups.HousingGroupDetailView.as_view()),
+    path(
+        "housing-groups/<uuid:group_id>/invitations/",
+        groups.GroupInvitationCreateView.as_view(),
+    ),
+    path(
+        "housing-groups/<uuid:group_id>/<slug:action>/",
+        groups.HousingGroupActionView.as_view(),
+    ),
+    path("group-invitations/preview/", groups.GroupInvitationPreviewView.as_view()),
+    path("group-invitations/join/", groups.GroupInvitationJoinView.as_view()),
+    path(
+        "group-invitations/<uuid:invitation_id>/",
+        groups.GroupInvitationDetailView.as_view(),
+    ),
+    path("housing-requests/", housing.HousingRequestsView.as_view()),
+    path("housing-demand/", housing.HousingDemandView.as_view()),
+    path("owner-housing-offers/", housing.OwnerHousingOffersView.as_view()),
+    path(
+        "housing-requests/<uuid:request_id>/",
+        housing.HousingRequestDetailView.as_view(),
+    ),
+    path(
+        "housing-requests/<uuid:request_id>/changes/",
+        housing.HousingRequestChangesView.as_view(),
+    ),
+    path("housing-offers/<uuid:offer_id>/", housing.HousingOfferDetailView.as_view()),
+    path(
+        "housing-requests/<uuid:request_id>/offers/",
+        housing.HousingOffersView.as_view(),
+    ),
     path(
         "housing-requests/<uuid:request_id>/offer-inventory/<uuid:property_id>/",
-        housing_offer_inventory,
+        HousingOfferInventoryView.as_view(),
     ),
     path(
         "housing-requests/<uuid:request_id>/<slug:action>/",
-        housing.housing_request_action,
+        housing.HousingRequestActionView.as_view(),
     ),
-    path("housing-offers/<uuid:offer_id>/<slug:action>/", housing.housing_offer_action),
+    path(
+        "housing-offers/<uuid:offer_id>/<slug:action>/",
+        housing.HousingOfferActionView.as_view(),
+    ),
     path(
         "leases/<uuid:lease_id>/condition-report-context/",
-        conditions.condition_report_context,
+        conditions.ConditionReportContextView.as_view(),
     ),
-    path("leases/<uuid:lease_id>/condition-reports/", conditions.condition_reports),
-    path("condition-reports/<uuid:report_id>/", conditions.condition_report_detail),
+    path(
+        "leases/<uuid:lease_id>/condition-reports/",
+        conditions.ConditionReportsView.as_view(),
+    ),
+    path(
+        "condition-reports/<uuid:report_id>/",
+        conditions.ConditionReportDetailView.as_view(),
+    ),
     path(
         "condition-reports/<uuid:report_id>/<slug:action>/",
-        conditions.condition_report_action,
+        conditions.ConditionReportActionView.as_view(),
     ),
-    path("leases/<uuid:lease_id>/move-out-notices/", transitions.move_out_notices),
     path(
-        "leases/<uuid:lease_id>/replacement-requests/", transitions.replacement_requests
+        "leases/<uuid:lease_id>/move-out-notices/",
+        transitions.MoveOutNoticesView.as_view(),
+    ),
+    path(
+        "leases/<uuid:lease_id>/replacement-requests/",
+        transitions.ReplacementRequestsView.as_view(),
     ),
     path(
         "leases/<uuid:lease_id>/replacement-candidates/",
-        transitions.replacement_candidates,
+        transitions.ReplacementCandidatesView.as_view(),
     ),
     path(
         "move-out-notices/<uuid:transition_id>/",
-        transitions.transition_detail_action,
+        transitions.TransitionDetailActionView.as_view(),
         {"kind": "moveOutNotice"},
     ),
     path(
         "move-out-notices/<uuid:transition_id>/<slug:action>/",
-        transitions.transition_detail_action,
+        transitions.TransitionDetailActionView.as_view(),
         {"kind": "moveOutNotice"},
     ),
     path(
         "replacement-requests/<uuid:transition_id>/",
-        transitions.transition_detail_action,
+        transitions.TransitionDetailActionView.as_view(),
         {"kind": "replacement"},
     ),
     path(
         "replacement-requests/<uuid:transition_id>/candidate-consent/",
-        transitions.replacement_candidate_consent,
+        transitions.ReplacementCandidateConsentView.as_view(),
     ),
     path(
         "replacement-requests/<uuid:transition_id>/<slug:action>/",
-        transitions.transition_detail_action,
+        transitions.TransitionDetailActionView.as_view(),
         {"kind": "replacement"},
     ),
-    path("replacement-invitations/", transitions.replacement_invitations),
-    path("commute-searches/", discovery.commute_searches),
-    path("commute-searches/<uuid:search_id>/", discovery.commute_detail),
-    path("commute-searches/<uuid:search_id>/cancel/", discovery.commute_cancel),
-    path("commute-searches/<uuid:search_id>/results/", discovery.commute_results),
-    path("tenant-assistant/turns/", discovery.tenant_assistant_turns),
+    path("replacement-invitations/", transitions.ReplacementInvitationsView.as_view()),
+    path("commute-searches/", discovery.CommuteSearchesView.as_view()),
+    path("commute-searches/<uuid:search_id>/", discovery.CommuteDetailView.as_view()),
+    path(
+        "commute-searches/<uuid:search_id>/cancel/",
+        discovery.CommuteCancelView.as_view(),
+    ),
+    path(
+        "commute-searches/<uuid:search_id>/results/",
+        discovery.CommuteResultsView.as_view(),
+    ),
+    path("tenant-assistant/turns/", discovery.TenantAssistantTurnsView.as_view()),
 ]
 
 from . import shared_housing_views as shared_housing
 
 urlpatterns += [
-    path("shared-housing-plans/", shared_housing.plans),
-    path("shared-housing-plans/<uuid:plan_id>/", shared_housing.detail),
-    path("shared-housing-plans/<uuid:plan_id>/proposals/", shared_housing.proposals),
+    path("shared-housing-plans/", shared_housing.PlansView.as_view()),
+    path("shared-housing-plans/<uuid:plan_id>/", shared_housing.DetailView.as_view()),
+    path(
+        "shared-housing-plans/<uuid:plan_id>/proposals/",
+        shared_housing.ProposalsView.as_view(),
+    ),
     path(
         "shared-housing-plans/<uuid:plan_id>/proposals/<uuid:proposal_id>/<slug:action>/",
-        shared_housing.proposal_action,
+        shared_housing.ProposalActionView.as_view(),
     ),
-    path("shared-housing-plans/<uuid:plan_id>/<slug:action>/", shared_housing.action),
-    path("shared-housing-demand/", shared_housing.demand),
-    path("owner-shared-housing-applications/", shared_housing.applications),
+    path(
+        "shared-housing-plans/<uuid:plan_id>/<slug:action>/",
+        shared_housing.ActionView.as_view(),
+    ),
+    path("shared-housing-demand/", shared_housing.DemandView.as_view()),
+    path(
+        "owner-shared-housing-applications/", shared_housing.ApplicationsView.as_view()
+    ),
 ]

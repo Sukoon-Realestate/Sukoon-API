@@ -1,78 +1,71 @@
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
-from core_apps.users.models import User
-from core_apps.properties.models import Property
-from core_apps.admin_api.models import KYCSubmission
-from ..models import RentalVerificationClaim
+from functools import partial
+from ..services.rental_lifecycle import claims_commands as commands
+
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
 from ..rental_lifecycle_serializers import ClaimBody, ReasonBody
-from ..services.rental_lifecycle.claims import record_claim, claim_payload
-from ..services.rental_lifecycle.common import audit, require_staff, require_revision
-from .common import endpoint, validated, mutate
+from .common import validated, mutate
 
 
-@endpoint(["POST"])
-def verification_claims(request):
-    data = validated(ClaimBody, request.data)
+class VerificationClaimsView(FeatureAPIView):
+    name = "Verification Claims"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "claims",
+            "verification_claims",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-    def authorize():
-        require_staff(
-            request.user,
-            (
-                {"kyc_reviewer"}
-                if data["subject_kind"] == "identity"
-                else {"property_reviewer"}
-            ),
-        )
-        return request.user
+    def post(self, request):
+        data = validated(ClaimBody, request.data)
 
-    def execute(actor):
-        subject = get_object_or_404(User, id=data["subject_user_id"])
-        prop = (
-            get_object_or_404(
-                Property.objects.select_for_update(), id=data["property_id"]
-            )
-            if data.get("property_id")
-            else None
-        )
-        kyc = (
-            get_object_or_404(KYCSubmission, id=data["kyc_submission_id"])
-            if data.get("kyc_submission_id")
-            else None
-        )
-        item = record_claim(actor, subject, data, prop=prop, kyc=kyc)
-        return item, {**claim_payload(item), "revision": item.revision}, 201
-
-    return mutate(request, "verification_claim.create", authorize, execute)
-
-
-@endpoint(["POST"])
-def revoke_claim(request, claim_id):
-    data = validated(ReasonBody, request.data)
-
-    def authorize():
-        item = get_object_or_404(
-            RentalVerificationClaim.objects.select_for_update(), id=claim_id
-        )
-        require_staff(
-            request.user,
-            (
-                {"kyc_reviewer"}
-                if item.subject_kind in {"identity", "student_enrollment"}
-                else {"property_reviewer"}
-            ),
-        )
-        return item
-
-    def execute(item):
-        require_revision(item, data["expected_revision"])
-        item.revoked_at = timezone.now()
-        item.revision += 1
-        item.save()
-        audit(item, request.user, "verification.revoked", data.get("reason", ""))
-        return (
-            item,
-            {"id": str(item.id), "revision": item.revision, "status": "revoked"},
-            200,
+        authorize = partial(
+            commands.verification_claims_post_authorize, actor=request.user, data=data
         )
 
-    return mutate(request, f"verification_claim.revoke.{claim_id}", authorize, execute)
+        execute = partial(commands.verification_claims_post_execute, data=data)
+
+        return mutate(request, "verification_claim.create", authorize, execute)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+verification_claims = VerificationClaimsView.as_view()
+
+
+class RevokeClaimView(FeatureAPIView):
+    name = "Revoke Claim"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "claims", "revoke_claim", boundary="standard", capability=None, typed=False
+        ),
+    }
+
+    def post(self, request, claim_id):
+        data = validated(ReasonBody, request.data)
+
+        authorize = partial(
+            commands.revoke_claim_post_authorize, actor=request.user, claim_id=claim_id
+        )
+
+        execute = partial(
+            commands.revoke_claim_post_execute, actor=request.user, data=data
+        )
+
+        return mutate(
+            request, f"verification_claim.revoke.{claim_id}", authorize, execute
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+revoke_claim = RevokeClaimView.as_view()

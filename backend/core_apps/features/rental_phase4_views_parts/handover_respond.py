@@ -1,23 +1,16 @@
 """Rental phase4 views: handover respond."""
 
-from django.db import transaction
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ..models import (
-    DepositAgreement,
-    RentalHandover,
-    RentalPayout,
-)
+from ..models import DepositAgreement, RentalPayout
 from ..renderers import FeatureJsonRenderer
-from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
-from ..services.rental_notes import record_response_note, validated_note
-from ..services.lease_permissions import handover_actions
-from ..services.payable_eligibility import evaluate_owner_payables
-from .handover_payload import _money, _lease, handover_payload, _handover
+from .handover_payload import _money, _lease
 from .lease_handovers import deposit_payload
 
 
@@ -32,97 +25,53 @@ def lease_deposit(request, lease_id):
     return Response(deposit_payload(deposit))
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def handover_respond(request, handover_id):
-    from ..rental_serializers_parts.command_serializers import (
-        HandoverRespondCommand,
-        validated,
-    )
+class HandoverRespondView(FeatureAPIView):
+    name = "Handover Respond"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "handover_respond",
+            "handover_respond",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-    data = request.data if hasattr(request.data, "get") else {}
-    action = data.get("action") or data.get("decision")
-    if (
-        not isinstance(action, str)
-        or action not in {"accept", "dispute"}
-        or not data.get("request_key")
-    ):
-        raise ValidationError(
-            "accept/dispute, expected_revision, and request_key are required."
+    def post(self, request, handover_id):
+        from ..rental_serializers_parts.command_serializers import (
+            HandoverRespondCommand,
+            validated,
         )
-    command = validated(HandoverRespondCommand, request.data)
-    handover = _handover(request, handover_id)
-    operation = f"handover.respond.{handover.id}.{request.user.id}"
-    replay = replay_operation(
-        request.user, operation, command["request_key"], request.data
-    )
-    if replay:
-        return Response(replay[0], status=replay[1])
-    note = validated_note(request.data)
-    with transaction.atomic():
-        handover = _handover(request, handover_id, lock=True)
-        replay = replay_operation(
-            request.user, operation, command["request_key"], request.data
-        )
-        if replay:
-            return Response(replay[0], status=replay[1])
-        from core_apps.common.command_authority import recheck_session
 
-        recheck_session(request)
-        if command["expected_revision"] != handover.revision:
-            raise RentalConflict("Handover revision conflict.", code="stale_revision")
-        if action not in handover_actions(request.user, handover):
-            raise RentalConflict("This handover action is no longer available.")
-        approvals = set(handover.approvals)
-        if action == "dispute":
-            handover.status = RentalHandover.Status.DISPUTED
-            handover.lease.occupancy_status = "handover_disputed"
-        else:
-            approvals.add(str(request.user.id))
-            handover.approvals = sorted(approvals)
-            if {str(handover.lease.owner.id), str(handover.lease.tenant.id)}.issubset(
-                approvals
-            ):
-                handover.status = RentalHandover.Status.ACCEPTED
-                handover.accepted_at = timezone.now()
-                if handover.kind == RentalHandover.Kind.MOVE_IN:
-                    from ..services.reputation.ancestry import freeze_handover
-
-                    handover.context_snapshot = freeze_handover(handover)
-                    handover.lease.occupancy_status = "occupied"
-                else:
-                    handover.lease.occupancy_status = "returned"
-                    from ..models import RentalInventoryDayLock
-
-                    RentalInventoryDayLock.objects.filter(
-                        lease=handover.lease, kind=RentalInventoryDayLock.Kind.OCCUPIED
-                    ).delete()
-            else:
-                handover.status = RentalHandover.Status.PENDING_APPROVAL
-        handover.revision += 1
-        handover.save()
-        record_response_note(handover, request.user, "handover", action, note)
+        data = request.data if hasattr(request.data, "get") else {}
+        action = data.get("action") or data.get("decision")
         if (
-            handover.kind == RentalHandover.Kind.MOVE_IN
-            and handover.status == RentalHandover.Status.ACCEPTED
+            not isinstance(action, str)
+            or action not in {"accept", "dispute"}
+            or not data.get("request_key")
         ):
-            evaluate_owner_payables(handover.lease)
-        handover.lease.revision += 1
-        handover.lease.save(
-            update_fields=["occupancy_status", "revision", "updated_at"]
+            raise ValidationError(
+                "accept/dispute, expected_revision, and request_key are required."
+            )
+        command = validated(HandoverRespondCommand, request.data)
+        from ..services.handover_commands import respond_handover
+
+        payload, status = respond_handover(
+            request.user,
+            request.auth,
+            command,
+            request.data,
+            handover_id,
+            action,
         )
-        output = remember_mutation(
-            user=request.user,
-            operation=operation,
-            request_key=command["request_key"],
-            payload=request.data,
-            request_subject_id=handover.id,
-            result_subject_id=handover.id,
-            result_revision=handover.revision,
-            resource=handover_payload(handover, request.user),
-        )
-    return Response(output)
+        return Response(payload, status=status)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+handover_respond = HandoverRespondView.as_view()
 
 
 def payout_payload(item):
@@ -168,3 +117,11 @@ def payout_payload(item):
         ],
         "payable_ids": [str(x.id) for x in item.payables.all()],
     }
+
+
+# Supported imports used by public facades and domain callers.
+from ..services.payable_eligibility import (
+    evaluate_owner_payables as evaluate_owner_payables,
+)
+
+__all__ = ["evaluate_owner_payables"]

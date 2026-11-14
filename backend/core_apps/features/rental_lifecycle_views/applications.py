@@ -1,7 +1,11 @@
-from datetime import timedelta
+from functools import partial
+from ..services.rental_lifecycle import applications_commands as commands
+
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
-from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from ..models import (
     ApplicationProfile,
@@ -16,112 +20,230 @@ from ..rental_lifecycle_serializers import (
 )
 from ..services.rental_lifecycle import applications as service
 from ..services.rental_lifecycle.access import property_for
-from ..services.rental_lifecycle.common import audit, require_revision
-from .common import endpoint, validated, mutate, page
+from .common import validated, mutate, page
 
 
-@endpoint(["GET", "PATCH"])
-def application_profile(request):
-    if request.method == "GET":
+class ApplicationProfileView(FeatureAPIView):
+    name = "Application Profile"
+    http_method_names = ["get", "patch", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "applications",
+            "application_profile",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "patch": ActionPolicy(
+            "applications",
+            "application_profile",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
         return Response(
             service.profile_payload(
                 ApplicationProfile.objects.filter(applicant=request.user).first(),
                 request.user,
             )
         )
-    data = validated(ProfileBody, request.data)
 
-    def execute(subject):
-        item = service.save_profile(request.user, data)
-        return item, service.profile_payload(item, request.user), 200
-
-    return mutate(request, "application_profile.save", lambda: request.user, execute)
-
-
-@endpoint(["POST"])
-def application_version(request):
-    data = validated(CommandBody, request.data)
-
-    def authorize():
-        return get_object_or_404(
-            ApplicationProfile.objects.select_for_update(), applicant=request.user
+    def patch(self, request):
+        data = validated(ProfileBody, request.data)
+        execute = partial(
+            commands.application_profile_patch_execute, actor=request.user, data=data
+        )
+        return mutate(
+            request, "application_profile.save", lambda: request.user, execute
         )
 
-    def execute(profile):
-        item = service.freeze_profile(profile, request.user, data)
-        return item, service.version_payload(item), 201
 
-    return mutate(request, "application_profile.freeze", authorize, execute)
+# Stable callable import for integrations; URLs use the explicit class.
+application_profile = ApplicationProfileView.as_view()
 
 
-@endpoint(["POST"])
-def application_share_review(request):
-    data = validated(ShareReviewBody, request.data)
-    version = get_object_or_404(
-        ApplicationProfileVersion,
-        id=data["version_id"],
-        profile__applicant=request.user,
-    )
-    prop = property_for(request.user, data["property_id"])
-    return Response(
-        service.share_review(version, prop, data["categories"], data["expires_at"])
-    )
+class ApplicationVersionView(FeatureAPIView):
+    name = "Application Version"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "applications",
+            "application_version",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
 
+    def post(self, request):
+        data = validated(CommandBody, request.data)
 
-@endpoint(["GET", "POST"])
-def application_shares(request):
-    if request.method == "GET":
-        qs = ApplicationAccessGrant.objects.filter(applicant=request.user).order_by(
-            "-created_at"
+        authorize = partial(
+            commands.application_version_post_authorize, actor=request.user
         )
-        return page(request, qs, lambda item: service.share_payload(item, request.user))
-    data = validated(ShareBody, request.data)
 
-    def authorize():
-        return get_object_or_404(
+        execute = partial(
+            commands.application_version_post_execute, actor=request.user, data=data
+        )
+
+        return mutate(request, "application_profile.freeze", authorize, execute)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+application_version = ApplicationVersionView.as_view()
+
+
+class ApplicationShareReviewView(FeatureAPIView):
+    name = "Application Share Review"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "applications",
+            "application_share_review",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request):
+        data = validated(ShareReviewBody, request.data)
+        version = get_object_or_404(
             ApplicationProfileVersion,
             id=data["version_id"],
             profile__applicant=request.user,
         )
-
-    def execute(version):
-        require_revision(version, data["expected_revision"])
-        prop = property_for(request.user, data["property_id"], lock=True)
-        item = service.create_share(version, request.user, prop, data)
-        return item, service.share_payload(item, request.user), 201
-
-    return mutate(request, "application_share.create", authorize, execute)
-
-
-@endpoint(["GET", "POST"])
-def application_share(request, share_id):
-    item = get_object_or_404(ApplicationAccessGrant, id=share_id)
-    payload = service.share_payload(item, request.user)
-    if request.method == "GET":
-        return Response(payload)
-    data = validated(CommandBody, request.data)
-
-    def authorize():
-        return get_object_or_404(
-            ApplicationAccessGrant.objects.select_for_update(),
-            id=share_id,
-            applicant=request.user,
+        prop = property_for(request.user, data["property_id"])
+        return Response(
+            service.share_review(version, prop, data["categories"], data["expires_at"])
         )
 
-    def execute(grant):
-        require_revision(grant, data["expected_revision"])
-        grant.revoked_at = timezone.now()
-        grant.revision += 1
-        grant.save()
-        audit(grant, request.user, "application.share_revoked")
-        return grant, service.share_payload(grant, request.user), 200
 
-    return mutate(request, f"application_share.revoke.{share_id}", authorize, execute)
+# Stable callable import for integrations; URLs use the explicit class.
+application_share_review = ApplicationShareReviewView.as_view()
 
 
-@endpoint(["GET"])
-def application_version_detail(request, version_id):
-    item = get_object_or_404(
-        ApplicationProfileVersion, id=version_id, profile__applicant=request.user
-    )
-    return Response(service.version_payload(item))
+class ApplicationSharesView(FeatureAPIView):
+    name = "Application Shares"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "applications",
+            "application_shares",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "applications",
+            "application_shares",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        qs = ApplicationAccessGrant.objects.filter(applicant=request.user).order_by(
+            "-created_at"
+        )
+        return page(request, qs, lambda item: service.share_payload(item, request.user))
+
+    def post(self, request):
+        data = validated(ShareBody, request.data)
+        authorize = partial(
+            commands.application_shares_post_authorize, actor=request.user, data=data
+        )
+        execute = partial(
+            commands.application_shares_post_execute, actor=request.user, data=data
+        )
+        return mutate(request, "application_share.create", authorize, execute)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+application_shares = ApplicationSharesView.as_view()
+
+
+class ApplicationShareView(FeatureAPIView):
+    name = "Application Share"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "applications",
+            "application_share",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "applications",
+            "application_share",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, share_id):
+        item = get_object_or_404(ApplicationAccessGrant, id=share_id)
+        payload = service.share_payload(item, request.user)
+        return Response(payload)
+
+    def post(self, request, share_id):
+        item = get_object_or_404(ApplicationAccessGrant, id=share_id)
+        service.share_payload(item, request.user)
+        data = validated(CommandBody, request.data)
+        authorize = partial(
+            commands.application_share_post_authorize,
+            actor=request.user,
+            share_id=share_id,
+        )
+        execute = partial(
+            commands.application_share_post_execute, actor=request.user, data=data
+        )
+        return mutate(
+            request, f"application_share.revoke.{share_id}", authorize, execute
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+application_share = ApplicationShareView.as_view()
+
+
+class ApplicationVersionDetailView(FeatureAPIView):
+    name = "Application Version Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "applications",
+            "application_version_detail",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, version_id):
+        item = get_object_or_404(
+            ApplicationProfileVersion, id=version_id, profile__applicant=request.user
+        )
+        return Response(service.version_payload(item))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+application_version_detail = ApplicationVersionDetailView.as_view()

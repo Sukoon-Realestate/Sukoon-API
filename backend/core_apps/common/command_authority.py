@@ -10,11 +10,15 @@ replay and upload completion.
 
 
 def recheck_session(request):
-    claims = getattr(request, "auth", None)
+    return recheck_actor_session(request.user, getattr(request, "auth", None))
+
+
+def recheck_actor_session(actor, claims):
+    """Same session fence for commands receiving explicit actor/token inputs."""
     if not claims or not hasattr(claims, "get"):
         # Session-less test clients and non-JWT authentication have no claims.
         return
     from core_apps.users.models import User
     from core_apps.users.services.sessions import validate_session
 
-    validate_session(User.objects.get(pk=request.user.pk), claims)
+    validate_session(User.objects.get(pk=actor.pk), claims)

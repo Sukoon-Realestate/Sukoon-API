@@ -1,5 +1,6 @@
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
 from rest_framework import serializers
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -8,7 +9,9 @@ from .services import decision_notebooks
 
 
 class Context(serializers.Serializer):
-    workspace = serializers.ChoiceField(choices=["individual", "owner", "student", "company"])
+    workspace = serializers.ChoiceField(
+        choices=["individual", "owner", "student", "company"]
+    )
     company_id = serializers.UUIDField(required=False)
 
 
@@ -28,26 +31,77 @@ class Resolve(serializers.Serializer):
 def context(request):
     value = Context(data=request.query_params)
     value.is_valid(raise_exception=True)
-    return value.validated_data["workspace"], str(value.validated_data.get("company_id", ""))
+    return value.validated_data["workspace"], str(
+        value.validated_data.get("company_id", "")
+    )
 
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def notebook(request):
-    workspace, company = context(request)
-    if request.method == "GET":
+class NotebookView(FeatureAPIView):
+    name = "Notebook"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "decision_views",
+            "notebook",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "decision_views",
+            "notebook",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        workspace, company = context(request)
         return Response(decision_notebooks.read(request.user, workspace, company))
-    body = Sync(data=request.data)
-    body.is_valid(raise_exception=True)
-    return Response(decision_notebooks.write(request.user, workspace, company, body.validated_data))
+
+    def post(self, request):
+        workspace, company = context(request)
+        body = Sync(data=request.data)
+        body.is_valid(raise_exception=True)
+        return Response(
+            decision_notebooks.write(
+                request.user, workspace, company, body.validated_data
+            )
+        )
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def resolve(request):
-    workspace, company = context(request)
-    body = Resolve(data=request.data)
-    body.is_valid(raise_exception=True)
-    return Response(decision_notebooks.write(request.user, workspace, company, body.validated_data))
+# Stable callable import for integrations; URLs use the explicit class.
+notebook = NotebookView.as_view()
+
+
+class ResolveView(FeatureAPIView):
+    name = "Resolve"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "decision_views",
+            "resolve",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request):
+        workspace, company = context(request)
+        body = Resolve(data=request.data)
+        body.is_valid(raise_exception=True)
+        return Response(
+            decision_notebooks.write(
+                request.user, workspace, company, body.validated_data
+            )
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+resolve = ResolveView.as_view()

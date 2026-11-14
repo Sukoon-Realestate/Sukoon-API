@@ -46,7 +46,7 @@ def propose_handover(item, user, data):
         raise RentalConflict("Confirm move-in before returning possession.")
     if not lease.start_date <= data["possession_on"] <= timezone.localdate():
         raise RentalConflict("Confirm an actual possession date, not a future event.")
-    from ...rental_phase4_views_parts.handover_payload import _validate_evidence
+    from ..handover_reads import _validate_evidence
 
     _validate_evidence(lease, data["evidence_ids"])
     content = {
@@ -87,7 +87,7 @@ def apply_handover(item, change):
         raise RentalConflict(
             "Confirm every employee departure before returning the company premises."
         )
-    from ...rental_phase4_views_parts.handover_payload import _validate_evidence
+    from ..handover_reads import _validate_evidence
 
     evidence = _validate_evidence(lease, data["evidence_ids"])
     if lease.handovers.filter(kind=change.kind).exists():

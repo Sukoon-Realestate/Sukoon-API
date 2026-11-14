@@ -1,272 +1,195 @@
+from .services.company import tenancy_commands as commands
+
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
 from rest_framework.response import Response
-from .company_views import company_api, mutate, page
+from .company_views import page
 from .company_serializers import CommandBody
 from .company_tenancy_serializers import ExecutionAuthorityBody, command_body
 from .rental_lifecycle_views.common import validated
-from .services.company import (
-    tenancy_commercial as commercial,
-    tenancy_continuation_signing as continuation,
-    tenancy_ownership as ownership,
-    tenancy_resolution as resolution,
-    tenancy_initial_recovery as initial_recovery,
-    tenancy_adjustments as adjustments,
-    tenancy_access as access,
-    tenancy_contracts as contracts,
-    tenancy_changes as changes,
-    tenancy_closure as closure,
-    tenancy_occupancy as occupancy,
-    tenancy_maintenance as maintenance,
-    tenancy_projection as projection,
-    service_requests,
-)
-from .services.company.contract_access import get as preparation_for
-from .services.rental_lifecycle.common import require_revision, require_staff
+from .services.company import tenancy_access as access, tenancy_projection as projection
 
 
-@company_api(["POST"])
-def create(request, preparation_id):
-    from .services.company.contract_preparation import existing_account_parties
-
-    body = validated(CommandBody, request.data)
-
-    def authorize():
-        from .services.company.contract_access import manages
-        from rest_framework.exceptions import PermissionDenied
-
-        item = preparation_for(request.user, preparation_id, lock=True)
-        if not manages(item, request.user):
-            raise PermissionDenied(
-                "Only the currently assigned coordinator can create this agreement."
-            )
-        return item
-
-    return mutate(
-        request,
-        "company.tenancy.create",
-        authorize,
-        lambda _: contracts.create(request.user, preparation_id, body),
-        receipt_resource,
-        creating=True,
-        account_parties=lambda: existing_account_parties(preparation_id),
-    )
-
-
-@company_api(["GET"])
-def collection(request):
-    from rest_framework import serializers
-
-    from .services.rental_lifecycle.common import require_actor
-
-    require_actor(request.user)
-    query = access.visible(request.user)
-    if request.query_params.get("company_id"):
-        identity = serializers.UUIDField().run_validation(
-            request.query_params["company_id"]
-        )
-        query = query.filter(lease__renter_company__id=identity)
-    if "lease_id" in request.query_params:
-        lease_id = serializers.UUIDField().run_validation(
-            request.query_params["lease_id"]
-        )
-        query = query.filter(lease__id=lease_id)
-    return page(request, query, lambda item: projection.payload(item, request.user))
-
-
-@company_api(["GET"])
-def detail(request, tenancy_id):
-    return Response(
-        projection.payload(access.get(request.user, tenancy_id), request.user)
-    )
-
-
-@company_api(["POST"])
-def resolve_operation(request, tenancy_id):
-    from .services.company.tenancy_operation_recovery import RecoveryBody, resolve
-    from .services.rental_foundation import private_no_store
-
-    body = validated(RecoveryBody, request.data)
-    return private_no_store(Response(resolve(request.user, tenancy_id, body)))
-
-
-def open_case(item, user, data):
-    from .services.rental_lifecycle.cases import open_system_case
-    from .services.company.role_context import selected
-
-    role = selected(user, item.lease.renter_company, required=False) or "owner"
-
-    open_system_case(
-        kind="company_tenancy_review",
-        source_key=f"company-tenancy:{item.id}:{user.id}:{role}",
-        actor=user,
-        lease=item.lease,
-        reason=data["reason"],
-        next_action="Review the exact company tenancy, current authority and outstanding possession or financial obligations.",
-    )
-    return access.changed(item, user, "company_tenancy_escalated", data["reason"])
-
-
-HANDLERS = {
-    "request_service": service_requests.request,
-    "commercial_change": commercial.propose,
-    "ownership_change": ownership.propose,
-    "settlement_adjustment": adjustments.propose,
-    "submit_continuation": continuation.submit,
-    "sign_continuation": continuation.sign,
-    "resume_continuation": continuation.resume,
-    "release_continuation": resolution.propose,
-    "release_agreement": initial_recovery.propose,
-    "review": contracts.review,
-    "submit_signature": contracts.submit,
-    "sign": contracts.signing_session,
-    "cancel": contracts.cancel,
-    "handover": occupancy.propose_handover,
-    "presence": occupancy.propose_presence,
-    "presence_respond": occupancy.confirm_presence,
-    "replace_employee": occupancy.propose_replacement,
-    "respond_change": changes.respond,
-    "withdraw_change": changes.withdraw,
-    "resume_change": changes.resume,
-    "terminate": closure.propose_termination,
-    "settlement": closure.propose_settlement,
-    "replace_authority": closure.propose_authority,
-    "maintenance": maintenance.create,
-    "maintenance_action": maintenance.act,
-    "reconcile": closure.reconcile,
-    "open_case": open_case,
-}
-
-
-@company_api(["POST"])
-def action(request, tenancy_id, action):
-    body = command_body(action, request.data)
-
-    def authorize():
-        item = access.get(request.user, tenancy_id, lock=True)
-        authorize_action(item, request.user, action, body)
-        return item
-
-    def execute(item):
-        require_revision(item.lease, body["expected_revision"])
-        return HANDLERS[action](item, request.user, body)
-
-    return mutate(
-        request, "company.tenancy." + action, authorize, execute, receipt_resource
-    )
-
-
-def receipt_resource(item):
-    # A receipt proves the original effect, not permission to redisclose its old
-    # commercial/roster projection. Screens refresh the current authorized view.
-    return {"id": str(item.id), "revision": item.revision}
-
-
-def authorize_action(item, user, action, body):
-    """Reauthorize receipts as well as new effects after a responsibility changes."""
-    from django.shortcuts import get_object_or_404
-    from rest_framework.exceptions import PermissionDenied
-    from .models import (
-        CompanyTenancyChange,
-        EmployeeAssignment,
-        EmployeeOccupancyConfirmation,
-    )
-
-    if action == "request_service":
-        service_requests.authorize_request(item, user, body.get("kind"))
-    permissions = {
-        "commercial_change": {"owner", "signer"},
-        "ownership_change": {"owner", "signer"},
-        "settlement_adjustment": {"owner", "payer"},
-        "submit_continuation": {"owner"},
-        "resume_continuation": {"owner", "coordinator", "signer", "payer"},
-        "release_continuation": {"owner", "signer"},
-        "release_agreement": {"owner", "signer"},
-        "review": {body.get("role")},
-        "submit_signature": {"owner"},
-        "sign": {"owner", "signer"},
-        "cancel": {"owner", "coordinator"},
-        "handover": {"owner", "coordinator"},
-        "replace_employee": {"coordinator"},
-        "terminate": {"owner", "signer"},
-        "settlement": {"owner", "payer"},
-        "replace_authority": {"administrator"},
-        "resume_change": {"coordinator"},
-        "reconcile": {"owner", "coordinator", "signer", "payer"},
+class CreateView(FeatureAPIView):
+    name = "Create"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "company_tenancy_views",
+            "create",
+            boundary="company",
+            capability=None,
+            typed=False,
+        ),
     }
-    if action in permissions:
-        access.require_role(item, user, permissions[action])
-    if action in {"respond_change", "withdraw_change", "sign_continuation"}:
-        change = get_object_or_404(
-            CompanyTenancyChange, tenancy=item, id=body["change_id"]
+
+    def post(self, request, preparation_id):
+        body = validated(CommandBody, request.data)
+        payload, status = commands.create_agreement(
+            request.user, preparation_id, body, request.data
         )
-        if action in {"respond_change", "sign_continuation"}:
-            changes.authorize_role(item, change, user, body["role"], positive=False)
-        elif not changes.can_withdraw(item, change, user):
-            raise PermissionDenied(
-                "Only the proposer or current coordinator can withdraw this review."
+        return Response(payload, status=status)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+create = CreateView.as_view()
+
+
+class CollectionView(FeatureAPIView):
+    name = "Collection"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "company_tenancy_views",
+            "collection",
+            boundary="company",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        from rest_framework import serializers
+
+        from .services.rental_lifecycle.common import require_actor
+
+        require_actor(request.user)
+        scope = {}
+        if request.query_params.get("company_id"):
+            identity = serializers.UUIDField().run_validation(
+                request.query_params["company_id"]
             )
-    if action in {"presence", "presence_respond"}:
-        row = (
-            get_object_or_404(
-                EmployeeAssignment,
-                item=item.preparation.booking,
-                id=body["assignment_id"],
+            scope["company_id"] = identity
+        if "lease_id" in request.query_params:
+            lease_id = serializers.UUIDField().run_validation(
+                request.query_params["lease_id"]
             )
-            if action == "presence"
-            else get_object_or_404(
-                EmployeeOccupancyConfirmation,
-                assignment__item=item.preparation.booking,
-                id=body["confirmation_id"],
-            ).assignment
+            scope["lease_id"] = lease_id
+        query = access.visible(request.user, **scope)
+        return page(request, query, lambda item: projection.payload(item, request.user))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+collection = CollectionView.as_view()
+
+
+class DetailView(FeatureAPIView):
+    name = "Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "company_tenancy_views",
+            "detail",
+            boundary="company",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, tenancy_id):
+        return Response(
+            projection.payload(access.get(request.user, tenancy_id), request.user)
         )
-        if user.pk not in {row.employee_id, item.lease.owner_id}:
-            raise PermissionDenied(
-                "Only the actual employee or owner can confirm this stay."
-            )
-    if action in {"maintenance", "maintenance_action"}:
-        from .models import CompanyMaintenanceScope
-
-        prop = body.get("property_id")
-        if action == "maintenance_action":
-            prop = get_object_or_404(
-                CompanyMaintenanceScope,
-                tenancy=item,
-                request__id=body["maintenance_id"],
-            ).property.id
-        if (
-            not access.roles(item, user) & {"owner", "coordinator", "payer"}
-            and not item.preparation.booking.assignments.filter(
-                employee=user, property__id=prop, occupancy_status="occupied"
-            ).exists()
-        ):
-            raise PermissionDenied(
-                "This maintenance record is outside your current responsibility."
-            )
 
 
-@company_api(["POST"])
-def verify_mandate(request, mandate_id):
-    from .models import CompanyMandate
-    from django.shortcuts import get_object_or_404
+# Stable callable import for integrations; URLs use the explicit class.
+detail = DetailView.as_view()
 
-    body = validated(ExecutionAuthorityBody, request.data)
 
-    def authorize():
-        item = get_object_or_404(CompanyMandate, id=mandate_id)
-        require_staff(
-            request.user,
-            {"kyc_reviewer"} if item.kind == "sign" else {"financial_approver"},
+class ResolveOperationView(FeatureAPIView):
+    name = "Resolve Operation"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "company_tenancy_views",
+            "resolve_operation",
+            boundary="company",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, tenancy_id):
+        from .services.company.tenancy_operation_recovery import RecoveryBody, resolve
+        from .services.rental_foundation import private_no_store
+
+        body = validated(RecoveryBody, request.data)
+        return private_no_store(Response(resolve(request.user, tenancy_id, body)))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+resolve_operation = ResolveOperationView.as_view()
+
+
+class ActionView(FeatureAPIView):
+    name = "Action"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "company_tenancy_views",
+            "action",
+            boundary="company",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, tenancy_id, action):
+        body = command_body(action, request.data)
+        payload, status = commands.apply_action(
+            request.user, tenancy_id, action, body, request.data
         )
-        return item
+        return Response(payload, status=status)
 
-    return mutate(
-        request,
-        "company.mandate.execution_review",
-        authorize,
-        lambda _: contracts.verify_mandate(request.user, mandate_id, body),
-        lambda item: {
-            "id": str(item.id),
-            "revision": item.revision,
-            "state": item.state,
-            "execution_verified_until": item.execution_verified_until.isoformat(),
-        },
-    )
+
+# Stable callable import for integrations; URLs use the explicit class.
+action = ActionView.as_view()
+
+
+class VerifyMandateView(FeatureAPIView):
+    name = "Verify Mandate"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "company_tenancy_views",
+            "verify_mandate",
+            boundary="company",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, mandate_id):
+        body = validated(ExecutionAuthorityBody, request.data)
+        payload, status = commands.verify_execution_mandate(
+            request.user, mandate_id, body, request.data
+        )
+        return Response(payload, status=status)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+verify_mandate = VerifyMandateView.as_view()
+
+# Supported service helpers retain their import identities.
+from .services.company.tenancy_commands import (
+    HANDLERS as HANDLERS,
+    open_case as open_case,
+    receipt_resource as receipt_resource,
+    authorize_action as authorize_action,
+)
+
+__all__ = ["HANDLERS", "authorize_action", "open_case", "receipt_resource"]

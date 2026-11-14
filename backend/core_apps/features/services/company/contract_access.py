@@ -89,7 +89,11 @@ def get(user, identity, *, lock=False):
     return item
 
 
-def visible(user):
+def visible(user, *, company_id=None):
+    """Narrow candidates before membership/mandate/private-row evaluation."""
+    base = CompanyContractPreparation.objects.all()
+    if company_id is not None:
+        base = base.filter(booking__request__company__id=company_id)
 
     require_actor(user)
     membership = Q(
@@ -97,7 +101,7 @@ def visible(user):
         booking__request__company__memberships__is_active=True,
     )
     candidates = (
-        CompanyContractPreparation.objects.filter(
+        base.filter(
             Q(snapshot__owner_id=str(user.id))
             | membership
             & (

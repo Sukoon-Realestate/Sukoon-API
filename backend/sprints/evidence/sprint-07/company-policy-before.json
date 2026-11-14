@@ -1,0 +1,5954 @@
+[
+  {
+    "class": "core_apps.features.company_responsibility_views.CollectionView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "collection",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.CollectionView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "collection",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.CollectionView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "collection",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.CollectionView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "collection",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.CollectionView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "collection",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.CollectionView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "collection",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.CollectionView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "collection",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.CollectionView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "collection",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.DetailView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.DetailView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.DetailView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.DetailView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.DetailView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.DetailView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.DetailView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.DetailView",
+    "method": "get",
+    "resource": "company_responsibility_views",
+    "action": "detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.ActionView",
+    "method": "post",
+    "resource": "company_responsibility_views",
+    "action": "action",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.ActionView",
+    "method": "post",
+    "resource": "company_responsibility_views",
+    "action": "action",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.ActionView",
+    "method": "post",
+    "resource": "company_responsibility_views",
+    "action": "action",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.ActionView",
+    "method": "post",
+    "resource": "company_responsibility_views",
+    "action": "action",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.ActionView",
+    "method": "post",
+    "resource": "company_responsibility_views",
+    "action": "action",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.ActionView",
+    "method": "post",
+    "resource": "company_responsibility_views",
+    "action": "action",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.ActionView",
+    "method": "post",
+    "resource": "company_responsibility_views",
+    "action": "action",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_responsibility_views.ActionView",
+    "method": "post",
+    "resource": "company_responsibility_views",
+    "action": "action",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleWorkView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_work",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleWorkView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_work",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleWorkView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_work",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleWorkView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_work",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleWorkView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_work",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleWorkView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_work",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleWorkView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_work",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleWorkView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_work",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleContextsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_contexts",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleContextsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_contexts",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleContextsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_contexts",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleContextsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_contexts",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleContextsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_contexts",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleContextsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_contexts",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleContextsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_contexts",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.RoleContextsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "role_contexts",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.NegotiationsView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "negotiations",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.NegotiationsView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "negotiations",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.NegotiationsView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "negotiations",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.NegotiationsView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "negotiations",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.NegotiationsView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "negotiations",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.NegotiationsView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "negotiations",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.NegotiationsView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "negotiations",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.NegotiationsView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "negotiations",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "get",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.DetailView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.StartView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "start",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.StartView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "start",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.StartView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "start",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.StartView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "start",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.StartView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "start",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.StartView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "start",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.StartView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "start",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_negotiation_views.StartView",
+    "method": "post",
+    "resource": "company_negotiation_views",
+    "action": "start",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.workspace_views.SummaryView",
+    "method": "get",
+    "resource": "workspace_views",
+    "action": "summary",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.workspace_views.SummaryView",
+    "method": "get",
+    "resource": "workspace_views",
+    "action": "summary",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.workspace_views.SummaryView",
+    "method": "get",
+    "resource": "workspace_views",
+    "action": "summary",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.workspace_views.SummaryView",
+    "method": "get",
+    "resource": "workspace_views",
+    "action": "summary",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.workspace_views.SummaryView",
+    "method": "get",
+    "resource": "workspace_views",
+    "action": "summary",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.workspace_views.SummaryView",
+    "method": "get",
+    "resource": "workspace_views",
+    "action": "summary",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.workspace_views.SummaryView",
+    "method": "get",
+    "resource": "workspace_views",
+    "action": "summary",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.workspace_views.SummaryView",
+    "method": "get",
+    "resource": "workspace_views",
+    "action": "summary",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.CollectionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "collection",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.DetailView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "detail",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.DetailView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "detail",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.DetailView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.DetailView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "detail",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.DetailView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "detail",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.DetailView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "detail",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.DetailView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "detail",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.DetailView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "detail",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ItemsView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "items",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ItemsView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "items",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ItemsView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "items",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ItemsView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "items",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ItemsView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "items",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ItemsView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "items",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ItemsView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "items",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ItemsView",
+    "method": "get",
+    "resource": "company_saved_views",
+    "action": "items",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ActionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "action",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ActionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "action",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ActionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "action",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ActionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "action",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ActionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "action",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ActionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "action",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ActionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "action",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_saved_views.ActionView",
+    "method": "post",
+    "resource": "company_saved_views",
+    "action": "action",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.RentalSummaryView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "rental_summary",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.RentalSummaryView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "rental_summary",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.RentalSummaryView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "rental_summary",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.RentalSummaryView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "rental_summary",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.RentalSummaryView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "rental_summary",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.RentalSummaryView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "rental_summary",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.RentalSummaryView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "rental_summary",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.RentalSummaryView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "rental_summary",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.HousingReportView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "housing_report",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.HousingReportView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "housing_report",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.HousingReportView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "housing_report",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.HousingReportView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "housing_report",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.HousingReportView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "housing_report",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.HousingReportView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "housing_report",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.HousingReportView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "housing_report",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.HousingReportView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "housing_report",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.CatalogView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "catalog",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.CatalogView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "catalog",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.CatalogView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "catalog",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.CatalogView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "catalog",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.CatalogView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "catalog",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.CatalogView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "catalog",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.CatalogView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "catalog",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.CatalogView",
+    "method": "get",
+    "resource": "company_rental_value_views",
+    "action": "catalog",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.AssistanceView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "assistance",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.AssistanceView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "assistance",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.AssistanceView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "assistance",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.AssistanceView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "assistance",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.AssistanceView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "assistance",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.AssistanceView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "assistance",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.AssistanceView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "assistance",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.AssistanceView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "assistance",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.ImportPreviewView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "import_preview",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.ImportPreviewView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "import_preview",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.ImportPreviewView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "import_preview",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.ImportPreviewView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "import_preview",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.ImportPreviewView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "import_preview",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.ImportPreviewView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "import_preview",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.ImportPreviewView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "import_preview",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_rental_value_views.ImportPreviewView",
+    "method": "post",
+    "resource": "company_rental_value_views",
+    "action": "import_preview",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CollectionView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "collection",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CollectionView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "collection",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CollectionView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "collection",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CollectionView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "collection",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CollectionView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "collection",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CollectionView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "collection",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CollectionView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "collection",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CollectionView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "collection",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.DetailView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.DetailView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.DetailView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.DetailView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.DetailView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.DetailView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.DetailView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.DetailView",
+    "method": "get",
+    "resource": "company_tenancy_views",
+    "action": "detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ResolveOperationView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "resolve_operation",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ResolveOperationView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "resolve_operation",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ResolveOperationView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "resolve_operation",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ResolveOperationView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "resolve_operation",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ResolveOperationView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "resolve_operation",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ResolveOperationView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "resolve_operation",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ResolveOperationView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "resolve_operation",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ResolveOperationView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "resolve_operation",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ActionView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "action",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ActionView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "action",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ActionView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "action",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ActionView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "action",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ActionView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "action",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ActionView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "action",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ActionView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "action",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.ActionView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "action",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CreateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "create",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CreateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "create",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CreateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "create",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CreateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "create",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CreateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "create",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CreateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "create",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CreateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "create",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.CreateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "create",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.VerifyMandateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "verify_mandate",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.VerifyMandateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "verify_mandate",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.VerifyMandateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "verify_mandate",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.VerifyMandateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "verify_mandate",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.VerifyMandateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "verify_mandate",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.VerifyMandateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "verify_mandate",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.VerifyMandateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "verify_mandate",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_tenancy_views.VerifyMandateView",
+    "method": "post",
+    "resource": "company_tenancy_views",
+    "action": "verify_mandate",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandatesView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandates",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandateActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandate_action",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandateActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandate_action",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandateActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandate_action",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandateActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandate_action",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandateActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandate_action",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandateActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandate_action",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandateActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandate_action",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.MandateActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "mandate_action",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationsView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparations",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationsView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparations",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationsView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparations",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationsView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparations",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationsView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparations",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationsView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparations",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationsView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparations",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationsView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "preparations",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.DetailView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.DetailView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.DetailView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.DetailView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.DetailView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.DetailView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.DetailView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.DetailView",
+    "method": "get",
+    "resource": "company_contract_views",
+    "action": "detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation_action",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation_action",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation_action",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation_action",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation_action",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation_action",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation_action",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_contract_views.PreparationActionView",
+    "method": "post",
+    "resource": "company_contract_views",
+    "action": "preparation_action",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeHistoryView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change_history",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeHistoryView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change_history",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeHistoryView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change_history",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeHistoryView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change_history",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeHistoryView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change_history",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeHistoryView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change_history",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeHistoryView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change_history",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeHistoryView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change_history",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.PreviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "preview",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.PreviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "preview",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.PreviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "preview",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.PreviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "preview",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.PreviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "preview",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.PreviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "preview",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.PreviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "preview",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.PreviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "preview",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.ChangeView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "change",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaCollectionView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_collection",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "put",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "put",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "put",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "put",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "put",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "put",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "put",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "put",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "delete",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "delete",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "delete",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "delete",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "delete",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "delete",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "delete",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaDetailView",
+    "method": "delete",
+    "resource": "portfolio_views",
+    "action": "media_detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaBytesView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_bytes",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaBytesView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_bytes",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaBytesView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_bytes",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaBytesView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_bytes",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaBytesView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_bytes",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaBytesView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_bytes",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaBytesView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_bytes",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaBytesView",
+    "method": "get",
+    "resource": "portfolio_views",
+    "action": "media_bytes",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaReviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_review",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaReviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_review",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaReviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_review",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaReviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_review",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaReviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_review",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaReviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_review",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaReviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_review",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.portfolio_views.MediaReviewView",
+    "method": "post",
+    "resource": "portfolio_views",
+    "action": "media_review",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_chat_views.DiscussionView",
+    "method": "get",
+    "resource": "company_chat_views",
+    "action": "discussion",
+    "role": "",
+    "outcome": "company_role_audience_required"
+  },
+  {
+    "class": "core_apps.features.company_chat_views.DiscussionView",
+    "method": "get",
+    "resource": "company_chat_views",
+    "action": "discussion",
+    "role": "admin",
+    "outcome": "company_role_audience_required"
+  },
+  {
+    "class": "core_apps.features.company_chat_views.DiscussionView",
+    "method": "get",
+    "resource": "company_chat_views",
+    "action": "discussion",
+    "role": "coordinator",
+    "outcome": "company_role_audience_required"
+  },
+  {
+    "class": "core_apps.features.company_chat_views.DiscussionView",
+    "method": "get",
+    "resource": "company_chat_views",
+    "action": "discussion",
+    "role": "approver",
+    "outcome": "company_role_audience_required"
+  },
+  {
+    "class": "core_apps.features.company_chat_views.DiscussionView",
+    "method": "get",
+    "resource": "company_chat_views",
+    "action": "discussion",
+    "role": "signer",
+    "outcome": "company_role_audience_required"
+  },
+  {
+    "class": "core_apps.features.company_chat_views.DiscussionView",
+    "method": "get",
+    "resource": "company_chat_views",
+    "action": "discussion",
+    "role": "payer",
+    "outcome": "company_role_audience_required"
+  },
+  {
+    "class": "core_apps.features.company_chat_views.DiscussionView",
+    "method": "get",
+    "resource": "company_chat_views",
+    "action": "discussion",
+    "role": "employee",
+    "outcome": "company_role_audience_required"
+  },
+  {
+    "class": "core_apps.features.company_chat_views.DiscussionView",
+    "method": "get",
+    "resource": "company_chat_views",
+    "action": "discussion",
+    "role": "unknown",
+    "outcome": "company_role_audience_required"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ApprovalRouteView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "approval_route",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ApprovalRouteView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "approval_route",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ApprovalRouteView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "approval_route",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ApprovalRouteView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "approval_route",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ApprovalRouteView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "approval_route",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ApprovalRouteView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "approval_route",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ApprovalRouteView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "approval_route",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ApprovalRouteView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "approval_route",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.WorkView",
+    "method": "get",
+    "resource": "company_work_views",
+    "action": "work",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.WorkView",
+    "method": "get",
+    "resource": "company_work_views",
+    "action": "work",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.WorkView",
+    "method": "get",
+    "resource": "company_work_views",
+    "action": "work",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_work_views.WorkView",
+    "method": "get",
+    "resource": "company_work_views",
+    "action": "work",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_work_views.WorkView",
+    "method": "get",
+    "resource": "company_work_views",
+    "action": "work",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.WorkView",
+    "method": "get",
+    "resource": "company_work_views",
+    "action": "work",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.WorkView",
+    "method": "get",
+    "resource": "company_work_views",
+    "action": "work",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.WorkView",
+    "method": "get",
+    "resource": "company_work_views",
+    "action": "work",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ReassignView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "reassign",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ReassignView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "reassign",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ReassignView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "reassign",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ReassignView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "reassign",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ReassignView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "reassign",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ReassignView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "reassign",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ReassignView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "reassign",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_work_views.ReassignView",
+    "method": "post",
+    "resource": "company_work_views",
+    "action": "reassign",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ContextsView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "contexts",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ContextsView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "contexts",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ContextsView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "contexts",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ContextsView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "contexts",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ContextsView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "contexts",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ContextsView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "contexts",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ContextsView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "contexts",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ContextsView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "contexts",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.PlanningPeopleView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "planning_people",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.PlanningPeopleView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "planning_people",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.PlanningPeopleView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "planning_people",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.PlanningPeopleView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "planning_people",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.PlanningPeopleView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "planning_people",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.PlanningPeopleView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "planning_people",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.PlanningPeopleView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "planning_people",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.PlanningPeopleView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "planning_people",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RosterView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "roster",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.DetailView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "detail",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ActivationView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "activation",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ActivationView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "activation",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ActivationView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "activation",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ActivationView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "activation",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ActivationView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "activation",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ActivationView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "activation",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ActivationView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "activation",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.ActivationView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "activation",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "batch",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "batch",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "batch",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "batch",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "batch",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "batch",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "batch",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "batch",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "batch_detail",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "batch_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "batch_detail",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "batch_detail",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "batch_detail",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "batch_detail",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "batch_detail",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "batch_detail",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessPreviewView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_preview",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessPreviewView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_preview",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessPreviewView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_preview",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessPreviewView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_preview",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessPreviewView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_preview",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessPreviewView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_preview",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessPreviewView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_preview",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessPreviewView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_preview",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RequestContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "request_contact_proof",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RequestContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "request_contact_proof",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RequestContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "request_contact_proof",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RequestContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "request_contact_proof",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RequestContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "request_contact_proof",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RequestContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "request_contact_proof",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RequestContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "request_contact_proof",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.RequestContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "request_contact_proof",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "get",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.VerifyContactProofView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "verify_contact_proof",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessResponseView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_response",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessResponseView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_response",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessResponseView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_response",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessResponseView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_response",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessResponseView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_response",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessResponseView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_response",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessResponseView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_response",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_staff_views.AccessResponseView",
+    "method": "post",
+    "resource": "company_staff_views",
+    "action": "access_response",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CapabilitiesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "capabilities",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CapabilitiesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "capabilities",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CapabilitiesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "capabilities",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CapabilitiesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "capabilities",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CapabilitiesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "capabilities",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CapabilitiesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "capabilities",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CapabilitiesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "capabilities",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CapabilitiesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "capabilities",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompaniesView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "companies",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AcceptInvitationView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "accept_invitation",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AcceptInvitationView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "accept_invitation",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AcceptInvitationView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "accept_invitation",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AcceptInvitationView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "accept_invitation",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AcceptInvitationView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "accept_invitation",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AcceptInvitationView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "accept_invitation",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AcceptInvitationView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "accept_invitation",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AcceptInvitationView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "accept_invitation",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "invitation_detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "invitation_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "invitation_detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "invitation_detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "invitation_detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "invitation_detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "invitation_detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "invitation_detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompanyDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "company_detail",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.CompanyDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "company_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompanyDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "company_detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompanyDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "company_detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompanyDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "company_detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompanyDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "company_detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompanyDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "company_detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.CompanyDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "company_detail",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MembersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "members",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MembersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "members",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.MembersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "members",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MembersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "members",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MembersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "members",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MembersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "members",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MembersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "members",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MembersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "members",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.OccupantsView",
+    "method": "get",
+    "resource": "company_admin_views",
+    "action": "occupants",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.OccupantsView",
+    "method": "get",
+    "resource": "company_admin_views",
+    "action": "occupants",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.OccupantsView",
+    "method": "get",
+    "resource": "company_admin_views",
+    "action": "occupants",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.OccupantsView",
+    "method": "get",
+    "resource": "company_admin_views",
+    "action": "occupants",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.OccupantsView",
+    "method": "get",
+    "resource": "company_admin_views",
+    "action": "occupants",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.OccupantsView",
+    "method": "get",
+    "resource": "company_admin_views",
+    "action": "occupants",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.OccupantsView",
+    "method": "get",
+    "resource": "company_admin_views",
+    "action": "occupants",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.OccupantsView",
+    "method": "get",
+    "resource": "company_admin_views",
+    "action": "occupants",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.CompanyBudgetView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "company_budget",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.CompanyBudgetView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "company_budget",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.CompanyBudgetView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "company_budget",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.CompanyBudgetView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "company_budget",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.CompanyBudgetView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "company_budget",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.CompanyBudgetView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "company_budget",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.CompanyBudgetView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "company_budget",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.CompanyBudgetView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "company_budget",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "reassign_coordinator",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "reassign_coordinator",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "reassign_coordinator",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "reassign_coordinator",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "reassign_coordinator",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "reassign_coordinator",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "reassign_coordinator",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.ReassignCoordinatorView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "reassign_coordinator",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.AuthorityReviewView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "authority_review",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.AuthorityReviewView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "authority_review",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.AuthorityReviewView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "authority_review",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.AuthorityReviewView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "authority_review",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.AuthorityReviewView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "authority_review",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.AuthorityReviewView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "authority_review",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.AuthorityReviewView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "authority_review",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_admin_views.AuthorityReviewView",
+    "method": "post",
+    "resource": "company_admin_views",
+    "action": "authority_review",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.MemberActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "member_action",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MemberActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "member_action",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.MemberActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "member_action",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MemberActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "member_action",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MemberActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "member_action",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MemberActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "member_action",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MemberActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "member_action",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.MemberActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "member_action",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "invitations",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "invitations",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "invitations",
+    "role": "coordinator",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "invitations",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "invitations",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "invitations",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "invitations",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.InvitationsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "invitations",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_requests",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.HousingRequestView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "housing_request",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.SelectOfferView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "select_offer",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.SelectOfferView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "select_offer",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.SelectOfferView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "select_offer",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.SelectOfferView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "select_offer",
+    "role": "approver",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.SelectOfferView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "select_offer",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.SelectOfferView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "select_offer",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.SelectOfferView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "select_offer",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.SelectOfferView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "select_offer",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.ItemActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "item_action",
+    "role": "",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.ItemActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "item_action",
+    "role": "admin",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.ItemActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "item_action",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ItemActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "item_action",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ItemActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "item_action",
+    "role": "signer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.ItemActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "item_action",
+    "role": "payer",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.ItemActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "item_action",
+    "role": "employee",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.ItemActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "item_action",
+    "role": "unknown",
+    "outcome": "company_role_forbidden"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "containers",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "patch",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "patch",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "patch",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "patch",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "patch",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "patch",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "patch",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.ContainerDetailView",
+    "method": "patch",
+    "resource": "company_views",
+    "action": "container_detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AttachUnitView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "attach_unit",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AttachUnitView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "attach_unit",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AttachUnitView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "attach_unit",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AttachUnitView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "attach_unit",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AttachUnitView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "attach_unit",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AttachUnitView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "attach_unit",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AttachUnitView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "attach_unit",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.AttachUnitView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "attach_unit",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.UnitTemplatesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "unit_templates",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.UnitTemplatesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "unit_templates",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.UnitTemplatesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "unit_templates",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.UnitTemplatesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "unit_templates",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.UnitTemplatesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "unit_templates",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.UnitTemplatesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "unit_templates",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.UnitTemplatesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "unit_templates",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.UnitTemplatesView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "unit_templates",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchUnitsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "batch_units",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchUnitsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "batch_units",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchUnitsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "batch_units",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchUnitsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "batch_units",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchUnitsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "batch_units",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchUnitsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "batch_units",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchUnitsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "batch_units",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchUnitsView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "batch_units",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "batch_detail",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "batch_detail",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "batch_detail",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "batch_detail",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "batch_detail",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "batch_detail",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "batch_detail",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.BatchDetailView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "batch_detail",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "get",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOffersView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offers",
+    "role": "unknown",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOfferActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offer_action",
+    "role": "",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOfferActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offer_action",
+    "role": "admin",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOfferActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offer_action",
+    "role": "coordinator",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOfferActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offer_action",
+    "role": "approver",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOfferActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offer_action",
+    "role": "signer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOfferActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offer_action",
+    "role": "payer",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOfferActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offer_action",
+    "role": "employee",
+    "outcome": "allowed"
+  },
+  {
+    "class": "core_apps.features.company_views.PortfolioOfferActionView",
+    "method": "post",
+    "resource": "company_views",
+    "action": "portfolio_offer_action",
+    "role": "unknown",
+    "outcome": "allowed"
+  }
+]

@@ -1,9 +1,11 @@
 """Rental phase6 views: final settlement propose."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 import uuid
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -83,132 +85,168 @@ def _settlement(lease):
     return item
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def final_settlement_detail(request, lease_id):
-    lease = _lease(request, lease_id)
-    item = FinalSettlement.objects.filter(lease=lease).first()
-    if item is None:
-        # An absent draft is a virtual initial state. Only propose persists it.
-        item = FinalSettlement(lease=lease)
-        item.id = None
-    return Response(settlement_payload(item, request.user))
+class FinalSettlementDetailView(FeatureAPIView):
+    name = "Final Settlement Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "final_settlement_propose",
+            "final_settlement_detail",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, lease_id):
+        lease = _lease(request, lease_id)
+        item = FinalSettlement.objects.filter(lease=lease).first()
+        if item is None:
+            # An absent draft is a virtual initial state. Only propose persists it.
+            item = FinalSettlement(lease=lease)
+            item.id = None
+        return Response(settlement_payload(item, request.user))
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def final_settlement_propose(request, lease_id):
-    lease = _lease(request, lease_id)
-    request_key, expected_revision = command_identity(request.data, minimum=1)
-    operation = f"settlement.propose.{lease.id}"
-    replay = replay_operation(request.user, operation, request_key, request.data)
-    if replay:
-        return Response(replay[0], status=replay[1])
-    note = validated_note(request.data)
-    lines = []
-    seen = set()
-    if (
-        not isinstance(request.data.get("lines", []), list)
-        or len(request.data.get("lines", [])) > 100
-    ):
-        raise ValidationError({"lines": "Supply at most 100 settlement lines."})
-    for raw in request.data.get("lines", []):
-        if not isinstance(raw, dict):
-            raise ValidationError({"lines": "Each line must be an object."})
-        line_id = str(raw.get("id") or uuid.uuid4())
-        amount = money_minor(raw.get("amount"), allow_negative=True)
-        if (
-            line_id in seen
-            or raw.get("type") not in LINE_TYPES
-            or not isinstance(amount, int)
-        ):
-            raise ValidationError(
-                {
-                    "lines": "Each line needs a unique ID, supported type, and integer EGP amount."
-                }
-            )
-        evidence_ids = raw.get("evidence_ids", [])
-        if RentalEvidence.objects.filter(
-            id__in=evidence_ids,
-            lease=lease,
-            malware_status=RentalEvidence.MalwareStatus.SAFE,
-        ).count() != len(set(evidence_ids)):
-            raise ValidationError(
-                {"lines": "Line evidence must be safe and belong to this lease."}
-            )
-        seen.add(line_id)
-        lines.append(
-            {
-                "id": line_id,
-                "type": raw["type"],
-                "label": raw.get("label", raw["type"]),
-                "description": raw.get("description")
-                or raw.get("label")
-                or raw["type"],
-                "amount": _money(amount),
-                "evidence_ids": list(evidence_ids),
-                **(
-                    {
-                        "maintenance_request_id": raw.get("maintenance_request_id"),
-                        "cost_version": raw.get("cost_version"),
-                    }
-                    if raw["type"] == "maintenance"
-                    else {}
-                ),
-                **(
-                    {"invoice_id": str(raw["invoice_id"])}
-                    if raw.get("invoice_id")
-                    else {}
-                ),
-            }
-        )
-    with transaction.atomic():
-        lease = _lease(request, lease_id, lock=True)
+# Stable callable import for integrations; URLs use the explicit class.
+final_settlement_detail = FinalSettlementDetailView.as_view()
+
+
+class FinalSettlementProposeView(FeatureAPIView):
+    name = "Final Settlement Propose"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "final_settlement_propose",
+            "final_settlement_propose",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, lease_id):
+        lease = _lease(request, lease_id)
+        request_key, expected_revision = command_identity(request.data, minimum=1)
+        operation = f"settlement.propose.{lease.id}"
         replay = replay_operation(request.user, operation, request_key, request.data)
         if replay:
             return Response(replay[0], status=replay[1])
-        item = _settlement(lease)
-        if item.revision != expected_revision:
-            raise RentalConflict("Settlement revision conflict.", code="stale_revision")
-        if item.status == FinalSettlement.Status.ACCEPTED:
-            raise RentalConflict("An accepted settlement cannot be rewritten.")
-        plan = prepare_settlement(lease, lines)
-        item.history.append(
-            {
-                "revision": item.revision,
-                "status": item.status,
-                "lines": item.lines,
-                "accepted_by": item.accepted_by,
-                "disputed_item_ids": item.disputed_item_ids,
-            }
-        )
-        item.lines = lines
-        item.financial_snapshot = financial_snapshot(lease)
-        item.execution_plan = plan
-        for field in (
-            "rent_balance_minor",
-            "deposit_to_return_minor",
-            "refund_due_minor",
-            "total_due_minor",
+        note = validated_note(request.data)
+        lines = []
+        seen = set()
+        if (
+            not isinstance(request.data.get("lines", []), list)
+            or len(request.data.get("lines", [])) > 100
         ):
-            setattr(item, field, plan[field])
-        item.status = FinalSettlement.Status.PROPOSED
-        item.accepted_by = [str(request.user.id)]
-        item.disputed_item_ids = []
-        item.proposed_by = request.user
-        item.revision += 1
-        remember_note(item, request.user, "propose", note, request_key)
-        item.save()
-        output = remember_mutation(
-            user=request.user,
-            operation=operation,
-            request_key=request_key,
-            payload=request.data,
-            request_subject_id=item.id,
-            result_subject_id=item.id,
-            result_revision=item.revision,
-            resource=settlement_payload(item, request.user),
-        )
-    return Response(output)
+            raise ValidationError({"lines": "Supply at most 100 settlement lines."})
+        for raw in request.data.get("lines", []):
+            if not isinstance(raw, dict):
+                raise ValidationError({"lines": "Each line must be an object."})
+            line_id = str(raw.get("id") or uuid.uuid4())
+            amount = money_minor(raw.get("amount"), allow_negative=True)
+            if (
+                line_id in seen
+                or raw.get("type") not in LINE_TYPES
+                or not isinstance(amount, int)
+            ):
+                raise ValidationError(
+                    {
+                        "lines": "Each line needs a unique ID, supported type, and integer EGP amount."
+                    }
+                )
+            evidence_ids = raw.get("evidence_ids", [])
+            if RentalEvidence.objects.filter(
+                id__in=evidence_ids,
+                lease=lease,
+                malware_status=RentalEvidence.MalwareStatus.SAFE,
+            ).count() != len(set(evidence_ids)):
+                raise ValidationError(
+                    {"lines": "Line evidence must be safe and belong to this lease."}
+                )
+            seen.add(line_id)
+            lines.append(
+                {
+                    "id": line_id,
+                    "type": raw["type"],
+                    "label": raw.get("label", raw["type"]),
+                    "description": raw.get("description")
+                    or raw.get("label")
+                    or raw["type"],
+                    "amount": _money(amount),
+                    "evidence_ids": list(evidence_ids),
+                    **(
+                        {
+                            "maintenance_request_id": raw.get("maintenance_request_id"),
+                            "cost_version": raw.get("cost_version"),
+                        }
+                        if raw["type"] == "maintenance"
+                        else {}
+                    ),
+                    **(
+                        {"invoice_id": str(raw["invoice_id"])}
+                        if raw.get("invoice_id")
+                        else {}
+                    ),
+                }
+            )
+        with transaction.atomic():
+            lease = _lease(request, lease_id, lock=True)
+            replay = replay_operation(
+                request.user, operation, request_key, request.data
+            )
+            if replay:
+                return Response(replay[0], status=replay[1])
+            item = _settlement(lease)
+            if item.revision != expected_revision:
+                raise RentalConflict(
+                    "Settlement revision conflict.", code="stale_revision"
+                )
+            if item.status == FinalSettlement.Status.ACCEPTED:
+                raise RentalConflict("An accepted settlement cannot be rewritten.")
+            plan = prepare_settlement(lease, lines)
+            item.history.append(
+                {
+                    "revision": item.revision,
+                    "status": item.status,
+                    "lines": item.lines,
+                    "accepted_by": item.accepted_by,
+                    "disputed_item_ids": item.disputed_item_ids,
+                }
+            )
+            item.lines = lines
+            item.financial_snapshot = financial_snapshot(lease)
+            item.execution_plan = plan
+            for field in (
+                "rent_balance_minor",
+                "deposit_to_return_minor",
+                "refund_due_minor",
+                "total_due_minor",
+            ):
+                setattr(item, field, plan[field])
+            item.status = FinalSettlement.Status.PROPOSED
+            item.accepted_by = [str(request.user.id)]
+            item.disputed_item_ids = []
+            item.proposed_by = request.user
+            item.revision += 1
+            remember_note(item, request.user, "propose", note, request_key)
+            item.save()
+            output = remember_mutation(
+                user=request.user,
+                operation=operation,
+                request_key=request_key,
+                payload=request.data,
+                request_subject_id=item.id,
+                result_subject_id=item.id,
+                result_revision=item.revision,
+                resource=settlement_payload(item, request.user),
+            )
+        return Response(output)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+final_settlement_propose = FinalSettlementProposeView.as_view()

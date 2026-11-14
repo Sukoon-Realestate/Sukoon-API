@@ -3,21 +3,35 @@ from . import housing_scenario_views as views
 
 urlpatterns = [
     path(
-        "companies/<uuid:company_id>/housing-scenario-decisions/", views.decision_inbox
+        "companies/<uuid:company_id>/housing-scenario-decisions/",
+        views.DecisionInboxView.as_view(),
     ),
-    path("housing-scenario-comparisons/<uuid:comparison_id>/", views.comparison_detail),
-    path("housing-scenario-runs/<uuid:run_id>/", views.scenario_run),
-    path("housing-scenario-runs/<uuid:run_id>/cancel/", views.scenario_run),
-    path("housing-scenario-decisions/<uuid:decision_id>/", views.scenario_decision),
+    path(
+        "housing-scenario-comparisons/<uuid:comparison_id>/",
+        views.ComparisonDetailView.as_view(),
+    ),
+    path("housing-scenario-runs/<uuid:run_id>/", views.ScenarioRunView.as_view()),
+    path(
+        "housing-scenario-runs/<uuid:run_id>/cancel/", views.ScenarioRunView.as_view()
+    ),
+    path(
+        "housing-scenario-decisions/<uuid:decision_id>/",
+        views.ScenarioDecisionView.as_view(),
+    ),
     path(
         "housing-scenario-decisions/<uuid:decision_id>/<str:action>/",
-        views.scenario_decision,
+        views.ScenarioDecisionView.as_view(),
     ),
-    path("companies/<uuid:company_id>/housing-scenarios/", views.scenarios),
+    path(
+        "companies/<uuid:company_id>/housing-scenarios/", views.ScenariosView.as_view()
+    ),
     path(
         "companies/<uuid:company_id>/housing-scenario-sources/<str:kind>/",
-        views.scenario_sources,
+        views.ScenarioSourcesView.as_view(),
     ),
-    path("housing-scenarios/<uuid:scenario_id>/", views.scenario_detail),
-    path("housing-scenarios/<uuid:scenario_id>/<str:action>/", views.scenario_action),
+    path("housing-scenarios/<uuid:scenario_id>/", views.ScenarioDetailView.as_view()),
+    path(
+        "housing-scenarios/<uuid:scenario_id>/<str:action>/",
+        views.ScenarioActionView.as_view(),
+    ),
 ]

@@ -1,10 +1,13 @@
 """Views: rental operation lookup."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 import hashlib
 import json
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import APIException, ValidationError, NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -92,74 +95,106 @@ def _remember(
     )
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def rental_capabilities(request):
-    subject_id = request.query_params.get("subject_id")
-    if not subject_id:
-        raise ValidationError({"subject_id": "This query parameter is required."})
-    subject = get_authorized_rental_subject(request.user, subject_id)
-    response = Response(
-        capabilities_for(
-            request.user,
-            subject,
-            request.query_params.get("action", ""),
+class RentalCapabilitiesView(FeatureAPIView):
+    name = "Rental Capabilities"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "rental_operation_lookup",
+            "rental_capabilities",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        subject_id = request.query_params.get("subject_id")
+        if not subject_id:
+            raise ValidationError({"subject_id": "This query parameter is required."})
+        subject = get_authorized_rental_subject(request.user, subject_id)
+        response = Response(
+            capabilities_for(
+                request.user,
+                subject,
+                request.query_params.get("action", ""),
+            )
         )
-    )
-    return private_no_store(response)
+        return private_no_store(response)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def rental_operation_lookup(request, request_key):
-    subject_id = request.query_params.get("subject_id")
-    if not subject_id:
-        raise ValidationError({"subject_id": "This query parameter is required."})
-    operation = IdempotencyRecord.objects.filter(
-        user=request.user,
-        request_key=str(request_key),
-        request_subject_id=subject_id,
-        is_rental_operation=True,
-    ).first()
-    departure_receipt = bool(
-        operation
-        and operation.operation == f"group.leave.{subject_id}"
-        and str(operation.result_subject_id) == str(subject_id)
-    )
-    from ..services.company.responsibility_management import recovery_subject
+# Stable callable import for integrations; URLs use the explicit class.
+rental_capabilities = RentalCapabilitiesView.as_view()
 
-    administrative_subject = recovery_subject(request.user, subject_id, operation)
-    if not departure_receipt and administrative_subject is None:
-        get_authorized_rental_subject(request.user, subject_id)
-    if operation:
-        if administrative_subject is not None:
-            if str(operation.result_subject_id) != str(administrative_subject.id):
-                raise NotFound()
-        elif not departure_receipt:
-            get_authorized_rental_subject(request.user, operation.result_subject_id)
-        receipt = {
-            "id": str(operation.id),
-            "subject_id": str(operation.result_subject_id),
-            "request_key": operation.request_key,
-            "revision": operation.result_revision,
-            "status": operation.recovery_status,
-        }
-        lookup_status = operation.recovery_status
-    else:
-        # Database absence alone is not a permanent tombstone.
-        receipt = None
-        lookup_status = IdempotencyRecord.RecoveryStatus.UNKNOWN
-    response = Response(
-        {
-            "request_key": str(request_key),
-            "request_subject_id": str(subject_id),
-            "status": lookup_status,
-            "operation_receipt": receipt,
-        }
-    )
-    return private_no_store(response)
+
+class RentalOperationLookupView(FeatureAPIView):
+    name = "Rental Operation Lookup"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "rental_operation_lookup",
+            "rental_operation_lookup",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, request_key):
+        subject_id = request.query_params.get("subject_id")
+        if not subject_id:
+            raise ValidationError({"subject_id": "This query parameter is required."})
+        operation = IdempotencyRecord.objects.filter(
+            user=request.user,
+            request_key=str(request_key),
+            request_subject_id=subject_id,
+            is_rental_operation=True,
+        ).first()
+        departure_receipt = bool(
+            operation
+            and operation.operation == f"group.leave.{subject_id}"
+            and str(operation.result_subject_id) == str(subject_id)
+        )
+        from ..services.company.responsibility_management import recovery_subject
+
+        administrative_subject = recovery_subject(request.user, subject_id, operation)
+        if not departure_receipt and administrative_subject is None:
+            get_authorized_rental_subject(request.user, subject_id)
+        if operation:
+            if administrative_subject is not None:
+                if str(operation.result_subject_id) != str(administrative_subject.id):
+                    raise NotFound()
+            elif not departure_receipt:
+                get_authorized_rental_subject(request.user, operation.result_subject_id)
+            receipt = {
+                "id": str(operation.id),
+                "subject_id": str(operation.result_subject_id),
+                "request_key": operation.request_key,
+                "revision": operation.result_revision,
+                "status": operation.recovery_status,
+            }
+            lookup_status = operation.recovery_status
+        else:
+            # Database absence alone is not a permanent tombstone.
+            receipt = None
+            lookup_status = IdempotencyRecord.RecoveryStatus.UNKNOWN
+        response = Response(
+            {
+                "request_key": str(request_key),
+                "request_subject_id": str(subject_id),
+                "status": lookup_status,
+                "operation_receipt": receipt,
+            }
+        )
+        return private_no_store(response)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+rental_operation_lookup = RentalOperationLookupView.as_view()
 
 
 def _paginate(request, queryset, serializer_class):

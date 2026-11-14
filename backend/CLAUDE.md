@@ -107,3 +107,29 @@ histories remain compatible and data-dependent. Do not silently truncate them.
 Use `make test-sprint06-properties-tours CYCLE_SETTINGS=<scratch_settings>`;
 PostgreSQL processes must each use a distinct disposable TEST database name.
 See `sprints/evidence/sprint-06/README.md` for reproduction and limits.
+
+## Housing adapters after Sprint 07
+
+Non-commerce housing routes use explicit `.as_view()` classes and per-method
+`ActionPolicy` metadata in `features.http`. Company policies must supply the
+stable resource/action pair consumed by `services.company.role_routes`;
+`get`/`post` and class names are never company authorization identities.
+Keep current resource/membership/mandate authority in command services, including
+receipt replay. Planning policies retain capability-before-body-validation,
+typed/untyped body rules, Django validation translation and success privacy.
+
+Personal handover/maintenance state changes live in `services.handover_commands`
+and `services.personal_maintenance`; transport supplies typed command data,
+original receipt data and authentication claims. Company tenancy commands live
+in `services.company.tenancy_commands`, with prepared read sections in
+`tenancy_reads`. Read facts have one response's lifetime and never grant command
+or byte access. `tenancy_access.visible` and `contract_access.visible` accept
+validated scope constraints before authority evaluation. Compatible complete
+legacy histories remain data-dependent; do not silently truncate them.
+
+Sprint 07 remains partially accepted: remaining domain extraction, full positive
+route/method/role/workspace matrices and hard family performance/retention
+criteria are listed in `sprints/evidence/sprint-07/README.md`. Explicit classes
+alone do not satisfy the service architecture target. Reproduce scoped checks
+with `make test-sprint07-housing CYCLE_SETTINGS=<isolated_settings>
+BASELINE_OUT=<scratch_directory>` and the ledger with `make sprint07-coverage`.

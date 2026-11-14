@@ -1958,6 +1958,7 @@
    "owner",
    "pending_requests",
    "pending_visits",
+   "reviews_count",
    "visits_this_week"
   ],
   "envelope": [
@@ -1978,6 +1979,7 @@
    "owner",
    "pending_requests",
    "pending_visits",
+   "reviews_count",
    "visits_this_week"
   ],
   "envelope": [
@@ -1998,6 +2000,7 @@
    "owner",
    "pending_requests",
    "pending_visits",
+   "reviews_count",
    "visits_this_week"
   ],
   "envelope": [
@@ -2018,6 +2021,7 @@
    "owner",
    "pending_requests",
    "pending_visits",
+   "reviews_count",
    "visits_this_week"
   ],
   "envelope": [

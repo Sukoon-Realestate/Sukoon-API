@@ -1,9 +1,14 @@
 """Planning housing views: housing request action."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
+
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from ..planning_models import HousingOffer
-from ..services.planning import money, mutate, planning_api
+from ..services.planning import money, mutate
 from .housing_requests import (
     request_status,
     get_request,
@@ -13,37 +18,59 @@ from .housing_requests import (
 )
 
 
-@planning_api(["POST"], "housing_requests")
-def housing_request_action(request, request_id, action):
-    def apply(item, revision):
-        if item.user_id != request.user.pk or action not in request_actions(
-            request.user, item
-        ):
-            raise PermissionDenied("This request action is not available to you.")
-        if request.data.get("action") != action:
-            raise ValidationError({"action": "Body and route action must match."})
-        if action == "edit":
-            from ..services.housing_request_reviews import edit_content
+class HousingRequestActionView(FeatureAPIView):
+    name = "Housing Request Action"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "housing_request_action",
+            "housing_request_action",
+            boundary="planning",
+            capability="housing_requests",
+            typed=False,
+        ),
+    }
 
-            edit_content(item, _request_values(request.data, previous=item.criteria), request.user)
-        else:
-            item.status = {
-                "pause": "paused",
-                "publish": "published",
-                "close": "closed",
-                "fulfill": "fulfilled",
-            }[action]
-        item.revision += 1
-        item.save()
-        return item
+    def post(self, request, request_id, action):
+        def apply(item, revision):
+            if item.user_id != request.user.pk or action not in request_actions(
+                request.user, item
+            ):
+                raise PermissionDenied("This request action is not available to you.")
+            if request.data.get("action") != action:
+                raise ValidationError({"action": "Body and route action must match."})
+            if action == "edit":
+                from ..services.housing_request_reviews import edit_content
 
-    return mutate(
-        request,
-        f"housing_request.{action}.{request_id}",
-        lambda: get_request(request.user, request_id, lock=True),
-        apply,
-        lambda x: request_payload(x, request.user),
-    )
+                edit_content(
+                    item,
+                    _request_values(request.data, previous=item.criteria),
+                    request.user,
+                )
+            else:
+                item.status = {
+                    "pause": "paused",
+                    "publish": "published",
+                    "close": "closed",
+                    "fulfill": "fulfilled",
+                }[action]
+            item.revision += 1
+            item.save()
+            return item
+
+        return mutate(
+            request,
+            f"housing_request.{action}.{request_id}",
+            lambda: get_request(request.user, request_id, lock=True),
+            apply,
+            lambda x: request_payload(x, request.user),
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+housing_request_action = HousingRequestActionView.as_view()
 
 
 def offer_status(item, *, existing_process=False):
@@ -62,6 +89,7 @@ def offer_status(item, *, existing_process=False):
         return "review_required"
     if item.request.academic_plan_id:
         from ..services.student_housing.policies import response_policy_current
+
         if not response_policy_current(item):
             return "review_required"
     if item.review_state == "incompatible":

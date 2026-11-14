@@ -4,34 +4,57 @@ from . import student_verification_views as verification
 from . import rental_summary_views as sharing
 
 urlpatterns = [
-    path("shared-rental-summaries/", sharing.summary_grants),
-    path("leases/<uuid:lease_id>/summary-sharing-options/", sharing.summary_options),
-    path("leases/<uuid:lease_id>/summary-grants/", sharing.summary_grants),
-    path("rental-summary-grants/<uuid:grant_id>/revoke/", sharing.revoke_summary),
-    path("student-evidence/", verification.student_evidence),
-    path("student-evidence/upload/", verification.student_evidence_upload),
+    path("shared-rental-summaries/", sharing.SummaryGrantsView.as_view()),
+    path(
+        "leases/<uuid:lease_id>/summary-sharing-options/",
+        sharing.SummaryOptionsView.as_view(),
+    ),
+    path("leases/<uuid:lease_id>/summary-grants/", sharing.SummaryGrantsView.as_view()),
+    path(
+        "rental-summary-grants/<uuid:grant_id>/revoke/",
+        sharing.RevokeSummaryView.as_view(),
+    ),
+    path("student-evidence/", verification.StudentEvidenceView.as_view()),
+    path("student-evidence/upload/", verification.StudentEvidenceUploadView.as_view()),
     path(
         "student-evidence/<uuid:evidence_id>/metadata/",
-        verification.student_evidence_metadata,
+        verification.StudentEvidenceMetadataView.as_view(),
     ),
-    path("student-evidence/<uuid:evidence_id>/", verification.student_evidence),
-    path("operations/student-verifications/", verification.student_review),
+    path(
+        "student-evidence/<uuid:evidence_id>/",
+        verification.StudentEvidenceView.as_view(),
+    ),
+    path("operations/student-verifications/", verification.StudentReviewView.as_view()),
     path(
         "operations/student-verifications/<uuid:profile_id>/review/",
-        verification.student_review,
+        verification.StudentReviewView.as_view(),
     ),
-    path("student-profile/", views.student_profile),
-    path("campuses/", views.campuses),
-    path("academic-plans/", views.academic_plans),
-    path("academic-plans/<uuid:plan_id>/", views.academic_plan),
-    path("academic-plans/<uuid:plan_id>/history/", views.plan_history),
-    path("academic-plans/<uuid:plan_id>/publication-preview/", views.plan_preview),
-    path("academic-plans/<uuid:plan_id>/arrangements/", views.living_arrangements),
-    path("academic-plans/<uuid:plan_id>/<slug:action>/", views.plan_action),
-    path("student-arrangements/<uuid:arrangement_id>/", views.living_arrangement),
+    path("student-profile/", views.StudentProfileView.as_view()),
+    path("campuses/", views.CampusesView.as_view()),
+    path("academic-plans/", views.AcademicPlansView.as_view()),
+    path("academic-plans/<uuid:plan_id>/", views.AcademicPlanView.as_view()),
+    path("academic-plans/<uuid:plan_id>/history/", views.PlanHistoryView.as_view()),
+    path(
+        "academic-plans/<uuid:plan_id>/publication-preview/",
+        views.PlanPreviewView.as_view(),
+    ),
+    path(
+        "academic-plans/<uuid:plan_id>/arrangements/",
+        views.LivingArrangementsView.as_view(),
+    ),
+    path(
+        "academic-plans/<uuid:plan_id>/<slug:action>/", views.PlanActionView.as_view()
+    ),
+    path(
+        "student-arrangements/<uuid:arrangement_id>/",
+        views.LivingArrangementView.as_view(),
+    ),
     path(
         "student-arrangements/<uuid:arrangement_id>/<slug:action>/",
-        views.living_arrangement,
+        views.LivingArrangementView.as_view(),
     ),
-    path("properties/<uuid:property_id>/student-policies/", views.student_offer_policy),
+    path(
+        "properties/<uuid:property_id>/student-policies/",
+        views.StudentOfferPolicyView.as_view(),
+    ),
 ]

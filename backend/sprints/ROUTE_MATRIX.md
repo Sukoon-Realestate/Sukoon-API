@@ -5,7 +5,7 @@ instead of editing by hand. Per-route detail (methods, auth/permission/throttle/
 schema hints, MVP availability per method, aliases, signals and referencing test files) is in
 [evidence/sprint-00/route-matrix.json](evidence/sprint-00/route-matrix.json).
 
-**795 API patterns**, 193 sharing a handler with another pattern (aliases/format variants). Styles: 419 decorated FBV, 350 DRF CBV, 22 DRF viewset, 2 plain function, 2 framework-generated DRF CBV.
+**795 API patterns**, 193 sharing a handler with another pattern (aliases/format variants). Styles: 686 DRF CBV, 83 decorated FBV, 22 DRF viewset, 2 plain function, 2 framework-generated DRF CBV.
 
 How to read the columns:
 
@@ -75,129 +75,129 @@ How to read the columns:
 | `api/chat/notification-actions` | 1 | Area 5 — Communication/support | 09 | 0 | POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 0 | 1 | 0 | 1 | 1 | 0 | 0 |
 | `api/chat/policy-cases` | 1 | Area 5 — Communication/support | 09 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/chat/quick-replies` | 2 | Area 5 — Communication/support | 09 | 0 | DELETE, GET, PUT | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/features/academic-plans` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 6 | CookieAuthentication | IsAuthenticated | 6 | 2 | 0 | 2 | 0 | 0 | 6 |
-| `api/features/account-contexts` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/action-center` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/advanced-executions` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 1 | 0 | 0 | 3 |
-| `api/features/amendments` | 4 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, PATCH, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 3 | 0 | 0 | 0 | 0 |
-| `api/features/application-profile` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, PATCH, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 2 | 0 | 0 | 3 |
-| `api/features/application-shares` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 0 | 4 | 0 | 0 | 4 |
-| `api/features/availability-blocks` | 1 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/academic-plans` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 2 | 0 | 2 | 0 | 0 | 6 |
+| `api/features/account-contexts` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/action-center` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/advanced-executions` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 1 | 0 | 0 | 3 |
+| `api/features/amendments` | 4 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, PATCH, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 3 | 0 | 0 | 0 | 0 |
+| `api/features/application-profile` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, PATCH, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 0 | 0 | 1 | 0 | 0 | 3 |
+| `api/features/application-shares` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 0 | 0 | 1 | 0 | 0 | 4 |
+| `api/features/availability-blocks` | 1 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/billing` | 11 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 11 | CookieAuthentication<br>— | IsAuthenticated<br>— | 11 | 0 | 1 | 0 | 0 | 0 | 6 |
 | `api/features/boost-campaigns` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 0 | 2 | 0 | 1 |
 | `api/features/business-policies` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 2 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| `api/features/campuses` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | AllowAny | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/commute-searches` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 0 | 1 | 0 | 0 | 0 | 0 | 4 |
-| `api/features/companies` | 30 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 30 | CookieAuthentication | IsAuthenticated | 30 | 13 | 0 | 4 | 2 | 0 | 0 |
-| `api/features/company-access` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 0 | 0 | 1 | 0 | 0 | 4 |
-| `api/features/company-authority` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 1 | 0 | 0 | 1 |
-| `api/features/company-booking-items` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 1 | 2 | 0 | 0 | 4 |
-| `api/features/company-capabilities` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/company-contract-preparations` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 1 | 1 | 0 | 0 | 4 |
-| `api/features/company-housing-requests` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 0 | 1 | 0 | 0 | 4 |
-| `api/features/company-invitations` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 1 | 1 | 1 | 0 | 2 |
-| `api/features/company-mandates` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 2 | 0 | 0 | 2 |
-| `api/features/company-requirements` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/company-saved-lists` | 6 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, POST | decorated FBV 6 | CookieAuthentication | IsAuthenticated | 6 | 4 | 0 | 0 | 0 | 0 | 6 |
-| `api/features/company-tenancies` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 1 | 1 | 1 | 0 | 4 |
-| `api/features/company-terms-negotiations` | 3 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 2 | 0 | 0 | 3 | 0 | 3 |
-| `api/features/condition-reports` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 0 | 0 | 0 | 2 |
-| `api/features/configuration` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/features/continuation-items` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
-| `api/features/deals` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
-| `api/features/decision-notebook` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/disputes` | 4 | Area 4 — Commerce/providers/advertising | 08 | 2 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 3 | 0 | 0 | 0 | 0 |
-| `api/features/experience` | 10 | Area 3 — Rentals/housing/planning | 07 | 0 | DELETE, GET, POST | decorated FBV 10 | CookieAuthentication | IsAuthenticated | 1 | 6 | 2 | 0 | 0 | 0 | 8 |
-| `api/features/external-payment-claims` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 1 | 0 | 0 | 0 | 0 |
-| `api/features/group-applications` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 2 | 0 | 0 | 2 |
-| `api/features/group-booking-proposals` | 11 | Area 3 — Rentals/housing/planning | 07 | 10 | GET, POST | decorated FBV 11 | CookieAuthentication | IsAuthenticated | 11 | 11 | 0 | 11 | 11 | 0 | 11 |
-| `api/features/group-invitations` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 0 | 0 | 0 | 3 |
-| `api/features/group-join-requests` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 1 | 0 | 0 | 3 |
-| `api/features/handovers` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, PATCH, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 2 | 0 | 0 | 0 | 0 |
-| `api/features/housing-bids` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 2 | 0 | 0 | 2 |
-| `api/features/housing-demand` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/housing-groups` | 7 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 1; decorated FBV 6 | CookieAuthentication | IsAuthenticated | 7 | 5 | 0 | 2 | 1 | 0 | 0 |
-| `api/features/housing-offers` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 1 | 0 | 0 | 2 |
-| `api/features/housing-package-runs` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 0 | 0 | 0 | 2 |
-| `api/features/housing-packages` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 2 | 0 | 1 | 0 | 0 | 3 |
-| `api/features/housing-requests` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 6 | CookieAuthentication | IsAuthenticated | 6 | 2 | 0 | 0 | 0 | 0 | 6 |
-| `api/features/housing-scenario-comparisons` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/housing-scenario-decisions` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 0 | 2 | 0 | 0 | 2 |
-| `api/features/housing-scenario-runs` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 0 | 2 | 0 | 0 | 2 |
-| `api/features/housing-scenarios` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 1 | 0 | 0 | 2 |
-| `api/features/housing-tender-sources` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/housing-tenders` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 6 | CookieAuthentication | IsAuthenticated | 6 | 4 | 0 | 4 | 0 | 0 | 6 |
-| `api/features/lease-configuration` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/features/lease-tenants` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 1 | 0 | 0 | 0 |
-| `api/features/leases` | 30 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, PATCH, POST | decorated FBV 30 | CookieAuthentication | IsAuthenticated | 30 | 10 | 11 | 3 | 3 | 0 | 0 |
-| `api/features/lifestyle-profile` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/listing-suggestions` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/features/living-labs` | 13 | Area 3 — Rentals/housing/planning | 07 | 11 | GET, POST, PUT | decorated FBV 13 | CookieAuthentication | IsAuthenticated | 13 | 12 | 0 | 12 | 0 | 0 | 13 |
-| `api/features/maintenance-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 1 | 0 | 0 | 0 | 0 |
+| `api/features/campuses` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | AllowAny | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/commute-searches` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 0 | 1 | 0 | 0 | 0 | 0 | 4 |
+| `api/features/companies` | 30 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 30 | CookieAuthentication | IsAuthenticated | 30 | 12 | 0 | 3 | 2 | 0 | 0 |
+| `api/features/company-access` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 0 | 0 | 1 | 0 | 0 | 4 |
+| `api/features/company-authority` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/company-booking-items` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 0 | 0 | 0 | 0 | 4 |
+| `api/features/company-capabilities` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/company-contract-preparations` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 0 | 0 | 0 | 0 | 4 |
+| `api/features/company-housing-requests` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 0 | 0 | 0 | 0 | 4 |
+| `api/features/company-invitations` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 1 | 1 | 1 | 0 | 2 |
+| `api/features/company-mandates` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 1 | 0 | 0 | 2 |
+| `api/features/company-requirements` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/company-saved-lists` | 6 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 4 | 0 | 0 | 0 | 0 | 6 |
+| `api/features/company-tenancies` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 0 | 0 | 0 | 1 | 0 | 4 |
+| `api/features/company-terms-negotiations` | 3 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 2 | 0 | 0 | 3 | 0 | 3 |
+| `api/features/condition-reports` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 0 | 0 | 0 | 2 |
+| `api/features/configuration` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/features/continuation-items` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
+| `api/features/deals` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
+| `api/features/decision-notebook` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/disputes` | 4 | Area 4 — Commerce/providers/advertising | 08 | 2 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 3 | 0 | 0 | 0 | 0 |
+| `api/features/experience` | 10 | Area 3 — Rentals/housing/planning | 07 | 0 | DELETE, GET, POST | DRF CBV 10 | CookieAuthentication | IsAuthenticated | 1 | 6 | 2 | 0 | 0 | 0 | 8 |
+| `api/features/external-payment-claims` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 1 | 0 | 0 | 0 | 0 |
+| `api/features/group-applications` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 2 | 0 | 0 | 2 |
+| `api/features/group-booking-proposals` | 11 | Area 3 — Rentals/housing/planning | 07 | 10 | GET, POST | DRF CBV 11 | CookieAuthentication | IsAuthenticated | 11 | 0 | 0 | 10 | 11 | 0 | 11 |
+| `api/features/group-invitations` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 0 | 0 | 0 | 3 |
+| `api/features/group-join-requests` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 1 | 0 | 0 | 3 |
+| `api/features/handovers` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, PATCH, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/features/housing-bids` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 1 | 1 | 0 | 0 | 2 |
+| `api/features/housing-demand` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/housing-groups` | 7 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 7 | CookieAuthentication | IsAuthenticated | 7 | 5 | 0 | 2 | 1 | 0 | 0 |
+| `api/features/housing-offers` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 1 | 0 | 0 | 2 |
+| `api/features/housing-package-runs` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 0 | 0 | 0 | 2 |
+| `api/features/housing-packages` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 2 | 0 | 1 | 0 | 0 | 3 |
+| `api/features/housing-requests` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 2 | 0 | 0 | 0 | 0 | 6 |
+| `api/features/housing-scenario-comparisons` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/housing-scenario-decisions` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 2 | 2 | 0 | 0 | 2 |
+| `api/features/housing-scenario-runs` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 2 | 0 | 0 | 2 |
+| `api/features/housing-scenarios` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 1 | 0 | 0 | 2 |
+| `api/features/housing-tender-sources` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/housing-tenders` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 4 | 1 | 4 | 0 | 0 | 6 |
+| `api/features/lease-configuration` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/features/lease-tenants` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 1 | 0 | 0 | 0 |
+| `api/features/leases` | 30 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, PATCH, POST | DRF CBV 27; decorated FBV 3 | CookieAuthentication | IsAuthenticated | 30 | 8 | 9 | 3 | 3 | 0 | 0 |
+| `api/features/lifestyle-profile` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/listing-suggestions` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/features/living-labs` | 13 | Area 3 — Rentals/housing/planning | 07 | 11 | GET, POST, PUT | DRF CBV 13 | CookieAuthentication | IsAuthenticated | 13 | 12 | 0 | 12 | 0 | 0 | 13 |
+| `api/features/maintenance-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 1 | 0 | 0 | 0 | 0 |
 | `api/features/mock-provider` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 4 | 3 | 0 | 0 | 2 |
-| `api/features/move-in-cases` | 1 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 1 | 0 | 0 | 1 |
-| `api/features/move-intents` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 0 | 1 | 0 | 0 | 4 |
-| `api/features/move-out-notices` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 0 | 2 | 0 | 0 | 2 |
-| `api/features/open-housing-groups` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/operations` | 19 | Area 4 — Commerce/providers/advertising | 08 | 4 | GET, POST | decorated FBV 19 | CookieAuthentication | IsAuthenticated | 19 | 9 | 4 | 7 | 3 | 0 | 12 |
+| `api/features/move-in-cases` | 1 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/move-intents` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 0 | 1 | 0 | 0 | 4 |
+| `api/features/move-out-notices` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 0 | 2 | 0 | 0 | 2 |
+| `api/features/open-housing-groups` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/operations` | 19 | Area 4 — Commerce/providers/advertising | 08 | 4 | GET, POST | DRF CBV 6; decorated FBV 13 | CookieAuthentication | IsAuthenticated | 19 | 6 | 4 | 2 | 3 | 0 | 12 |
 | `api/features/operator` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 2 |
 | `api/features/owner-achievements` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 2 |
-| `api/features/owner-analytics` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
-| `api/features/owner-application-queue` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/owner-group-applications` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/owner-housing-offers` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/owner-analytics` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+| `api/features/owner-application-queue` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/owner-group-applications` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/owner-housing-offers` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/owner-payables` | 1 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/features/owner-payment-profile` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 2 | 0 | 3 | 0 | 2 |
-| `api/features/owner-shared-housing-applications` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/owner-shared-housing-applications` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/payment-attempts` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 0 | 0 | 1 | 0 | 0 |
-| `api/features/payment-extension-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 1 | 0 | 0 | 0 | 0 |
+| `api/features/payment-extension-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 1 | 0 | 0 | 0 | 0 |
 | `api/features/payouts` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/features/planning-capabilities` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
-| `api/features/planning-home` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/portfolio-offers` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 1 | 1 | 0 | 2 |
-| `api/features/properties` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 0 | 1 | 1 | 0 | 4 |
+| `api/features/planning-capabilities` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+| `api/features/planning-home` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/portfolio-offers` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 1 | 0 | 2 |
+| `api/features/properties` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 0 | 0 | 1 | 0 | 4 |
 | `api/features/provider-webhooks` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | decorated FBV 2 | CookieAuthentication | AllowAny | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/features/refund-requests` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 3 | 0 | 0 | 0 | 0 |
-| `api/features/renewals` | 4 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, PATCH, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 3 | 0 | 0 | 0 | 0 |
-| `api/features/rent-invoices` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 6 | CookieAuthentication | IsAuthenticated | 6 | 2 | 3 | 0 | 1 | 0 | 0 |
-| `api/features/rental-attachments` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 1 | 0 | 1 | 1 | 0 |
-| `api/features/rental-capabilities` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
-| `api/features/rental-cases` | 4 | Area 3 — Rentals/housing/planning | 07 | 3 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 0 | 4 | 0 | 0 | 4 |
-| `api/features/rental-documents` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET | decorated FBV 2 | CookieAuthentication<br>— | AllowAny<br>IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/features/rental-interests` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 2 | 2 | 1 | 0 | 0 | 0 |
-| `api/features/rental-operations` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 1 | 0 | 1 | 0 | 0 |
-| `api/features/rental-statements` | 1 | Area 4 — Commerce/providers/advertising | 08 | 0 | POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
-| `api/features/rental-summary-grants` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 1 | 0 | 0 | 1 |
-| `api/features/replacement-invitations` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/replacement-requests` | 3 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 3 | 0 | 3 | 0 | 0 | 3 |
+| `api/features/renewals` | 4 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, PATCH, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 3 | 0 | 0 | 0 | 0 |
+| `api/features/rent-invoices` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2; decorated FBV 4 | CookieAuthentication | IsAuthenticated | 6 | 2 | 3 | 0 | 1 | 0 | 0 |
+| `api/features/rental-attachments` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 1 | 0 | 1 | 1 | 0 |
+| `api/features/rental-capabilities` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
+| `api/features/rental-cases` | 4 | Area 3 — Rentals/housing/planning | 07 | 3 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 0 | 0 | 2 | 0 | 0 | 4 |
+| `api/features/rental-documents` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET | DRF CBV 2 | CookieAuthentication<br>— | AllowAny<br>IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/features/rental-interests` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 2 | 2 | 1 | 0 | 0 | 0 |
+| `api/features/rental-operations` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 1 | 0 | 1 | 0 | 0 |
+| `api/features/rental-statements` | 1 | Area 4 — Commerce/providers/advertising | 08 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
+| `api/features/rental-summary-grants` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 1 | 0 | 0 | 1 |
+| `api/features/replacement-invitations` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/replacement-requests` | 3 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 3 | 0 | 3 | 0 | 0 | 3 |
 | `api/features/reputation-grants` | 5 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 5 | CookieAuthentication | IsAuthenticated | 5 | 0 | 0 | 0 | 2 | 0 | 5 |
-| `api/features/reservation-holds` | 4 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 0 | 0 | 0 | 0 | 4 |
-| `api/features/residential-assets` | 7 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | decorated FBV 7 | CookieAuthentication | IsAuthenticated | 0 | 1 | 0 | 0 | 0 | 0 | 7 |
-| `api/features/residential-changes` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/residential-media` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | DELETE, GET, POST, PUT | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 1 | 1 | 1 | 3 |
-| `api/features/residential-unit-batches` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 1 | 0 | 0 | 2 |
-| `api/features/residential-unit-templates` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/reservation-holds` | 4 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 0 | 0 | 0 | 0 | 4 |
+| `api/features/residential-assets` | 7 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | DRF CBV 7 | CookieAuthentication | IsAuthenticated | 0 | 1 | 0 | 0 | 0 | 0 | 7 |
+| `api/features/residential-changes` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/residential-media` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | DELETE, GET, POST, PUT | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 1 | 1 | 3 |
+| `api/features/residential-unit-batches` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 1 | 0 | 0 | 2 |
+| `api/features/residential-unit-templates` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/reviews` | 33 | Area 3 — Rentals/housing/planning | 07 | 11 | DELETE, GET, PATCH, POST, PUT | DRF CBV 33 | CookieAuthentication | AllowAny<br>IsAuthenticated | 25 | 2 | 0 | 3 | 1 | 0 | 19 |
-| `api/features/roommate-candidates` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 0 | 0 | 0 | 2 |
-| `api/features/roommate-connections` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 1 | 0 | 0 | 2 |
-| `api/features/search-alerts` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | DELETE, GET, PATCH, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 0 | 2 | 2 | 1 | 0 | 0 | 0 |
-| `api/features/shared-housing-demand` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/shared-housing-plans` | 5 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 5 | CookieAuthentication | IsAuthenticated | 5 | 3 | 0 | 4 | 0 | 0 | 5 |
-| `api/features/shared-rental-summaries` | 1 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 1 | 1 | 1 | 0 | 1 |
-| `api/features/signing` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | AllowAny<br>IsAuthenticated | 1 | 2 | 1 | 0 | 1 | 0 | 1 |
-| `api/features/student-arrangements` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 0 | 2 | 0 | 0 | 2 |
-| `api/features/student-evidence` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 1 | 4 | 2 | 1 | 4 |
-| `api/features/student-profile` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/roommate-candidates` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 0 | 0 | 0 | 2 |
+| `api/features/roommate-connections` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 1 | 0 | 1 | 0 | 0 | 2 |
+| `api/features/search-alerts` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | DELETE, GET, PATCH, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 0 | 2 | 2 | 1 | 0 | 0 | 0 |
+| `api/features/shared-housing-demand` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/shared-housing-plans` | 5 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 5 | CookieAuthentication | IsAuthenticated | 5 | 3 | 0 | 4 | 0 | 0 | 5 |
+| `api/features/shared-rental-summaries` | 1 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 1 | 1 | 1 | 0 | 1 |
+| `api/features/signing` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | AllowAny<br>IsAuthenticated | 1 | 2 | 1 | 0 | 1 | 0 | 1 |
+| `api/features/student-arrangements` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 2 | 0 | 0 | 2 |
+| `api/features/student-evidence` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 1 | 4 | 2 | 1 | 4 |
+| `api/features/student-profile` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/subscription-plans` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/subscriptions` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/tenancy-invitations` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 6 | CookieAuthentication | IsAuthenticated | 6 | 5 | 5 | 1 | 2 | 0 | 1 |
-| `api/features/tenant-assistant` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 1 | 1 | 0 | 0 | 1 |
-| `api/features/termination-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 1 | 0 | 0 | 0 | 2 |
-| `api/features/terms-proposals` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, PATCH, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 0 | 4 | 2 | 0 | 0 |
-| `api/features/transition-candidates` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 0 | 0 | 0 | 3 |
-| `api/features/transition-match-runs` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 1 | 0 | 0 | 1 |
-| `api/features/transition-plans` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/workspace-summary` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
+| `api/features/tenancy-invitations` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 5 | 5 | 1 | 2 | 0 | 1 |
+| `api/features/tenant-assistant` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 1 | 1 | 0 | 0 | 1 |
+| `api/features/termination-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 1 | 0 | 0 | 0 | 2 |
+| `api/features/terms-proposals` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, PATCH, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 0 | 3 | 2 | 0 | 0 |
+| `api/features/transition-candidates` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 0 | 0 | 0 | 3 |
+| `api/features/transition-match-runs` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 1 | 0 | 0 | 1 |
+| `api/features/transition-plans` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/workspace-summary` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `api/homepage` | 1 | Area 2 — Properties/visits/tours | 06 | 0 | GET | DRF CBV 1 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/notifications` | 9 | Area 5 — Communication/support | 09 | 0 | DELETE, GET, PATCH, POST, PUT | DRF CBV 9 | CookieAuthentication | IsAuthenticated | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
 | `api/pages` | 5 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 5 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 2 | 0 | 0 |

@@ -1,11 +1,13 @@
 """Rental phase2 views: update structured lease."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from datetime import timedelta
 from django.conf import settings
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -110,48 +112,64 @@ def update_structured_lease(request, lease_id):
     return Response(output)
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def lease_review(request, lease_id):
-    lease = _participant_lease(request, lease_id)
-    serializer = RentalDecisionSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    data = serializer.validated_data
-    operation = f"rental_agreement.review.{lease_id}"
-    replay = _replay_response(
-        request.user, operation, data["request_key"], request.data
-    )
-    if replay:
-        return replay
-    with transaction.atomic():
-        lease = _participant_lease(request, lease_id, lock=True)
-        if lease.legacy_read_only or lease.status != Lease.Status.DRAFT:
-            raise RentalConflict("This agreement cannot be reviewed.")
-        if data["expected_revision"] != lease.revision:
-            raise RentalConflict("Lease revision conflict.", code="stale_revision")
-        actor_id = str(request.user.id)
-        from ..services.rental_lifecycle.consents import record_consent
+class LeaseReviewView(FeatureAPIView):
+    name = "Lease Review"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "update_structured_lease",
+            "lease_review",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-        record_consent(lease, request.user, data["decision"])
-        if data["decision"] == "accept_review":
-            lease.reviewed_by = list(dict.fromkeys([*lease.reviewed_by, actor_id]))
-        elif data["decision"] == "request_changes":
-            lease.reviewed_by = []
-        else:
-            raise ValidationError({"decision": "Unsupported review decision."})
-        lease.revision += 1
-        lease.save(update_fields=["reviewed_by", "revision", "updated_at"])
-        _event(lease, request.user, "review", data["decision"])
-        resource = LeasePhase2Serializer(lease, context={"request": request}).data
-        output = remember_mutation(
-            user=request.user,
-            operation=operation,
-            request_key=data["request_key"],
-            payload=request.data,
-            request_subject_id=lease.id,
-            result_subject_id=lease.id,
-            result_revision=lease.revision,
-            resource=resource,
+    def post(self, request, lease_id):
+        lease = _participant_lease(request, lease_id)
+        serializer = RentalDecisionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        operation = f"rental_agreement.review.{lease_id}"
+        replay = _replay_response(
+            request.user, operation, data["request_key"], request.data
         )
-    return Response(output)
+        if replay:
+            return replay
+        with transaction.atomic():
+            lease = _participant_lease(request, lease_id, lock=True)
+            if lease.legacy_read_only or lease.status != Lease.Status.DRAFT:
+                raise RentalConflict("This agreement cannot be reviewed.")
+            if data["expected_revision"] != lease.revision:
+                raise RentalConflict("Lease revision conflict.", code="stale_revision")
+            actor_id = str(request.user.id)
+            from ..services.rental_lifecycle.consents import record_consent
+
+            record_consent(lease, request.user, data["decision"])
+            if data["decision"] == "accept_review":
+                lease.reviewed_by = list(dict.fromkeys([*lease.reviewed_by, actor_id]))
+            elif data["decision"] == "request_changes":
+                lease.reviewed_by = []
+            else:
+                raise ValidationError({"decision": "Unsupported review decision."})
+            lease.revision += 1
+            lease.save(update_fields=["reviewed_by", "revision", "updated_at"])
+            _event(lease, request.user, "review", data["decision"])
+            resource = LeasePhase2Serializer(lease, context={"request": request}).data
+            output = remember_mutation(
+                user=request.user,
+                operation=operation,
+                request_key=data["request_key"],
+                payload=request.data,
+                request_subject_id=lease.id,
+                result_subject_id=lease.id,
+                result_revision=lease.revision,
+                resource=resource,
+            )
+        return Response(output)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+lease_review = LeaseReviewView.as_view()

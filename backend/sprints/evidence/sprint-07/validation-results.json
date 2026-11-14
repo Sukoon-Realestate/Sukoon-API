@@ -1,0 +1,93 @@
+{
+  "integrated_full_mvp": {
+    "tests": 6044,
+    "passed": 6008,
+    "failed": 3,
+    "errors": 0,
+    "skipped": 21,
+    "expected_failures": 12,
+    "failure_cases": [
+      "core_apps.common.test_route_contracts.test_route_family_contract[api-properties]",
+      "core_apps.common.test_route_contracts.test_route_family_contract[api-property-captures]",
+      "core_apps.features.tests.test_command_input_matrix.test_session_revoked_while_waiting_for_lock_rejects_command"
+    ],
+    "skip_reasons": {
+      "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike": 1,
+      "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike": 1,
+      "Generate fresh Flutter request bodies with the documented Make targets": 8,
+      "aliases exist only on the edit screen": 4,
+      "could not import 'cv2': No module named 'cv2'": 1,
+      "Capture readiness needs OpenCV (not in Pipfile.lock)": 1,
+      "Independent PostgreSQL drill cluster not supplied": 5
+    }
+  },
+  "integrated_full_restoration": {
+    "tests": 6044,
+    "passed": 6007,
+    "failed": 4,
+    "errors": 0,
+    "skipped": 21,
+    "expected_failures": 12,
+    "failure_cases": [
+      "core_apps.common.test_route_contracts.test_route_family_contract[api-properties]",
+      "core_apps.common.test_route_contracts.test_route_family_contract[api-property-captures]",
+      "core_apps.features.tests.test_command_input_matrix.test_session_revoked_while_waiting_for_lock_rejects_command",
+      "core_apps.features.tests.test_sprint07_transport.test_frozen_housing_transport_contracts"
+    ]
+  },
+  "final_scoped_features": {
+    "tests": 2358,
+    "passed": 2339,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 8,
+    "expected_failures": 11,
+    "failure_cases": []
+  },
+  "final_affected_gates": {
+    "tests": 17,
+    "passed": 17,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "transport_checks": 11600,
+    "company_method_role_rows": 744
+  },
+  "scope": {
+    "patterns": 383,
+    "converted_aliases": 336,
+    "former_function_handlers": 284,
+    "global_patterns": 795,
+    "route_method_policy_alias_parity": true,
+    "domain_extraction_complete": false
+  },
+  "resolved_full_run_failures": {
+    "property_contracts": "Reproduced on original commit 498e88e3; refreshed only four reviews_count shapes and six pre-existing processing-job GET cases from original source.",
+    "session_lock_seam": "Moved revocation injection from the former view lock helper to the extracted maintenance service; original 401/no-write/no-receipt assertions retained.",
+    "restoration_transport_fixture": "Captured original restoration behavior; two workspace-summary GET records differ from the common 5800-case baseline. Both modes now run explicitly."
+  },
+  "limits": [
+    "Full runs predated final validation corrections and small policy/read cleanup; no claim of green whole-backend final-tree runs.",
+    "Final scoped and affected gates overlap the full runs; counts must not be summed.",
+    "Complete service extraction, exhaustive positive parity and family-wide performance/retention acceptance remain open."
+  ],
+  "static_checks": {
+    "django_check": "passed",
+    "migration_consistency": "no changes",
+    "python_files_parsed": 2183,
+    "parse_errors": 0,
+    "scoped_pyflakes": "passed",
+    "whitespace": "passed",
+    "project_module_imports": 2008,
+    "import_errors": 0
+  },
+  "preservation": {
+    "existing_database_files_fingerprint_checked": 3,
+    "all_unchanged": true,
+    "production_targeted": false,
+    "schema_migrations_added": 0,
+    "deployed": false,
+    "disposable_postgres_cluster_stopped": true
+  }
+}

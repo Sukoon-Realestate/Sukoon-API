@@ -104,7 +104,7 @@ def settlement_lines(lease, raw):
             raise ValidationError(
                 "Settlement descriptions are limited to 2000 characters."
             )
-        from ...rental_phase4_views_parts.handover_payload import _validate_evidence
+        from ..handover_reads import _validate_evidence
 
         evidence_ids = line.get("evidence_ids", [])
         if not isinstance(evidence_ids, list) or len(evidence_ids) > 5:
@@ -161,7 +161,7 @@ def propose_settlement(item, user, data):
 
 def apply_settlement(item, change):
     body = change.snapshot["content"]
-    from ...rental_phase4_views_parts.handover_payload import _validate_evidence
+    from ..handover_reads import _validate_evidence
 
     for line in body["lines"]:
         _validate_evidence(item.lease, line.get("evidence_ids", []))

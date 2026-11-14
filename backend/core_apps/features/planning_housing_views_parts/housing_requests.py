@@ -1,5 +1,10 @@
 """Planning housing views: housing requests."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
+
 from datetime import timedelta
 from uuid import UUID
 from django.conf import settings
@@ -15,7 +20,6 @@ from ..services.planning import (
     eligible_owner,
     mutate,
     page,
-    planning_api,
     public_properties,
     text_field,
 )
@@ -126,9 +130,29 @@ def _request_values(data, previous=None):
     }
 
 
-@planning_api(["GET", "POST"], "housing_requests")
-def housing_requests(request):
-    if request.method == "GET":
+class HousingRequestsView(FeatureAPIView):
+    name = "Housing Requests"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "housing_requests",
+            "housing_requests",
+            boundary="planning",
+            capability="housing_requests",
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "housing_requests",
+            "housing_requests",
+            boundary="planning",
+            capability="housing_requests",
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
         from ..services.student_housing.access import plans_for
 
         visible = HousingRequest.objects.filter(
@@ -143,105 +167,167 @@ def housing_requests(request):
             visible.order_by("-created_at", "pkid"),
             lambda x: request_payload(x, request.user),
         )
-    if request.data.get("action") != "publish":
-        raise ValidationError({"action": "A new housing request must be published."})
 
-    def create(_, revision):
-        live = HousingRequest.objects.filter(
-            user=request.user,
-            status__in=["published", "paused"],
-            expires_at__gt=timezone.now(),
-        ).count()
-        if live >= settings.PLANNING_MAX_LIVE_REQUESTS:
-            raise RentalConflict(
-                "Close an existing housing request before publishing another.",
-                code="request_limit",
+    def post(self, request):
+        if request.data.get("action") != "publish":
+            raise ValidationError(
+                {"action": "A new housing request must be published."}
             )
-        return HousingRequest.objects.create(
-            user=request.user,
-            expires_at=timezone.now()
-            + timedelta(days=settings.PLANNING_REQUEST_TTL_DAYS),
-            **_request_values(request.data),
-        )
 
-    return mutate(
-        request,
-        "housing_request.create",
-        lambda: None,
-        create,
-        lambda x: request_payload(x, request.user),
-        creating=True,
-    )
-
-
-@planning_api(["GET"], "housing_requests")
-def housing_demand(request):
-    if not eligible_owner(request.user):
-        raise PermissionDenied(
-            "A verified owned listing is required to read housing demand."
-        )
-    # Location preferences filter discovery only. Owners may suggest a home
-    # elsewhere; sending still validates the exact inventory and rental terms.
-    items = (
-        HousingRequest.objects.filter(
-            status="published",
-            visibility="eligible_owners",
-            expires_at__gt=timezone.now(),
-        )
-        .exclude(user=request.user)
-        .select_related("user")
-        .order_by("-created_at", "pkid")
-    )
-    city = request.query_params.get("city", "").strip()
-    if request.query_params.get("student") == "true":
-        items = items.filter(academic_plan__isnull=False)
-    if request.query_params.get("matching_inventory") == "true":
-        by_city = {}
-        for city_id, district_id in (
-            public_properties()
-            .filter(owner=request.user, is_ownership_verified=True)
-            .values_list("city__id", "district_catalog__id")
-            .distinct()
-        ):
-            selected = by_city.setdefault(str(city_id), set())
-            if district_id:
-                selected.add(str(district_id))
-        matching = Q(pk__in=[])
-        for city_id, district_ids in by_city.items():
-            district_scope = Q(criteria__district_ids=[]) | ~Q(
-                criteria__has_key="district_ids"
+        def create(_, revision):
+            live = HousingRequest.objects.filter(
+                user=request.user,
+                status__in=["published", "paused"],
+                expires_at__gt=timezone.now(),
+            ).count()
+            if live >= settings.PLANNING_MAX_LIVE_REQUESTS:
+                raise RentalConflict(
+                    "Close an existing housing request before publishing another.",
+                    code="request_limit",
+                )
+            return HousingRequest.objects.create(
+                user=request.user,
+                expires_at=timezone.now()
+                + timedelta(days=settings.PLANNING_REQUEST_TTL_DAYS),
+                **_request_values(request.data),
             )
-            for district_id in district_ids:
-                district_scope |= Q(criteria__district_ids__contains=[district_id])
-            matching |= Q(criteria__city_id=city_id) & district_scope
-        items = items.filter(matching)
-    if city:
-        try:
-            city = str(UUID(city))
-        except ValueError:
-            raise ValidationError({"city": "Use a city catalog UUID."})
-        items = items.filter(criteria__city_id=city)
-    return page(request, items, lambda x: request_payload(x, request.user))
+
+        return mutate(
+            request,
+            "housing_request.create",
+            lambda: None,
+            create,
+            lambda x: request_payload(x, request.user),
+            creating=True,
+        )
 
 
-@planning_api(["GET"], "housing_requests")
-def housing_request_detail(request, request_id):
-    return Response(
-        request_payload(get_request(request.user, request_id), request.user)
-    )
+# Stable callable import for integrations; URLs use the explicit class.
+housing_requests = HousingRequestsView.as_view()
 
 
-@planning_api(["GET"], "housing_requests")
-def housing_request_changes(request, request_id):
-    from ..services.housing_request_reviews import (
-        require_history_access,
-        change_payload,
-    )
+class HousingDemandView(FeatureAPIView):
+    name = "Housing Demand"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "housing_requests",
+            "housing_demand",
+            boundary="planning",
+            capability="housing_requests",
+            typed=False,
+        ),
+    }
 
-    item = get_request(request.user, request_id)
-    require_history_access(request.user, item)
-    return page(
-        request,
-        item.changes.select_related("request").order_by("-to_revision"),
-        change_payload,
-    )
+    def get(self, request):
+        if not eligible_owner(request.user):
+            raise PermissionDenied(
+                "A verified owned listing is required to read housing demand."
+            )
+        # Location preferences filter discovery only. Owners may suggest a home
+        # elsewhere; sending still validates the exact inventory and rental terms.
+        items = (
+            HousingRequest.objects.filter(
+                status="published",
+                visibility="eligible_owners",
+                expires_at__gt=timezone.now(),
+            )
+            .exclude(user=request.user)
+            .select_related("user")
+            .order_by("-created_at", "pkid")
+        )
+        city = request.query_params.get("city", "").strip()
+        if request.query_params.get("student") == "true":
+            items = items.filter(academic_plan__isnull=False)
+        if request.query_params.get("matching_inventory") == "true":
+            by_city = {}
+            for city_id, district_id in (
+                public_properties()
+                .filter(owner=request.user, is_ownership_verified=True)
+                .values_list("city__id", "district_catalog__id")
+                .distinct()
+            ):
+                selected = by_city.setdefault(str(city_id), set())
+                if district_id:
+                    selected.add(str(district_id))
+            matching = Q(pk__in=[])
+            for city_id, district_ids in by_city.items():
+                district_scope = Q(criteria__district_ids=[]) | ~Q(
+                    criteria__has_key="district_ids"
+                )
+                for district_id in district_ids:
+                    district_scope |= Q(criteria__district_ids__contains=[district_id])
+                matching |= Q(criteria__city_id=city_id) & district_scope
+            items = items.filter(matching)
+        if city:
+            try:
+                city = str(UUID(city))
+            except ValueError:
+                raise ValidationError({"city": "Use a city catalog UUID."})
+            items = items.filter(criteria__city_id=city)
+        return page(request, items, lambda x: request_payload(x, request.user))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+housing_demand = HousingDemandView.as_view()
+
+
+class HousingRequestDetailView(FeatureAPIView):
+    name = "Housing Request Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "housing_requests",
+            "housing_request_detail",
+            boundary="planning",
+            capability="housing_requests",
+            typed=False,
+        ),
+    }
+
+    def get(self, request, request_id):
+        return Response(
+            request_payload(get_request(request.user, request_id), request.user)
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+housing_request_detail = HousingRequestDetailView.as_view()
+
+
+class HousingRequestChangesView(FeatureAPIView):
+    name = "Housing Request Changes"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "housing_requests",
+            "housing_request_changes",
+            boundary="planning",
+            capability="housing_requests",
+            typed=False,
+        ),
+    }
+
+    def get(self, request, request_id):
+        from ..services.housing_request_reviews import (
+            require_history_access,
+            change_payload,
+        )
+
+        item = get_request(request.user, request_id)
+        require_history_access(request.user, item)
+        return page(
+            request,
+            item.changes.select_related("request").order_by("-to_revision"),
+            change_payload,
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+housing_request_changes = HousingRequestChangesView.as_view()

@@ -16,8 +16,16 @@ def occupants(item, prop):
     )
 
 
-def access_reviewers(item, scope):
-    rows = list(occupants(item, scope.property).select_related("employee"))
+def access_reviewers(item, scope, *, prepared_assignments=None):
+    rows = (
+        list(occupants(item, scope.property).select_related("employee"))
+        if prepared_assignments is None
+        else [
+            r
+            for r in prepared_assignments
+            if r.property_id == scope.property_id and r.occupancy_status == "occupied"
+        ]
+    )
     if rows:
         return {
             str(r.employee.id): {
@@ -37,11 +45,18 @@ def access_reviewers(item, scope):
     }
 
 
-def actions(item, scope, user):
-    request, roles = scope.request, access.roles(item, user)
-    resident = (
-        "employee" in roles
-        and occupants(item, scope.property).filter(employee=user).exists()
+def actions(item, scope, user, *, prepared_roles=None, prepared_assignments=None):
+    request = scope.request
+    roles = access.roles(item, user) if prepared_roles is None else prepared_roles
+    resident = "employee" in roles and (
+        occupants(item, scope.property).filter(employee=user).exists()
+        if prepared_assignments is None
+        else any(
+            r.property_id == scope.property_id
+            and r.occupancy_status == "occupied"
+            and r.employee_id == user.pk
+            for r in prepared_assignments
+        )
     )
     if not roles & {"owner", "coordinator", "payer"} and not resident:
         return []
@@ -62,7 +77,7 @@ def actions(item, scope, user):
     if resident and user.pk == request.reporter_id or "coordinator" in roles:
         available.add("cancel")
     if (resident or "coordinator" in roles) and str(user.id) in access_reviewers(
-        item, scope
+        item, scope, prepared_assignments=prepared_assignments
     ):
         available.add("revoke_access")
         if request.appointment_ends_at and timezone.now() < request.appointment_ends_at:

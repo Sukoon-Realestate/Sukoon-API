@@ -1,5 +1,10 @@
 """Planning group views: group payload."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
+
 import secrets
 from datetime import timedelta
 from django.shortcuts import get_object_or_404
@@ -13,15 +18,34 @@ from ..services.planning import (
     display_name,
     mutate,
     page,
-    planning_api,
 )
 from .process_payload import group_for, group_actions, active_ids, process_payload
 from .invitation_from_token import invitation_from_token, invitation_payload
 
 
-@planning_api(["GET", "POST"], "housing_groups")
-def group_invitation_create(request, group_id):
-    if request.method == "GET":
+class GroupInvitationCreateView(FeatureAPIView):
+    name = "Group Invitation Create"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "group_payload",
+            "group_invitation_create",
+            boundary="planning",
+            capability="housing_groups",
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "group_payload",
+            "group_invitation_create",
+            boundary="planning",
+            capability="housing_groups",
+            typed=False,
+        ),
+    }
+
+    def get(self, request, group_id):
         group = group_for(request.user, group_id)
         if "read_invite" not in group_actions(request.user, group):
             raise NotFound()
@@ -31,45 +55,88 @@ def group_invitation_create(request, group_id):
             invitation_payload,
         )
 
-    def apply(group, revision):
-        if "create_invite" not in group_actions(request.user, group):
-            raise PermissionDenied("Only the group administrator can invite members.")
-        if str(request.data.get("group_id")) != str(group.id):
-            raise ValidationError({"group_id": "Must match the route."})
-        check_revision(group.revision, request.data.get("group_revision"))
-        return GroupInvitation.objects.create(
-            group=group,
-            nonce=secrets.token_hex(32),
-            expires_at=timezone.now() + timedelta(days=7),
+    def post(self, request, group_id):
+        def apply(group, revision):
+            if "create_invite" not in group_actions(request.user, group):
+                raise PermissionDenied(
+                    "Only the group administrator can invite members."
+                )
+            if str(request.data.get("group_id")) != str(group.id):
+                raise ValidationError({"group_id": "Must match the route."})
+            check_revision(group.revision, request.data.get("group_revision"))
+            return GroupInvitation.objects.create(
+                group=group,
+                nonce=secrets.token_hex(32),
+                expires_at=timezone.now() + timedelta(days=7),
+            )
+
+        return mutate(
+            request,
+            f"group.invite.{group_id}",
+            lambda: group_for(request.user, group_id, lock=True),
+            apply,
+            invitation_payload,
+            creating=True,
         )
 
-    return mutate(
-        request,
-        f"group.invite.{group_id}",
-        lambda: group_for(request.user, group_id, lock=True),
-        apply,
-        invitation_payload,
-        creating=True,
-    )
+
+# Stable callable import for integrations; URLs use the explicit class.
+group_invitation_create = GroupInvitationCreateView.as_view()
 
 
-@planning_api(["GET"], "housing_groups")
-def group_invitation_detail(request, invitation_id):
-    item = get_object_or_404(
-        GroupInvitation.objects.select_related("group"), id=invitation_id
-    )
-    if "read_invite" not in group_actions(request.user, item.group):
-        raise NotFound()
-    return Response(invitation_payload(item))
+class GroupInvitationDetailView(FeatureAPIView):
+    name = "Group Invitation Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "group_payload",
+            "group_invitation_detail",
+            boundary="planning",
+            capability="housing_groups",
+            typed=False,
+        ),
+    }
 
-
-@planning_api(["POST"], "housing_groups")
-def group_invitation_preview(request):
-    return Response(
-        invitation_payload(
-            invitation_from_token(request.data.get("token")), include_link=False
+    def get(self, request, invitation_id):
+        item = get_object_or_404(
+            GroupInvitation.objects.select_related("group"), id=invitation_id
         )
-    )
+        if "read_invite" not in group_actions(request.user, item.group):
+            raise NotFound()
+        return Response(invitation_payload(item))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+group_invitation_detail = GroupInvitationDetailView.as_view()
+
+
+class GroupInvitationPreviewView(FeatureAPIView):
+    name = "Group Invitation Preview"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "group_payload",
+            "group_invitation_preview",
+            boundary="planning",
+            capability="housing_groups",
+            typed=False,
+        ),
+    }
+
+    def post(self, request):
+        return Response(
+            invitation_payload(
+                invitation_from_token(request.data.get("token")), include_link=False
+            )
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+group_invitation_preview = GroupInvitationPreviewView.as_view()
 
 
 def join_payload(item, user):

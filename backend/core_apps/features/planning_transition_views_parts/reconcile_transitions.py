@@ -1,5 +1,10 @@
 """Planning transition views: reconcile transitions."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
+
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -12,7 +17,6 @@ from ..services.planning import (
     display_name,
     mutate,
     page,
-    planning_api,
     selection_payload,
     text_field,
 )
@@ -20,32 +24,50 @@ from ..services.rental_phase2 import RentalConflict
 from .transition_projection import TERMINAL, transition_projection, _candidates
 
 
-@planning_api(["GET"], "replacements")
-def replacement_candidates(request, lease_id):
-    lease = participant_lease(request.user, lease_id)
-    candidates = _candidates(lease)
-    if request.user.pk != lease.owner_id:
-        candidates = candidates.filter(
-            pk__in=lease.planning_transitions.filter(candidate_consented=True).values(
-                "candidate_id"
+class ReplacementCandidatesView(FeatureAPIView):
+    name = "Replacement Candidates"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "reconcile_transitions",
+            "replacement_candidates",
+            boundary="planning",
+            capability="replacements",
+            typed=False,
+        ),
+    }
+
+    def get(self, request, lease_id):
+        lease = participant_lease(request.user, lease_id)
+        candidates = _candidates(lease)
+        if request.user.pk != lease.owner_id:
+            candidates = candidates.filter(
+                pk__in=lease.planning_transitions.filter(
+                    candidate_consented=True
+                ).values("candidate_id")
+            )
+        consented = set(
+            lease.planning_transitions.filter(candidate_consented=True).values_list(
+                "candidate_id", flat=True
             )
         )
-    consented = set(
-        lease.planning_transitions.filter(candidate_consented=True).values_list(
-            "candidate_id", flat=True
+        return page(
+            request,
+            candidates,
+            lambda x: {
+                "id": str(x.id),
+                "display_name": display_name(x.tenant),
+                "source": "rental_interest",
+                "revision": x.revision,
+                "consented": x.pk in consented,
+            },
         )
-    )
-    return page(
-        request,
-        candidates,
-        lambda x: {
-            "id": str(x.id),
-            "display_name": display_name(x.tenant),
-            "source": "rental_interest",
-            "revision": x.revision,
-            "consented": x.pk in consented,
-        },
-    )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+replacement_candidates = ReplacementCandidatesView.as_view()
 
 
 def candidate_invitation_payload(item):
@@ -66,55 +88,93 @@ def candidate_invitation_payload(item):
     }
 
 
-@planning_api(["GET"], "replacements")
-def replacement_invitations(request):
-    return page(
-        request,
-        TenancyTransition.objects.filter(
-            candidate__tenant=request.user, kind="replacement"
+class ReplacementInvitationsView(FeatureAPIView):
+    name = "Replacement Invitations"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "reconcile_transitions",
+            "replacement_invitations",
+            boundary="planning",
+            capability="replacements",
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        return page(
+            request,
+            TenancyTransition.objects.filter(
+                candidate__tenant=request.user, kind="replacement"
+            )
+            .exclude(status__in=TERMINAL)
+            .order_by("-created_at", "pkid"),
+            candidate_invitation_payload,
         )
-        .exclude(status__in=TERMINAL)
-        .order_by("-created_at", "pkid"),
-        candidate_invitation_payload,
-    )
 
 
-@planning_api(["POST"], "replacements")
-def replacement_candidate_consent(request, transition_id):
-    def load():
-        item = get_object_or_404(
-            TenancyTransition,
-            id=transition_id,
-            kind="replacement",
-            candidate__tenant=request.user,
+# Stable callable import for integrations; URLs use the explicit class.
+replacement_invitations = ReplacementInvitationsView.as_view()
+
+
+class ReplacementCandidateConsentView(FeatureAPIView):
+    name = "Replacement Candidate Consent"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "reconcile_transitions",
+            "replacement_candidate_consent",
+            boundary="planning",
+            capability="replacements",
+            typed=False,
+        ),
+    }
+
+    def post(self, request, transition_id):
+        def load():
+            item = get_object_or_404(
+                TenancyTransition,
+                id=transition_id,
+                kind="replacement",
+                candidate__tenant=request.user,
+            )
+            Lease.objects.select_for_update().get(pk=item.lease_id)
+            return TenancyTransition.objects.select_for_update().get(pk=item.pk)
+
+        def apply(item, revision):
+            if item.status != "candidate_pending":
+                raise RentalConflict("This candidate invitation is not pending.")
+            check_revision(item.candidate.revision, item.candidate_revision)
+            action = request.data.get("decision")
+            if action not in {"accept", "decline"}:
+                raise ValidationError({"decision": "Use accept or decline."})
+            item.candidate_consented = action == "accept"
+            item.status = (
+                "candidate_consented" if item.candidate_consented else "declined"
+            )
+            item.revision += 1
+            item.history.append(f"Candidate {action} at revision {item.revision}.")
+            note = text_field(request.data, "note", limit=2000)
+            if note:
+                item.history.append(note)
+            item.save()
+            return item
+
+        return mutate(
+            request,
+            f"replacement.candidate-consent.{transition_id}",
+            load,
+            apply,
+            candidate_invitation_payload,
         )
-        Lease.objects.select_for_update().get(pk=item.lease_id)
-        return TenancyTransition.objects.select_for_update().get(pk=item.pk)
 
-    def apply(item, revision):
-        if item.status != "candidate_pending":
-            raise RentalConflict("This candidate invitation is not pending.")
-        check_revision(item.candidate.revision, item.candidate_revision)
-        action = request.data.get("decision")
-        if action not in {"accept", "decline"}:
-            raise ValidationError({"decision": "Use accept or decline."})
-        item.candidate_consented = action == "accept"
-        item.status = "candidate_consented" if item.candidate_consented else "declined"
-        item.revision += 1
-        item.history.append(f"Candidate {action} at revision {item.revision}.")
-        note = text_field(request.data, "note", limit=2000)
-        if note:
-            item.history.append(note)
-        item.save()
-        return item
 
-    return mutate(
-        request,
-        f"replacement.candidate-consent.{transition_id}",
-        load,
-        apply,
-        candidate_invitation_payload,
-    )
+# Stable callable import for integrations; URLs use the explicit class.
+replacement_candidate_consent = ReplacementCandidateConsentView.as_view()
 
 
 def reconcile_transitions():

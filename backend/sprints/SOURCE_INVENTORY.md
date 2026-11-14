@@ -2112,3 +2112,37 @@ initial 469-file list, so its original scope count and the final ownership count
 |---|---|---|---|
 | [conftest.py](../conftest.py) | application/support; syntax/support | Supporting scope | — |
 | [manage.py](../manage.py) | application/support; syntax/support | Supporting scope | — |
+
+
+## Sprint 07 added modules (2026-11-14)
+
+The baseline counts above remain historical. The following modules belong to Area 3 and the existing feature model/retention owners; see [Sprint 07 ownership](evidence/sprint-07/SOURCE_RETENTION.md).
+
+| Source | Lines | Area | Review |
+|---|---:|---:|---|
+| [core_apps/features/services/company/administration_commands.py](../core_apps/features/services/company/administration_commands.py) | 27 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/company/membership_commands.py](../core_apps/features/services/company/membership_commands.py) | 58 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/company/portfolio_commands.py](../core_apps/features/services/company/portfolio_commands.py) | 21 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/company/responsibility_commands.py](../core_apps/features/services/company/responsibility_commands.py) | 10 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/company/tenancy_commands.py](../core_apps/features/services/company/tenancy_commands.py) | 232 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/company/tenancy_reads.py](../core_apps/features/services/company/tenancy_reads.py) | 719 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/company/work_commands.py](../core_apps/features/services/company/work_commands.py) | 11 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/evidence_projection.py](../core_apps/features/services/evidence_projection.py) | 21 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/handover_commands.py](../core_apps/features/services/handover_commands.py) | 196 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/handover_reads.py](../core_apps/features/services/handover_reads.py) | 95 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/housing_scenarios/entry_commands.py](../core_apps/features/services/housing_scenarios/entry_commands.py) | 40 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/housing_tenders/entry_commands.py](../core_apps/features/services/housing_tenders/entry_commands.py) | 101 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/maintenance_reads.py](../core_apps/features/services/maintenance_reads.py) | 187 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/personal_maintenance.py](../core_apps/features/services/personal_maintenance.py) | 246 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/planning_home.py](../core_apps/features/services/planning_home.py) | 94 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/rental_lifecycle/applications_commands.py](../core_apps/features/services/rental_lifecycle/applications_commands.py) | 56 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/rental_lifecycle/cases_commands.py](../core_apps/features/services/rental_lifecycle/cases_commands.py) | 53 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/rental_lifecycle/claims_commands.py](../core_apps/features/services/rental_lifecycle/claims_commands.py) | 73 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/rental_lifecycle/decisions_commands.py](../core_apps/features/services/rental_lifecycle/decisions_commands.py) | 99 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/rental_lifecycle/group_bookings_commands.py](../core_apps/features/services/rental_lifecycle/group_bookings_commands.py) | 58 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/rental_lifecycle/habitability_commands.py](../core_apps/features/services/rental_lifecycle/habitability_commands.py) | 17 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/rental_lifecycle/reservations_commands.py](../core_apps/features/services/rental_lifecycle/reservations_commands.py) | 13 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/rental_lifecycle/terms_commands.py](../core_apps/features/services/rental_lifecycle/terms_commands.py) | 11 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/student_housing/entry_commands.py](../core_apps/features/services/student_housing/entry_commands.py) | 89 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/services/student_housing/verification_commands.py](../core_apps/features/services/student_housing/verification_commands.py) | 60 | 3 | Sprint 07 command/read extraction |
+| [core_apps/features/http.py](../core_apps/features/http.py) | 76 | 3 | Sprint 07 explicit method-policy transport |

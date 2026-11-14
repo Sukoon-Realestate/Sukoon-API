@@ -1,0 +1,80 @@
+{
+  "baseline_sha256": "72c45dcd8b142213d366741b0af7364e72b4131d099576446814a7503e4d3823",
+  "mode": "SUKOON_MVP=false",
+  "characterizations": 5800,
+  "source_commit": "498e88e3",
+  "overrides": [
+    {
+      "route": "api/v1/features/v1/workspace-summary/",
+      "method": "GET",
+      "auth": "account",
+      "locale": "en",
+      "status": 200,
+      "body": {
+        "message": "Operation successful.",
+        "data": {
+          "request_counts": {},
+          "company_approval_counts": {},
+          "favorites_count": 0,
+          "group_join_requests_count": 0,
+          "unread_chat_messages_count": 0,
+          "unread_notifications_count": 0,
+          "visit_requests_count": 0,
+          "workspace_chat_counts": {
+            "individual": 0,
+            "student": 0,
+            "owner": 0,
+            "company": 0,
+            "general": 0,
+            "all": 0
+          },
+          "company_chat_counts": {}
+        }
+      },
+      "headers": {
+        "Allow": "OPTIONS, GET",
+        "Cache-Control": "private, no-store",
+        "Referrer-Policy": null,
+        "X-Content-Type-Options": null,
+        "Content-Type": "application/json; charset=utf-8",
+        "ETag": null
+      }
+    },
+    {
+      "route": "api/v1/features/v1/workspace-summary/",
+      "method": "GET",
+      "auth": "account",
+      "locale": "ar",
+      "status": 200,
+      "body": {
+        "message": "Operation successful.",
+        "data": {
+          "request_counts": {},
+          "company_approval_counts": {},
+          "favorites_count": 0,
+          "group_join_requests_count": 0,
+          "unread_chat_messages_count": 0,
+          "unread_notifications_count": 0,
+          "visit_requests_count": 0,
+          "workspace_chat_counts": {
+            "individual": 0,
+            "student": 0,
+            "owner": 0,
+            "company": 0,
+            "general": 0,
+            "all": 0
+          },
+          "company_chat_counts": {}
+        }
+      },
+      "headers": {
+        "Allow": "OPTIONS, GET",
+        "Cache-Control": "private, no-store",
+        "Referrer-Policy": null,
+        "X-Content-Type-Options": null,
+        "Content-Type": "application/json; charset=utf-8",
+        "ETag": null
+      }
+    }
+  ]
+}

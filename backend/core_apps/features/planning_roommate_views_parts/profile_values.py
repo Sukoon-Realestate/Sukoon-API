@@ -1,16 +1,15 @@
 """Planning roommate views: profile values."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+from rest_framework.permissions import IsAuthenticated
+from core_apps.features.renderers import FeatureJsonRenderer
+
+
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from ..planning_models import LifestyleProfile, RoommateConnection
-from ..services.planning import (
-    check_revision,
-    display_name,
-    mutate,
-    planning_api,
-    criteria_payload,
-)
+from ..services.planning import check_revision, display_name, mutate, criteria_payload
 from ..services.lifestyle_matching import profile_extensions
 
 
@@ -88,35 +87,60 @@ def profile_values(data):
     return result
 
 
-@planning_api(["GET", "POST"], "lifestyle")
-def lifestyle_profile(request):
-    if request.method == "GET":
+class LifestyleProfileView(FeatureAPIView):
+    name = "Lifestyle Profile"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "profile_values",
+            "lifestyle_profile",
+            boundary="planning",
+            capability="lifestyle",
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "profile_values",
+            "lifestyle_profile",
+            boundary="planning",
+            capability="lifestyle",
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
         return Response(
             lifestyle_payload(
                 LifestyleProfile.objects.filter(user=request.user).first()
             )
         )
 
-    def apply(item, revision):
-        check_revision(item.revision if item else 0, revision)
-        values = profile_values(request.data)
-        if item is None:
-            return LifestyleProfile.objects.create(user=request.user, **values)
-        for key, value in values.items():
-            setattr(item, key, value)
-        item.revision += 1
-        item.save()
-        return item
+    def post(self, request):
+        def apply(item, revision):
+            check_revision(item.revision if item else 0, revision)
+            values = profile_values(request.data)
+            if item is None:
+                return LifestyleProfile.objects.create(user=request.user, **values)
+            for key, value in values.items():
+                setattr(item, key, value)
+            item.revision += 1
+            item.save()
+            return item
 
-    return mutate(
-        request,
-        "lifestyle.save",
-        lambda: LifestyleProfile.objects.select_for_update()
-        .filter(user=request.user)
-        .first(),
-        apply,
-        lifestyle_payload,
-    )
+        return mutate(
+            request,
+            "lifestyle.save",
+            lambda: LifestyleProfile.objects.select_for_update()
+            .filter(user=request.user)
+            .first(),
+            apply,
+            lifestyle_payload,
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+lifestyle_profile = LifestyleProfileView.as_view()
 
 
 def connections(user):
