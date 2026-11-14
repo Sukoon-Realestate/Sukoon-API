@@ -1,6 +1,7 @@
 """Explicit, opt-in recovery of original advertising bytes; never runs on GET."""
 
 import hashlib
+import logging
 from pathlib import Path
 
 from django.core.files.base import ContentFile
@@ -8,6 +9,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
 from core_apps.advertising.models import Advertisement
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -46,3 +49,9 @@ class Command(BaseCommand):
             self.stdout.write("Original bytes restored; metadata unchanged.")
         else:
             self.stdout.write("Verified original bytes; dry run, no storage write.")
+        # Operational audit contains identity/integrity facts, never source paths
+        # or artwork bytes. Keep the configured log sink with the repair record.
+        logger.info(
+            "advertising_media_repair advertisement=%s sha256=%s size_bytes=%s applied=%s",
+            ad.id, media.sha256, media.size_bytes, bool(options["apply"]),
+        )

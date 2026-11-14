@@ -55,16 +55,18 @@ from .services.rental_phase3 import post_ledger_transaction as post_ledger_trans
 from .rental_phase4_views_parts.handover_payload import (
     PNG_MAGIC as PNG_MAGIC,
     MAX_EVIDENCE_BYTES as MAX_EVIDENCE_BYTES,
-    _money as _money,
-    _lease as _lease,
     evidence_payload as evidence_payload,
     handover_payload as handover_payload,
-    _handover as _handover,
-    _validate_evidence as _validate_evidence,
+)
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase4_views_parts.handover_payload import (  # noqa: F401
+    _money,
+    _lease,
+    _handover,
+    _validate_evidence,
 )
 from .rental_phase4_views_parts.rental_evidence_upload import (
     rental_evidence_upload as rental_evidence_upload,
-    _evidence as _evidence,
     rental_evidence_detail as rental_evidence_detail,
     rental_evidence_download as rental_evidence_download,
     rental_evidence_content as rental_evidence_content,
@@ -72,6 +74,10 @@ from .rental_phase4_views_parts.rental_evidence_upload import (
     RentalEvidenceDetailView as RentalEvidenceDetailView,
     RentalEvidenceDownloadView as RentalEvidenceDownloadView,
     RentalEvidenceUploadView as RentalEvidenceUploadView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase4_views_parts.rental_evidence_upload import (  # noqa: F401
+    _evidence,
 )
 from .rental_phase4_views_parts.lease_handovers import (
     lease_handovers as lease_handovers,
@@ -91,11 +97,14 @@ from .rental_phase4_views_parts.handover_respond import (
 from .rental_phase4_views_parts.operations_execute_payout import (
     payouts as payouts,
     payout_detail as payout_detail,
-    _require_payout_role as _require_payout_role,
     operations_execute_payout as operations_execute_payout,
     OperationsExecutePayoutView as OperationsExecutePayoutView,
     PayoutDetailView as PayoutDetailView,
     PayoutsView as PayoutsView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase4_views_parts.operations_execute_payout import (  # noqa: F401
+    _require_payout_role,
 )
 from .rental_phase4_views_parts.operations_reconcile_payout import (
     operations_reconcile_payout as operations_reconcile_payout,

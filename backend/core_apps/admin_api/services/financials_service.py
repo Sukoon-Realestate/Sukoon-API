@@ -17,3 +17,17 @@ from .financials_service_parts.get_financial_summary import (
 from .financials_service_parts.get_transactions_list import (
     get_transactions_list,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'logging',
+    'timezone',
+    'Avg',
+    'Count',
+    'Property',
+    'PropertyVisit',
+    'KYCSubmission',
+    'logger',
+    'get_financial_summary',
+    'get_transactions_list',
+]

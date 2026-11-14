@@ -40,12 +40,18 @@ from .planning_condition_views_parts.condition_report_context import (
     baseline_for as baseline_for,
     lease_selection as lease_selection,
     condition_report_context as condition_report_context,
-    _acknowledgement as _acknowledgement,
     ConditionReportContextView as ConditionReportContextView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .planning_condition_views_parts.condition_report_context import (  # noqa: F401
+    _acknowledgement,
 )
 from .planning_condition_views_parts.report_snapshot import (
     report_snapshot as report_snapshot,
-    _report_values as _report_values,
+)
+# Supported private imports stay outside the public star-import surface.
+from .planning_condition_views_parts.report_snapshot import (  # noqa: F401
+    _report_values,
 )
 from .planning_condition_views_parts.condition_report_action import (
     condition_reports as condition_reports,

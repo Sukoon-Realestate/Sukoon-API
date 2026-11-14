@@ -48,20 +48,27 @@ from .planning_group_views_parts.process_payload import (
     group_actions as group_actions,
     active_ids as active_ids,
     process_payload as process_payload,
-    _group_values as _group_values,
     invalidate_process as invalidate_process,
     invalidate_roster as invalidate_roster,
-    _shortlist_item as _shortlist_item,
 )
-from .planning_group_views_parts.dispatch_process import (
-    _proposal as _proposal,
-    _dispatch_process as _dispatch_process,
+# Supported private imports stay outside the public star-import surface.
+from .planning_group_views_parts.process_payload import (  # noqa: F401
+    _group_values,
+    _shortlist_item,
+)
+# Supported private imports stay outside the public star-import surface.
+from .planning_group_views_parts.dispatch_process import (  # noqa: F401
+    _proposal,
+    _dispatch_process,
 )
 from .planning_group_views_parts.invitation_from_token import (
-    _submit_process as _submit_process,
     invitation_token as invitation_token,
     invitation_from_token as invitation_from_token,
     invitation_payload as invitation_payload,
+)
+# Supported private imports stay outside the public star-import surface.
+from .planning_group_views_parts.invitation_from_token import (  # noqa: F401
+    _submit_process,
 )
 from .planning_group_views_parts.group_payload import (
     group_invitation_create as group_invitation_create,

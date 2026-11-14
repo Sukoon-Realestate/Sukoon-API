@@ -1,18 +1,4 @@
 from ..amenities import AMENITY_FIELDS
-from typing import Optional
-from decimal import Decimal
-
-from django.contrib.contenttypes.models import ContentType
-from django.db import transaction
-from django.db.models import Avg, Count, FloatField, Q
-from django.db.models.functions import Coalesce
-from django.utils import timezone
-
-from core_apps.common.models import ContentView
-
-from ..models import Property, PropertyImage, PropertyType, PropertyVisit
-
-
 from .property_operations.property_catalog import PropertyCatalogMixin
 from .property_operations.property_creation import PropertyCreationMixin
 from .property_operations.property_update import PropertyUpdateMixin

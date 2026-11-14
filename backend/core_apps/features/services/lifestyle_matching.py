@@ -14,3 +14,13 @@ from .lifestyle_matching_parts.profile_extensions import (
 from .lifestyle_matching_parts.disclosure_scope import (
     disclosure_scope,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'time',
+    'ValidationError',
+    'UNKNOWN',
+    'profile_extensions',
+    'match_facts',
+    'disclosure_scope',
+]

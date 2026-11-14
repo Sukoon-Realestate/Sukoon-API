@@ -1,0 +1,5 @@
+DOTENV_DISABLED=1 .venv/bin/python tools/qa/sprint11_standards.py
+Before: {'F401': 2145, 'F811': 1110, 'F841': 25}; remaining: {'F401': 1107, 'F811': 1107, 'F841': 20}
+Remaining classifications: {'settings composition; retained': 1, 'model/task/admin/signal registration or public import; retained': 296, 'uncertain implementation/import consumer; candidate retained': 279, 'pytest registration or test dependency; retained for fixture/caller review': 1658}
+New diagnostics: 0; facade surface failures: 0
+.venv/bin/python -c 'import json, subprocess, sys; paths=json.load(open("sprints/evidence/sprint-11/scoped-lint-files.json")); sys.exit(subprocess.call([sys.executable, "-m", "flake8", "--select=F401,F811,F841", *paths, "tools/qa/sprint11_standards.py"]))'

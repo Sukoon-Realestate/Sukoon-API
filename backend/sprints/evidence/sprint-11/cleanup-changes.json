@@ -1,0 +1,73 @@
+[
+  {
+    "path": "core_apps/properties/services/property.py",
+    "removed": "from typing import Optional\nfrom decimal import Decimal\n\nfrom django.contrib.contenttypes.models import ContentType\nfrom django.db import transaction\nfrom django.db.models import Avg, Count, FloatField, Q\nfrom django.db.models.functions import Coalesce\nfrom django.utils import timezone\n\nfrom core_apps.common.models import ContentView\n\nfrom ..models import Property, PropertyImage, PropertyType, PropertyVisit\n\n\n",
+    "reason": "Copied dependencies; no internal attribute reads, direct imports, registries or migration strings. PropertyService and all mixins retained."
+  },
+  {
+    "path": "core_apps/admin_api/views/staff.py",
+    "removed": "        staff = invite_staff_member(",
+    "replacement": "        invite_staff_member(",
+    "reason": "Unused local/duplicate import; side-effecting calls retained. Exception scope unchanged."
+  },
+  {
+    "path": "core_apps/common/cookie_auth.py",
+    "removed": "except TokenError as e:",
+    "replacement": "except TokenError:",
+    "reason": "Unused local/duplicate import; side-effecting calls retained. Exception scope unchanged."
+  },
+  {
+    "path": "core_apps/properties/serializers/visit_parts/tenant_visit_request_serializer.py",
+    "removed": "        was_reviewed = hasattr(obj, \"review\")\n",
+    "replacement": "",
+    "reason": "Unused local/duplicate import; side-effecting calls retained. Exception scope unchanged."
+  },
+  {
+    "path": "core_apps/users/views_parts/set_auth_cookies.py",
+    "removed": "        from rest_framework_simplejwt.exceptions import InvalidToken, TokenError\n\n",
+    "replacement": "",
+    "reason": "Unused local/duplicate import; side-effecting calls retained. Exception scope unchanged."
+  },
+  {
+    "path": "core_apps/properties/services/property_operations/property_catalog.py",
+    "removed": "from django.db.models import Q\n",
+    "replacement": "",
+    "reason": "Unused local/duplicate import; side-effecting calls retained. Exception scope unchanged."
+  },
+  {
+    "path": "core_apps/properties/serializers/visit_parts/tenant_visit_request_serializer.py",
+    "removed": "from datetime import datetime\n",
+    "reason": "Unused copied import; repository source/client reference search found no consumer; actual serializer and model field retained."
+  },
+  {
+    "path": "core_apps/properties/serializers/visit_parts/tenant_visit_request_serializer.py",
+    "removed": "from .tenant_visit_list_serializer import TenantVisitListSerializer\n",
+    "reason": "Unused copied import; repository source/client reference search found no consumer; actual serializer and model field retained."
+  },
+  {
+    "path": "core_apps/features/model_parts/owner_payments.py",
+    "removed": "from django.utils import timezone\n",
+    "reason": "Unused copied import; repository source/client reference search found no consumer; actual serializer and model field retained."
+  },
+  {
+    "path": "core_apps/features/model_parts/owner_payments.py",
+    "removed": "uuid, F, Q",
+    "reason": "Unused copied stdlib/ORM imports; models/fields and migration identities retained."
+  },
+  {
+    "path": "core_apps/common/ws_auth.py",
+    "removed": "unused exception binding e",
+    "reason": "Retains (TokenError, KeyError) handling and anonymous fallback."
+  },
+  {
+    "path": "core_apps/common/recovery_postgres.py",
+    "removed": "unused exception binding exc",
+    "reason": "Retains psycopg2.Error handling and RecoveryRequired translation."
+  },
+  {
+    "path": "core_apps/advertising/services_parts/ensure_media_persisted.py",
+    "removed": "duplicated media availability predicate body",
+    "replacement": "ensure_media_persisted(getattr(advertisement, \"media\", None))",
+    "reason": "Equivalent read-only check; both supported names retained; no storage or metadata writes."
+  }
+]

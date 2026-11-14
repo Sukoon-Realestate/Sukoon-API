@@ -82,14 +82,17 @@ from .views_parts.rental_operation_lookup import (
     FEATURE_DECORATORS as FEATURE_DECORATORS,
     LEASE_TEMPLATES as LEASE_TEMPLATES,
     Conflict as Conflict,
-    _fingerprint as _fingerprint,
-    _replay as _replay,
-    _remember as _remember,
     rental_capabilities as rental_capabilities,
     rental_operation_lookup as rental_operation_lookup,
-    _paginate as _paginate,
     RentalCapabilitiesView as RentalCapabilitiesView,
     RentalOperationLookupView as RentalOperationLookupView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .views_parts.rental_operation_lookup import (  # noqa: F401
+    _fingerprint,
+    _replay,
+    _remember,
+    _paginate,
 )
 from .views_parts.planning_capabilities import (
     configuration as configuration,
@@ -122,12 +125,15 @@ from .views_parts.tenancy_invitations import (
     TenancyInvitationsView as TenancyInvitationsView,
 )
 from .views_parts.tenancy_invitation_respond import (
-    _participant_invitation as _participant_invitation,
     tenancy_invitation_detail as tenancy_invitation_detail,
     tenancy_invitation_respond as tenancy_invitation_respond,
-    _lease_queryset as _lease_queryset,
     TenancyInvitationDetailView as TenancyInvitationDetailView,
     TenancyInvitationRespondView as TenancyInvitationRespondView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .views_parts.tenancy_invitation_respond import (  # noqa: F401
+    _participant_invitation,
+    _lease_queryset,
 )
 from .views_parts.tenancy_invitation_recovery import (
     tenancy_invitation_response_resolve as tenancy_invitation_response_resolve,
@@ -137,22 +143,28 @@ from .views_parts.tenancy_invitation_recovery import (
 )
 from .views_parts.leases import (
     leases as leases,
-    _get_authorized_lease as _get_authorized_lease,
     lease_detail as lease_detail,
     LeaseDetailView as LeaseDetailView,
     LeasesView as LeasesView,
 )
+# Supported private imports stay outside the public star-import surface.
+from .views_parts.leases import (  # noqa: F401
+    _get_authorized_lease,
+)
 from .views_parts.lease_cancel import (
     lease_signing_session as lease_signing_session,
     lease_cancel as lease_cancel,
-    _invoice_queryset as _invoice_queryset,
     rent_invoices as rent_invoices,
-    _get_authorized_invoice as _get_authorized_invoice,
     rent_invoice_detail as rent_invoice_detail,
     LeaseCancelView as LeaseCancelView,
     LeaseSigningSessionView as LeaseSigningSessionView,
     RentInvoiceDetailView as RentInvoiceDetailView,
     RentInvoicesView as RentInvoicesView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .views_parts.lease_cancel import (  # noqa: F401
+    _invoice_queryset,
+    _get_authorized_invoice,
 )
 from .views_parts.rent_invoice_checkout import (
     rent_invoice_checkout as rent_invoice_checkout,

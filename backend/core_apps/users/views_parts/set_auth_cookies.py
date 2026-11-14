@@ -111,8 +111,6 @@ class CustomTokenRefreshView(TokenRefreshView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-
         serializer = self.get_serializer(data={"refresh": refresh_token})
         try:
             serializer.is_valid(raise_exception=True)

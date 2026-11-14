@@ -27,3 +27,26 @@ from .planning_models_parts.tenancy_transition import (
     PlanningEvent,
 )
 from .planning_models_parts.housing_request_change import HousingRequestChange
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'settings',
+    'models',
+    'Q',
+    'TimeStampedModel',
+    'LifestyleProfile',
+    'RoommateConnection',
+    'HousingGroup',
+    'GroupMembership',
+    'GroupInvitation',
+    'GroupProcess',
+    'HousingRequest',
+    'HousingOffer',
+    'ConditionReport',
+    'TenancyTransition',
+    'CommuteSearch',
+    'TenantAssistantTurn',
+    'GroupJoinRequest',
+    'PlanningEvent',
+    'HousingRequestChange',
+]

@@ -29,9 +29,44 @@ from .rental_phase2_parts.remember_mutation import (
     assert_owner_ready,
     add_months,
     validate_interest_capacity,
+)
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase2_parts.remember_mutation import (  # noqa: F401
     _overlapping_accommodation,
 )
 from .rental_phase2_parts.reserve_inventory_days import (
     reserve_inventory_days,
     activate_inventory,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'calendar',
+    'hashlib',
+    'json',
+    'date',
+    'timedelta',
+    'settings',
+    'IntegrityError',
+    'transaction',
+    'timezone',
+    'status',
+    'APIException',
+    'PermissionDenied',
+    'ValidationError',
+    'IdempotencyRecord',
+    'OwnerPaymentProfile',
+    'RentalCommercialPolicy',
+    'RentalInventoryDayLock',
+    'RentalConflict',
+    'fingerprint',
+    'replay_operation',
+    'remember_mutation',
+    'ensure_policy',
+    'get_or_create_owner_profile',
+    'assert_owner_ready',
+    'add_months',
+    'validate_interest_capacity',
+    'reserve_inventory_days',
+    'activate_inventory',
+]

@@ -18,6 +18,9 @@ from .tenancy_invitations_parts.validate_accounts import (
     LIVE_LEASE_STATUSES,
     localized,
     validate_accounts,
+)
+# Supported private imports stay outside the public star-import surface.
+from .tenancy_invitations_parts.validate_accounts import (  # noqa: F401
     _room_details,
 )
 from .tenancy_invitations_parts.resolve_offer_snapshot import (
@@ -31,3 +34,30 @@ from .tenancy_invitations_parts.notify_after_commit import (
     create_notification_for_invitation,
     create_notification_for_response,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'copy',
+    'transaction',
+    'timezone',
+    'status',
+    'APIException',
+    'PermissionDenied',
+    'ValidationError',
+    'Lease',
+    'TenancyInvitation',
+    'Notification',
+    'FCMService',
+    'NotificationService',
+    'InvitationConflict',
+    'LIVE_LEASE_STATUSES',
+    'localized',
+    'validate_accounts',
+    'resolve_offer_snapshot',
+    'current_invitation_problem',
+    'refresh_effective_status',
+    'invitation_is_eligible',
+    'notify_after_commit',
+    'create_notification_for_invitation',
+    'create_notification_for_response',
+]

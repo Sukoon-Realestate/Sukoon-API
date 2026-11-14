@@ -1,7 +1,6 @@
 """PropertyCatalog operations owned by PropertyService."""
 
 from typing import Optional
-from django.db.models import Q
 from ...models import Property, PropertyType
 from ...catalog_labels import property_type_label
 

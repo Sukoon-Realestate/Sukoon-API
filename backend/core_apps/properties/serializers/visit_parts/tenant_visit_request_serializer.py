@@ -2,7 +2,6 @@ from core_apps.features.services.reputation.eligibility import can_review_visit
 
 """Visit: tenant visit request serializer."""
 
-from datetime import datetime
 from django.utils import timezone
 from rest_framework import serializers
 from ...phone_disclosure import counterpart_phone_payload
@@ -17,7 +16,6 @@ from .property_visit_serializer import (
     get_visit_language,
     PostVisitContextMixin,
 )
-from .tenant_visit_list_serializer import TenantVisitListSerializer
 from .visit_owner_serializer import (
     VisitPropertySummarySerializer,
     VisitOwnerSerializer,
@@ -76,7 +74,6 @@ class TenantVisitRequestSerializer(PostVisitContextMixin, serializers.ModelSeria
         from ...services.viewing_access import participant
 
         current_attendee = participant(obj, self.context["request"].user)
-        was_reviewed = hasattr(obj, "review")
         return {
             "can_cancel": obj.status
             in (PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED)

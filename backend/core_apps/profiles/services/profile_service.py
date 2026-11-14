@@ -21,3 +21,24 @@ from .profile_service_parts.arabic_months import (
 from .profile_service_parts.profile_service import (
     ProfileService,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'logging',
+    'Any',
+    'Dict',
+    'Optional',
+    'get_user_model',
+    'transaction',
+    'Contract',
+    'Profile',
+    'UserSettings',
+    'logger',
+    'User',
+    'ARABIC_MONTHS',
+    'mask_phone_number',
+    'format_arabic_month_year',
+    'format_arabic_date',
+    'format_arabic_count',
+    'ProfileService',
+]

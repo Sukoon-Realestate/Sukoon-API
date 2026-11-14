@@ -25,3 +25,28 @@ from .ticket_service_parts.get_ticket_detail import (
     get_ticket_detail,
     add_ticket_reply,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'logging',
+    'uuid',
+    'Any',
+    'List',
+    'Optional',
+    'transaction',
+    'timezone',
+    'ValidationError',
+    'Ticket',
+    'TicketAttachment',
+    'TicketMessage',
+    'logger',
+    'ALLOWED_IMAGE_EXTENSIONS',
+    'MAX_ATTACHMENT_SIZE_BYTES',
+    'MAX_ATTACHMENTS_COUNT',
+    'TicketClosedConflict',
+    'list_user_tickets',
+    'generate_ticket_reference',
+    'create_ticket',
+    'get_ticket_detail',
+    'add_ticket_reply',
+]

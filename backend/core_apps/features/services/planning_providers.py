@@ -26,3 +26,28 @@ from .planning_providers_parts.extract_criteria import (
     ASSISTANT_SCHEMA,
     extract_criteria,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'json',
+    'math',
+    'HTTPError',
+    'URLError',
+    'quote',
+    'Request',
+    'urlopen',
+    'settings',
+    'cache',
+    'timezone',
+    'APIException',
+    'Throttled',
+    'DiscoveryUnavailable',
+    'provider_budget',
+    'post_json',
+    'mock_discovery',
+    'ready_services',
+    'configuration',
+    'route_matrix',
+    'ASSISTANT_SCHEMA',
+    'extract_criteria',
+]

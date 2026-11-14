@@ -14,7 +14,7 @@ For model/migration/endpoint/serializer work, prefer the `django-feature` skill.
 - Apps live in `core_apps/<app>/` (urls → thin views → serializers → `services/`).
 - Architecture target (user-approved; see `sprints/ARCHITECTURE.md`): new and converted HTTP endpoints are
   explicit class-based views; domain services own transactions, locks, authority and side effects. The existing
-  526 `@api_view` routes are migration debt converted by sprints 05–10 — do not add new `@api_view` functions
+  former function routes were converted by sprints 05–10 — do not add new `@api_view` functions
   and do not change route names/aliases/contracts during conversion.
 - DRF endpoints use cookie/SimpleJWT auth (`core_apps.common.cookie_auth`), django-filter and the configured
   pagination/renderer. Admin is Django admin plus the `admin_api` staff API (no django-unfold).

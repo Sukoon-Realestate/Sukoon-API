@@ -1,0 +1,19 @@
+...............................................................s         [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+core_apps/advertising/tests/test_sprint08_media_recovery.py: 1 warning
+core_apps/properties/tests/test_owner_profile_locale.py: 19 warnings
+core_apps/properties/tests/test_sprint03_correctness.py: 5 warnings
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /private/tmp/sukoon-sprint11/static_root/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /Users/demo23home/code/sukoon/Sukoon-API/backend/sprints/evidence/sprint-11/junit/focused-sqlite.xml -
+63 passed, 1 skipped, 27 warnings in 59.26s

@@ -37,3 +37,14 @@
 - No required fake/test adapters, explicit upgrade responses, supported exports or historical migrations disappear.
 - Scoped lint/import/type checks and contract/query regressions pass. The prior 2,476 F401 warnings are classified/resolved,
   not blindly equated with 2,476 safe deletions or hidden by a global ignore.
+
+## Results — 2026-11-14
+
+Sprint 11 changes and validation are recorded in [evidence/sprint-11](evidence/sprint-11/README.md), with a
+[consumer/cleanup decision ledger](evidence/sprint-11/cleanup-decisions.md) and machine-readable validation, lint,
+export, route and database-preservation records. Earlier-sprint artwork/statistics/chat cleanup was revalidated;
+reviewed redundant plumbing was removed, explicit facade exports were added and the blanket F401 ignore was removed.
+Uncertain import candidates and supported compatibility behavior remain. See the evidence README for final test
+results and unmet acceptance criteria; do not infer whole-tree lint or static type-checker acceptance from scoped checks.
+
+Stop after Sprint 11. Sprint 12 production/rollout work is outside this execution.

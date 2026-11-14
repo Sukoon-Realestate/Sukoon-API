@@ -34,3 +34,27 @@ from .serializers_parts.tenancy_invitation_serializer import (
     TenancyInvitationResponseSerializer,
     TenancyInvitationSerializer,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'timezone',
+    'serializers',
+    'can_cancel_draft',
+    'can_revoke_invitation',
+    'is_read_only',
+    'BoostCampaign',
+    'Lease',
+    'RentInvoice',
+    'SearchAlert',
+    'TenancyInvitation',
+    'BoostCampaignSerializer',
+    'SearchAlertSerializer',
+    'AlertCreateSerializer',
+    'LeaseSerializer',
+    'LeaseCreateSerializer',
+    'RentInvoiceSerializer',
+    'RevisionRequestSerializer',
+    'TenancyInvitationCreateSerializer',
+    'TenancyInvitationResponseSerializer',
+    'TenancyInvitationSerializer',
+]

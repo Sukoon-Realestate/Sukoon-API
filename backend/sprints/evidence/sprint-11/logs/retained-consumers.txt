@@ -1,0 +1,26 @@
+core_apps/advertising/views.py:39:    ensure_media_persisted as ensure_media_persisted,
+core_apps/advertising/views.py:111:    "ensure_media_persisted",
+core_apps/advertising/audit_asset.py:11:def get_audit_banner_bytes() -> bytes:
+core_apps/properties/services/property_operations/property_media.py:41:    def upload_property_images(cls, property_obj, uploaded_images):
+core_apps/properties/services/property_operations/property_media.py:53:    def update_property_image(cls, image_obj, validated_data):
+core_apps/advertising/services_parts/ensure_media_persisted.py:98:def ensure_media_persisted(media):
+core_apps/advertising/services_parts/ensure_media_persisted.py:110:    return ensure_media_persisted(getattr(advertisement, "media", None))
+core_apps/advertising/services_parts/ensure_media_persisted.py:117:    "ensure_media_persisted",
+core_apps/advertising/services_parts/activate_with_mock_payment.py:7:from .ensure_media_persisted import (
+core_apps/advertising/services.py:46:from .services_parts.ensure_media_persisted import (
+core_apps/advertising/services.py:51:    ensure_media_persisted,
+core_apps/advertising/services.py:98:    'ensure_media_persisted',
+core_apps/advertising/tests/test_sprint08_media_recovery.py:14:from core_apps.advertising.services_parts.ensure_media_persisted import (
+core_apps/advertising/tests/test_advertising_api.py:650:    from core_apps.advertising.audit_asset import get_audit_banner_bytes
+core_apps/advertising/tests/test_advertising_api.py:653:    original = get_audit_banner_bytes()
+core_apps/features/management/commands/prepare_owner_tenant_cycle_qa.py:16:from core_apps.advertising.audit_asset import AUDIT_AD_ID, AUDIT_AD_SHA256
+core_apps/properties/tests/test_views.py:541:    def test_upload_property_images_happy_path(self, auth_client, user):
+core_apps/properties/tests/test_views.py:589:    def test_upload_property_images_not_owner(self, auth_client, another_user):
+core_apps/properties/tests/test_views.py:601:    def test_update_property_image_metadata(self, auth_client, user):
+core_apps/properties/tests/test_views.py:616:    def test_update_property_image_not_owner(self, auth_client, another_user):
+core_apps/properties/tests/test_services.py:77:    def test_upload_property_images_service(self, user):
+core_apps/properties/tests/test_services.py:80:        images = PropertyService.upload_property_images(property_obj, uploaded_images)
+core_apps/properties/tests/test_services.py:86:    def test_update_property_image_service(self, user):
+core_apps/properties/tests/test_services.py:93:        updated_image = PropertyService.update_property_image(
+core_apps/features/services/purchase_service_state.py:25:        from core_apps.advertising.services_parts.ensure_media_persisted import (
+core_apps/features/services/billing_advertising.py:74:        from core_apps.advertising.services_parts.ensure_media_persisted import (

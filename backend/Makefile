@@ -270,3 +270,19 @@ test-sprint10-admin-shared: ## Admin/shared command, HTTP, query and native admi
 
 sprint10-coverage: ## Check global explicit callbacks, API transport parity and shared-service imports without database access
 	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint10_inventory.py
+
+.PHONY: test-sprint11-cleanup sprint11-standards
+test-sprint11-cleanup: ## Cleanup contracts; supply disposable CYCLE_SETTINGS and private storage roots
+	mkdir -p $(BASELINE_OUT)
+	$(BASELINE_ENV) DOTENV_DISABLED=1 $(CYCLE_PYTHON) -m pytest -p no:cacheprovider \
+		-o addopts="--strict-markers --tb=short" -q -rfE --ds=$(CYCLE_SETTINGS) \
+		--junitxml=$(BASELINE_OUT)/sprint11.xml \
+		core_apps/advertising/tests core_apps/properties/tests \
+		core_apps/common/test_route_contracts.py core_apps/common/tests_mvp_scope.py \
+		core_apps/chat/tests/test_sprint09_communication.py \
+		core_apps/features/tests/test_staging_simulation_opt_in.py \
+		core_apps/features/tests/test_rental_phase2.py
+
+sprint11-standards: ## Visible import-debt classification, explicit facade surfaces and strict scoped lint
+	DOTENV_DISABLED=1 $(CYCLE_PYTHON) tools/qa/sprint11_standards.py
+	$(CYCLE_PYTHON) -c 'import json, subprocess, sys; paths=json.load(open("sprints/evidence/sprint-11/scoped-lint-files.json")); sys.exit(subprocess.call([sys.executable, "-m", "flake8", "--select=F401,F811,F841", *paths, "tools/qa/sprint11_standards.py"]))'

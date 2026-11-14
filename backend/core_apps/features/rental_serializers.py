@@ -31,3 +31,26 @@ from .rental_serializers_parts.rental_interest_serializer import (
 from .rental_serializers_parts.lease_phase2_serializer import (
     LeasePhase2Serializer,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'serializers',
+    'Lease',
+    'OwnerPaymentProfile',
+    'RentalCommercialPolicy',
+    'RentalInterest',
+    'TermsProposal',
+    'MoneySerializer',
+    'RentalTermsSerializer',
+    'OwnerPaymentProfileSerializer',
+    'OwnerOnboardingBodySerializer',
+    'RentalInterestBodySerializer',
+    'RentalInterestSerializer',
+    'RentalDecisionSerializer',
+    'TermsProposalBodySerializer',
+    'TermsProposalSerializer',
+    'RentalInvitationBodySerializer',
+    'RentalAgreementDraftBodySerializer',
+    'RentalSigningBodySerializer',
+    'LeasePhase2Serializer',
+]

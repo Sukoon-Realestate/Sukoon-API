@@ -40,7 +40,6 @@ from .planning_housing_views_parts.housing_requests import (
     get_request as get_request,
     request_actions as request_actions,
     request_payload as request_payload,
-    _request_values as _request_values,
     housing_requests as housing_requests,
     housing_demand as housing_demand,
     housing_request_detail as housing_request_detail,
@@ -49,6 +48,10 @@ from .planning_housing_views_parts.housing_requests import (
     HousingRequestChangesView as HousingRequestChangesView,
     HousingRequestDetailView as HousingRequestDetailView,
     HousingRequestsView as HousingRequestsView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .planning_housing_views_parts.housing_requests import (  # noqa: F401
+    _request_values,
 )
 from .planning_housing_views_parts.housing_request_action import (
     housing_request_action as housing_request_action,

@@ -107,12 +107,7 @@ def ensure_media_persisted(media):
 
 
 def media_is_available(advertisement):
-    media = getattr(advertisement, "media", None)
-    if not media or not media.banner:
-        return False
-    if media.size_bytes <= 0:
-        return False
-    return media.banner.storage.exists(media.banner.name)
+    return ensure_media_persisted(getattr(advertisement, "media", None))
 
 
 __all__ = [

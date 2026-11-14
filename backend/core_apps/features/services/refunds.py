@@ -28,3 +28,27 @@ from .refunds_parts.remaining_components import (
 from .refunds_parts.execute_refund import (
     execute_refund,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'Decimal',
+    'ROUND_HALF_UP',
+    'transaction',
+    'Sum',
+    'ValidationError',
+    'DepositAgreement',
+    'Lease',
+    'LedgerTransaction',
+    'OwnerPayable',
+    'PaymentAttempt',
+    'RefundRequest',
+    'RentInvoice',
+    'get_rental_provider',
+    'RentalConflict',
+    'invoice_balance_minor',
+    'post_ledger_transaction',
+    'captured_components',
+    'remaining_components',
+    'validate_allocations',
+    'execute_refund',
+]

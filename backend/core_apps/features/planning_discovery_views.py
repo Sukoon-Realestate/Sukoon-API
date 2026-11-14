@@ -56,15 +56,19 @@ from .planning_discovery_views_parts.catalog_matches import (
     catalog_matches as catalog_matches,
     commute_payload as commute_payload,
 )
-from .planning_discovery_views_parts.mock_duration import (
-    _mock_duration as _mock_duration,
+# Supported private imports stay outside the public star-import surface.
+from .planning_discovery_views_parts.mock_duration import (  # noqa: F401
+    _mock_duration,
 )
 from .planning_discovery_views_parts.commute_searches import (
     commute_searches as commute_searches,
-    _commute as _commute,
     commute_detail as commute_detail,
     CommuteDetailView as CommuteDetailView,
     CommuteSearchesView as CommuteSearchesView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .planning_discovery_views_parts.commute_searches import (  # noqa: F401
+    _commute,
 )
 from .planning_discovery_views_parts.commute_results import (
     commute_cancel as commute_cancel,

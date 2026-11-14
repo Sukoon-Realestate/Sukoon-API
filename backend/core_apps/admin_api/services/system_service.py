@@ -13,6 +13,9 @@ from core_apps.admin_api.models import UserReport
 
 from .system_service_parts.logger import (
     logger,
+)
+# Supported private imports stay outside the public star-import surface.
+from .system_service_parts.logger import (  # noqa: F401
     _PUSH_CAMPAIGNS,
 )
 from .system_service_parts.get_audit_logs import (
@@ -23,3 +26,20 @@ from .system_service_parts.get_system_health import (
     get_push_campaigns,
     send_push_notification,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'logging',
+    'datetime',
+    'timezone',
+    'ValidationError',
+    'KYCSubmission',
+    'StaffProfile',
+    'Property',
+    'UserReport',
+    'logger',
+    'get_audit_logs',
+    'get_system_health',
+    'get_push_campaigns',
+    'send_push_notification',
+]

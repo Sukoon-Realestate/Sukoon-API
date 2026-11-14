@@ -16,8 +16,29 @@ from .dashboard_service_parts.get_executive_dashboard_stats import (
     logger,
     User,
     get_executive_dashboard_stats,
+)
+# Supported private imports stay outside the public star-import surface.
+from .dashboard_service_parts.get_executive_dashboard_stats import (  # noqa: F401
     _format_time_ago,
 )
 from .dashboard_service_parts.get_dashboard_overview_stats import (
     get_dashboard_overview_stats,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'logging',
+    'timedelta',
+    'timezone',
+    'get_user_model',
+    'Count',
+    'Q',
+    'Property',
+    'KYCSubmission',
+    'UserReport',
+    'PropertyVisit',
+    'logger',
+    'User',
+    'get_executive_dashboard_stats',
+    'get_dashboard_overview_stats',
+]

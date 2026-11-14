@@ -14,3 +14,13 @@ from .report_serializers_parts.support_ticket_serializer import (
 from .report_serializers_parts.overview_ticket_serializer import (
     OverviewTicketSerializer,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'serializers',
+    'UserReport',
+    'UserReportListSerializer',
+    'UserReportActionSerializer',
+    'SupportTicketSerializer',
+    'OverviewTicketSerializer',
+]

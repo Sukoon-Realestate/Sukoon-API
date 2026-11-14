@@ -60,16 +60,18 @@ from .services.rental_phase3 import (
 
 from .rental_phase3_views_parts.rent_invoice_quote import (
     PaymentReconcileThrottle as PaymentReconcileThrottle,
-    _money as _money,
-    _invoice as _invoice,
-    _attempt as _attempt,
-    _active_session as _active_session,
     quote_payload as quote_payload,
     rent_invoice_quote as rent_invoice_quote,
     RentInvoiceQuoteView as RentInvoiceQuoteView,
 )
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase3_views_parts.rent_invoice_quote import (  # noqa: F401
+    _money,
+    _invoice,
+    _attempt,
+    _active_session,
+)
 from .rental_phase3_views_parts.owner_payables import (
-    _validated_navigation as _validated_navigation,
     payment_attempts as payment_attempts,
     payment_attempt_detail as payment_attempt_detail,
     payment_attempt_reconcile as payment_attempt_reconcile,
@@ -79,6 +81,10 @@ from .rental_phase3_views_parts.owner_payables import (
     PaymentAttemptDetailView as PaymentAttemptDetailView,
     PaymentAttemptReconcileView as PaymentAttemptReconcileView,
     PaymentAttemptsView as PaymentAttemptsView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase3_views_parts.owner_payables import (  # noqa: F401
+    _validated_navigation,
 )
 from .rental_phase3_views_parts.rent_invoice_checkout import (
     rent_invoice_checkout as rent_invoice_checkout,

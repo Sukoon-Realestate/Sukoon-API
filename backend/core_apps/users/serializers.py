@@ -26,3 +26,26 @@ from .serializers_parts.set_user_password_serializer import (
     ResendOtpSerializer,
     SetUserPasswordSerializer,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'get_user_model',
+    'UserCreatePasswordRetypeSerializer',
+    'UserSerializer',
+    'serializers',
+    'PhoneNumberField',
+    'CloudinarySerializerField',
+    'PrivateJourneySerializerMixin',
+    'User',
+    'CreateUserSerializer',
+    'CustomUserSerializer',
+    'CurrentUserSerializer',
+    'CompleteRegisterSerializer',
+    'GoogleAuthSerializer',
+    'AppleAuthSerializer',
+    'FacebookAuthSerializer',
+    'UserDeleteSerializer',
+    'VerifyEmailSerializer',
+    'ResendOtpSerializer',
+    'SetUserPasswordSerializer',
+]

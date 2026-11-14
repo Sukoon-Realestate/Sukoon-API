@@ -64,7 +64,7 @@ class AdminStaffInviteAPIView(APIView):
         email = serializer.validated_data["email"]
         role_name = serializer.validated_data.get("role_name", "مراجع KYC")
 
-        staff = invite_staff_member(
+        invite_staff_member(
             email=email,
             name=name,
             role_name=role_name,

@@ -53,11 +53,14 @@ from .services.rental_phase3 import cairo_instant as cairo_instant
 
 from .rental_phase5_views_parts.maintenance_payload import (
     MAINTENANCE_ACTIONS as MAINTENANCE_ACTIONS,
-    _money as _money,
-    _lease as _lease,
-    _safe_evidence as _safe_evidence,
     maintenance_payload as maintenance_payload,
-    _maintenance as _maintenance,
+)
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase5_views_parts.maintenance_payload import (  # noqa: F401
+    _money,
+    _lease,
+    _safe_evidence,
+    _maintenance,
 )
 from .rental_phase5_views_parts.maintenance_requests import (
     maintenance_requests as maintenance_requests,
@@ -68,8 +71,11 @@ from .rental_phase5_views_parts.maintenance_requests import (
 from .rental_phase5_views_parts.maintenance_action import (
     maintenance_action as maintenance_action,
     change_payload as change_payload,
-    _change as _change,
     MaintenanceActionView as MaintenanceActionView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase5_views_parts.maintenance_action import (  # noqa: F401
+    _change,
 )
 from .rental_phase5_views_parts.change_collection import (
     change_collection as change_collection,

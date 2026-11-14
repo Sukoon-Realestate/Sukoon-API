@@ -1,0 +1,16 @@
+{
+  "routes": 795,
+  "removed": [],
+  "added": [],
+  "metadata_differences": [],
+  "scope": [
+    "name",
+    "methods",
+    "authentication",
+    "permissions",
+    "parsers",
+    "throttles",
+    "aliases",
+    "mvp_allowed"
+  ]
+}

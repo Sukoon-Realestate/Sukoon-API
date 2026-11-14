@@ -47,7 +47,7 @@ class JWTCookieAuthMiddleware(BaseMiddleware):
             try:
                 validated = AccessToken(raw_token)
                 scope["user"] = await _get_user(validated["user_id"], validated.payload)
-            except (TokenError, KeyError) as e:
+            except (TokenError, KeyError):
                 # ! Invalid/expired token -> stays anonymous; consumer decides to reject
                 logger.info("WS authentication rejected")
 

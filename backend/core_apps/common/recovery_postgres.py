@@ -87,7 +87,7 @@ class PostgresRecoveryJournal:
                 self.verify(cursor)
                 cursor.execute("SELECT pg_advisory_lock(%s)", [LOCK_KEY])
                 yield cursor
-        except psycopg2.Error as exc:
+        except psycopg2.Error:
             # Driver exceptions may contain credentials/hosts. Never expose them
             # in an API response. No dispatch is possible after a failed append.
             raise RecoveryRequired(

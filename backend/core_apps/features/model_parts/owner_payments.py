@@ -1,10 +1,7 @@
 """Owner payments models with unchanged Django identities."""
 
-import uuid
 from django.conf import settings
 from django.db import models
-from django.db.models import F, Q
-from django.utils import timezone
 from core_apps.common.models import TimeStampedModel
 
 

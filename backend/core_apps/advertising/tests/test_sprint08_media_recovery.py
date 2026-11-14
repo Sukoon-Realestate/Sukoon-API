@@ -8,6 +8,7 @@ from unittest.mock import patch
 import pytest
 from django.core.management import call_command
 from django.core.management.base import CommandError
+from django.urls import reverse
 
 from core_apps.advertising.models import AdvertisementMedia
 from core_apps.advertising.services_parts.ensure_media_persisted import (
@@ -31,7 +32,24 @@ def test_missing_historical_media_probe_never_writes_or_fabricates(user):
     delete.assert_not_called()
 
 
-def test_explicit_restore_requires_exact_original_bytes_and_apply(user, tmp_path):
+def test_missing_artwork_gets_leave_storage_and_metadata_untouched(user, auth_client):
+    ad = ads(user, 1)[0]
+    media = ad.media
+    before = AdvertisementMedia.objects.filter(pk=media.pk).values().get()
+    with patch.object(media.banner.storage, "exists", return_value=False), patch.object(
+        media.banner.storage, "save", side_effect=AssertionError("GET wrote artwork")
+    ), patch.object(
+        media.banner.storage, "delete", side_effect=AssertionError("GET deleted artwork")
+    ), patch.object(
+        AdvertisementMedia, "save", side_effect=AssertionError("GET repaired metadata")
+    ):
+        assert auth_client.get(reverse("advertising:advertisement-media", args=[ad.id])).status_code == 404
+        assert auth_client.get(reverse("advertising:owner-advertisement-detail", args=[ad.id])).status_code == 200
+        assert auth_client.get(reverse("advertising:tenant-home")).status_code == 200
+    assert AdvertisementMedia.objects.filter(pk=media.pk).values().get() == before
+
+
+def test_explicit_restore_requires_exact_original_bytes_and_apply(user, tmp_path, caplog):
     ad = ads(user, 1)[0]
     media = ad.media
     content = b"original verified upload bytes"
@@ -41,6 +59,7 @@ def test_explicit_restore_requires_exact_original_bytes_and_apply(user, tmp_path
     media.save()
     source = tmp_path / "original.png"
     source.write_bytes(content)
+    caplog.set_level("INFO", logger="core_apps.advertising.management.commands.restore_advertising_media")
     with patch.object(media.banner.storage, "exists", return_value=False), patch.object(
         media.banner.storage, "save", return_value=media.banner.name
     ) as save:
@@ -57,6 +76,12 @@ def test_explicit_restore_requires_exact_original_bytes_and_apply(user, tmp_path
         )
         save.assert_called_once()
         assert save.call_args.args[1].read() == content
+    audit = [record.getMessage() for record in caplog.records if "advertising_media_repair" in record.getMessage()]
+    assert len(audit) == 2
+    assert "applied=False" in audit[0]
+    assert "applied=True" in audit[1]
+    assert all(str(ad.id) in entry and media.sha256 in entry for entry in audit)
+    assert all(str(source) not in entry and content.decode() not in entry for entry in audit)
     source.write_bytes(b"x" * len(content))
     with pytest.raises(CommandError, match="digest"):
         call_command("restore_advertising_media", str(ad.id), str(source), apply=True)

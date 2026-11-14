@@ -34,17 +34,23 @@ from .planning_transition_views_parts.transition_projection import (
     transition_projection as transition_projection,
     transition_payload as transition_payload,
     transition_for as transition_for,
-    _candidates as _candidates,
-    _nominate as _nominate,
+)
+# Supported private imports stay outside the public star-import surface.
+from .planning_transition_views_parts.transition_projection import (  # noqa: F401
+    _candidates,
+    _nominate,
 )
 from .planning_transition_views_parts.transition_detail_action import (
-    _transition_list as _transition_list,
     move_out_notices as move_out_notices,
     replacement_requests as replacement_requests,
     transition_detail_action as transition_detail_action,
     MoveOutNoticesView as MoveOutNoticesView,
     ReplacementRequestsView as ReplacementRequestsView,
     TransitionDetailActionView as TransitionDetailActionView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .planning_transition_views_parts.transition_detail_action import (  # noqa: F401
+    _transition_list,
 )
 from .planning_transition_views_parts.reconcile_transitions import (
     replacement_candidates as replacement_candidates,

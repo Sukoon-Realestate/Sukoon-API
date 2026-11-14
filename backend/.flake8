@@ -9,5 +9,5 @@ exclude =
     .venv,
     static,
     manage.py
-plugins = flake8_django 
-ignore = F401,W503
+plugins = flake8_django
+ignore = W503

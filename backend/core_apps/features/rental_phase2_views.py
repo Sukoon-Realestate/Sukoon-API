@@ -86,19 +86,22 @@ from .services.tenancy_invitations import (
 )
 
 from .rental_phase2_views_parts.owner_payment_profile import (
-    _paginate as _paginate,
-    _replay_response as _replay_response,
-    _remember_session as _remember_session,
-    _participant_interest as _participant_interest,
-    _participant_proposal as _participant_proposal,
-    _participant_lease as _participant_lease,
-    _money_minor_from_offer as _money_minor_from_offer,
-    _json_safe as _json_safe,
-    _validate_terms_offer as _validate_terms_offer,
-    _event as _event,
-    _notify as _notify,
     owner_payment_profile as owner_payment_profile,
     OwnerPaymentProfileView as OwnerPaymentProfileView,
+)
+# Supported private imports stay outside the public star-import surface.
+from .rental_phase2_views_parts.owner_payment_profile import (  # noqa: F401
+    _paginate,
+    _replay_response,
+    _remember_session,
+    _participant_interest,
+    _participant_proposal,
+    _participant_lease,
+    _money_minor_from_offer,
+    _json_safe,
+    _validate_terms_offer,
+    _event,
+    _notify,
 )
 from .rental_phase2_views_parts.owner_onboarding_session import (
     owner_onboarding_session as owner_onboarding_session,

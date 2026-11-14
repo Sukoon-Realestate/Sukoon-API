@@ -1,0 +1,5 @@
+{
+  "scope": "changed application modules",
+  "changed_signatures_or_annotations": [],
+  "limit": "AST compatibility check; no configured mypy/pyright dependency; not full static type analysis"
+}

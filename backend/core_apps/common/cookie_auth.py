@@ -34,7 +34,7 @@ class CookieAuthentication(JWTAuthentication):
                 touch_session(user, validated_token)
                 return user, validated_token
 
-            except TokenError as e:
+            except TokenError:
                 logging.info("JWT validation rejected")
 
         return None

@@ -17,3 +17,16 @@ from .planning_notifications_parts.record_event import (
 from .planning_notifications_parts.deliver_planning_events import (
     deliver_planning_events,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'transaction',
+    'timedelta',
+    'settings',
+    'Q',
+    'timezone',
+    'PlanningEvent',
+    'record_event',
+    'record_lease_reminders',
+    'deliver_planning_events',
+]

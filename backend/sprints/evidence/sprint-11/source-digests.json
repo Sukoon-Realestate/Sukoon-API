@@ -1,0 +1,332 @@
+[
+  {
+    "path": ".flake8",
+    "before": "b04aeb10bb4fdca2dac6c8e6f4567530e5c2e3f6feb2f84305e8db271dae1afb",
+    "after": "49a6058acdfd82328c10740152f55327302aa2dfe2ce6a0acf6ad45524b03166"
+  },
+  {
+    "path": "CLAUDE.md",
+    "before": "ca9be730ab9f3083fe2e02d2df34bfaa082a12d967105d0105c6f022d0e58126",
+    "after": "5177543424dfcea17d88933aec97062a9fa2e4b782953573a92b9bf95a011825"
+  },
+  {
+    "path": "Makefile",
+    "before": "4846cf319f5c3b309a70b17551dd09af4409e00ac2d1923ff92aa6508727a2ce",
+    "after": "c1478dae122f3284ec6712fa6445bf3a6a7e2cbaf476604d8ec08b4e7b66a45d"
+  },
+  {
+    "path": "core_apps/admin_api/serializers/report_serializers.py",
+    "before": "4fdbeb3e90d2d6f5196d3a5d11d5840bd49797c7a005ef9666badd83f9dc4a3a",
+    "after": "f498f005a488a0f13ae7587aabce4b9699f8f0f56a8e12db2682ede626d8f3f1"
+  },
+  {
+    "path": "core_apps/admin_api/services/dashboard_service.py",
+    "before": "cf8768e3a60baec8e00395f6b2289d0b47e5b8a30dfeb55552a9b64d5aaf0791",
+    "after": "6b2c9ce8610241ad942b5b0fa0f209b4a04c1176de6f473f5ebc1d5523be9320"
+  },
+  {
+    "path": "core_apps/admin_api/services/financials_service.py",
+    "before": "44fee5e483e03fa73d9dfb4f55e320c260a436ce547595defb98a14ef89161ba",
+    "after": "92411e055d8dffb09f91eb1dc8b52a6e965c4b0c0afd41aeb326b560d39ecfa8"
+  },
+  {
+    "path": "core_apps/admin_api/services/property_service.py",
+    "before": "db3ddab0382932ea922339a4c264ed7b192577ccfc093fab981a3917c13ba445",
+    "after": "39ca1fb93d99ec81dca42d6baf201f2434a16002c66cf710181433f8716532e5"
+  },
+  {
+    "path": "core_apps/admin_api/services/system_service.py",
+    "before": "30a2b7ccccb65a8f1b9b12e708d09bf565c5e6195f8b04f4478ee92ee9739627",
+    "after": "052fa5fc78922960ae3d189b3eed854ec4dbfbf3e13aa61bc374877fbefb0ac4"
+  },
+  {
+    "path": "core_apps/admin_api/views/staff.py",
+    "before": "55f2fca78f992c2d072fb3fedb3acb3a300053690a4c9c6d31e7784190081c9d",
+    "after": "077f55bd32a94b835f0546f8d933faaf51464eaeb2abc09d56f645eb855e6c5d"
+  },
+  {
+    "path": "core_apps/advertising/management/commands/restore_advertising_media.py",
+    "before": "f6d87f52ec5f5fad230503b158ec002d9b9c547bdcbcebd2c47cc239eb68cedf",
+    "after": "1fc899b1ac51a442759388d02a74e1a6175578ea1e461b73721f6a0f8156808f"
+  },
+  {
+    "path": "core_apps/advertising/services.py",
+    "before": "1bb72f85a5ff6e32defbcde4735d11ec1cf6e752dde24d1ace77824f9df7810f",
+    "after": "f6286361c576fb181d5113bdea1ee07648d567acdca5966316606378c9d7e990"
+  },
+  {
+    "path": "core_apps/advertising/services_parts/ensure_media_persisted.py",
+    "before": "2ccedf8ef638b2c5e36946dab475aa5e4600ebca46e0453ce256d0b78663193c",
+    "after": "2a62cdb435edf0d46cdbd28a178417d8049fbcbdcdfcfc912c55ca3b944c272e"
+  },
+  {
+    "path": "core_apps/advertising/tests/test_sprint08_media_recovery.py",
+    "before": "3556df653ada16b291f7a0ceb7af20417821e02c29f04e9de6b149bc8645673d",
+    "after": "cd110eb363c9f805e739b87a2eafa612b05487b8f756f76a0b5c31f9d2398590"
+  },
+  {
+    "path": "core_apps/common/cookie_auth.py",
+    "before": "7d4824e1491fb0fb06f1752e5d02a361b2c2da0787df1a84a786e30c410a8140",
+    "after": "c262b95c963b3feb1632ae1fca307e317fc1d8afadbe84eaa5a1a920d9284666"
+  },
+  {
+    "path": "core_apps/common/recovery_postgres.py",
+    "before": "3963025e97cacc39b19c716a4d5e30d4cb591d53334dfc784f423a34fbdc615c",
+    "after": "9d3c338247bf5bbebac449276d6c46adc08bb285eac01a69a36b58eeae476682"
+  },
+  {
+    "path": "core_apps/common/ws_auth.py",
+    "before": "0271ee822250532fff1bef2f98043a236b2c788fcd455fe1c28594b111bf772b",
+    "after": "7fba8ba95beb2b4f0731cce9c492daf43fadc84f6ec295301afe282ce588b9b9"
+  },
+  {
+    "path": "core_apps/features/model_parts/owner_payments.py",
+    "before": "3916c45ad25bcaa218564af2372a1f96b9fc2660f7f51f8e90494284643b6223",
+    "after": "fe81bab6ac3796132470d2ceacc16ffead8bcda197e42b4f55c75837a0a15dac"
+  },
+  {
+    "path": "core_apps/features/planning_condition_views.py",
+    "before": "e8a05f36488e75cde70b8d3d3148e239ea0bedb1aa6d6a6309551f0c2605ac26",
+    "after": "d17a8d65e6576b358ea2257f9899184722e335a1dd880b5ad52d070eca13552d"
+  },
+  {
+    "path": "core_apps/features/planning_discovery_views.py",
+    "before": "5976a2628340537e87bd6316813a2a7074c592ebb4cfe25a46aec4a89bac562f",
+    "after": "e2dd7b6ddfaf1e0afd7d2f08978e7c6fdbab367060e15f97e611049411b08200"
+  },
+  {
+    "path": "core_apps/features/planning_group_views.py",
+    "before": "c1e609638f22e622c0d6fdc8dca50237dd2b47291cfcf0ce099dd04721537465",
+    "after": "1f69c940c164c8c036a7ede96dbb113ef0d376a8ea21dd23be4cfc99b3ac97f0"
+  },
+  {
+    "path": "core_apps/features/planning_housing_views.py",
+    "before": "e88fa86a98370082f2512b6a58b27b141b8afc3643a3ec999ff775ff7946aa00",
+    "after": "74be9368e8d07d9b6f41f2a0f7e6fb96b9e3b8a97ceba136fb4700adc6b255d9"
+  },
+  {
+    "path": "core_apps/features/planning_models.py",
+    "before": "be7c84325984ef1c4fb4e04d61d93db4e0d7c8370f72ca6150f585d83836f00f",
+    "after": "dab483e73184acebdb8654b9474cc0191199ee5b9dde99ebec5acaa59130ba4f"
+  },
+  {
+    "path": "core_apps/features/planning_transition_views.py",
+    "before": "175bb5340df9a885443f64e61eab7fca5c3b5617a4cef742b5f5add7444f5fa9",
+    "after": "58a8d0f072c8c7eed357d8b1956bc9aebfa796820ab16724dd939621a498c34b"
+  },
+  {
+    "path": "core_apps/features/rental_phase2_views.py",
+    "before": "9917c1d6d5c8abd0a45931f0d1f19956ede751a5d9f8b56b6aef1088ee7c7527",
+    "after": "be68d8ba916b14a5ec0a084926ac960ad55dcb9f57e26fcd38ded75dc3eed723"
+  },
+  {
+    "path": "core_apps/features/rental_phase3_views.py",
+    "before": "e8c16a6794be0c0e760e6473fa744267629ec985c5778411525a45f1a41d3379",
+    "after": "d198198b8bd8299333f902c72e2855f82179dbad9393b2c60cb574a0862ed2fb"
+  },
+  {
+    "path": "core_apps/features/rental_phase4_views.py",
+    "before": "15bdc6515a630a0d376d28930a5058f020a2792f265d749930b692429ebd1a57",
+    "after": "82956f76ca116a784275079feaa77bbbd97ac91fae60b4160658f6a5f9224212"
+  },
+  {
+    "path": "core_apps/features/rental_phase5_views.py",
+    "before": "88359ec1cae326ca8eaf68609a704bd79edb56e1cd25e8a682ec50793f3fca02",
+    "after": "ee3abc29e4c7a8c0b2df025d9b0b11b601f5b10fe956a3842728353d1b70a881"
+  },
+  {
+    "path": "core_apps/features/rental_phase6_views.py",
+    "before": "817c4d10bf7c38e97e4b246d03201f6a24e85ce7c66818c04ba47ce5d0c3d4bd",
+    "after": "5903d78388c678ca9c45c5c26cc5fced6034260ed4e2175b86513814a148e2de"
+  },
+  {
+    "path": "core_apps/features/rental_serializers.py",
+    "before": "095c46888f5f70dd21701b90b669996cb05f1921a7d4323296b63d65e248dcb2",
+    "after": "c03617cf853026fdb1c5f924d973b79bcd85e7ea75d5c7d7fcc313dae6f71a99"
+  },
+  {
+    "path": "core_apps/features/serializers.py",
+    "before": "a6f396ce80f35ecac565baf7a947cd2b8edb470d146bf40db224831d2f4b77c4",
+    "after": "f61096cc2a22960abd231a2e745ac14a7377e3d4809ceb926bd60bbc1894c5de"
+  },
+  {
+    "path": "core_apps/features/services/lifestyle_matching.py",
+    "before": "a911769d1c87fad3a2faf2779779700f101723a33110b2576ca740e07bb31a1a",
+    "after": "4b13457a74c991b0debccc208ab01b538820d7c53984c30f695550e3a807cca7"
+  },
+  {
+    "path": "core_apps/features/services/planning.py",
+    "before": "2a8bff5c8897a2b417ce81dfd8fc7a8d03cb22fdc4dcdfb27ac67e436e98baf6",
+    "after": "fe5ec094c7ac35e393ea05cc6f20b2a0fbafb881a45b8b3f85025bfa2c22c85d"
+  },
+  {
+    "path": "core_apps/features/services/planning_notifications.py",
+    "before": "93f1536045e122161244adbb3c9839aba538f2afb5e84561e2d18b4c9af34c5a",
+    "after": "35513ea44dc9697395eb2a7d62a65c9110cbd27169a08427a6bdf236982814b4"
+  },
+  {
+    "path": "core_apps/features/services/planning_providers.py",
+    "before": "ff2e362bfa4e1bac0f7e4c888b0ba5ddf7b1744f9ca10c613abe7af6434273b8",
+    "after": "7b0eafe1ba68b931de64caec222a051efa0d4f7b0a829dff8205be12e2f891e0"
+  },
+  {
+    "path": "core_apps/features/services/refunds.py",
+    "before": "ab6240471f81ffe5ce8ae8d86a67f9f5abc1280648721912549aaee0cb1c7d43",
+    "after": "ccadf59008974162ecb98f3dd6f017a2d230b675bc35bc2ec043073bcf289b57"
+  },
+  {
+    "path": "core_apps/features/services/rental_foundation.py",
+    "before": "c188762131c561894bf33eac44ab1aa051aaa4271393eaf1605a5e55d5c70e9d",
+    "after": "ffd64417417ea3928329e4443ed505a4698340e398bbb984b5ea3e24c7fde993"
+  },
+  {
+    "path": "core_apps/features/services/rental_phase2.py",
+    "before": "1c4d91909093d040d0d35a772748376b08517ce3a33f71f582f35f12afaabd26",
+    "after": "1782b2edec41b438c5f3eec544728c00c02108f5b51c3f79effc45cedb191bdf"
+  },
+  {
+    "path": "core_apps/features/services/rental_phase3.py",
+    "before": "251544e467853e31b741d6f273c3a4c642dcc42105d04f98401835856f3db225",
+    "after": "652cb22a351f479d5edded35b4ca98fe402b279b7c3c7fa09ffbcaa1422b453f"
+  },
+  {
+    "path": "core_apps/features/services/settlements.py",
+    "before": "f0ba866640dc0493c956eccd043097b25261d46ea8cf1253bdd20f13650c8aea",
+    "after": "e3c2e07bc8e46fc23729f12db44a1d3bb29c5a6530b633f4e67bb0de342ed720"
+  },
+  {
+    "path": "core_apps/features/services/tenancy_invitations.py",
+    "before": "9abccebeac406e9dbae0b02db6af7e550c4ef1fec0ee8633f97a9a1e6bdee2a8",
+    "after": "e4865ec36161d79eb324e2587066070bdb7cb1b41bc3c2eddce9bda5a92c235d"
+  },
+  {
+    "path": "core_apps/features/tasks.py",
+    "before": "f14ef40948fe62df139489b4bb71943f8e27c9471b7810be87a5e84e5a45110c",
+    "after": "8007237357edddc9809d00be526348c5b7cf09d105b35c6f3d5c0da26943866e"
+  },
+  {
+    "path": "core_apps/features/views.py",
+    "before": "550add3e4143fac5e2de00676fe31514df09686ea61781c92be23cc2feaa94dd",
+    "after": "2ed0277a816f8f73f094f7317d366434ba8995cc1010cc32cd0b77dce2f1b790"
+  },
+  {
+    "path": "core_apps/notifications/services/notification_service.py",
+    "before": "7f6b0d62401784d21a9858fdef9f2ae01b8ffd5ae5e9d3a0788018f5b2df6157",
+    "after": "c7ff034131d17e1a98d874344e7c72fc14e9d3803e1826c89c935b62f4a589b8"
+  },
+  {
+    "path": "core_apps/profiles/serializers.py",
+    "before": "9c278c36509a41d0bd2506df9534b2814c6d59b5368502583f1dc2d6203f4189",
+    "after": "e3ab753911da5be92b59bc7c12eddb8733a81ca419577fa7ab187375bcd3a63d"
+  },
+  {
+    "path": "core_apps/profiles/services/profile_service.py",
+    "before": "91344fc67468cf201a5a242ce9e37dab63edb4582d6baaae23f0ccd8dff483ed",
+    "after": "e5df9ca2da973af7a0b3213be3f6cfb22e6467964b20b38dccffeeb20f772cf1"
+  },
+  {
+    "path": "core_apps/profiles/views.py",
+    "before": "05e1380baf98457c46666abc64cb74113ee7a177db2fc618baac928cabd9e058",
+    "after": "6089016e9549cc9cc3c10a1b15c6cad1e52310e468934f94a685d7c0c4b23a69"
+  },
+  {
+    "path": "core_apps/properties/models/visit.py",
+    "before": "457ecc09a1531c6402cfa4d7fee28615cbd82d63c61caf2765e711e6445c008c",
+    "after": "0789234dc68e9c54cac02cd78e204b24dd04eb559ee19d7ecb051999c169dfbe"
+  },
+  {
+    "path": "core_apps/properties/rental_inventory.py",
+    "before": "1e379c8a5aaa60a8204f8ccd24275a71e944fce0d4e080fd2742c7dbf9178c04",
+    "after": "6d0a51df916e18a894c427ba833760e1f71f6849bf47b06b59292f7e38f223a9"
+  },
+  {
+    "path": "core_apps/properties/serializers/owner_dashboard.py",
+    "before": "0c6a5d1a749fc3a9e59d13496d38aeecc6ca27d2ccfff7b2ca1de3299e59e23f",
+    "after": "7dbafbfd75a27bcf2d8b9e59c9750ac69b3bbde3143f9eb471ffd283cb6c96d6"
+  },
+  {
+    "path": "core_apps/properties/serializers/property.py",
+    "before": "169de18d7bc7e8d5eb6d18f2444cdab5493b606e2d18b633a60fc9bd48b6b53d",
+    "after": "ab18c84c77f6ff3c613020c00faa1413dc4d3dc286bf36556e8aa4fa9daff2dd"
+  },
+  {
+    "path": "core_apps/properties/serializers/visit.py",
+    "before": "c0ff677812e00229c7b6335a7a15bc9f45ba4e9df5599b2ddccafb53949499ca",
+    "after": "a72f507cd79ea01df43cfe0244164189226d5ff5ac82960fa77c1bd55c0bdaf1"
+  },
+  {
+    "path": "core_apps/properties/serializers/visit_parts/tenant_visit_request_serializer.py",
+    "before": "f579522fc9e42497fd4dd41dba252ac86a4d486b0ea18d11b037490fa934c320",
+    "after": "f4d377532d8ae908ab773f22a28faaa75509072dca4bdc15347efddd78662e25"
+  },
+  {
+    "path": "core_apps/properties/services/post_visit_decision.py",
+    "before": "2e5e36abe4d68b0863b1e2a13b8abf4ce14ea7d48a0e322bdeb4f40e0e148a32",
+    "after": "0fff486d6a385b79950f7b9dbfe347e9db3332dae70657b5595c998a4cc3f809"
+  },
+  {
+    "path": "core_apps/properties/services/property.py",
+    "before": "46bc35a140eb391f4dc55a82a22379bc39df9d451f73ffc2ede1df8b75d16fd3",
+    "after": "306f4eb78afeb2f2f2dcc5d7b88c7182e601bd6ba793f7362c100fe53ee06533"
+  },
+  {
+    "path": "core_apps/properties/services/property_operations/property_catalog.py",
+    "before": "82edf7bbf81e87dfff98ae57b11728d0a9b4ae82033ef0830d76fb4ee50db2b0",
+    "after": "fc4950a30ad40f4f54120f88bb3213a1c96032f07b3fceed3875738dd0c7afa8"
+  },
+  {
+    "path": "core_apps/properties/services/visit.py",
+    "before": "29e0dd0cb5e09d8a87fb39f4d9459fb2c15500e68926b8efedf6f77cfc7311ed",
+    "after": "0ce46e4963b7f8d41b09501c59143f97059ad86f4cdfccc958539238b08dc226"
+  },
+  {
+    "path": "core_apps/properties/views/owner_dashboard.py",
+    "before": "10f23a09821a5c90c56842e9380d2a3e4b66a372088cf8bfb79c1f3aee15012a",
+    "after": "fafb1b72f200f907d33032b3de322ad937aa12192b9274cead8b4be0c041ca80"
+  },
+  {
+    "path": "core_apps/properties/views/property.py",
+    "before": "f21fb506cf75164bf52c531aa7cfd442f6a20d0ba70608db4569cca2dc32f78a",
+    "after": "61396e0f558865533cf3669051ee77dbaa9640001dfdfe403a6378009f122208"
+  },
+  {
+    "path": "core_apps/properties/views/visit.py",
+    "before": "59301e81f2eacbcca566f414d1d7e6bc2dea6c5acfc19ef4d56ee9f5036cbf60",
+    "after": "bb2a94f3a161117063db58e708c51435bd8cfd685beec57f3d72514db0f88333"
+  },
+  {
+    "path": "core_apps/support/services/ticket_service.py",
+    "before": "3a2b72c1183ae052e3eca9bf8213079ebddadf00dccbf38e18f415f4f91c7c96",
+    "after": "b5f7d84fdb9575d8ac78bf8607db080ec38f65960d196623699b1bc8ace27664"
+  },
+  {
+    "path": "core_apps/users/serializers.py",
+    "before": "a545f6b238b5635951aa720832a2d9dbfab0a03f9468beda44912d5dc1cbdf1b",
+    "after": "e9cdc8f9964e72f657c8b7c56ff06d3cd7cbc52378220a2e02cb8e7e750a05ab"
+  },
+  {
+    "path": "core_apps/users/services/social_auth_service.py",
+    "before": "9939ba80ef06fb7d8394402c8773a9ba180442dd367a588ebb626e2dcc013e97",
+    "after": "b22599bd70b2a7f3dc74d7d6e284f766586b70e06083f0fad9fe028aaa6e1b46"
+  },
+  {
+    "path": "core_apps/users/views.py",
+    "before": "da600204b43ae4ecdf14fa8e27980559aa83d0ba4990ffb58645a7c9b307f3ab",
+    "after": "c4c9164c6494aed2238e01598d60eaefb0588287cf31981ad75dddd18e06d3fe"
+  },
+  {
+    "path": "core_apps/users/views_parts/set_auth_cookies.py",
+    "before": "cc3119ac0d4c2a7051c72bc2b2e3f5d1fb92dae712dc682e2966f39bead528f4",
+    "after": "455f13bfe2add54b469fff6db2f32bbe938a40e5942c3793a637e656b6ca915e"
+  },
+  {
+    "path": "sprints/sprint-11-cleanup-and-standards.md",
+    "before": "82aa4b2851327329a7e8754aa3b027f0e98df02206bfdffe9c615736b4eb54f7",
+    "after": "458f4c5673967b9271bb9f24bd794b11d06fd8b7135990a223154eb962f16a24"
+  },
+  {
+    "path": "tools/qa/sprint11_standards.py",
+    "before": null,
+    "after": "0c79f3ba5cca027b5726a8deaf3c4fd9faa780e5c01e43db495a8d640721ad54"
+  }
+]

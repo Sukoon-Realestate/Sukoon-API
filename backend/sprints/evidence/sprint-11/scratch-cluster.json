@@ -1,0 +1,16 @@
+{
+  "owner": "Sprint 11 task",
+  "root": "/private/tmp/sukoon-sprint11",
+  "version": "postgres (PostgreSQL) 18.6 (Homebrew)",
+  "socket": "/private/tmp/sukoon-sprint11/pg/socket",
+  "port": 55451,
+  "role": "sprint11",
+  "listen_addresses": "",
+  "max_locks_per_transaction": 1024,
+  "databases": [
+    "test_sprint11_mvp",
+    "test_sprint11_restoration"
+  ],
+  "existing_cluster_used": false,
+  "state": "stopped after both full suites completed"
+}

@@ -18,3 +18,21 @@ from .notification_service_parts.logger import (
 from .notification_service_parts.notification_service import (
     NotificationService,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'logging',
+    'Any',
+    'Dict',
+    'Optional',
+    'transaction',
+    'QuerySet',
+    'timezone',
+    'NotFound',
+    'ValidationError',
+    'DeviceToken',
+    'Notification',
+    'FCMService',
+    'logger',
+    'NotificationService',
+]

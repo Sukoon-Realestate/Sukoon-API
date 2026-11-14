@@ -29,9 +29,36 @@ from .settlements_parts.financial_snapshot import (
 from .settlements_parts.prepare_settlement import (
     prepare_settlement,
 )
-from .settlements_parts.apply_credit import (
+# Supported private imports stay outside the public star-import surface.
+from .settlements_parts.apply_credit import (  # noqa: F401
     _apply_credit,
 )
 from .settlements_parts.execute_settlement import (
     execute_settlement,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'uuid',
+    'transaction',
+    'timezone',
+    'ValidationError',
+    'DepositAgreement',
+    'FinalSettlement',
+    'InvoiceLine',
+    'Lease',
+    'OwnerPayable',
+    'PaymentAttempt',
+    'RefundRequest',
+    'RentInvoice',
+    'RentalConflict',
+    'fingerprint',
+    'invoice_balance_minor',
+    'post_ledger_transaction',
+    'remaining_components',
+    'CHARGE_TYPES',
+    'LINE_TYPES',
+    'financial_snapshot',
+    'prepare_settlement',
+    'execute_settlement',
+]

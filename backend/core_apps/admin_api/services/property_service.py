@@ -23,9 +23,12 @@ from core_apps.admin_api.models import UserReport
 from .property_service_parts.get_admin_properties_queryset import (
     logger,
     User,
-    _get_property_by_identifier,
     get_admin_properties_queryset,
     get_admin_property_metrics,
+)
+# Supported private imports stay outside the public star-import surface.
+from .property_service_parts.get_admin_properties_queryset import (  # noqa: F401
+    _get_property_by_identifier,
 )
 from .property_service_parts.get_admin_property_detail import (
     get_admin_property_detail,
@@ -33,3 +36,32 @@ from .property_service_parts.get_admin_property_detail import (
     reject_admin_property,
     request_admin_property_revision,
 )
+
+# Preserve the existing public import surface, including compatibility seams.
+__all__ = [
+    'uuid',
+    'logging',
+    'ContentType',
+    'get_user_model',
+    'Count',
+    'Q',
+    'Avg',
+    'get_object_or_404',
+    'timezone',
+    'NotFound',
+    'ValidationError',
+    'Property',
+    'PropertyImage',
+    'PropertyType',
+    'PropertyVisit',
+    'ContentView',
+    'UserReport',
+    'logger',
+    'User',
+    'get_admin_properties_queryset',
+    'get_admin_property_metrics',
+    'get_admin_property_detail',
+    'approve_admin_property',
+    'reject_admin_property',
+    'request_admin_property_revision',
+]

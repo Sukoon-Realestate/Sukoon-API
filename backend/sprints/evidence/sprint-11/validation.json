@@ -1,0 +1,2982 @@
+{
+  "date": "2026-11-14",
+  "scope": "Sprint 11 only; isolated local tests",
+  "runs": {
+    "full/mvp/junit.xml": {
+      "cases": 6173,
+      "passed": 6140,
+      "failed_or_errored": [],
+      "skipped_or_expected_failures": [
+        {
+          "test": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "type": "pytest.skip",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "test": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "type": "pytest.skip",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "test": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_advanced_company_passport_v2::test_two_company_packages_mock_sign_payment_and_uncertain_reconciliation",
+          "type": "pytest.xfail",
+          "reason": "BUG-AUTH-01: company_sign/company_pay require member_for() membership flags while the HTTP signer/payer role exists only through approved mandates; no member can satisfy both. Needs a product decision on the signing/payment authority model."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_company_push_retry_rechecks_revoked_membership",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_unknown_company_send_can_retry_exact_identity_with_membership_fence",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_company_retry_rejects_wrong_period_and_authority_revocation",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_discussion_grants_case_access_and_never_approves_from_text",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_reassignment_revokes_old_actor_and_preserves_business_history",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_company_role_loss_revokes_private_attachments_and_delayed_notifications",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_company_chat_tools_keep_coordinator_and_personal_boundaries",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_housing_request_and_authoritative_offer_bodies",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_invite_body",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_cost_proposal_body",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_condition_create_and_acknowledgement_roundtrip",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_notice_body",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_incoming_replacement_consent_body",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_commute_and_assistant_bodies",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_refund_body_and_recovery_subject",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_purchase_events::test_company_recipients_and_retries_require_current_read_authority[after_failed_push]",
+          "type": "pytest.xfail",
+          "reason": "BUG-AUTH-01: a member with can_execute_payments but no approved pay mandate has billing authority yet no selectable company role, so their company notice is suppressed at delivery."
+        },
+        {
+          "test": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[image/upload/v1700000000/someone-elses-avatar-profile_image-profile-update]",
+          "type": "pytest.skip",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "test": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[image/upload/v1700000000/someone-elses-avatar-image-profile-update]",
+          "type": "pytest.skip",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "test": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[https://res.cloudinary.com/test_cloud/image/upload/v1/someone-elses-avatar.jpg-profile_image-profile-update]",
+          "type": "pytest.skip",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "test": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[https://res.cloudinary.com/test_cloud/image/upload/v1/someone-elses-avatar.jpg-image-profile-update]",
+          "type": "pytest.skip",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "test": "core_apps.virtual_tours.tests.test_capture::test_partial_panorama_does_not_become_full_tour",
+          "type": "pytest.skip",
+          "reason": "could not import 'cv2': No module named 'cv2'"
+        },
+        {
+          "test": "core_apps.virtual_tours.tests.test_capture_config::test_strict_preflight_requires_successful_requested_provider_probe[live]",
+          "type": "pytest.skip",
+          "reason": "Capture readiness needs OpenCV (not in Pipfile.lock)"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_primary_rollback_does_not_erase_durable_external_fact",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_concurrent_dispatch_has_one_original_transport",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_unknown_outcome_survives_reconnection_and_never_resends",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_primary_cluster_and_privileged_role_are_rejected",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_runtime_role_cannot_mutate_or_delete_history",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_late_original_and_company_retry_commit_once",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_concurrent_case_send_uses_one_canonical_message",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 4763.739
+    },
+    "full/restoration/junit.xml": {
+      "cases": 6173,
+      "passed": 6140,
+      "failed_or_errored": [],
+      "skipped_or_expected_failures": [
+        {
+          "test": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "type": "pytest.skip",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "test": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "type": "pytest.skip",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "test": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_advanced_company_passport_v2::test_two_company_packages_mock_sign_payment_and_uncertain_reconciliation",
+          "type": "pytest.xfail",
+          "reason": "BUG-AUTH-01: company_sign/company_pay require member_for() membership flags while the HTTP signer/payer role exists only through approved mandates; no member can satisfy both. Needs a product decision on the signing/payment authority model."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_company_push_retry_rechecks_revoked_membership",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_unknown_company_send_can_retry_exact_identity_with_membership_fence",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_company_retry_rejects_wrong_period_and_authority_revocation",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_discussion_grants_case_access_and_never_approves_from_text",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_reassignment_revokes_old_actor_and_preserves_business_history",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_company_role_loss_revokes_private_attachments_and_delayed_notifications",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_company_chat_tools_keep_coordinator_and_personal_boundaries",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_housing_request_and_authoritative_offer_bodies",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_invite_body",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_cost_proposal_body",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_condition_create_and_acknowledgement_roundtrip",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_notice_body",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_incoming_replacement_consent_body",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_commute_and_assistant_bodies",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_refund_body_and_recovery_subject",
+          "type": "pytest.skip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "test": "core_apps.features.tests.test_purchase_events::test_company_recipients_and_retries_require_current_read_authority[after_failed_push]",
+          "type": "pytest.xfail",
+          "reason": "BUG-AUTH-01: a member with can_execute_payments but no approved pay mandate has billing authority yet no selectable company role, so their company notice is suppressed at delivery."
+        },
+        {
+          "test": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[image/upload/v1700000000/someone-elses-avatar-profile_image-profile-update]",
+          "type": "pytest.skip",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "test": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[image/upload/v1700000000/someone-elses-avatar-image-profile-update]",
+          "type": "pytest.skip",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "test": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[https://res.cloudinary.com/test_cloud/image/upload/v1/someone-elses-avatar.jpg-profile_image-profile-update]",
+          "type": "pytest.skip",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "test": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[https://res.cloudinary.com/test_cloud/image/upload/v1/someone-elses-avatar.jpg-image-profile-update]",
+          "type": "pytest.skip",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "test": "core_apps.virtual_tours.tests.test_capture::test_partial_panorama_does_not_become_full_tour",
+          "type": "pytest.skip",
+          "reason": "could not import 'cv2': No module named 'cv2'"
+        },
+        {
+          "test": "core_apps.virtual_tours.tests.test_capture_config::test_strict_preflight_requires_successful_requested_provider_probe[live]",
+          "type": "pytest.skip",
+          "reason": "Capture readiness needs OpenCV (not in Pipfile.lock)"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_primary_rollback_does_not_erase_durable_external_fact",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_concurrent_dispatch_has_one_original_transport",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_unknown_outcome_survives_reconnection_and_never_resends",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_primary_cluster_and_privileged_role_are_rejected",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.common.test_recovery_postgres::test_runtime_role_cannot_mutate_or_delete_history",
+          "type": "pytest.skip",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_late_original_and_company_retry_commit_once",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "test": "core_apps.features.tests.test_company_discussions::test_concurrent_case_send_uses_one_canonical_message",
+          "type": "pytest.xfail",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 4710.13
+    },
+    "junit/focused-sqlite.xml": {
+      "cases": 64,
+      "passed": 63,
+      "failed_or_errored": [],
+      "skipped_or_expected_failures": [
+        {
+          "test": "core_apps.properties.tests.test_sprint03_correctness::test_full_put_replays_without_another_review_revision",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        }
+      ],
+      "seconds": 59.264
+    },
+    "junit/scoped-sqlite-attempt.xml": {
+      "cases": 874,
+      "passed": 620,
+      "failed_or_errored": [
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_complete_post_visit_journey_over_authenticated_http",
+          "type": "error",
+          "reason": "failed on setup with \"PermissionError: [Errno 1] Operation not permitted\"",
+          "detail": ".venv/lib/python3.11/site-packages/pytest_django/fixtures.py:577: in live_server\n    server = live_server_helper.LiveServer(addr)\n.venv/lib/python3.11/site-packages/pytest_django/live_server_helper.py:56: in __init__\n    self.start()\n.venv/lib/python3.11/site-packages/pytest_django/live_server_helper.py:70: in start\n    raise error\n.venv/lib/python3.11/site-packages/django/test/testcases.py:1779: in run\n    self.httpd = self._create_server(\n.venv/lib/python3.11/site-packages/django/test/testcases.py:1795: in _create_server\n    return self.server_class(\n.venv/lib/python3.11/site-packages/django/core/servers/basehttp.py:92: in __init__\n    super().__init__(*args, **kwargs)\n.venv/lib/python3.11/site-packages/django/core/servers/basehttp.py:77: in __init__\n    super().__init__(*args, **kwargs)\n/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socketserver.py:456: in __init__\n    self.server_bind()\n/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/wsgiref/simple_server.py:50: in server_bind\n    HTTPServer.server_bind(self)\n/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/server.py:140: in server_bind\n    socketserver.TCPServer.server_bind(self)\n/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socketserver.py:472: in server_bind\n    self.socket.bind(self.server_address)\nE   PermissionError: [Errno 1] Operation not permitted"
+        }
+      ],
+      "skipped_or_expected_failures": [
+        {
+          "test": "core_apps.properties.tests.test_contextual_viewings::test_one_group_appointment_records_each_attendee_independently",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_mobile_handoff_oct2026.TestCheck4_AllWritableFieldsAndReopen::test_all_writable_fields_persist_and_reopen",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint03_correctness::test_full_put_replays_without_another_review_revision",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_unscheduled_visit_requests::test_request_notes_owner_decision_and_chat[accept-]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_unscheduled_visit_requests::test_request_notes_owner_decision_and_chat[accept-\\u0623\\u0631\\u063a\\u0628 \\u0641\\u064a \\u0645\\u0639\\u0627\\u064a\\u0646\\u0629 \\u0627\\u0644\\u063a\\u0631\\u0641\\u0629 \\u0648\\u0627\\u0644\\u062a\\u0648\\u0627\\u0635\\u0644 \\u0644\\u062a\\u0646\\u0633\\u064a\\u0642 \\u0627\\u0644\\u0632\\u064a\\u0627\\u0631\\u0629]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_unscheduled_visit_requests::test_request_notes_owner_decision_and_chat[reject-]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_unscheduled_visit_requests::test_request_notes_owner_decision_and_chat[reject-\\u0623\\u0631\\u063a\\u0628 \\u0641\\u064a \\u0645\\u0639\\u0627\\u064a\\u0646\\u0629 \\u0627\\u0644\\u063a\\u0631\\u0641\\u0629 \\u0648\\u0627\\u0644\\u062a\\u0648\\u0627\\u0635\\u0644 \\u0644\\u062a\\u0646\\u0633\\u064a\\u0642 \\u0627\\u0644\\u0632\\u064a\\u0627\\u0631\\u0629]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_ux_convenience::test_agenda_day_filter_precedes_pagination_and_sorts_times[True]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_ux_convenience::test_agenda_day_filter_precedes_pagination_and_sorts_times[False]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_event_history::test_old_queued_request_survives_accept_and_cancel_with_current_history",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_price_edit_keeps_confirmed_visit_snapshot_and_notifies_both_parties",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_location_change_requires_a_new_viewing_and_preserves_old_identity",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_different_bed_change_does_not_replace_the_visited_bed",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_views.TestPropertyVisitViews::test_list_tenant_visits",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_views.TestPropertyVisitViews::test_list_tenant_visits_filter_by_status",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_views.TestPropertyVisitViews::test_list_tenant_visits_invalid_status_returns_400",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_public_booking_details_decision_and_invitation_share_complete_frozen_snapshot[entire_property]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_public_booking_details_decision_and_invitation_share_complete_frozen_snapshot[room]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_public_booking_details_decision_and_invitation_share_complete_frozen_snapshot[room_group]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_public_booking_details_decision_and_invitation_share_complete_frozen_snapshot[bed]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_existing_thin_snapshot_is_never_backfilled_from_current_inventory",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_phone_disclosure::test_pending_visit_hides_numbers_across_visit_property_and_chat_reads",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_phone_disclosure::test_acceptance_keeps_contacts_private_and_is_idempotent",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_phone_disclosure::test_rejected_or_pre_acceptance_cancelled_visit_never_discloses",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_phone_disclosure::test_notices_localize_and_missing_granted_phone_stays_authorized",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_request_api.TestTenantVisitRequestScreens::test_list_returns_card_data_and_status_actions",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_request_api.TestTenantVisitRequestScreens::test_detail_reveals_owner_phone_only_after_confirmation",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_request_api.TestTenantVisitRequestScreens::test_other_tenant_cannot_read_or_cancel_visit",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_request_api.TestBilingualVisitLabels::test_tenant_visit_request_labels_in_english_and_arabic",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_workspace_account_handoff.TestWorkspaceAccountContract::test_single_account_can_access_tenant_and_owner_endpoints",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-analytics]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-content]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-dashboard]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-financials]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-followups]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-kyc]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-moderation]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-permissions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-properties]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-reports]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-residential-assets]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-review-appeals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-review-cases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-review-recovery]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-review-windows]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-reviews]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-session]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-settings]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-staff]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-support]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-system]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-users]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-advertising]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-o]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-users-1]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-users-p-a-z0-9]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-account-closure]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-apple]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-complete-register]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-delete-account]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-email-change]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-facebook]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-google]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-login]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-logout]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-refresh]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-register]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-resend-otp]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-security]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-token]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-users-2]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-verify]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-verify-email]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-verify-otp]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-account-policy]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-admin]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-conversations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-lists]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-messages]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-notification-actions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-policy-cases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-quick-replies]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-academic-plans]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-account-contexts]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-action-center]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-advanced-executions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-amendments]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-application-profile]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-application-shares]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-availability-blocks]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-billing]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-boost-campaigns]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-business-policies]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-campuses]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-commute-searches]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-companies]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-access]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-authority]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-booking-items]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-capabilities]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-contract-preparations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-housing-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-invitations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-mandates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-requirements]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-saved-lists]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-tenancies]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-terms-negotiations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-condition-reports]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-configuration]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-continuation-items]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-deals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-decision-notebook]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-disputes]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-experience]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-external-payment-claims]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-group-applications]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-group-booking-proposals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-group-invitations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-group-join-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-handovers]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-bids]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-demand]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-groups]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-offers]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-package-runs]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-packages]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-scenario-comparisons]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-scenario-decisions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-scenario-runs]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-scenarios]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-tender-sources]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-tenders]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-lease-configuration]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-lease-tenants]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-leases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-lifestyle-profile]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-listing-suggestions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-living-labs]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-maintenance-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-mock-provider]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-move-in-cases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-move-intents]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-move-out-notices]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-open-housing-groups]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-operations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-operator]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-achievements]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-analytics]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-application-queue]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-group-applications]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-housing-offers]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-payables]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-payment-profile]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-shared-housing-applications]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-payment-attempts]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-payment-extension-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-payouts]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-planning-capabilities]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-planning-home]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-portfolio-offers]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-properties]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-provider-webhooks]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-refund-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-renewals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rent-invoices]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-attachments]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-capabilities]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-cases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-documents]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-interests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-operations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-statements]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-summary-grants]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-replacement-invitations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-replacement-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-reputation-grants]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-reservation-holds]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-assets]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-changes]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-media]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-unit-batches]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-unit-templates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-reviews]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-roommate-candidates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-roommate-connections]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-search-alerts]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-shared-housing-demand]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-shared-housing-plans]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-shared-rental-summaries]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-signing]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-student-arrangements]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-student-evidence]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-student-profile]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-subscription-plans]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-subscriptions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-tenancy-invitations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-tenant-assistant]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-termination-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-terms-proposals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-transition-candidates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-transition-match-runs]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-transition-plans]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-workspace-summary]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-homepage]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-notifications]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-pages]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-payments]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-profiles]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-properties]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-property-captures]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-residential-assets]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-support]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-virtual-tour-operations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-virtual-tour-updates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-virtual-tour-uploads]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-virtual-tour-viewer]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.chat.tests.test_sprint09_communication::test_large_read_receipt_projection_uses_one_statement_and_original_times",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.advertising.tests.test_advertising_api::test_concurrent_payment_retries_share_one_receipt",
+          "type": "pytest.skip",
+          "reason": "Row-lock concurrency requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_listing_input_matrix::test_concurrent_cover_and_gallery_never_exceed_cap",
+          "type": "pytest.skip",
+          "reason": "Row-lock serialization is a PostgreSQL guarantee"
+        },
+        {
+          "test": "core_apps.properties.tests.test_parallel_media::test_remote_uploads_overlap_without_holding_account_lock",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_decision_transaction_races[same]",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_decision_transaction_races[opposite]",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_decision_transaction_races[cancel]",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_decision_transaction_races[reschedule]",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_one_operation_key_cannot_commit_different_visits",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_review_versions::test_concurrent_reviewers_only_one_decision",
+          "type": "pytest.skip",
+          "reason": "Requires real row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_review_versions::test_owner_edit_racing_decision_always_requires_review_of_edited_content",
+          "type": "pytest.skip",
+          "reason": "Requires real row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint03_listing_concurrency::test_competing_aliases_one_scalar_version_wins",
+          "type": "pytest.skip",
+          "reason": "Listing races require PostgreSQL row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint03_listing_concurrency::test_concurrent_alias_retry_commits_one_revision",
+          "type": "pytest.skip",
+          "reason": "Listing races require PostgreSQL row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[False-revoke-403]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[False-epoch-401]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[False-definition-409]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[False-acknowledge-409]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[True-revoke-403]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[True-epoch-401]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[True-definition-409]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[True-acknowledge-409]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_membership_withdrawal_and_listing_change_share_lock_order",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_owner_accept_and_listing_unavailability_serialize",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_attendance_committing_during_listing_edit_cannot_be_erased",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_response_commands::test_owner_response_and_tenant_cancel_are_serialized",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_response_commands::test_same_response_from_two_devices_runs_once",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_acceptance_is_atomic_idempotent_and_changes_visit_revision",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_expired_closed_and_stale_proposals_keep_original_appointment",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_competing_alternatives_accept_exactly_one_and_supersede_the_other",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_same_owner_two_properties_cannot_accept_the_same_time",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_closure_and_acceptance_race_preserves_the_winning_revision",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_only_current_parties_in_individual_context_can_propose_up_to_three",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_booking_concurrency::test_different_tenants_can_request_the_same_property",
+          "type": "pytest.skip",
+          "reason": "Visit booking races require PostgreSQL row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_booking_concurrency::test_same_tenant_concurrent_duplicate_creates_one_request",
+          "type": "pytest.skip",
+          "reason": "Visit booking races require PostgreSQL row locks"
+        }
+      ],
+      "seconds": 97.684
+    },
+    "junit/scoped-sqlite-final.xml": {
+      "cases": 874,
+      "passed": 621,
+      "failed_or_errored": [],
+      "skipped_or_expected_failures": [
+        {
+          "test": "core_apps.properties.tests.test_contextual_viewings::test_one_group_appointment_records_each_attendee_independently",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_mobile_handoff_oct2026.TestCheck4_AllWritableFieldsAndReopen::test_all_writable_fields_persist_and_reopen",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint03_correctness::test_full_put_replays_without_another_review_revision",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_unscheduled_visit_requests::test_request_notes_owner_decision_and_chat[accept-]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_unscheduled_visit_requests::test_request_notes_owner_decision_and_chat[accept-\\u0623\\u0631\\u063a\\u0628 \\u0641\\u064a \\u0645\\u0639\\u0627\\u064a\\u0646\\u0629 \\u0627\\u0644\\u063a\\u0631\\u0641\\u0629 \\u0648\\u0627\\u0644\\u062a\\u0648\\u0627\\u0635\\u0644 \\u0644\\u062a\\u0646\\u0633\\u064a\\u0642 \\u0627\\u0644\\u0632\\u064a\\u0627\\u0631\\u0629]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_unscheduled_visit_requests::test_request_notes_owner_decision_and_chat[reject-]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_unscheduled_visit_requests::test_request_notes_owner_decision_and_chat[reject-\\u0623\\u0631\\u063a\\u0628 \\u0641\\u064a \\u0645\\u0639\\u0627\\u064a\\u0646\\u0629 \\u0627\\u0644\\u063a\\u0631\\u0641\\u0629 \\u0648\\u0627\\u0644\\u062a\\u0648\\u0627\\u0635\\u0644 \\u0644\\u062a\\u0646\\u0633\\u064a\\u0642 \\u0627\\u0644\\u0632\\u064a\\u0627\\u0631\\u0629]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_ux_convenience::test_agenda_day_filter_precedes_pagination_and_sorts_times[True]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_ux_convenience::test_agenda_day_filter_precedes_pagination_and_sorts_times[False]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_event_history::test_old_queued_request_survives_accept_and_cancel_with_current_history",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_price_edit_keeps_confirmed_visit_snapshot_and_notifies_both_parties",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_location_change_requires_a_new_viewing_and_preserves_old_identity",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_different_bed_change_does_not_replace_the_visited_bed",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_views.TestPropertyVisitViews::test_list_tenant_visits",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_views.TestPropertyVisitViews::test_list_tenant_visits_filter_by_status",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_views.TestPropertyVisitViews::test_list_tenant_visits_invalid_status_returns_400",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_public_booking_details_decision_and_invitation_share_complete_frozen_snapshot[entire_property]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_public_booking_details_decision_and_invitation_share_complete_frozen_snapshot[room]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_public_booking_details_decision_and_invitation_share_complete_frozen_snapshot[room_group]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_public_booking_details_decision_and_invitation_share_complete_frozen_snapshot[bed]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_offer_snapshot::test_existing_thin_snapshot_is_never_backfilled_from_current_inventory",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_phone_disclosure::test_pending_visit_hides_numbers_across_visit_property_and_chat_reads",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_phone_disclosure::test_acceptance_keeps_contacts_private_and_is_idempotent",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_phone_disclosure::test_rejected_or_pre_acceptance_cancelled_visit_never_discloses",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_phone_disclosure::test_notices_localize_and_missing_granted_phone_stays_authorized",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_request_api.TestTenantVisitRequestScreens::test_list_returns_card_data_and_status_actions",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_request_api.TestTenantVisitRequestScreens::test_detail_reveals_owner_phone_only_after_confirmation",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_request_api.TestTenantVisitRequestScreens::test_other_tenant_cannot_read_or_cancel_visit",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_request_api.TestBilingualVisitLabels::test_tenant_visit_request_labels_in_english_and_arabic",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_workspace_account_handoff.TestWorkspaceAccountContract::test_single_account_can_access_tenant_and_owner_endpoints",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-analytics]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-content]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-dashboard]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-financials]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-followups]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-kyc]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-moderation]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-permissions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-properties]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-reports]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-residential-assets]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-review-appeals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-review-cases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-review-recovery]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-review-windows]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-reviews]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-session]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-settings]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-staff]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-support]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-system]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-admin-users]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-advertising]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-o]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-users-1]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-users-p-a-z0-9]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-account-closure]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-apple]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-complete-register]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-delete-account]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-email-change]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-facebook]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-google]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-login]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-logout]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-refresh]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-register]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-resend-otp]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-security]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-token]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-users-2]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-verify]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-verify-email]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-auth-verify-otp]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-account-policy]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-admin]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-conversations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-lists]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-messages]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-notification-actions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-policy-cases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-chat-quick-replies]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-academic-plans]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-account-contexts]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-action-center]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-advanced-executions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-amendments]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-application-profile]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-application-shares]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-availability-blocks]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-billing]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-boost-campaigns]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-business-policies]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-campuses]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-commute-searches]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-companies]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-access]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-authority]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-booking-items]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-capabilities]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-contract-preparations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-housing-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-invitations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-mandates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-requirements]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-saved-lists]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-tenancies]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-company-terms-negotiations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-condition-reports]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-configuration]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-continuation-items]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-deals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-decision-notebook]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-disputes]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-experience]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-external-payment-claims]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-group-applications]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-group-booking-proposals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-group-invitations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-group-join-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-handovers]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-bids]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-demand]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-groups]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-offers]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-package-runs]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-packages]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-scenario-comparisons]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-scenario-decisions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-scenario-runs]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-scenarios]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-tender-sources]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-housing-tenders]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-lease-configuration]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-lease-tenants]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-leases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-lifestyle-profile]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-listing-suggestions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-living-labs]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-maintenance-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-mock-provider]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-move-in-cases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-move-intents]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-move-out-notices]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-open-housing-groups]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-operations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-operator]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-achievements]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-analytics]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-application-queue]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-group-applications]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-housing-offers]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-payables]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-payment-profile]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-owner-shared-housing-applications]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-payment-attempts]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-payment-extension-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-payouts]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-planning-capabilities]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-planning-home]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-portfolio-offers]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-properties]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-provider-webhooks]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-refund-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-renewals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rent-invoices]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-attachments]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-capabilities]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-cases]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-documents]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-interests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-operations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-statements]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-rental-summary-grants]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-replacement-invitations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-replacement-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-reputation-grants]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-reservation-holds]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-assets]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-changes]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-media]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-unit-batches]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-residential-unit-templates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-reviews]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-roommate-candidates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-roommate-connections]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-search-alerts]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-shared-housing-demand]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-shared-housing-plans]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-shared-rental-summaries]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-signing]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-student-arrangements]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-student-evidence]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-student-profile]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-subscription-plans]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-subscriptions]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-tenancy-invitations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-tenant-assistant]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-termination-requests]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-terms-proposals]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-transition-candidates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-transition-match-runs]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-transition-plans]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-features-workspace-summary]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-homepage]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-notifications]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-pages]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-payments]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-profiles]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-properties]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-property-captures]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-residential-assets]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-support]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-virtual-tour-operations]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-virtual-tour-updates]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-virtual-tour-uploads]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-virtual-tour-viewer]",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.chat.tests.test_sprint09_communication::test_large_read_receipt_projection_uses_one_statement_and_original_times",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.advertising.tests.test_advertising_api::test_concurrent_payment_retries_share_one_receipt",
+          "type": "pytest.skip",
+          "reason": "Row-lock concurrency requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_listing_input_matrix::test_concurrent_cover_and_gallery_never_exceed_cap",
+          "type": "pytest.skip",
+          "reason": "Row-lock serialization is a PostgreSQL guarantee"
+        },
+        {
+          "test": "core_apps.properties.tests.test_parallel_media::test_remote_uploads_overlap_without_holding_account_lock",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_decision_transaction_races[same]",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_decision_transaction_races[opposite]",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_decision_transaction_races[cancel]",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_decision_transaction_races[reschedule]",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_post_visit_decision::test_one_operation_key_cannot_commit_different_visits",
+          "type": "pytest.skip",
+          "reason": "Actual row locking requires PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_review_versions::test_concurrent_reviewers_only_one_decision",
+          "type": "pytest.skip",
+          "reason": "Requires real row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_review_versions::test_owner_edit_racing_decision_always_requires_review_of_edited_content",
+          "type": "pytest.skip",
+          "reason": "Requires real row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint03_listing_concurrency::test_competing_aliases_one_scalar_version_wins",
+          "type": "pytest.skip",
+          "reason": "Listing races require PostgreSQL row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint03_listing_concurrency::test_concurrent_alias_retry_commits_one_revision",
+          "type": "pytest.skip",
+          "reason": "Listing races require PostgreSQL row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[False-revoke-403]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[False-epoch-401]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[False-definition-409]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[False-acknowledge-409]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[True-revoke-403]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[True-epoch-401]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[True-definition-409]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_sprint04_saved_search_locking::test_postgres_current_authority_and_watermark_are_checked_after_scan[True-acknowledge-409]",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock proof requires disposable PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_membership_withdrawal_and_listing_change_share_lock_order",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_owner_accept_and_listing_unavailability_serialize",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_listing_changes::test_attendance_committing_during_listing_edit_cannot_be_erased",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_response_commands::test_owner_response_and_tenant_cancel_are_serialized",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_response_commands::test_same_response_from_two_devices_runs_once",
+          "type": "pytest.skip",
+          "reason": "Concurrent row-lock races require PostgreSQL"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_acceptance_is_atomic_idempotent_and_changes_visit_revision",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_expired_closed_and_stale_proposals_keep_original_appointment",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_competing_alternatives_accept_exactly_one_and_supersede_the_other",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_same_owner_two_properties_cannot_accept_the_same_time",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_closure_and_acceptance_race_preserves_the_winning_revision",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_viewing_times::test_only_current_parties_in_individual_context_can_propose_up_to_three",
+          "type": "pytest.skip",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_booking_concurrency::test_different_tenants_can_request_the_same_property",
+          "type": "pytest.skip",
+          "reason": "Visit booking races require PostgreSQL row locks"
+        },
+        {
+          "test": "core_apps.properties.tests.test_visit_booking_concurrency::test_same_tenant_concurrent_duplicate_creates_one_request",
+          "type": "pytest.skip",
+          "reason": "Visit booking races require PostgreSQL row locks"
+        }
+      ],
+      "seconds": 106.395
+    }
+  },
+  "static": {
+    "imports": {
+      "settings": "sprint11_sqlite",
+      "imported": 2041,
+      "failed": 0,
+      "failures": []
+    },
+    "facades": {
+      "modules": 37,
+      "names": 1017,
+      "missing": []
+    },
+    "routes": {
+      "routes": 795,
+      "removed": [],
+      "added": [],
+      "metadata_differences": [],
+      "scope": [
+        "name",
+        "methods",
+        "authentication",
+        "permissions",
+        "parsers",
+        "throttles",
+        "aliases",
+        "mvp_allowed"
+      ]
+    },
+    "syntax": {
+      "files": 2221,
+      "encoding": "utf-8-sig (honor existing Python BOM)",
+      "failures": []
+    },
+    "signature_annotations": {
+      "scope": "changed application modules",
+      "changed_signatures_or_annotations": [],
+      "limit": "AST compatibility check; no configured mypy/pyright dependency; not full static type analysis"
+    },
+    "facade_surface_parity": {
+      "checked": 37,
+      "comparison": "Original implicit public names versus current literal __all__",
+      "differences": []
+    }
+  },
+  "diagnostic_attempts": [
+    "Initial sandbox PostgreSQL initialization could not allocate shared memory; initialized a new cluster after escalation.",
+    "Initial scoped SQLite run passed 620 with 253 skips but local live_server could not bind under sandbox; permission-enabled rerun passed 621 with 253 skips.",
+    "Initial AST probe did not strip an existing UTF-8 BOM; corrected reader to utf-8-sig, no source change."
+  ],
+  "full_postgres_results": {
+    "mvp": {
+      "passed": 6140,
+      "skipped": 21,
+      "expected_failures": 12,
+      "unexpected_failures_or_errors": 0
+    },
+    "restoration": {
+      "passed": 6140,
+      "skipped": 21,
+      "expected_failures": 12,
+      "unexpected_failures_or_errors": 0
+    }
+  },
+  "test_cluster_state": "stopped"
+}

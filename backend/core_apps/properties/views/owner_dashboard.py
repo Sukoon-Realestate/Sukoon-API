@@ -65,8 +65,8 @@ class OwnerProfileAPIView(generics.GenericAPIView):
 
     Response includes:
     - owner header: avatar, is_verified, full_name, role_badge ("مالك موثّق"),
-      average rating, reviews count, rating label ("4.8 (42 تقييم)"), member since label.
-    - stats: properties_count ("3 عقارات"), reviews_count ("42 تقييم"), acceptance_rate ("96% قبول").
+      canonical reputation average (null without history), review count and member since label.
+    - stats: measured property/review counts and visit acceptance (null without decisions).
     - account_details: name, email, mobile phone with masking ("010****432").
     - privacy_notice: "رقمك لا يُعرض للمستأجرين – يظهر فقط بعد قبول الزيارة".
     - recent_reviews: list of recent visit reviews.
