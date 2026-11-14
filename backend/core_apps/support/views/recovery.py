@@ -9,6 +9,7 @@ from core_apps.common.idempotency import request_key, resolve_or_close
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.features.models import IdempotencyRecord
 from core_apps.support.models import Ticket
+from core_apps.support.services.receipts import compact_requested, ticket_receipt
 from core_apps.support.serializers import TicketDetailSerializer
 from core_apps.support.services import get_ticket_detail
 
@@ -19,7 +20,10 @@ class TicketCreationReceiptAPIView(APIView):
 
     def post(self, request):
         workspace, key = request.data.get("workspace"), request_key(request)
-        if workspace not in {"tenant", "owner", "student", "company", "account"} or not key:
+        if (
+            workspace not in {"tenant", "owner", "student", "company", "account"}
+            or not key
+        ):
             raise ValidationError("Supply workspace and original Idempotency-Key.")
         record = resolve_or_close(
             user=request.user,
@@ -32,7 +36,10 @@ class TicketCreationReceiptAPIView(APIView):
     def get(self, request):
         workspace = request.query_params.get("workspace")
         key = request_key(request)
-        if workspace not in {"tenant", "owner", "student", "company", "account"} or not key:
+        if (
+            workspace not in {"tenant", "owner", "student", "company", "account"}
+            or not key
+        ):
             raise ValidationError(
                 "Supply a workspace and the original Idempotency-Key."
             )
@@ -46,6 +53,7 @@ class TicketCreationReceiptAPIView(APIView):
     def _projection(self, request, workspace, key, record):
         # Missing is deliberately unknown: a concurrent transaction may still
         # commit. Neither an absent row nor a similar ticket permits resending.
+        compact = compact_requested(request)
         data = {"outcome": "unknown", "request_key": key, "ticket": None}
         if record and record.recovery_status == "absent_final":
             data["outcome"] = "absent_final"
@@ -56,15 +64,22 @@ class TicketCreationReceiptAPIView(APIView):
         ):
             try:
                 ticket = get_ticket_detail(
-                    request.user, str(record.result_subject_id), workspace=workspace
+                    request.user,
+                    str(record.result_subject_id),
+                    workspace=workspace,
+                    prepare=not compact,
                 )
             except Ticket.DoesNotExist:
                 pass
             else:
                 data.update(
                     outcome="acknowledged",
-                    ticket=TicketDetailSerializer(
-                        ticket, context={"request": request}
-                    ).data,
+                    ticket=(
+                        ticket_receipt(ticket)
+                        if compact
+                        else TicketDetailSerializer(
+                            ticket, context={"request": request}
+                        ).data
+                    ),
                 )
         return Response(data, headers={"Cache-Control": "no-store"})

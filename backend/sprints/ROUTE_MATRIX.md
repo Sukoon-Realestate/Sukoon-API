@@ -5,7 +5,7 @@ instead of editing by hand. Per-route detail (methods, auth/permission/throttle/
 schema hints, MVP availability per method, aliases, signals and referencing test files) is in
 [evidence/sprint-00/route-matrix.json](evidence/sprint-00/route-matrix.json).
 
-**795 API patterns**, 193 sharing a handler with another pattern (aliases/format variants). Styles: 755 DRF CBV, 22 DRF viewset, 14 decorated FBV, 2 Django CBV, 2 framework-generated DRF CBV.
+**795 API patterns**, 193 sharing a handler with another pattern (aliases/format variants). Styles: 769 DRF CBV, 22 DRF viewset, 2 Django CBV, 2 framework-generated DRF CBV.
 
 How to read the columns:
 
@@ -69,12 +69,12 @@ How to read the columns:
 | `api/auth/verify-otp` | 1 | Area 1 — Identity/profiles | 05 | 1 | POST | DRF CBV 1 | — | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/chat/account-policy` | 1 | Area 5 — Communication/support | 09 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/chat/admin` | 4 | Area 5 — Communication/support | 09 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
-| `api/chat/conversations` | 33 | Area 5 — Communication/support | 09 | 3 | DELETE, GET, PATCH, POST, PUT | DRF CBV 22; decorated FBV 11 | CookieAuthentication | IsAuthenticated<br>IsAuthenticated, IsParticipant | 0 | 8 | 1 | 20 | 14 | 1 | 0 |
+| `api/chat/conversations` | 33 | Area 5 — Communication/support | 09 | 3 | DELETE, GET, PATCH, POST, PUT | DRF CBV 33 | CookieAuthentication | IsAuthenticated<br>IsAuthenticated, IsParticipant | 0 | 8 | 2 | 20 | 14 | 1 | 0 |
 | `api/chat/lists` | 1 | Area 5 — Communication/support | 09 | 0 | DELETE, GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
 | `api/chat/messages` | 1 | Area 5 — Communication/support | 09 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
-| `api/chat/notification-actions` | 1 | Area 5 — Communication/support | 09 | 0 | POST | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 0 | 1 | 0 | 1 | 1 | 0 | 0 |
+| `api/chat/notification-actions` | 1 | Area 5 — Communication/support | 09 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
 | `api/chat/policy-cases` | 1 | Area 5 — Communication/support | 09 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/chat/quick-replies` | 2 | Area 5 — Communication/support | 09 | 0 | DELETE, GET, PUT | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/chat/quick-replies` | 2 | Area 5 — Communication/support | 09 | 0 | DELETE, GET, PUT | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/features/academic-plans` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 2 | 0 | 2 | 0 | 0 | 6 |
 | `api/features/account-contexts` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/action-center` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |

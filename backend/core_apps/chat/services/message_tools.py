@@ -4,7 +4,7 @@ from datetime import timedelta
 from itertools import islice
 import hashlib
 import json
-from django.db import transaction
+from django.db import connection, transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import serializers
@@ -171,6 +171,29 @@ def record_reads(conversation, participant, through, read_at):
         .exclude(sender_id=participant.user_id)
         .exclude(kind="system")
     )
+    if connection.vendor == "postgresql":
+        # Keep exact synchronous read times without materializing a long unread
+        # history in Python or issuing a statement per receipt. No extension is
+        # required for PostgreSQL's built-in UUID generation.
+        select, params = rows.order_by().values("pkid").query.sql_with_params()
+        table = connection.ops.quote_name(MessageReadReceipt._meta.db_table)
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""INSERT INTO {table}
+                    (id, created_at, updated_at, message_id, user_id, membership_period, read_at)
+                    SELECT gen_random_uuid(), %s, %s, selected.pkid, %s, %s, %s
+                    FROM ({select}) AS selected
+                    ON CONFLICT (message_id, user_id, membership_period) DO NOTHING""",
+                [
+                    read_at,
+                    read_at,
+                    participant.user_id,
+                    participant.membership_period,
+                    read_at,
+                    *params,
+                ],
+            )
+        return
     identities = (
         rows.order_by("pk").values_list("pk", flat=True).iterator(chunk_size=500)
     )
@@ -197,15 +220,19 @@ def message_readers(conversation, user, identity):
         raise PermissionDenied("Only the sender can view message reading details.")
     return message, eligible_participants(conversation).filter(
         visible_from_sequence__lte=message.sequence
-    ).exclude(user=user).select_related("user").order_by("pk")
+    ).exclude(user=user).select_related("user__profile").order_by("pk")
 
 
-def reader_payload(message, reader):
+def reader_payload(message, reader, *, receipts=None):
     from .group_projection import sender_payload
 
-    receipt = message.read_receipts.filter(
-        user_id=reader.user_id, membership_period=reader.membership_period
-    ).first()
+    receipt = (
+        receipts.get((reader.user_id, reader.membership_period))
+        if receipts is not None
+        else message.read_receipts.filter(
+            user_id=reader.user_id, membership_period=reader.membership_period
+        ).first()
+    )
     return {
         "user": sender_payload(reader.user),
         "is_read": reader.last_read_sequence >= message.sequence,

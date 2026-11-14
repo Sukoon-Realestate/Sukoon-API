@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 from core_apps.chat.models import Conversation
 from core_apps.chat.services.group_operations import (
     delete_group_message,
-    set_preference,
 )
 from core_apps.chat.services.group_rate_limit import enforce_rate
 
@@ -18,19 +17,5 @@ class GroupMessageDeleteAPIView(APIView):
         return Response(
             delete_group_message(
                 get_object_or_404(Conversation, id=id), request.user, message_id
-            )
-        )
-
-
-class GroupPreferencesAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def patch(self, request, id):
-        enforce_rate(request.user, "preferences")
-        return Response(
-            set_preference(
-                get_object_or_404(Conversation, id=id),
-                request.user,
-                request.data.get("is_muted"),
             )
         )

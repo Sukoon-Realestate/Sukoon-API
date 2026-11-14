@@ -1,4 +1,5 @@
 from core_apps.support.services.workspace import normalize_workspace
+
 """Ticket service: get ticket detail."""
 
 import uuid
@@ -11,16 +12,18 @@ from .create_ticket import logger, TicketClosedConflict
 
 
 def get_ticket_detail(
-    user: Any, ticket_id: str, workspace: Optional[str] = None, *, read_params=None
+    user: Any,
+    ticket_id: str,
+    workspace: Optional[str] = None,
+    *,
+    read_params=None,
+    prepare=True,
 ) -> Ticket:
     """
     Retrieves full ticket detail ensuring account ownership and workspace scoping.
     Raises Ticket.DoesNotExist on ownership/workspace mismatch.
     """
-    qs = (
-        Ticket.objects.select_related("user")
-        .filter(user=user)
-    )
+    qs = Ticket.objects.select_related("user").filter(user=user)
 
     # Allow querying by UUID id or reference
     try:
@@ -41,7 +44,8 @@ def get_ticket_detail(
 
     pages = ReadPages.parse(read_params) if read_params is not None else None
     ticket.read_bounds = pages
-    prepare_messages(ticket, pages)
+    if prepare:
+        prepare_messages(ticket, pages)
     return ticket
 
 
@@ -52,12 +56,14 @@ def add_ticket_reply(
     body: str,
     workspace: Optional[str] = None,
     attachment_ids=None,
+    *,
+    compact=False,
 ) -> Ticket:
     """
     Adds a reply to an active ticket and returns the complete updated ticket.
     Rejects replies to resolved/closed tickets with TicketClosedConflict.
     """
-    ticket = get_ticket_detail(user, ticket_id, workspace=workspace)
+    ticket = get_ticket_detail(user, ticket_id, workspace=workspace, prepare=False)
     ticket = Ticket.objects.select_for_update().get(pk=ticket.pk)
 
     if ticket.status in [Ticket.Status.RESOLVED, Ticket.Status.CLOSED]:
@@ -82,4 +88,4 @@ def add_ticket_reply(
     ticket.save(update_fields=["revision", "updated_at"])
 
     logger.info("Added reply to ticket %s by user %s", ticket.reference, user.id)
-    return get_ticket_detail(user, ticket_id, workspace=workspace)
+    return get_ticket_detail(user, ticket_id, workspace=workspace, prepare=not compact)

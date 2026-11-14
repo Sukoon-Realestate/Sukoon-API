@@ -1,3 +1,5 @@
+
+from .event_names import MESSAGE_DELETED, MESSAGE_READ, CONVERSATION_UPDATED
 from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
@@ -30,7 +32,7 @@ def mark_group_read(conversation, user, sequence):
     ):
         participant.unread_reminder_sequence = None
         participant.save(update_fields=["unread_reminder_sequence", "updated_at"])
-        record_event(conversation, "conversation.updated", actor=user)
+        record_event(conversation, CONVERSATION_UPDATED, actor=user)
     if sequence > participant.last_read_sequence:
         from .message_tools import record_reads
 
@@ -48,7 +50,7 @@ def mark_group_read(conversation, user, sequence):
             participant.save(update_fields=["unread_count"])
         record_event(
             conversation,
-            "message.read",
+            MESSAGE_READ,
             actor=user,
             data={"membership_period": str(participant.membership_period)},
         )
@@ -102,12 +104,12 @@ def delete_group_message(conversation, user, identity, *, event_data=None):
         # removed by the periodic cleanup worker, which can safely retry I/O.
         record_event(
             conversation,
-            "message.deleted",
+            MESSAGE_DELETED,
             message=message,
             actor=user,
             data=event_data,
         )
-        record_event(conversation, "conversation.updated", actor=user)
+        record_event(conversation, CONVERSATION_UPDATED, actor=user)
     return message_payload(message, participant, member)
 
 
@@ -122,5 +124,5 @@ def set_preference(conversation, user, muted):
         participant.is_muted = muted
         participant.muted_until = None
         participant.save(update_fields=["is_muted", "muted_until", "updated_at"])
-        record_event(conversation, "conversation.updated", actor=user)
+        record_event(conversation, CONVERSATION_UPDATED, actor=user)
     return summary(conversation, user)

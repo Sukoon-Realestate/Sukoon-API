@@ -1,5 +1,7 @@
 """Transactional event log with resumable fanout, independent of message cursors."""
 
+from .event_names import MESSAGE_READ, CONVERSATION_UPDATED, MODERATED_MESSAGE_EVENTS
+
 import logging
 from django.db import transaction
 from rest_framework.exceptions import APIException
@@ -12,8 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 # A5-01: event kinds that carry a new reviewable message revision. These are the
-# recorded *event* names (commands such as "message.edit" emit "message.edited").
-MODERATED_MESSAGE_EVENTS = frozenset({"message.new", "message.edited"})
+# recorded *event* names (commands such as "message.edit" emit MESSAGE_EDITED).
 
 
 def record_event(conversation, kind, *, message=None, actor=None, data=None):
@@ -115,9 +116,9 @@ def event_payload(event, user, *, authorized=None, roster=None, properties=None)
                 event.message, participant, member, roster=roster, properties=properties
             )
         )
-    elif event.kind == "conversation.updated":
+    elif event.kind == CONVERSATION_UPDATED:
         payload["conversation"] = summary(conversation, user)
-    elif event.kind == "message.read":
+    elif event.kind == MESSAGE_READ:
         # No disclosure of a cursor or identity from a former membership period.
         from .group_access import eligible_participants
 

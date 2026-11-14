@@ -1,7 +1,7 @@
 from django.urls import path
-from .views.notification_actions import notification_action
-from .views.forwarding import forward_destinations, forward
-from .views.mentions import unread_mentions, mention_seen
+from .views.notification_actions import NotificationActionAPIView
+from .views.forwarding import ForwardDestinationsAPIView, ForwardAPIView
+from .views.mentions import UnreadMentionsAPIView, MentionSeenAPIView
 from .views.interactions import MessageReactionAPIView, ConversationMembersAPIView
 from .views.group_attachments import (
     GroupAttachmentDetailAPIView,
@@ -15,42 +15,57 @@ from .views.group_history import (
     GroupMessageContextAPIView,
     GroupMessageLookupAPIView,
 )
-
 from .views import productivity
 
 urlpatterns = [
-    path("notification-actions/", notification_action, name="chat-notification-action"),
-    path("quick-replies/", productivity.saved_replies),
-    path("quick-replies/<uuid:id>/", productivity.saved_reply),
-    path("conversations/<uuid:id>/starred/", productivity.starred_messages),
-    path("conversations/<uuid:id>/forward/", productivity.forward_messages),
+    path(
+        "notification-actions/",
+        NotificationActionAPIView.as_view(),
+        name="chat-notification-action",
+    ),
+    path("quick-replies/", productivity.SavedRepliesAPIView.as_view()),
+    path("quick-replies/<uuid:id>/", productivity.SavedReplyAPIView.as_view()),
+    path(
+        "conversations/<uuid:id>/starred/",
+        productivity.StarredMessagesAPIView.as_view(),
+    ),
+    path(
+        "conversations/<uuid:id>/forward/",
+        productivity.ForwardMessagesAPIView.as_view(),
+    ),
     path(
         "conversations/<uuid:id>/messages/<uuid:message_id>/star/",
-        productivity.message_star,
+        productivity.MessageStarAPIView.as_view(),
     ),
     path(
         "conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
-        productivity.message_pin,
+        productivity.MessagePinAPIView.as_view(),
     ),
     path(
         "conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
-        productivity.message_readers,
+        productivity.MessageReadersAPIView.as_view(),
     ),
     path(
         "conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
-        productivity.poll_vote,
+        productivity.PollVoteAPIView.as_view(),
     ),
     path(
         "conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
-        productivity.poll_close,
+        productivity.PollCloseAPIView.as_view(),
     ),
     path(
         "conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
-        forward_destinations,
+        ForwardDestinationsAPIView.as_view(),
     ),
-    path("conversations/<uuid:id>/messages/<uuid:message_id>/forward/", forward),
-    path("conversations/<uuid:id>/mentions/", unread_mentions),
-    path("conversations/<uuid:id>/mentions/<uuid:message_id>/seen/", mention_seen),
+    path(
+        "conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+        ForwardAPIView.as_view(),
+    ),
+    path("conversations/<uuid:id>/mentions/", UnreadMentionsAPIView.as_view()),
+    path(
+        "conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+        MentionSeenAPIView.as_view(),
+    ),
     path("conversations/<uuid:id>/members/", ConversationMembersAPIView.as_view()),
     path(
         "conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",

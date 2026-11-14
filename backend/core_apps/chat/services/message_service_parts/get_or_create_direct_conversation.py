@@ -1,15 +1,10 @@
 """Message service: get or create direct conversation."""
 
-import json
 import logging
-from typing import List
-from asgiref.sync import async_to_sync
-from django.core.cache import cache
 from django.db import transaction
 from rest_framework import status
 from rest_framework.exceptions import APIException, PermissionDenied, ValidationError
-from core_apps.chat.models import Conversation, ConversationParticipant, Message
-from ..presence import ONLINE_KEY_PREFIX, ONLINE_TTL_SECONDS, set_user_online_status, is_user_online
+from core_apps.chat.models import Conversation
 
 
 logger = logging.getLogger(__name__)
@@ -99,77 +94,3 @@ def get_or_create_direct_conversation(*, user, other_user, workspace=None, renta
             except (ValueError, TypeError, DjangoValidationError):
                 raise ValidationError({"rental_context": "Invalid property identity."})
     return contextual_conversation(user, other_user, workspace, rental_context)
-
-
-def _notify_recipients(
-    *, conversation: Conversation, sender, preview: str, message: Message
-) -> None:
-    """Push/in-app notify every participant except the sender of a new message."""
-    recipients = (
-        ConversationParticipant.objects.filter(conversation=conversation)
-        .exclude(user=sender)
-        .select_related("user")
-    )
-    from core_apps.chat.services.conversation_preferences import viewer_workspace
-
-    for participant in recipients:
-        from ..inbox_preferences import notifications_muted
-
-        if notifications_muted(participant):
-            continue
-        try:
-            from core_apps.notifications.models import Notification
-            from core_apps.notifications.services.notification_service import (
-                NotificationService,
-            )
-
-            sender_name = sender.get_full_name or sender.email
-            NotificationService.create_notification(
-                user=participant.user,
-                title=f"New message from {sender_name}",
-                body=preview,
-                notification_type=Notification.NotificationType.NEW_MESSAGE,
-                category="chat",
-                data={
-                    "conversation_id": str(conversation.id),
-                    "message_id": str(message.id),
-                    "sender_id": str(sender.id),
-                    "workspace": viewer_workspace(conversation, participant.user),
-                },
-                send_push=True,
-            )
-        except Exception:
-            logger.exception(
-                "Failed to notify recipient %s of new message %s",
-                participant.user_id,
-                message.id,
-            )
-
-
-def _broadcast_new_message(*, conversation: Conversation, message: Message) -> None:
-    """Broadcast a new message event to all conversation participants."""
-    try:
-        from channels.layers import get_channel_layer
-        from core_apps.chat.serializers.message import MessageSerializer
-
-        channel_layer = get_channel_layer()
-        if not channel_layer:
-            return
-
-        # ? json round-trip coerces UUID/datetime to str so msgpack can serialize the payload
-        payload = json.loads(
-            json.dumps(dict(MessageSerializer(message).data), default=str)
-        )
-        participant_ids: List[str] = list(
-            ConversationParticipant.objects.filter(
-                conversation=conversation
-            ).values_list("user__id", flat=True)
-        )
-
-        for uid in participant_ids:
-            async_to_sync(channel_layer.group_send)(
-                f"chat_user_{uid}",
-                {"type": "chat.message", "payload": payload},
-            )
-    except Exception:
-        logger.exception("Failed to broadcast new message %s", message.id)

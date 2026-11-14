@@ -1,0 +1,615 @@
+{
+  "global_patterns": 795,
+  "scoped_patterns": 64,
+  "converted_original_functions": [
+    "core_apps.chat.views.forwarding.forward",
+    "core_apps.chat.views.forwarding.forward_destinations",
+    "core_apps.chat.views.mentions.mention_seen",
+    "core_apps.chat.views.mentions.unread_mentions",
+    "core_apps.chat.views.notification_actions.notification_action",
+    "core_apps.chat.views.productivity.forward_messages",
+    "core_apps.chat.views.productivity.message_pin",
+    "core_apps.chat.views.productivity.message_readers",
+    "core_apps.chat.views.productivity.message_star",
+    "core_apps.chat.views.productivity.poll_close",
+    "core_apps.chat.views.productivity.poll_vote",
+    "core_apps.chat.views.productivity.saved_replies",
+    "core_apps.chat.views.productivity.saved_reply",
+    "core_apps.chat.views.productivity.starred_messages"
+  ],
+  "scoped_function_callbacks_remaining": 0,
+  "global_transport_metadata_parity": true,
+  "routes": [
+    {
+      "route": "api/v1/notifications/delivery-policy/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.notifications.delivery_policy_views.NotificationDeliveryPolicyAPIView",
+      "handler": "core_apps.notifications.delivery_policy_views.NotificationDeliveryPolicyAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/notifications/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.notifications.views.notification.NotificationListAPIView",
+      "handler": "core_apps.notifications.views.notification.NotificationListAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/notifications/unread-count/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.notifications.views.notification.NotificationUnreadCountAPIView",
+      "handler": "core_apps.notifications.views.notification.NotificationUnreadCountAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/notifications/mark-all-read/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.notifications.views.notification.NotificationMarkAllReadAPIView",
+      "handler": "core_apps.notifications.views.notification.NotificationMarkAllReadAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/notifications/settings/",
+      "methods": [
+        "GET",
+        "PUT",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.notifications.views.notification.NotificationSettingsAPIView",
+      "handler": "core_apps.notifications.views.notification.NotificationSettingsAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/notifications/devices/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.notifications.views.device.DeviceTokenCreateAPIView",
+      "handler": "core_apps.notifications.views.device.DeviceTokenCreateAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/notifications/devices/unregister/",
+      "methods": [
+        "POST",
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.notifications.views.device.DeviceTokenDeleteAPIView",
+      "handler": "core_apps.notifications.views.device.DeviceTokenDeleteAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/notifications/<uuid:pk>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.notifications.views.notification.NotificationDetailAPIView",
+      "handler": "core_apps.notifications.views.notification.NotificationDetailAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/notifications/<uuid:pk>/read/",
+      "methods": [
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.notifications.views.notification.NotificationMarkReadAPIView",
+      "handler": "core_apps.notifications.views.notification.NotificationMarkReadAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.transcription.VoiceTranscriptionView",
+      "handler": "core_apps.chat.views.transcription.VoiceTranscriptionView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/notification-actions/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.notification_actions.notification_action",
+      "handler": "core_apps.chat.views.notification_actions.NotificationActionAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/quick-replies/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.saved_replies",
+      "handler": "core_apps.chat.views.productivity.SavedRepliesAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/quick-replies/<uuid:id>/",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.saved_reply",
+      "handler": "core_apps.chat.views.productivity.SavedReplyAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/starred/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.starred_messages",
+      "handler": "core_apps.chat.views.productivity.StarredMessagesAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/forward/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.forward_messages",
+      "handler": "core_apps.chat.views.productivity.ForwardMessagesAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/star/",
+      "methods": [
+        "PUT"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.message_star",
+      "handler": "core_apps.chat.views.productivity.MessageStarAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
+      "methods": [
+        "PUT"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.message_pin",
+      "handler": "core_apps.chat.views.productivity.MessagePinAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.message_readers",
+      "handler": "core_apps.chat.views.productivity.MessageReadersAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
+      "methods": [
+        "PUT"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.poll_vote",
+      "handler": "core_apps.chat.views.productivity.PollVoteAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.productivity.poll_close",
+      "handler": "core_apps.chat.views.productivity.PollCloseAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.forwarding.forward_destinations",
+      "handler": "core_apps.chat.views.forwarding.ForwardDestinationsAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.forwarding.forward",
+      "handler": "core_apps.chat.views.forwarding.ForwardAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/mentions/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.mentions.unread_mentions",
+      "handler": "core_apps.chat.views.mentions.UnreadMentionsAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+      "methods": [
+        "PUT"
+      ],
+      "previous_handler": "core_apps.chat.views.mentions.mention_seen",
+      "handler": "core_apps.chat.views.mentions.MentionSeenAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/members/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.interactions.ConversationMembersAPIView",
+      "handler": "core_apps.chat.views.interactions.ConversationMembersAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",
+      "methods": [
+        "PUT"
+      ],
+      "previous_handler": "core_apps.chat.views.interactions.MessageReactionAPIView",
+      "handler": "core_apps.chat.views.interactions.MessageReactionAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/chat/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.group_history.DirectChatSummaryAPIView",
+      "handler": "core_apps.chat.views.group_history.DirectChatSummaryAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.group_history.GroupMessageLookupAPIView",
+      "handler": "core_apps.chat.views.group_history.GroupMessageLookupAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/context/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.group_history.GroupMessageContextAPIView",
+      "handler": "core_apps.chat.views.group_history.GroupMessageContextAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/",
+      "methods": [
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.chat.views.group_commands.GroupMessageDeleteAPIView",
+      "handler": "core_apps.chat.views.group_commands.GroupMessageDeleteAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "previous_handler": "core_apps.chat.views.preferences.ConversationPreferencesAPIView",
+      "handler": "core_apps.chat.views.preferences.ConversationPreferencesAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/events/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.group_history.GroupEventsAPIView",
+      "handler": "core_apps.chat.views.group_history.GroupEventsAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/attachments/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.group_attachments.GroupAttachmentUploadAPIView",
+      "handler": "core_apps.chat.views.group_attachments.GroupAttachmentUploadAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+      "handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+      "handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+      "handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/admin/policy-status/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.moderation.views.AdminPolicyStatusView",
+      "handler": "core_apps.chat.moderation.views.AdminPolicyStatusView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.moderation.views.ChatPolicyView",
+      "handler": "core_apps.chat.moderation.views.ChatPolicyView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/rental-context/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.moderation.views.RentalContextView",
+      "handler": "core_apps.chat.moderation.views.RentalContextView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/account-policy/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.moderation.views.AccountPolicyView",
+      "handler": "core_apps.chat.moderation.views.AccountPolicyView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/policy-cases/<uuid:id>/appeal/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.moderation.views.AppealView",
+      "handler": "core_apps.chat.moderation.views.AppealView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/admin/policy-cases/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.moderation.views.AdminCasesView",
+      "handler": "core_apps.chat.moderation.views.AdminCasesView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.moderation.views.AdminCaseView",
+      "handler": "core_apps.chat.moderation.views.AdminCaseView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/admin/policy-cases/<uuid:id>/attachments/<uuid:attachment_id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.moderation.views.AdminCaseMediaView",
+      "handler": "core_apps.chat.moderation.views.AdminCaseMediaView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/lists/",
+      "methods": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.chat.views.preferences.ChatListsAPIView",
+      "handler": "core_apps.chat.views.preferences.ChatListsAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/messages/search/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.search.MessageSearchAPIView",
+      "handler": "core_apps.chat.views.search.MessageSearchAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/library/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.search.ConversationLibraryAPIView",
+      "handler": "core_apps.chat.views.search.ConversationLibraryAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.conversation.ConversationListAPIView",
+      "handler": "core_apps.chat.views.conversation.ConversationListAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/create/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.conversation.ConversationCreateAPIView",
+      "handler": "core_apps.chat.views.conversation.ConversationCreateAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.conversation.ConversationDetailAPIView",
+      "handler": "core_apps.chat.views.conversation.ConversationDetailAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.message.MessageListAPIView",
+      "handler": "core_apps.chat.views.message.MessageListAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/messages/create/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.message.MessageCreateAPIView",
+      "handler": "core_apps.chat.views.message.MessageCreateAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/chat/conversations/<uuid:id>/read/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.chat.views.conversation.ConversationReadAPIView",
+      "handler": "core_apps.chat.views.conversation.ConversationReadAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/attachment-policy/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.support.views.uploads.AttachmentPolicyAPIView",
+      "handler": "core_apps.support.views.uploads.AttachmentPolicyAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/uploads/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.support.views.uploads.AttachmentUploadAPIView",
+      "handler": "core_apps.support.views.uploads.AttachmentUploadAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/uploads/<uuid:id>/",
+      "methods": [
+        "GET",
+        "DELETE"
+      ],
+      "previous_handler": "core_apps.support.views.uploads.AttachmentUploadDetailAPIView",
+      "handler": "core_apps.support.views.uploads.AttachmentUploadDetailAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.support.views.reply_recovery.TicketReplyReceiptAPIView",
+      "handler": "core_apps.support.views.reply_recovery.TicketReplyReceiptAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/attachments/<uuid:id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.support.views.attachments.TicketAttachmentAPIView",
+      "handler": "core_apps.support.views.attachments.TicketAttachmentAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/help-center/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.support.views.help_center.HelpCenterAPIView",
+      "handler": "core_apps.support.views.help_center.HelpCenterAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/tickets/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.support.views.ticket.TicketListCreateAPIView",
+      "handler": "core_apps.support.views.ticket.TicketListCreateAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/tickets/creation-receipt/",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "previous_handler": "core_apps.support.views.recovery.TicketCreationReceiptAPIView",
+      "handler": "core_apps.support.views.recovery.TicketCreationReceiptAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/tickets/<str:id>/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.support.views.ticket.TicketDetailAPIView",
+      "handler": "core_apps.support.views.ticket.TicketDetailAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/support/tickets/<str:id>/replies/",
+      "methods": [
+        "POST"
+      ],
+      "previous_handler": "core_apps.support.views.ticket.TicketReplyAPIView",
+      "handler": "core_apps.support.views.ticket.TicketReplyAPIView",
+      "style": "DRF CBV"
+    },
+    {
+      "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/chat/",
+      "methods": [
+        "GET"
+      ],
+      "previous_handler": "core_apps.chat.views.group_history.GroupChatSummaryAPIView",
+      "handler": "core_apps.chat.views.group_history.GroupChatSummaryAPIView",
+      "style": "DRF CBV"
+    }
+  ]
+}

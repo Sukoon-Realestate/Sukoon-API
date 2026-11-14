@@ -235,7 +235,7 @@ def staff_command(user, ticket_id, data, key):
 
 @transaction.atomic
 def answer(
-    *, user, ticket_id, workspace, request_id, expected_revision, body, attachment_ids
+    *, user, ticket_id, workspace, request_id, expected_revision, body, attachment_ids, compact=False
 ):
     from .ticket_service import get_ticket_detail, add_ticket_reply
     from core_apps.users.models import User
@@ -247,7 +247,7 @@ def answer(
         or current.security_epoch != user.security_epoch
     ):
         raise PermissionDenied("Account authority changed.")
-    ticket = get_ticket_detail(user, ticket_id, workspace)
+    ticket = get_ticket_detail(user, ticket_id, workspace, prepare=False)
     ticket = Ticket.objects.select_for_update().get(pk=ticket.pk)
     if not eligible(ticket):
         raise PermissionDenied("This support request is outside the MVP inquiry scope.")
@@ -265,11 +265,11 @@ def answer(
     from .information_evidence import validate_answer, record_submission
 
     validate_answer(row, attachment_ids, user)
-    updated = add_ticket_reply(user, ticket_id, body, workspace, attachment_ids)
+    updated = add_ticket_reply(user, ticket_id, body, workspace, attachment_ids, compact=compact)
     row.answer = updated.messages.order_by("-created_at", "-pkid").first()
     row.status = "answer_sent"
     row.revision += 1
     row.save(update_fields=["answer", "status", "revision", "updated_at"])
     record_submission(row)
     event(row, user, "answer_sent")
-    return get_ticket_detail(user, ticket_id, workspace)
+    return get_ticket_detail(user, ticket_id, workspace, prepare=not compact)

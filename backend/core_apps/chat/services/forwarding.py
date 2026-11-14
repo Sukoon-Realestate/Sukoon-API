@@ -27,7 +27,11 @@ class ForwardBody(serializers.Serializer):
 
 def source_message(conversation, user, message_id):
     conversation, participant, _ = authorize(conversation, user)
-    message = get_object_or_404(visible_messages(conversation, participant), id=message_id, deleted_at__isnull=True)
+    message = get_object_or_404(
+        visible_messages(conversation, participant),
+        id=message_id,
+        deleted_at__isnull=True,
+    )
     if message.kind in {"system", "poll"}:
         raise ValidationError("This message kind cannot be forwarded.")
     return message, participant
@@ -35,7 +39,11 @@ def source_message(conversation, user, message_id):
 
 def destinations(conversation, user, message_id, query):
     message, _ = source_message(conversation, user, message_id)
-    candidates = visible(user).exclude(pk=conversation.pk).select_related("housing_group", "company_request")
+    candidates = (
+        visible(user)
+        .exclude(pk=conversation.pk)
+        .select_related("housing_group", "company_request")
+    )
     if message.kind == "property":
         candidates = candidates.filter(kind="housing_group")
     if query.get("q", "").strip():
@@ -51,7 +59,11 @@ def destinations(conversation, user, message_id, query):
         title = (
             sender_payload(target.participants.exclude(pk=user.pk).get())["name"]
             if target.kind == "direct"
-            else candidate.housing_group.name if target.kind == "housing_group" else candidate.company_request.title
+            else (
+                candidate.housing_group.name
+                if target.kind == "housing_group"
+                else candidate.company_request.title
+            )
         )
         result.append(
             {
@@ -72,16 +84,30 @@ def lock_roots(conversations):
     from core_apps.features.planning_models import HousingGroup
 
     direct = [c.pk for c in conversations if c.kind == "direct"]
-    people = User.objects.filter(conversation_participants__conversation_id__in=direct).values_list("pk", flat=True)
-    list(User.objects.select_for_update(no_key=True).filter(pk__in=people).order_by("pk"))
-    requests = CompanyHousingRequest.objects.filter(
-        pk__in=[c.company_request_id for c in conversations if c.kind == "company_request"]
+    people = User.objects.filter(
+        conversation_participants__conversation_id__in=direct
+    ).values_list("pk", flat=True)
+    list(
+        User.objects.select_for_update(no_key=True).filter(pk__in=people).order_by("pk")
     )
-    list(Company.objects.select_for_update().filter(pk__in=requests.values("company_id")).order_by("pk"))
+    requests = CompanyHousingRequest.objects.filter(
+        pk__in=[
+            c.company_request_id for c in conversations if c.kind == "company_request"
+        ]
+    )
+    list(
+        Company.objects.select_for_update()
+        .filter(pk__in=requests.values("company_id"))
+        .order_by("pk")
+    )
     list(requests.select_for_update().order_by("pk"))
     list(
         HousingGroup.objects.select_for_update()
-        .filter(pk__in=[c.housing_group_id for c in conversations if c.kind == "housing_group"])
+        .filter(
+            pk__in=[
+                c.housing_group_id for c in conversations if c.kind == "housing_group"
+            ]
+        )
         .order_by("pk")
     )
 
@@ -98,18 +124,29 @@ def forward_message(conversation, user, message_id, data):
     authorize(target, user, action="send_message")
     lock_roots([conversation, target])
     grants = {
-        c.pk: authorize(c, user, action="send_message" if c.pk == target.pk else "read_chat", lock=True)
+        c.pk: authorize(
+            c,
+            user,
+            action="send_message" if c.pk == target.pk else "read_chat",
+            lock=True,
+        )
         for c in sorted([conversation, target], key=lambda c: c.pk)
     }
     conversation, source_member, _ = grants[conversation.pk]
     target, recipient, _ = grants[target.pk]
-    if str(body["source_membership_period"]) != str(source_member.membership_period) or str(
-        body["destination_membership_period"]
-    ) != str(recipient.membership_period):
+    if str(body["source_membership_period"]) != str(
+        source_member.membership_period
+    ) or str(body["destination_membership_period"]) != str(recipient.membership_period):
         raise ChatConflict("Refresh the current chat membership before retrying.")
     fingerprint = hashlib.sha256(
         json.dumps(
-            ["forward", str(conversation.id), str(message_id), {k: str(v) for k, v in body.items()}], sort_keys=True
+            [
+                "forward",
+                str(conversation.id),
+                str(message_id),
+                {k: str(v) for k, v in body.items()},
+            ],
+            sort_keys=True,
         ).encode()
     ).hexdigest()
     existing = Message.objects.filter(
@@ -119,9 +156,15 @@ def forward_message(conversation, user, message_id, data):
         if existing.payload_fingerprint != fingerprint or not existing.is_forwarded:
             raise ChatConflict()
         if existing.sequence < recipient.visible_from_sequence:
-            raise ChatConflict("This operation belongs to an earlier membership period.")
+            raise ChatConflict(
+                "This operation belongs to an earlier membership period."
+            )
         return existing
-    message = visible_messages(conversation, source_member).filter(id=message_id, deleted_at__isnull=True).first()
+    message = (
+        visible_messages(conversation, source_member)
+        .filter(id=message_id, deleted_at__isnull=True)
+        .first()
+    )
     if message is None:
         raise NotFound("This message is unavailable.")
     if message.kind in {"system", "poll"}:
@@ -172,3 +215,101 @@ def forward_message(conversation, user, message_id, data):
     forwarded.payload_fingerprint = fingerprint
     forwarded.save(update_fields=["is_forwarded", "payload_fingerprint"])
     return forwarded
+
+
+def destination_page(conversation, user, message_id, query):
+    """Scan at most 100 current candidates; rejected rows still advance the cursor."""
+    from datetime import datetime
+    from django.core import signing
+    from django.db.models import F, Q
+    from core_apps.users.models import User
+
+    message, source = source_message(conversation, user, message_id)
+    fresh = User.objects.get(pk=user.pk)
+    binding = [
+        str(user.pk),
+        fresh.security_epoch,
+        str(conversation.pk),
+        str(source.membership_period),
+        str(message_id),
+        message.revision,
+        query.get("q", ""),
+    ]
+    candidates = (
+        visible(fresh)
+        .exclude(pk=conversation.pk)
+        .select_related("housing_group", "company_request")
+    )
+    if message.kind == "property":
+        candidates = candidates.filter(kind="housing_group")
+    if query.get("q", "").strip():
+        from .search import filter_conversations, query_text
+
+        candidates = filter_conversations(candidates, query_text(query), fresh)
+    if query.get("cursor"):
+        try:
+            decoded = signing.loads(
+                query["cursor"], salt="chat-forward-destinations", max_age=1800
+            )
+            if decoded["binding"] != binding:
+                raise ValueError()
+            identity = uuid.UUID(decoded["id"])
+            stamp = datetime.fromisoformat(decoded["at"]) if decoded["at"] else None
+        except (signing.BadSignature, KeyError, ValueError, TypeError) as exc:
+            raise ValidationError({"cursor": "Refresh forward destinations."}) from exc
+        if stamp is None:
+            candidates = candidates.filter(
+                last_message_at__isnull=True, id__lt=identity
+            )
+        else:
+            candidates = candidates.filter(
+                Q(last_message_at__lt=stamp)
+                | Q(last_message_at=stamp, id__lt=identity)
+                | Q(last_message_at__isnull=True)
+            )
+    rows = list(
+        candidates.order_by(F("last_message_at").desc(nulls_last=True), "-id")[:101]
+    )
+    results, last, scanned = [], None, 0
+    for candidate in rows[:100]:
+        last = candidate
+        scanned += 1
+        try:
+            target, participant, _ = authorize(candidate, fresh, action="send_message")
+        except APIException:
+            continue
+        title = (
+            sender_payload(target.participants.exclude(pk=fresh.pk).get())["name"]
+            if target.kind == "direct"
+            else (
+                target.housing_group.name
+                if target.kind == "housing_group"
+                else target.company_request.title
+            )
+        )
+        results.append(
+            {
+                "id": str(target.id),
+                "title": title,
+                "conversation_type": target.kind,
+                "membership_period": str(participant.membership_period),
+            }
+        )
+        if len(results) == 20:
+            break
+    more = len(rows) > scanned
+    cursor = (
+        signing.dumps(
+            {
+                "binding": binding,
+                "id": str(last.id),
+                "at": (
+                    last.last_message_at.isoformat() if last.last_message_at else None
+                ),
+            },
+            salt="chat-forward-destinations",
+        )
+        if more
+        else None
+    )
+    return {"results": results, "next_cursor": cursor, "has_more": bool(cursor)}

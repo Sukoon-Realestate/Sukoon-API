@@ -1,5 +1,7 @@
 """Socket edits/deletions serialized with sends, membership changes and retries."""
 
+from .event_names import MESSAGE_EDITED, CONVERSATION_UPDATED
+
 import hashlib
 import json
 from uuid import UUID
@@ -18,6 +20,8 @@ from .group_projection import message_payload
 
 @transaction.atomic
 def mutate_message(conversation, user, data):
+    if not isinstance(data, dict):
+        raise ValidationError("Supply a message operation object.")
     kind = data.get("type")
     if kind not in {"message.edit", "message.delete"}:
         raise ValidationError("Unsupported message operation.")
@@ -108,7 +112,7 @@ def mutate_message(conversation, user, data):
         conversation.last_message_preview = (content or "📷")[:200]
         conversation.save(update_fields=["last_message_preview"])
     record_event(
-        conversation, "message.edited", message=message, actor=user, data=event_data
+        conversation, MESSAGE_EDITED, message=message, actor=user, data=event_data
     )
-    record_event(conversation, "conversation.updated", actor=user)
+    record_event(conversation, CONVERSATION_UPDATED, actor=user)
     return message_payload(message, participant, member)

@@ -26,6 +26,13 @@ class MessageSerializer(serializers.ModelSerializer):
         return "sent"
 
 
+class MessageTextField(serializers.CharField):
+    def to_internal_value(self, data):
+        from core_apps.chat.services.group_limits import validate_text
+
+        return super().to_internal_value(validate_text(data))
+
+
 class MessageCreateSerializer(serializers.Serializer):
     """
     Send a message in a conversation.
@@ -34,5 +41,5 @@ class MessageCreateSerializer(serializers.Serializer):
         {"content": "Hello, is this property still available?"}
     """
 
-    content = serializers.CharField(max_length=5000)
+    content = MessageTextField()
     client_message_id = serializers.UUIDField(required=False)

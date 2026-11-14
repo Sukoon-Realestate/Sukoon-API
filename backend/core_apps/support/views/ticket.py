@@ -13,6 +13,7 @@ from core_apps.common.idempotency import (
 )
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.support.models import Ticket
+from core_apps.support.services.receipts import compact_requested, ticket_receipt
 from core_apps.support.pagination import SupportPagination
 from core_apps.support.serializers import (
     TicketCreateSerializer,
@@ -141,7 +142,7 @@ class TicketReplyAPIView(APIView):
         workspace = request.query_params.get("workspace")
         try:
             ticket = get_ticket_detail(
-                user=request.user, ticket_id=id, workspace=workspace
+                user=request.user, ticket_id=id, workspace=workspace, prepare=False
             )
         except Ticket.DoesNotExist:
             raise Http404("Ticket not found or access denied.")
@@ -150,6 +151,7 @@ class TicketReplyAPIView(APIView):
                 {"message": "لا يمكن الرد على تذكرة دعم تم حلها أو إغلاقها."},
                 status=status.HTTP_409_CONFLICT,
             )
+        compact = compact_requested(request)
         request_key = get_idempotency_key(request)
 
         def create_reply():
@@ -166,6 +168,7 @@ class TicketReplyAPIView(APIView):
                         expected_revision=serializer.validated_data["information_revision"],
                         body=serializer.validated_data["body"],
                         attachment_ids=serializer.validated_data.get("attachment_ids", []),
+                        compact=compact,
                     )
                 else:
                     updated_ticket = add_ticket_reply(
@@ -174,17 +177,20 @@ class TicketReplyAPIView(APIView):
                         body=serializer.validated_data["body"],
                         workspace=workspace,
                         attachment_ids=serializer.validated_data.get("attachment_ids", []),
+                        compact=compact,
                     )
             except TicketClosedConflict as exc:
                 # The row may have changed after the pre-check.
                 raise TicketStateConflict(str(exc))
-            detail = TicketDetailSerializer(
+            detail = (ticket_receipt(updated_ticket) if compact else TicketDetailSerializer(
                 updated_ticket, context={"request": request}
-            ).data
+            ).data)
             reply = updated_ticket.messages.order_by("-created_at", "-pk").first()
             return detail, status.HTTP_200_OK, reply.id
 
         payload = {**serializer.validated_data, "workspace": workspace or ""}
+        if compact:
+            payload["receipt"] = "compact"
         data, response_status, replayed = execute_idempotent(
             user=request.user,
             auth_claims=request.auth,

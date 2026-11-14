@@ -163,9 +163,10 @@ def message_payload(message, participant, membership, *, properties=None, roster
                     "after": edit.after,
                     "edited_at": edit.created_at.isoformat(),
                 }
-                for edit in message.edits.all()
+                for edit in (message.page_edits if hasattr(message, "page_edits") else message.edits.all())
             ]
         ),
+        **({"edit_history_page": message.edit_page} if hasattr(message, "edit_page") else {}),
         "delete_before": (message.created_at + timedelta(hours=1)).isoformat(),
         "reply_to": reply,
         "attachments": (

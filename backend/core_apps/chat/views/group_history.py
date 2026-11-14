@@ -1,4 +1,5 @@
 from django.db import transaction
+from core_apps.chat.services.read_context import MessagePage
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +9,6 @@ from core_apps.chat.models import ChatEvent, Conversation
 from core_apps.chat.services.group_access import (
     authorize,
     visible_messages,
-    eligible_participants,
 )
 from core_apps.chat.services.group_cursors import (
     decode_cursor,
@@ -17,8 +17,7 @@ from core_apps.chat.services.group_cursors import (
 )
 from core_apps.chat.services.group_events import event_payload
 from core_apps.chat.services.group_limits import ChatResync, ChatUnavailable
-from core_apps.chat.services.group_projection import message_payload, summary
-from core_apps.chat.services.property_sharing import properties_for_messages
+from core_apps.chat.services.group_projection import summary
 
 
 def history_response(conversation, user, query):
@@ -39,28 +38,12 @@ def history_response(conversation, user, query):
                 sequence__lte=snapshot,
             )
             .select_related("sender__profile", "reply_to__sender__profile")
-            .prefetch_related(
-                "attachments__conversation",
-                "reply_to__attachments__conversation",
-                "edits",
-                "reactions",
-            )
             .order_by("-sequence")[: count + 1]
         )
         more = len(rows) > count
         rows = rows[:count]
-        roster = list(eligible_participants(conversation))
-        for message in rows:
-            message.conversation = conversation
-        properties = properties_for_messages(rows)
-        response = Response(
-            [
-                message_payload(
-                    m, participant, member, properties=properties, roster=roster
-                )
-                for m in reversed(rows)
-            ]
-        )
+        page = MessagePage.prepare(rows, (conversation, participant, member), query)
+        response = Response([page.payload(m) for m in reversed(rows)])
         response["X-Chat-Older-Cursor"] = (
             encode_cursor(
                 conversation, participant, "older", rows[-1].sequence, snapshot
@@ -132,7 +115,10 @@ class GroupMessageLookupAPIView(APIView):
                 "No committed message is currently visible.",
                 code="chat_message_not_found",
             )
-        return Response(message_payload(message, participant, member))
+        page = MessagePage.prepare(
+            [message], (conversation, participant, member), request.query_params
+        )
+        return Response(page.payload(message))
 
 
 class GroupMessageContextAPIView(APIView):
@@ -144,15 +130,8 @@ class GroupMessageContextAPIView(APIView):
             get_object_or_404(Conversation, id=id), request.user, lock=True
         )
         count = page_limit(request.query_params)
-        visible = (
-            visible_messages(conversation, participant)
-            .select_related("sender__profile", "reply_to__sender__profile")
-            .prefetch_related(
-                "attachments__conversation",
-                "reply_to__attachments__conversation",
-                "edits",
-                "reactions",
-            )
+        visible = visible_messages(conversation, participant).select_related(
+            "sender__profile", "reply_to__sender__profile"
         )
         target = get_object_or_404(visible, id=message_id)
         older = list(
@@ -166,18 +145,10 @@ class GroupMessageContextAPIView(APIView):
             ]
         )
         rows = list(reversed(older)) + newer
-        roster = list(eligible_participants(conversation))
-        for message in rows:
-            message.conversation = conversation
-        properties = properties_for_messages(rows)
-        response = Response(
-            [
-                message_payload(
-                    m, participant, member, properties=properties, roster=roster
-                )
-                for m in rows
-            ]
+        page = MessagePage.prepare(
+            rows, (conversation, participant, member), request.query_params
         )
+        response = Response([page.payload(m) for m in rows])
         more = visible.filter(sequence__lt=rows[0].sequence).exists()
         response["X-Chat-Older-Cursor"] = (
             encode_cursor(
@@ -226,14 +197,6 @@ class GroupEventsAPIView(APIView):
                 "message__reply_to__sender__profile",
                 "message__poll",
             )
-            .prefetch_related(
-                "message__attachments__conversation",
-                "message__reply_to__attachments__conversation",
-                "message__edits",
-                "message__reactions",
-                "message__stars",
-                "message__poll__votes",
-            )
             .order_by("sequence")[: count + 1]
         )
         if any(
@@ -241,11 +204,10 @@ class GroupEventsAPIView(APIView):
         ) or (not rows and cursor["n"] < conversation.last_event_sequence):
             raise ChatResync()
         more, rows = len(rows) > count, rows[:count]
-        roster = list(eligible_participants(conversation))
         messages = [event.message for event in rows if event.message_id]
-        for message in messages:
-            message.conversation = conversation
-        properties = properties_for_messages(messages)
+        page = MessagePage.prepare(
+            messages, (conversation, participant, member), request.query_params
+        )
         result = [
             payload
             for event in rows
@@ -254,8 +216,8 @@ class GroupEventsAPIView(APIView):
                     event,
                     request.user,
                     authorized=(conversation, participant, member),
-                    roster=roster,
-                    properties=properties,
+                    roster=page.roster,
+                    properties=page.properties,
                 )
             )
             is not None

@@ -1,8 +1,6 @@
-from django.db.models import Q
 from rest_framework import serializers
 
 from core_apps.chat.models import Conversation
-from core_apps.chat.services.message_service import direct_message_blocked
 from core_apps.chat.serializers.participant import ParticipantSerializer
 from core_apps.properties.phone_disclosure import counterpart_phone_payload
 
@@ -15,11 +13,14 @@ class ConversationParticipantSerializer(ParticipantSerializer):
 
     def _contact(self, user):
         request = self.context.get("request")
-        return counterpart_phone_payload(
-            viewer=getattr(request, "user", None),
-            counterpart=user,
-            request=request,
-        )
+        contacts = self.context.setdefault("chat_contacts", {})
+        if user.pk not in contacts:
+            contacts[user.pk] = counterpart_phone_payload(
+                viewer=getattr(request, "user", None),
+                counterpart=user,
+                request=request,
+            )
+        return contacts[user.pk]
 
     def get_phone_number(self, user):
         return self._contact(user)["phone_number"]
@@ -51,13 +52,13 @@ class ConversationSerializer(serializers.ModelSerializer):
             from core_apps.chat.services.group_projection import summary
 
             return summary(instance, self.context["request"].user)
-        from core_apps.chat.services.group_access import authorize
-        from core_apps.chat.services.conversation_preferences import preferences_payload
-        _, participant, _ = authorize(instance, self.context["request"].user)
+        prepared = self._read(instance)
         value = {"conversation_type": "direct", **super().to_representation(instance)}
-        value.update(preferences_payload(instance, self.context["request"].user, participant))
-        latest = self._latest_visible_message(instance, participant)
-        value["last_message_preview"] = latest.content[:160] if latest and not latest.deleted_at else ""
+        value.update(prepared.preferences)
+        latest = prepared.latest
+        value["last_message_preview"] = (
+            latest.content[:160] if latest and not latest.deleted_at else ""
+        )
         value["last_message_at"] = latest.created_at.isoformat() if latest else None
         return value
 
@@ -82,19 +83,21 @@ class ConversationSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if not request or not request.user:
             return None
-        from core_apps.chat.services.group_access import authorize
-        _, participant, _ = authorize(obj, request.user)
-        latest = self._latest_visible_message(obj, participant)
+        latest = self._read(obj).latest
         return conversation_preview(latest, request.user)
 
-    @staticmethod
-    def _latest_visible_message(conversation, participant):
-        visible = Q(sequence__gte=participant.visible_from_sequence)
-        # Older clients can still send unsequenced text. Include it only when
-        # this participant has not cleared their history.
-        if participant.visible_from_sequence <= 1:
-            visible |= Q(sequence__isnull=True)
-        return conversation.messages.filter(visible).order_by("-created_at", "-pk").first()
+    def _read(self, conversation):
+        # Local to this serializer/response; never survives another request or
+        # authorizes a command, private bytes, transcript or socket dispatch.
+        from core_apps.chat.services.read_context import ConversationRead
+
+        if not hasattr(self, "prepared_reads"):
+            self.prepared_reads = {}
+        if conversation.pk not in self.prepared_reads:
+            self.prepared_reads[conversation.pk] = ConversationRead.prepare(
+                conversation, self.context["request"].user
+            )
+        return self.prepared_reads[conversation.pk]
 
     def get_other_participant(self, obj):
         request = self.context.get("request")
@@ -124,22 +127,13 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     def get_policy(self, obj):
         from core_apps.chat.moderation.policy import projection
-        return projection(obj, self.context['request'].user)
+
+        return projection(obj, self.context["request"].user)
 
     def get_can_send(self, obj) -> bool:
-        request = self.context.get("request")
-        from core_apps.chat.moderation.policy import restricted
-        return bool(
-            request
-            and not restricted(request.user)
-            and request.user.is_active
-            and obj.participants.filter(pk=request.user.pk).exists()
-            and obj.participants.filter(is_active=True).count() == 2
-            and not any(
-                direct_message_blocked(request.user, other)
-                for other in obj.participants.exclude(pk=request.user.pk)
-            )
-        )
+        from core_apps.chat.services.group_access import actions
+
+        return "send_message" in actions(self._read(obj).grant)
 
 
 class ConversationCreateSerializer(serializers.Serializer):
@@ -151,7 +145,9 @@ class ConversationCreateSerializer(serializers.Serializer):
     """
 
     user_id = serializers.UUIDField()
-    workspace = serializers.ChoiceField(choices=['individual', 'owner', 'student'], required=False)
+    workspace = serializers.ChoiceField(
+        choices=["individual", "owner", "student"], required=False
+    )
 
     rental_context = serializers.JSONField(required=False)
-    expected_visit_revision = serializers.IntegerField(min_value=1,required=False)
+    expected_visit_revision = serializers.IntegerField(min_value=1, required=False)

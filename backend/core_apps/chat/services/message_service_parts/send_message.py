@@ -1,127 +1,29 @@
 """Message service: send message."""
 
 from asgiref.sync import async_to_sync
-from django.db import IntegrityError, transaction
-from django.db.models import F
+from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied, ValidationError
-from core_apps.chat.models import Conversation, ConversationParticipant, Message
+from core_apps.chat.models import Conversation, ConversationParticipant
 from .get_or_create_direct_conversation import (
     logger,
     ChatMessageConflict,
-    direct_message_blocked,
-    _notify_recipients,
-    _broadcast_new_message,
 )
 
 
-@transaction.atomic
-def send_message(
-    *, conversation: Conversation, sender, content: str, client_message_id=None
-) -> Message:
-    """
-    Create a message, update conversation preview, increment recipients' unread counts,
-    and broadcast to all participants via the channel layer.
-    """
-    if conversation.kind in {"housing_group", "company_request"}:
-        from ..group_send import send_group_message
+def send_message(*, conversation, sender, content, client_message_id=None):
+    from ..commands import SendCommand, send
+    from ..group_limits import ChatConflict
 
-        return send_group_message(
-            conversation,
-            sender,
-            {
-                "client_message_id": str(client_message_id),
-                "kind": "text",
-                "content": content,
-            },
-        )
-    from ..group_limits import validate_text
-
-    content = validate_text(content)
-    # Guard: sender must be a participant in the conversation
-    if not ConversationParticipant.objects.filter(
+    if conversation.kind == "direct" and not ConversationParticipant.objects.filter(
         conversation=conversation, user=sender
     ).exists():
-        raise ValidationError(
-            {"content": "You are not a participant in this conversation."}
-        )
-
-    from ..direct_access import lock_root, prepare_locked
-
-    conversation = prepare_locked(lock_root(conversation))
-    if not conversation.participants.filter(pk=sender.pk, is_active=True).exists():
-        raise PermissionDenied("An active participant is required.")
-    for recipient in conversation.participants.exclude(pk=sender.pk):
-        if not recipient.is_active or direct_message_blocked(
-            sender, recipient, lock=True
-        ):
-            raise PermissionDenied(
-                "Messaging consent is not active for this connection."
-            )
-
-    from ..send_receipts import preserve_original_send, text_fingerprint
-    fingerprint = text_fingerprint(content)
-    if client_message_id:
-        existing = Message.objects.filter(
-            conversation=conversation,
-            sender=sender,
-            client_message_id=client_message_id,
-        ).first()
-        if existing:
-            if (
-                preserve_original_send(existing) != fingerprint
-                or existing.sequence < conversation.participant_set.get(user=sender).visible_from_sequence
-            ):
-                raise ChatMessageConflict()
-            return existing
-    from core_apps.chat.moderation.policy import attach_context, require_send
-    attach_context(conversation, sender)
-    require_send(conversation, sender)
+        raise ValidationError({"content": "You are not a participant in this conversation."})
     try:
-        # The savepoint keeps the surrounding transaction usable when REST and
-        # WebSocket race on the same database uniqueness constraint.
-        with transaction.atomic():
-            message = Message.objects.create(
-                conversation=conversation,
-                sender=sender,
-                content=content,
-                client_message_id=client_message_id,
-                payload_fingerprint=fingerprint,
-                sequence=conversation.last_sequence + 1,
-            )
-    except IntegrityError:
-        if not client_message_id:
-            raise
-        message = Message.objects.get(
-            conversation=conversation,
-            sender=sender,
-            client_message_id=client_message_id,
-        )
-        if preserve_original_send(message) != fingerprint:
-            raise ChatMessageConflict()
-        return message
-
-    preview = content[:200] if len(content) > 200 else content
-    Conversation.objects.filter(pk=conversation.pk).update(
-        last_sequence=message.sequence,
-        last_message_at=message.created_at,
-        last_message_preview=preview,
-    )
-
-    # Increment unread count for every participant except the sender
-    ConversationParticipant.objects.filter(
-        conversation=conversation,
-    ).exclude(
-        user=sender
-    ).update(unread_count=F("unread_count") + 1)
-
-    # Share durable events with media sends, including current access at delivery.
-    from ..group_events import record_event
-
-    conversation.refresh_from_db()
-    record_event(conversation, "message.new", message=message, actor=sender)
-
-    return message
+        return send(conversation, sender, SendCommand.legacy_text(content, client_message_id))
+    except ChatConflict as exc:
+        # The original protocol keeps its established conflict code and text.
+        raise ChatMessageConflict() from exc
 
 
 def _broadcast_read_receipt(*, conversation: Conversation, reader) -> None:

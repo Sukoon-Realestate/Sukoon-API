@@ -47,7 +47,7 @@ def request_transcription(attachment, user):
     # The attachment serializes requests from different conversation members;
     # locking only the requester would race on the one-to-one job constraint.
     attachment = ChatAttachment.objects.select_for_update().get(pk=attachment.pk)
-    from ..views.group_attachments import accessible_attachment
+    from .attachment_access import accessible_attachment
 
     accessible_attachment(attachment.conversation, user, identity=attachment.id)
     job = (
@@ -127,7 +127,7 @@ def process_one():
             ]
         )
     try:
-        from ..views.group_attachments import accessible_attachment
+        from .attachment_access import accessible_attachment
 
         attachment = accessible_attachment(
             job.attachment.conversation, job.requester, identity=job.attachment.id

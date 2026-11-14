@@ -245,3 +245,13 @@ test-sprint08-commerce: ## Commerce/domain/identity regressions; supply isolated
 
 sprint08-coverage: ## Reconcile all 73 original commerce functions, callbacks and global aliases
 	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint08_inventory.py
+
+.PHONY: test-sprint09-communication sprint09-coverage
+test-sprint09-communication: ## Communication CBVs/commands/reads; supply isolated settings/storage
+	mkdir -p $(BASELINE_OUT)/sprint-09
+	$(BASELINE_ENV) DOTENV_DISABLED=1 $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-09/junit.xml \
+		core_apps/chat core_apps/notifications core_apps/support
+
+sprint09-coverage: ## Reconcile all communication aliases and transport policies, without database access
+	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint09_inventory.py

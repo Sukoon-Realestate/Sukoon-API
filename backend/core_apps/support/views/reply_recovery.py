@@ -6,6 +6,7 @@ from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.common.idempotency import request_key, resolve_or_close
 from core_apps.features.models import IdempotencyRecord
 from core_apps.support.models import Ticket
+from core_apps.support.services.receipts import compact_requested, ticket_receipt
 from core_apps.support.services import get_ticket_detail
 from core_apps.support.serializers import TicketDetailSerializer
 
@@ -23,10 +24,14 @@ class TicketReplyReceiptAPIView(APIView):
     def project(self, request, id, close):
         try:
             ticket = get_ticket_detail(
-                request.user, id, workspace=request.query_params.get("workspace")
+                request.user,
+                id,
+                workspace=request.query_params.get("workspace"),
+                prepare=False,
             )
         except Ticket.DoesNotExist:
             raise NotFound()
+        compact = compact_requested(request)
         key = request_key(request)
         if not key:
             raise ValidationError("Supply the original Idempotency-Key.")
@@ -57,10 +62,14 @@ class TicketReplyReceiptAPIView(APIView):
                 "outcome": outcome,
                 "request_key": key,
                 "ticket": (
-                    TicketDetailSerializer(
-                        get_ticket_detail(request.user, id),
-                        context={"request": request},
-                    ).data
+                    (
+                        ticket_receipt(ticket)
+                        if compact
+                        else TicketDetailSerializer(
+                            get_ticket_detail(request.user, id),
+                            context={"request": request},
+                        ).data
+                    )
                     if outcome == "acknowledged"
                     else None
                 ),

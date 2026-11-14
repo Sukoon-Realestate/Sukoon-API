@@ -1,0 +1,2692 @@
+[
+  {
+    "route": "api/v1/notifications/delivery-policy/",
+    "name": "notification-delivery-policy",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.delivery_policy_views.NotificationDeliveryPolicyAPIView",
+    "file": "core_apps/notifications/delivery_policy_views.py",
+    "line": 34,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "PolicyInput",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "signals": [
+      "headers",
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/notifications/tests/test_delivery_policy.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/notifications/",
+    "name": "notification-list",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.views.notification.NotificationListAPIView",
+    "file": "core_apps/notifications/views/notification.py",
+    "line": 19,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "NotificationListSerializer",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/common/test_mobile_locale.py",
+      "core_apps/common/test_api_budgets.py",
+      "core_apps/notifications/tests/test_account_scope.py",
+      "core_apps/notifications/tests/test_views.py",
+      "core_apps/notifications/tests/test_workspace_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/notifications/unread-count/",
+    "name": "notification-unread-count",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.views.notification.NotificationUnreadCountAPIView",
+    "file": "core_apps/notifications/views/notification.py",
+    "line": 125,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/common/test_api_budgets.py",
+      "core_apps/notifications/tests/test_account_scope.py",
+      "core_apps/notifications/tests/test_views.py",
+      "core_apps/notifications/tests/test_workspace_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/notifications/mark-all-read/",
+    "name": "notification-mark-all-read",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.views.notification.NotificationMarkAllReadAPIView",
+    "file": "core_apps/notifications/views/notification.py",
+    "line": 102,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/notifications/tests/test_account_scope.py",
+      "core_apps/notifications/tests/test_views.py",
+      "core_apps/notifications/tests/test_workspace_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/notifications/settings/",
+    "name": "notification-settings",
+    "methods": [
+      "GET",
+      "PUT",
+      "PATCH"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.views.notification.NotificationSettingsAPIView",
+    "file": "core_apps/notifications/views/notification.py",
+    "line": 140,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "UserSettingsSerializer",
+    "mvp_allowed": {
+      "GET": true,
+      "PUT": true,
+      "PATCH": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/notifications/tests/test_views.py",
+      "core_apps/notifications/tests/test_workspace_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/notifications/devices/",
+    "name": "device-token-create",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.views.device.DeviceTokenCreateAPIView",
+    "file": "core_apps/notifications/views/device.py",
+    "line": 16,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "DeviceTokenSerializer",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/notifications/tests/test_views.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/notifications/devices/unregister/",
+    "name": "device-token-delete",
+    "methods": [
+      "POST",
+      "DELETE"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.views.device.DeviceTokenDeleteAPIView",
+    "file": "core_apps/notifications/views/device.py",
+    "line": 55,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "DeviceTokenUnregisterSerializer",
+    "mvp_allowed": {
+      "POST": true,
+      "DELETE": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/notifications/tests/test_views.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/notifications/<uuid:pk>/",
+    "name": "notification-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.views.notification.NotificationDetailAPIView",
+    "file": "core_apps/notifications/views/notification.py",
+    "line": 67,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "NotificationDetailSerializer",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_company_role_contexts.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/common/test_mobile_locale.py",
+      "core_apps/notifications/tests/test_views.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/notifications/<uuid:pk>/read/",
+    "name": "notification-mark-read",
+    "methods": [
+      "PATCH"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.notifications.views.notification.NotificationMarkReadAPIView",
+    "file": "core_apps/notifications/views/notification.py",
+    "line": 86,
+    "area": 5,
+    "family": "api/notifications",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "NotificationDetailSerializer",
+    "mvp_allowed": {
+      "PATCH": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/common/test_mobile_locale.py",
+      "core_apps/notifications/tests/test_views.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/transcription/",
+    "name": "",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.transcription.VoiceTranscriptionView",
+    "file": "core_apps/chat/views/transcription.py",
+    "line": 13,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/notification-actions/",
+    "name": "chat-notification-action",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.notification_actions.notification_action",
+    "file": "core_apps/chat/views/notification_actions.py",
+    "line": 29,
+    "area": 5,
+    "family": "api/chat/notification-actions",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "authority",
+      "headers",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_inbox_actions.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/quick-replies/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.saved_replies",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 69,
+    "area": 5,
+    "family": "api/chat/quick-replies",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_productivity.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/quick-replies/<uuid:id>/",
+    "name": "",
+    "methods": [
+      "PUT",
+      "DELETE"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.saved_reply",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 75,
+    "area": 5,
+    "family": "api/chat/quick-replies",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "PUT": true,
+      "DELETE": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_productivity.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/starred/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.starred_messages",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 35,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/forward/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.forward_messages",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 95,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/star/",
+    "name": "",
+    "methods": [
+      "PUT"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.message_star",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 17,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "PUT": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/pin/",
+    "name": "",
+    "methods": [
+      "PUT"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.message_pin",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 25,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "PUT": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/readers/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.message_readers",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 57,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/vote/",
+    "name": "",
+    "methods": [
+      "PUT"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.poll_vote",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 81,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "PUT": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/poll/close/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.productivity.poll_close",
+    "file": "core_apps/chat/views/productivity.py",
+    "line": 87,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward-destinations/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.forwarding.forward_destinations",
+    "file": "core_apps/chat/views/forwarding.py",
+    "line": 12,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/forward/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.forwarding.forward",
+    "file": "core_apps/chat/views/forwarding.py",
+    "line": 24,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "authority",
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/mentions/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.mentions.unread_mentions",
+    "file": "core_apps/chat/views/mentions.py",
+    "line": 11,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/mentions/<uuid:message_id>/seen/",
+    "name": "",
+    "methods": [
+      "PUT"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.chat.views.mentions.mention_seen",
+    "file": "core_apps/chat/views/mentions.py",
+    "line": 20,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "PUT": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/members/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.interactions.ConversationMembersAPIView",
+    "file": "core_apps/chat/views/interactions.py",
+    "line": 29,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/reaction/",
+    "name": "",
+    "methods": [
+      "PUT"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.interactions.MessageReactionAPIView",
+    "file": "core_apps/chat/views/interactions.py",
+    "line": 13,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "PUT": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/chat/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_history.DirectChatSummaryAPIView",
+    "file": "core_apps/chat/views/group_history.py",
+    "line": 101,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "headers",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/by-client-id/<uuid:client_id>/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_history.GroupMessageLookupAPIView",
+    "file": "core_apps/chat/views/group_history.py",
+    "line": 117,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/context/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_history.GroupMessageContextAPIView",
+    "file": "core_apps/chat/views/group_history.py",
+    "line": 138,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/<uuid:message_id>/",
+    "name": "",
+    "methods": [
+      "DELETE"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_commands.GroupMessageDeleteAPIView",
+    "file": "core_apps/chat/views/group_commands.py",
+    "line": 13,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "DELETE": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/preferences/",
+    "name": "",
+    "methods": [
+      "GET",
+      "PATCH"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.preferences.ConversationPreferencesAPIView",
+    "file": "core_apps/chat/views/preferences.py",
+    "line": 11,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true,
+      "PATCH": true
+    },
+    "signals": [
+      "authority"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/events/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_history.GroupEventsAPIView",
+    "file": "core_apps/chat/views/group_history.py",
+    "line": 200,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/attachments/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_attachments.GroupAttachmentUploadAPIView",
+    "file": "core_apps/chat/views/group_attachments.py",
+    "line": 75,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "authority",
+      "upload"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+    "file": "core_apps/chat/views/group_attachments.py",
+    "line": 118,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "headers",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": [
+      "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+      "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/"
+    ]
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+    "file": "core_apps/chat/views/group_attachments.py",
+    "line": 118,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "headers",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": [
+      "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+      "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/"
+    ]
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/<str:content>/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_attachments.GroupAttachmentDetailAPIView",
+    "file": "core_apps/chat/views/group_attachments.py",
+    "line": 118,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority",
+      "headers",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": [
+      "api/v1/chat/conversations/<uuid:id>/attachments/by-client-id/<uuid:client_id>/",
+      "api/v1/chat/conversations/<uuid:id>/attachments/<uuid:attachment_id>/"
+    ]
+  },
+  {
+    "route": "api/v1/chat/admin/policy-status/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.moderation.views.AdminPolicyStatusView",
+    "file": "core_apps/chat/moderation/views.py",
+    "line": 168,
+    "area": 5,
+    "family": "api/chat/admin",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_rental_moderation.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/policy/",
+    "name": "",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.moderation.views.ChatPolicyView",
+    "file": "core_apps/chat/moderation/views.py",
+    "line": 31,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "AcknowledgeSerializer",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "signals": [
+      "authority"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/rental-context/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.moderation.views.RentalContextView",
+    "file": "core_apps/chat/moderation/views.py",
+    "line": 51,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "authority"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/account-policy/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.moderation.views.AccountPolicyView",
+    "file": "core_apps/chat/moderation/views.py",
+    "line": 61,
+    "area": 5,
+    "family": "api/chat/account-policy",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/policy-cases/<uuid:id>/appeal/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.moderation.views.AppealView",
+    "file": "core_apps/chat/moderation/views.py",
+    "line": 78,
+    "area": 5,
+    "family": "api/chat/policy-cases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "AppealSerializer",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/admin/policy-cases/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.moderation.views.AdminCasesView",
+    "file": "core_apps/chat/moderation/views.py",
+    "line": 87,
+    "area": 5,
+    "family": "api/chat/admin",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_rental_moderation.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/admin/policy-cases/<uuid:id>/",
+    "name": "",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.moderation.views.AdminCaseView",
+    "file": "core_apps/chat/moderation/views.py",
+    "line": 109,
+    "area": 5,
+    "family": "api/chat/admin",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "ReviewSerializer",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_rental_moderation.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/admin/policy-cases/<uuid:id>/attachments/<uuid:attachment_id>/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.moderation.views.AdminCaseMediaView",
+    "file": "core_apps/chat/moderation/views.py",
+    "line": 126,
+    "area": 5,
+    "family": "api/chat/admin",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_rental_moderation.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/lists/",
+    "name": "chat-lists",
+    "methods": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.preferences.ChatListsAPIView",
+    "file": "core_apps/chat/views/preferences.py",
+    "line": 44,
+    "area": 5,
+    "family": "api/chat/lists",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true,
+      "DELETE": true
+    },
+    "signals": [
+      "authority"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/messages/search/",
+    "name": "message-search",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.search.MessageSearchAPIView",
+    "file": "core_apps/chat/views/search.py",
+    "line": 7,
+    "area": 5,
+    "family": "api/chat/messages",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/library/",
+    "name": "conversation-library",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.search.ConversationLibraryAPIView",
+    "file": "core_apps/chat/views/search.py",
+    "line": 16,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/",
+    "name": "conversation-list",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.conversation.ConversationListAPIView",
+    "file": "core_apps/chat/views/conversation.py",
+    "line": 35,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "ConversationSerializer",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_property_sharing.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_views.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_group_messages.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py",
+      "core_apps/properties/tests/test_visit_phone_disclosure.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/create/",
+    "name": "conversation-create",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.conversation.ConversationCreateAPIView",
+    "file": "core_apps/chat/views/conversation.py",
+    "line": 106,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "ConversationCreateSerializer, ConversationSerializer",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "authority",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_views.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_viewing_message_context.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py",
+      "core_apps/properties/tests/test_workspace_account_handoff.py",
+      "core_apps/properties/tests/test_visit_phone_disclosure.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/",
+    "name": "conversation-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.conversation.ConversationDetailAPIView",
+    "file": "core_apps/chat/views/conversation.py",
+    "line": 140,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated, IsParticipant",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "ConversationSerializer",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py",
+      "core_apps/properties/tests/test_visit_phone_disclosure.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/",
+    "name": "message-list",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.message.MessageListAPIView",
+    "file": "core_apps/chat/views/message.py",
+    "line": 26,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated, IsParticipant",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "MessageSerializer",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "authority"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_property_sharing.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_sprint04_legacy_history.py",
+      "core_apps/chat/tests/test_views.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_group_messages.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py",
+      "core_apps/properties/tests/test_visit_phone_disclosure.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/messages/create/",
+    "name": "message-create",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.message.MessageCreateAPIView",
+    "file": "core_apps/chat/views/message.py",
+    "line": 88,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated, IsParticipant",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "MessageCreateSerializer, MessageSerializer",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "authority"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_group_socket.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_property_sharing.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_views.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/chat/conversations/<uuid:id>/read/",
+    "name": "conversation-read",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.conversation.ConversationReadAPIView",
+    "file": "core_apps/chat/views/conversation.py",
+    "line": 162,
+    "area": 5,
+    "family": "api/chat/conversations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated, IsParticipant",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "authority",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_workspace_group_scope.py",
+      "core_apps/chat/tests/test_mvp_direct_tools.py",
+      "core_apps/chat/tests/test_direct_media.py",
+      "core_apps/chat/tests/test_reactions_mentions.py",
+      "core_apps/chat/tests/test_mvp_forward_media.py",
+      "core_apps/chat/tests/test_command_input_matrix.py",
+      "core_apps/chat/tests/test_group_native_media.py",
+      "core_apps/chat/tests/test_group_api.py",
+      "core_apps/chat/tests/test_participant_disclosure.py",
+      "core_apps/chat/tests/test_sprint04_performance.py",
+      "core_apps/chat/tests/test_legacy_send_policy.py",
+      "core_apps/chat/tests/test_inbox_actions.py",
+      "core_apps/chat/tests/test_rental_moderation.py",
+      "core_apps/chat/tests/test_views.py",
+      "core_apps/chat/tests/test_transcript_segments.py",
+      "core_apps/chat/tests/test_rich_attachments.py",
+      "core_apps/chat/tests/test_discovery.py",
+      "core_apps/chat/tests/test_inbox_receipts.py",
+      "core_apps/chat/tests/test_forwarding.py",
+      "core_apps/chat/tests/test_productivity.py",
+      "core_apps/chat/tests/test_all_mentions_navigation.py",
+      "core_apps/chat/tests/test_workspace_inbox.py",
+      "core_apps/chat/tests/test_voice_transcription.py",
+      "core_apps/chat/tests/test_private_workspace_preferences.py",
+      "core_apps/features/tests/test_company_discussions.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/properties/tests/test_mvp_complete_journey.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/attachment-policy/",
+    "name": "support-attachment-policy",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.uploads.AttachmentPolicyAPIView",
+    "file": "core_apps/support/views/uploads.py",
+    "line": 21,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication, SessionAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/support/tests/test_upload_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/uploads/",
+    "name": "support-upload",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.uploads.AttachmentUploadAPIView",
+    "file": "core_apps/support/views/uploads.py",
+    "line": 47,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication, SessionAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "lock",
+      "upload"
+    ],
+    "tests": [
+      "core_apps/support/tests/test_upload_recovery.py",
+      "core_apps/support/tests/test_information_evidence.py",
+      "core_apps/support/tests/test_information_requests.py",
+      "core_apps/support/tests/test_staged_media.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/uploads/<uuid:id>/",
+    "name": "support-upload-detail",
+    "methods": [
+      "GET",
+      "DELETE"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.uploads.AttachmentUploadDetailAPIView",
+    "file": "core_apps/support/views/uploads.py",
+    "line": 140,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication, SessionAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true,
+      "DELETE": true
+    },
+    "signals": [
+      "authority",
+      "headers",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/support/tests/test_upload_recovery.py",
+      "core_apps/support/tests/test_staged_media.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/tickets/<str:id>/reply-receipt/",
+    "name": "support-reply-receipt",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.reply_recovery.TicketReplyReceiptAPIView",
+    "file": "core_apps/support/views/reply_recovery.py",
+    "line": 13,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "TicketDetailSerializer",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "signals": [
+      "headers",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/common/test_mobile_locale.py",
+      "core_apps/support/tests/test_information_requests.py",
+      "core_apps/support/tests/test_staged_media.py",
+      "core_apps/support/tests/test_scope_roundtrip.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/attachments/<uuid:id>/",
+    "name": "support-attachment",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.attachments.TicketAttachmentAPIView",
+    "file": "core_apps/support/views/attachments.py",
+    "line": 18,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication, SessionAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/support/tests/test_upload_recovery.py",
+      "core_apps/support/tests/test_information_evidence.py",
+      "core_apps/support/tests/test_information_requests.py",
+      "core_apps/support/tests/test_staged_media.py",
+      "core_apps/support/tests/test_private_attachments.py",
+      "core_apps/support/tests/test_scope_roundtrip.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/help-center/",
+    "name": "support-help-center",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.help_center.HelpCenterAPIView",
+    "file": "core_apps/support/views/help_center.py",
+    "line": 13,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "HelpCenterSerializer",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/common/test_managed_content.py",
+      "core_apps/common/test_mvp_help_truth.py",
+      "core_apps/support/tests/test_views.py",
+      "core_apps/admin_api/tests/test_content_editor.py",
+      "core_apps/admin_api/tests/test_mvp_content.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/tickets/",
+    "name": "support-ticket-list-create",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.ticket.TicketListCreateAPIView",
+    "file": "core_apps/support/views/ticket.py",
+    "line": 39,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "TicketCreateSerializer, TicketDetailSerializer",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "signals": [
+      "receipt",
+      "upload"
+    ],
+    "tests": [
+      "core_apps/common/test_mobile_locale.py",
+      "core_apps/support/tests/test_views.py",
+      "core_apps/support/tests/test_staged_media.py",
+      "core_apps/support/tests/test_mvp_message_ordering.py",
+      "core_apps/support/tests/test_private_attachments.py",
+      "core_apps/support/tests/test_creation_recovery.py",
+      "core_apps/support/tests/test_scope_roundtrip.py",
+      "core_apps/users/tests/test_mvp_closure_support.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/tickets/creation-receipt/",
+    "name": "support-ticket-creation-receipt",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.recovery.TicketCreationReceiptAPIView",
+    "file": "core_apps/support/views/recovery.py",
+    "line": 16,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "TicketDetailSerializer",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "signals": [
+      "headers",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/support/tests/test_creation_recovery.py",
+      "core_apps/support/tests/test_scope_roundtrip.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/tickets/<str:id>/",
+    "name": "support-ticket-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.ticket.TicketDetailAPIView",
+    "file": "core_apps/support/views/ticket.py",
+    "line": 101,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "TicketDetailSerializer",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/common/test_mobile_locale.py",
+      "core_apps/support/tests/test_shared_admin.py",
+      "core_apps/support/tests/test_information_evidence.py",
+      "core_apps/support/tests/test_information_requests.py",
+      "core_apps/support/tests/test_views.py",
+      "core_apps/support/tests/test_staged_media.py",
+      "core_apps/support/tests/test_mvp_message_ordering.py",
+      "core_apps/support/tests/test_sprint04_thread_reads.py",
+      "core_apps/support/tests/test_scope_roundtrip.py",
+      "core_apps/users/tests/test_mvp_closure_support.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/support/tickets/<str:id>/replies/",
+    "name": "support-ticket-reply",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.support.views.ticket.TicketReplyAPIView",
+    "file": "core_apps/support/views/ticket.py",
+    "line": 126,
+    "area": 5,
+    "family": "api/support",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "TicketDetailSerializer, TicketReplySerializer",
+    "mvp_allowed": {
+      "POST": true
+    },
+    "signals": [
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/common/test_mobile_locale.py",
+      "core_apps/support/tests/test_information_requests.py",
+      "core_apps/support/tests/test_views.py",
+      "core_apps/support/tests/test_staged_media.py",
+      "core_apps/support/tests/test_mvp_message_ordering.py",
+      "core_apps/support/tests/test_sprint04_thread_reads.py",
+      "core_apps/support/tests/test_scope_roundtrip.py",
+      "core_apps/users/tests/test_mvp_closure_support.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/housing-groups/<uuid:group_id>/chat/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.chat.views.group_history.GroupChatSummaryAPIView",
+    "file": "core_apps/chat/views/group_history.py",
+    "line": 79,
+    "area": 5,
+    "family": "api/features/housing-groups",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "\u2014",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/chat/tests/test_group_api.py"
+    ],
+    "aliases": []
+  }
+]
