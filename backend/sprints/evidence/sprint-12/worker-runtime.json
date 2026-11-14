@@ -1,0 +1,15 @@
+{
+  "local_only": true,
+  "provider_transactions": false,
+  "physical_device": false,
+  "queued_with_worker_stopped": true,
+  "queued_job_processed": true,
+  "planning_inbox_delivered": true,
+  "interrupted_job_recovered_once": true,
+  "scheduled_probe_verified": true,
+  "scheduled_tasks_verified": [
+    "qa-probe"
+  ],
+  "result": "passed",
+  "resources_stopped": true
+}

@@ -1,7 +1,18 @@
 # Sprint 12 — Prove the outcome and roll out safely
 
+## Execution — 2026-11-14
+
+The [Sprint 12 acceptance package](evidence/sprint-12/README.md) implements reproducible local inventory/reporting,
+complete fresh client fixture export, isolated validation and a [staged release/recovery plan](evidence/sprint-12/ROLLOUT.md).
+Both complete PostgreSQL modes passed 6,140 cases with 21 skips and 12 expected failures each; no unexpected backend failures.
+Whole-backend/release acceptance remains **unmet**: service-to-view dependencies, incomplete global contracts/performance,
+124 locked dependency advisories, a stale client hosted-onboarding contract, known company authority limitations and external
+provider/device/deployment/independent-review gates remain visible. No deployment or existing-database change occurred.
+Work stops after Sprint 12; details, failed attempts, omissions and final tool statuses are in the linked report.
+
 **Outcome:** evidence demonstrates the agreed architecture, performance, security, correctness and cleanup goals across
-the supported API surface. This is a future implementation/release stage; the audit did not deploy changes.
+the supported API surface. The gates below define release acceptance; the local execution above does not satisfy the
+remaining architecture, global validation and external signoff gates. The original audit did not deploy changes.
 
 ## Gates
 

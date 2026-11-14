@@ -1,0 +1,1021 @@
+{
+  "limit": "Inherited evidence links; no blanket closure or approved exceptions. Sprint 00 has its own evidence index.",
+  "findings": [
+    {
+      "finding": "A1-01",
+      "source": "../../findings/area-1.md#a1-01",
+      "summary": "High \u2014 Unowned avatar references can become provider-deletion commands",
+      "sprints": [
+        "01",
+        "02",
+        "05"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-02/README.md",
+        "../sprint-05/README.md"
+      ]
+    },
+    {
+      "finding": "A1-02",
+      "source": "../../findings/area-1.md#a1-02",
+      "summary": "High \u2014 Inherited Djoser deletion bypasses reviewed closure",
+      "sprints": [
+        "01",
+        "05"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-05/README.md"
+      ]
+    },
+    {
+      "finding": "A1-03",
+      "source": "../../findings/area-1.md#a1-03",
+      "summary": "High \u2014 Social email auto-link preserves attacker-created local credentials",
+      "sprints": [
+        "01",
+        "05"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-05/README.md"
+      ]
+    },
+    {
+      "finding": "A1-04",
+      "source": "../../findings/area-1.md#a1-04",
+      "summary": "Medium \u2014 OTP attempts/consumption use non-atomic cache operations",
+      "sprints": [
+        "01",
+        "03"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-03/README.md"
+      ]
+    },
+    {
+      "finding": "A1-05",
+      "source": "../../findings/area-1.md#a1-05",
+      "summary": "Medium \u2014 Identity submission loses the authenticated epoch before acquiring its lock",
+      "sprints": [
+        "01",
+        "02",
+        "05"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-02/README.md",
+        "../sprint-05/README.md"
+      ]
+    },
+    {
+      "finding": "A1-06",
+      "source": "../../findings/area-1.md#a1-06",
+      "summary": "Medium \u2014 Legacy social token issuance does not use the bound-session issuer",
+      "sprints": [
+        "03",
+        "05"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-05/README.md"
+      ]
+    },
+    {
+      "finding": "A1-07",
+      "source": "../../findings/area-1.md#a1-07",
+      "summary": "Medium \u2014 Refresh mutates potentially immutable request data",
+      "sprints": [
+        "02",
+        "03",
+        "05"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-02/README.md",
+        "../sprint-03/README.md",
+        "../sprint-05/README.md"
+      ]
+    },
+    {
+      "finding": "A1-08",
+      "source": "../../findings/area-1.md#a1-08",
+      "summary": "Medium hardening \u2014 Cookie JWT writes lack explicit CSRF verification",
+      "sprints": [
+        "01",
+        "05"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-05/README.md"
+      ]
+    },
+    {
+      "finding": "A1-09",
+      "source": "../../findings/area-1.md#a1-09",
+      "summary": "Medium performance \u2014 Registration performs email I/O inside account transaction",
+      "sprints": [
+        "04",
+        "05"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-05/README.md"
+      ]
+    },
+    {
+      "finding": "A1-10",
+      "source": "../../findings/area-1.md#a1-10",
+      "summary": "Architecture/cleanup \u2014 Consolidate identity entry points without removing protections",
+      "sprints": [
+        "05",
+        "11"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-05/README.md",
+        "../sprint-11/README.md"
+      ]
+    },
+    {
+      "finding": "A2-01",
+      "source": "../../findings/area-2.md#a2-01",
+      "summary": "High \u2014 Publication checks are absent from visit creation and some public reads",
+      "sprints": [
+        "01",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-02",
+      "source": "../../findings/area-2.md#a2-02",
+      "summary": "High \u2014 Published virtual-tour bytes remain public after the owner's closure request",
+      "sprints": [
+        "01",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-03",
+      "source": "../../findings/area-2.md#a2-03",
+      "summary": "Medium \u2014 An active alternate listing-update route bypasses the canonical concurrency and retry contract",
+      "sprints": [
+        "03",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-04",
+      "source": "../../findings/area-2.md#a2-04",
+      "summary": "Medium \u2014 Cover replacement bypasses the 25-photo limit",
+      "sprints": [
+        "02",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-02/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-05",
+      "source": "../../findings/area-2.md#a2-05",
+      "summary": "Medium \u2014 Nested inventory/metadata values bypass typed validation and raise raw exceptions",
+      "sprints": [
+        "02",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-02/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-06",
+      "source": "../../findings/area-2.md#a2-06",
+      "summary": "Medium \u2014 Listing-media inputs have incompatible reference/file and video validation contracts",
+      "sprints": [
+        "02",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-02/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-07",
+      "source": "../../findings/area-2.md#a2-07",
+      "summary": "Medium \u2014 Visit list serialization performs repeated per-visit authorization/continuation queries",
+      "sprints": [
+        "04",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-08",
+      "source": "../../findings/area-2.md#a2-08",
+      "summary": "Medium \u2014 Availability checks issue a closure query for each candidate slot",
+      "sprints": [
+        "04",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-09",
+      "source": "../../findings/area-2.md#a2-09",
+      "summary": "Medium \u2014 Saved-search reads materialize the complete result set and store unbounded JSON while holding the user lock",
+      "sprints": [
+        "04",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-10",
+      "source": "../../findings/area-2.md#a2-10",
+      "summary": "Medium \u2014 Owner screens return fabricated acceptance and rating statistics",
+      "sprints": [
+        "03",
+        "11"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-11/README.md"
+      ]
+    },
+    {
+      "finding": "A2-11",
+      "source": "../../findings/area-2.md#a2-11",
+      "summary": "Medium architectural backlog \u2014 59 DRF function endpoints remain, with mixed HTTP and domain logic",
+      "sprints": [
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-12",
+      "source": "../../findings/area-2.md#a2-12",
+      "summary": "Medium \u2014 Capture-session payloads have multiplicative query and response growth",
+      "sprints": [
+        "04",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A2-13",
+      "source": "../../findings/area-2.md#a2-13",
+      "summary": "Medium \u2014 Public reviews and owner dashboard paginate after unbounded work, or not at all",
+      "sprints": [
+        "04",
+        "06"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-06/README.md"
+      ]
+    },
+    {
+      "finding": "A3-01",
+      "source": "../../findings/area-3.md#a3-01",
+      "summary": "P1 \u2014 active portfolio images are deleted by the tour-storage cleanup",
+      "sprints": [
+        "01",
+        "06",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-06/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-02",
+      "source": "../../findings/area-3.md#a3-02",
+      "summary": "P2 \u2014 personal maintenance mutations do not validate their complete command body",
+      "sprints": [
+        "02",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-02/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-03",
+      "source": "../../findings/area-3.md#a3-03",
+      "summary": "P2 \u2014 transition matching rejects all near-metro requirements",
+      "sprints": [
+        "03",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-04",
+      "source": "../../findings/area-3.md#a3-04",
+      "summary": "P2 \u2014 company offer discovery does full-market work before pagination and resolves each scope twice",
+      "sprints": [
+        "04",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-05",
+      "source": "../../findings/area-3.md#a3-05",
+      "summary": "P2 \u2014 company visibility scans every candidate before company/lease filters and pagination",
+      "sprints": [
+        "04",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-06",
+      "source": "../../findings/area-3.md#a3-06",
+      "summary": "P2 \u2014 anonymous public reputation requests issue at least four extra queries per invoice",
+      "sprints": [
+        "04",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-07",
+      "source": "../../findings/area-3.md#a3-07",
+      "summary": "P2 \u2014 maintenance collection is unbounded and still performs a query per maintenance row",
+      "sprints": [
+        "04",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-08",
+      "source": "../../findings/area-3.md#a3-08",
+      "summary": "P2 \u2014 discovery expiry maintenance repeatedly scans and updates all expired history",
+      "sprints": [
+        "04",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-09",
+      "source": "../../findings/area-3.md#a3-09",
+      "summary": "P2 \u2014 tender calculation holds property/domain locks during combinatorial work",
+      "sprints": [
+        "04",
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-10",
+      "source": "../../findings/area-3.md#a3-10",
+      "summary": "P1 delivery prerequisite \u2014 CBV migration must replace function-name-dependent company route policies explicitly",
+      "sprints": [
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A3-11",
+      "source": "../../findings/area-3.md#a3-11",
+      "summary": "P2 architecture \u2014 large mixed projections/handlers still hide domain responsibilities after file splitting",
+      "sprints": [
+        "07"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-07/README.md"
+      ]
+    },
+    {
+      "finding": "A4-01",
+      "source": "../../findings/area-4.md#a4-01",
+      "summary": "High / money correctness \u2014 partial refunds conflict with already-earned commission identity",
+      "sprints": [
+        "03",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-02",
+      "source": "../../findings/area-4.md#a4-02",
+      "summary": "Medium / authorization \u2014 personal payment readers and commands omit private-access revocation",
+      "sprints": [
+        "01",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-03",
+      "source": "../../findings/area-4.md#a4-03",
+      "summary": "Medium / input validation and correctness \u2014 handover commands persist untyped input and return 500 for malformed revisions",
+      "sprints": [
+        "02",
+        "03",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-02/README.md",
+        "../sprint-03/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-04",
+      "source": "../../findings/area-4.md#a4-04",
+      "summary": "Medium / domain validation \u2014 rental refund endpoint crashes on a valid non-rental payment identity",
+      "sprints": [
+        "02",
+        "03",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-02/README.md",
+        "../sprint-03/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-05",
+      "source": "../../findings/area-4.md#a4-05",
+      "summary": "Medium / query growth \u2014 billing invoice pagination still issues per-row relation and status queries",
+      "sprints": [
+        "04",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-06",
+      "source": "../../findings/area-4.md#a4-06",
+      "summary": "Medium / scalability \u2014 personal finance lists are unbounded, with nested history N+1 work",
+      "sprints": [
+        "04",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-07",
+      "source": "../../findings/area-4.md#a4-07",
+      "summary": "Medium / transaction bottleneck \u2014 payable evaluation repeats lease-wide work while financial locks are held",
+      "sprints": [
+        "04",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-08",
+      "source": "../../findings/area-4.md#a4-08",
+      "summary": "Medium / public endpoint bottleneck \u2014 advertising feed limits output, not candidate/remote-storage work",
+      "sprints": [
+        "04",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-09",
+      "source": "../../findings/area-4.md#a4-09",
+      "summary": "Medium / production cleanup and read semantics \u2014 public advertising GET contains one-off fixture restoration and fabricated-artwork code",
+      "sprints": [
+        "08",
+        "11"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-08/README.md",
+        "../sprint-11/README.md"
+      ]
+    },
+    {
+      "finding": "A4-10",
+      "source": "../../findings/area-4.md#a4-10",
+      "summary": "Medium / architecture and requested migration \u2014 APIs remain FBVs and views own domain mutations",
+      "sprints": [
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A4-11",
+      "source": "../../findings/area-4.md#a4-11",
+      "summary": "Medium / GET side effects and query growth \u2014 document catalog performs per-record creation on every read",
+      "sprints": [
+        "03",
+        "04",
+        "08"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-04/README.md",
+        "../sprint-08/README.md"
+      ]
+    },
+    {
+      "finding": "A5-01",
+      "source": "../../findings/area-5.md#a5-01",
+      "summary": "High \u2014 message edits bypass moderation enqueue",
+      "sprints": [
+        "01",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-02",
+      "source": "../../findings/area-5.md#a5-02",
+      "summary": "High \u2014 legacy direct socket bypasses text validation and explicit send limits",
+      "sprints": [
+        "01",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-03",
+      "source": "../../findings/area-5.md#a5-03",
+      "summary": "High \u2014 starting a chat discloses the counterpart's email",
+      "sprints": [
+        "01",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-04",
+      "source": "../../findings/area-5.md#a5-04",
+      "summary": "Medium \u2014 conversation list prefetch is defeated by repeated per-row authorization/projection queries",
+      "sprints": [
+        "04",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-05",
+      "source": "../../findings/area-5.md#a5-05",
+      "summary": "Medium \u2014 rich message pages and event replay have per-message query growth",
+      "sprints": [
+        "04",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-06",
+      "source": "../../findings/area-5.md#a5-06",
+      "summary": "Medium \u2014 forward destinations paginate after scanning every conversation",
+      "sprints": [
+        "04",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-07",
+      "source": "../../findings/area-5.md#a5-07",
+      "summary": "Medium \u2014 marking a long unread history read creates all receipts in memory under chat locks",
+      "sprints": [
+        "04",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-08",
+      "source": "../../findings/area-5.md#a5-08",
+      "summary": "Medium \u2014 support detail/reply/recovery return unbounded threads with nested evidence N+1 queries",
+      "sprints": [
+        "04",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-09",
+      "source": "../../findings/area-5.md#a5-09",
+      "summary": "Medium \u2014 one expired device session can suppress a digest despite another authorized device",
+      "sprints": [
+        "03",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-10",
+      "source": "../../findings/area-5.md#a5-10",
+      "summary": "Medium \u2014 a legacy direct send retry conflicts after that message is edited",
+      "sprints": [
+        "03",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-11",
+      "source": "../../findings/area-5.md#a5-11",
+      "summary": "Medium / policy gap \u2014 opaque chat files accept every byte format without content inspection",
+      "sprints": [
+        "02",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-02/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-12",
+      "source": "../../findings/area-5.md#a5-12",
+      "summary": "High for validation readiness \u2014 poll-voter tests import a nonexistent helper",
+      "sprints": [
+        "00",
+        "03"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-00/README.md",
+        "../sprint-03/README.md"
+      ]
+    },
+    {
+      "finding": "A5-13",
+      "source": "../../findings/area-5.md#a5-13",
+      "summary": "Medium / architecture \u2014 14 routed function views remain against the requested CBV rule",
+      "sprints": [
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A5-14",
+      "source": "../../findings/area-5.md#a5-14",
+      "summary": "Low / cleanup \u2014 unused pre-outbox send helpers and an unrouted preferences view remain",
+      "sprints": [
+        "09",
+        "11"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-09/README.md",
+        "../sprint-11/README.md"
+      ]
+    },
+    {
+      "finding": "A5-15",
+      "source": "../../findings/area-5.md#a5-15",
+      "summary": "Low \u2014 online presence expires during active sessions and one tab disconnect marks all tabs offline",
+      "sprints": [
+        "03",
+        "09"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-09/README.md"
+      ]
+    },
+    {
+      "finding": "A6-01",
+      "source": "../../findings/area-6.md#a6-01",
+      "summary": "High \u2014 Legacy moderation route bypasses canonical decision invariants",
+      "sprints": [
+        "01",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-02",
+      "source": "../../findings/area-6.md#a6-02",
+      "summary": "Medium \u2014 Admin KYC filters reference the wrong model relation",
+      "sprints": [
+        "03",
+        "04",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-04/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-03",
+      "source": "../../findings/area-6.md#a6-03",
+      "summary": "Medium \u2014 Admin property list has measured per-row query growth",
+      "sprints": [
+        "04",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-04",
+      "source": "../../findings/area-6.md#a6-04",
+      "summary": "Medium \u2014 KYC and report projections still query per list item",
+      "sprints": [
+        "04",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-05",
+      "source": "../../findings/area-6.md#a6-05",
+      "summary": "Medium \u2014 Transaction/audit histories are truncated before filtering and pagination",
+      "sprints": [
+        "03",
+        "04",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-04/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-06",
+      "source": "../../findings/area-6.md#a6-06",
+      "summary": "Medium \u2014 Dashboard/analytics performs repeated daily and role queries",
+      "sprints": [
+        "04",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-07",
+      "source": "../../findings/area-6.md#a6-07",
+      "summary": "Medium \u2014 Campaign history expands into per-campaign aggregate queries",
+      "sprints": [
+        "04",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-08",
+      "source": "../../findings/area-6.md#a6-08",
+      "summary": "Medium \u2014 Campaign cap is applied before audience eligibility",
+      "sprints": [
+        "03",
+        "04",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-03/README.md",
+        "../sprint-04/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-09",
+      "source": "../../findings/area-6.md#a6-09",
+      "summary": "Medium \u2014 Content catalog projections lack their relation fetch plan",
+      "sprints": [
+        "04",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-04/README.md",
+        "../sprint-10/README.md"
+      ]
+    },
+    {
+      "finding": "A6-10",
+      "source": "../../findings/area-6.md#a6-10",
+      "summary": "High maintenance priority \u2014 Unsupported framework pin and unmeasured dependency security",
+      "sprints": [
+        "01",
+        "12"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-01/README.md",
+        "../sprint-12/README.md"
+      ]
+    },
+    {
+      "finding": "A6-11",
+      "source": "../../findings/area-6.md#a6-11",
+      "summary": "Quality backlog \u2014 Broad unused-import suppression hides substantial cleanup candidates",
+      "sprints": [
+        "11"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-11/README.md"
+      ]
+    },
+    {
+      "finding": "A6-12",
+      "source": "../../findings/area-6.md#a6-12",
+      "summary": "Documentation/architecture \u2014 Repository instructions conflict with the agreed target",
+      "sprints": [
+        "00",
+        "10"
+      ],
+      "status": "See owning sprint evidence; not independently closed by Sprint 12",
+      "evidence": [
+        "../sprint-00/README.md",
+        "../sprint-10/README.md"
+      ]
+    }
+  ]
+}

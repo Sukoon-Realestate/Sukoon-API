@@ -1,0 +1,44 @@
+SOKOUN_FLUTTER_REQUEST_BODIES=/private/tmp/sukoon-sprint12/client-final/client/flutter-request-bodies.json .venv/bin/python -m pytest core_apps/features/tests/test_flutter_request_roundtrip.py --ds=sprint12_client --junitxml=/private/tmp/sukoon-sprint12/client-final/client/flutter-request-roundtrip.xml
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-8.3.5, pluggy-1.6.0 -- /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/bin/python
+cachedir: .pytest_cache
+django: version: 4.2.11, settings: sprint12_client (from option)
+rootdir: /Users/demo23home/code/sukoon/Sukoon-API/backend
+configfile: pytest.ini
+plugins: cov-6.0.0, platformdirs-4.12.3, django-4.9.0, asyncio-0.23.7, anyio-4.15.1
+asyncio: mode=Mode.STRICT
+collecting ... collected 8 items
+
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_housing_request_and_authoritative_offer_bodies PASSED [ 12%]
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_invite_body PASSED [ 25%]
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_cost_proposal_body PASSED [ 37%]
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_condition_create_and_acknowledgement_roundtrip PASSED [ 50%]
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_notice_body PASSED [ 62%]
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_incoming_replacement_consent_body PASSED [ 75%]
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_commute_and_assistant_bodies PASSED [ 87%]
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_refund_body_and_recovery_subject PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_housing_request_and_authoritative_offer_bodies
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_housing_request_and_authoritative_offer_bodies
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_invite_body
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_cost_proposal_body
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_condition_create_and_acknowledgement_roundtrip
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_notice_body
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_incoming_replacement_consent_body
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_commute_and_assistant_bodies
+core_apps/features/tests/test_flutter_request_roundtrip.py::test_flutter_refund_body_and_recovery_subject
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /private/tmp/sukoon-sprint12/static_root/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /private/tmp/sukoon-sprint12/client-final/client/flutter-request-roundtrip.xml -
+======================= 8 passed, 11 warnings in 54.73s ========================

@@ -1,0 +1,21 @@
+{
+  "owner": "Sprint 12 task",
+  "root": "/private/tmp/sukoon-sprint12/pg",
+  "version": "postgres (PostgreSQL) 18.6 (Homebrew)",
+  "listen_addresses": "",
+  "socket": "/private/tmp/sukoon-sprint12/pg/socket",
+  "port": 55452,
+  "role": "sprint12",
+  "max_locks_per_transaction": 1024,
+  "existing_cluster_used": false,
+  "remaining_databases": [
+    "postgres",
+    "template0",
+    "template1",
+    "test_sokoun_sprint12_operations",
+    "test_sokoun_sprint12_restore"
+  ],
+  "state": "stopped",
+  "runtime_helpers": "owned Redis/ASGI/worker/scheduler stopped and cloned databases dropped; see runtime reports",
+  "dump": "scratch operations.dump retained only locally; sanitized digest in backup-restore.json"
+}

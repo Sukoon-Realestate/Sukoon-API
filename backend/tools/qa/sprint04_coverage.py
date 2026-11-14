@@ -29,9 +29,9 @@ def evidence(row):
         return ["capture-sessions", "capture-session-summary"]
     if handler.endswith(("capture_views.jobs", "capture_views.JobsAPIView")):
         return ["capture-job-history"]
-    if handler.endswith("owner_advertisement_collection"):
+    if handler.endswith(("owner_advertisement_collection", ".OwnerAdvertisementCollectionView")):
         return ["advertising-owner"]
-    if handler.endswith("tenant_home_placement"):
+    if handler.endswith(("tenant_home_placement", ".TenantHomePlacementView")):
         return ["advertising-rejection"]
     if handler.endswith(".AdminPropertyListAPIView") or handler.endswith(".AdminPropertyListView"):
         return ["admin-properties"]

@@ -1,0 +1,326 @@
+{
+  "source_base": "fd7fb3829481c15d81a4bf00b96401fcc4c51e73",
+  "scope": "Sprint 12 local acceptance artifacts; not deployment approval",
+  "artifacts": [
+    {
+      "path": ".gitignore",
+      "bytes": 103,
+      "sha256": "ab99c60967a61aadfaff0327ff50e130053e9b3807f0285df85dd0863f04ab84"
+    },
+    {
+      "path": "LOCAL_ACCEPTANCE.md",
+      "bytes": 5390,
+      "sha256": "53458402527917204e5cc894cf44257a6d3390d47c8cf88d2a8db75057e33917"
+    },
+    {
+      "path": "README.md",
+      "bytes": 17030,
+      "sha256": "3ea90e55824581194160eb41126d82361e853c33abaf6f67a2b7b7ed531131e3"
+    },
+    {
+      "path": "ROLLOUT.md",
+      "bytes": 9711,
+      "sha256": "5899a458225ae5ef5f5cd35db7c32427120487e8efaf1d1bef75136966e21b00"
+    },
+    {
+      "path": "acceptance.json",
+      "bytes": 1625198,
+      "sha256": "9da03fcc7ffa96c0a92c6d73dec936ffd4d1beff6d2f6f4612fb2e16ab5772e5"
+    },
+    {
+      "path": "backup-restore.json",
+      "bytes": 55964,
+      "sha256": "6ba8b87063a107d1326b8248f8546ef1eadefa8c1d8c78849389fae53b363922"
+    },
+    {
+      "path": "chat-runtime.json",
+      "bytes": 1000,
+      "sha256": "1f6cba06d5e352cc8ffe92d74bd1da414b32bc4648380a809a8c78c489c0e111"
+    },
+    {
+      "path": "client-contracts.json",
+      "bytes": 3921,
+      "sha256": "6dbeb820cc5cb02eb5d532c8a6aca535082588331dd0b5ea7c161cab2b5ff86a"
+    },
+    {
+      "path": "database-before.json",
+      "bytes": 534,
+      "sha256": "a36c9c48cda284344d2d14b1c879643de21d989ae7578d601cc0ecb347f20294"
+    },
+    {
+      "path": "database-preservation.json",
+      "bytes": 1329,
+      "sha256": "7f0acbbff1587fd5616b99d19d3aee95d7272b406d104bc189432029cf77cd10"
+    },
+    {
+      "path": "dependency-audit.json",
+      "bytes": 170866,
+      "sha256": "c221bba026cd3a62c72a826cd44b419295c2f1c1f41c5551adb285f387e406a2"
+    },
+    {
+      "path": "finding-links.json",
+      "bytes": 31530,
+      "sha256": "e664e6b02ebe3db480929ff75df2fd362231ce1c7a02ca0865d543ed5cacac88"
+    },
+    {
+      "path": "full/mvp/junit.xml",
+      "bytes": 1071581,
+      "sha256": "346119093f5c7a8ace9353958bdf4c90643b71b3245327c530a35d62c0feca55"
+    },
+    {
+      "path": "full/restoration/junit.xml",
+      "bytes": 1071581,
+      "sha256": "2e5835db2c4f3eb21a8682175ee04c0bdae99367fd01144820a8002a390a8f72"
+    },
+    {
+      "path": "imports.json",
+      "bytes": 88,
+      "sha256": "a5e4fe4f774866244d082d7232e27a584675ce0f05776e90248448ea62f647b0"
+    },
+    {
+      "path": "junit/client-export-final.xml",
+      "bytes": 5889,
+      "sha256": "8a04cf8752cca983f31855c988c883af0547edfb3844994e5368fc0cc1ea84ef"
+    },
+    {
+      "path": "junit/client-export.xml",
+      "bytes": 5561,
+      "sha256": "95c7c5c8ac8dc2e1eeb6b465f7271cbf1bb5384c5a8e5fa8121a87512679fe15"
+    },
+    {
+      "path": "junit/client-signing-export.xml",
+      "bytes": 570,
+      "sha256": "524951246aa1c3aa58cfe78fc4bad8b07dd1d0947b45e3f8449069e230e87fdc"
+    },
+    {
+      "path": "junit/flutter-request-roundtrip.xml",
+      "bytes": 1379,
+      "sha256": "53c48cadce2a6a9085720b24117937a30d6b4785ec820e024927d20267096c66"
+    },
+    {
+      "path": "junit/local-contracts-final.xml",
+      "bytes": 5233,
+      "sha256": "60226c8aeabddf47146476cc22b5ce302ab07214a82c5d343de910d8f3ca24d5"
+    },
+    {
+      "path": "junit/local-contracts.xml",
+      "bytes": 5233,
+      "sha256": "c344a578773152de11d20fef16603e3cac6276dd78e55758a5e3ec9ef54b5ae2"
+    },
+    {
+      "path": "junit/report-final.xml",
+      "bytes": 1053,
+      "sha256": "2d599364670563f585e6e8f18f46c07de804d991b1dded837a2abe8459b99764"
+    },
+    {
+      "path": "logs/acceptance-final.log",
+      "bytes": 114,
+      "sha256": "59e126c306293ac0f9da986af3ccb98c70f9e00e3f260decd0453912ef4b6d3a"
+    },
+    {
+      "path": "logs/acceptance-target.log",
+      "bytes": 534,
+      "sha256": "53a949c52f15d49e64c83f9cab2c188757b9ed0ac5b9fffa4f113d13fbce092e"
+    },
+    {
+      "path": "logs/audit-install.log",
+      "bytes": 6986,
+      "sha256": "02d33bdbda2b6c4a6e1066fc29ae5488b00cf99318e733fd635bcc10721297bf"
+    },
+    {
+      "path": "logs/backup-restore.log",
+      "bytes": 500,
+      "sha256": "9da4daae932efe608da6d82b1a6224f047538e0abfe3ae28f67683b78366d193"
+    },
+    {
+      "path": "logs/chat-network.log",
+      "bytes": 1093,
+      "sha256": "9afa27c01d0bb928818d16668ca7456db6e7ac7d86e22e24d43e661ac2db437b"
+    },
+    {
+      "path": "logs/client-backend-export.log",
+      "bytes": 7108,
+      "sha256": "7f679ff0f8243f0c67a76749198daae30fcd258b2ee9f982cfac5c3858ea6de0"
+    },
+    {
+      "path": "logs/client-export-final.log",
+      "bytes": 2859,
+      "sha256": "0d66d2f736fb9f37cc3ad36780ec1f8dd9238bae662005e39e0be61e684899e8"
+    },
+    {
+      "path": "logs/client-signing-export.log",
+      "bytes": 1703,
+      "sha256": "bde1b081a2af85884424b86269d84e25ea89e97cc32cb9e6e2a3da0f5202c288"
+    },
+    {
+      "path": "logs/dependency-audit.log",
+      "bytes": 281,
+      "sha256": "e323c1b2de2e29479bfeaba49dd25e64a17944fe8d69054ac13903028afb80a3"
+    },
+    {
+      "path": "logs/django-check.log",
+      "bytes": 48,
+      "sha256": "1e3e63f221bde88816c4a4ef7367691607b20cc1d194028a02ec9ae0586cf9b1"
+    },
+    {
+      "path": "logs/flutter-contracts-final.log",
+      "bytes": 6638,
+      "sha256": "5feda77d0e607020d195a2303f7f923f2faa1e851ae44438000507fb28de0e62"
+    },
+    {
+      "path": "logs/flutter-contracts-initial.log",
+      "bytes": 8887,
+      "sha256": "56fb1a2c23e2bc849bd183c2445c972088372a99f057acc2da766eec2aff8251"
+    },
+    {
+      "path": "logs/flutter-cycle-contract.log",
+      "bytes": 1532,
+      "sha256": "22394c6d2a37ccbce9f40e3d8cf5906b47b601e7a21ef9a445e463cb531d45db"
+    },
+    {
+      "path": "logs/flutter-request-roundtrip.log",
+      "bytes": 4019,
+      "sha256": "10afd927c31e9cdcd4e1178df8ba455559afe4fca56d3500e34ac0643242629a"
+    },
+    {
+      "path": "logs/forward-migrations.log",
+      "bytes": 18775,
+      "sha256": "5546e47827b1820917d76509df3cda6cd86cf05e3d44977c29717a8f971d7d4f"
+    },
+    {
+      "path": "logs/full-mvp.log",
+      "bytes": 36084,
+      "sha256": "2f7c69e042ef9864d545c47b1736ad9567043374aca9482e0b384edb8f93afdc"
+    },
+    {
+      "path": "logs/full-restoration.log",
+      "bytes": 36041,
+      "sha256": "28eea9aaef9bbf23f6cb4c9ae6c585982434b11df127befae2ed36b57e819d56"
+    },
+    {
+      "path": "logs/imports.log",
+      "bytes": 489,
+      "sha256": "797d5bde15add08c8bafacd476ea36ec8d329734d3c53017a0403210fb3ad4f8"
+    },
+    {
+      "path": "logs/local-contracts-final.log",
+      "bytes": 2569,
+      "sha256": "478f0320e5ee71417f5ffd5323ef27cd4310352fb4f17d36a74854897c3dfb63"
+    },
+    {
+      "path": "logs/local-contracts.log",
+      "bytes": 2529,
+      "sha256": "764e0d32aca567fdacb0a4d1112ba5258428c1e4f6302c0fe6cf381fe0b259cb"
+    },
+    {
+      "path": "logs/migration-consistency.log",
+      "bytes": 20,
+      "sha256": "a2bfa7b376c38062f77ce2b1e703876aaa04662f96355cdf5dc9d0d075302b05"
+    },
+    {
+      "path": "logs/migrations-noop.log",
+      "bytes": 275,
+      "sha256": "2296902b34ada1107bc1dcd7f36681ab0ed21dd10cf7d63a81177dfd44047380"
+    },
+    {
+      "path": "logs/performance-coverage.log",
+      "bytes": 182,
+      "sha256": "0f524cd82ac345ada783851e7b36f9c3fe9233cefe550a9c251ee831081112cd"
+    },
+    {
+      "path": "logs/pip-check.log",
+      "bytes": 308,
+      "sha256": "be74fc4daff7d626befc73032637eff37786d7eda76e9f70260bbe5446d4deb6"
+    },
+    {
+      "path": "logs/report-final.log",
+      "bytes": 1133,
+      "sha256": "c3e32c8a8de9c61f9f43a4d0175a7d619ab63c41e24e57390a2039483a522c76"
+    },
+    {
+      "path": "logs/scoped-lint.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/workers.log",
+      "bytes": 966,
+      "sha256": "bdb0fc6c9baacb7dd773e1879d1d21c38cb1102627efe4ee3e325081ee5e228b"
+    },
+    {
+      "path": "metrics-mvp.jsonl",
+      "bytes": 39502,
+      "sha256": "ffd90ff9372687564f3f749e510645f9a4c6138dee7cc9cde6397f0d7941962b"
+    },
+    {
+      "path": "metrics-restoration.jsonl",
+      "bytes": 39494,
+      "sha256": "66b556daccd153129be49706afa4a92e1752afbb4f48e7fb5dcf88b278acb762"
+    },
+    {
+      "path": "performance-baseline.json",
+      "bytes": 64538,
+      "sha256": "7dfffa32b92f639dcbc6592bd1aef227494193c8fb69ddbaddbc8c2e614f6ff6"
+    },
+    {
+      "path": "performance-coverage.json",
+      "bytes": 566363,
+      "sha256": "b936b2565a2320a947e10cc9a681662619d5addcedd43309c1ee66748992e362"
+    },
+    {
+      "path": "scratch-backup-restore.example.py",
+      "bytes": 2956,
+      "sha256": "ee0769e40d5f9a8c46e8026ab52a03bd2594db748867b7c3e78d7ba86cb24371"
+    },
+    {
+      "path": "scratch-client.example.py",
+      "bytes": 107,
+      "sha256": "107cbdb4be9af88eaa6fb7b9a62561cdc5f30fbdd2f0c1c41502299ac8945c94"
+    },
+    {
+      "path": "scratch-cluster.json",
+      "bytes": 715,
+      "sha256": "bbd1d7fd6fddfcf554fe9efdfdd188a2f67856f488afc33320f5703fba630d7e"
+    },
+    {
+      "path": "scratch-mvp.example.py",
+      "bytes": 351,
+      "sha256": "a253d22cd7bea58882afd3ad9bb545c3f862c9fd2826651c752ae950d188cd5c"
+    },
+    {
+      "path": "scratch-operations.example.py",
+      "bytes": 372,
+      "sha256": "f1542e925886be4af446f874144075d99406b8bb2707bbfb8e9a5b41de6fcc3d"
+    },
+    {
+      "path": "scratch-restoration.example.py",
+      "bytes": 375,
+      "sha256": "fe0191f62a86b440130b620822e49f1eb6fe1b915459f056113bb6e25f9d74d9"
+    },
+    {
+      "path": "scratch-sqlite.example.py",
+      "bytes": 541,
+      "sha256": "b36655ffc3c81d2872714eb90855de0edb3081a74aaa3d6293ccd72eca905469"
+    },
+    {
+      "path": "syntax.json",
+      "bytes": 65,
+      "sha256": "e0eb024076b0710f84b0738409bac70406087468cc9ca906d2f30b9e2d0788e2"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 26740,
+      "sha256": "9fc31227ac2febc3b923e4e0fb7d34df65496dda01c56bfc354e15e118484952"
+    },
+    {
+      "path": "versions.json",
+      "bytes": 665,
+      "sha256": "02485382b2f5de92f51a4e49efa74aea2859208f0b5f6b56d973f5e1e0656f82"
+    },
+    {
+      "path": "worker-runtime.json",
+      "bytes": 374,
+      "sha256": "3ffd29551266faaf98ed98137e94e9b203b54ed754650524a0073c77ae038929"
+    }
+  ]
+}

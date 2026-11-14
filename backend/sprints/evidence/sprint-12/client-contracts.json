@@ -1,0 +1,108 @@
+{
+  "client_commit": "4829239fa815170b99e4b952fcf9fdf97fdc3b75",
+  "client_working_tree": "",
+  "restoration_flags": [
+    "SUKOON_MVP=false"
+  ],
+  "fresh_contract_tests": {
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0,
+    "log": "logs/flutter-contracts-final.log"
+  },
+  "cycle_contract_tests": {
+    "passed": 3,
+    "failed": 1,
+    "skipped": 0,
+    "log": "logs/flutter-cycle-contract.log",
+    "failure": "Django onboarding envelope passes the actual Flutter request helper",
+    "source_reason": "OwnerPaymentData.onboardingEnabled is explicitly false; legacy hosted onboarding is disabled. Preserve the client policy; replace/reconcile the stale positive test with supported prepared-beneficiary/current-authorization contracts in a coordinated client task."
+  },
+  "initial_attempt": {
+    "passed": 8,
+    "failed_including_loader": 6,
+    "log": "logs/flutter-contracts-initial.log",
+    "cause": "Default MVP mode for deferred planning; missing amendments/renewals signing artifacts. Complete fresh export plus explicit SUKOON_MVP=false resolved this setup attempt."
+  },
+  "reverse_django_contracts": {
+    "cases": 8,
+    "counts": {
+      "passed": 8
+    },
+    "omissions": [],
+    "regression_passed": true,
+    "all_cases_passed": true
+  },
+  "physical_device": false,
+  "real_providers": false,
+  "fixture_manifest": {
+    "django-amendments-signing-contract.json": {
+      "sha256": "f5474334301c9073dfcb862c50fde681db5bfdd4da927ebced6c103e9e4d5f17",
+      "bytes": 28953
+    },
+    "django-assistant-contract.json": {
+      "sha256": "068d6d7a60bbf78664943bbd354570bfdc16888ac97e9e08322bf5a21c66272c",
+      "bytes": 8122
+    },
+    "django-commute-contract.json": {
+      "sha256": "dcdcea9c86b18ab013a6784652fedaee7ea3a0ab00116be02e31d172ce18355c",
+      "bytes": 4580
+    },
+    "django-condition-contract.json": {
+      "sha256": "1c8454dbf11f19eb37d368ca5e1b974b103198ba5a2bad29cd93fde8685926d1",
+      "bytes": 21032
+    },
+    "django-cycle-contract.json": {
+      "sha256": "86018e5c92748039bb562597363d7055b63b7fc98d1b23f6912f3178d5ec7eb6",
+      "bytes": 55987
+    },
+    "django-group-contract.json": {
+      "sha256": "3c9573d7e2d1879010816137df4dd5e4c2710e1cde763af3f2bf66897514a1d2",
+      "bytes": 13741
+    },
+    "django-housing-contract.json": {
+      "sha256": "f3b36befc7f6b78bfffc09ef0492212af5cdcacc0ef1cfefd85deeca4ea9c552",
+      "bytes": 12827
+    },
+    "django-notice-contract.json": {
+      "sha256": "297981e47ee471eb594c201c7b1eabb2230dcae3711079af028f1a3b831cd2ac",
+      "bytes": 4981
+    },
+    "django-refund-contract.json": {
+      "sha256": "181adb405567ea2041063fdb24a40ab15429c3bd919c710b142259e3c433840e",
+      "bytes": 5259
+    },
+    "django-renewals-signing-contract.json": {
+      "sha256": "d1818893c0fa0beefe9a8654b967fc4dc4f7847c4e6c8d936ba11fcff5d37d3a",
+      "bytes": 28947
+    },
+    "django-replacement-contract.json": {
+      "sha256": "eaf6ca347417a50093cce7dc457f743c9bfff70a30aa52aaa736b9e40cd95fd7",
+      "bytes": 7700
+    },
+    "django-settlement-contract.json": {
+      "sha256": "0cdcc420d67905ae287ac5ec3a3afaf659f1d7faaf777b11d840ae446a536583",
+      "bytes": 5008
+    },
+    "flutter-request-bodies.json": {
+      "sha256": "94d34a80e60caa0bea1c239e67b2bb60cbcf30e76be748242403dba9026f9ef8",
+      "bytes": 8078
+    },
+    "full-http-cycle-group.json": {
+      "sha256": "ca0cad6d9ef00654c61b7c2490431db76cdaa0e9d9fa5ff889269de542e07543",
+      "bytes": 18310
+    },
+    "full-http-cycle-housing_request.json": {
+      "sha256": "af78ff806c94beea3934a37dca0833853b8f1c967f11326dc3ec40ae8fe021fc",
+      "bytes": 16926
+    },
+    "full-http-cycle-marketplace.json": {
+      "sha256": "557d3158c6011a7e663228bb8a4f759fba089e1fa089b3e2b5ce0e99d34c7277",
+      "bytes": 17401
+    },
+    "full-http-cycle.json": {
+      "sha256": "4ba9b814e35d507895005080066e1a2a2db11e5163f61bb3cc1711b193ce344e",
+      "bytes": 16503
+    }
+  }
+}

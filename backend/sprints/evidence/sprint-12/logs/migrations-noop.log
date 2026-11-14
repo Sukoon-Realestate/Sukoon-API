@@ -1,0 +1,4 @@
+Operations to perform:
+  Apply all migrations: admin, admin_api, advertising, auth, chat, common, contenttypes, features, notifications, profiles, properties, sessions, sites, social_django, support, taggit, users, virtual_tours
+Running migrations:
+  No migrations to apply.

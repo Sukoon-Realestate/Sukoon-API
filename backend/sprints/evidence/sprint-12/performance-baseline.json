@@ -1,0 +1,2349 @@
+{
+  "baseline": "../sprint-11/metrics-mvp.jsonl",
+  "current": "metrics-mvp.jsonl",
+  "current_base_commit": "fd7fb3829481c15d81a4bf00b96401fcc4c51e73",
+  "comparable_case_size_pairs": 90,
+  "limits": "Separate local runs, same locked stack and test cases; synthetic fixtures. Timings/heap affected by concurrent suites and host noise. Not before/after production SLOs, not API-wide acceptance. Keep repeated raw observations in JSONL.",
+  "comparisons": [
+    {
+      "case": "admin-properties",
+      "size": 5,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 2550,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 155967,
+        "seconds": 0.008132416987791657
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 2550,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 155659,
+        "seconds": 0.011059792013838887
+      }
+    },
+    {
+      "case": "admin-properties",
+      "size": 40,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 20430,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 346597,
+        "seconds": 0.014583999989554286
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 20430,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 345543,
+        "seconds": 0.01769420795608312
+      }
+    },
+    {
+      "case": "admin-properties",
+      "size": 100,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 51090,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 730134,
+        "seconds": 0.02644891699310392
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 51090,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 727482,
+        "seconds": 0.027116875047795475
+      }
+    },
+    {
+      "case": "advertising-owner",
+      "size": 1,
+      "sprint11": {
+        "queries": 3,
+        "payload_bytes": 471,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 141881,
+        "seconds": 0.009269666974432766
+      },
+      "sprint12": {
+        "queries": 3,
+        "payload_bytes": 471,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 142239,
+        "seconds": 0.010411125025711954
+      }
+    },
+    {
+      "case": "advertising-owner",
+      "size": 10,
+      "sprint11": {
+        "queries": 3,
+        "payload_bytes": 4314,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 161538,
+        "seconds": 0.011262708925642073
+      },
+      "sprint12": {
+        "queries": 3,
+        "payload_bytes": 4314,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 161697,
+        "seconds": 0.012805792037397623
+      }
+    },
+    {
+      "case": "advertising-owner",
+      "size": 100,
+      "sprint11": {
+        "queries": 3,
+        "payload_bytes": 42744,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 618212,
+        "seconds": 0.03245762491133064
+      },
+      "sprint12": {
+        "queries": 3,
+        "payload_bytes": 42744,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 618721,
+        "seconds": 0.047208125004544854
+      }
+    },
+    {
+      "case": "advertising-rejection",
+      "size": 1,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 101,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 176624,
+        "seconds": 0.012167416978627443
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 101,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 176404,
+        "seconds": 0.014114666962996125
+      }
+    },
+    {
+      "case": "advertising-rejection",
+      "size": 10,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 101,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 211931,
+        "seconds": 0.013393124914728105
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 101,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 212479,
+        "seconds": 0.015116333030164242
+      }
+    },
+    {
+      "case": "advertising-rejection",
+      "size": 100,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 101,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 557286,
+        "seconds": 0.026895667077042162
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 101,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 556740,
+        "seconds": 0.03012716700322926
+      }
+    },
+    {
+      "case": "analytics",
+      "size": 7,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 2418,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 102662,
+        "seconds": 0.01533883297815919
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 2418,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 102114,
+        "seconds": 0.015754791093058884
+      }
+    },
+    {
+      "case": "analytics",
+      "size": 30,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 5363,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 231321,
+        "seconds": 0.02710149995982647
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 5363,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 228027,
+        "seconds": 0.0280337919248268
+      }
+    },
+    {
+      "case": "analytics",
+      "size": 90,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 13043,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 550733,
+        "seconds": 0.05908112495671958
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 13043,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 548441,
+        "seconds": 0.06062825000844896
+      }
+    },
+    {
+      "case": "appointment-availability",
+      "size": 1,
+      "sprint11": {
+        "queries": 4,
+        "payload_bytes": 199,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 32219,
+        "seconds": 0.004677042015828192
+      },
+      "sprint12": {
+        "queries": 4,
+        "payload_bytes": 199,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 31780,
+        "seconds": 0.004670833004638553
+      }
+    },
+    {
+      "case": "appointment-availability",
+      "size": 56,
+      "sprint11": {
+        "queries": 4,
+        "payload_bytes": 7294,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 103931,
+        "seconds": 0.009224707959219813
+      },
+      "sprint12": {
+        "queries": 4,
+        "payload_bytes": 7294,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 108887,
+        "seconds": 0.009839000063948333
+      }
+    },
+    {
+      "case": "appointment-availability",
+      "size": 1000,
+      "sprint11": {
+        "queries": 4,
+        "payload_bytes": 129070,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 1545016,
+        "seconds": 0.09815195901319385
+      },
+      "sprint12": {
+        "queries": 4,
+        "payload_bytes": 129070,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 1596014,
+        "seconds": 0.10626666597090662
+      }
+    },
+    {
+      "case": "campaign-history",
+      "size": 1,
+      "sprint11": {
+        "queries": 5,
+        "payload_bytes": 527,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 38858,
+        "seconds": 0.005094374995678663
+      },
+      "sprint12": {
+        "queries": 5,
+        "payload_bytes": 527,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 38998,
+        "seconds": 0.005686375079676509
+      }
+    },
+    {
+      "case": "campaign-history",
+      "size": 10,
+      "sprint11": {
+        "queries": 5,
+        "payload_bytes": 5270,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 51998,
+        "seconds": 0.006237249937839806
+      },
+      "sprint12": {
+        "queries": 5,
+        "payload_bytes": 5270,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 51857,
+        "seconds": 0.0071697080275043845
+      }
+    },
+    {
+      "case": "campaign-history",
+      "size": 100,
+      "sprint11": {
+        "queries": 5,
+        "payload_bytes": 52790,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 266703,
+        "seconds": 0.013447292032651603
+      },
+      "sprint12": {
+        "queries": 5,
+        "payload_bytes": 52790,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 266511,
+        "seconds": 0.014747832901775837
+      }
+    },
+    {
+      "case": "capture-job-history",
+      "size": 31,
+      "sprint11": {
+        "queries": 3,
+        "payload_bytes": 2654,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 89796,
+        "seconds": 0.01081520807929337
+      },
+      "sprint12": {
+        "queries": 3,
+        "payload_bytes": 2654,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 89401,
+        "seconds": 0.009471292025409639
+      }
+    },
+    {
+      "case": "capture-session-summary",
+      "size": 31,
+      "sprint11": {
+        "queries": 3,
+        "payload_bytes": 465,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 139137,
+        "seconds": 0.017189207952469587
+      },
+      "sprint12": {
+        "queries": 3,
+        "payload_bytes": 465,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 138565,
+        "seconds": 0.016407708055339754
+      }
+    },
+    {
+      "case": "capture-sessions",
+      "size": 1,
+      "sprint11": {
+        "queries": 7,
+        "payload_bytes": 1140,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 158751,
+        "seconds": 0.02706808305811137
+      },
+      "sprint12": {
+        "queries": 7,
+        "payload_bytes": 1140,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 158793,
+        "seconds": 0.027156707947142422
+      }
+    },
+    {
+      "case": "capture-sessions",
+      "size": 10,
+      "sprint11": {
+        "queries": 7,
+        "payload_bytes": 11400,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 245604,
+        "seconds": 0.03221575007773936
+      },
+      "sprint12": {
+        "queries": 7,
+        "payload_bytes": 11400,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 246308,
+        "seconds": 0.07314700004644692
+      }
+    },
+    {
+      "case": "capture-sessions",
+      "size": 100,
+      "sprint11": {
+        "queries": 7,
+        "payload_bytes": 114000,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 1948785,
+        "seconds": 0.10583487502299249
+      },
+      "sprint12": {
+        "queries": 7,
+        "payload_bytes": 114000,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 1957279,
+        "seconds": 0.47404304204974324
+      }
+    },
+    {
+      "case": "content-campuses",
+      "size": 1,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 437,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 37363,
+        "seconds": 0.0018813330680131912
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 437,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 36185,
+        "seconds": 0.002326957997865975
+      }
+    },
+    {
+      "case": "content-campuses",
+      "size": 25,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 10955,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 285862,
+        "seconds": 0.01743754104245454
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 10955,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 286172,
+        "seconds": 0.01924233289901167
+      }
+    },
+    {
+      "case": "content-cities",
+      "size": 1,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 276,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 26339,
+        "seconds": 0.0014974588993936777
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 276,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 26897,
+        "seconds": 0.0016527499537914991
+      }
+    },
+    {
+      "case": "content-cities",
+      "size": 25,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 6746,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 219621,
+        "seconds": 0.014094042009674013
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 6746,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 219802,
+        "seconds": 0.015021375031210482
+      }
+    },
+    {
+      "case": "content-districts",
+      "size": 1,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 257,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 26742,
+        "seconds": 0.0013752920785918832
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 257,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 27176,
+        "seconds": 0.0014964999863877892
+      }
+    },
+    {
+      "case": "content-districts",
+      "size": 25,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 6440,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 206134,
+        "seconds": 0.012027583085000515
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 6440,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 205829,
+        "seconds": 0.01252154097892344
+      }
+    },
+    {
+      "case": "content-plan_benefits",
+      "size": 1,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 299,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 40070,
+        "seconds": 0.0015682920347899199
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 299,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 41992,
+        "seconds": 0.0018711249576881528
+      }
+    },
+    {
+      "case": "content-plan_benefits",
+      "size": 25,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 7490,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 239462,
+        "seconds": 0.009601791040040553
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 7490,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 239152,
+        "seconds": 0.010741999954916537
+      }
+    },
+    {
+      "case": "content-subscription_plans",
+      "size": 1,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 325,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 29290,
+        "seconds": 0.0012029999634250998
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 325,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 29476,
+        "seconds": 0.0012806670274585485
+      }
+    },
+    {
+      "case": "content-subscription_plans",
+      "size": 25,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 8155,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 244424,
+        "seconds": 0.01597366703208536
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 8155,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 244424,
+        "seconds": 0.02087808307260275
+      }
+    },
+    {
+      "case": "executive-dashboard",
+      "size": 30,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 7111,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 111583,
+        "seconds": 0.01262066699564457
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 7111,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 111661,
+        "seconds": 0.014752166927792132
+      }
+    },
+    {
+      "case": "group-message-history",
+      "size": 1,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 849,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.015812291065230966,
+        "peak_python_bytes": 117235,
+        "seconds": 0.015991957974620163
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 849,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.01704308297485113,
+        "peak_python_bytes": 117675,
+        "seconds": 0.017254874925129116
+      }
+    },
+    {
+      "case": "group-message-history",
+      "size": 30,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 25511,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.028288417030125856,
+        "peak_python_bytes": 438603,
+        "seconds": 0.02846379193942994
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 25511,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.030953750014305115,
+        "peak_python_bytes": 440803,
+        "seconds": 0.03116733394563198
+      }
+    },
+    {
+      "case": "group-message-history",
+      "size": 100,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 85082,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.05852158402558416,
+        "peak_python_bytes": 1439841,
+        "seconds": 0.058712458005174994
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 85082,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.06285479106009007,
+        "peak_python_bytes": 1439670,
+        "seconds": 0.06307408399879932
+      }
+    },
+    {
+      "case": "group-rich-events",
+      "size": 1,
+      "sprint11": {
+        "queries": 16,
+        "payload_bytes": 1560,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.028132000006735325,
+        "peak_python_bytes": 231258,
+        "seconds": 0.030296667013317347
+      },
+      "sprint12": {
+        "queries": 16,
+        "payload_bytes": 1560,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.029398416983895004,
+        "peak_python_bytes": 233012,
+        "seconds": 0.031712666037492454
+      }
+    },
+    {
+      "case": "group-rich-events",
+      "size": 30,
+      "sprint11": {
+        "queries": 16,
+        "payload_bytes": 46864,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.056989750009961426,
+        "peak_python_bytes": 1109170,
+        "seconds": 0.06126920902170241
+      },
+      "sprint12": {
+        "queries": 16,
+        "payload_bytes": 46864,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.06062295800074935,
+        "peak_python_bytes": 1110319,
+        "seconds": 0.06518237490672618
+      }
+    },
+    {
+      "case": "group-rich-events",
+      "size": 100,
+      "sprint11": {
+        "queries": 16,
+        "payload_bytes": 156278,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.13131291593890637,
+        "peak_python_bytes": 3548118,
+        "seconds": 0.14122712495736778
+      },
+      "sprint12": {
+        "queries": 16,
+        "payload_bytes": 156278,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.13874637498520315,
+        "peak_python_bytes": 3548084,
+        "seconds": 0.1492474169936031
+      }
+    },
+    {
+      "case": "kyc",
+      "size": 1,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 434,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 81924,
+        "seconds": 0.004804458003491163
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 434,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 80374,
+        "seconds": 0.00637487496715039
+      }
+    },
+    {
+      "case": "kyc",
+      "size": 20,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 8680,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 117769,
+        "seconds": 0.007034917012788355
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 8680,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 117395,
+        "seconds": 0.01159558305516839
+      }
+    },
+    {
+      "case": "kyc",
+      "size": 100,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 43400,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 396714,
+        "seconds": 0.017438458977267146
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 43400,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 394228,
+        "seconds": 0.020331333042122424
+      }
+    },
+    {
+      "case": "legacy-direct-message-history",
+      "size": 1,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 411,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 119320,
+        "seconds": 0.016351916012354195
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 411,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 117443,
+        "seconds": 0.017650040914304554
+      }
+    },
+    {
+      "case": "legacy-direct-message-history",
+      "size": 10,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 3714,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 165963,
+        "seconds": 0.017697333940304816
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 3714,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 166084,
+        "seconds": 0.018903209012933075
+      }
+    },
+    {
+      "case": "legacy-direct-message-history",
+      "size": 100,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 36834,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 713928,
+        "seconds": 0.03630854096263647
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 36834,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 714530,
+        "seconds": 0.04001583298668265
+      }
+    },
+    {
+      "case": "probe",
+      "size": 10,
+      "sprint11": {
+        "queries": 2,
+        "payload_bytes": 10,
+        "rows_inspected": null,
+        "http_calls": 1,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.00016620801761746407,
+        "peak_python_bytes": 18410,
+        "seconds": 0.00038879201747477055
+      },
+      "sprint12": {
+        "queries": 2,
+        "payload_bytes": 10,
+        "rows_inspected": null,
+        "http_calls": 1,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.00016000005416572094,
+        "peak_python_bytes": 18410,
+        "seconds": 0.00038183305878192186
+      }
+    },
+    {
+      "case": "public-payment-reliability",
+      "size": 5,
+      "sprint11": {
+        "queries": 2,
+        "payload_bytes": 208,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 95525,
+        "seconds": 0.008290707948617637
+      },
+      "sprint12": {
+        "queries": 2,
+        "payload_bytes": 208,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 95331,
+        "seconds": 0.0067320410162210464
+      }
+    },
+    {
+      "case": "public-payment-reliability",
+      "size": 40,
+      "sprint11": {
+        "queries": 2,
+        "payload_bytes": 211,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 250833,
+        "seconds": 0.012958290986716747
+      },
+      "sprint12": {
+        "queries": 2,
+        "payload_bytes": 211,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 251562,
+        "seconds": 0.010432917042635381
+      }
+    },
+    {
+      "case": "public-payment-reliability",
+      "size": 100,
+      "sprint11": {
+        "queries": 2,
+        "payload_bytes": 214,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 544263,
+        "seconds": 0.022246083011850715
+      },
+      "sprint12": {
+        "queries": 2,
+        "payload_bytes": 214,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 542538,
+        "seconds": 0.016727125039324164
+      }
+    },
+    {
+      "case": "public-property-reviews",
+      "size": 1,
+      "sprint11": {
+        "queries": 5,
+        "payload_bytes": 607,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 225035,
+        "seconds": 0.0359242910053581
+      },
+      "sprint12": {
+        "queries": 5,
+        "payload_bytes": 607,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 223587,
+        "seconds": 0.03870404197368771
+      }
+    },
+    {
+      "case": "public-property-reviews",
+      "size": 10,
+      "sprint11": {
+        "queries": 5,
+        "payload_bytes": 1306,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 221299,
+        "seconds": 0.0354629170615226
+      },
+      "sprint12": {
+        "queries": 5,
+        "payload_bytes": 1305,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 222539,
+        "seconds": 0.03923324996139854
+      }
+    },
+    {
+      "case": "public-property-reviews",
+      "size": 100,
+      "sprint11": {
+        "queries": 5,
+        "payload_bytes": 1307,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 221572,
+        "seconds": 0.038260792032815516
+      },
+      "sprint12": {
+        "queries": 5,
+        "payload_bytes": 1306,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 222284,
+        "seconds": 0.04148587503004819
+      }
+    },
+    {
+      "case": "reports",
+      "size": 1,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 529,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 79352,
+        "seconds": 0.005735540995374322
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 529,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 79786,
+        "seconds": 0.006978166988119483
+      }
+    },
+    {
+      "case": "reports",
+      "size": 20,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 10580,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 124835,
+        "seconds": 0.008074083947576582
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 10580,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 121797,
+        "seconds": 0.009235125035047531
+      }
+    },
+    {
+      "case": "reports",
+      "size": 100,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 52900,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 403455,
+        "seconds": 0.01747583399992436
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 52900,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 400004,
+        "seconds": 0.0202784170396626
+      }
+    },
+    {
+      "case": "saved-search-itemized",
+      "size": 1,
+      "sprint11": {
+        "queries": 22,
+        "payload_bytes": 26,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 5,
+        "max_transaction_seconds": 0.003900500014424324,
+        "peak_python_bytes": 102689,
+        "seconds": 0.014143083011731505
+      },
+      "sprint12": {
+        "queries": 22,
+        "payload_bytes": 26,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 5,
+        "max_transaction_seconds": 0.0039053329965099692,
+        "peak_python_bytes": 101163,
+        "seconds": 0.018992125056684017
+      }
+    },
+    {
+      "case": "saved-search-itemized",
+      "size": 100,
+      "sprint11": {
+        "queries": 22,
+        "payload_bytes": 75,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 5,
+        "max_transaction_seconds": 0.008790750056505203,
+        "peak_python_bytes": 184916,
+        "seconds": 0.027329916949383914
+      },
+      "sprint12": {
+        "queries": 22,
+        "payload_bytes": 75,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 5,
+        "max_transaction_seconds": 0.007847874891012907,
+        "peak_python_bytes": 186007,
+        "seconds": 0.02481041697319597
+      }
+    },
+    {
+      "case": "saved-search-itemized",
+      "size": 2000,
+      "sprint11": {
+        "queries": 34,
+        "payload_bytes": 85,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 8,
+        "max_transaction_seconds": 0.034870333038270473,
+        "peak_python_bytes": 1368096,
+        "seconds": 0.2228727909969166
+      },
+      "sprint12": {
+        "queries": 34,
+        "payload_bytes": 85,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 8,
+        "max_transaction_seconds": 0.034910415997728705,
+        "peak_python_bytes": 1377189,
+        "seconds": 0.22164308303035796
+      }
+    },
+    {
+      "case": "saved-search-legacy",
+      "size": 1,
+      "sprint11": {
+        "queries": 15,
+        "payload_bytes": 26,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 4,
+        "max_transaction_seconds": 0.0034179999493062496,
+        "peak_python_bytes": 81639,
+        "seconds": 0.010504124918952584
+      },
+      "sprint12": {
+        "queries": 15,
+        "payload_bytes": 26,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 4,
+        "max_transaction_seconds": 0.004164249985478818,
+        "peak_python_bytes": 81718,
+        "seconds": 0.013168917037546635
+      }
+    },
+    {
+      "case": "saved-search-legacy",
+      "size": 100,
+      "sprint11": {
+        "queries": 15,
+        "payload_bytes": 75,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 4,
+        "max_transaction_seconds": 0.003953916020691395,
+        "peak_python_bytes": 150970,
+        "seconds": 0.016455709002912045
+      },
+      "sprint12": {
+        "queries": 15,
+        "payload_bytes": 75,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 4,
+        "max_transaction_seconds": 0.00475829211063683,
+        "peak_python_bytes": 148201,
+        "seconds": 0.01605674996972084
+      }
+    },
+    {
+      "case": "saved-search-legacy",
+      "size": 2000,
+      "sprint11": {
+        "queries": 15,
+        "payload_bytes": 85,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 4,
+        "max_transaction_seconds": 0.011427709017880261,
+        "peak_python_bytes": 1505223,
+        "seconds": 0.08875162503682077
+      },
+      "sprint12": {
+        "queries": 15,
+        "payload_bytes": 85,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 4,
+        "max_transaction_seconds": 0.010732457973062992,
+        "peak_python_bytes": 1503119,
+        "seconds": 0.08405491698067635
+      }
+    },
+    {
+      "case": "sprint09-compact-support-recovery",
+      "size": 1,
+      "sprint11": {
+        "queries": 3,
+        "payload_bytes": 343,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 63832,
+        "seconds": 0.0050694579258561134
+      },
+      "sprint12": {
+        "queries": 3,
+        "payload_bytes": 343,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 65169,
+        "seconds": 0.005686916061677039
+      }
+    },
+    {
+      "case": "sprint09-compact-support-recovery",
+      "size": 100,
+      "sprint11": {
+        "queries": 3,
+        "payload_bytes": 343,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 61013,
+        "seconds": 0.005159375024959445
+      },
+      "sprint12": {
+        "queries": 3,
+        "payload_bytes": 343,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 58345,
+        "seconds": 0.006933958036825061
+      }
+    },
+    {
+      "case": "sprint09-compact-support-recovery",
+      "size": 1000,
+      "sprint11": {
+        "queries": 3,
+        "payload_bytes": 343,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 60683,
+        "seconds": 0.005124083021655679
+      },
+      "sprint12": {
+        "queries": 3,
+        "payload_bytes": 343,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 60735,
+        "seconds": 0.011517332983203232
+      }
+    },
+    {
+      "case": "sprint09-compact-support-reply",
+      "size": 1,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 254,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.009894000017084181,
+        "peak_python_bytes": 112361,
+        "seconds": 0.016485124942846596
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 254,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.010707958019338548,
+        "peak_python_bytes": 113503,
+        "seconds": 0.017627542023546994
+      }
+    },
+    {
+      "case": "sprint09-compact-support-reply",
+      "size": 100,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 254,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.010078707942739129,
+        "peak_python_bytes": 112984,
+        "seconds": 0.016765667009167373
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 254,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.01074749999679625,
+        "peak_python_bytes": 112984,
+        "seconds": 0.017466374905779958
+      }
+    },
+    {
+      "case": "sprint09-compact-support-reply",
+      "size": 1000,
+      "sprint11": {
+        "queries": 14,
+        "payload_bytes": 254,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.010614332975819707,
+        "peak_python_bytes": 113861,
+        "seconds": 0.01722504198551178
+      },
+      "sprint12": {
+        "queries": 14,
+        "payload_bytes": 254,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.03247045795433223,
+        "peak_python_bytes": 114914,
+        "seconds": 0.0459662500070408
+      }
+    },
+    {
+      "case": "sprint09-edit-pages",
+      "size": 1,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 1400,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.018236667034216225,
+        "peak_python_bytes": 137157,
+        "seconds": 0.018432874931022525
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 1400,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.01969137496780604,
+        "peak_python_bytes": 136886,
+        "seconds": 0.01989041594788432
+      }
+    },
+    {
+      "case": "sprint09-edit-pages",
+      "size": 30,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 42021,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.0352436670800671,
+        "peak_python_bytes": 607189,
+        "seconds": 0.03545766696333885
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 42021,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.03823554201517254,
+        "peak_python_bytes": 607503,
+        "seconds": 0.03846466704271734
+      }
+    },
+    {
+      "case": "sprint09-edit-pages",
+      "size": 100,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 140092,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.07704091700725257,
+        "peak_python_bytes": 1945056,
+        "seconds": 0.07726383302360773
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 140092,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.08478037500753999,
+        "peak_python_bytes": 1994700,
+        "seconds": 0.08501475001685321
+      }
+    },
+    {
+      "case": "sprint09-inbox-page",
+      "size": 1,
+      "sprint11": {
+        "queries": 17,
+        "payload_bytes": 1414,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 275865,
+        "seconds": 0.049439665977843106
+      },
+      "sprint12": {
+        "queries": 17,
+        "payload_bytes": 1414,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 274145,
+        "seconds": 0.05345799995120615
+      }
+    },
+    {
+      "case": "sprint09-inbox-page",
+      "size": 20,
+      "sprint11": {
+        "queries": 17,
+        "payload_bytes": 27444,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 834076,
+        "seconds": 0.07468320801854134
+      },
+      "sprint12": {
+        "queries": 17,
+        "payload_bytes": 27444,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 832528,
+        "seconds": 0.07798633305355906
+      }
+    },
+    {
+      "case": "sprint09-inbox-page",
+      "size": 100,
+      "sprint11": {
+        "queries": 17,
+        "payload_bytes": 137044,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 3451159,
+        "seconds": 0.17986220901366323
+      },
+      "sprint12": {
+        "queries": 17,
+        "payload_bytes": 137044,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 3451283,
+        "seconds": 0.1910478330682963
+      }
+    },
+    {
+      "case": "sprint09-large-inbox-history",
+      "size": 10001,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 1506,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 122823,
+        "seconds": 0.016510540968738496
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 1506,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 128380,
+        "seconds": 0.01828912494238466
+      }
+    },
+    {
+      "case": "sprint09-read-receipts",
+      "size": 10000,
+      "sprint11": {
+        "queries": 1,
+        "payload_bytes": 4,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 20599,
+        "seconds": 0.03625512507278472
+      },
+      "sprint12": {
+        "queries": 1,
+        "payload_bytes": 4,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 20475,
+        "seconds": 0.050475207972340286
+      }
+    },
+    {
+      "case": "sprint10-campaign-preview",
+      "size": 1,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 27,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.010753375012427568,
+        "peak_python_bytes": 87175,
+        "seconds": 0.0109579999698326
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 27,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.011922542005777359,
+        "peak_python_bytes": 86602,
+        "seconds": 0.012145833927206695
+      }
+    },
+    {
+      "case": "sprint10-campaign-preview",
+      "size": 20,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 27,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.01815833302680403,
+        "peak_python_bytes": 203335,
+        "seconds": 0.01835400005802512
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 27,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.01989570795558393,
+        "peak_python_bytes": 205806,
+        "seconds": 0.020099792047403753
+      }
+    },
+    {
+      "case": "sprint10-campaign-preview",
+      "size": 100,
+      "sprint11": {
+        "queries": 13,
+        "payload_bytes": 27,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.050537124974653125,
+        "peak_python_bytes": 667808,
+        "seconds": 0.050739708938635886
+      },
+      "sprint12": {
+        "queries": 13,
+        "payload_bytes": 27,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 2,
+        "max_transaction_seconds": 0.056504250038415194,
+        "peak_python_bytes": 653320,
+        "seconds": 0.05673025001306087
+      }
+    },
+    {
+      "case": "support-bounded-thread",
+      "size": 1,
+      "sprint11": {
+        "queries": 17,
+        "payload_bytes": 3932,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 129217,
+        "seconds": 0.03170570801012218
+      },
+      "sprint12": {
+        "queries": 17,
+        "payload_bytes": 3932,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 130183,
+        "seconds": 0.06379108398687094
+      }
+    },
+    {
+      "case": "support-bounded-thread",
+      "size": 10,
+      "sprint11": {
+        "queries": 17,
+        "payload_bytes": 5762,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 147912,
+        "seconds": 0.03281641693320125
+      },
+      "sprint12": {
+        "queries": 17,
+        "payload_bytes": 5762,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 146895,
+        "seconds": 0.04091716592665762
+      }
+    },
+    {
+      "case": "support-bounded-thread",
+      "size": 100,
+      "sprint11": {
+        "queries": 17,
+        "payload_bytes": 5766,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 146430,
+        "seconds": 0.032849458046257496
+      },
+      "sprint12": {
+        "queries": 17,
+        "payload_bytes": 5766,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 144107,
+        "seconds": 0.03693416598252952
+      }
+    },
+    {
+      "case": "support-information",
+      "size": 1,
+      "sprint11": {
+        "queries": 4,
+        "payload_bytes": 817,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 54235,
+        "seconds": 0.006430459092371166
+      },
+      "sprint12": {
+        "queries": 4,
+        "payload_bytes": 817,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 54159,
+        "seconds": 0.006705999956466258
+      }
+    },
+    {
+      "case": "support-information",
+      "size": 25,
+      "sprint11": {
+        "queries": 4,
+        "payload_bytes": 20440,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 227009,
+        "seconds": 0.015037541976198554
+      },
+      "sprint12": {
+        "queries": 4,
+        "payload_bytes": 20440,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 229005,
+        "seconds": 0.014969457988627255
+      }
+    },
+    {
+      "case": "support-information",
+      "size": 100,
+      "sprint11": {
+        "queries": 4,
+        "payload_bytes": 81790,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 878822,
+        "seconds": 0.038582167006097734
+      },
+      "sprint12": {
+        "queries": 4,
+        "payload_bytes": 81790,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 866716,
+        "seconds": 0.060851417016237974
+      }
+    },
+    {
+      "case": "support-staff-thread",
+      "size": 1,
+      "sprint11": {
+        "queries": 10,
+        "payload_bytes": 2566,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 103630,
+        "seconds": 0.015405875048600137
+      },
+      "sprint12": {
+        "queries": 10,
+        "payload_bytes": 2566,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 103678,
+        "seconds": 0.019365707994438708
+      }
+    },
+    {
+      "case": "support-staff-thread",
+      "size": 10,
+      "sprint11": {
+        "queries": 10,
+        "payload_bytes": 17975,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 250941,
+        "seconds": 0.022241666913032532
+      },
+      "sprint12": {
+        "queries": 10,
+        "payload_bytes": 17975,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 252464,
+        "seconds": 0.02677850006148219
+      }
+    },
+    {
+      "case": "support-staff-thread",
+      "size": 100,
+      "sprint11": {
+        "queries": 10,
+        "payload_bytes": 172326,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 1770326,
+        "seconds": 0.09025779191870242
+      },
+      "sprint12": {
+        "queries": 10,
+        "payload_bytes": 172326,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 0,
+        "max_transaction_seconds": 0.0,
+        "peak_python_bytes": 1849461,
+        "seconds": 0.08981112495530397
+      }
+    },
+    {
+      "case": "tender-construction-job",
+      "size": 2,
+      "sprint11": {
+        "queries": 99,
+        "payload_bytes": 10,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 12,
+        "max_transaction_seconds": 0.08993533300235868,
+        "peak_python_bytes": 363105,
+        "seconds": 0.1406756250653416
+      },
+      "sprint12": {
+        "queries": 99,
+        "payload_bytes": 10,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 12,
+        "max_transaction_seconds": 0.08646645792759955,
+        "peak_python_bytes": 358141,
+        "seconds": 0.13725166697986424
+      }
+    },
+    {
+      "case": "transition-match-job",
+      "size": 2,
+      "sprint11": {
+        "queries": 67,
+        "payload_bytes": 14,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 6,
+        "max_transaction_seconds": 0.049892834038473666,
+        "peak_python_bytes": 296866,
+        "seconds": 0.10296874993946403
+      },
+      "sprint12": {
+        "queries": 67,
+        "payload_bytes": 14,
+        "rows_inspected": null,
+        "http_calls": 0,
+        "storage_exists_calls": 0,
+        "lock_queries": 6,
+        "max_transaction_seconds": 0.0502742090029642,
+        "peak_python_bytes": 296308,
+        "seconds": 0.1001435830257833
+      }
+    }
+  ]
+}

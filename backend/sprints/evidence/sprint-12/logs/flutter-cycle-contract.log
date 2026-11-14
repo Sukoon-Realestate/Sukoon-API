@@ -1,0 +1,26 @@
+00:00 +0: loading /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_cycle_contract_test.dart
+00:00 +0: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +0: Django invoice, deposit and activation share identities and amounts
+00:00 +1: Django onboarding envelope passes the actual Flutter request helper
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_action_rejected] not found[0m
+00:00 +1 -1: Django onboarding envelope passes the actual Flutter request helper [E]
+  Expected: true
+    Actual: <false>
+  rental_action_rejected
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/django_cycle_contract_test.dart 123:7          main.<fn>
+  
+00:00 +1 -1: Django signing envelope passes the actual Flutter request helper
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:00 +2 -1: Django quote and checkout pass the actual Flutter request helpers
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:00 +3 -1: (tearDownAll)
+00:00 +3 -1: Some tests failed.
+
+Failing tests:
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_cycle_contract_test.dart: Django onboarding envelope passes the actual Flutter request helper

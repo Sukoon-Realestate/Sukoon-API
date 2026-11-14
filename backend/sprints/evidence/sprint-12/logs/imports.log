@@ -1,0 +1,5 @@
+/Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /private/tmp/sukoon-sprint12/static_root/
+  mw_instance = middleware(adapted_handler)
+/Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /private/tmp/sukoon-sprint12/static_root/
+  mw_instance = middleware(adapted_handler)
+imported=2042 failed=0

@@ -216,9 +216,26 @@ test-sprint05-identity: ## Identity CBV/service contracts; supply isolated CYCLE
 
 .PHONY: test-sprint12-local-contracts
 test-sprint12-local-contracts: ## Offline staging security and scratch-environment isolation; no deployment
+	mkdir -p $(BASELINE_OUT)/sprint-12
 	$(BASELINE_ENV) $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
-		--ds=$(CYCLE_SETTINGS) core_apps/common/test_settings_environment.py \
-		core_apps/common/test_staging_acceptance_settings.py core_apps/common/test_performance_probe.py
+		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-12/junit.xml \
+		core_apps/common/test_settings_environment.py core_apps/common/test_staging_acceptance_settings.py \
+		core_apps/common/test_performance_probe.py core_apps/common/test_sprint12_acceptance.py
+
+.PHONY: sprint12-acceptance test-sprint12-client-export
+sprint12-acceptance: ## Refresh local inventory/report; open architecture gaps return nonzero; never release approval
+	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=$(CYCLE_SETTINGS) $(CYCLE_PYTHON) tools/qa/sprint12_acceptance.py \
+		--output $(BASELINE_OUT)/sprint-12/acceptance.json $(foreach report,$(SPRINT12_JUNIT),--junit $(report))
+
+test-sprint12-client-export: ## Fresh complete Flutter fixtures; use isolated settings, then test within grant expiry
+	mkdir -p $(BASELINE_OUT)/client
+	$(BASELINE_ENV) DOTENV_DISABLED=1 SOKOUN_PLANNING_ARTIFACT_DIR=$(abspath $(BASELINE_OUT)/client) \
+		SOKOUN_CONTRACT_ARTIFACT_DIR=$(abspath $(BASELINE_OUT)/client) $(CYCLE_PYTHON) -m pytest \
+		-p no:cacheprovider -o addopts="--strict-markers --tb=short" -q --ds=$(CYCLE_SETTINGS) \
+		--junitxml=$(BASELINE_OUT)/client/export.xml core_apps/features/tests/test_planning_cycles.py \
+		core_apps/features/tests/test_planning_boundaries.py core_apps/features/tests/test_funded_settlement.py \
+		core_apps/features/tests/test_remaining_concurrency.py core_apps/features/tests/test_full_cycle_http.py \
+		core_apps/features/tests/test_change_recovery.py::test_change_signing_session_replays_after_both_mock_signatures
 
 .PHONY: test-sprint06-properties-tours
 test-sprint06-properties-tours: ## Property/tour contracts and domain regressions; use isolated settings/storage

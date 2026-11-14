@@ -1,0 +1,4 @@
+DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=sprint12_sqlite .venv/bin/python tools/qa/sprint12_acceptance.py \
+		--output /private/tmp/sukoon-sprint12/refreshed/sprint-12/acceptance.json --junit sprints/evidence/sprint-12/full/mvp/junit.xml --junit sprints/evidence/sprint-12/full/restoration/junit.xml --junit sprints/evidence/sprint-12/junit/report-final.xml
+{"output": "/private/tmp/sukoon-sprint12/refreshed/sprint-12/acceptance.json", "local_checks_passed": false, "release_accepted": false}
+make: *** [sprint12-acceptance] Error 1

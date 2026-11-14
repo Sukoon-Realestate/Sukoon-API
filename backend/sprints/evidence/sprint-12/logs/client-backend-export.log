@@ -1,0 +1,65 @@
+SOKOUN_PLANNING_ARTIFACT_DIR=/private/tmp/sukoon-sprint12/client SOKOUN_CONTRACT_ARTIFACT_DIR=/private/tmp/sukoon-sprint12/client .venv/bin/python -m pytest core_apps/features/tests/test_planning_cycles.py core_apps/features/tests/test_planning_boundaries.py core_apps/features/tests/test_funded_settlement.py core_apps/features/tests/test_remaining_concurrency.py core_apps/features/tests/test_full_cycle_http.py --ds=sprint12_client --junitxml=/private/tmp/sukoon-sprint12/client/remaining-cycles.xml
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-8.3.5, pluggy-1.6.0 -- /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/bin/python
+cachedir: .pytest_cache
+django: version: 4.2.11, settings: sprint12_client (from option)
+rootdir: /Users/demo23home/code/sukoon/Sukoon-API/backend
+configfile: pytest.ini
+plugins: cov-6.0.0, platformdirs-4.12.3, django-4.9.0, asyncio-0.23.7, anyio-4.15.1
+asyncio: mode=Mode.STRICT
+collecting ... collected 33 items
+
+core_apps/features/tests/test_planning_cycles.py::test_lifestyle_disclosure_connections_and_revocation PASSED [  3%]
+core_apps/features/tests/test_planning_cycles.py::test_group_invitation_cost_consent_visit_application_and_roster_change PASSED [  6%]
+core_apps/features/tests/test_planning_cycles.py::test_group_capacity_expiry_wrong_token_stale_roster_and_independent_gates PASSED [  9%]
+core_apps/features/tests/test_planning_cycles.py::test_housing_request_offer_identity_permissions_expiry_and_recovery PASSED [ 12%]
+core_apps/features/tests/test_planning_boundaries.py::test_condition_objection_reapproval_immutable_baseline_and_private_evidence PASSED [ 15%]
+core_apps/features/tests/test_planning_boundaries.py::test_notice_does_not_release_possession_or_change_legal_terms PASSED [ 18%]
+core_apps/features/tests/test_planning_boundaries.py::test_replacement_requires_incoming_consent_owner_approval_and_separate_active_lease PASSED [ 21%]
+core_apps/features/tests/test_planning_boundaries.py::test_commute_mock_filters_rank_before_paging_unknown_exclusion_expiry_and_privacy PASSED [ 24%]
+core_apps/features/tests/test_planning_boundaries.py::test_assistant_grounded_catalog_actions_no_raw_prompt_and_account_scoped_history PASSED [ 27%]
+core_apps/features/tests/test_planning_boundaries.py::test_departure_replays_and_recovers_without_disclosing_current_group PASSED [ 30%]
+core_apps/features/tests/test_planning_boundaries.py::test_chat_send_uses_current_mutual_roommate_consent PASSED [ 33%]
+core_apps/features/tests/test_planning_boundaries.py::test_malformed_commands_are_validation_errors_not_server_errors[housing-requests/-values0] PASSED [ 36%]
+core_apps/features/tests/test_planning_boundaries.py::test_malformed_commands_are_validation_errors_not_server_errors[housing-groups/-values1] PASSED [ 39%]
+core_apps/features/tests/test_planning_boundaries.py::test_malformed_commands_are_validation_errors_not_server_errors[lifestyle-profile/-values2] PASSED [ 42%]
+core_apps/features/tests/test_planning_boundaries.py::test_malformed_commands_are_validation_errors_not_server_errors[lifestyle-profile/-values3] PASSED [ 45%]
+core_apps/features/tests/test_planning_boundaries.py::test_malformed_commands_are_validation_errors_not_server_errors[commute-searches/-values4] PASSED [ 48%]
+core_apps/features/tests/test_planning_boundaries.py::test_malformed_commands_are_validation_errors_not_server_errors[tenant-assistant/turns/-values5] PASSED [ 51%]
+core_apps/features/tests/test_planning_boundaries.py::test_replacement_does_not_use_an_unrelated_incoming_lease PASSED [ 54%]
+core_apps/features/tests/test_funded_settlement.py::test_funded_deposit_deduction_return_and_owner_payout_close PASSED [ 57%]
+core_apps/features/tests/test_funded_settlement.py::test_partial_combined_refund_replay_and_component_limits PASSED [ 60%]
+core_apps/features/tests/test_funded_settlement.py::test_settlement_refuses_changed_finances_and_applies_explicit_writeoff PASSED [ 63%]
+core_apps/features/tests/test_funded_settlement.py::test_partial_refund_can_be_repaid_without_duplicate_owner_or_deposit_allocations PASSED [ 66%]
+core_apps/features/tests/test_funded_settlement.py::test_settlement_releases_uncollected_deposit_instead_of_paying_it_to_owner PASSED [ 69%]
+core_apps/features/tests/test_funded_settlement.py::test_settlement_adjustment_balance_after_deposit_is_payable PASSED [ 72%]
+core_apps/features/tests/test_funded_settlement.py::test_refund_after_owner_payout_requires_explicit_mock_recovery PASSED [ 75%]
+core_apps/features/tests/test_remaining_concurrency.py::test_duplicate_partial_refund_reserves_capture_once PASSED [ 78%]
+core_apps/features/tests/test_remaining_concurrency.py::test_competing_partial_refunds_cannot_oversubscribe_component PASSED [ 81%]
+core_apps/features/tests/test_remaining_concurrency.py::test_duplicate_funded_settlement_acceptance_posts_once PASSED [ 84%]
+core_apps/features/tests/test_remaining_concurrency.py::test_competing_group_joins_cannot_overfill PASSED [ 87%]
+core_apps/features/tests/test_full_cycle_http.py::test_complete_funded_cycle_over_http[direct] PASSED [ 90%]
+core_apps/features/tests/test_full_cycle_http.py::test_complete_funded_cycle_over_http[marketplace] PASSED [ 93%]
+core_apps/features/tests/test_full_cycle_http.py::test_complete_funded_cycle_over_http[group] PASSED [ 96%]
+core_apps/features/tests/test_full_cycle_http.py::test_complete_funded_cycle_over_http[housing_request] PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+core_apps/features/tests/test_planning_cycles.py: 5 warnings
+core_apps/features/tests/test_planning_boundaries.py: 14 warnings
+core_apps/features/tests/test_funded_settlement.py: 7 warnings
+core_apps/features/tests/test_remaining_concurrency.py: 4 warnings
+core_apps/features/tests/test_full_cycle_http.py: 1 warning
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /private/tmp/sukoon-sprint12/static_root/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /private/tmp/sukoon-sprint12/client/remaining-cycles.xml -
+================== 33 passed, 33 warnings in 71.93s (0:01:11) ==================

@@ -1,0 +1,98 @@
+/opt/homebrew/bin/flutter test --no-pub test/remaining_rental_finance_test.dart test/django_remaining_contract_test.dart test/django_mock_provider_contract_test.dart --dart-define=SOKOUN_DJANGO_REMAINING="/private/tmp/sukoon-sprint12/client" --dart-define=SOKOUN_LIFESTYLE=true --dart-define=SOKOUN_ROOMMATES=true --dart-define=SOKOUN_HOUSING_GROUPS=true --dart-define=SOKOUN_GROUP_VISITS=true --dart-define=SOKOUN_GROUP_APPLICATIONS=true --dart-define=SOKOUN_HOUSING_REQUESTS=true --dart-define=SOKOUN_HOUSING_OFFERS=true --dart-define=SOKOUN_COMMUTE=true --dart-define=SOKOUN_TENANT_ASSISTANT=true --dart-define=SOKOUN_CONDITION_REPORTS=true --dart-define=SOKOUN_MOVE_OUT_NOTICES=true --dart-define=SOKOUN_REPLACEMENTS=true
+
+┌─────────────────────────────────────────────────────────┐
+│ A new version of Flutter is available!                  │
+│                                                         │
+│ To update to the latest version, run "flutter upgrade". │
+└─────────────────────────────────────────────────────────┘
+00:00 +0: loading /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/remaining_rental_finance_test.dart
+00:00 +0: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/remaining_rental_finance_test.dart: partial combined refund preserves explicit split, revision and identity
+00:00 +1: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/remaining_rental_finance_test.dart: zero in one component is valid but over-allocating either component is rejected
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_invalid_amount] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_invalid_amount] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_invalid_amount] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_invalid_amount] not found[0m
+00:00 +2: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/remaining_rental_finance_test.dart: unknown allocation metadata is not parsed as a verified zero balance
+00:00 +3: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/remaining_rental_finance_test.dart: partial invoice repayment needs explicit server permission
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/remaining_rental_finance_test.dart: tenant settlement credits render while negative payment inputs remain invalid
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/remaining_rental_finance_test.dart: (tearDownAll)
+00:02 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:02 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django group consent and invite envelopes pass the actual Flutter helper
+[34m[🌎 Easy Localization] [WARNING] Localization key [planning_unavailable] not found[0m
+00:02 +5 -1: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django group consent and invite envelopes pass the actual Flutter helper [E]
+  Expected: true
+    Actual: <false>
+  planning_unavailable
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/django_remaining_contract_test.dart 119:7      main.<fn>
+  
+00:02 +5 -1: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django housing requests and priced owner offers pass Flutter helpers
+[34m[🌎 Easy Localization] [WARNING] Localization key [planning_unavailable] not found[0m
+00:02 +5 -2: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django housing requests and priced owner offers pass Flutter helpers [E]
+  Expected: true
+    Actual: <false>
+  planning_unavailable
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/django_remaining_contract_test.dart 154:7      main.<fn>
+  
+00:02 +5 -2: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django report templates can be submitted by the Flutter form
+[34m[🌎 Easy Localization] [WARNING] Localization key [planning_unavailable] not found[0m
+00:02 +5 -3: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django report templates can be submitted by the Flutter form [E]
+  Expected: true
+    Actual: <false>
+  planning_unavailable
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/django_remaining_contract_test.dart 201:7      main.<fn>
+  
+00:02 +5 -3: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django transition response preserves the separate release states
+[34m[🌎 Easy Localization] [WARNING] Localization key [planning_unavailable] not found[0m
+00:02 +5 -4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django transition response preserves the separate release states [E]
+  Expected: true
+    Actual: <false>
+  planning_unavailable
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/django_remaining_contract_test.dart 238:7      main.<fn>
+  
+00:02 +5 -4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django commute coverage and every-limit filtering pass Flutter helper
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +6 -4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django grounded assistant reply passes Flutter catalog validation
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +7 -4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django payment allows the explicit partial-refund form and request helper
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +8 -4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django replacement nomination consent passes the incoming tenant helper
+[34m[🌎 Easy Localization] [WARNING] Localization key [planning_unavailable] not found[0m
+00:02 +8 -5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django replacement nomination consent passes the incoming tenant helper [E]
+  Expected: true
+    Actual: <false>
+  planning_unavailable
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/django_remaining_contract_test.dart 358:7      main.<fn>
+  
+00:02 +8 -5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: (tearDownAll)
+00:02 +8 -6: loading /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_mock_provider_contract_test.dart [E]
+  Failed to load "/Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_mock_provider_contract_test.dart": Cannot open file, path = '/private/tmp/sukoon-sprint12/client/django-amendments-signing-contract.json' (OS Error: No such file or directory, errno = 2)
+  dart:io                                              _File.readAsStringSync
+  test/django_mock_provider_contract_test.dart 35:53   main.read
+  test/django_mock_provider_contract_test.dart 138:20  main
+  
+00:02 +8 -6: Some tests failed.
+
+Failing tests:
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_mock_provider_contract_test.dart: loading /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_mock_provider_contract_test.dart
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django group consent and invite envelopes pass the actual Flutter helper
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django housing requests and priced owner offers pass Flutter helpers
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/django_remaining_contract_test.dart: Django replacement nomination consent passes the incoming tenant helper
+  ... and 2 more
+make: *** [test-django-remaining-contract] Error 1

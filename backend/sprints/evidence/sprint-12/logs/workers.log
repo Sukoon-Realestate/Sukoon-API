@@ -1,0 +1,6 @@
+/Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /var/folders/fm/s554092x5xj5sczz7gs70yyc0000gn/T/sokoun-cycle-workers-kjgb2j7t/static/
+  mw_instance = middleware(adapted_handler)
+/Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /var/folders/fm/s554092x5xj5sczz7gs70yyc0000gn/T/sokoun-cycle-workers-kjgb2j7t/static/
+  mw_instance = middleware(adapted_handler)
+{"interrupted_job_recovered_once": true, "local_only": true, "physical_device": false, "planning_inbox_delivered": true, "provider_transactions": false, "queued_job_processed": true, "queued_with_worker_stopped": true, "result": "passed", "scheduled_probe_verified": true, "scheduled_tasks_verified": ["qa-probe"]}
+Local evidence: /var/folders/fm/s554092x5xj5sczz7gs70yyc0000gn/T/sokoun-cycle-workers-kjgb2j7t
