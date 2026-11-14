@@ -160,14 +160,24 @@ class TicketReplyAPIView(APIView):
                 if information_id:
                     if not request_key:
                         from rest_framework.exceptions import ValidationError
-                        raise ValidationError("Retain the original operation key before answering.")
+
+                        raise ValidationError(
+                            "Retain the original operation key before answering."
+                        )
                     from core_apps.support.services.information import answer
+
                     updated_ticket = answer(
-                        user=request.user, ticket_id=id, workspace=workspace,
+                        user=request.user,
+                        ticket_id=id,
+                        workspace=workspace,
                         request_id=information_id,
-                        expected_revision=serializer.validated_data["information_revision"],
+                        expected_revision=serializer.validated_data[
+                            "information_revision"
+                        ],
                         body=serializer.validated_data["body"],
-                        attachment_ids=serializer.validated_data.get("attachment_ids", []),
+                        attachment_ids=serializer.validated_data.get(
+                            "attachment_ids", []
+                        ),
                         compact=compact,
                     )
                 else:
@@ -176,16 +186,22 @@ class TicketReplyAPIView(APIView):
                         ticket_id=id,
                         body=serializer.validated_data["body"],
                         workspace=workspace,
-                        attachment_ids=serializer.validated_data.get("attachment_ids", []),
+                        attachment_ids=serializer.validated_data.get(
+                            "attachment_ids", []
+                        ),
                         compact=compact,
                     )
             except TicketClosedConflict as exc:
                 # The row may have changed after the pre-check.
                 raise TicketStateConflict(str(exc))
-            detail = (ticket_receipt(updated_ticket) if compact else TicketDetailSerializer(
-                updated_ticket, context={"request": request}
-            ).data)
             reply = updated_ticket.messages.order_by("-created_at", "-pk").first()
+            detail = (
+                ticket_receipt(updated_ticket, message_id=reply.id)
+                if compact
+                else TicketDetailSerializer(
+                    updated_ticket, context={"request": request}
+                ).data
+            )
             return detail, status.HTTP_200_OK, reply.id
 
         payload = {**serializer.validated_data, "workspace": workspace or ""}

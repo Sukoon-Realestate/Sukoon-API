@@ -32,6 +32,7 @@ class MentionSeenAPIView(APIView):
 
     def put(self, request, id, message_id):
         from core_apps.common.command_fields import require_object_body
+
         require_object_body(request)
         return Response(
             see_mention(

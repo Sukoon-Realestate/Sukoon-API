@@ -117,11 +117,18 @@ class SendCommand:
     payload: dict
     fingerprint: str
     membership_period: object = None
+    membership_provided: bool = False
 
     @classmethod
     def parse(cls, data):
         client_id, payload, fingerprint = normalize_request(data)
-        return cls(client_id, payload, fingerprint, data.get("membership_period"))
+        return cls(
+            client_id,
+            payload,
+            fingerprint,
+            data.get("membership_period"),
+            "membership_period" in data,
+        )
 
     @classmethod
     def legacy_text(cls, content, client_message_id=None):
@@ -160,7 +167,7 @@ def send(conversation, sender, command):
         raise ValidationError(
             {"kind": "Property sharing is available in housing groups only."}
         )
-    if command.membership_period is not None and str(command.membership_period) != str(
+    if command.membership_provided and str(command.membership_period) != str(
         participant.membership_period
     ):
         raise ChatConflict("Refresh the current chat membership before retrying.")

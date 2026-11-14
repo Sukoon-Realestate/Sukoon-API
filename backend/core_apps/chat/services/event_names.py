@@ -1,4 +1,5 @@
 """Durable event names are protocol contracts, distinct from client commands."""
+
 MESSAGE_NEW = "message.new"
 MESSAGE_EDITED = "message.edited"
 MESSAGE_DELETED = "message.deleted"

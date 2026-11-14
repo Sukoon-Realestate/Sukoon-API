@@ -1,0 +1,12 @@
+{
+  "python": "3.11.15 (main, Mar  3 2026, 00:52:57) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "packages": {
+    "Django": "4.2.11",
+    "djangorestframework": "3.15.0",
+    "channels": "4.3.2",
+    "pytest": "8.3.5",
+    "pytest-django": "4.9.0",
+    "psycopg2-binary": "2.9.9",
+    "Pillow": "13.0.0"
+  }
+}

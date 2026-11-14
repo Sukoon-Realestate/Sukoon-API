@@ -43,7 +43,6 @@ class BoundedChatUploadHandler(TemporaryFileUploadHandler):
         return super().receive_data_chunk(raw_data, start)
 
 
-
 from core_apps.chat.services.attachment_access import accessible_attachment
 
 

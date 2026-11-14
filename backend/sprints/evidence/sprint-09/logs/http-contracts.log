@@ -1,0 +1,17 @@
+...........                                                              [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+core_apps/common/test_route_contracts.py: 11 warnings
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /private/tmp/sukoon-sprint09/runtime/static/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+-------- generated xml file: /private/tmp/sukoon-sprint09/contracts.xml --------
+11 passed, 178 deselected, 13 warnings in 130.82s (0:02:10)

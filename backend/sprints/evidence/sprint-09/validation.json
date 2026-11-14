@@ -1,0 +1,982 @@
+{
+  "date": "2026-11-14",
+  "scope": "Sprint 09 only",
+  "acceptance": "partial; see README unmet criteria",
+  "runs": {
+    "baseline-before-sqlite": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "existing communication suite before Sprint 09",
+      "tests": 689,
+      "passed": 662,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_all_mentions_navigation::test_existing_mentions_backfill_keeps_read_and_unread_progress",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_forwarding::test_migration_keeps_old_instance_message_inserts_working",
+          "reason": "PostgreSQL rolling deployment contract"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_notification_preferences::test_database_defaults_support_previous_release_memberships",
+          "reason": "Rolling deployment uses PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.chat.tests.test_rich_attachments::test_legacy_upload_writer_survives_rich_media_migration",
+          "reason": "Production rolling deployment uses PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_search_migration::test_search_migration_does_not_require_installing_postgres_extensions",
+          "reason": "PostgreSQL extension permissions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_deployed_acceptance::test_explicit_synthetic_flag_is_required",
+          "reason": "Acceptance intentionally requires real PostgreSQL transactions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_deployed_acceptance::test_complete_acceptance_and_load_leave_no_rows_or_side_effects",
+          "reason": "Acceptance intentionally requires real PostgreSQL transactions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_deployed_acceptance::test_failure_still_rolls_back_and_restores_flags",
+          "reason": "Acceptance intentionally requires real PostgreSQL transactions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_deployed_acceptance::test_unrelated_due_input_and_retry_batch_cannot_be_claimed",
+          "reason": "Acceptance intentionally requires real PostgreSQL transactions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_direct_media::test_legacy_socket_and_rich_direct_send_race_keeps_one_message",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_forwarding::test_opposite_forwards_and_duplicate_retries_do_not_deadlock",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_concurrency::test_postgres_concurrent_provisioning",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_concurrency::test_postgres_concurrent_send_same_identity",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_concurrency::test_send_racing_removal_serializes_on_the_roster",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_concurrency::test_cleanup_racing_attach_preserves_committed_media",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_message_mutations::test_concurrent_edits_are_serialized[True]",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_message_mutations::test_concurrent_edits_are_serialized[False]",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_productivity::test_batch_opposite_directions_duplicate_and_normal_send_do_not_deadlock",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_rental_moderation::test_postgres_moderation_claims_are_exclusive",
+          "reason": "Real row-lock proof requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.notifications.tests.test_delivery_policy::test_concurrent_digest_workers_and_timezone_change_never_duplicate_summary",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.support.tests.test_inquiry_resolution::test_concurrent_resolution_and_reply_serialize_without_duplicate_effects[True]",
+          "reason": "Independent PostgreSQL row locking is required"
+        },
+        {
+          "node": "core_apps.support.tests.test_inquiry_resolution::test_concurrent_resolution_and_reply_serialize_without_duplicate_effects[False]",
+          "reason": "Independent PostgreSQL row locking is required"
+        },
+        {
+          "node": "core_apps.support.tests.test_shared_admin::test_concurrent_supervisors_claim_one_escalated_ticket",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.support.tests.test_staged_media::test_reply_timeout_fence_and_original_request_serialize",
+          "reason": "PostgreSQL row locks"
+        }
+      ],
+      "seconds": 85.418,
+      "pytest_summary": "662 passed, 26 skipped, 1 xfailed, 216 warnings in 85.43s (0:01:25)",
+      "pytest_outcomes": {
+        "passed": 662,
+        "skipped": 26,
+        "xfailed": 1,
+        "warnings": 216
+      }
+    },
+    "existing-communication-sqlite": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "intermediate affected suite before prepared inbox",
+      "tests": 689,
+      "passed": 662,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_all_mentions_navigation::test_existing_mentions_backfill_keeps_read_and_unread_progress",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_forwarding::test_migration_keeps_old_instance_message_inserts_working",
+          "reason": "PostgreSQL rolling deployment contract"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_notification_preferences::test_database_defaults_support_previous_release_memberships",
+          "reason": "Rolling deployment uses PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.chat.tests.test_rich_attachments::test_legacy_upload_writer_survives_rich_media_migration",
+          "reason": "Production rolling deployment uses PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_search_migration::test_search_migration_does_not_require_installing_postgres_extensions",
+          "reason": "PostgreSQL extension permissions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_deployed_acceptance::test_explicit_synthetic_flag_is_required",
+          "reason": "Acceptance intentionally requires real PostgreSQL transactions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_deployed_acceptance::test_complete_acceptance_and_load_leave_no_rows_or_side_effects",
+          "reason": "Acceptance intentionally requires real PostgreSQL transactions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_deployed_acceptance::test_failure_still_rolls_back_and_restores_flags",
+          "reason": "Acceptance intentionally requires real PostgreSQL transactions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_deployed_acceptance::test_unrelated_due_input_and_retry_batch_cannot_be_claimed",
+          "reason": "Acceptance intentionally requires real PostgreSQL transactions"
+        },
+        {
+          "node": "core_apps.chat.tests.test_direct_media::test_legacy_socket_and_rich_direct_send_race_keeps_one_message",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_forwarding::test_opposite_forwards_and_duplicate_retries_do_not_deadlock",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_concurrency::test_postgres_concurrent_provisioning",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_concurrency::test_postgres_concurrent_send_same_identity",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_concurrency::test_send_racing_removal_serializes_on_the_roster",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_concurrency::test_cleanup_racing_attach_preserves_committed_media",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.chat.tests.test_message_mutations::test_concurrent_edits_are_serialized[True]",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_message_mutations::test_concurrent_edits_are_serialized[False]",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_productivity::test_batch_opposite_directions_duplicate_and_normal_send_do_not_deadlock",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.chat.tests.test_rental_moderation::test_postgres_moderation_claims_are_exclusive",
+          "reason": "Real row-lock proof requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.notifications.tests.test_delivery_policy::test_concurrent_digest_workers_and_timezone_change_never_duplicate_summary",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        },
+        {
+          "node": "core_apps.support.tests.test_inquiry_resolution::test_concurrent_resolution_and_reply_serialize_without_duplicate_effects[True]",
+          "reason": "Independent PostgreSQL row locking is required"
+        },
+        {
+          "node": "core_apps.support.tests.test_inquiry_resolution::test_concurrent_resolution_and_reply_serialize_without_duplicate_effects[False]",
+          "reason": "Independent PostgreSQL row locking is required"
+        },
+        {
+          "node": "core_apps.support.tests.test_shared_admin::test_concurrent_supervisors_claim_one_escalated_ticket",
+          "reason": "Row-lock evidence requires PostgreSQL"
+        },
+        {
+          "node": "core_apps.support.tests.test_staged_media::test_reply_timeout_fence_and_original_request_serialize",
+          "reason": "PostgreSQL row locks"
+        }
+      ],
+      "seconds": 122.727,
+      "pytest_summary": "662 passed, 26 skipped, 1 xfailed, 216 warnings in 122.75s (0:02:02)",
+      "pytest_outcomes": {
+        "passed": 662,
+        "skipped": 26,
+        "xfailed": 1,
+        "warnings": 216
+      }
+    },
+    "initial-postgres": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "intermediate existing affected suite",
+      "tests": 689,
+      "passed": 686,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 264.847,
+      "pytest_summary": "686 passed, 2 skipped, 1 xfailed, 219 warnings in 264.90s (0:04:24)",
+      "pytest_outcomes": {
+        "passed": 686,
+        "skipped": 2,
+        "xfailed": 1,
+        "warnings": 219
+      }
+    },
+    "new-initial-sqlite": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "initial 17 new cases",
+      "tests": 17,
+      "passed": 17,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 76.503,
+      "pytest_summary": "17 passed, 6 warnings in 76.51s (0:01:16)",
+      "pytest_outcomes": {
+        "passed": 17,
+        "warnings": 6
+      }
+    },
+    "initial-final-postgres": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "707-case gate before prepared direct inbox",
+      "tests": 707,
+      "passed": 704,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 328.341,
+      "pytest_summary": "704 passed, 2 skipped, 1 xfailed, 223 warnings in 328.39s (0:05:28)",
+      "pytest_outcomes": {
+        "passed": 704,
+        "skipped": 2,
+        "xfailed": 1,
+        "warnings": 223
+      }
+    },
+    "socket-authority": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "both ASGI boundaries; also included in final gate",
+      "tests": 8,
+      "passed": 8,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 159.97,
+      "pytest_summary": "8 passed, 2 warnings in 159.97s (0:02:39)",
+      "pytest_outcomes": {
+        "passed": 8,
+        "warnings": 2
+      }
+    },
+    "http-contracts-final": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "final tree; 11 communication families against original fixtures",
+      "tests": 11,
+      "passed": 11,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 129.445,
+      "pytest_summary": "11 passed, 178 deselected, 13 warnings in 129.45s (0:02:09)",
+      "pytest_outcomes": {
+        "passed": 11,
+        "warnings": 13
+      }
+    },
+    "http-contracts": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "11 communication HTTP families, original fixtures",
+      "tests": 11,
+      "passed": 11,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 130.82,
+      "pytest_summary": "11 passed, 178 deselected, 13 warnings in 130.82s (0:02:10)",
+      "pytest_outcomes": {
+        "passed": 11,
+        "warnings": 13
+      }
+    },
+    "inbox-initial-characterization": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "before bulk authorization; 24/385/1905 queries",
+      "tests": 4,
+      "passed": 4,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 123.354,
+      "pytest_summary": "4 passed, 14 deselected, 5 warnings in 123.35s (0:02:03)",
+      "pytest_outcomes": {
+        "passed": 4,
+        "warnings": 5
+      }
+    },
+    "inbox-focused": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "first prepared inbox characterization",
+      "tests": 25,
+      "passed": 25,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 112.137,
+      "pytest_summary": "25 passed, 44 deselected, 12 warnings in 112.14s (0:01:52)",
+      "pytest_outcomes": {
+        "passed": 25,
+        "warnings": 12
+      }
+    },
+    "inbox-parity": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "56 affected list/disclosure/receipts/preferences/discovery cases",
+      "tests": 56,
+      "passed": 56,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 4.486,
+      "pytest_summary": "56 passed, 37 warnings in 4.49s",
+      "pytest_outcomes": {
+        "passed": 56,
+        "warnings": 37
+      }
+    },
+    "latest-small-regressions": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "compact message identity and corrected cleared-history parity",
+      "tests": 23,
+      "passed": 22,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_sprint09_communication::test_large_read_receipt_projection_uses_one_statement_and_original_times",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        }
+      ],
+      "seconds": 3.464,
+      "pytest_summary": "22 passed, 1 skipped, 9 warnings in 3.47s",
+      "pytest_outcomes": {
+        "passed": 22,
+        "skipped": 1,
+        "warnings": 9
+      }
+    },
+    "prepared-inbox-postgres": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "720 cases before indexed latest-message refinement",
+      "tests": 720,
+      "passed": 717,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 364.733,
+      "pytest_summary": "717 passed, 2 skipped, 1 xfailed, 226 warnings in 364.77s (0:06:04)",
+      "pytest_outcomes": {
+        "passed": 717,
+        "skipped": 2,
+        "xfailed": 1,
+        "warnings": 226
+      }
+    },
+    "inbox-indexed-sqlite": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "27 inbox-focused cases after indexed latest-message refinement",
+      "tests": 27,
+      "passed": 27,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 3.182,
+      "pytest_summary": "27 passed, 33 deselected, 12 warnings in 3.18s",
+      "pytest_outcomes": {
+        "passed": 27,
+        "warnings": 12
+      }
+    },
+    "inbox-large-history-sqlite": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "7 inbox cases including 10001-message history and clear boundary",
+      "tests": 7,
+      "passed": 7,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 6.211,
+      "pytest_summary": "7 passed, 14 deselected, 5 warnings in 6.21s",
+      "pytest_outcomes": {
+        "passed": 7,
+        "warnings": 5
+      }
+    },
+    "indexed-inbox-postgres": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "721 cases before final explicit-null membership fence correction",
+      "tests": 721,
+      "passed": 718,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 428.494,
+      "pytest_summary": "718 passed, 2 skipped, 1 xfailed, 226 warnings in 428.52s (0:07:08)",
+      "pytest_outcomes": {
+        "passed": 718,
+        "skipped": 2,
+        "xfailed": 1,
+        "warnings": 226
+      }
+    },
+    "membership-fence-sqlite": {
+      "status": "passed",
+      "engine": "SQLite",
+      "scope": "56 send/retry/membership cases, one PostgreSQL-only skip",
+      "tests": 57,
+      "passed": 56,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_sprint09_communication::test_large_read_receipt_projection_uses_one_statement_and_original_times",
+          "reason": "Requires PostgreSQL (row locks, JSON containment or engine semantics); run with config.settings.postgres_test"
+        }
+      ],
+      "seconds": 5.068,
+      "pytest_summary": "56 passed, 1 skipped, 11 warnings in 5.07s",
+      "pytest_outcomes": {
+        "passed": 56,
+        "skipped": 1,
+        "warnings": 11
+      }
+    },
+    "final-postgres": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "final affected tree, includes socket/inbox/receipt cases",
+      "tests": 727,
+      "passed": 724,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 164.542,
+      "pytest_summary": "724 passed, 2 skipped, 1 xfailed, 226 warnings in 164.56s (0:02:44)",
+      "pytest_outcomes": {
+        "passed": 724,
+        "skipped": 2,
+        "xfailed": 1,
+        "warnings": 226
+      }
+    },
+    "schema-capacity-retry": {
+      "status": "passed",
+      "engine": "PostgreSQL 18",
+      "scope": "the three failed cleanup/migration cases; scratch max_locks_per_transaction=1024",
+      "tests": 3,
+      "passed": 3,
+      "failures": [],
+      "failure_details": [],
+      "skipped_or_xfailed": [],
+      "seconds": 171.784,
+      "pytest_summary": "3 passed, 2 warnings in 171.78s (0:02:51)",
+      "pytest_outcomes": {
+        "passed": 3,
+        "warnings": 2
+      }
+    },
+    "full-mvp": {
+      "status": "failed",
+      "engine": "PostgreSQL 18",
+      "scope": "integrated run started before final prepared-inbox correction",
+      "tests": 6084,
+      "passed": 6049,
+      "failures": [
+        "core_apps.common.test_release_compatibility::test_local_unpublished_column_removal_can_be_repaired_without_history_loss",
+        "core_apps.features.tests.test_billing_migrations::test_billing_upgrade_preserves_paid_rent_receipt_and_ledger"
+      ],
+      "failure_details": [
+        {
+          "node": "core_apps.common.test_release_compatibility::test_local_unpublished_column_removal_can_be_repaired_without_history_loss",
+          "kind": "error",
+          "message": "failed on teardown with \"django.core.management.base.CommandError: Database test_sprint09_mvp couldn't be flushed. Possible reasons:\n  * The database isn't running or isn't configured correctly.\n  * At least one of the expected database tables doesn't exist.\n  * The SQL was invalid.\nHint: Look at the output of 'django-admin sqlflush'. That's the SQL this command wasn't able to run.\"",
+          "trace": ".venv/lib/python3.11/site-packages/django/db/backends/utils.py:87: in _execute\n    return self.cursor.execute(sql)\nE   psycopg2.errors.OutOfMemory: out of shared memory\nE   HINT:  You might need to increase \"max_locks_per_transaction\".\n\nThe above exception was the direct cause of the following exception:\n.venv/lib/python3.11/site-packages/django/core/management/commands/flush.py:73: in handle\n    connection.ops.execute_sql_flush(sql_list)\n.venv/lib/python3.11/site-packages/django/db/backends/base/operations.py:451: in execute_sql_flush\n    cursor.execute(sql)\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute\n    return self._execute_with_wrappers(\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers\n    return executor(sql, params, many, context)\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute\n    with self.db.wrap_database_errors:\n.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:87: in _execute\n    return self.cursor.execute(sql)\nE   django.db.utils.OperationalError: out of shared memory\nE   HINT:  You might need to increase \"max_locks_per_transaction\".\n\nThe above exception was the direct cause of the following exception:\n.venv/lib/python3.11/site-packages/pytest_django/fixtures.py:259: in _django_db_helper\n    test_case._post_teardown()\n.venv/lib/python3.11/site-packages/django/test/testcases.py:1279: in _post_teardown\n    self._fixture_teardown()\n.venv/lib/python3.11/site-packages/django/test/testcases.py:1313: in _fixture_teardown\n    call_command(\n.venv/lib/python3.11/site-packages/django/core/management/__init__.py:194: in call_command\n    return command.execute(*args, **defaults)\n.venv/lib/python3.11/site-packages/django/core/management/base.py:458: in execute\n    output = self.handle(*args, **options)\n.venv/lib/python3.11/site-packages/django/core/management/commands/flush.py:75: in handle\n    raise CommandError(\nE   django.core.management.base.CommandError: Database test_sprint09_mvp couldn't be flushed. Possible reasons:\nE     * The database isn't running or isn't configured correctly.\nE     * At least one of the expected database tables doesn't exist.\nE     * The SQL was invalid.\nE   Hint: Look at the output of 'django-admin sqlflush'. That's the SQL this command wasn't able to run."
+        },
+        {
+          "node": "core_apps.features.tests.test_billing_migrations::test_billing_upgrade_preserves_paid_rent_receipt_and_ledger",
+          "kind": "failure",
+          "message": "django.db.utils.OperationalError: out of shared memory\nHINT:  You might need to increase \"max_locks_per_transaction\".",
+          "trace": ".venv/lib/python3.11/site-packages/django/db/backends/utils.py:87: in _execute\n    return self.cursor.execute(sql)\nE   psycopg2.errors.OutOfMemory: out of shared memory\nE   HINT:  You might need to increase \"max_locks_per_transaction\".\n\nThe above exception was the direct cause of the following exception:\ncore_apps/features/tests/test_billing_migrations.py:29: in test_billing_upgrade_preserves_paid_rent_receipt_and_ledger\n    cursor.execute(f\"DROP SCHEMA {quoted} CASCADE\")\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute\n    return self._execute_with_wrappers(\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers\n    return executor(sql, params, many, context)\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute\n    with self.db.wrap_database_errors:\n.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:87: in _execute\n    return self.cursor.execute(sql)\nE   django.db.utils.OperationalError: out of shared memory\nE   HINT:  You might need to increase \"max_locks_per_transaction\"."
+        }
+      ],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_advanced_company_passport_v2::test_two_company_packages_mock_sign_payment_and_uncertain_reconciliation",
+          "reason": "BUG-AUTH-01: company_sign/company_pay require member_for() membership flags while the HTTP signer/payer role exists only through approved mandates; no member can satisfy both. Needs a product decision on the signing/payment authority model."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_company_push_retry_rechecks_revoked_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_unknown_company_send_can_retry_exact_identity_with_membership_fence",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_company_retry_rejects_wrong_period_and_authority_revocation",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_discussion_grants_case_access_and_never_approves_from_text",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_reassignment_revokes_old_actor_and_preserves_business_history",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_company_role_loss_revokes_private_attachments_and_delayed_notifications",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_company_chat_tools_keep_coordinator_and_personal_boundaries",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_housing_request_and_authoritative_offer_bodies",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_invite_body",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_cost_proposal_body",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_condition_create_and_acknowledgement_roundtrip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_notice_body",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_incoming_replacement_consent_body",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_commute_and_assistant_bodies",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_refund_body_and_recovery_subject",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_purchase_events::test_company_recipients_and_retries_require_current_read_authority[after_failed_push]",
+          "reason": "BUG-AUTH-01: a member with can_execute_payments but no approved pay mandate has billing authority yet no selectable company role, so their company notice is suppressed at delivery."
+        },
+        {
+          "node": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[image/upload/v1700000000/someone-elses-avatar-profile_image-profile-update]",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "node": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[image/upload/v1700000000/someone-elses-avatar-image-profile-update]",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "node": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[https://res.cloudinary.com/test_cloud/image/upload/v1/someone-elses-avatar.jpg-profile_image-profile-update]",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "node": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[https://res.cloudinary.com/test_cloud/image/upload/v1/someone-elses-avatar.jpg-image-profile-update]",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "node": "core_apps.virtual_tours.tests.test_capture::test_partial_panorama_does_not_become_full_tour",
+          "reason": "could not import 'cv2': No module named 'cv2'"
+        },
+        {
+          "node": "core_apps.virtual_tours.tests.test_capture_config::test_strict_preflight_requires_successful_requested_provider_probe[live]",
+          "reason": "Capture readiness needs OpenCV (not in Pipfile.lock)"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_primary_rollback_does_not_erase_durable_external_fact",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_concurrent_dispatch_has_one_original_transport",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_unknown_outcome_survives_reconnection_and_never_resends",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_primary_cluster_and_privileged_role_are_rejected",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_runtime_role_cannot_mutate_or_delete_history",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_late_original_and_company_retry_commit_once",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_concurrent_case_send_uses_one_canonical_message",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 2337.886,
+      "pytest_summary": "1 failed, 6050 passed, 21 skipped, 12 xfailed, 3265 warnings, 1 error in 2337.95s (0:38:57)",
+      "pytest_outcomes": {
+        "failed": 1,
+        "passed": 6050,
+        "skipped": 21,
+        "xfailed": 12,
+        "warnings": 3265,
+        "error": 1
+      }
+    },
+    "full-restoration": {
+      "status": "failed",
+      "engine": "PostgreSQL 18",
+      "scope": "integrated run started before final prepared-inbox correction",
+      "tests": 6084,
+      "passed": 6049,
+      "failures": [
+        "core_apps.common.test_release_compatibility::test_coordinated_upgrade_preserves_previous_account_property_and_chat",
+        "core_apps.features.tests.test_billing_migrations::test_billing_upgrade_preserves_paid_rent_receipt_and_ledger"
+      ],
+      "failure_details": [
+        {
+          "node": "core_apps.common.test_release_compatibility::test_coordinated_upgrade_preserves_previous_account_property_and_chat",
+          "kind": "failure",
+          "message": "django.db.utils.OperationalError: out of shared memory\nHINT:  You might need to increase \"max_locks_per_transaction\".",
+          "trace": ".venv/lib/python3.11/site-packages/django/db/backends/utils.py:87: in _execute\n    return self.cursor.execute(sql)\nE   psycopg2.errors.OutOfMemory: out of shared memory\nE   HINT:  You might need to increase \"max_locks_per_transaction\".\n\nThe above exception was the direct cause of the following exception:\ncore_apps/common/test_release_compatibility.py:99: in test_coordinated_upgrade_preserves_previous_account_property_and_chat\n    cursor.execute(f\"DROP SCHEMA {schema} CASCADE\")\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute\n    return self._execute_with_wrappers(\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers\n    return executor(sql, params, many, context)\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute\n    with self.db.wrap_database_errors:\n.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:87: in _execute\n    return self.cursor.execute(sql)\nE   django.db.utils.OperationalError: out of shared memory\nE   HINT:  You might need to increase \"max_locks_per_transaction\"."
+        },
+        {
+          "node": "core_apps.features.tests.test_billing_migrations::test_billing_upgrade_preserves_paid_rent_receipt_and_ledger",
+          "kind": "failure",
+          "message": "django.db.utils.OperationalError: out of shared memory\nHINT:  You might need to increase \"max_locks_per_transaction\".",
+          "trace": ".venv/lib/python3.11/site-packages/django/db/backends/utils.py:87: in _execute\n    return self.cursor.execute(sql)\nE   psycopg2.errors.OutOfMemory: out of shared memory\nE   HINT:  You might need to increase \"max_locks_per_transaction\".\n\nThe above exception was the direct cause of the following exception:\ncore_apps/features/tests/test_billing_migrations.py:29: in test_billing_upgrade_preserves_paid_rent_receipt_and_ledger\n    cursor.execute(f\"DROP SCHEMA {quoted} CASCADE\")\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute\n    return self._execute_with_wrappers(\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers\n    return executor(sql, params, many, context)\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute\n    with self.db.wrap_database_errors:\n.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n.venv/lib/python3.11/site-packages/django/db/backends/utils.py:87: in _execute\n    return self.cursor.execute(sql)\nE   django.db.utils.OperationalError: out of shared memory\nE   HINT:  You might need to increase \"max_locks_per_transaction\"."
+        }
+      ],
+      "skipped_or_xfailed": [
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[ANDROID]",
+          "reason": "Provide CHAT_NATIVE_ANDROID_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_group_native_media::test_native_recording_upload_send_and_other_member_download[IOS]",
+          "reason": "Provide CHAT_NATIVE_IOS_CLIP from the native voice spike"
+        },
+        {
+          "node": "core_apps.chat.tests.test_reactions_mentions::test_company_discussion_mentions_and_reactions_follow_case_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_advanced_company_passport_v2::test_two_company_packages_mock_sign_payment_and_uncertain_reconciliation",
+          "reason": "BUG-AUTH-01: company_sign/company_pay require member_for() membership flags while the HTTP signer/payer role exists only through approved mandates; no member can satisfy both. Needs a product decision on the signing/payment authority model."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_company_push_retry_rechecks_revoked_membership",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_unknown_company_send_can_retry_exact_identity_with_membership_fence",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_company_retry_rejects_wrong_period_and_authority_revocation",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_discussion_grants_case_access_and_never_approves_from_text",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_reassignment_revokes_old_actor_and_preserves_business_history",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_company_role_loss_revokes_private_attachments_and_delayed_notifications",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_company_chat_tools_keep_coordinator_and_personal_boundaries",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_housing_request_and_authoritative_offer_bodies",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_invite_body",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_cost_proposal_body",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_condition_create_and_acknowledgement_roundtrip",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_notice_body",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_incoming_replacement_consent_body",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_commute_and_assistant_bodies",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_flutter_request_roundtrip::test_flutter_refund_body_and_recovery_subject",
+          "reason": "Generate fresh Flutter request bodies with the documented Make targets"
+        },
+        {
+          "node": "core_apps.features.tests.test_purchase_events::test_company_recipients_and_retries_require_current_read_authority[after_failed_push]",
+          "reason": "BUG-AUTH-01: a member with can_execute_payments but no approved pay mandate has billing authority yet no selectable company role, so their company notice is suppressed at delivery."
+        },
+        {
+          "node": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[image/upload/v1700000000/someone-elses-avatar-profile_image-profile-update]",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "node": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[image/upload/v1700000000/someone-elses-avatar-image-profile-update]",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "node": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[https://res.cloudinary.com/test_cloud/image/upload/v1/someone-elses-avatar.jpg-profile_image-profile-update]",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "node": "core_apps.profiles.tests.test_avatar_ownership::test_borrowed_reference_is_refused_on_every_avatar_input[https://res.cloudinary.com/test_cloud/image/upload/v1/someone-elses-avatar.jpg-image-profile-update]",
+          "reason": "aliases exist only on the edit screen"
+        },
+        {
+          "node": "core_apps.virtual_tours.tests.test_capture::test_partial_panorama_does_not_become_full_tour",
+          "reason": "could not import 'cv2': No module named 'cv2'"
+        },
+        {
+          "node": "core_apps.virtual_tours.tests.test_capture_config::test_strict_preflight_requires_successful_requested_provider_probe[live]",
+          "reason": "Capture readiness needs OpenCV (not in Pipfile.lock)"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_primary_rollback_does_not_erase_durable_external_fact",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_concurrent_dispatch_has_one_original_transport",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_unknown_outcome_survives_reconnection_and_never_resends",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_primary_cluster_and_privileged_role_are_rejected",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.common.test_recovery_postgres::test_runtime_role_cannot_mutate_or_delete_history",
+          "reason": "Independent PostgreSQL drill cluster not supplied"
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_late_original_and_company_retry_commit_once",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        },
+        {
+          "node": "core_apps.features.tests.test_company_discussions::test_concurrent_case_send_uses_one_canonical_message",
+          "reason": "Company discussions are deliberately locked: role_routes refuses company_chat_views with company_role_audience_required until every message has a verified role audience."
+        }
+      ],
+      "seconds": 2335.273,
+      "pytest_summary": "2 failed, 6049 passed, 21 skipped, 12 xfailed, 3265 warnings in 2335.32s (0:38:55)",
+      "pytest_outcomes": {
+        "failed": 2,
+        "passed": 6049,
+        "skipped": 21,
+        "xfailed": 12,
+        "warnings": 3265
+      }
+    }
+  },
+  "syntax_files": 2151,
+  "syntax_errors": [],
+  "remaining_acceptance": [
+    "compatible full modes remain data-dependent",
+    "full command family consolidation",
+    "moderated/group inbox flat-query and arbitrary-history lock budgets",
+    "native clips and authentic provider/deployment evidence",
+    "Sprint 02 opaque-file product sign-off",
+    "green final-tree integrated baseline after scratch capacity correction"
+  ],
+  "intermediate_corrections": [
+    "REST form text validation and UUID attachment URLs corrected before 662-test existing gate",
+    "cleared-history parity regression in initial batched inbox corrected with a viewer-scoped subquery; retained regression",
+    "explicit-null membership preserved as a supplied fence rather than treated as omitted; six invalid-value retry regressions retained"
+  ],
+  "validation_limits": "Passing counts are JUnit testcase counts (a teardown error may be counted separately by pytest). Integrated runs began before the final prepared inbox. Final affected gate and focused parity tests validate the final changed code. No native/production/provider certification.",
+  "scratch_cluster_stopped": true,
+  "existing_repository_databases_unchanged": true,
+  "scratch_capacity_resolution": {
+    "initial_max_locks_per_transaction": 64,
+    "retry_max_locks_per_transaction": 1024,
+    "affected_cases_retried": 3,
+    "passed": 3,
+    "production_configuration_changed": false
+  }
+}

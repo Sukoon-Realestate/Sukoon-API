@@ -1,0 +1,15 @@
+{
+  "unchanged": true,
+  "before": {
+    "dev.sqlite3": "7069d625528cce8a9bfbfe8dea58f7daa4bad23564e9123e2ae7b04b384d7f9d",
+    "db.sqlite3": "95458fb658d196ceeac17e799824851eed12693c345256ad6105355d52ea2ecb",
+    "commerce_sandbox.sqlite3": "ef068099050bf79e8ff3cb13f6a8352d52d4786d35e530c96158ca9713ad52d1",
+    ".demo/database.sqlite3": "6bcce6008fd3efbbad2651155664fbd12d6c9cdf0537d1a54707f9f499059e59"
+  },
+  "after": {
+    "dev.sqlite3": "7069d625528cce8a9bfbfe8dea58f7daa4bad23564e9123e2ae7b04b384d7f9d",
+    "db.sqlite3": "95458fb658d196ceeac17e799824851eed12693c345256ad6105355d52ea2ecb",
+    "commerce_sandbox.sqlite3": "ef068099050bf79e8ff3cb13f6a8352d52d4786d35e530c96158ca9713ad52d1",
+    ".demo/database.sqlite3": "6bcce6008fd3efbbad2651155664fbd12d6c9cdf0537d1a54707f9f499059e59"
+  }
+}

@@ -1,4 +1,3 @@
-
 from .event_names import MESSAGE_DELETED, MESSAGE_READ, CONVERSATION_UPDATED
 from django.db import transaction
 from django.utils import timezone
@@ -73,9 +72,14 @@ def delete_group_message(conversation, user, identity, *, event_data=None):
         raise PermissionDenied()
     if not message.deleted_at:
         from datetime import timedelta
+
         if timezone.now() > message.created_at + timedelta(hours=1):
-            raise PermissionDenied("Messages can only be deleted within one hour of sending.", code="message_delete_expired")
+            raise PermissionDenied(
+                "Messages can only be deleted within one hour of sending.",
+                code="message_delete_expired",
+            )
         from .send_receipts import preserve_original_send
+
         preserve_original_send(message)
         message.revision += 1
         message.deleted_at, message.deleted_by = timezone.now(), user

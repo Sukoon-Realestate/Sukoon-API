@@ -63,7 +63,7 @@ class TicketReplyReceiptAPIView(APIView):
                 "request_key": key,
                 "ticket": (
                     (
-                        ticket_receipt(ticket)
+                        ticket_receipt(ticket, message_id=record.result_subject_id)
                         if compact
                         else TicketDetailSerializer(
                             get_ticket_detail(request.user, id),

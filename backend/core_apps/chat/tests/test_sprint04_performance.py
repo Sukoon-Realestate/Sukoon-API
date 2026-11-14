@@ -77,6 +77,7 @@ def test_read_receipts_materialize_at_most_500_preserve_timestamp_and_retry(chat
     with patch.object(MessageReadReceipt.objects, "bulk_create", side_effect=create):
         record_reads(conversation, participant, 1201, read_at)
     from django.db import connection
+
     if connection.vendor == "postgresql":
         assert sizes == []  # INSERT/SELECT never materializes receipt objects.
     else:

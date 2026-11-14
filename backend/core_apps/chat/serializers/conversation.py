@@ -35,6 +35,19 @@ class ConversationParticipantSerializer(ParticipantSerializer):
         return self._contact(user)["phone_notice"]
 
 
+class ConversationListSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        from core_apps.chat.services.read_context import ConversationPage
+
+        rows = list(data.all() if hasattr(data, "all") else data)
+        prepared, presence = ConversationPage.prepare(
+            rows, self.context["request"].user
+        )
+        self.child.prepared_reads = prepared
+        self.context["participant_presence"] = presence
+        return super().to_representation(rows)
+
+
 class ConversationSerializer(serializers.ModelSerializer):
     """
     Read representation of a conversation for the conversation list.
@@ -64,6 +77,7 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conversation
+        list_serializer_class = ConversationListSerializer
         fields = (
             "id",
             "other_participant",
@@ -84,7 +98,7 @@ class ConversationSerializer(serializers.ModelSerializer):
         if not request or not request.user:
             return None
         latest = self._read(obj).latest
-        return conversation_preview(latest, request.user)
+        return conversation_preview(latest, request.user, roster=self._read(obj).roster)
 
     def _read(self, conversation):
         # Local to this serializer/response; never survives another request or
@@ -128,7 +142,12 @@ class ConversationSerializer(serializers.ModelSerializer):
     def get_policy(self, obj):
         from core_apps.chat.moderation.policy import projection
 
-        return projection(obj, self.context["request"].user)
+        prepared = self._read(obj)
+        return (
+            prepared.policy
+            if prepared.policy is not None
+            else projection(obj, self.context["request"].user)
+        )
 
     def get_can_send(self, obj) -> bool:
         from core_apps.chat.services.group_access import actions

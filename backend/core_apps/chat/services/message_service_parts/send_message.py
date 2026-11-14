@@ -15,12 +15,19 @@ def send_message(*, conversation, sender, content, client_message_id=None):
     from ..commands import SendCommand, send
     from ..group_limits import ChatConflict
 
-    if conversation.kind == "direct" and not ConversationParticipant.objects.filter(
-        conversation=conversation, user=sender
-    ).exists():
-        raise ValidationError({"content": "You are not a participant in this conversation."})
+    if (
+        conversation.kind == "direct"
+        and not ConversationParticipant.objects.filter(
+            conversation=conversation, user=sender
+        ).exists()
+    ):
+        raise ValidationError(
+            {"content": "You are not a participant in this conversation."}
+        )
     try:
-        return send(conversation, sender, SendCommand.legacy_text(content, client_message_id))
+        return send(
+            conversation, sender, SendCommand.legacy_text(content, client_message_id)
+        )
     except ChatConflict as exc:
         # The original protocol keeps its established conflict code and text.
         raise ChatMessageConflict() from exc

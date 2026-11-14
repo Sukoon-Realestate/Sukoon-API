@@ -1,0 +1,6 @@
+DJANGO_SETTINGS_MODULE=config.settings.test .venv/bin/python tools/qa/import_baseline.py
+/Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /Users/demo23home/code/sukoon/Sukoon-API/backend/staticfiles/
+  mw_instance = middleware(adapted_handler)
+/Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /Users/demo23home/code/sukoon/Sukoon-API/backend/staticfiles/
+  mw_instance = middleware(adapted_handler)
+imported=2039 failed=0

@@ -36,6 +36,9 @@ def test_compact_reply_and_recovery_preserve_paged_history(size, auth_client, us
 
     result, report = measured("sprint09-compact-support-reply", size, reply)
     assert "messages" not in result.data and result.data["id"] == str(ticket.id)
+    assert ticket.messages.filter(
+        id=result.data["message_id"], body="Current reply"
+    ).exists()
     assert report["queries"] <= 35 and report["payload_bytes"] < 1000
     replay = reply()
     assert replay.data == result.data and ticket.messages.count() == size + 1

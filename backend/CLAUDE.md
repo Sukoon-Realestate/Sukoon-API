@@ -133,3 +133,45 @@ criteria are listed in `sprints/evidence/sprint-07/README.md`. Explicit classes
 alone do not satisfy the service architecture target. Reproduce scoped checks
 with `make test-sprint07-housing CYCLE_SETTINGS=<isolated_settings>
 BASELINE_OUT=<scratch_directory>` and the ledger with `make sprint07-coverage`.
+
+## Communication adapters after Sprint 09
+
+Chat, notification and support routes resolve to explicit CBVs. Chat's 14 former
+productivity/forwarding/mention/OS-action functions retain their methods, OPTIONS
+names and transport policies. Do not restore decorated functions or obsolete
+pre-outbox broadcast helpers. `services.commands.SendCommand` and `send` own the
+single legacy/rich send transaction; `group_send` and `message_service` preserve
+supported imports and legacy conflict adaptation. Edit/delete/read/forward keep
+their existing current-authorized domain services and immutable receipt rules.
+`event_names` defines committed message events and the moderation whitelist.
+
+`MessagePage` prepares authorized history/context/lookup/starred/replay/search
+relations and eligible rosters for one response. `ConversationPage` batches current direct inbox grants, people, restrictions,
+blocks, latest visible messages, preferences and presence when moderation is off;
+moderation-enabled/non-direct/legacy preparation keeps its existing current
+boundaries. `ConversationRead` reuses the prepared facts across inbox fields. These objects
+never authorize a later request, mutation, byte read, transcript or socket send.
+Private attachment access lives in `services.attachment_access`; its view import
+remains compatible. WebSocket middleware still guards both receive and send.
+
+Legacy full lists remain compatible. Message pages accept `edits_page` and
+`edits_page_size` (default 5, maximum 20) and expose `edit_history_page`; omitted
+controls keep complete edit history. Forward destinations accept `bounded=true`
+and their signed `cursor`, with 20 accepted rows and at most 100 candidates per
+request. Empty result pages can still have `has_more=true`; follow the cursor.
+Support GET retains its existing `bounded=true` relation pages. Support reply and
+creation/reply recovery accept `receipt=compact`; full is the default. Retain
+that reply choice with the original Idempotency-Key: changing the representation
+on the same command conflicts. Compact recovery reports current ticket identity,
+revision and status; paged detail supplies history.
+
+PostgreSQL read receipts use one INSERT/SELECT with original synchronous read
+timestamps and conflict protection; SQLite retains 500-object batches. This
+bounds Python memory, not the database's work independently of unread count.
+Presence remains connection-scoped and renewable; digest delivery chooses any
+currently authorized source and rechecks each device at dispatch.
+
+Run `make test-sprint09-communication CYCLE_SETTINGS=<isolated_settings>
+BASELINE_OUT=<scratch_directory>` and `make sprint09-coverage`. Sprint 09 has
+remaining acceptance limits, including compatible unbounded modes and moderated/group inbox
+query work; see `sprints/evidence/sprint-09/README.md`.

@@ -6,3 +6,6 @@ from .commands import send
 
 def send_group_message(conversation, sender, data):
     return send(conversation, sender, SendCommand.parse(data))
+
+
+__all__ = ["normalize_request", "send_group_message"]

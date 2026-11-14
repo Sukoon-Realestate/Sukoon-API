@@ -218,3 +218,184 @@ def test_large_read_receipt_projection_uses_one_statement_and_original_times(
     assert MessageReadReceipt.objects.filter(read_at=stamp).count() == 10000
     record_reads(chat, participant, 10000, timezone.now())
     assert MessageReadReceipt.objects.filter(read_at=stamp).count() == 10000
+
+
+@pytest.mark.parametrize("size", [1, 20, 100])
+def test_inbox_page_query_budget(size, user, another_user):
+    """A direct inbox page batches current authority, previews and presence."""
+    from core_apps.chat.models import ConversationWorkspace
+
+    chats = Conversation.objects.bulk_create(
+        [Conversation(last_sequence=1) for _ in range(size)]
+    )
+    ConversationParticipant.objects.bulk_create(
+        [
+            ConversationParticipant(
+                conversation=chat, user=actor, membership_period=uuid4()
+            )
+            for chat in chats
+            for actor in (user, another_user)
+        ]
+    )
+    ConversationWorkspace.objects.bulk_create(
+        [
+            ConversationWorkspace(conversation=chat, user=user, workspace="individual")
+            for chat in chats
+        ]
+    )
+    Message.objects.bulk_create(
+        [
+            Message(conversation=chat, sender=user, sequence=1, content="Inbox preview")
+            for chat in chats
+        ]
+    )
+    api = APIClient()
+    api.force_authenticate(user)
+
+    def get():
+        response = api.get("/api/v1/chat/conversations/", {"page_size": size})
+        assert response.status_code == 200, response.data
+        return response
+
+    response, report = measured("sprint09-inbox-page", size, get)
+    assert report["queries"] <= 30
+    data = response.data.get("data", response.data)
+    assert len(data["results"]) == size
+
+
+def test_prepared_inbox_matches_individual_reads_and_refreshes_block_and_clear(
+    user, another_user
+):
+    from types import SimpleNamespace
+    from core_apps.chat.models import ChatBlock, ChatList
+    from core_apps.chat.serializers.conversation import ConversationSerializer
+    from core_apps.chat.services.group_operations import mark_group_read
+    from core_apps.chat.services.conversation_preferences import update_preferences
+
+    chat = get_or_create_direct_conversation(user=user, other_user=another_user)
+    message = send_message(
+        conversation=chat, sender=user, content="Preview and receipts"
+    )
+    mark_group_read(chat, another_user, message.sequence)
+    private = ChatList.objects.create(user=user, workspace="individual", name="Saved")
+    private.conversations.add(chat)
+    context = {"request": SimpleNamespace(user=user)}
+
+    def compare():
+        original = Conversation.objects.get(pk=chat.pk)
+        expected = ConversationSerializer(original, context=context.copy()).data
+        fresh = Conversation.objects.get(pk=chat.pk)
+        actual = ConversationSerializer(
+            [fresh], many=True, context=context.copy()
+        ).data[0]
+        assert actual == expected
+        return actual
+
+    assert compare()["last_message"]["read_by_count"] == 1
+    ChatBlock.objects.create(user=another_user, blocked_user=user)
+    blocked = compare()
+    assert (
+        blocked["is_blocked"]
+        and not blocked["blocked_by_me"]
+        and not blocked["can_send"]
+    )
+    # A later page cannot reuse the earlier allow result.
+    ChatBlock.objects.all().delete()
+    assert compare()["can_send"]
+    update_preferences(
+        chat, user, {"delete_for_me": True, "delete_through_sequence": message.sequence}
+    )
+    assert compare()["last_message"] is None
+
+
+def test_prepared_inbox_rechecks_account_and_moderation_mode(
+    user, another_user, settings
+):
+    from types import SimpleNamespace
+    from core_apps.chat.serializers.conversation import ConversationSerializer
+    from core_apps.chat.services import group_access
+    from core_apps.users.models import User
+
+    chat = get_or_create_direct_conversation(user=user, other_user=another_user)
+    settings.CHAT_MODERATION_MODE = "shadow"
+    with patch(
+        "core_apps.chat.services.group_access.authorize", wraps=group_access.authorize
+    ) as current:
+        ConversationSerializer(
+            [chat], many=True, context={"request": SimpleNamespace(user=user)}
+        ).data
+    assert current.call_count == 1
+    settings.CHAT_MODERATION_MODE = "off"
+    User.objects.filter(pk=user.pk).update(is_active=False)
+    with pytest.raises(PermissionDenied):
+        ConversationSerializer(
+            [chat], many=True, context={"request": SimpleNamespace(user=user)}
+        ).data
+
+
+def test_prepared_inbox_large_history_keeps_latest_and_clear_boundary(
+    user, another_user
+):
+    from datetime import timedelta
+    from types import SimpleNamespace
+    from django.utils import timezone
+    from core_apps.chat.serializers.conversation import ConversationSerializer
+
+    chat = get_or_create_direct_conversation(user=user, other_user=another_user)
+    Message.objects.bulk_create(
+        [
+            Message(
+                conversation=chat,
+                sender=another_user,
+                sequence=i + 1,
+                content="Old private text" * 20,
+            )
+            for i in range(10000)
+        ]
+    )
+    chat.last_sequence = 10000
+    chat.save(update_fields=["last_sequence"])
+    Message.objects.filter(conversation=chat).update(
+        created_at=timezone.now() - timedelta(days=100)
+    )
+    latest = send_message(
+        conversation=chat, sender=user, content="Newest visible preview"
+    )
+
+    def page():
+        return ConversationSerializer(
+            [Conversation.objects.get(pk=chat.pk)],
+            many=True,
+            context={"request": SimpleNamespace(user=user)},
+        ).data
+
+    data, report = measured("sprint09-large-inbox-history", 10001, page)
+    assert data[0]["last_message"]["id"] == str(latest.id)
+    assert report["queries"] <= 25 and report["payload_bytes"] < 2000
+    ConversationParticipant.objects.filter(conversation=chat, user=user).update(
+        visible_from_sequence=10002, hidden_through_sequence=10001
+    )
+    assert page()[0]["last_message"] is None
+
+
+@pytest.mark.parametrize("period", [None, "", False, [], {}, str(uuid4())])
+def test_explicit_invalid_membership_does_not_become_an_omitted_fence(
+    period, user, another_user
+):
+    from core_apps.chat.services.group_limits import ChatConflict
+
+    chat = get_or_create_direct_conversation(user=user, other_user=another_user)
+    data = {"client_message_id": str(uuid4()), "content": "Same original command"}
+    original = send(chat, user, SendCommand.parse(data))
+    with pytest.raises(ChatConflict):
+        send(chat, user, SendCommand.parse({**data, "membership_period": period}))
+    with pytest.raises(ChatConflict):
+        send(
+            chat,
+            user,
+            SendCommand.parse(
+                {**data, "client_message_id": str(uuid4()), "membership_period": period}
+            ),
+        )
+    assert send(chat, user, SendCommand.parse(data)).pk == original.pk
+    assert Message.objects.filter(conversation=chat).count() == 1

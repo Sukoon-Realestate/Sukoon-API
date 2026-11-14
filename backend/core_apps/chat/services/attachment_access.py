@@ -1,4 +1,5 @@
 """Fresh attachment authority, shared by bytes, discovery and transcription."""
+
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound
 from core_apps.chat.models import ChatAttachment

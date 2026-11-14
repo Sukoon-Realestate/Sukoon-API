@@ -1,0 +1,202 @@
+mkdir -p /private/tmp/sukoon-sprint09/final3/sprint-09
+CHAT_PRIVATE_MEDIA_ROOT=/private/tmp/sukoon-sprint09/final3/storage/chat SUPPORT_PRIVATE_MEDIA_ROOT=/private/tmp/sukoon-sprint09/final3/storage/support VIRTUAL_TOUR_PRIVATE_ROOT=/private/tmp/sukoon-sprint09/final3/storage/tours EVIDENCE_PRIVATE_ROOT=/private/tmp/sukoon-sprint09/final3/storage/evidence DOTENV_DISABLED=1 .venv/bin/python -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=sprint09_final3_settings --junitxml=/private/tmp/sukoon-sprint09/final3/sprint-09/junit.xml \
+		core_apps/chat core_apps/notifications core_apps/support
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-8.3.5, pluggy-1.6.0
+django: version: 4.2.11, settings: sprint09_final3_settings (from option)
+rootdir: /Users/demo23home/code/sukoon/Sukoon-API/backend
+configfile: pytest.ini
+plugins: cov-6.0.0, platformdirs-4.12.3, django-4.9.0, asyncio-0.23.7, anyio-4.15.1
+asyncio: mode=Mode.STRICT
+collected 720 items
+
+core_apps/chat/tests/test_all_mentions_navigation.py .......             [  0%]
+core_apps/chat/tests/test_command_input_matrix.py .                      [  1%]
+core_apps/chat/tests/test_consumers.py .                                 [  1%]
+core_apps/chat/tests/test_direct_media.py ...                            [  1%]
+core_apps/chat/tests/test_discovery.py .....                             [  2%]
+core_apps/chat/tests/test_durable_chat_push.py ........                  [  3%]
+core_apps/chat/tests/test_edit_moderation_enqueue.py ...                 [  3%]
+core_apps/chat/tests/test_existing_chat_classification.py ....           [  4%]
+core_apps/chat/tests/test_forwarding.py ............                     [  6%]
+core_apps/chat/tests/test_group_api.py ............                      [  7%]
+core_apps/chat/tests/test_group_media.py .........                       [  9%]
+core_apps/chat/tests/test_group_media_remote.py ................         [ 11%]
+core_apps/chat/tests/test_group_messages.py ............                 [ 12%]
+core_apps/chat/tests/test_group_native_media.py ss                       [ 13%]
+core_apps/chat/tests/test_group_notification_preferences.py ............ [ 14%]
+.....                                                                    [ 15%]
+core_apps/chat/tests/test_inbox_actions.py ...............               [ 17%]
+core_apps/chat/tests/test_inbox_receipts.py ......                       [ 18%]
+core_apps/chat/tests/test_legacy_send_policy.py ..                       [ 18%]
+core_apps/chat/tests/test_message_mutations.py .....                     [ 19%]
+core_apps/chat/tests/test_models.py ...                                  [ 19%]
+core_apps/chat/tests/test_mvp_direct_tools.py ......                     [ 20%]
+core_apps/chat/tests/test_mvp_forward_media.py .                         [ 20%]
+core_apps/chat/tests/test_mvp_policy_review_authority.py ......          [ 21%]
+core_apps/chat/tests/test_participant_disclosure.py ...                  [ 22%]
+core_apps/chat/tests/test_policy_push_outbox.py ....                     [ 22%]
+core_apps/chat/tests/test_private_workspace_preferences.py ........      [ 23%]
+core_apps/chat/tests/test_productivity.py .............                  [ 25%]
+core_apps/chat/tests/test_property_sharing.py .............              [ 27%]
+core_apps/chat/tests/test_provider_evaluation.py .........               [ 28%]
+core_apps/chat/tests/test_reactions_mentions.py .....................x   [ 31%]
+core_apps/chat/tests/test_read_authorization.py .                        [ 31%]
+core_apps/chat/tests/test_rental_moderation.py ......................    [ 34%]
+core_apps/chat/tests/test_rental_policy_commitments.py .......           [ 35%]
+core_apps/chat/tests/test_rich_attachments.py .......................... [ 39%]
+.                                                                        [ 39%]
+core_apps/chat/tests/test_search_migration.py .                          [ 39%]
+core_apps/chat/tests/test_serializers.py ......                          [ 40%]
+core_apps/chat/tests/test_services.py ........                           [ 41%]
+core_apps/chat/tests/test_shortlist_polls.py ....                        [ 42%]
+core_apps/chat/tests/test_sprint03_recovery.py ......                    [ 43%]
+core_apps/chat/tests/test_sprint04_legacy_history.py .....               [ 43%]
+core_apps/chat/tests/test_sprint04_performance.py .......                [ 44%]
+core_apps/chat/tests/test_sprint09_communication.py .................... [ 47%]
+                                                                         [ 47%]
+core_apps/chat/tests/test_transcript_segments.py ..........              [ 48%]
+core_apps/chat/tests/test_typing_privacy.py .                            [ 49%]
+core_apps/chat/tests/test_views.py ...................                   [ 51%]
+core_apps/chat/tests/test_voice_transcription.py ...                     [ 52%]
+core_apps/chat/tests/test_workspace_group_scope.py ..                    [ 52%]
+core_apps/chat/tests/test_workspace_inbox.py ....                        [ 52%]
+core_apps/notifications/tests/test_account_scope.py ..                   [ 53%]
+core_apps/notifications/tests/test_delivery_policy.py ..........         [ 54%]
+core_apps/notifications/tests/test_fcm_service.py ......                 [ 55%]
+core_apps/notifications/tests/test_models.py ..                          [ 55%]
+core_apps/notifications/tests/test_mvp_workspace_api.py ...              [ 56%]
+core_apps/notifications/tests/test_push_delivery.py .....                [ 56%]
+core_apps/notifications/tests/test_serializers.py .....                  [ 57%]
+core_apps/notifications/tests/test_services.py .........                 [ 58%]
+core_apps/notifications/tests/test_views.py .....................        [ 61%]
+core_apps/notifications/tests/test_workspace_scope.py .......            [ 62%]
+core_apps/support/tests/test_creation_recovery.py .......                [ 63%]
+core_apps/support/tests/test_durable_storage.py .......                  [ 64%]
+core_apps/support/tests/test_information_evidence.py ...                 [ 65%]
+core_apps/support/tests/test_information_requests.py .....               [ 65%]
+core_apps/support/tests/test_inquiry_resolution.py ...........           [ 67%]
+core_apps/support/tests/test_models.py ..                                [ 67%]
+core_apps/support/tests/test_mvp_message_ordering.py .                   [ 67%]
+core_apps/support/tests/test_operator_console.py .                       [ 67%]
+core_apps/support/tests/test_platform_payment_reports.py .......         [ 68%]
+core_apps/support/tests/test_private_attachments.py .....                [ 69%]
+core_apps/support/tests/test_scope_roundtrip.py .......                  [ 70%]
+core_apps/support/tests/test_services.py ............                    [ 72%]
+core_apps/support/tests/test_shared_admin.py ....                        [ 72%]
+core_apps/support/tests/test_sprint04_performance.py ....                [ 73%]
+core_apps/support/tests/test_sprint04_thread_reads.py .................. [ 75%]
+..                                                                       [ 75%]
+core_apps/support/tests/test_sprint09_receipts.py ...                    [ 76%]
+core_apps/support/tests/test_staff_replies.py ..                         [ 76%]
+core_apps/support/tests/test_staged_media.py .....                       [ 77%]
+core_apps/support/tests/test_upload_recovery.py ......                   [ 78%]
+core_apps/support/tests/test_views.py ...............                    [ 80%]
+core_apps/chat/tests/test_consumers.py .......                           [ 81%]
+core_apps/chat/tests/test_deployed_acceptance.py ....                    [ 81%]
+core_apps/chat/tests/test_direct_media.py ....                           [ 82%]
+core_apps/chat/tests/test_forwarding.py .                                [ 82%]
+core_apps/chat/tests/test_group_concurrency.py .......                   [ 83%]
+core_apps/chat/tests/test_group_socket.py ...                            [ 83%]
+core_apps/chat/tests/test_legacy_send_policy.py ........                 [ 85%]
+core_apps/chat/tests/test_message_mutations.py ....                      [ 85%]
+core_apps/chat/tests/test_mvp_direct_tools.py ....                       [ 86%]
+core_apps/chat/tests/test_productivity.py .                              [ 86%]
+core_apps/chat/tests/test_property_sharing.py .                          [ 86%]
+core_apps/chat/tests/test_reactions_mentions.py ......                   [ 87%]
+core_apps/chat/tests/test_read_authorization.py .                        [ 87%]
+core_apps/chat/tests/test_rental_moderation.py .                         [ 87%]
+core_apps/chat/tests/test_sprint03_recovery.py ..                        [ 87%]
+core_apps/chat/tests/test_sprint09_socket_authority.py ........          [ 88%]
+core_apps/chat/tests/test_typing_privacy.py .                            [ 89%]
+core_apps/notifications/tests/test_delivery_policy.py .                  [ 89%]
+core_apps/support/tests/test_inquiry_resolution.py ..                    [ 89%]
+core_apps/support/tests/test_shared_admin.py .                           [ 89%]
+core_apps/support/tests/test_staged_media.py .                           [ 89%]
+core_apps/chat/tests/test_edit_moderation_enqueue.py .                   [ 89%]
+core_apps/chat/tests/test_independent_review.py .....                    [ 90%]
+core_apps/chat/tests/test_media_runtime.py ...                           [ 90%]
+core_apps/chat/tests/test_provider_evaluation.py ....................... [ 94%]
+...                                                                      [ 94%]
+core_apps/chat/tests/test_reactions_mentions.py .                        [ 94%]
+core_apps/chat/tests/test_shortlist_polls.py .....                       [ 95%]
+core_apps/notifications/tests/test_push_privacy.py ..................... [ 98%]
+............                                                             [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+core_apps/chat/tests/test_all_mentions_navigation.py: 1 warning
+core_apps/chat/tests/test_command_input_matrix.py: 1 warning
+core_apps/chat/tests/test_direct_media.py: 5 warnings
+core_apps/chat/tests/test_discovery.py: 4 warnings
+core_apps/chat/tests/test_forwarding.py: 6 warnings
+core_apps/chat/tests/test_group_api.py: 12 warnings
+core_apps/chat/tests/test_group_messages.py: 3 warnings
+core_apps/chat/tests/test_inbox_actions.py: 7 warnings
+core_apps/chat/tests/test_legacy_send_policy.py: 2 warnings
+core_apps/chat/tests/test_mvp_direct_tools.py: 1 warning
+core_apps/chat/tests/test_mvp_forward_media.py: 1 warning
+core_apps/chat/tests/test_participant_disclosure.py: 3 warnings
+core_apps/chat/tests/test_private_workspace_preferences.py: 2 warnings
+core_apps/chat/tests/test_productivity.py: 2 warnings
+core_apps/chat/tests/test_property_sharing.py: 3 warnings
+core_apps/chat/tests/test_reactions_mentions.py: 2 warnings
+core_apps/chat/tests/test_rental_moderation.py: 3 warnings
+core_apps/chat/tests/test_rental_policy_commitments.py: 7 warnings
+core_apps/chat/tests/test_rich_attachments.py: 13 warnings
+core_apps/chat/tests/test_sprint04_legacy_history.py: 5 warnings
+core_apps/chat/tests/test_sprint04_performance.py: 3 warnings
+core_apps/chat/tests/test_sprint09_communication.py: 4 warnings
+core_apps/chat/tests/test_transcript_segments.py: 2 warnings
+core_apps/chat/tests/test_views.py: 19 warnings
+core_apps/chat/tests/test_voice_transcription.py: 2 warnings
+core_apps/chat/tests/test_workspace_group_scope.py: 1 warning
+core_apps/chat/tests/test_workspace_inbox.py: 2 warnings
+core_apps/notifications/tests/test_account_scope.py: 2 warnings
+core_apps/notifications/tests/test_delivery_policy.py: 1 warning
+core_apps/notifications/tests/test_mvp_workspace_api.py: 2 warnings
+core_apps/notifications/tests/test_views.py: 21 warnings
+core_apps/notifications/tests/test_workspace_scope.py: 4 warnings
+core_apps/support/tests/test_creation_recovery.py: 7 warnings
+core_apps/support/tests/test_durable_storage.py: 3 warnings
+core_apps/support/tests/test_information_evidence.py: 3 warnings
+core_apps/support/tests/test_information_requests.py: 5 warnings
+core_apps/support/tests/test_inquiry_resolution.py: 1 warning
+core_apps/support/tests/test_mvp_message_ordering.py: 1 warning
+core_apps/support/tests/test_operator_console.py: 1 warning
+core_apps/support/tests/test_platform_payment_reports.py: 6 warnings
+core_apps/support/tests/test_private_attachments.py: 2 warnings
+core_apps/support/tests/test_scope_roundtrip.py: 7 warnings
+core_apps/support/tests/test_shared_admin.py: 4 warnings
+core_apps/support/tests/test_sprint04_thread_reads.py: 3 warnings
+core_apps/support/tests/test_sprint09_receipts.py: 3 warnings
+core_apps/support/tests/test_staged_media.py: 4 warnings
+core_apps/support/tests/test_upload_recovery.py: 5 warnings
+core_apps/support/tests/test_views.py: 15 warnings
+core_apps/chat/tests/test_deployed_acceptance.py: 2 warnings
+core_apps/chat/tests/test_group_socket.py: 1 warning
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /private/tmp/sukoon-sprint09/runtime/static/
+    mw_instance = middleware(adapted_handler)
+
+core_apps/notifications/tests/test_serializers.py::TestNotificationSerializers::test_arabic_time_formatting
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/core_apps/notifications/tests/test_serializers.py:32: RemovedInDjango50Warning: The django.utils.timezone.utc alias is deprecated. Please update your code to use datetime.timezone.utc instead.
+    dt = timezone.datetime(2026, 1, 14, 14, 55, tzinfo=timezone.utc)
+
+core_apps/support/tests/test_inquiry_resolution.py::test_console_resolves_general_inquiry_with_explicit_acknowledgment
+core_apps/support/tests/test_operator_console.py::test_support_console_submits_one_reply_and_rejects_stale_or_revoked_write
+core_apps/support/tests/test_platform_payment_reports.py::test_assigned_finance_console_has_reachable_read_only_report
+core_apps/support/tests/test_platform_payment_reports.py::test_anonymous_admin_login_does_not_query_assigned_private_reports
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:348: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /private/tmp/sukoon-sprint09/final3/sprint-09/junit.xml --
+===== 717 passed, 2 skipped, 1 xfailed, 226 warnings in 364.77s (0:06:04) ======

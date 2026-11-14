@@ -2168,3 +2168,14 @@ classes already converted in Sprint 07 and every explicitly deferred commerce/pr
 | `advertising/management/commands/restore_advertising_media.py` | Explicit original-byte recovery; dry run by default |
 
 These entries describe source ownership, not completed family-wide performance or real-provider acceptance.
+
+## Sprint 09 implementation addendum — 2026-11-14
+
+Communication transport and prepared-read changes are inventoried separately in
+[evidence/sprint-09/route-coverage.json](evidence/sprint-09/route-coverage.json),
+with 64 communication URL patterns and all 14 original functions reconciled to
+explicit CBVs. The 795-pattern global route/policy check preserves the rest of
+the working tree's prior sprint changes. See the Sprint 09 evidence README for
+commands, focused and integrated validation, source checks and unmet acceptance.
+The baseline audit tables above remain historical evidence rather than a claim
+of a new full semantic audit.

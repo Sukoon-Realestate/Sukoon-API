@@ -163,10 +163,18 @@ def message_payload(message, participant, membership, *, properties=None, roster
                     "after": edit.after,
                     "edited_at": edit.created_at.isoformat(),
                 }
-                for edit in (message.page_edits if hasattr(message, "page_edits") else message.edits.all())
+                for edit in (
+                    message.page_edits
+                    if hasattr(message, "page_edits")
+                    else message.edits.all()
+                )
             ]
         ),
-        **({"edit_history_page": message.edit_page} if hasattr(message, "edit_page") else {}),
+        **(
+            {"edit_history_page": message.edit_page}
+            if hasattr(message, "edit_page")
+            else {}
+        ),
         "delete_before": (message.created_at + timedelta(hours=1)).isoformat(),
         "reply_to": reply,
         "attachments": (
@@ -249,7 +257,7 @@ def summary(conversation, user):
     }
 
 
-def conversation_preview(message, viewer):
+def conversation_preview(message, viewer, *, roster=None):
     """Minimal inbox preview; receipts use the same eligible roster as history.
 
     Incoming unread counts remain independent of the recipient's read receipt
@@ -263,16 +271,42 @@ def conversation_preview(message, viewer):
         and not message.deleted_at
         and message.kind != "system"
     ):
-        readers = eligible_participants(message.conversation).exclude(user_id=viewer.pk)
-        if message.sequence is not None:
-            readers = readers.filter(visible_from_sequence__lte=message.sequence)
-            read_count = readers.filter(
-                last_read_sequence__gte=message.sequence
-            ).count()
+        if roster is not None:
+            readers = [
+                row
+                for row in roster
+                if row.user_id != viewer.pk
+                and (
+                    message.sequence is None
+                    or row.visible_from_sequence <= message.sequence
+                )
+            ]
+            read_count = sum(
+                (
+                    (row.last_read_sequence >= message.sequence)
+                    if message.sequence is not None
+                    else bool(
+                        row.last_read_at and row.last_read_at >= message.created_at
+                    )
+                )
+                for row in readers
+            )
+            eligible_count = len(readers)
         else:
-            # Legacy direct messages have not yet acquired sequence numbers.
-            read_count = readers.filter(last_read_at__gte=message.created_at).count()
-        eligible_count = readers.count()
+            readers = eligible_participants(message.conversation).exclude(
+                user_id=viewer.pk
+            )
+            if message.sequence is not None:
+                readers = readers.filter(visible_from_sequence__lte=message.sequence)
+                read_count = readers.filter(
+                    last_read_sequence__gte=message.sequence
+                ).count()
+            else:
+                # Legacy direct messages have not yet acquired sequence numbers.
+                read_count = readers.filter(
+                    last_read_at__gte=message.created_at
+                ).count()
+            eligible_count = readers.count()
     return {
         "id": str(message.id),
         "sequence": message.sequence,

@@ -1,0 +1,7 @@
+./core_apps/chat/services/message_service_parts/get_or_create_direct_conversation.py:def _notify_recipients(
+./core_apps/chat/services/message_service_parts/get_or_create_direct_conversation.py:def _broadcast_new_message(*, conversation: Conversation, message: Message) -> None:
+./core_apps/chat/services/message_service_parts/send_message.py:    _notify_recipients,
+./core_apps/chat/services/message_service_parts/send_message.py:    _broadcast_new_message,
+./core_apps/chat/services/message_service.py:    _notify_recipients,
+./core_apps/chat/services/message_service.py:    _broadcast_new_message,
+./core_apps/chat/views/group_commands.py:class GroupPreferencesAPIView(APIView):

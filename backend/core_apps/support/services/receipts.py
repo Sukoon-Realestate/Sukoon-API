@@ -10,7 +10,7 @@ def compact_requested(request):
     return value == "compact"
 
 
-def ticket_receipt(ticket):
+def ticket_receipt(ticket, *, message_id=None):
     return {
         "id": str(ticket.id),
         "reference": ticket.reference,
@@ -19,4 +19,5 @@ def ticket_receipt(ticket):
         "workspace": ticket.workspace,
         "subject": ticket.subject,
         "category": ticket.category,
+        **({"message_id": str(message_id)} if message_id is not None else {}),
     }

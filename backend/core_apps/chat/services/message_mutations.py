@@ -84,6 +84,7 @@ def mutate_message(conversation, user, data):
         raise ChatConflict("This message changed. Reload it before continuing.")
     event_data = {"operation_id": operation_id, "fingerprint": fingerprint}
     from .send_receipts import preserve_original_send
+
     preserve_original_send(message)
     if kind == "message.delete":
         return delete_group_message(conversation, user, identity, event_data=event_data)
@@ -98,13 +99,22 @@ def mutate_message(conversation, user, data):
             {"content": "Supply valid message text within the limit."}
         )
     from core_apps.chat.models import MessageEdit
-    MessageEdit.objects.create(message=message, revision=message.revision + 1, before=message.content, after=content)
+
+    MessageEdit.objects.create(
+        message=message,
+        revision=message.revision + 1,
+        before=message.content,
+        after=content,
+    )
     from .mentions import retained_mentions, retain_mention_receipts
+
     message.mentions = retained_mentions(message, content)
     message.content = content
     message.edited_at = timezone.now()
     message.revision += 1
-    message.save(update_fields=["content", "mentions", "edited_at", "revision", "updated_at"])
+    message.save(
+        update_fields=["content", "mentions", "edited_at", "revision", "updated_at"]
+    )
     retain_mention_receipts(message)
     # Keep the original send fingerprint immutable: a delayed original send must
     # return this same message, never restore the previous text or create a copy.

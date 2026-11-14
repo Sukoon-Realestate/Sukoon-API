@@ -1,0 +1,1 @@
+{"server_version" : "18.6 (Homebrew)", "max_locks_per_transaction" : "1024", "listen_addresses" : "", "unix_socket_directories" : "/private/tmp/sukoon-sprint09/pg/socket"}

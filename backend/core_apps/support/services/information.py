@@ -42,17 +42,24 @@ def projection(ticket):
     from .read_pages import child_counts
 
     pages = getattr(ticket, "read_bounds", None)
-    requests = ticket.information_requests.select_related("source_message", "answer").order_by("created_at", "pk")
+    requests = ticket.information_requests.select_related(
+        "source_message", "answer"
+    ).order_by("created_at", "pk")
     if pages:
-        requests = pages.select("information_requests", requests.order_by("created_at", "pk"))
-    history = TicketInformationEvent.objects.select_related("answer").order_by("created_at", "pk")
-    versions = TicketEvidenceSubmission.objects.select_related("message").order_by("version")
+        requests = pages.select(
+            "information_requests", requests.order_by("created_at", "pk")
+        )
+    history = TicketInformationEvent.objects.select_related("answer").order_by(
+        "created_at", "pk"
+    )
+    versions = TicketEvidenceSubmission.objects.select_related("message").order_by(
+        "version"
+    )
     if pages:
         history = pages.specs["history"].slice(history)
         versions = pages.specs["evidence_versions"].slice(versions)
     rows = list(
-        requests.select_related("source_message", "answer")
-        .prefetch_related(
+        requests.select_related("source_message", "answer").prefetch_related(
             Prefetch(
                 "history",
                 queryset=history,
@@ -74,10 +81,20 @@ def projection(ticket):
     )
     return [
         {
-            **({"pages": {
-                "history": pages.specs["history"].metadata(history_counts.get(row.pk, 0)),
-                "evidence_versions": pages.specs["evidence_versions"].metadata(version_counts.get(row.pk, 0)),
-            }} if pages else {}),
+            **(
+                {
+                    "pages": {
+                        "history": pages.specs["history"].metadata(
+                            history_counts.get(row.pk, 0)
+                        ),
+                        "evidence_versions": pages.specs["evidence_versions"].metadata(
+                            version_counts.get(row.pk, 0)
+                        ),
+                    }
+                }
+                if pages
+                else {}
+            ),
             "id": str(row.id),
             "revision": row.revision,
             "prompt": row.prompt,
@@ -235,7 +252,15 @@ def staff_command(user, ticket_id, data, key):
 
 @transaction.atomic
 def answer(
-    *, user, ticket_id, workspace, request_id, expected_revision, body, attachment_ids, compact=False
+    *,
+    user,
+    ticket_id,
+    workspace,
+    request_id,
+    expected_revision,
+    body,
+    attachment_ids,
+    compact=False,
 ):
     from .ticket_service import get_ticket_detail, add_ticket_reply
     from core_apps.users.models import User
@@ -265,7 +290,9 @@ def answer(
     from .information_evidence import validate_answer, record_submission
 
     validate_answer(row, attachment_ids, user)
-    updated = add_ticket_reply(user, ticket_id, body, workspace, attachment_ids, compact=compact)
+    updated = add_ticket_reply(
+        user, ticket_id, body, workspace, attachment_ids, compact=compact
+    )
     row.answer = updated.messages.order_by("-created_at", "-pkid").first()
     row.status = "answer_sent"
     row.revision += 1

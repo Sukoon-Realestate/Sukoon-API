@@ -96,10 +96,16 @@ def authorize(conversation, user, *, action="read_chat", lock=False):
         and others[0].is_active
         and not direct_message_blocked(fresh, others[0], lock=lock)
     )
-    from core_apps.chat.moderation.policy import attach_context, require_send, restricted, mode
-    if mode() != 'off':
+    from core_apps.chat.moderation.policy import (
+        attach_context,
+        require_send,
+        restricted,
+        mode,
+    )
+
+    if mode() != "off":
         attach_context(conversation, fresh)
-    if action in {'send_message', 'upload_attachment', 'reply'}:
+    if action in {"send_message", "upload_attachment", "reply"}:
         require_send(conversation, fresh)
     can_send = can_send and not restricted(fresh)
     grant = DirectConversationGrant(participant.id, can_send=can_send)
@@ -123,3 +129,93 @@ def actions(grant):
 
 def eligible_participants(conversation):
     return conversation.participant_set.filter(user__is_active=True)
+
+
+def authorize_page(conversations, user):
+    """Current direct-read grants for one bounded page; never mutation authority.
+
+    The read-only path has no policy enrollment side effects. Moderation-enabled
+    reads retain authorize() so its enrollment boundary continues to execute.
+    """
+    from collections import defaultdict
+    from django.db.models import Q
+    from rest_framework.exceptions import PermissionDenied
+    from core_apps.chat.models import ChatBlock, AccountRestriction
+    from core_apps.chat.moderation.policy import ACTIVE_RESTRICTIONS, mode
+    from core_apps.features.planning_models import RoommateConnection
+
+    if mode() != "off":
+        return {}
+    fresh = User.objects.get(pk=user.pk)
+    if not fresh.is_active:
+        raise PermissionDenied(
+            "Conversation access is unavailable.", code="chat_access_revoked"
+        )
+    ids = [
+        conversation.pk
+        for conversation in conversations
+        if conversation.kind == "direct"
+    ]
+    current = {
+        row.pk: row for row in Conversation.objects.filter(pk__in=ids, kind="direct")
+    }
+    rosters = defaultdict(list)
+    for participant in ConversationParticipant.objects.filter(
+        conversation_id__in=ids
+    ).select_related("user__profile"):
+        rosters[participant.conversation_id].append(participant)
+    peers = {
+        row.user_id
+        for roster in rosters.values()
+        for row in roster
+        if row.user_id != fresh.pk
+    }
+    blocks = list(
+        ChatBlock.objects.filter(
+            Q(user=fresh, blocked_user_id__in=peers)
+            | Q(blocked_user=fresh, user_id__in=peers)
+        ).values_list("user_id", "blocked_user_id")
+    )
+    own_blocks = {other for actor, other in blocks if actor == fresh.pk}
+    blocked = {other if actor == fresh.pk else actor for actor, other in blocks}
+    withdrawn = set(
+        RoommateConnection.objects.filter(
+            Q(first_id=fresh.pk, second_id__in=peers)
+            | Q(second_id=fresh.pk, first_id__in=peers)
+        )
+        .exclude(status="accepted")
+        .values_list("first_id", "second_id")
+    )
+    restricted = AccountRestriction.objects.filter(
+        user=fresh, state__in=ACTIVE_RESTRICTIONS
+    ).exists()
+    result = {}
+    for conversation in conversations:
+        if conversation.kind != "direct":
+            continue
+        current_conversation = current.get(conversation.pk)
+        roster = rosters[conversation.pk]
+        participant = next((row for row in roster if row.user_id == fresh.pk), None)
+        if not current_conversation or not participant:
+            raise PermissionDenied(
+                "Conversation access is unavailable.", code="chat_access_revoked"
+            )
+        if any(row.membership_period is None for row in roster):
+            # Legacy sequence/membership preparation keeps its existing locks.
+            continue
+        others = [row.user for row in roster if row.user_id != fresh.pk]
+        can_send = (
+            len(others) == 1
+            and others[0].is_active
+            and not restricted
+            and others[0].pk not in blocked
+            and tuple(sorted([fresh.pk, others[0].pk])) not in withdrawn
+        )
+        grant = DirectConversationGrant(participant.id, can_send=can_send)
+        result[conversation.pk] = {
+            "authorized": (current_conversation, participant, grant),
+            "roster": roster,
+            "blocked_by_me": bool(others and others[0].pk in own_blocks),
+            "is_blocked": bool(others and others[0].pk in blocked),
+        }
+    return result

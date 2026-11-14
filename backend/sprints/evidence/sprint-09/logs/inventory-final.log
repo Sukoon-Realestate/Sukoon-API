@@ -1,0 +1,23 @@
+DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test .venv/bin/python tools/qa/sprint09_inventory.py
+{
+  "global_patterns": 795,
+  "scoped_patterns": 64,
+  "converted_original_functions": [
+    "core_apps.chat.views.forwarding.forward",
+    "core_apps.chat.views.forwarding.forward_destinations",
+    "core_apps.chat.views.mentions.mention_seen",
+    "core_apps.chat.views.mentions.unread_mentions",
+    "core_apps.chat.views.notification_actions.notification_action",
+    "core_apps.chat.views.productivity.forward_messages",
+    "core_apps.chat.views.productivity.message_pin",
+    "core_apps.chat.views.productivity.message_readers",
+    "core_apps.chat.views.productivity.message_star",
+    "core_apps.chat.views.productivity.poll_close",
+    "core_apps.chat.views.productivity.poll_vote",
+    "core_apps.chat.views.productivity.saved_replies",
+    "core_apps.chat.views.productivity.saved_reply",
+    "core_apps.chat.views.productivity.starred_messages"
+  ],
+  "scoped_function_callbacks_remaining": 0,
+  "global_transport_metadata_parity": true
+}

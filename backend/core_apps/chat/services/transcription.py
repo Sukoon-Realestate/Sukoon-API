@@ -29,7 +29,9 @@ def payload(job):
     return {
         "state": job.state,
         "text": decoded.get("text", ""),
-        "segments": validated_segments(decoded.get("segments"), job.attachment.duration_ms),
+        "segments": validated_segments(
+            decoded.get("segments"), job.attachment.duration_ms
+        ),
         "duration_ms": job.attachment.duration_ms,
         "error_code": job.error_code,
     }
@@ -162,9 +164,18 @@ def process_one():
                 "properties": {
                     "text": {"type": "string"},
                     "intelligible": {"type": "boolean"},
-                    "segments": {"type": "array", "items": {"type": "object", "properties": {
-                        "start_ms": {"type": "integer"}, "end_ms": {"type": "integer"},
-                        "text": {"type": "string"}}, "required": ["start_ms", "end_ms", "text"]}},
+                    "segments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "start_ms": {"type": "integer"},
+                                "end_ms": {"type": "integer"},
+                                "text": {"type": "string"},
+                            },
+                            "required": ["start_ms", "end_ms", "text"],
+                        },
+                    },
                 },
                 "required": ["text", "intelligible"],
             },
@@ -185,7 +196,18 @@ def process_one():
             pk=job.pk, lease_token=token, state="running"
         ).update(
             state=state,
-            ciphertext=seal({"text": text, "segments": validated_segments(result.get("segments"), attachment.duration_ms)}) if state == "ready" else "",
+            ciphertext=(
+                seal(
+                    {
+                        "text": text,
+                        "segments": validated_segments(
+                            result.get("segments"), attachment.duration_ms
+                        ),
+                    }
+                )
+                if state == "ready"
+                else ""
+            ),
             error_code="",
             lease_until=None,
         )

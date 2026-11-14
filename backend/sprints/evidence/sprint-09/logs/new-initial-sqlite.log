@@ -1,0 +1,20 @@
+.................                                                        [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+core_apps/chat/tests/test_sprint09_communication.py::test_invalid_edit_controls_and_non_object_mentions_are_client_errors
+core_apps/support/tests/test_sprint09_receipts.py::test_compact_reply_and_recovery_preserve_paged_history[1]
+core_apps/support/tests/test_sprint09_receipts.py::test_compact_reply_and_recovery_preserve_paged_history[100]
+core_apps/support/tests/test_sprint09_receipts.py::test_compact_reply_and_recovery_preserve_paged_history[1000]
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /private/tmp/sukoon-sprint09/runtime/static/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+----------- generated xml file: /private/tmp/sukoon-sprint09/new.xml -----------
+17 passed, 6 warnings in 76.51s (0:01:16)

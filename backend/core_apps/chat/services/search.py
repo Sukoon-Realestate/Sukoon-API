@@ -158,8 +158,8 @@ def discover(request, conversation_id=None):
         .order_by("-pkid")
     )
     results, last, more = [], None, False
-    # Fresh authorization per candidate prevents stale membership projections
-    # from leaking either snippets or attachments. Work is bounded per page.
+    # Prepare each conversation once inside this bounded response. Attachment
+    # and transcript disclosure still refresh authority at their own boundaries.
     candidates = list(rows[:101])
     pages, conversation_payloads = {}, {}
     for message in candidates[:100]:
