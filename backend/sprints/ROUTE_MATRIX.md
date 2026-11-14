@@ -5,7 +5,7 @@ instead of editing by hand. Per-route detail (methods, auth/permission/throttle/
 schema hints, MVP availability per method, aliases, signals and referencing test files) is in
 [evidence/sprint-00/route-matrix.json](evidence/sprint-00/route-matrix.json).
 
-**795 API patterns**, 193 sharing a handler with another pattern (aliases/format variants). Styles: 686 DRF CBV, 83 decorated FBV, 22 DRF viewset, 2 plain function, 2 framework-generated DRF CBV.
+**795 API patterns**, 193 sharing a handler with another pattern (aliases/format variants). Styles: 755 DRF CBV, 22 DRF viewset, 14 decorated FBV, 2 Django CBV, 2 framework-generated DRF CBV.
 
 How to read the columns:
 
@@ -44,7 +44,7 @@ How to read the columns:
 | `api/admin/support` | 5 | Area 6 — Admin/shared/config | 10 | 0 | GET, POST | DRF CBV 5 | CookieAuthentication | IsSupportStaff | 0 | 0 | 2 | 0 | 2 | 0 | 1 |
 | `api/admin/system` | 6 | Area 6 — Admin/shared/config | 10 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsSystemOwner | 0 | 0 | 0 | 0 | 1 | 0 | 1 |
 | `api/admin/users` | 7 | Area 6 — Admin/shared/config | 10 | 6 | GET, POST | DRF CBV 7 | CookieAuthentication | IsUserManager | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
-| `api/advertising` | 7 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 7 | CookieAuthentication | AllowAny<br>IsAuthenticated | 7 | 1 | 3 | 0 | 1 | 1 | 7 |
+| `api/advertising` | 7 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 7 | CookieAuthentication | AllowAny<br>IsAuthenticated | 7 | 1 | 3 | 0 | 1 | 1 | 7 |
 | `api/auth` | 2 | Framework-generated (router root); owned with Area 1 | — | 2 | GET | framework-generated DRF CBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | `api/auth/^o` | 1 | Area 1 — Identity/profiles | 05 | 0 | GET, POST | DRF CBV 1 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/auth/^users` | 21 | Area 1 — Identity/profiles | 05 | 21 | DELETE, GET, PATCH, POST, PUT | DRF viewset 21 | CookieAuthentication | CurrentUserOrAdmin | 0 | 0 | 0 | 21 | 0 | 0 | 21 |
@@ -83,9 +83,9 @@ How to read the columns:
 | `api/features/application-profile` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, PATCH, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 0 | 0 | 1 | 0 | 0 | 3 |
 | `api/features/application-shares` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 0 | 0 | 1 | 0 | 0 | 4 |
 | `api/features/availability-blocks` | 1 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/billing` | 11 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 11 | CookieAuthentication<br>— | IsAuthenticated<br>— | 11 | 0 | 1 | 0 | 0 | 0 | 6 |
-| `api/features/boost-campaigns` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | decorated FBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 0 | 2 | 0 | 1 |
-| `api/features/business-policies` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 2 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
+| `api/features/billing` | 11 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 11 | CookieAuthentication<br>— | IsAuthenticated<br>— | 11 | 0 | 1 | 0 | 0 | 0 | 6 |
+| `api/features/boost-campaigns` | 3 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 3 | CookieAuthentication | IsAuthenticated | 3 | 1 | 0 | 0 | 2 | 0 | 1 |
+| `api/features/business-policies` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 2 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
 | `api/features/campuses` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | AllowAny | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/commute-searches` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 0 | 1 | 0 | 0 | 0 | 0 | 4 |
 | `api/features/companies` | 30 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 30 | CookieAuthentication | IsAuthenticated | 30 | 12 | 0 | 3 | 2 | 0 | 0 |
@@ -129,37 +129,37 @@ How to read the columns:
 | `api/features/housing-tenders` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 4 | 1 | 4 | 0 | 0 | 6 |
 | `api/features/lease-configuration` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/features/lease-tenants` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 1 | 0 | 0 | 0 |
-| `api/features/leases` | 30 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, PATCH, POST | DRF CBV 27; decorated FBV 3 | CookieAuthentication | IsAuthenticated | 30 | 8 | 9 | 3 | 3 | 0 | 0 |
+| `api/features/leases` | 30 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, PATCH, POST | DRF CBV 30 | CookieAuthentication | IsAuthenticated | 30 | 6 | 7 | 3 | 3 | 0 | 0 |
 | `api/features/lifestyle-profile` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 1 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/listing-suggestions` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/features/living-labs` | 13 | Area 3 — Rentals/housing/planning | 07 | 11 | GET, POST, PUT | DRF CBV 13 | CookieAuthentication | IsAuthenticated | 13 | 12 | 0 | 12 | 0 | 0 | 13 |
 | `api/features/maintenance-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 1 | 0 | 0 | 0 | 0 |
-| `api/features/mock-provider` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 4 | 3 | 0 | 0 | 2 |
+| `api/features/mock-provider` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 4 | 3 | 0 | 0 | 2 |
 | `api/features/move-in-cases` | 1 | Area 3 — Rentals/housing/planning | 07 | 1 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/move-intents` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 0 | 1 | 0 | 0 | 4 |
 | `api/features/move-out-notices` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 0 | 2 | 0 | 0 | 2 |
 | `api/features/open-housing-groups` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/operations` | 19 | Area 4 — Commerce/providers/advertising | 08 | 4 | GET, POST | DRF CBV 6; decorated FBV 13 | CookieAuthentication | IsAuthenticated | 19 | 6 | 4 | 2 | 3 | 0 | 12 |
-| `api/features/operator` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 2 |
+| `api/features/operations` | 19 | Area 4 — Commerce/providers/advertising | 08 | 4 | GET, POST | DRF CBV 19 | CookieAuthentication | IsAuthenticated | 19 | 2 | 0 | 1 | 3 | 0 | 12 |
+| `api/features/operator` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 2 |
 | `api/features/owner-achievements` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 2 |
 | `api/features/owner-analytics` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
 | `api/features/owner-application-queue` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/owner-group-applications` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/owner-housing-offers` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/owner-payables` | 1 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/features/owner-payment-profile` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 2 | 0 | 3 | 0 | 2 |
+| `api/features/owner-payables` | 1 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/features/owner-payment-profile` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 2 | 0 | 3 | 0 | 2 |
 | `api/features/owner-shared-housing-applications` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/payment-attempts` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 0 | 0 | 1 | 0 | 0 |
+| `api/features/payment-attempts` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 0 | 0 | 1 | 0 | 0 |
 | `api/features/payment-extension-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 1 | 0 | 0 | 0 | 0 |
-| `api/features/payouts` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET | decorated FBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/features/payouts` | 2 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/features/planning-capabilities` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
 | `api/features/planning-home` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/portfolio-offers` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 0 | 1 | 0 | 2 |
 | `api/features/properties` | 4 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 2 | 0 | 0 | 1 | 0 | 4 |
-| `api/features/provider-webhooks` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | decorated FBV 2 | CookieAuthentication | AllowAny | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `api/features/refund-requests` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | decorated FBV 4 | CookieAuthentication | IsAuthenticated | 4 | 3 | 3 | 0 | 0 | 0 | 0 |
+| `api/features/provider-webhooks` | 2 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 2 | CookieAuthentication | AllowAny | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `api/features/refund-requests` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/features/renewals` | 4 | Area 3 — Rentals/housing/planning | 07 | 4 | GET, PATCH, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 4 | 3 | 0 | 0 | 0 | 0 |
-| `api/features/rent-invoices` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 2; decorated FBV 4 | CookieAuthentication | IsAuthenticated | 6 | 2 | 3 | 0 | 1 | 0 | 0 |
+| `api/features/rent-invoices` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 0 | 1 | 0 | 1 | 0 | 0 |
 | `api/features/rental-attachments` | 4 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `api/features/rental-capabilities` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
 | `api/features/rental-cases` | 4 | Area 3 — Rentals/housing/planning | 07 | 3 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 0 | 0 | 2 | 0 | 0 | 4 |
@@ -188,8 +188,8 @@ How to read the columns:
 | `api/features/student-arrangements` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 0 | 0 | 2 | 0 | 0 | 2 |
 | `api/features/student-evidence` | 4 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, POST | DRF CBV 4 | CookieAuthentication | IsAuthenticated | 4 | 1 | 1 | 4 | 2 | 1 | 4 |
 | `api/features/student-profile` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/subscription-plans` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| `api/features/subscriptions` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | decorated FBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/subscription-plans` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| `api/features/subscriptions` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | GET | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | `api/features/tenancy-invitations` | 6 | Area 3 — Rentals/housing/planning | 07 | 0 | GET, POST | DRF CBV 6 | CookieAuthentication | IsAuthenticated | 6 | 5 | 5 | 1 | 2 | 0 | 1 |
 | `api/features/tenant-assistant` | 1 | Area 3 — Rentals/housing/planning | 07 | 0 | POST | DRF CBV 1 | CookieAuthentication | IsAuthenticated | 0 | 0 | 1 | 1 | 0 | 0 | 1 |
 | `api/features/termination-requests` | 2 | Area 3 — Rentals/housing/planning | 07 | 2 | GET, PATCH, POST | DRF CBV 2 | CookieAuthentication | IsAuthenticated | 2 | 2 | 1 | 0 | 0 | 0 | 2 |
@@ -201,7 +201,7 @@ How to read the columns:
 | `api/homepage` | 1 | Area 2 — Properties/visits/tours | 06 | 0 | GET | DRF CBV 1 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `api/notifications` | 9 | Area 5 — Communication/support | 09 | 0 | DELETE, GET, PATCH, POST, PUT | DRF CBV 9 | CookieAuthentication | IsAuthenticated | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
 | `api/pages` | 5 | Area 6 — Admin/shared/config | 10 | 0 | GET | DRF CBV 5 | CookieAuthentication | AllowAny | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
-| `api/payments` | 3 | Area 4 — Commerce/providers/advertising | 08 | 0 | (adapter-defined), POST | decorated FBV 1; plain function 2 | — | AllowAny<br>— | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
+| `api/payments` | 3 | Area 4 — Commerce/providers/advertising | 08 | 0 | GET, POST | DRF CBV 1; Django CBV 2 | — | AllowAny<br>— | 1 | 0 | 0 | 0 | 1 | 0 | 0 |
 | `api/profiles` | 16 | Area 1 — Identity/profiles | 05 | 1 | DELETE, GET, PATCH, POST, PUT | DRF CBV 16 | CookieAuthentication | IsAuthenticated | 3 | 0 | 2 | 0 | 4 | 1 | 0 |
 | `api/properties` | 71 | Area 2 — Properties/visits/tours | 06 | 12 | DELETE, GET, PATCH, POST, PUT | DRF CBV 71 | CookieAuthentication | AllowAny<br>IsAuthenticated<br>IsAuthenticated, IsOwner<br>IsAuthenticated, IsOwnerOrReadOnly<br>IsAuthenticated, IsTenantOrPropertyOwner<br>IsAuthenticatedOrReadOnly | 5 | 1 | 11 | 9 | 13 | 0 | 3 |
 | `api/property-captures` | 15 | Area 2 — Properties/visits/tours | 06 | 0 | DELETE, GET, PATCH, POST, PUT | DRF CBV 15 | CookieAuthentication | IsAuthenticated | 0 | 0 | 0 | 0 | 0 | 0 | 0 |

@@ -593,11 +593,11 @@ def test_concurrent_payment_retries_share_one_receipt(auth_client, user):
 
 @pytest.mark.django_db
 def test_existing_audit_ad_media_recovery_and_mock_payment_activation(
-    auth_client, user
+    auth_client, user, tmp_path
 ):
     """
     BE002: Verify that existing audit ad 85295dd1-f8bd-4c82-a903-9bdc3d90af98
-    recovers missing media across container restart, activates with mock payment,
+    explicitly recovers original media, activates with mock payment,
     replays idempotently, serves media, and places banner in tenant home.
     """
     from core_apps.advertising.models import AdvertisementMedia
@@ -639,6 +639,24 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(
     # 1. Simulate media file missing from ephemeral disk
     if media.banner.storage.exists(media.banner.name):
         media.banner.storage.delete(media.banner.name)
+
+    # GET cannot repair or fabricate missing historical artwork.
+    media_url = reverse("advertising:advertisement-media", args=[ad.id])
+    assert auth_client.get(media_url).status_code == 404
+    assert not media.banner.storage.exists(media.banner.name)
+
+    # Explicit recovery requires original bytes matching reviewed stored metadata.
+    from django.core.management import call_command
+    from core_apps.advertising.audit_asset import get_audit_banner_bytes
+    import hashlib
+
+    original = get_audit_banner_bytes()
+    media.sha256 = hashlib.sha256(original).hexdigest()
+    media.size_bytes = len(original)
+    media.save(update_fields=["sha256", "size_bytes"])
+    source = tmp_path / "original.png"
+    source.write_bytes(original)
+    call_command("restore_advertising_media", str(ad.id), str(source), apply=True)
 
     # 2. Mock payment activation succeeds (does not fail with 400 errors.banner)
     pay_url = reverse("advertising:mock-payment", args=[ad.id])
@@ -693,3 +711,6 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(
     assert res_en.status_code == 200
     assert res_en["Content-Language"] == "en"
     assert res_en.json()["message"] == "Available plans."
+
+
+__all__ = ["isolated_media", "pending_ad"]

@@ -1,10 +1,8 @@
 """Services: ensure media persisted."""
 
 import calendar
-import hashlib
 from datetime import datetime, timedelta, timezone as datetime_timezone
 from django.utils import timezone
-from PIL import Image
 from ..models import Advertisement, AdvertisingPlan
 from .validate_banner import CAIRO, property_is_publishable, eligible_offer
 from .create_advertisement import _valid_local_datetime
@@ -98,78 +96,30 @@ def destination_is_eligible(advertisement):
 
 
 def ensure_media_persisted(media):
-    if not media or not media.banner:
+    """Compatibility probe; serving never repairs or invents source artwork.
+
+    Missing historical files require the explicit restore_advertising_media
+    command with original bytes matching the recorded length and digest.
+    """
+    if not media or not media.banner or media.size_bytes <= 0:
         return False
-    from ..audit_asset import (
-        AUDIT_AD_ID,
-        AUDIT_AD_SHA256,
-        AUDIT_AD_BYTE_LEN,
-        get_audit_banner_bytes,
-    )
-
-    ad = getattr(media, "advertisement", None)
-    ad_id = (
-        str(ad.id)
-        if ad and hasattr(ad, "id")
-        else str(getattr(media, "advertisement_id", "") or "")
-    )
-    if ad_id == AUDIT_AD_ID or AUDIT_AD_ID in str(getattr(media.banner, "name", "")):
-        try:
-            if media.banner.storage.exists(media.banner.name):
-                with media.banner.open("rb") as f:
-                    content = f.read()
-                if (
-                    len(content) == AUDIT_AD_BYTE_LEN
-                    and hashlib.sha256(content).hexdigest() == AUDIT_AD_SHA256
-                ):
-                    return True
-        except Exception:
-            pass
-        # Restore the exact original 28,970-byte artwork
-        try:
-            import io
-
-            content = get_audit_banner_bytes()
-            if media.banner.storage.exists(media.banner.name):
-                try:
-                    media.banner.storage.delete(media.banner.name)
-                except Exception:
-                    pass
-            media.banner.storage.save(media.banner.name, io.BytesIO(content))
-            media.size_bytes = AUDIT_AD_BYTE_LEN
-            media.sha256 = AUDIT_AD_SHA256
-            media.content_type = "image/png"
-            media.save(update_fields=["size_bytes", "sha256", "content_type"])
-            return True
-        except Exception:
-            return False
-
-    try:
-        if media.banner.storage.exists(media.banner.name):
-            return True
-    except Exception:
-        pass
-    try:
-        from PIL import Image
-        import io
-
-        img_format = "PNG" if "png" in (media.content_type or "").lower() else "JPEG"
-        img = Image.new("RGB", (600, 300), color=(50, 120, 220))
-        buf = io.BytesIO()
-        img.save(buf, format=img_format)
-        content = buf.getvalue()
-        media.banner.storage.save(media.banner.name, io.BytesIO(content))
-        return True
-    except Exception:
-        return False
+    return media.banner.storage.exists(media.banner.name)
 
 
 def media_is_available(advertisement):
     media = getattr(advertisement, "media", None)
     if not media or not media.banner:
         return False
-    if str(advertisement.id) == "85295dd1-f8bd-4c82-a903-9bdc3d90af98":
-        ensure_media_persisted(media)
     if media.size_bytes <= 0:
         return False
     return media.banner.storage.exists(media.banner.name)
+
+
+__all__ = [
+    "calendar_expiry",
+    "destination_is_eligible",
+    "effective_status",
+    "ensure_media_persisted",
+    "media_is_available",
+    "resolve_cairo_local",
+]

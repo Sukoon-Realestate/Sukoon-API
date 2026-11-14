@@ -1,0 +1,367 @@
+[
+  {
+    "handler": "core_apps.features.beneficiary_views.submit_details",
+    "file": "core_apps/features/beneficiary_views.py",
+    "line": 66
+  },
+  {
+    "handler": "core_apps.features.beneficiary_views.confirm",
+    "file": "core_apps/features/beneficiary_views.py",
+    "line": 95
+  },
+  {
+    "handler": "core_apps.features.billing_views.invoices",
+    "file": "core_apps/features/billing_views.py",
+    "line": 65
+  },
+  {
+    "handler": "core_apps.features.billing_views.invoice_detail",
+    "file": "core_apps/features/billing_views.py",
+    "line": 150
+  },
+  {
+    "handler": "core_apps.features.billing_views.invoice_operation",
+    "file": "core_apps/features/billing_views.py",
+    "line": 166
+  },
+  {
+    "handler": "core_apps.features.billing_views.invoice_quote",
+    "file": "core_apps/features/billing_views.py",
+    "line": 197
+  },
+  {
+    "handler": "core_apps.features.billing_views.invoice_checkout",
+    "file": "core_apps/features/billing_views.py",
+    "line": 211
+  },
+  {
+    "handler": "core_apps.features.billing_views.invoice_cancel",
+    "file": "core_apps/features/billing_views.py",
+    "line": 222
+  },
+  {
+    "handler": "core_apps.features.chargeback_views.chargeback_detail",
+    "file": "core_apps/features/chargeback_views.py",
+    "line": 26
+  },
+  {
+    "handler": "core_apps.features.commerce_views.store_context",
+    "file": "core_apps/features/commerce_views.py",
+    "line": 27
+  },
+  {
+    "handler": "core_apps.features.commerce_views.store_verify",
+    "file": "core_apps/features/commerce_views.py",
+    "line": 34
+  },
+  {
+    "handler": "core_apps.features.commerce_views.entitlements",
+    "file": "core_apps/features/commerce_views.py",
+    "line": 43
+  },
+  {
+    "handler": "core_apps.features.commerce_views.store_notification",
+    "file": "core_apps/features/commerce_views.py",
+    "line": 62
+  },
+  {
+    "handler": "core_apps.features.payment_resume_views.payment_attempt_resume",
+    "file": "core_apps/features/payment_resume_views.py",
+    "line": 22
+  },
+  {
+    "handler": "core_apps.features.purchase_routing_views.purchase_route",
+    "file": "core_apps/features/purchase_routing_views.py",
+    "line": 12
+  },
+  {
+    "handler": "core_apps.features.refund_operations.queue",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 115
+  },
+  {
+    "handler": "core_apps.features.refund_operations.review",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 132
+  },
+  {
+    "handler": "core_apps.features.refund_operations.reconcile",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 144
+  },
+  {
+    "handler": "core_apps.features.refund_operations.retry",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 160
+  },
+  {
+    "handler": "core_apps.features.refund_operations.reauthorize",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 274
+  },
+  {
+    "handler": "core_apps.features.rental_phase2_views_parts.lease_billing_schedule.lease_timeline",
+    "file": "core_apps/features/rental_phase2_views_parts/lease_billing_schedule.py",
+    "line": 16
+  },
+  {
+    "handler": "core_apps.features.rental_phase2_views_parts.lease_billing_schedule.lease_billing_schedule",
+    "file": "core_apps/features/rental_phase2_views_parts/lease_billing_schedule.py",
+    "line": 40
+  },
+  {
+    "handler": "core_apps.features.rental_phase2_views_parts.owner_payment_profile.owner_payment_profile",
+    "file": "core_apps/features/rental_phase2_views_parts/owner_payment_profile.py",
+    "line": 208
+  },
+  {
+    "handler": "core_apps.features.rental_phase3_views_parts.owner_payables.payment_attempts",
+    "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+    "line": 62
+  },
+  {
+    "handler": "core_apps.features.rental_phase3_views_parts.owner_payables.payment_attempt_detail",
+    "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+    "line": 135
+  },
+  {
+    "handler": "core_apps.features.rental_phase3_views_parts.owner_payables.payment_attempt_reconcile",
+    "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+    "line": 145
+  },
+  {
+    "handler": "core_apps.features.rental_phase3_views_parts.owner_payables.owner_payables",
+    "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+    "line": 181
+  },
+  {
+    "handler": "core_apps.features.rental_phase3_views_parts.rent_invoice_checkout.rent_invoice_checkout",
+    "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_checkout.py",
+    "line": 32
+  },
+  {
+    "handler": "core_apps.features.rental_phase3_views_parts.rent_invoice_checkout.fake_payment_webhook",
+    "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_checkout.py",
+    "line": 193
+  },
+  {
+    "handler": "core_apps.features.rental_phase3_views_parts.rent_invoice_payments.rent_invoice_payments",
+    "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_payments.py",
+    "line": 15
+  },
+  {
+    "handler": "core_apps.features.rental_phase3_views_parts.rent_invoice_quote.rent_invoice_quote",
+    "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_quote.py",
+    "line": 134
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.handover_respond.lease_deposit",
+    "file": "core_apps/features/rental_phase4_views_parts/handover_respond.py",
+    "line": 28
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.handover_respond.handover_respond",
+    "file": "core_apps/features/rental_phase4_views_parts/handover_respond.py",
+    "line": 112
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.lease_handovers.lease_handovers",
+    "file": "core_apps/features/rental_phase4_views_parts/lease_handovers.py",
+    "line": 32
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.lease_handovers.handover_detail",
+    "file": "core_apps/features/rental_phase4_views_parts/lease_handovers.py",
+    "line": 120
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.operations_execute_payout.payouts",
+    "file": "core_apps/features/rental_phase4_views_parts/operations_execute_payout.py",
+    "line": 32
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.operations_execute_payout.payout_detail",
+    "file": "core_apps/features/rental_phase4_views_parts/operations_execute_payout.py",
+    "line": 49
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.operations_execute_payout.operations_execute_payout",
+    "file": "core_apps/features/rental_phase4_views_parts/operations_execute_payout.py",
+    "line": 69
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.operations_reconcile_payout.operations_reconcile_payout",
+    "file": "core_apps/features/rental_phase4_views_parts/operations_reconcile_payout.py",
+    "line": 21
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.payout_queue",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 87
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.payable_queue",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 107
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.payout_review",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 173
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.payout_preview",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 267
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.reauthorize_payout",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 441
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.retry_failed_payout",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 448
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.rental_evidence_upload",
+    "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+    "line": 67
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.rental_evidence_detail",
+    "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+    "line": 171
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.rental_evidence_download",
+    "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+    "line": 178
+  },
+  {
+    "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.rental_evidence_content",
+    "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+    "line": 208
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.disputes.disputes",
+    "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+    "line": 25
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.disputes.dispute_detail",
+    "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+    "line": 99
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.disputes.dispute_respond",
+    "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+    "line": 106
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_propose.final_settlement_detail",
+    "file": "core_apps/features/rental_phase6_views_parts/final_settlement_propose.py",
+    "line": 89
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_propose.final_settlement_propose",
+    "file": "core_apps/features/rental_phase6_views_parts/final_settlement_propose.py",
+    "line": 98
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_respond.final_settlement_respond",
+    "file": "core_apps/features/rental_phase6_views_parts/final_settlement_respond.py",
+    "line": 26
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.lease_documents",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 53
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.document_download",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 103
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.document_content",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 131
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.rental_statement_create",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 141
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.lease_reviews",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 228
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.refund_execute.refund_execute",
+    "file": "core_apps/features/rental_phase6_views_parts/refund_execute.py",
+    "line": 47
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.refund_requests.refund_requests",
+    "file": "core_apps/features/rental_phase6_views_parts/refund_requests.py",
+    "line": 24
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.refund_requests.refund_detail",
+    "file": "core_apps/features/rental_phase6_views_parts/refund_requests.py",
+    "line": 124
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.refund_requests.refund_respond",
+    "file": "core_apps/features/rental_phase6_views_parts/refund_requests.py",
+    "line": 131
+  },
+  {
+    "handler": "core_apps.features.rental_phase6_views_parts.rental_center.rental_center",
+    "file": "core_apps/features/rental_phase6_views_parts/rental_center.py",
+    "line": 19
+  },
+  {
+    "handler": "core_apps.advertising.views_parts.owner_advertisement_collection.plan_list",
+    "file": "core_apps/advertising/views_parts/owner_advertisement_collection.py",
+    "line": 83
+  },
+  {
+    "handler": "core_apps.advertising.views_parts.owner_advertisement_collection.owner_advertisement_collection",
+    "file": "core_apps/advertising/views_parts/owner_advertisement_collection.py",
+    "line": 96
+  },
+  {
+    "handler": "core_apps.advertising.views_parts.owner_advertisement_collection.owner_advertisement_detail",
+    "file": "core_apps/advertising/views_parts/owner_advertisement_collection.py",
+    "line": 161
+  },
+  {
+    "handler": "core_apps.advertising.views_parts.tenant_home_placement.mock_payment",
+    "file": "core_apps/advertising/views_parts/tenant_home_placement.py",
+    "line": 40
+  },
+  {
+    "handler": "core_apps.advertising.views_parts.tenant_home_placement.operation_detail",
+    "file": "core_apps/advertising/views_parts/tenant_home_placement.py",
+    "line": 70
+  },
+  {
+    "handler": "core_apps.advertising.views_parts.tenant_home_placement.tenant_home_placement",
+    "file": "core_apps/advertising/views_parts/tenant_home_placement.py",
+    "line": 110
+  },
+  {
+    "handler": "core_apps.advertising.views_parts.tenant_home_placement.advertisement_media",
+    "file": "core_apps/advertising/views_parts/tenant_home_placement.py",
+    "line": 151
+  },
+  {
+    "handler": "core_apps.common.paymob_checkout.test_checkout",
+    "file": "core_apps/common/paymob_checkout.py",
+    "line": 54
+  }
+]

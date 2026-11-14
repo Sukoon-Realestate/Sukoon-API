@@ -475,7 +475,7 @@ def test_unsent_approval_needs_fresh_authorization_and_replays_once(instruction)
     path = f"/api/v1/features/v1/operations/payouts/{payout.id}/reauthorize/"
     data = {"request_key": str(uuid.uuid4()), "expected_revision": payout.revision}
     with patch(
-        "core_apps.users.services.sensitive_actions.consume",
+        "core_apps.users.services.sensitive_actions.consume_for_actor",
         side_effect=PermissionDenied(),
     ):
         assert client_for(actor).post(path, data, format="json").status_code == 403
@@ -578,7 +578,7 @@ def test_execute_stages_exact_bound_target_once_and_returns_owner_safe_projectio
     instruction,
 ):
     from core_apps.features.models import RentalHandover
-    from core_apps.users.services.sensitive_actions import consume
+    from core_apps.users.services.sensitive_actions import consume_for_actor as consume
 
     payout = instruction.payout
     actor, lease, payable = (
@@ -609,7 +609,7 @@ def test_execute_stages_exact_bound_target_once_and_returns_owner_safe_projectio
     assert preview.status_code == 200, preview.data
     data = {"request_key": str(uuid.uuid4()), "payable_ids": [str(payable.id)]}
     with patch(
-        "core_apps.users.services.sensitive_actions.consume", wraps=consume
+        "core_apps.users.services.sensitive_actions.consume_for_actor", wraps=consume
     ) as verify, patch.object(client, "transport") as network:
         created = api.post(
             "/api/v1/features/v1/operations/payouts/execute/", data, format="json"
@@ -733,7 +733,7 @@ def test_queue_has_real_counts_and_no_recipient_secrets(instruction):
 def test_confirmed_failure_retry_keeps_prior_attempt_and_requires_new_approval(
     instruction,
 ):
-    from core_apps.users.services.sensitive_actions import consume
+    from core_apps.users.services.sensitive_actions import consume_for_actor as consume
 
     failed = proof(instruction, disbursement_status="failed", status_code="500")
     with patch.object(
@@ -745,13 +745,13 @@ def test_confirmed_failure_retry_keeps_prior_attempt_and_requires_new_approval(
     path = f"/api/v1/features/v1/operations/payouts/{payout.id}/retry/"
     command = {"expected_revision": payout.revision, "request_key": str(uuid.uuid4())}
     with patch(
-        "core_apps.users.services.sensitive_actions.consume",
+        "core_apps.users.services.sensitive_actions.consume_for_actor",
         side_effect=PermissionDenied(),
     ):
         assert client_for(actor).post(path, command, format="json").status_code == 403
     assert PaymobPayout.objects.count() == 1
     with patch(
-        "core_apps.users.services.sensitive_actions.consume", wraps=consume
+        "core_apps.users.services.sensitive_actions.consume_for_actor", wraps=consume
     ) as verification:
         approved = client_for(actor).post(path, command, format="json")
         assert approved.status_code == 200, approved.data
@@ -868,7 +868,7 @@ def test_pending_refund_hold_requires_resolution_and_new_approval(instruction):
     refund.save()
     details = api.get(base + "review/").data["authorization_details"]
     with patch(
-        "core_apps.users.services.sensitive_actions.consume"
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
     ) as consume, patch.object(client, "transport") as send:
         result = api.post(base + "reauthorize/", body, format="json")
         assert result.status_code == 200, result.data
@@ -913,15 +913,15 @@ def test_review_of_same_recipient_can_accept_new_profile_revision(
         "expected_revision": instruction.payout.revision,
     }
     with patch(
-        "core_apps.users.services.sensitive_actions.consume",
+        "core_apps.users.services.sensitive_actions.consume_for_actor",
         side_effect=PermissionDenied(),
     ):
         assert api.post(base + "reauthorize/", body, format="json").status_code == 403
     instruction.payout.refresh_from_db()
     assert instruction.payout.beneficiary_profile_revision == previous_revision
-    with patch("core_apps.users.services.sensitive_actions.consume"), patch.object(
-        client, "transport"
-    ) as send:
+    with patch(
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
+    ), patch.object(client, "transport") as send:
         result = api.post(base + "reauthorize/", body, format="json")
         assert result.status_code == 200, result.data
         assert api.post(base + "reauthorize/", body, format="json").data == result.data
@@ -950,7 +950,9 @@ def test_changed_recipient_cannot_be_accepted_as_renewed_approval(
         review.data["can_reauthorize"]
         and "reauthorize" not in review.data["allowed_actions"]
     )
-    with patch("core_apps.users.services.sensitive_actions.consume") as consume:
+    with patch(
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
+    ) as consume:
         response = api.post(
             base + "reauthorize/",
             {
@@ -984,14 +986,16 @@ def test_unsettled_funding_must_be_restored_before_renewed_approval(instruction)
     base = f"/api/v1/features/v1/operations/payouts/{payout.id}/"
     body = {"request_key": str(uuid.uuid4()), "expected_revision": payout.revision}
     assert "reauthorize" not in api.get(base + "review/").data["allowed_actions"]
-    with patch("core_apps.users.services.sensitive_actions.consume") as consume:
+    with patch(
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
+    ) as consume:
         assert api.post(base + "reauthorize/", body, format="json").status_code == 409
     consume.assert_not_called()
     attempt.settlement_status = "settled"
     attempt.save(update_fields=["settlement_status"])
     assert "reauthorize" in api.get(base + "review/").data["allowed_actions"]
     with patch(
-        "core_apps.users.services.sensitive_actions.consume"
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
     ) as consume, patch.object(client, "transport") as send:
         assert api.post(base + "reauthorize/", body, format="json").status_code == 200
     send.assert_not_called()

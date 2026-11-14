@@ -29,6 +29,7 @@ from .plans import record_step
 
 def terms_for(spec, plan):
     from ..negotiation_terms import FIXED_TEMPLATE_TERMS
+
     start = date.fromisoformat(spec["starts_on"])
     return {
         "starts_on": spec["starts_on"],
@@ -77,7 +78,9 @@ def prepare_leg(plan, leg, actor):
         from ..signwell_client import ready
 
         if not ready():
-            raise RentalConflict("Signing is not configured.", code="capability_unavailable")
+            raise RentalConflict(
+                "Signing is not configured.", code="capability_unavailable"
+            )
     spec = leg.specification
     prop = get_object_or_404(
         Property.objects.select_for_update(), id=spec["property_id"]
@@ -89,6 +92,7 @@ def prepare_leg(plan, leg, actor):
         User, id=spec["tenant_id"], is_active=True, is_verified=True
     )
     from core_apps.chat.moderation.policy import require_new_business
+
     require_new_business(owner)
     require_new_business(tenant)
     require_new_business(actor)
@@ -191,7 +195,10 @@ def prepare_leg(plan, leg, actor):
         "confirmed",
         "lease",
         lease.id,
-        {"hold_expires_at": lease.hold_expires_at.isoformat(), "provider_mode": plan.provider_mode},
+        {
+            "hold_expires_at": lease.hold_expires_at.isoformat(),
+            "provider_mode": plan.provider_mode,
+        },
         actor=actor,
     )
     return leg
@@ -229,7 +236,7 @@ def sign(plan, leg, actor, instruction):
         expires_at=timezone.now()
         + timedelta(minutes=settings.RENTAL_SIGNING_TTL_MINUTES),
     )
-    from ...rental_phase2_views_parts.apply_fake_rental_event import (
+    from ..rental_provider_events import (
         apply_fake_rental_event,
     )
 
@@ -292,7 +299,7 @@ def pay(plan, leg, actor, instruction):
         provider_session_id=hosted.provider_session_id,
         expires_at=expires,
     )
-    from ...rental_phase3_views_parts.owner_payables import apply_fake_payment_event
+    from ..payment_events import apply_fake_payment_event
 
     apply_fake_payment_event(
         {

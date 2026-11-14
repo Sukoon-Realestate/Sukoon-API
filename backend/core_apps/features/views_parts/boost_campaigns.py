@@ -1,5 +1,8 @@
 """Views: boost campaigns."""
 
+from django.utils.decorators import method_decorator
+
+
 from core_apps.features.http import ActionPolicy, FeatureAPIView
 
 
@@ -7,7 +10,6 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -23,42 +25,98 @@ from .rental_operation_lookup import _replay, _remember, _paginate
 from ..services.rental_foundation import private_no_store
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def boost_campaign_detail(request, campaign_id):
-    campaign = get_object_or_404(
-        BoostCampaign.objects.select_related("property"),
-        id=campaign_id,
-        owner=request.user,
-    )
-    return private_no_store(Response(BoostCampaignSerializer(campaign).data))
+class BoostCampaignDetailView(FeatureAPIView):
+    name = "Boost Campaign Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "boost_campaigns",
+            "boost_campaign_detail",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, campaign_id):
+        campaign = get_object_or_404(
+            BoostCampaign.objects.select_related("property"),
+            id=campaign_id,
+            owner=request.user,
+        )
+        return private_no_store(Response(BoostCampaignSerializer(campaign).data))
 
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-@transaction.atomic
-def boost_campaigns(request):
-    if request.method == "GET":
+# Stable callable import for integrations; URLs use the explicit class.
+boost_campaign_detail = BoostCampaignDetailView.as_view()
+
+
+@method_decorator(transaction.atomic, name="dispatch")
+class BoostCampaignsView(FeatureAPIView):
+    name = "Boost Campaigns"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "boost_campaigns",
+            "boost_campaigns",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "boost_campaigns",
+            "boost_campaigns",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
         return _paginate(
             request,
             BoostCampaign.objects.filter(owner=request.user).select_related("property"),
             BoostCampaignSerializer,
         )
-    from ..services.promotion_commands import create
 
-    data, code = create(request.user, request.data)
-    return Response(data, status=code)
+    def post(self, request):
+        from ..services.promotion_commands import create
+
+        data, code = create(request.user, request.data)
+        return Response(data, status=code)
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def boost_campaign_resolve(request):
-    from ..services.promotion_commands import resolve
+# Stable callable import for integrations; URLs use the explicit class.
+boost_campaigns = BoostCampaignsView.as_view()
 
-    return private_no_store(Response(resolve(request.user, request.data)))
+
+class BoostCampaignResolveView(FeatureAPIView):
+    name = "Boost Campaign Resolve"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "boost_campaigns",
+            "boost_campaign_resolve",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request):
+        from ..services.promotion_commands import resolve
+
+        return private_no_store(Response(resolve(request.user, request.data)))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+boost_campaign_resolve = BoostCampaignResolveView.as_view()
 
 
 class SearchAlertsView(FeatureAPIView):
@@ -299,3 +357,14 @@ class SearchAlertDetailView(FeatureAPIView):
 
 # Stable callable import for integrations; URLs use the explicit class.
 search_alert_detail = SearchAlertDetailView.as_view()
+
+__all__ = [
+    "BoostCampaignDetailView",
+    "BoostCampaignResolveView",
+    "BoostCampaignsView",
+    "SearchAlertDetailView",
+    "SearchAlertsView",
+    "boost_campaigns",
+    "search_alert_detail",
+    "search_alerts",
+]

@@ -5,9 +5,6 @@ from core_apps.features.models import OwnerPayable, RentalChargeback, RentalPayo
 from core_apps.features.services.rental_phase3 import process_provider_event
 from core_apps.features.tasks import reconcile_approved_payouts
 from core_apps.features.tests.test_funded_settlement import (
-    funded_exit,
-    awaiting_signatures,
-    rental_participants,
     propose,
     authenticated,
     command,
@@ -15,6 +12,11 @@ from core_apps.features.tests.test_funded_settlement import (
 )
 from core_apps.features.tests.test_rental_lifecycle_safety import event, operator
 from core_apps.features.tests.test_chargeback_resolution import fact, restore
+from core_apps.features.tests import test_funded_settlement as funded_fixtures
+
+funded_exit = funded_fixtures.funded_exit
+awaiting_signatures = funded_fixtures.awaiting_signatures
+rental_participants = funded_fixtures.rental_participants
 
 
 @pytest.fixture
@@ -131,9 +133,7 @@ def test_manual_reconciliation_rechecks_role_before_locked_financial_effect(
     from importlib import import_module
     from core_apps.admin_api.models import StaffProfile
 
-    module = import_module(
-        "core_apps.features.rental_phase4_views_parts.operations_reconcile_payout"
-    )
+    module = import_module("core_apps.features.services.payout_commands")
     lease, _, payable, actor = derived_payable
     reserved = reserve(payable, actor)
     payout = RentalPayout.objects.get(id=reserved.data["resource"]["id"])

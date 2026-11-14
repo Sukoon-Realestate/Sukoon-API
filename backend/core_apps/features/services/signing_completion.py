@@ -11,7 +11,7 @@ from .rental_phase2 import RentalConflict
 
 @transaction.atomic
 def complete_signature(provider_session_id):
-    from ..rental_phase2_views_parts.owner_payment_profile import _event, _notify
+    from .rental_events import _event, _notify
 
     session = get_object_or_404(SigningSession, provider_session_id=provider_session_id)
     if session.lease.renter_company_id:
@@ -106,3 +106,6 @@ def complete_signature(provider_session_id):
                         workspace=workspace,
                     )
                 )
+
+
+__all__ = ["complete_signature"]

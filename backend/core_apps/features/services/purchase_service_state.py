@@ -4,13 +4,18 @@ from django.utils import timezone
 
 
 def service_state(invoice):
+    prepared = getattr(invoice, "prepared_billing", None)
     if invoice.status != "paid":
         return None
     if invoice.purpose == "subscription":
         from ..models import AccountSubscription
         from .billing_catalog import subscription_status
 
-        item = AccountSubscription.objects.filter(invoice=invoice).first()
+        item = (
+            prepared["service"]
+            if prepared is not None
+            else AccountSubscription.objects.filter(invoice=invoice).first()
+        )
         if item is None:
             return None
         status = subscription_status(item)
@@ -21,9 +26,13 @@ def service_state(invoice):
             effective_status,
         )
 
-        item = Advertisement.objects.filter(
-            id=invoice.purchase_snapshot.get("subject_id")
-        ).first()
+        item = (
+            prepared["service"]
+            if prepared is not None
+            else Advertisement.objects.filter(
+                id=invoice.purchase_snapshot.get("subject_id")
+            ).first()
+        )
         if item is None:
             return None
         status = effective_status(item)
@@ -31,9 +40,13 @@ def service_state(invoice):
     elif invoice.purpose == "promotion":
         from ..models import BoostCampaign
 
-        item = BoostCampaign.objects.filter(
-            id=invoice.purchase_snapshot.get("subject_id")
-        ).first()
+        item = (
+            prepared["service"]
+            if prepared is not None
+            else BoostCampaign.objects.filter(
+                id=invoice.purchase_snapshot.get("subject_id")
+            ).first()
+        )
         if item is None:
             return None
         status = item.status
@@ -48,3 +61,6 @@ def service_state(invoice):
         "starts_at": item.starts_at.isoformat() if item.starts_at else None,
         "ends_at": end.isoformat() if end else None,
     }
+
+
+__all__ = ["service_state"]

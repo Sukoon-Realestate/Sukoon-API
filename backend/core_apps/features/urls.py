@@ -1,9 +1,9 @@
-from .payment_resume_views import payment_attempt_resume
+from .payment_resume_views import PaymentAttemptResumeView
 from . import refund_operations
 from . import beneficiary_views
 from .signing_views import SigningCallbackView, SigningStatusView
 from django.urls import include, path
-from .chargeback_views import chargeback_detail
+from .chargeback_views import ChargebackDetailView
 from .rental_phase6_views_parts.lease_reviews import DocumentContentView
 
 from . import views
@@ -20,29 +20,36 @@ from .models import RentalChange
 from .rental_lifecycle_views import habitability
 
 from .views_parts.listing_suggestions import OwnerAnalyticsExportView
-from .views_parts.boost_campaigns import boost_campaign_detail, boost_campaign_resolve
+from .views_parts.boost_campaigns import (
+    BoostCampaignDetailView,
+    BoostCampaignResolveView,
+)
 
 urlpatterns = [
     path("", include("core_apps.features.experience.urls")),
-    path("operations/refunds/", refund_operations.queue, name="operation-refund-queue"),
+    path(
+        "operations/refunds/",
+        refund_operations.QueueView.as_view(),
+        name="operation-refund-queue",
+    ),
     path(
         "operations/refunds/<uuid:refund_id>/review/",
-        refund_operations.review,
+        refund_operations.ReviewView.as_view(),
         name="operation-refund-review",
     ),
     path(
         "operations/refunds/<uuid:refund_id>/reconcile/",
-        refund_operations.reconcile,
+        refund_operations.ReconcileView.as_view(),
         name="operation-refund-reconcile",
     ),
     path(
         "operations/refunds/<uuid:refund_id>/reauthorize/",
-        refund_operations.reauthorize,
+        refund_operations.ReauthorizeView.as_view(),
         name="operation-refund-reauthorize",
     ),
     path(
         "operations/refunds/<uuid:refund_id>/retry/",
-        refund_operations.retry,
+        refund_operations.RetryView.as_view(),
         name="operation-refund-retry",
     ),
     path(
@@ -57,7 +64,7 @@ urlpatterns = [
     ),
     path(
         "payment-attempts/<uuid:attempt_id>/resume/",
-        payment_attempt_resume,
+        PaymentAttemptResumeView.as_view(),
         name="payment-attempt-resume",
     ),
     path(
@@ -67,22 +74,22 @@ urlpatterns = [
     ),
     path(
         "operator/chargebacks/<uuid:chargeback_id>/",
-        chargeback_detail,
+        ChargebackDetailView.as_view(),
         name="operator-chargeback-detail",
     ),
     path(
         "business-policies/",
-        business_policy_views.current_policies,
+        business_policy_views.CurrentPoliciesView.as_view(),
         name="business-policies",
     ),
     path(
         "business-policies/<str:code>/versions/<str:version>/",
-        business_policy_views.policy_version,
+        business_policy_views.PolicyVersionView.as_view(),
         name="business-policy-version",
     ),
     path(
         "operator/business-policies/",
-        business_policy_views.administer_policies,
+        business_policy_views.AdministerPoliciesView.as_view(),
         name="business-policy-administration",
     ),
     path(
@@ -112,20 +119,20 @@ urlpatterns = [
     path("", include("core_apps.features.planning_urls")),
     path(
         "mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
-        mock_provider_views.onboarding_complete,
+        mock_provider_views.OnboardingCompleteView.as_view(),
     ),
     path(
         "mock-provider/signing-sessions/<uuid:session_id>/complete/",
-        mock_provider_views.signing_complete,
+        mock_provider_views.SigningCompleteView.as_view(),
     ),
     path(
         "mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
-        mock_provider_views.signing_complete,
+        mock_provider_views.SigningCompleteView.as_view(),
         {"change": True},
     ),
     path(
         "mock-provider/payment-attempts/<uuid:attempt_id>/events/",
-        mock_provider_views.payment_event,
+        mock_provider_views.PaymentEventView.as_view(),
     ),
     path(
         "rental-capabilities/",
@@ -147,15 +154,17 @@ urlpatterns = [
         views.ConfigurationView.as_view(),
         name="feature-configuration",
     ),
-    path("boost-campaigns/", views.boost_campaigns, name="boost-campaigns"),
+    path(
+        "boost-campaigns/", views.BoostCampaignsView.as_view(), name="boost-campaigns"
+    ),
     path(
         "boost-campaigns/resolve/",
-        boost_campaign_resolve,
+        BoostCampaignResolveView.as_view(),
         name="boost-campaign-resolve",
     ),
     path(
         "boost-campaigns/<uuid:campaign_id>/",
-        boost_campaign_detail,
+        BoostCampaignDetailView.as_view(),
         name="boost-campaign-detail",
     ),
     path("search-alerts/", views.SearchAlertsView.as_view(), name="search-alerts"),
@@ -181,22 +190,22 @@ urlpatterns = [
     ),
     path(
         "owner-payment-profile/",
-        views_phase2.owner_payment_profile,
+        views_phase2.OwnerPaymentProfileView.as_view(),
         name="owner-payment-profile",
     ),
     path(
         "owner-payment-profile/beneficiary-details/",
-        beneficiary_views.submit_details,
+        beneficiary_views.SubmitDetailsView.as_view(),
         name="owner-beneficiary-details",
     ),
     path(
         "owner-payment-profile/confirm-beneficiary/",
-        beneficiary_views.confirm,
+        beneficiary_views.ConfirmView.as_view(),
         name="owner-beneficiary-confirm",
     ),
     path(
         "owner-payment-profile/onboarding-session/",
-        views_phase2.owner_onboarding_session,
+        views_phase2.OwnerOnboardingSessionView.as_view(),
         name="owner-onboarding-session",
     ),
     path(
@@ -291,7 +300,7 @@ urlpatterns = [
     ),
     path(
         "provider-webhooks/rental/",
-        views_phase2.fake_rental_provider_webhook,
+        views_phase2.FakeRentalProviderWebhookView.as_view(),
         name="fake-rental-provider-webhook",
     ),
     path(
@@ -307,34 +316,42 @@ urlpatterns = [
     ),
     path(
         "rent-invoices/<uuid:invoice_id>/checkout/",
-        views_phase3.rent_invoice_checkout,
+        views_phase3.RentInvoiceCheckoutView.as_view(),
         name="rent-invoice-checkout",
     ),
     path(
         "rent-invoices/<uuid:invoice_id>/quote/",
-        views_phase3.rent_invoice_quote,
+        views_phase3.RentInvoiceQuoteView.as_view(),
         name="rent-invoice-quote",
     ),
-    path("payment-attempts/", views_phase3.payment_attempts, name="payment-attempts"),
+    path(
+        "payment-attempts/",
+        views_phase3.PaymentAttemptsView.as_view(),
+        name="payment-attempts",
+    ),
     path(
         "rent-invoices/<uuid:invoice_id>/payments/",
-        views_phase3.rent_invoice_payments,
+        views_phase3.RentInvoicePaymentsView.as_view(),
         name="rent-invoice-payments",
     ),
     path(
         "payment-attempts/<uuid:attempt_id>/",
-        views_phase3.payment_attempt_detail,
+        views_phase3.PaymentAttemptDetailView.as_view(),
         name="payment-attempt-detail",
     ),
     path(
         "payment-attempts/<uuid:attempt_id>/reconcile/",
-        views_phase3.payment_attempt_reconcile,
+        views_phase3.PaymentAttemptReconcileView.as_view(),
         name="payment-attempt-reconcile",
     ),
-    path("owner-payables/", views_phase3.owner_payables, name="owner-payables"),
+    path(
+        "owner-payables/",
+        views_phase3.OwnerPayablesView.as_view(),
+        name="owner-payables",
+    ),
     path(
         "provider-webhooks/payments/",
-        views_phase3.fake_payment_webhook,
+        views_phase3.FakePaymentWebhookView.as_view(),
         name="fake-payment-webhook",
     ),
     path(
@@ -374,51 +391,53 @@ urlpatterns = [
     ),
     path(
         "leases/<uuid:lease_id>/deposit/",
-        views_phase4.lease_deposit,
+        views_phase4.LeaseDepositView.as_view(),
         name="lease-deposit",
     ),
-    path("payouts/", views_phase4.payouts, name="rental-payouts"),
+    path("payouts/", views_phase4.PayoutsView.as_view(), name="rental-payouts"),
     path(
         "payouts/<uuid:payout_id>/",
-        views_phase4.payout_detail,
+        views_phase4.PayoutDetailView.as_view(),
         name="rental-payout-detail",
     ),
     path(
         "operations/payouts/execute/",
-        views_phase4.operations_execute_payout,
+        views_phase4.OperationsExecutePayoutView.as_view(),
         name="operations-payout-execute",
     ),
     path(
         "operations/payouts/preview/",
-        views_phase4.payout_preview,
+        views_phase4.PayoutPreviewView.as_view(),
         name="operations-payout-preview",
     ),
     path(
-        "operations/payouts/", views_phase4.payout_queue, name="operations-payout-queue"
+        "operations/payouts/",
+        views_phase4.PayoutQueueView.as_view(),
+        name="operations-payout-queue",
     ),
     path(
         "operations/payables/",
-        views_phase4.payable_queue,
+        views_phase4.PayableQueueView.as_view(),
         name="operations-payable-queue",
     ),
     path(
         "operations/payouts/<uuid:payout_id>/review/",
-        views_phase4.payout_review,
+        views_phase4.PayoutReviewView.as_view(),
         name="operations-payout-review",
     ),
     path(
         "operations/payouts/<uuid:payout_id>/reauthorize/",
-        views_phase4.reauthorize_payout,
+        views_phase4.ReauthorizePayoutView.as_view(),
         name="operations-payout-reauthorize",
     ),
     path(
         "operations/payouts/<uuid:payout_id>/retry/",
-        views_phase4.retry_failed_payout,
+        views_phase4.RetryFailedPayoutView.as_view(),
         name="operations-payout-retry",
     ),
     path(
         "operations/payouts/<uuid:payout_id>/reconcile/",
-        views_phase4.operations_reconcile_payout,
+        views_phase4.OperationsReconcilePayoutView.as_view(),
         name="operations-payout-reconcile",
     ),
     path(
@@ -438,7 +457,7 @@ urlpatterns = [
     ),
     path(
         "leases/<uuid:lease_id>/payment-extension-requests/",
-        views_phase5.payment_extensions,
+        views_phase5.PaymentExtensionsView.as_view(),
         name="payment-extensions",
     ),
     path(
@@ -458,12 +477,12 @@ urlpatterns = [
     ),
     path(
         "rent-invoices/<uuid:invoice_id>/external-payment-claims/",
-        views_phase5.external_claim_create,
+        views_phase5.ExternalClaimCreateView.as_view(),
         name="external-claim-create",
     ),
     path(
         "leases/<uuid:lease_id>/external-payment-claims/",
-        views_phase5.external_claims,
+        views_phase5.ExternalClaimsView.as_view(),
         name="external-claims",
     ),
     path(
@@ -552,7 +571,7 @@ urlpatterns = [
     ),
     path(
         "refund-requests/<uuid:refund_id>/execute/",
-        views_phase6.refund_execute,
+        views_phase6.RefundExecuteView.as_view(),
         name="refund-execute",
     ),
     path(
@@ -570,15 +589,19 @@ urlpatterns = [
         views_phase6.FinalSettlementRespondView.as_view(),
         name="final-settlement-respond",
     ),
-    path("refund-requests/", views_phase6.refund_requests, name="refund-requests"),
+    path(
+        "refund-requests/",
+        views_phase6.RefundRequestsView.as_view(),
+        name="refund-requests",
+    ),
     path(
         "refund-requests/<uuid:refund_id>/",
-        views_phase6.refund_detail,
+        views_phase6.RefundDetailView.as_view(),
         name="refund-detail",
     ),
     path(
         "refund-requests/<uuid:refund_id>/respond/",
-        views_phase6.refund_respond,
+        views_phase6.RefundRespondView.as_view(),
         name="refund-respond",
     ),
     path("disputes/", views_phase6.DisputesView.as_view(), name="rental-disputes"),

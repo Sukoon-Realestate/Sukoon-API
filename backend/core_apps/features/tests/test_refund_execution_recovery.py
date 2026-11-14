@@ -113,12 +113,12 @@ def test_fresh_reauthorization_only_queues_original_unsent_instruction(instructi
     refund = instruction.refund
     body = {"request_key": str(uuid.uuid4()), "expected_revision": refund.revision}
     with patch(
-        "core_apps.users.services.sensitive_actions.consume",
+        "core_apps.users.services.sensitive_actions.consume_for_actor",
         side_effect=PermissionDenied(),
     ):
         assert post(instruction, "reauthorize", body).status_code == 403
     with patch(
-        "core_apps.users.services.sensitive_actions.consume"
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
     ) as verify, patch.object(paymob_client, "submit_refund") as send:
         response = post(instruction, "reauthorize", body)
         assert response.status_code == 200, response.data
@@ -236,7 +236,7 @@ def test_same_command_concurrent_reauthorization_has_one_effect(instruction):
             close_old_connections()
 
     with patch(
-        "core_apps.users.services.sensitive_actions.consume"
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
     ) as verify, ThreadPoolExecutor(max_workers=2) as executor:
         responses = list(executor.map(lambda _: run(), range(2)))
     assert [code for code, _ in responses] == [200, 200]
@@ -373,13 +373,13 @@ def test_confirmed_failure_history_and_explicit_retry_once(instruction):
     with patch.object(paymob_client, "submit_refund") as send:
         paymob_refunds.process(instruction)
         with patch.object(paymob_client, "inquiry", return_value=proof), patch(
-            "core_apps.users.services.sensitive_actions.consume",
+            "core_apps.users.services.sensitive_actions.consume_for_actor",
             side_effect=PermissionDenied(),
         ):
             assert post(instruction, "retry", body).status_code == 403
         assert PaymobRefund.objects.filter(refund=instruction.refund).count() == 1
         with patch.object(paymob_client, "inquiry", return_value=proof), patch(
-            "core_apps.users.services.sensitive_actions.consume"
+            "core_apps.users.services.sensitive_actions.consume_for_actor"
         ) as consume:
             response = post(instruction, "retry", body)
             assert response.status_code == 200, response.data
@@ -444,7 +444,7 @@ def test_retry_rechecks_original_funding_and_role(instruction):
     body = retry_body(instruction)
     with patch.object(paymob_client, "inquiry", return_value=proof), patch(
         "core_apps.features.services.chargebacks.funding.can_refund", return_value=False
-    ), patch("core_apps.users.services.sensitive_actions.consume") as consume:
+    ), patch("core_apps.users.services.sensitive_actions.consume_for_actor") as consume:
         assert post(instruction, "retry", body).status_code == 409
     consume.assert_not_called()
     StaffProfile.objects.filter(user=instruction.refund.approved_by).update(
@@ -457,7 +457,7 @@ def test_retry_rechecks_original_funding_and_role(instruction):
 def test_changed_old_outcome_holds_unsent_retry_without_accounting(instruction):
     proof = fail_instruction(instruction)
     with patch.object(paymob_client, "inquiry", return_value=proof), patch(
-        "core_apps.users.services.sensitive_actions.consume"
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
     ):
         assert post(instruction, "retry", retry_body(instruction)).status_code == 200
     replacement = PaymobRefund.objects.get(refund=instruction.refund, current=True)
@@ -493,7 +493,7 @@ def test_concurrent_retries_have_one_new_attempt(instruction):
             close_old_connections()
 
     with patch.object(paymob_client, "inquiry", return_value=proof), patch(
-        "core_apps.users.services.sensitive_actions.consume"
+        "core_apps.users.services.sensitive_actions.consume_for_actor"
     ) as consume, ThreadPoolExecutor(max_workers=2) as executor:
         responses = list(executor.map(lambda _: run(), range(2)))
     assert [code for code, _ in responses] == [200, 200]

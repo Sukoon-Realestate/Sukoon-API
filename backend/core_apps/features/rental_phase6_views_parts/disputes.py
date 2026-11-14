@@ -36,6 +36,10 @@ class DisputesView(FeatureAPIView):
 
     @transaction.atomic
     def get(self, request):
+        if request.query_params.get("projection") == "compact_v1":
+            from ..financial_http import compact_financial_response
+
+            return compact_financial_response(request, "disputes")
         workspace = request.query_params.get("workspace")
         queryset = (
             RentalDispute.objects.filter(lease__owner=request.user)
@@ -282,3 +286,14 @@ def document_payload(item):
             str(item.ends_on_exclusive) if item.ends_on_exclusive else None
         ),
     }
+
+
+__all__ = [
+    "DisputeDetailView",
+    "DisputeRespondView",
+    "DisputesView",
+    "dispute_detail",
+    "dispute_respond",
+    "disputes",
+    "document_payload",
+]

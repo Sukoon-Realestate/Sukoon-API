@@ -1,27 +1,14 @@
 """Rental phase3 views: rent invoice quote."""
 
-import uuid
-from datetime import timedelta
-from django.conf import settings
-from django.db import transaction
-from django.shortcuts import get_object_or_404
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from django.utils import timezone
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
-from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.throttling import UserRateThrottle
-from ..models import Lease, IdempotencyRecord, PaymentAttempt, PaymentQuote, RentInvoice
-from ..providers import checkout_available
+from ..models import IdempotencyRecord
 from ..renderers import FeatureJsonRenderer
-from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
-from ..services.rental_phase3 import (
-    invoice_balance_minor,
-    invoice_payment_allowed,
-    quote_fingerprint,
-)
-from ..services.company.tenancy_access import financial_read, can_pay
 from ..services.rental_lifecycle.locks import lock_financial_lease as _lock_lease
 
 
@@ -32,51 +19,19 @@ class PaymentReconcileThrottle(UserRateThrottle):
     rate = "6/min"
 
 
-def _money(amount, currency="EGP", exponent=2):
-    return {"amount_minor": amount, "currency": currency, "exponent": exponent}
+from core_apps.features.services.money_projection import _money as _money
 
 
 def _invoice(request, invoice_id, lock=False):
-    queryset = RentInvoice.objects.select_related(
-        "lease", "lease__property", "billing_period"
-    )
-    if lock:
-        candidate = get_object_or_404(queryset, id=invoice_id)
-        if candidate.lease_id is None:
-            raise NotFound()
-        _lock_lease(candidate.lease)
-        queryset = queryset.select_for_update(of=("self",))
-    invoice = get_object_or_404(queryset, id=invoice_id)
-    if invoice.lease_id is None or (
-        invoice.beneficiary_id != request.user.pk
-        and not financial_read(invoice.lease, request.user)
-    ):
-        raise NotFound()
-    return invoice
+    from ..services.money_access import rental_invoice_for
+
+    return rental_invoice_for(request.user, invoice_id, lock)
 
 
 def _attempt(request, attempt_id, lock=False, allow_original_payer=False):
-    queryset = PaymentAttempt.objects.select_related("invoice__lease", "quote")
-    if lock:
-        candidate = get_object_or_404(queryset, id=attempt_id)
-        if candidate.invoice.lease_id is not None:
-            _lock_lease(candidate.invoice.lease)
-        queryset = queryset.select_for_update(of=("self",))
-    attempt = get_object_or_404(queryset, id=attempt_id)
-    if attempt.invoice.lease_id is None:
-        from ..services.billing_invoices import authorized_invoice
+    from ..services.money_access import payment_attempt_for
 
-        authorized_invoice(request.user, attempt.invoice.id)
-        return attempt
-    if allow_original_payer and attempt.payer_id == request.user.pk:
-        # A4-02: reconciling one's own original payment stays possible after a
-        # private-access revocation; it reveals and changes nothing else.
-        return attempt
-    if attempt.invoice.beneficiary_id != request.user.pk and not financial_read(
-        attempt.invoice.lease, request.user
-    ):
-        raise NotFound()
-    return attempt
+    return payment_attempt_for(request.user, attempt_id, lock, allow_original_payer)
 
 
 def _active_session(attempt):
@@ -110,91 +65,51 @@ def _active_session(attempt):
     return {**resource, "operation_receipt_id": str(receipt.id)}
 
 
-def quote_payload(quote):
-    from ..services.chargebacks.funding import quote_disclosure
+from core_apps.features.services.money_projection import quote_payload as quote_payload
 
-    return {
-        "quote_id": str(quote.id),
-        "invoice_id": str(quote.invoice.id),
-        "invoice_revision": quote.invoice_revision,
-        "payer_amount": _money(
-            quote.payer_amount_minor, quote.currency, quote.exponent
-        ),
-        "tenant_service_fee": _money(
-            quote.tenant_service_fee_minor, quote.currency, quote.exponent
-        ),
-        "policy_version": quote.policy_version,
-        "fingerprint": quote.fingerprint,
-        "expires_at": quote.expires_at.isoformat(),
-        "chargeback_replacement": quote_disclosure(
-            quote.invoice, quote.payer_amount_minor
+
+class RentInvoiceQuoteView(FeatureAPIView):
+    name = "Rent Invoice Quote"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "rent_invoice_quote",
+            "rent_invoice_quote",
+            boundary="standard",
+            capability=None,
+            typed=False,
         ),
     }
 
+    def post(self, request, invoice_id):
+        from ..services.rental_payment_commands import quote_rent
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def rent_invoice_quote(request, invoice_id):
-    expected = request.data.get("expected_revision")
-    request_key = request.data.get("request_key")
-    if expected is None or not request_key:
-        raise ValidationError(
-            {"request_key": "request_key and expected_revision are required."}
+        result = quote_rent(
+            request.user,
+            request.auth,
+            request.data,
+            request.headers.get("X-Sokoun-Authorization", ""),
+            invoice_id,
         )
-    try:
-        expected = int(expected)
-        request_key = uuid.UUID(str(request_key))
-    except (ValueError, TypeError):
-        raise ValidationError({"request_key": "Must be a UUID."})
-    with transaction.atomic():
-        invoice = _invoice(request, invoice_id, lock=True)
-        if not can_pay(invoice.lease, request.user):
-            raise PermissionDenied("Current authority to pay this invoice is required.")
-        replay = replay_operation(
-            request.user, f"invoice.quote.{invoice_id}", request_key, request.data
-        )
-        if replay:
-            return Response(replay[0], status=replay[1])
-        if not checkout_available():
-            raise PermissionDenied(
-                {
-                    "message": "Secure checkout is unavailable.",
-                    "code": "capability_unavailable",
-                }
-            )
-        if int(expected) != invoice.revision:
-            raise RentalConflict("Invoice revision conflict.", code="stale_revision")
-        if not invoice_payment_allowed(request.user, invoice):
-            raise RentalConflict("This invoice is not payable.")
-        from ..services.chargebacks.funding import quote_amount
+        return Response(result.data, status=result.status)
 
-        balance = quote_amount(invoice)
-        if not balance or invoice.status not in {
-            RentInvoice.Status.DUE,
-            RentInvoice.Status.OVERDUE,
-            RentInvoice.Status.PARTIALLY_PAID,
-        }:
-            raise RentalConflict("This invoice is not payable.")
-        expires = timezone.now() + timedelta(minutes=settings.RENTAL_QUOTE_TTL_MINUTES)
-        quote = PaymentQuote.objects.create(
-            invoice=invoice,
-            request_key=request_key,
-            invoice_revision=invoice.revision,
-            payer_amount_minor=balance,
-            policy_version="rental-policy-v1",
-            fingerprint=quote_fingerprint(invoice, request_key, balance, expires),
-            expires_at=expires,
-        )
-        output = remember_mutation(
-            user=request.user,
-            operation=f"invoice.quote.{invoice_id}",
-            request_key=request_key,
-            payload=request.data,
-            request_subject_id=invoice.id,
-            result_subject_id=quote.id,
-            result_revision=invoice.revision,
-            resource=quote_payload(quote),
-            response_status=201,
-        )
-    return Response(output, status=status.HTTP_201_CREATED)
+
+# Stable callable import for integrations; URLs use the explicit class.
+rent_invoice_quote = RentInvoiceQuoteView.as_view()
+
+__all__ = [
+    "_lock_lease",
+    "PaymentReconcileThrottle",
+    "RentInvoiceQuoteView",
+    "_active_session",
+    "_attempt",
+    "_invoice",
+    "_money",
+    "can_pay",
+    "quote_payload",
+    "rent_invoice_quote",
+]
+
+from ..services.company.tenancy_access import can_pay

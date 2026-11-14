@@ -2146,3 +2146,25 @@ The baseline counts above remain historical. The following modules belong to Are
 | [core_apps/features/services/student_housing/entry_commands.py](../core_apps/features/services/student_housing/entry_commands.py) | 89 | 3 | Sprint 07 command/read extraction |
 | [core_apps/features/services/student_housing/verification_commands.py](../core_apps/features/services/student_housing/verification_commands.py) | 60 | 3 | Sprint 07 command/read extraction |
 | [core_apps/features/http.py](../core_apps/features/http.py) | 76 | 3 | Sprint 07 explicit method-policy transport |
+
+## Sprint 08 additions (2026-11-14)
+
+The original 73 commerce functions are reconciled by
+[evidence/sprint-08/original-commerce-functions.json](evidence/sprint-08/original-commerce-functions.json)
+and [the runtime coverage ledger](evidence/sprint-08/route-coverage.json). The ledger includes shared housing
+classes already converted in Sprint 07 and every explicitly deferred commerce/provider/catalog pattern.
+
+| Domain source | Ownership |
+|---|---|
+| `features/services/money_access.py`, `money_result.py`, `money_projection.py` | Commerce access, command receipts and original money projections |
+| `features/services/rental_payment_commands.py`, `payment_events.py` | Quote, checkout and canonical fake payment events |
+| `features/services/payout_authority.py`, `payout_commands.py` | Fresh financial roles, original instruction approval/reconciliation/retry |
+| `features/services/refund_commands.py` | Rental request/review/execution and hosted refund retry/renewal |
+| `features/services/settlement_commands.py`, `settlement_projection.py` | Original final-settlement transitions and receipt projection |
+| `features/services/billing_reads.py`, `financial_lists.py` | Purpose-aware invoice pages and opt-in compact finance pages |
+| `features/services/operation_receipts.py`, `rental_events.py` | Shared operation identities and committed timeline/notification records |
+| `features/services/change_signing_completion.py`, `rental_provider_events.py` | Original signature and authenticated fake-provider transition application |
+| `common/paymob_callbacks.py` | Verified callback intake; authenticated inquiry establishes canonical money state |
+| `advertising/management/commands/restore_advertising_media.py` | Explicit original-byte recovery; dry run by default |
+
+These entries describe source ownership, not completed family-wide performance or real-provider acceptance.

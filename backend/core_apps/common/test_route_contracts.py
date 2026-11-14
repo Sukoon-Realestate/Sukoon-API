@@ -68,7 +68,14 @@ def shape(value):
         return sorted(value)
     if isinstance(value, list):
         first = value[0] if value else None
-        return ["list", sorted(first) if isinstance(first, dict) else type(first).__name__ if value else "empty"]
+        return [
+            "list",
+            (
+                sorted(first)
+                if isinstance(first, dict)
+                else type(first).__name__ if value else "empty"
+            ),
+        ]
     return type(value).__name__
 
 
@@ -83,7 +90,9 @@ def observe(response):
         if isinstance(body, dict):
             envelope = sorted(body)
             data = shape(body.get("data")) if "data" in body else None
-            code = code or (body.get("code") if isinstance(body.get("code"), str) else None)
+            code = code or (
+                body.get("code") if isinstance(body.get("code"), str) else None
+            )
         else:
             envelope = type(body).__name__
     return {
@@ -103,11 +112,17 @@ def identities(db):
 
     User = get_user_model()
     tenant = User.objects.create_user(
-        email="contract-tenant@example.com", first_name="Contract", last_name="Tenant",
-        password="Contract-pass-1", is_verified=True,
+        email="contract-tenant@example.com",
+        first_name="Contract",
+        last_name="Tenant",
+        password="Contract-pass-1",
+        is_verified=True,
     )
     staff = User.objects.create_superuser(
-        email="contract-staff@example.com", first_name="Contract", last_name="Staff", password="Contract-pass-1",
+        email="contract-staff@example.com",
+        first_name="Contract",
+        last_name="Staff",
+        password="Contract-pass-1",
     )
     StaffProfile.objects.create(user=staff, role_name="system_owner")
     return {"anonymous": None, "tenant": tenant, "staff": staff}
@@ -121,7 +136,13 @@ def test_route_family_contract(family, identities, settings):
     for row in FAMILIES[family]:
         path = concrete_path(row["route"])
         served = resolve(path).url_name or ""
-        methods = [m for m in row["methods"] if m.isalpha()] or FALLBACK_METHODS
+        # Ordinary provider adapters retain both the supported and rejected
+        # GET/POST cases after conversion from plain functions to Django Views.
+        methods = (
+            FALLBACK_METHODS
+            if row["style"] in {"plain function", "Django CBV"}
+            else [m for m in row["methods"] if m.isalpha()] or FALLBACK_METHODS
+        )
         for mvp in MVP_MODES:
             settings.SUKOON_MVP = mvp
             for identity in IDENTITIES:
@@ -130,28 +151,45 @@ def test_route_family_contract(family, identities, settings):
                 if identities[identity] is not None:
                     client.force_authenticate(identities[identity])
                 for method in methods:
-                    for cache in caches.all():  # throttles must not depend on request order
+                    for (
+                        cache
+                    ) in caches.all():  # throttles must not depend on request order
                         cache.clear()
                     call = getattr(client, method.lower())
                     # Each request runs in its own rolled-back savepoint: no side effects leak into
                     # the next request, and a database error cannot abort the shared test transaction.
                     with transaction.atomic():
-                        response = call(path) if method == "GET" else call(path, {}, format="json")
+                        response = (
+                            call(path)
+                            if method == "GET"
+                            else call(path, {}, format="json")
+                        )
                         transaction.set_rollback(True)
-                    observed[f"{method} {path} {identity} mvp={'on' if mvp else 'off'}"] = {
-                        "route": row["route"], "served_by": served, **observe(response),
+                    observed[
+                        f"{method} {path} {identity} mvp={'on' if mvp else 'off'}"
+                    ] = {
+                        "route": row["route"],
+                        "served_by": served,
+                        **observe(response),
                     }
 
     fixture = FIXTURES / f"{slug(family)}.json"
     if UPDATE or not fixture.exists():
         FIXTURES.mkdir(exist_ok=True)
-        fixture.write_text(json.dumps(observed, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        fixture.write_text(
+            json.dumps(observed, indent=1, sort_keys=True) + "\n", encoding="utf-8"
+        )
         if not UPDATE:
-            pytest.fail(f"Recorded a new contract fixture for {family}; review and commit {fixture.name}")
+            pytest.fail(
+                f"Recorded a new contract fixture for {family}; review and commit {fixture.name}"
+            )
         return
     expected = json.loads(fixture.read_text(encoding="utf-8"))
-    changed = {k: {"expected": expected.get(k), "observed": observed.get(k)}
-               for k in sorted(set(expected) | set(observed)) if expected.get(k) != observed.get(k)}
+    changed = {
+        k: {"expected": expected.get(k), "observed": observed.get(k)}
+        for k in sorted(set(expected) | set(observed))
+        if expected.get(k) != observed.get(k)
+    }
     assert not changed, (
         f"{len(changed)} contract change(s) in {family}; if intended, regenerate with ROUTE_CONTRACTS_UPDATE=1.\n"
         + json.dumps(dict(list(changed.items())[:5]), indent=1)

@@ -1,5 +1,6 @@
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
 from django.utils.dateparse import parse_date
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -59,11 +60,87 @@ def language(request):
     return "ar" if getattr(request, "LANGUAGE_CODE", "en").startswith("ar") else "en"
 
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def invoices(request):
-    if request.method == "POST":
+class InvoicesView(FeatureAPIView):
+    name = "Invoices"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "billing_views",
+            "invoices",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "billing_views",
+            "invoices",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        workspace = workspace_for(request.query_params.get("workspace", "tenant"))
+        organization = organization_for(
+            request.user, request.query_params.get("organization_id")
+        )
+        query = invoice_queryset(
+            request.user, workspace, organization
+        ).prefetch_related("lines")
+        if request.query_params.get("status"):
+            status = request.query_params["status"]
+            if status not in {choice[0] for choice in query.model.Status.choices}:
+                raise ValidationError({"status": "Unknown invoice status."})
+            query = query.filter(status=status)
+        if request.query_params.get("purpose"):
+            purpose = request.query_params["purpose"]
+            if purpose not in {
+                "rent",
+                "subscription",
+                "advertising",
+                "maintenance",
+                "promotion",
+                "settlement",
+                "adjustment",
+                "deposit",
+            }:
+                raise ValidationError({"purpose": "Unknown invoice purpose."})
+            query = query.filter(purpose=purpose)
+        for key, lookup in (
+            ("from", "created_at__date__gte"),
+            ("to", "created_at__date__lte"),
+        ):
+            if request.query_params.get(key):
+                try:
+                    day = parse_date(request.query_params[key])
+                except ValueError:
+                    day = None
+                if day is None:
+                    raise ValidationError({key: "Use a valid ISO date."})
+                query = query.filter(**{lookup: day})
+        pager = FeaturePagination()
+        from .services.billing_reads import invoice_read_queryset, prepare_invoice_page
+
+        page = prepare_invoice_page(
+            pager.paginate_queryset(invoice_read_queryset(query), request)
+        )
+        return pager.get_paginated_response(
+            [
+                invoice_payload(
+                    x,
+                    request.user,
+                    language(request),
+                    mobile=mobile_projection(request),
+                    platform=request.query_params.get("platform", "unknown"),
+                )
+                for x in page
+            ]
+        )
+
+    def post(self, request):
         command = validated(IssueInvoiceSerializer, request)
         if request.query_params.get("organization_id"):
             organization = organization_for(
@@ -90,145 +167,179 @@ def invoices(request):
             ),
             status=201 if created else 200,
         )
-    workspace = workspace_for(request.query_params.get("workspace", "tenant"))
-    organization = organization_for(
-        request.user, request.query_params.get("organization_id")
-    )
-    query = invoice_queryset(request.user, workspace, organization).prefetch_related(
-        "lines"
-    )
-    if request.query_params.get("status"):
-        status = request.query_params["status"]
-        if status not in {choice[0] for choice in query.model.Status.choices}:
-            raise ValidationError({"status": "Unknown invoice status."})
-        query = query.filter(status=status)
-    if request.query_params.get("purpose"):
-        purpose = request.query_params["purpose"]
-        if purpose not in {
-            "rent",
-            "subscription",
-            "advertising",
-            "maintenance",
-            "promotion",
-            "settlement",
-            "adjustment",
-            "deposit",
-        }:
-            raise ValidationError({"purpose": "Unknown invoice purpose."})
-        query = query.filter(purpose=purpose)
-    for key, lookup in (
-        ("from", "created_at__date__gte"),
-        ("to", "created_at__date__lte"),
-    ):
-        if request.query_params.get(key):
-            try:
-                day = parse_date(request.query_params[key])
-            except ValueError:
-                day = None
-            if day is None:
-                raise ValidationError({key: "Use a valid ISO date."})
-            query = query.filter(**{lookup: day})
-    pager = FeaturePagination()
-    page = pager.paginate_queryset(query, request)
-    return pager.get_paginated_response(
-        [
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+invoices = InvoicesView.as_view()
+
+
+class InvoiceDetailView(FeatureAPIView):
+    name = "Invoice Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "billing_views",
+            "invoice_detail",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, invoice_id):
+        invoice = check_context(request, authorized_invoice(request.user, invoice_id))
+        return Response(
             invoice_payload(
-                x,
+                invoice,
                 request.user,
                 language(request),
                 mobile=mobile_projection(request),
                 platform=request.query_params.get("platform", "unknown"),
             )
-            for x in page
-        ]
-    )
+        )
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def invoice_detail(request, invoice_id):
-    invoice = check_context(request, authorized_invoice(request.user, invoice_id))
-    return Response(
-        invoice_payload(
-            invoice,
+# Stable callable import for integrations; URLs use the explicit class.
+invoice_detail = InvoiceDetailView.as_view()
+
+
+class InvoiceOperationView(FeatureAPIView):
+    name = "Invoice Operation"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "billing_views",
+            "invoice_operation",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, request_key):
+        organization_for(request.user, request.query_params.get("organization_id"))
+        record = IdempotencyRecord.objects.filter(
+            user=request.user, operation="billing.issue", request_key=request_key
+        ).first()
+        invoice = (
+            authorized_invoice(request.user, record.result_subject_id)
+            if record
+            else None
+        )
+        if invoice:
+            check_context(request, invoice)
+        return Response(
+            {
+                "invoice": (
+                    invoice_payload(
+                        invoice,
+                        request.user,
+                        language(request),
+                        mobile=mobile_projection(request),
+                        platform=request.query_params.get("platform", "unknown"),
+                    )
+                    if invoice
+                    else None
+                ),
+                "absence_confirmed": False,
+            }
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+invoice_operation = InvoiceOperationView.as_view()
+
+
+class InvoiceQuoteView(FeatureAPIView):
+    name = "Invoice Quote"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "billing_views",
+            "invoice_quote",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, invoice_id):
+        check_context(request, authorized_invoice(request.user, invoice_id))
+        quote = quote_purchase(
             request.user,
-            language(request),
-            mobile=mobile_projection(request),
+            invoice_id,
+            validated(InvoiceActionSerializer, request),
             platform=request.query_params.get("platform", "unknown"),
         )
-    )
+        return Response(purchase_quote_payload(quote), status=201)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def invoice_operation(request, request_key):
-    organization_for(request.user, request.query_params.get("organization_id"))
-    record = IdempotencyRecord.objects.filter(
-        user=request.user, operation="billing.issue", request_key=request_key
-    ).first()
-    invoice = (
-        authorized_invoice(request.user, record.result_subject_id) if record else None
-    )
-    if invoice:
-        check_context(request, invoice)
-    return Response(
-        {
-            "invoice": (
-                invoice_payload(
-                    invoice,
-                    request.user,
-                    language(request),
-                    mobile=mobile_projection(request),
-                    platform=request.query_params.get("platform", "unknown"),
-                )
-                if invoice
-                else None
-            ),
-            "absence_confirmed": False,
-        }
-    )
+# Stable callable import for integrations; URLs use the explicit class.
+invoice_quote = InvoiceQuoteView.as_view()
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def invoice_quote(request, invoice_id):
-    check_context(request, authorized_invoice(request.user, invoice_id))
-    quote = quote_purchase(
-        request.user,
-        invoice_id,
-        validated(InvoiceActionSerializer, request),
-        platform=request.query_params.get("platform", "unknown"),
-    )
-    return Response(purchase_quote_payload(quote), status=201)
+class InvoiceCheckoutView(FeatureAPIView):
+    name = "Invoice Checkout"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "billing_views",
+            "invoice_checkout",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def invoice_checkout(request, invoice_id):
-    check_context(request, authorized_invoice(request.user, invoice_id))
-    attempt = checkout_purchase(
-        request.user, invoice_id, validated(PurchaseCheckoutSerializer, request)
-    )
-    return Response(purchase_attempt_payload(attempt))
-
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def invoice_cancel(request, invoice_id):
-    check_context(request, authorized_invoice(request.user, invoice_id))
-    body = validated(InvoiceActionSerializer, request)
-    invoice = cancel_invoice(request.user, invoice_id, body)
-    return Response(
-        invoice_payload(
-            invoice,
-            request.user,
-            language(request),
-            mobile=mobile_projection(request),
-            platform=request.query_params.get("platform", "unknown"),
+    def post(self, request, invoice_id):
+        check_context(request, authorized_invoice(request.user, invoice_id))
+        attempt = checkout_purchase(
+            request.user, invoice_id, validated(PurchaseCheckoutSerializer, request)
         )
-    )
+        return Response(purchase_attempt_payload(attempt))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+invoice_checkout = InvoiceCheckoutView.as_view()
+
+
+class InvoiceCancelView(FeatureAPIView):
+    name = "Invoice Cancel"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "billing_views",
+            "invoice_cancel",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, invoice_id):
+        check_context(request, authorized_invoice(request.user, invoice_id))
+        body = validated(InvoiceActionSerializer, request)
+        invoice = cancel_invoice(request.user, invoice_id, body)
+        return Response(
+            invoice_payload(
+                invoice,
+                request.user,
+                language(request),
+                mobile=mobile_projection(request),
+                platform=request.query_params.get("platform", "unknown"),
+            )
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+invoice_cancel = InvoiceCancelView.as_view()

@@ -1,9 +1,11 @@
 """Authenticated provider simulation for explicitly enabled non-production APIs."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -79,151 +81,207 @@ def _remember(request, data, operation, subject, resource):
     )
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def onboarding_complete(request, session_id):
-    data = _body(request)
-    session = get_object_or_404(
-        OwnerOnboardingSession, id=session_id, owner_profile__owner=request.user
-    )
-    operation = f"mock.onboarding.complete.{session_id}"
-    with transaction.atomic():
-        profile = OwnerPaymentProfile.objects.select_for_update().get(
-            pk=session.owner_profile_id
+class OnboardingCompleteView(FeatureAPIView):
+    name = "Onboarding Complete"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "mock_provider_views",
+            "onboarding_complete",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, session_id):
+        data = _body(request)
+        session = get_object_or_404(
+            OwnerOnboardingSession, id=session_id, owner_profile__owner=request.user
         )
-        replay = _replay(request, data, operation)
-        if replay is not None:
-            return replay
-        _revision(data, profile)
-        apply_fake_rental_event(
-            {
-                "type": "onboarding.completed",
-                "provider_session_id": session.provider_session_id,
-            }
-        )
-        profile.refresh_from_db()
-        return _remember(
-            request,
-            data,
-            operation,
-            profile,
-            dict(
-                OwnerPaymentProfileSerializer(
-                    profile, context={"request": request}
-                ).data
-            ),
-        )
+        operation = f"mock.onboarding.complete.{session_id}"
+        with transaction.atomic():
+            profile = OwnerPaymentProfile.objects.select_for_update().get(
+                pk=session.owner_profile_id
+            )
+            replay = _replay(request, data, operation)
+            if replay is not None:
+                return replay
+            _revision(data, profile)
+            apply_fake_rental_event(
+                {
+                    "type": "onboarding.completed",
+                    "provider_session_id": session.provider_session_id,
+                }
+            )
+            profile.refresh_from_db()
+            return _remember(
+                request,
+                data,
+                operation,
+                profile,
+                dict(
+                    OwnerPaymentProfileSerializer(
+                        profile, context={"request": request}
+                    ).data
+                ),
+            )
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def signing_complete(request, session_id, change=False):
-    data = _body(request)
-    session_model = ChangeSigningSession if change else SigningSession
-    session = get_object_or_404(session_model, id=session_id, signer=request.user)
-    operation = f"mock.signing.complete.{session_id}"
-    with transaction.atomic():
-        company_review = None
-        if change:
-            subject = RentalChange.objects.select_for_update().get(pk=session.change_id)
-            if subject.lease.renter_company_id:
-                from .services.company.continuation_capabilities import (
-                    authorize_current_signatory,
-                    require_pending_session,
+# Stable callable import for integrations; URLs use the explicit class.
+onboarding_complete = OnboardingCompleteView.as_view()
+
+
+class SigningCompleteView(FeatureAPIView):
+    name = "Signing Complete"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "mock_provider_views",
+            "signing_complete",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, session_id, change=False):
+        data = _body(request)
+        session_model = ChangeSigningSession if change else SigningSession
+        session = get_object_or_404(session_model, id=session_id, signer=request.user)
+        operation = f"mock.signing.complete.{session_id}"
+        with transaction.atomic():
+            company_review = None
+            if change:
+                subject = RentalChange.objects.select_for_update().get(
+                    pk=session.change_id
                 )
+                if subject.lease.renter_company_id:
+                    from .services.company.continuation_capabilities import (
+                        authorize_current_signatory,
+                        require_pending_session,
+                    )
 
-                company_review = authorize_current_signatory(request.user, subject)
-        else:
+                    company_review = authorize_current_signatory(request.user, subject)
+            else:
+                from .services.rental_lifecycle.locks import lock_financial_lease
+
+                subject = lock_financial_lease(Lease.objects.get(pk=session.lease_id))
+                if subject.renter_company_id:
+                    from .services.company.tenancy_access import (
+                        get,
+                        require_role,
+                        require_delegate,
+                    )
+
+                    item = get(request.user, subject.company_tenancy.id)
+                    require_role(
+                        item, request.user, {"owner", "signer"}, sensitive=True
+                    )
+                    if request.user.pk != subject.owner_id:
+                        require_delegate(item, request.user, "sign")
+            replay = _replay(request, data, operation)
+            if replay is not None:
+                return replay
+            _revision(data, subject)
+            if company_review is not None:
+                require_pending_session(
+                    request.user, subject, company_review, session=session
+                )
+            apply_fake_rental_event(
+                {
+                    "type": (
+                        "change-signature.completed"
+                        if change
+                        else "signature.completed"
+                    ),
+                    "provider_session_id": session.provider_session_id,
+                }
+            )
+            subject.refresh_from_db()
+            resource = (
+                change_payload(subject, request.user)
+                if change
+                else dict(
+                    LeasePhase2Serializer(subject, context={"request": request}).data
+                )
+            )
+            return _remember(request, data, operation, subject, resource)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+signing_complete = SigningCompleteView.as_view()
+
+
+class PaymentEventView(FeatureAPIView):
+    name = "Payment Event"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "mock_provider_views",
+            "payment_event",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, attempt_id):
+        data = _body(request, MockPaymentBody)
+        if not checkout_available():
+            raise NotFound()
+        operation = f"mock.payment.event.{attempt_id}"
+        with transaction.atomic():
+            candidate = get_object_or_404(
+                PaymentAttempt.objects.select_related("invoice"),
+                id=attempt_id,
+                payer=request.user,
+            )
+            if candidate.invoice.lease_id is None:
+                raise NotFound()
             from .services.rental_lifecycle.locks import lock_financial_lease
 
-            subject = lock_financial_lease(Lease.objects.get(pk=session.lease_id))
-            if subject.renter_company_id:
-                from .services.company.tenancy_access import (
-                    get,
-                    require_role,
-                    require_delegate,
-                )
+            lease = lock_financial_lease(candidate.invoice.lease)
+            if lease.renter_company_id:
+                from .services.company.tenancy_access import require_delegate
 
-                item = get(request.user, subject.company_tenancy.id)
-                require_role(item, request.user, {"owner", "signer"}, sensitive=True)
-                if request.user.pk != subject.owner_id:
-                    require_delegate(item, request.user, "sign")
-        replay = _replay(request, data, operation)
-        if replay is not None:
-            return replay
-        _revision(data, subject)
-        if company_review is not None:
-            require_pending_session(
-                request.user, subject, company_review, session=session
+                require_delegate(lease.company_tenancy, request.user, "pay")
+            attempt = get_object_or_404(
+                PaymentAttempt.objects.select_for_update(),
+                id=attempt_id,
+                payer=request.user,
             )
-        apply_fake_rental_event(
-            {
-                "type": (
-                    "change-signature.completed" if change else "signature.completed"
-                ),
-                "provider_session_id": session.provider_session_id,
-            }
-        )
-        subject.refresh_from_db()
-        resource = (
-            change_payload(subject, request.user)
-            if change
-            else dict(LeasePhase2Serializer(subject, context={"request": request}).data)
-        )
-        return _remember(request, data, operation, subject, resource)
+            replay = _replay(request, data, operation)
+            if replay is not None:
+                return replay
+            _revision(data, attempt)
+            # Amount, currency and event identity come from persisted server state.
+            # A tester cannot alter the invoice by supplying their own payment amount.
+            apply_fake_payment_event(
+                {
+                    "event_id": f"mock:{attempt.id}:{data['request_key']}",
+                    "type": f"payment.{data['event']}",
+                    "sequence": attempt.revision,
+                    "payment_attempt_id": str(attempt.id),
+                    "amount_minor": attempt.amount_minor,
+                    "currency": attempt.currency,
+                }
+            )
+            attempt.refresh_from_db()
+            return _remember(
+                request,
+                data,
+                operation,
+                attempt,
+                payment_attempt_payload(attempt, request.user),
+            )
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def payment_event(request, attempt_id):
-    data = _body(request, MockPaymentBody)
-    if not checkout_available():
-        raise NotFound()
-    operation = f"mock.payment.event.{attempt_id}"
-    with transaction.atomic():
-        candidate = get_object_or_404(
-            PaymentAttempt.objects.select_related("invoice"),
-            id=attempt_id,
-            payer=request.user,
-        )
-        if candidate.invoice.lease_id is None:
-            raise NotFound()
-        from .services.rental_lifecycle.locks import lock_financial_lease
-
-        lease = lock_financial_lease(candidate.invoice.lease)
-        if lease.renter_company_id:
-            from .services.company.tenancy_access import require_delegate
-
-            require_delegate(lease.company_tenancy, request.user, "pay")
-        attempt = get_object_or_404(
-            PaymentAttempt.objects.select_for_update(),
-            id=attempt_id,
-            payer=request.user,
-        )
-        replay = _replay(request, data, operation)
-        if replay is not None:
-            return replay
-        _revision(data, attempt)
-        # Amount, currency and event identity come from persisted server state.
-        # A tester cannot alter the invoice by supplying their own payment amount.
-        apply_fake_payment_event(
-            {
-                "event_id": f"mock:{attempt.id}:{data['request_key']}",
-                "type": f"payment.{data['event']}",
-                "sequence": attempt.revision,
-                "payment_attempt_id": str(attempt.id),
-                "amount_minor": attempt.amount_minor,
-                "currency": attempt.currency,
-            }
-        )
-        attempt.refresh_from_db()
-        return _remember(
-            request,
-            data,
-            operation,
-            attempt,
-            payment_attempt_payload(attempt, request.user),
-        )
+# Stable callable import for integrations; URLs use the explicit class.
+payment_event = PaymentEventView.as_view()

@@ -7,7 +7,6 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from core_apps.common.command_fields import parse_revision, require_request_key
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -20,11 +19,37 @@ from .maintenance_action import change_payload, _change
 from .change_collection import change_collection
 
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def payment_extensions(request, lease_id):
-    return change_collection(request, lease_id, RentalChange.Kind.PAYMENT_EXTENSION)
+class PaymentExtensionsView(FeatureAPIView):
+    name = "Payment Extensions"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "change_respond",
+            "payment_extensions",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "change_respond",
+            "payment_extensions",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, lease_id):
+        return change_collection(request, lease_id, RentalChange.Kind.PAYMENT_EXTENSION)
+
+    def post(self, request, lease_id):
+        return change_collection(request, lease_id, RentalChange.Kind.PAYMENT_EXTENSION)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+payment_extensions = PaymentExtensionsView.as_view()
 
 
 class AmendmentsView(FeatureAPIView):
@@ -126,23 +151,55 @@ class TerminationsView(FeatureAPIView):
 terminations = TerminationsView.as_view()
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def external_claims(request, lease_id):
-    return change_collection(request, lease_id, RentalChange.Kind.EXTERNAL_PAYMENT)
+class ExternalClaimsView(FeatureAPIView):
+    name = "External Claims"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "change_respond",
+            "external_claims",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, lease_id):
+        return change_collection(request, lease_id, RentalChange.Kind.EXTERNAL_PAYMENT)
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def external_claim_create(request, invoice_id):
-    invoice = get_object_or_404(
-        RentInvoice.objects.select_related("lease"), id=invoice_id, purpose="rent"
-    )
-    from ..services.platform_rent_payments import reject_external_claim
+# Stable callable import for integrations; URLs use the explicit class.
+external_claims = ExternalClaimsView.as_view()
 
-    return reject_external_claim(request, invoice)
+
+class ExternalClaimCreateView(FeatureAPIView):
+    name = "External Claim Create"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "change_respond",
+            "external_claim_create",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, invoice_id):
+        invoice = get_object_or_404(
+            RentInvoice.objects.select_related("lease"), id=invoice_id, purpose="rent"
+        )
+        from ..services.platform_rent_payments import reject_external_claim
+
+        return reject_external_claim(request, invoice)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+external_claim_create = ExternalClaimCreateView.as_view()
 
 
 class ChangeDetailView(FeatureAPIView):
@@ -373,3 +430,22 @@ class ChangeRespondView(FeatureAPIView):
 
 # Stable callable import for integrations; URLs use the explicit class.
 change_respond = ChangeRespondView.as_view()
+
+__all__ = [
+    "AmendmentsView",
+    "ChangeDetailView",
+    "ChangeRespondView",
+    "ExternalClaimCreateView",
+    "ExternalClaimsView",
+    "PaymentExtensionsView",
+    "RenewalsView",
+    "TerminationsView",
+    "amendments",
+    "change_detail",
+    "change_respond",
+    "external_claim_create",
+    "external_claims",
+    "payment_extensions",
+    "renewals",
+    "terminations",
+]

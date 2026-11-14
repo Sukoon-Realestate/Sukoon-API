@@ -6,31 +6,35 @@ from . import views
 app_name = "advertising"
 
 urlpatterns = [
-    path("plans/", views.plan_list, name="plan-list"),
+    path("plans/", views.PlanListView.as_view(), name="plan-list"),
     path(
         "owner-advertisements/",
-        views.owner_advertisement_collection,
+        views.OwnerAdvertisementCollectionView.as_view(),
         name="owner-advertisement-list",
     ),
     path(
         "owner-advertisements/<uuid:advertisement_id>/",
-        views.owner_advertisement_detail,
+        views.OwnerAdvertisementDetailView.as_view(),
         name="owner-advertisement-detail",
     ),
     path(
         "owner-advertisements/<uuid:advertisement_id>/mock-payment/",
-        views.mock_payment,
+        views.MockPaymentView.as_view(),
         name="mock-payment",
     ),
     path(
         "operations/<str:operation_id>/",
-        views.operation_detail,
+        views.OperationDetailView.as_view(),
         name="operation-detail",
     ),
-    path("placements/tenant-home/", views.tenant_home_placement, name="tenant-home"),
+    path(
+        "placements/tenant-home/",
+        views.TenantHomePlacementView.as_view(),
+        name="tenant-home",
+    ),
     path(
         "media/<uuid:advertisement_id>/",
-        views.advertisement_media,
+        views.AdvertisementMediaView.as_view(),
         name="advertisement-media",
     ),
 ]

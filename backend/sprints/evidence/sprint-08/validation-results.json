@@ -1,0 +1,182 @@
+{
+  "date": "2026-11-14",
+  "timezone": "Africa/Cairo",
+  "starting_commit": "2b635583a4fd7fa15ba8abf37d954529867773d6",
+  "overall_acceptance": "partial",
+  "stop_after": "Sprint 08",
+  "no_production_or_existing_database_changes": true,
+  "environment": {
+    "python": "3.11.15",
+    "django": "4.2.11",
+    "postgresql": "18.6",
+    "dotenv_disabled": true,
+    "real_provider_acceptance": false,
+    "scratch_cluster_stopped": true,
+    "raw_runtime_artifacts_retained_locally": true
+  },
+  "runs": {
+    "focused": {
+      "tests": 112,
+      "passed": 110,
+      "failures": [
+        {
+          "test": "core_apps.advertising.tests.test_advertising_api::test_existing_audit_ad_media_recovery_and_mock_payment_activation",
+          "type": "failure"
+        },
+        {
+          "test": "core_apps.features.tests.test_paymob_payouts::test_execute_stages_exact_bound_target_once_and_returns_owner_safe_projection",
+          "type": "failure"
+        }
+      ],
+      "skipped": 0,
+      "expected_failures": 0,
+      "sha256": "31b02abb90dd36324990d27e14b5112f2428a2eef33c9614649a9178394c7a38",
+      "local_xml_artifact": "focused.xml"
+    },
+    "new-gates-final": {
+      "tests": 15,
+      "passed": 15,
+      "failures": [],
+      "skipped": 0,
+      "expected_failures": 0,
+      "sha256": "dcff6a0465fdfee35e051a0e549d12df04b691da851d570ec9c6a8abf1f0ef7d",
+      "local_xml_artifact": "new-gates-final.xml"
+    },
+    "integrated": {
+      "tests": 4112,
+      "passed": 4084,
+      "failures": [
+        {
+          "test": "core_apps.features.tests.test_chargeback_deposit_payable::test_manual_reconciliation_rechecks_role_before_locked_financial_effect",
+          "type": "failure"
+        },
+        {
+          "test": "core_apps.features.tests.test_sprint08_transport::test_frozen_commerce_transport_contracts[mvp]",
+          "type": "failure"
+        },
+        {
+          "test": "core_apps.features.tests.test_sprint08_transport::test_frozen_commerce_transport_contracts[restoration]",
+          "type": "failure"
+        },
+        {
+          "test": "core_apps.common.test_route_contracts::test_route_family_contract[api-payments]",
+          "type": "failure"
+        }
+      ],
+      "skipped": 13,
+      "expected_failures": 11,
+      "sha256": "1cfba5d87b120bf9fe157a699f6b77560b57e6bd553613ab200352a4e4e87f2e",
+      "local_xml_artifact": "integrated.xml"
+    },
+    "final-acceptance": {
+      "tests": 342,
+      "passed": 342,
+      "failures": [],
+      "skipped": 0,
+      "expected_failures": 0,
+      "sha256": "a28cb07433d817acdfa91d11f1b0e7c260997b2133617dcd29e72ff75c724fba",
+      "local_xml_artifact": "final-acceptance.xml"
+    },
+    "final-reads-corrected": {
+      "tests": 15,
+      "passed": 15,
+      "failures": [],
+      "skipped": 0,
+      "expected_failures": 0,
+      "sha256": "a4c0b84f0de564f918815466004834cb973c023dbe5ef658b6e8e39e25e5f20d",
+      "local_xml_artifact": "final-reads-corrected.xml"
+    },
+    "final-corrections": {
+      "tests": 20,
+      "passed": 20,
+      "failures": [],
+      "skipped": 0,
+      "expected_failures": 0,
+      "sha256": "69d09bc427dd88dbeb35cdff2c391bdff42f15922312790770b561254c0abf74",
+      "local_xml_artifact": "final-corrections.xml"
+    }
+  },
+  "final_run_notes": [
+    "342-test final affected commerce gate passed before the last compact reader field/UUID refinement.",
+    "The final 20-test correction gate passes on the final implementation and includes all four integrated failures, all final compact readers and both transport modes.",
+    "The integrated 4,112-test run began before characterization/seam corrections and later source extractions; it is not a green whole-backend final-tree run.",
+    "Results overlap; do not sum passes as unique tests."
+  ],
+  "contracts": {
+    "original_commerce_functions": 73,
+    "ordinary_paymob_views": 2,
+    "expanded_scope_patterns": 93,
+    "global_patterns": 795,
+    "frozen_cases_per_mode": 1536,
+    "frozen_comparisons_both_modes": 3072,
+    "scoped_function_callbacks_remaining": 0,
+    "global_metadata_parity": true,
+    "callback_family_fixtures_unchanged": true
+  },
+  "read_budgets": {
+    "invoice_sample": {
+      "sizes": [
+        5,
+        40
+      ],
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "purposes": [
+        "subscription",
+        "advertising",
+        "promotion",
+        "maintenance",
+        "deposit",
+        "settlement",
+        "adjustment"
+      ],
+      "preparation_queries_max": 7,
+      "projection_queries": 0,
+      "legacy_projection_equality": true,
+      "organization_and_rental_authority_budgets_complete": false
+    },
+    "compact_histories": {
+      "sizes": [
+        5,
+        40
+      ],
+      "historical_entries_per_row": 40,
+      "payout_refund_dispute_selection_queries": 1,
+      "dispute_responses_deferred": true,
+      "public_uuid_checks": true,
+      "pagination_and_legacy_shape": true,
+      "legacy_default_bounded": false
+    }
+  },
+  "static": {
+    "django_checks": "passed",
+    "migration_drift": "none",
+    "syntax": {
+      "files": 2197,
+      "errors": 0
+    },
+    "imports": {
+      "settings": "sprint08_settings",
+      "imported": 2030,
+      "failed": 0,
+      "failures": []
+    },
+    "scoped_F_lint": "passed",
+    "format": "passed",
+    "git_diff_check": "passed"
+  },
+  "existing_databases": {
+    "existing_database_files": 4,
+    "unchanged": true,
+    "fingerprint_details": "Retained in local task-owned scratch evidence; omitted from publication."
+  },
+  "remaining_acceptance": [
+    "complete thin-service architecture across shared/beneficiary/mock/recovery adapters",
+    "family-wide budgets including legacy collections, rental/company billing, staff histories, payable lock cost and advertising storage/candidate work",
+    "exhaustive positive and concurrency parity",
+    "authentic external provider/current-state/real settlement, storage, production-load and deployment acceptance"
+  ]
+}

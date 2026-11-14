@@ -25,3 +25,16 @@ advertising and shared Paymob callbacks. **Evidence:** A4 findings; financial st
 - List budgets cover mixed invoice purposes and long payout/refund/dispute histories; no per-row provider/storage work.
 - Fake/staging/live gates remain explicit. Passing fake-provider tests is not recorded as real settlement/provider acceptance.
   Unsupported store adapters remain disabled until their authentic notification and current-state contracts are verified.
+
+## Results — 2026-11-14
+
+Implemented and stopped at Sprint 08. The [evidence and acceptance report](evidence/sprint-08/README.md)
+records the implementation, PostgreSQL validation, API compatibility and remaining gaps. All 73 original commerce
+functions and both ordinary provider views resolve to explicit classes. Major payment, refund, payout and settlement
+commands have request-independent entry points. Purpose-aware invoice pages and opt-in compact personal finance
+pages preserve existing client responses. Advertising serving no longer restores fixture or fabricated artwork;
+original-byte recovery is an explicit maintenance command. Existing databases and production were not targeted.
+
+**Overall acceptance remains partial:** complete transport/domain separation, exhaustive positive parity, legacy/full-history
+and company/rental/advertising performance budgets, and authentic provider acceptance are not certified by these changes.
+Do not treat explicit classes or fake-provider tests as completed architecture or real settlement acceptance.

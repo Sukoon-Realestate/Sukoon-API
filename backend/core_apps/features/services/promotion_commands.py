@@ -14,7 +14,7 @@ from core_apps.chat.moderation.policy import require_new_business as require_pol
 from core_apps.users.services.new_business import require_new_business
 from ..catalog_models import PromotionOption
 from ..models import BoostCampaign, IdempotencyRecord
-from ..views_parts.rental_operation_lookup import Conflict, _remember, _replay
+from .operation_receipts import Conflict, _remember, _replay
 
 
 class Identity(serializers.Serializer):
@@ -46,7 +46,7 @@ def create(user, payload):
     get_user_model().objects.select_for_update(no_key=True).get(pk=user.pk)
     replay = _replay(user, "boost.create", body["request_key"], body)
     if replay:
-        return replay.data, replay.status_code
+        return replay.data, replay.status
     require_new_business(user.pk)
     require_policy(user)
     prop = get_object_or_404(
@@ -150,3 +150,6 @@ def resolve(user, payload):
         recovery_status=IdempotencyRecord.RecoveryStatus.ABSENT_FINAL,
     )
     return {**result, "status": "absent_final"}
+
+
+__all__ = ["create", "resolve"]

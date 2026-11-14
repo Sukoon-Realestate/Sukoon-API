@@ -103,6 +103,7 @@ from .views_parts.boost_campaigns import (
     search_alert_detail as search_alert_detail,
     SearchAlertDetailView as SearchAlertDetailView,
     SearchAlertsView as SearchAlertsView,
+    BoostCampaignsView as BoostCampaignsView,
 )
 from .views_parts.listing_suggestions import (
     owner_analytics as owner_analytics,
@@ -163,6 +164,7 @@ __all__ = [
     "AllowAny",
     "BoostCampaign",
     "BoostCampaignSerializer",
+    "BoostCampaignsView",
     "CheckoutSession",
     "ConfigurationView",
     "Conflict",

@@ -1,15 +1,12 @@
 """Views: owner advertisement collection."""
 
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from django.core.paginator import EmptyPage, Paginator
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from rest_framework import permissions, status
-from rest_framework.decorators import (
-    api_view,
-    parser_classes,
-    permission_classes,
-    renderer_classes,
-)
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from ..models import Advertisement, AdvertisingPlan
 from ..renderers import AdvertisingJsonRenderer
@@ -33,7 +30,9 @@ from .language import (
 
 
 def banner_url(request, advertisement):
-    return request.build_absolute_uri(reverse("advertising:advertisement-media", args=[advertisement.id]))
+    return request.build_absolute_uri(
+        reverse("advertising:advertisement-media", args=[advertisement.id])
+    )
 
 
 def payment_payload(payment):
@@ -48,13 +47,17 @@ def payment_payload(payment):
     }
 
 
-def advertisement_payload(request, advertisement, *, public=False, now=None, invoice_map=None):
+def advertisement_payload(
+    request, advertisement, *, public=False, now=None, invoice_map=None
+):
     data = {
         "id": str(advertisement.id),
         "title": advertisement.title,
         "description": advertisement.description,
         "banner_url": banner_url(request, advertisement),
-        "property_id": (str(advertisement.property.id) if advertisement.property_id else None),
+        "property_id": (
+            str(advertisement.property.id) if advertisement.property_id else None
+        ),
         "offer_id": advertisement.offer_id or None,
         "status": effective_status(advertisement, now),
         "starts_at": iso8601(advertisement.starts_at),
@@ -78,24 +81,58 @@ def advertisement_payload(request, advertisement, *, public=False, now=None, inv
     return data
 
 
-@api_view(["GET"])
-@permission_classes([permissions.AllowAny])
-@renderer_classes([AdvertisingJsonRenderer])
-def plan_list(request):
-    plans = AdvertisingPlan.objects.filter(active=True).order_by("sort_order", "id")
-    response = envelope(
-        {"results": [plan_payload(plan, language(request)) for plan in plans]},
-        message(request, "plans"),
-    )
-    return finalize(response, request, public_ttl=300)
+class PlanListView(FeatureAPIView):
+    name = "Plan List"
+    http_method_names = ["get", "options"]
+    permission_classes = [permissions.AllowAny]
+    renderer_classes = [AdvertisingJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "owner_advertisement_collection",
+            "plan_list",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        plans = AdvertisingPlan.objects.filter(active=True).order_by("sort_order", "id")
+        response = envelope(
+            {"results": [plan_payload(plan, language(request)) for plan in plans]},
+            message(request, "plans"),
+        )
+        return finalize(response, request, public_ttl=300)
 
 
-@api_view(["GET", "POST"])
-@permission_classes([permissions.IsAuthenticated])
-@parser_classes([MultiPartParser, FormParser, JSONParser])
-@renderer_classes([AdvertisingJsonRenderer])
-def owner_advertisement_collection(request):
-    if request.method == "GET":
+# Stable callable import for integrations; URLs use the explicit class.
+plan_list = PlanListView.as_view()
+
+
+class OwnerAdvertisementCollectionView(FeatureAPIView):
+    name = "Owner Advertisement Collection"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    renderer_classes = [AdvertisingJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "owner_advertisement_collection",
+            "owner_advertisement_collection",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "owner_advertisement_collection",
+            "owner_advertisement_collection",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
         queryset = (
             Advertisement.objects.filter(owner=request.user)
             .select_related("operation", "payment", "property__owner")
@@ -122,45 +159,98 @@ def owner_advertisement_collection(request):
             "total_pages": paginator.num_pages,
             "next": page_number + 1 if page_number < paginator.num_pages else None,
             "previous": page_number - 1 if page_number > 1 else None,
-            "results": [advertisement_payload(request, item, invoice_map=invoice_map) for item in page],
+            "results": [
+                advertisement_payload(request, item, invoice_map=invoice_map)
+                for item in page
+            ],
         }
-        return finalize(envelope(payload, message(request, "owners")), request, private=True)
+        return finalize(
+            envelope(payload, message(request, "owners")), request, private=True
+        )
 
-    serializer = AdvertisementCreateSerializer(data=request.data)
-    if not serializer.is_valid():
-        record_rejected_operation(request.user, request.data.get("operation_id"), serializer.errors)
-        return finalize(validation_error_response(serializer, request), request, private=True)
-    try:
-        advertisement, created = create_advertisement(request.user, serializer.validated_data, language(request))
-    except AdvertisingServiceError as error:
-        if error.errors not in (
-            {"operation_id": ["idempotency_conflict"]},
-            {"operation_id": ["operation_processing"]},
-        ):
-            record_rejected_operation(request.user, serializer.validated_data["operation_id"], error.errors)
-        return finalize(error_response(error, request), request, private=True)
-    advertisement = Advertisement.objects.select_related("operation", "payment", "property__owner").get(
-        pk=advertisement.pk
-    )
-    response = envelope(
-        advertisement_payload(request, advertisement),
-        message(request, "created"),
-        status_code=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
-    )
-    return finalize(response, request, private=True)
+    def post(self, request):
+        serializer = AdvertisementCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            record_rejected_operation(
+                request.user, request.data.get("operation_id"), serializer.errors
+            )
+            return finalize(
+                validation_error_response(serializer, request), request, private=True
+            )
+        try:
+            advertisement, created = create_advertisement(
+                request.user, serializer.validated_data, language(request)
+            )
+        except AdvertisingServiceError as error:
+            if error.errors not in (
+                {"operation_id": ["idempotency_conflict"]},
+                {"operation_id": ["operation_processing"]},
+            ):
+                record_rejected_operation(
+                    request.user,
+                    serializer.validated_data["operation_id"],
+                    error.errors,
+                )
+            return finalize(error_response(error, request), request, private=True)
+        advertisement = Advertisement.objects.select_related(
+            "operation", "payment", "property__owner"
+        ).get(pk=advertisement.pk)
+        response = envelope(
+            advertisement_payload(request, advertisement),
+            message(request, "created"),
+            status_code=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
+        )
+        return finalize(response, request, private=True)
 
 
-@api_view(["GET"])
-@permission_classes([permissions.IsAuthenticated])
-@renderer_classes([AdvertisingJsonRenderer])
-def owner_advertisement_detail(request, advertisement_id):
-    advertisement = get_object_or_404(
-        Advertisement.objects.select_related("operation", "payment", "property__owner"),
-        id=advertisement_id,
-        owner=request.user,
-    )
-    return finalize(
-        envelope(advertisement_payload(request, advertisement), message(request, "detail")),
-        request,
-        private=True,
-    )
+# Stable callable import for integrations; URLs use the explicit class.
+owner_advertisement_collection = OwnerAdvertisementCollectionView.as_view()
+
+
+class OwnerAdvertisementDetailView(FeatureAPIView):
+    name = "Owner Advertisement Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [permissions.IsAuthenticated]
+    renderer_classes = [AdvertisingJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "owner_advertisement_collection",
+            "owner_advertisement_detail",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, advertisement_id):
+        advertisement = get_object_or_404(
+            Advertisement.objects.select_related(
+                "operation", "payment", "property__owner"
+            ),
+            id=advertisement_id,
+            owner=request.user,
+        )
+        return finalize(
+            envelope(
+                advertisement_payload(request, advertisement),
+                message(request, "detail"),
+            ),
+            request,
+            private=True,
+        )
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+owner_advertisement_detail = OwnerAdvertisementDetailView.as_view()
+
+__all__ = [
+    "OwnerAdvertisementCollectionView",
+    "OwnerAdvertisementDetailView",
+    "PlanListView",
+    "advertisement_payload",
+    "banner_url",
+    "owner_advertisement_collection",
+    "owner_advertisement_detail",
+    "payment_payload",
+    "plan_list",
+]

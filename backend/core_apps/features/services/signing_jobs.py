@@ -249,7 +249,7 @@ def apply(identity):
     from .rental_lifecycle.locks import lock_financial_lease
     from .rental_lifecycle.cases import open_system_case
     from .signing_completion import complete_signature
-    from ..rental_phase5_views_parts.change_signing_session import (
+    from .change_signing_completion import (
         complete_change_signature,
     )
 
@@ -339,3 +339,6 @@ def drain(limit=5):
         .values_list("id", flat=True)[:limit]
     )
     return {str(identity): run(identity) for identity in ids}
+
+
+__all__ = ["drain", "persist_original"]

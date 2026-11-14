@@ -50,13 +50,17 @@ def _adapter(policy):
 
 
 def _actor(request):
-    user = User.objects.select_for_update().get(pk=request.user.pk)
-    validate_session(user, request.auth or {})
+    return _credential_actor(request.user, request.auth)
+
+
+def _credential_actor(actor, claims):
+    user = User.objects.select_for_update().get(pk=actor.pk)
+    validate_session(user, claims or {})
     from .totp import require_sensitive_access
 
     require_sensitive_access(user)
     session = AuthSession.objects.filter(
-        user=user, id=(request.auth or {}).get("session_id"), revoked_at__isnull=True
+        user=user, id=(claims or {}).get("session_id"), revoked_at__isnull=True
     ).first()
     if session is None:
         raise PermissionDenied("Sign in again before this sensitive action.")
@@ -156,6 +160,18 @@ def _verify_locked(request, identity, assertion):
 
 
 def consume(request, *, action, resource_id, revision, payload=None):
+    return consume_for_actor(
+        request.user,
+        request.auth,
+        request.headers.get("X-Sokoun-Authorization", ""),
+        action=action,
+        resource_id=resource_id,
+        revision=revision,
+        payload=payload if payload is not None else request.data,
+    )
+
+
+def consume_for_actor(actor, claims, token, *, action, resource_id, revision, payload):
     if not transaction.get_connection().in_atomic_block:
         raise RuntimeError("Consume the authorization inside the command transaction.")
     from .totp import require_sensitive_access
@@ -167,13 +183,10 @@ def consume(request, *, action, resource_id, revision, payload=None):
         from core_apps.features.providers import fake_provider_available
 
         if fake_provider_available():
-            require_sensitive_access(
-                User.objects.select_for_update().get(pk=request.user.pk)
-            )
+            require_sensitive_access(User.objects.select_for_update().get(pk=actor.pk))
             return
-    user, session = _actor(request)
+    user, session = _credential_actor(actor, claims)
     policy = approved_policy("D26", action)
-    token = request.headers.get("X-Sokoun-Authorization", "")
     item = (
         SensitiveAuthorization.objects.select_for_update()
         .filter(
@@ -184,9 +197,7 @@ def consume(request, *, action, resource_id, revision, payload=None):
             resource_id=resource_id,
             resource_revision=revision,
             policy=policy,
-            payload_digest=fingerprint(
-                payload if payload is not None else request.data
-            ),
+            payload_digest=fingerprint(payload),
             security_epoch=user.security_epoch,
             verified_at__isnull=False,
             consumed_at__isnull=True,
@@ -223,3 +234,6 @@ def consume(request, *, action, resource_id, revision, payload=None):
         policy_version=policy.version,
         decision="authorized",
     )
+
+
+__all__ = ["begin", "consume", "consume_for_actor", "verify"]

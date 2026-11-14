@@ -1,27 +1,18 @@
 """Rental phase2 views: owner payment profile."""
 
-import json
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from core_apps.notifications.services.notification_service import NotificationService
-from ..models import (
-    IdempotencyRecord,
-    Lease,
-    RentalInterest,
-    RentalTimelineEvent,
-    TenancyInvitation,
-    TermsProposal,
-)
+from ..models import IdempotencyRecord, Lease, RentalInterest, TermsProposal
 from ..pagination import FeaturePagination
 from ..providers import require_rental_provider, require_verified_rental_account
 from ..renderers import FeatureJsonRenderer
 from ..rental_serializers import OwnerPaymentProfileSerializer
 from ..services.rental_phase2 import (
-    RentalConflict,
     fingerprint,
     get_or_create_owner_profile,
     replay_operation,
@@ -164,51 +155,56 @@ def _participant_lease(request, lease_id, lock=False):
 from ..services.rental_lifecycle.terms import (
     money_minor_from_offer as _money_minor_from_offer,
     validate_terms_offer as _validate_terms_offer,
-    _json_safe,
 )
 
 
-def _event(lease, actor, kind, label, resource_id=None, description=""):
-    RentalTimelineEvent.objects.create(
-        lease=lease,
-        actor=actor,
-        kind=kind,
-        label=label,
-        description=description,
-        resource_id=resource_id or lease.id,
-    )
+from core_apps.features.services.rental_events import _event as _event
 
 
-def _notify(user, notification_type, title, action_type, target_id, **context):
-    payload = {
-        "action_type": action_type,
-        "target_id": str(target_id),
-        **{key: str(value) for key, value in context.items() if value is not None},
+from core_apps.features.services.rental_events import _notify as _notify
+
+
+class OwnerPaymentProfileView(FeatureAPIView):
+    name = "Owner Payment Profile"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "owner_payment_profile",
+            "owner_payment_profile",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
     }
-    if context.get("lease_id"):
-        invitation = (
-            TenancyInvitation.objects.filter(lease__id=context["lease_id"])
-            .select_related("source_visit", "source_decision")
-            .first()
+
+    def get(self, request):
+        profile = get_or_create_owner_profile(request.user)
+        response = Response(
+            OwnerPaymentProfileSerializer(profile, context={"request": request}).data
         )
-        if invitation and invitation.source_visit_id:
-            payload["source_visit_id"] = str(invitation.source_visit.id)
-            payload["source_decision_id"] = str(invitation.source_decision.id)
-    NotificationService.create_notification(
-        user=user,
-        notification_type=notification_type,
-        title=title,
-        data=payload,
-    )
+        response["Cache-Control"] = "private, no-store"
+        return response
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def owner_payment_profile(request):
-    profile = get_or_create_owner_profile(request.user)
-    response = Response(
-        OwnerPaymentProfileSerializer(profile, context={"request": request}).data
-    )
-    response["Cache-Control"] = "private, no-store"
-    return response
+# Stable callable import for integrations; URLs use the explicit class.
+owner_payment_profile = OwnerPaymentProfileView.as_view()
+
+__all__ = [
+    "OwnerPaymentProfileView",
+    "_event",
+    "_json_safe",
+    "_money_minor_from_offer",
+    "_notify",
+    "_paginate",
+    "_participant_interest",
+    "_participant_lease",
+    "_participant_proposal",
+    "_remember_session",
+    "_replay_response",
+    "_validate_terms_offer",
+    "owner_payment_profile",
+]
+
+from ..services.rental_lifecycle.terms import _json_safe

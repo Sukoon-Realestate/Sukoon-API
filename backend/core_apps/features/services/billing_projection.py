@@ -6,6 +6,7 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
     from .billing_notifications import PURPOSES, invoice_workspace
     from .purchase_service_state import service_state
 
+    prepared = getattr(invoice, "prepared_billing", None)
     is_rent = invoice.purpose == "rent"
     # Rental settlement credits reduce the obligation without rewriting its
     # original amount or treating the credit as a cash payment.
@@ -17,9 +18,13 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
         payable = invoice_payment_allowed(user, invoice)
     cancellable = False
     receipt = (
-        invoice.payment_attempts.filter(payment_status="captured")
-        .select_related("receipt")
-        .first()
+        prepared["receipt"]
+        if prepared is not None
+        else (
+            invoice.payment_attempts.filter(payment_status="captured")
+            .select_related("receipt")
+            .first()
+        )
     )
     from .purchase_routing import routing, routing_v1
 
@@ -27,9 +32,13 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
     if invoice.purpose == "subscription":
         from ..models import SubscriptionPlan
 
-        plan = SubscriptionPlan.objects.filter(
-            id=invoice.purchase_snapshot.get("id")
-        ).first()
+        plan = (
+            prepared["plan"]
+            if prepared is not None
+            else SubscriptionPlan.objects.filter(
+                id=invoice.purchase_snapshot.get("id")
+            ).first()
+        )
     route = routing_v1(
         invoice.purpose,
         platform,
@@ -63,9 +72,13 @@ def invoice_payload(invoice, user, language="en", *, mobile=False, platform="unk
                 authority = True
             except (PermissionDenied, ValidationError):
                 authority = False
-        unresolved = invoice.payment_attempts.filter(
-            payment_status__in=["created", "pending", "authorized"]
-        ).exists()
+        unresolved = (
+            prepared["unresolved"]
+            if prepared is not None
+            else invoice.payment_attempts.filter(
+                payment_status__in=["created", "pending", "authorized"]
+            ).exists()
+        )
         payable = bool(
             authority
             and invoice.status == "due"
@@ -265,3 +278,6 @@ def purchase_quote_payload(quote):
 def activation_case_id(invoice):
     job = getattr(invoice, "fulfillment", None)
     return str(job.case.id) if job and job.case_id else None
+
+
+__all__ = ["invoice_payload", "purchase_attempt_payload", "purchase_quote_payload"]

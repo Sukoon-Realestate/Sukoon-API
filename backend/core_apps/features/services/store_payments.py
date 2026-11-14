@@ -61,9 +61,19 @@ def adapter(platform):
 
 def product_route(plan, platform):
     mode = "storekit" if platform == "ios" else "play_billing"
-    product = StoreProduct.objects.filter(
-        plan=plan, platform=platform, environment=environment(), active=True
-    ).first()
+    if hasattr(plan, "prepared_store_products"):
+        product = next(
+            (
+                item
+                for item in plan.prepared_store_products
+                if item.platform == platform
+            ),
+            None,
+        )
+    else:
+        product = StoreProduct.objects.filter(
+            plan=plan, platform=platform, environment=environment(), active=True
+        ).first()
     configured = bool(
         getattr(settings, "COMMERCE_STORE_PURCHASES_ENABLED", False)
         and getattr(settings, "COMMERCE_STORE_ADAPTERS", {}).get(platform)
@@ -367,3 +377,17 @@ def review_purchase(user, purchase, digest, reason):
                 "reason_code": reason[:80],
             },
         )
+
+
+__all__ = [
+    "StoreUnavailable",
+    "VerifiedPurchase",
+    "account_context",
+    "adapter",
+    "create_intent",
+    "environment",
+    "product_route",
+    "record_purchase",
+    "review_purchase",
+    "verify_purchase",
+]

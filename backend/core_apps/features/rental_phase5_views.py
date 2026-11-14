@@ -88,6 +88,9 @@ from .rental_phase5_views_parts.change_respond import (
     ChangeRespondView as ChangeRespondView,
     RenewalsView as RenewalsView,
     TerminationsView as TerminationsView,
+    ExternalClaimCreateView as ExternalClaimCreateView,
+    ExternalClaimsView as ExternalClaimsView,
+    PaymentExtensionsView as PaymentExtensionsView,
 )
 from .rental_phase5_views_parts.change_signing_session import (
     submit_change_for_signature as submit_change_for_signature,
@@ -103,6 +106,8 @@ __all__ = [
     "ChangeRespondView",
     "ChangeSigningSession",
     "ChangeSigningSessionView",
+    "ExternalClaimCreateView",
+    "ExternalClaimsView",
     "FeatureJsonRenderer",
     "IsAuthenticated",
     "Lease",
@@ -114,6 +119,7 @@ __all__ = [
     "MaintenanceRequest",
     "MaintenanceRequestsView",
     "NotFound",
+    "PaymentExtensionsView",
     "PermissionDenied",
     "RenewalsView",
     "RentInvoice",

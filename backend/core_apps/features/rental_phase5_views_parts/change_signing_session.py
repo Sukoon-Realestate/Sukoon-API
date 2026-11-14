@@ -5,14 +5,13 @@ from core_apps.features.http import ActionPolicy, FeatureAPIView
 
 from datetime import timedelta
 from django.db import transaction
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from core_apps.common.command_fields import parse_revision, require_request_key
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ..models import ChangeSigningSession, Lease, RentalChange
+from ..models import ChangeSigningSession, RentalChange
 from ..providers import mock_completion_metadata, get_rental_provider
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
@@ -206,49 +205,14 @@ class ChangeSigningSessionView(FeatureAPIView):
 change_signing_session = ChangeSigningSessionView.as_view()
 
 
-def complete_change_signature(provider_session_id):
-    with transaction.atomic():
-        session = get_object_or_404(
-            ChangeSigningSession, provider_session_id=provider_session_id
-        )
-        if session.change.lease.renter_company_id:
-            from ..services.company.tenancy_continuation_signing import complete
+from core_apps.features.services.change_signing_completion import (
+    complete_change_signature as complete_change_signature,
+)
 
-            return complete(session)
-        # Match participant commands and the worker: lease, change, then session.
-        lease = Lease.objects.select_for_update().get(pk=session.change.lease_id)
-        item = RentalChange.objects.select_for_update().get(pk=session.change_id)
-        item.lease = lease
-        session = ChangeSigningSession.objects.select_for_update().get(pk=session.pk)
-        if session.status == "completed":
-            return item
-        from ..services.change_terms import require_current_change_base
-
-        require_current_change_base(item)
-        if (
-            item.status != RentalChange.Status.PENDING_SIGNATURES
-            or session.expires_at <= timezone.now()
-            or session.change_revision != item.revision
-            or session.document_id != item.document_id
-            or session.document_hash != item.document_hash
-        ):
-            raise RentalConflict(
-                "The signed change document is stale.", code="document_changed"
-            )
-        session.status = "completed"
-        session.completed_at = timezone.now()
-        session.save()
-        signed = set(item.signed_by)
-        signed.add(str(session.signer.id))
-        item.signed_by = sorted(signed)
-        if {str(item.lease.owner.id), str(item.lease.tenant.id)}.issubset(signed):
-            item.status = RentalChange.Status.SIGNED
-            item.revision += 1
-        item.save()
-        from ..services.document_intents import change
-
-        change(item)
-        from ..services.planning_notifications import record_event
-
-        record_event(item, session.signer, f"change.signed.{session.id}")
-        return item
+__all__ = [
+    "ChangeSigningSessionView",
+    "SubmitChangeForSignatureView",
+    "change_signing_session",
+    "complete_change_signature",
+    "submit_change_for_signature",
+]

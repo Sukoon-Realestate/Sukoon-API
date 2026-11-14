@@ -1,29 +1,42 @@
 """Rental phase6 views: refund requests."""
 
-from django.db import transaction
-from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
-from rest_framework.exceptions import PermissionDenied, ValidationError
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from core_apps.admin_api.models import StaffProfile
-from ..models import Lease, PaymentAttempt, RefundRequest
+from ..models import RefundRequest
 from ..renderers import FeatureJsonRenderer
-from core_apps.common.command_authority import recheck_session as recheck_session_after_locks
-from ..services.commands import command_identity, money_minor
-from ..services.refunds import validate_allocations
-from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
-from ..services.rental_phase6 import refundable_balance_minor
-from .final_settlement_propose import _lease
 from .final_settlement_respond import refund_payload, _refund
 
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def refund_requests(request):
-    if request.method == "GET":
+class RefundRequestsView(FeatureAPIView):
+    name = "Refund Requests"
+    http_method_names = ["get", "post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "refund_requests",
+            "refund_requests",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+        "post": ActionPolicy(
+            "refund_requests",
+            "refund_requests",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request):
+        if request.query_params.get("projection") == "compact_v1":
+            from ..financial_http import compact_financial_response
+
+            return compact_financial_response(request, "refunds")
         workspace = request.query_params.get("workspace")
         queryset = (
             RefundRequest.objects.filter(lease__owner=request.user)
@@ -42,184 +55,82 @@ def refund_requests(request):
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
-    from ..rental_serializers_parts.command_serializers import (
-        RefundCreateCommand,
-        validated,
-    )
 
-    # A4-04: type the body first, then select only rental payment attempts.
-    # Subscription/advertising/purchase attempts have no lease and are not
-    # refundable through this rental route: they are indistinguishable from
-    # unknown identities (404), so no other purpose's existence leaks.
-    from rest_framework.exceptions import NotFound
-    from core_apps.common.command_fields import is_uuid
+    def post(self, request):
+        from ..services.refund_commands import request_refund
 
-    body = request.data if hasattr(request.data, "get") else {}
-    if not is_uuid(body.get("payment_attempt_id")):
-        raise NotFound()  # cannot name an existing attempt (historical 404)
-    attempt = get_object_or_404(
-        PaymentAttempt.objects.select_related("invoice__lease").filter(
-            payer=request.user, invoice__lease__isnull=False, invoice__purpose="rent"
+        result = request_refund(
+            request.user,
+            request.auth,
+            request.data,
+            request.headers.get("X-Sokoun-Authorization", ""),
+        )
+        return Response(result.data, status=result.status)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+refund_requests = RefundRequestsView.as_view()
+
+
+class RefundDetailView(FeatureAPIView):
+    name = "Refund Detail"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "refund_requests",
+            "refund_detail",
+            boundary="standard",
+            capability=None,
+            typed=False,
         ),
-        id=body["payment_attempt_id"],
-    )
-    lease = _lease(request, attempt.invoice.lease.id)
-    if request.user != attempt.payer:
-        raise PermissionDenied("Only the captured payer can request a refund.")
-    request_key, expected_revision = command_identity(request.data)
-    command = validated(RefundCreateCommand, request.data)
-    if expected_revision != 0:
-        raise ValidationError(
-            {"expected_revision": "A new refund starts at revision 0."}
+    }
+
+    def get(self, request, refund_id):
+        return Response(refund_payload(_refund(request, refund_id)))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+refund_detail = RefundDetailView.as_view()
+
+
+class RefundRespondView(FeatureAPIView):
+    name = "Refund Respond"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "refund_requests",
+            "refund_respond",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, refund_id):
+        from ..services.refund_commands import respond_refund
+
+        result = respond_refund(
+            request.user,
+            request.auth,
+            request.data,
+            request.headers.get("X-Sokoun-Authorization", ""),
+            refund_id,
         )
-    if command.get("lease_id") and str(command["lease_id"]) != str(lease.id):
-        raise ValidationError({"lease_id": "Payment belongs to a different lease."})
-    operation = f"refund.create.{attempt.id}"
-    replay = replay_operation(request.user, operation, request_key, request.data)
-    if replay:
-        return Response(replay[0], status=replay[1])
-    amount = money_minor(request.data.get("amount"))
-    if (
-        not isinstance(amount, int)
-        or amount <= 0
-        or amount > refundable_balance_minor(attempt)
-    ):
-        raise RentalConflict(
-            "Refund exceeds the remaining refundable capture balance.",
-            code="refund_exceeds_balance",
-        )
-    with transaction.atomic():
-        lease = _lease(request, lease.id, lock=True)
-        attempt = PaymentAttempt.objects.select_for_update().get(pk=attempt.pk)
-        replay = replay_operation(request.user, operation, request_key, request.data)
-        if replay:
-            return Response(replay[0], status=replay[1])
-        from core_apps.common.command_authority import recheck_session
-
-        recheck_session(request)
-        if amount > refundable_balance_minor(attempt):
-            raise RentalConflict(
-                "Refund exceeds the remaining refundable capture balance.",
-                code="refund_exceeds_balance",
-            )
-        from ..services.chargebacks.funding import can_refund
-
-        if not can_refund(attempt):
-            raise RentalConflict(
-                "Only confirmed captures can be refunded.", code="payment_not_captured"
-            )
-        if command.get("payment_revision", attempt.revision) != attempt.revision:
-            raise RentalConflict("Payment revision conflict.", code="stale_revision")
-        allocations = validate_allocations(
-            attempt, amount, request.data.get("allocations")
-        )
-        item = RefundRequest.objects.create(
-            lease=lease,
-            payment_attempt=attempt,
-            requester=request.user,
-            amount_minor=amount,
-            refundable_balance_snapshot_minor=refundable_balance_minor(attempt),
-            reason=command["reason"],
-            request_key=request_key,
-            allocations=allocations,
-        )
-        from ..services.refund_notifications import record
-
-        record(item, "requested", request.user)
-        output = remember_mutation(
-            user=request.user,
-            operation=operation,
-            request_key=request_key,
-            payload=request.data,
-            request_subject_id=attempt.id,
-            result_subject_id=item.id,
-            result_revision=item.revision,
-            resource=refund_payload(item),
-            response_status=201,
-        )
-    return Response(output, status=status.HTTP_201_CREATED)
+        return Response(result.data, status=result.status)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def refund_detail(request, refund_id):
-    return Response(refund_payload(_refund(request, refund_id)))
+# Stable callable import for integrations; URLs use the explicit class.
+refund_respond = RefundRespondView.as_view()
 
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def refund_respond(request, refund_id):
-    from ..services.financial_authority import require_financial_actor
-    from ..services.paymob_refunds import ROLES
-
-    require_financial_actor(request.user, ROLES, "refund.review")
-    item = _refund(request, refund_id, allow_operations=True)
-    from ..rental_serializers_parts.command_serializers import (
-        RefundRespondCommand,
-        validated,
-    )
-
-    data = request.data if hasattr(request.data, "get") else {}
-    action = data.get("action") or data.get("decision")
-    if not isinstance(action, str) or action not in {"approve", "reject"}:
-        raise ValidationError({"action": "Must be approve or reject."})
-    command = validated(RefundRespondCommand, request.data)
-    request_key = command["request_key"]
-    operation = f"refund.respond.{item.id}"
-    with transaction.atomic():
-        require_financial_actor(request.user, ROLES, "refund.review", lock=True)
-        from ..services.rental_lifecycle.locks import lock_financial_lease
-
-        if item.purpose == "chargeback_excess":
-            from ..services.chargebacks.operations import require_operator
-
-            require_financial_actor(
-                request.user,
-                {
-                    StaffProfile.RoleName.REFUND_OPERATOR,
-                    StaffProfile.RoleName.FINANCIAL_APPROVER,
-                },
-                "chargeback.approve_refund",
-                lock=True,
-            )
-            require_operator(request.user, item.lease, lock=True)
-        lock_financial_lease(Lease.objects.get(pk=item.lease_id))
-        item = _refund(request, refund_id, allow_operations=True, lock=True)
-        if item.purpose == "chargeback_excess":
-            require_operator(request.user, item.lease, lock=True)
-            if action != "approve":
-                raise RentalConflict(
-                    "Rejecting a review cannot erase evidenced excess funds; retain the refund for reconciliation."
-                )
-        replay = replay_operation(request.user, operation, request_key, request.data)
-        if replay:
-            return Response(replay[0], status=replay[1])
-        recheck_session_after_locks(request)
-        if item.revision != command["expected_revision"]:
-            raise RentalConflict("Refund revision conflict.", code="stale_revision")
-        if item.status != RefundRequest.Status.REQUESTED:
-            raise RentalConflict("Only a requested refund can be approved or rejected.")
-        item.status = (
-            RefundRequest.Status.APPROVED
-            if action == "approve"
-            else RefundRequest.Status.REJECTED
-        )
-        item.approved_by = request.user
-        item.revision += 1
-        item.save()
-        from ..services.refund_notifications import record
-
-        record(item, "approved" if action == "approve" else "rejected", request.user)
-        output = remember_mutation(
-            user=request.user,
-            operation=operation,
-            request_key=request_key,
-            payload=request.data,
-            request_subject_id=item.id,
-            result_subject_id=item.id,
-            result_revision=item.revision,
-            resource=refund_payload(item),
-        )
-    return Response(output)
+__all__ = [
+    "RefundDetailView",
+    "RefundRequestsView",
+    "RefundRespondView",
+    "refund_detail",
+    "refund_requests",
+    "refund_respond",
+]

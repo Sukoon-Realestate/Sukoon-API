@@ -3,12 +3,9 @@
 from core_apps.features.http import ActionPolicy, FeatureAPIView
 
 
-import hashlib
-import json
 from django.contrib.auth import get_user_model
-from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.exceptions import APIException, ValidationError, NotFound
+from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import IdempotencyRecord
@@ -38,61 +35,20 @@ LEASE_TEMPLATES = [
 ]
 
 
-class Conflict(APIException):
-    status_code = status.HTTP_409_CONFLICT
-    default_detail = "The request conflicts with current server state."
+from ..services.operation_receipts import Conflict as Conflict
 
 
-def _fingerprint(data):
-    return hashlib.sha256(
-        json.dumps(data, sort_keys=True, default=str, separators=(",", ":")).encode()
-    ).hexdigest()
+from ..services.operation_receipts import _fingerprint as _fingerprint
 
 
 def _replay(user, operation, request_key, payload):
-    record = IdempotencyRecord.objects.filter(
-        user=user, operation=operation, request_key=request_key
-    ).first()
-    if not record:
-        return None
-    if record.recovery_status == IdempotencyRecord.RecoveryStatus.ABSENT_FINAL:
-        raise Conflict(
-            "This operation was closed without execution. Review the current resource before using a new request key.",
-            code="operation_closed",
-        )
-    if record.fingerprint != _fingerprint(payload):
-        raise Conflict(
-            "This request_key was already used with a different payload.",
-            code="idempotency_conflict",
-        )
-    return Response(record.response_data, status=record.response_status)
+    from ..services.operation_receipts import _replay as replay
+
+    result = replay(user, operation, request_key, payload)
+    return Response(result.data, status=result.status) if result else None
 
 
-def _remember(
-    user,
-    operation,
-    request_key,
-    payload,
-    data,
-    response_status,
-    *,
-    request_subject_id=None,
-    result_subject_id=None,
-    result_revision=None,
-    is_rental_operation=False,
-):
-    return IdempotencyRecord.objects.create(
-        user=user,
-        operation=operation,
-        request_key=request_key,
-        fingerprint=_fingerprint(payload),
-        response_data=data,
-        response_status=response_status,
-        request_subject_id=request_subject_id,
-        result_subject_id=result_subject_id,
-        result_revision=result_revision,
-        is_rental_operation=is_rental_operation,
-    )
+from ..services.operation_receipts import _remember as _remember
 
 
 class RentalCapabilitiesView(FeatureAPIView):
@@ -202,3 +158,19 @@ def _paginate(request, queryset, serializer_class):
     page = paginator.paginate_queryset(queryset, request)
     serializer = serializer_class(page, many=True, context={"request": request})
     return paginator.get_paginated_response(serializer.data)
+
+
+__all__ = [
+    "Conflict",
+    "FEATURE_DECORATORS",
+    "LEASE_TEMPLATES",
+    "RentalCapabilitiesView",
+    "RentalOperationLookupView",
+    "User",
+    "_fingerprint",
+    "_paginate",
+    "_remember",
+    "_replay",
+    "rental_capabilities",
+    "rental_operation_lookup",
+]

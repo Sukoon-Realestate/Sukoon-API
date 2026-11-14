@@ -33,18 +33,24 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("tours/", TourViewerView.as_view(), name="virtual-tour-viewer-shell"),
-    path("tours/assets/<str:filename>", TourViewerView.as_view(), name="virtual-tour-viewer-asset"),
+    path(
+        "tours/assets/<str:filename>",
+        TourViewerView.as_view(),
+        name="virtual-tour-viewer-asset",
+    ),
     path(
         "api/v1/payments/paymob/test-checkout/",
         test_checkout,
         name="paymob-test-checkout",
     ),
     path(
-        "api/v1/payments/paymob/webhook/", paymob_views.webhook, name="paymob-webhook"
+        "api/v1/payments/paymob/webhook/",
+        paymob_views.PaymobWebhookView.as_view(),
+        name="paymob-webhook",
     ),
     path(
         "api/v1/payments/paymob/return/",
-        paymob_views.payment_return,
+        paymob_views.PaymobReturnView.as_view(),
         name="paymob-return",
     ),
     path("health/", health, name="runtime-health"),

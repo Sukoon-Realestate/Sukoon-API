@@ -1,22 +1,19 @@
 """Narrow financial review; reading an original outcome never submits a refund."""
 
-from django.db import transaction
+from core_apps.features.http import ActionPolicy, FeatureAPIView
+
+
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from core_apps.users.models import User
-from core_apps.users.services import sensitive_actions, totp
+from core_apps.users.services import totp
 from .models import RefundRequest, PaymobRefund
 from .pagination import FeaturePagination
 from .renderers import FeatureJsonRenderer
 from .services import paymob_client, paymob_refunds
-from .services.commands import command_identity
-from .services.financial_authority import require_financial_actor, authorization_context
 from .services.rental_lifecycle.common import staff_role
-from .services.rental_lifecycle.locks import lock_financial_lease
-from .services.rental_phase2 import RentalConflict, replay_operation, remember_mutation
 from .rental_phase6_views_parts.final_settlement_respond import refund_payload
 
 
@@ -27,13 +24,7 @@ def reader(user):
     return current
 
 
-def details(refund):
-    return {
-        "amount_minor": refund.amount_minor,
-        "payment_attempt_id": str(refund.payment_attempt.id),
-        "allocations": refund.allocations,
-        "currency": refund.payment_attempt.currency,
-    }
+from core_apps.features.services.money_projection import details as details
 
 
 def projection(refund, user):
@@ -109,241 +100,162 @@ def private(data):
     return response
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def queue(request):
-    current = reader(request.user)
-    paginator = FeaturePagination()
-    rows = RefundRequest.objects.select_related(
-        "lease", "payment_attempt__invoice"
-    ).order_by("-created_at", "-pk")
-    page = paginator.paginate_queryset(rows, request)
-    response = paginator.get_paginated_response(
-        [projection(row, current) for row in page]
-    )
-    response["Cache-Control"] = "private, no-store"
-    return response
+class QueueView(FeatureAPIView):
+    name = "Queue"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "refund_operations",
+            "queue",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
 
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def review(request, refund_id):
-    current = reader(request.user)
-    refund = get_object_or_404(
-        RefundRequest.objects.select_related("lease", "payment_attempt__invoice"),
-        id=refund_id,
-    )
-    return private(projection(refund, current))
-
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def reconcile(request, refund_id):
-    reader(request.user)
-    item = get_object_or_404(PaymobRefund, refund__id=refund_id, current=True)
-    if request.data.get("provider_transaction_id"):
-        paymob_refunds.verify_result(
-            item, candidate_id=request.data["provider_transaction_id"]
+    def get(self, request):
+        current = reader(request.user)
+        paginator = FeaturePagination()
+        rows = RefundRequest.objects.select_related(
+            "lease", "payment_attempt__invoice"
+        ).order_by("-created_at", "-pk")
+        page = paginator.paginate_queryset(rows, request)
+        response = paginator.get_paginated_response(
+            [projection(row, current) for row in page]
         )
-    else:
-        paymob_refunds.process(item, allow_submit=False)
-    current = reader(request.user)
-    return private(projection(RefundRequest.objects.get(pk=item.refund_id), current))
+        response["Cache-Control"] = "private, no-store"
+        return response
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def retry(request, refund_id):
-    key, revision = command_identity(request.data, minimum=1)
-    operation = f"refund.retry.{refund_id}"
-    # Check replay before any external inquiry, including recovery of a lost reply.
-    with transaction.atomic():
-        actor = require_financial_actor(
-            request.user, paymob_refunds.ROLES, operation, lock=True
+# Stable callable import for integrations; URLs use the explicit class.
+queue = QueueView.as_view()
+
+
+class ReviewView(FeatureAPIView):
+    name = "Review"
+    http_method_names = ["get", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "get": ActionPolicy(
+            "refund_operations",
+            "review",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def get(self, request, refund_id):
+        current = reader(request.user)
+        refund = get_object_or_404(
+            RefundRequest.objects.select_related("lease", "payment_attempt__invoice"),
+            id=refund_id,
         )
-        replay = replay_operation(actor, operation, key, request.data)
-        if replay:
-            return Response(replay[0], status=replay[1])
-    candidate = get_object_or_404(
-        PaymobRefund.objects.select_related("refund__lease", "payment"),
-        refund__id=refund_id,
-        current=True,
-    )
-    if (
-        str(candidate.id) != request.data.get("failed_instruction_id")
-        or candidate.status != "failed"
-        or candidate.refund.revision != revision
-    ):
-        # Another copy of this command may have finished after the first replay
-        # check, before the current instruction was read.
-        with transaction.atomic():
-            actor = require_financial_actor(
-                request.user, paymob_refunds.ROLES, operation, lock=True
+        return private(projection(refund, current))
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+review = ReviewView.as_view()
+
+
+class ReconcileView(FeatureAPIView):
+    name = "Reconcile"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "refund_operations",
+            "reconcile",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, refund_id):
+        reader(request.user)
+        item = get_object_or_404(PaymobRefund, refund__id=refund_id, current=True)
+        if request.data.get("provider_transaction_id"):
+            paymob_refunds.verify_result(
+                item, candidate_id=request.data["provider_transaction_id"]
             )
-            replay = replay_operation(actor, operation, key, request.data)
-            if replay:
-                return Response(replay[0], status=replay[1])
-        raise RentalConflict(
-            "Refresh the failed attempt before retrying.", code="stale_revision"
-        )
-    if not paymob_client.refund_ready():
-        raise paymob_client.PaymobUnavailable()
-    # A fresh authenticated inquiry must still confirm the predecessor's failure.
-    paymob_refunds.verify_result(candidate)
-    with transaction.atomic():
-        actor = require_financial_actor(
-            request.user, paymob_refunds.ROLES, operation, lock=True
-        )
-        replay = replay_operation(actor, operation, key, request.data)
-        if replay:
-            return Response(replay[0], status=replay[1])
-        lock_financial_lease(candidate.refund.lease)
-        refund = RefundRequest.objects.select_for_update().get(pk=candidate.refund_id)
-        item = PaymobRefund.objects.select_for_update().get(pk=candidate.pk)
-        if refund.revision != revision or not item.current:
-            raise RentalConflict("Refresh the original refund.", code="stale_revision")
-        if (
-            refund.status != "failed"
-            or refund.failure_code != "provider_declined"
-            or item.status != "failed"
-            or item.resolved_at is None
-            or item.result_snapshot.get("success") is not False
-            or item.result_snapshot.get("pending") is not False
-        ):
-            raise RentalConflict(
-                "Reconcile the original outcome before retrying.",
-                code="reconciliation_required",
-            )
-        if (
-            refund.payment_attempt_id != item.payment.attempt_id
-            or refund.amount_minor != item.amount_minor
-            or refund.allocations != item.allocations
-        ):
-            raise RentalConflict("The refund details changed.", code="invoice_changed")
-        from .services.chargebacks.funding import can_refund
-        from .services.refunds import validate_allocations
-
-        if not can_refund(refund.payment_attempt):
-            raise RentalConflict(
-                "The original funding requires reconciliation.",
-                code="payment_not_captured",
-            )
-        split = validate_allocations(
-            refund.payment_attempt,
-            item.amount_minor,
-            item.allocations,
-            exclude_refund=refund,
-        )
-        sensitive_actions.consume(
-            request,
-            action="refund.execute",
-            resource_id=refund.id,
-            revision=refund.revision,
-            payload={
-                "command": request.data,
-                "approval_kind": "retry",
-                **details(refund),
-            },
-        )
-        item.current = False
-        item.save(update_fields=["current", "updated_at"])
-        paymob_refunds.stage(
-            refund, refund.payment_attempt, split, actor=actor, retry_of=item
-        )
-        return Response(
-            remember_mutation(
-                user=actor,
-                operation=operation,
-                request_key=key,
-                payload=request.data,
-                request_subject_id=refund.id,
-                result_subject_id=refund.id,
-                result_revision=refund.revision,
-                resource=refund_payload(refund),
-            )
+        else:
+            paymob_refunds.process(item, allow_submit=False)
+        current = reader(request.user)
+        return private(
+            projection(RefundRequest.objects.get(pk=item.refund_id), current)
         )
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@renderer_classes([FeatureJsonRenderer])
-def reauthorize(request, refund_id):
-    key, revision = command_identity(request.data, minimum=1)
-    operation = f"refund.reauthorize.{refund_id}"
-    with transaction.atomic():
-        actor = require_financial_actor(
-            request.user, paymob_refunds.ROLES, operation, lock=True
-        )
-        replay = replay_operation(actor, operation, key, request.data)
-        if replay:
-            return Response(replay[0], status=replay[1])
-        candidate = get_object_or_404(
-            PaymobRefund.objects.select_related("refund__lease"),
-            refund__id=refund_id,
-            current=True,
-        )
-        lock_financial_lease(candidate.refund.lease)
-        refund = RefundRequest.objects.select_for_update().get(pk=candidate.refund_id)
-        item = PaymobRefund.objects.select_for_update().get(pk=candidate.pk)
-        if refund.revision != revision:
-            raise RentalConflict("Refresh the original refund.", code="stale_revision")
-        if (
-            item.status != "held"
-            or item.failure_code != "authorization_changed"
-            or item.submitted_at is not None
-            or refund.status != "processing"
-        ):
-            raise RentalConflict(
-                "An unknown refund cannot be submitted again.",
-                code="reconciliation_required",
-            )
-        if not paymob_client.refund_ready():
-            raise paymob_client.PaymobUnavailable()
-        if (
-            refund.amount_minor != item.amount_minor
-            or refund.allocations != item.allocations
-        ):
-            raise RentalConflict("The refund details changed.", code="invoice_changed")
-        sensitive_actions.consume(
-            request,
-            action="refund.execute",
-            resource_id=refund.id,
-            revision=refund.revision,
-            payload={
-                "command": request.data,
-                "approval_kind": "reauthorize",
-                **details(refund),
-            },
-        )
-        item.authorization_context = authorization_context(actor)
-        item.status, item.failure_code = "queued", ""
-        item.save(
-            update_fields=[
-                "authorization_context",
-                "status",
-                "failure_code",
-                "updated_at",
-            ]
-        )
-        refund.failure_code = ""
-        refund.revision += 1
-        refund.save(update_fields=["failure_code", "revision", "updated_at"])
-        from .services.refund_notifications import record
+# Stable callable import for integrations; URLs use the explicit class.
+reconcile = ReconcileView.as_view()
 
-        record(refund, "reauthorized", actor)
-        return Response(
-            remember_mutation(
-                user=actor,
-                operation=operation,
-                request_key=key,
-                payload=request.data,
-                request_subject_id=refund.id,
-                result_subject_id=refund.id,
-                result_revision=refund.revision,
-                resource=refund_payload(refund),
-            )
+
+class RetryView(FeatureAPIView):
+    name = "Retry"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "refund_operations",
+            "retry",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, refund_id):
+        from core_apps.features.services.refund_commands import retry_refund
+
+        result = retry_refund(
+            request.user,
+            request.auth,
+            request.data,
+            request.headers.get("X-Sokoun-Authorization", ""),
+            refund_id,
         )
+        return Response(result.data, status=result.status)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+retry = RetryView.as_view()
+
+
+class ReauthorizeView(FeatureAPIView):
+    name = "Reauthorize"
+    http_method_names = ["post", "options"]
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [FeatureJsonRenderer]
+    action_policies = {
+        "post": ActionPolicy(
+            "refund_operations",
+            "reauthorize",
+            boundary="standard",
+            capability=None,
+            typed=False,
+        ),
+    }
+
+    def post(self, request, refund_id):
+        from core_apps.features.services.refund_commands import reauthorize_refund
+
+        result = reauthorize_refund(
+            request.user,
+            request.auth,
+            request.data,
+            request.headers.get("X-Sokoun-Authorization", ""),
+            refund_id,
+        )
+        return Response(result.data, status=result.status)
+
+
+# Stable callable import for integrations; URLs use the explicit class.
+reauthorize = ReauthorizeView.as_view()
+
+__all__ = ["details"]

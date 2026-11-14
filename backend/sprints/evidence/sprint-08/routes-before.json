@@ -1,0 +1,2830 @@
+[
+  {
+    "route": "api/v1/payments/paymob/test-checkout/",
+    "name": "paymob-test-checkout",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.common.paymob_checkout.test_checkout",
+    "file": "core_apps/common/paymob_checkout.py",
+    "line": 50,
+    "area": 4,
+    "family": "api/payments",
+    "authentication": "—",
+    "permissions": "AllowAny",
+    "throttles": "TestCheckoutThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "TestCheckoutInput",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/common/test_paymob_checkout.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/payments/paymob/webhook/",
+    "name": "paymob-webhook",
+    "methods": [
+      "(adapter-defined)"
+    ],
+    "style": "plain function",
+    "handler": "core_apps.common.paymob_views.webhook",
+    "file": "core_apps/common/paymob_views.py",
+    "line": 34,
+    "area": 4,
+    "family": "api/payments",
+    "authentication": "—",
+    "permissions": "—",
+    "throttles": "—",
+    "parsers": "—",
+    "request_schema": "—",
+    "mvp_allowed": {},
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_paymob_invoice_payments.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/common/test_paymob_callbacks.py",
+      "core_apps/common/test_paymob_checkout.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/payments/paymob/return/",
+    "name": "paymob-return",
+    "methods": [
+      "(adapter-defined)"
+    ],
+    "style": "plain function",
+    "handler": "core_apps.common.paymob_views.payment_return",
+    "file": "core_apps/common/paymob_views.py",
+    "line": 73,
+    "area": 4,
+    "family": "api/payments",
+    "authentication": "—",
+    "permissions": "—",
+    "throttles": "—",
+    "parsers": "—",
+    "request_schema": "—",
+    "mvp_allowed": {},
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_paymob_invoice_payments.py",
+      "core_apps/common/tests_mvp_scope.py",
+      "core_apps/common/test_paymob_callbacks.py",
+      "core_apps/common/test_paymob_checkout.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/refunds/",
+    "name": "operation-refund-queue",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.refund_operations.queue",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 112,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/review/",
+    "name": "operation-refund-review",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.refund_operations.review",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 129,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reconcile/",
+    "name": "operation-refund-reconcile",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.refund_operations.reconcile",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 141,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/reauthorize/",
+    "name": "operation-refund-reauthorize",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.refund_operations.reauthorize",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 271,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "authority",
+      "lock",
+      "receipt"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/refunds/<uuid:refund_id>/retry/",
+    "name": "operation-refund-retry",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.refund_operations.retry",
+    "file": "core_apps/features/refund_operations.py",
+    "line": 157,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/resume/",
+    "name": "payment-attempt-resume",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.payment_resume_views.payment_attempt_resume",
+    "file": "core_apps/features/payment_resume_views.py",
+    "line": 18,
+    "area": 4,
+    "family": "api/features/payment-attempts",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "PaymentReconcileThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_checkout_absence_recovery.py",
+      "core_apps/features/tests/test_field_audit_rental_payment.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operator/chargebacks/<uuid:chargeback_id>/",
+    "name": "operator-chargeback-detail",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.chargeback_views.chargeback_detail",
+    "file": "core_apps/features/chargeback_views.py",
+    "line": 23,
+    "area": 4,
+    "family": "api/features/operator",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/business-policies/",
+    "name": "business-policies",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.business_policy_views.current_policies",
+    "file": "core_apps/features/business_policy_views.py",
+    "line": 15,
+    "area": 3,
+    "family": "api/features/business-policies",
+    "authentication": "CookieAuthentication",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/business-policies/<str:code>/versions/<str:version>/",
+    "name": "business-policy-version",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.business_policy_views.policy_version",
+    "file": "core_apps/features/business_policy_views.py",
+    "line": 32,
+    "area": 3,
+    "family": "api/features/business-policies",
+    "authentication": "CookieAuthentication",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": true
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operator/business-policies/",
+    "name": "business-policy-administration",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.business_policy_views.administer_policies",
+    "file": "core_apps/features/business_policy_views.py",
+    "line": 47,
+    "area": 3,
+    "family": "api/features/operator",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": true,
+      "POST": true
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rental-documents/<uuid:document_id>/content/",
+    "name": "rental-document-content",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.DocumentContentView",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 132,
+    "area": 4,
+    "family": "api/features/rental-documents",
+    "authentication": "—",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_ux_document_context.py",
+      "core_apps/features/tests/test_rental_phase6.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/store/notifications/<str:platform>/",
+    "name": "billing-store-notification",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.commerce_views.store_notification",
+    "file": "core_apps/features/commerce_views.py",
+    "line": 58,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "—",
+    "permissions": "—",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/store/context/",
+    "name": "billing-store-context",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.commerce_views.store_context",
+    "file": "core_apps/features/commerce_views.py",
+    "line": 24,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/store/verify/",
+    "name": "billing-store-verify",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.commerce_views.store_verify",
+    "file": "core_apps/features/commerce_views.py",
+    "line": 31,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "StoreVerifySerializer",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/entitlements/",
+    "name": "billing-entitlements",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.commerce_views.entitlements",
+    "file": "core_apps/features/commerce_views.py",
+    "line": 40,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/purchase-routing/",
+    "name": "",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.purchase_routing_views.purchase_route",
+    "file": "core_apps/features/purchase_routing_views.py",
+    "line": 9,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/subscription-plans/",
+    "name": "subscription-plans",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.subscription_views.plans",
+    "file": "core_apps/features/subscription_views.py",
+    "line": 15,
+    "area": 3,
+    "family": "api/features/subscription-plans",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/subscriptions/current/",
+    "name": "current-subscription",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.subscription_views.current",
+    "file": "core_apps/features/subscription_views.py",
+    "line": 37,
+    "area": 3,
+    "family": "api/features/subscriptions",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/invoices/",
+    "name": "billing-invoices",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.billing_views.invoices",
+    "file": "core_apps/features/billing_views.py",
+    "line": 62,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/advertising/tests/test_advertising_api.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/invoice-operations/<uuid:request_key>/",
+    "name": "billing-invoice-operation",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.billing_views.invoice_operation",
+    "file": "core_apps/features/billing_views.py",
+    "line": 163,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "receipt"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/",
+    "name": "billing-invoice",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.billing_views.invoice_detail",
+    "file": "core_apps/features/billing_views.py",
+    "line": 147,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/advertising/tests/test_advertising_api.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/quote/",
+    "name": "billing-quote",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.billing_views.invoice_quote",
+    "file": "core_apps/features/billing_views.py",
+    "line": 194,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/advertising/tests/test_advertising_api.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/checkout/",
+    "name": "billing-checkout",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.billing_views.invoice_checkout",
+    "file": "core_apps/features/billing_views.py",
+    "line": 208,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/advertising/tests/test_advertising_api.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/billing/invoices/<uuid:invoice_id>/cancel/",
+    "name": "billing-cancel",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.billing_views.invoice_cancel",
+    "file": "core_apps/features/billing_views.py",
+    "line": 219,
+    "area": 4,
+    "family": "api/features/billing",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/advertising/tests/test_advertising_api.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.mock_provider_views.onboarding_complete",
+    "file": "core_apps/features/mock_provider_views.py",
+    "line": 82,
+    "area": 3,
+    "family": "api/features/mock-provider",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "OwnerPaymentProfileSerializer",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "authority",
+      "lock",
+      "receipt"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/mock-provider/signing-sessions/<uuid:session_id>/complete/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.mock_provider_views.signing_complete",
+    "file": "core_apps/features/mock_provider_views.py",
+    "line": 119,
+    "area": 3,
+    "family": "api/features/mock-provider",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "LeasePhase2Serializer",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "authority",
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase2.py"
+    ],
+    "aliases": [
+      "api/v1/features/v1/mock-provider/change-signing-sessions/<uuid:session_id>/complete/"
+    ]
+  },
+  {
+    "route": "api/v1/features/v1/mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.mock_provider_views.signing_complete",
+    "file": "core_apps/features/mock_provider_views.py",
+    "line": 119,
+    "area": 3,
+    "family": "api/features/mock-provider",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "LeasePhase2Serializer",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "authority",
+      "lock",
+      "receipt"
+    ],
+    "tests": [],
+    "aliases": [
+      "api/v1/features/v1/mock-provider/signing-sessions/<uuid:session_id>/complete/"
+    ]
+  },
+  {
+    "route": "api/v1/features/v1/mock-provider/payment-attempts/<uuid:attempt_id>/events/",
+    "name": "",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.mock_provider_views.payment_event",
+    "file": "core_apps/features/mock_provider_views.py",
+    "line": 178,
+    "area": 3,
+    "family": "api/features/mock-provider",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase2.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/boost-campaigns/",
+    "name": "boost-campaigns",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.views_parts.boost_campaigns.boost_campaigns",
+    "file": "core_apps/features/views_parts/boost_campaigns.py",
+    "line": 38,
+    "area": 3,
+    "family": "api/features/boost-campaigns",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [
+      "lock"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_promotion_visibility.py",
+      "core_apps/features/tests/test_audit_concurrency.py",
+      "core_apps/features/tests/test_promotion_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/boost-campaigns/resolve/",
+    "name": "boost-campaign-resolve",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.views_parts.boost_campaigns.boost_campaign_resolve",
+    "file": "core_apps/features/views_parts/boost_campaigns.py",
+    "line": 55,
+    "area": 3,
+    "family": "api/features/boost-campaigns",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/boost-campaigns/<uuid:campaign_id>/",
+    "name": "boost-campaign-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.views_parts.boost_campaigns.boost_campaign_detail",
+    "file": "core_apps/features/views_parts/boost_campaigns.py",
+    "line": 26,
+    "area": 3,
+    "family": "api/features/boost-campaigns",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "BoostCampaignSerializer",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_promotion_visibility.py",
+      "core_apps/features/tests/test_audit_concurrency.py",
+      "core_apps/features/tests/test_promotion_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/owner-payment-profile/",
+    "name": "owner-payment-profile",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase2_views_parts.owner_payment_profile.owner_payment_profile",
+    "file": "core_apps/features/rental_phase2_views_parts/owner_payment_profile.py",
+    "line": 205,
+    "area": 4,
+    "family": "api/features/owner-payment-profile",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "OwnerPaymentProfileSerializer",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_beneficiary_confirmation.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/owner-payment-profile/beneficiary-details/",
+    "name": "owner-beneficiary-details",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.beneficiary_views.submit_details",
+    "file": "core_apps/features/beneficiary_views.py",
+    "line": 63,
+    "area": 4,
+    "family": "api/features/owner-payment-profile",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/owner-payment-profile/confirm-beneficiary/",
+    "name": "owner-beneficiary-confirm",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.beneficiary_views.confirm",
+    "file": "core_apps/features/beneficiary_views.py",
+    "line": 92,
+    "area": 4,
+    "family": "api/features/owner-payment-profile",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "OwnerPaymentProfileSerializer",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "headers",
+      "lock",
+      "receipt"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/owner-payment-profile/onboarding-session/",
+    "name": "owner-onboarding-session",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase2_views_parts.owner_onboarding_session.owner_onboarding_session",
+    "file": "core_apps/features/rental_phase2_views_parts/owner_onboarding_session.py",
+    "line": 24,
+    "area": 3,
+    "family": "api/features/owner-payment-profile",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "OwnerOnboardingBodySerializer",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase2.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/timeline/",
+    "name": "lease-timeline",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase2_views_parts.lease_billing_schedule.LeaseTimelineView",
+    "file": "core_apps/features/rental_phase2_views_parts/lease_billing_schedule.py",
+    "line": 15,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/billing-schedule/",
+    "name": "lease-billing-schedule",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase2_views_parts.lease_billing_schedule.LeaseBillingScheduleView",
+    "file": "core_apps/features/rental_phase2_views_parts/lease_billing_schedule.py",
+    "line": 55,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/provider-webhooks/rental/",
+    "name": "fake-rental-provider-webhook",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase2_views_parts.apply_fake_rental_event.fake_rental_provider_webhook",
+    "file": "core_apps/features/rental_phase2_views_parts/apply_fake_rental_event.py",
+    "line": 80,
+    "area": 3,
+    "family": "api/features/provider-webhooks",
+    "authentication": "CookieAuthentication",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase5.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/checkout/",
+    "name": "rent-invoice-checkout",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase3_views_parts.rent_invoice_checkout.rent_invoice_checkout",
+    "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_checkout.py",
+    "line": 29,
+    "area": 4,
+    "family": "api/features/rent-invoices",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_mobile_field_http.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_rental_foundation.py",
+      "core_apps/features/tests/test_checkout_absence_recovery.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_invoice_read_recovery.py",
+      "core_apps/features/tests/test_rental_payment_history.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_field_audit_rental_payment.py",
+      "core_apps/support/tests/test_platform_payment_reports.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/quote/",
+    "name": "rent-invoice-quote",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase3_views_parts.rent_invoice_quote.rent_invoice_quote",
+    "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_quote.py",
+    "line": 135,
+    "area": 4,
+    "family": "api/features/rent-invoices",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_mobile_field_http.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_rental_foundation.py",
+      "core_apps/features/tests/test_checkout_absence_recovery.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_invoice_read_recovery.py",
+      "core_apps/features/tests/test_rental_payment_history.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_field_audit_rental_payment.py",
+      "core_apps/support/tests/test_platform_payment_reports.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/payment-attempts/",
+    "name": "payment-attempts",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase3_views_parts.owner_payables.payment_attempts",
+    "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+    "line": 59,
+    "area": 4,
+    "family": "api/features/payment-attempts",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [
+      "headers",
+      "lock"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_checkout_absence_recovery.py",
+      "core_apps/features/tests/test_field_audit_rental_payment.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/payments/",
+    "name": "rent-invoice-payments",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase3_views_parts.rent_invoice_payments.rent_invoice_payments",
+    "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_payments.py",
+    "line": 12,
+    "area": 4,
+    "family": "api/features/rent-invoices",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_mobile_field_http.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_rental_foundation.py",
+      "core_apps/features/tests/test_checkout_absence_recovery.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_invoice_read_recovery.py",
+      "core_apps/features/tests/test_rental_payment_history.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_field_audit_rental_payment.py",
+      "core_apps/support/tests/test_platform_payment_reports.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/",
+    "name": "payment-attempt-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase3_views_parts.owner_payables.payment_attempt_detail",
+    "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+    "line": 132,
+    "area": 4,
+    "family": "api/features/payment-attempts",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_checkout_absence_recovery.py",
+      "core_apps/features/tests/test_field_audit_rental_payment.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/payment-attempts/<uuid:attempt_id>/reconcile/",
+    "name": "payment-attempt-reconcile",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase3_views_parts.owner_payables.payment_attempt_reconcile",
+    "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+    "line": 141,
+    "area": 4,
+    "family": "api/features/payment-attempts",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "PaymentReconcileThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_checkout_absence_recovery.py",
+      "core_apps/features/tests/test_field_audit_rental_payment.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/owner-payables/",
+    "name": "owner-payables",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase3_views_parts.owner_payables.owner_payables",
+    "file": "core_apps/features/rental_phase3_views_parts/owner_payables.py",
+    "line": 178,
+    "area": 4,
+    "family": "api/features/owner-payables",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_rental_phase2.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/provider-webhooks/payments/",
+    "name": "fake-payment-webhook",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase3_views_parts.rent_invoice_checkout.fake_payment_webhook",
+    "file": "core_apps/features/rental_phase3_views_parts/rent_invoice_checkout.py",
+    "line": 196,
+    "area": 4,
+    "family": "api/features/provider-webhooks",
+    "authentication": "CookieAuthentication",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_recovery_fence.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/handovers/",
+    "name": "lease-handovers",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.lease_handovers.LeaseHandoversView",
+    "file": "core_apps/features/rental_phase4_views_parts/lease_handovers.py",
+    "line": 13,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "JSONParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/handovers/<uuid:handover_id>/",
+    "name": "handover-detail",
+    "methods": [
+      "GET",
+      "PATCH"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.lease_handovers.HandoverDetailView",
+    "file": "core_apps/features/rental_phase4_views_parts/lease_handovers.py",
+    "line": 66,
+    "area": 4,
+    "family": "api/features/handovers",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "PATCH": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_rental_phase4.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/handovers/<uuid:handover_id>/respond/",
+    "name": "handover-respond",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.handover_respond.HandoverRespondView",
+    "file": "core_apps/features/rental_phase4_views_parts/handover_respond.py",
+    "line": 28,
+    "area": 4,
+    "family": "api/features/handovers",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_rental_phase4.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rental-attachments/",
+    "name": "rental-evidence-upload",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.RentalEvidenceUploadView",
+    "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+    "line": 54,
+    "area": 4,
+    "family": "api/features/rental-attachments",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt",
+      "upload"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_evidence_independence.py",
+      "core_apps/features/tests/test_rental_phase4.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rental-attachments/<uuid:evidence_id>/",
+    "name": "rental-evidence-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.RentalEvidenceDetailView",
+    "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+    "line": 175,
+    "area": 4,
+    "family": "api/features/rental-attachments",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_evidence_independence.py",
+      "core_apps/features/tests/test_rental_phase4.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rental-attachments/<uuid:evidence_id>/content/",
+    "name": "rental-evidence-content",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.RentalEvidenceContentView",
+    "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+    "line": 244,
+    "area": 4,
+    "family": "api/features/rental-attachments",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_evidence_independence.py",
+      "core_apps/features/tests/test_rental_phase4.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rental-attachments/<uuid:evidence_id>/download/",
+    "name": "rental-evidence-download",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.rental_evidence_upload.RentalEvidenceDownloadView",
+    "file": "core_apps/features/rental_phase4_views_parts/rental_evidence_upload.py",
+    "line": 198,
+    "area": 4,
+    "family": "api/features/rental-attachments",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_evidence_independence.py",
+      "core_apps/features/tests/test_rental_phase4.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/deposit/",
+    "name": "lease-deposit",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.handover_respond.lease_deposit",
+    "file": "core_apps/features/rental_phase4_views_parts/handover_respond.py",
+    "line": 17,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/payouts/",
+    "name": "rental-payouts",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.operations_execute_payout.payouts",
+    "file": "core_apps/features/rental_phase4_views_parts/operations_execute_payout.py",
+    "line": 30,
+    "area": 4,
+    "family": "api/features/payouts",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/payouts/<uuid:payout_id>/",
+    "name": "rental-payout-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.operations_execute_payout.payout_detail",
+    "file": "core_apps/features/rental_phase4_views_parts/operations_execute_payout.py",
+    "line": 47,
+    "area": 4,
+    "family": "api/features/payouts",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/payouts/execute/",
+    "name": "operations-payout-execute",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.operations_execute_payout.operations_execute_payout",
+    "file": "core_apps/features/rental_phase4_views_parts/operations_execute_payout.py",
+    "line": 67,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/users/tests/test_security_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/payouts/preview/",
+    "name": "operations-payout-preview",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.payout_preview",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 264,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "OwnerPaymentProfileSerializer",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/payouts/",
+    "name": "operations-payout-queue",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.payout_queue",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 84,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/users/tests/test_security_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/payables/",
+    "name": "operations-payable-queue",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.payable_queue",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 104,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "OwnerPaymentProfileSerializer",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/review/",
+    "name": "operations-payout-review",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.payout_review",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 170,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/users/tests/test_security_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reauthorize/",
+    "name": "operations-payout-reauthorize",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.reauthorize_payout",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 438,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/users/tests/test_security_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/retry/",
+    "name": "operations-payout-retry",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.payout_review.retry_failed_payout",
+    "file": "core_apps/features/rental_phase4_views_parts/payout_review.py",
+    "line": 445,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/users/tests/test_security_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/operations/payouts/<uuid:payout_id>/reconcile/",
+    "name": "operations-payout-reconcile",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase4_views_parts.operations_reconcile_payout.operations_reconcile_payout",
+    "file": "core_apps/features/rental_phase4_views_parts/operations_reconcile_payout.py",
+    "line": 18,
+    "area": 4,
+    "family": "api/features/operations",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_paymob_payouts.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/users/tests/test_security_recovery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/payment-extension-requests/",
+    "name": "payment-extensions",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase5_views_parts.change_respond.payment_extensions",
+    "file": "core_apps/features/rental_phase5_views_parts/change_respond.py",
+    "line": 23,
+    "area": 3,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rent-invoices/<uuid:invoice_id>/external-payment-claims/",
+    "name": "external-claim-create",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase5_views_parts.change_respond.external_claim_create",
+    "file": "core_apps/features/rental_phase5_views_parts/change_respond.py",
+    "line": 136,
+    "area": 3,
+    "family": "api/features/rent-invoices",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase3.py",
+      "core_apps/features/tests/test_mobile_field_http.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_rental_foundation.py",
+      "core_apps/features/tests/test_checkout_absence_recovery.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_invoice_read_recovery.py",
+      "core_apps/features/tests/test_rental_payment_history.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_field_audit_rental_payment.py",
+      "core_apps/support/tests/test_platform_payment_reports.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/external-payment-claims/",
+    "name": "external-claims",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase5_views_parts.change_respond.external_claims",
+    "file": "core_apps/features/rental_phase5_views_parts/change_respond.py",
+    "line": 129,
+    "area": 3,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/execute/",
+    "name": "refund-execute",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.refund_execute.refund_execute",
+    "file": "core_apps/features/rental_phase6_views_parts/refund_execute.py",
+    "line": 44,
+    "area": 4,
+    "family": "api/features/refund-requests",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/",
+    "name": "final-settlement",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_propose.FinalSettlementDetailView",
+    "file": "core_apps/features/rental_phase6_views_parts/final_settlement_propose.py",
+    "line": 88,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/propose/",
+    "name": "final-settlement-propose",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_propose.FinalSettlementProposeView",
+    "file": "core_apps/features/rental_phase6_views_parts/final_settlement_propose.py",
+    "line": 117,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/final-settlement/respond/",
+    "name": "final-settlement-respond",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.final_settlement_respond.FinalSettlementRespondView",
+    "file": "core_apps/features/rental_phase6_views_parts/final_settlement_respond.py",
+    "line": 25,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/refund-requests/",
+    "name": "refund-requests",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.refund_requests.refund_requests",
+    "file": "core_apps/features/rental_phase6_views_parts/refund_requests.py",
+    "line": 22,
+    "area": 4,
+    "family": "api/features/refund-requests",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/",
+    "name": "refund-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.refund_requests.refund_detail",
+    "file": "core_apps/features/rental_phase6_views_parts/refund_requests.py",
+    "line": 143,
+    "area": 4,
+    "family": "api/features/refund-requests",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/refund-requests/<uuid:refund_id>/respond/",
+    "name": "refund-respond",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.refund_requests.refund_respond",
+    "file": "core_apps/features/rental_phase6_views_parts/refund_requests.py",
+    "line": 150,
+    "area": 4,
+    "family": "api/features/refund-requests",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/disputes/",
+    "name": "rental-disputes",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.disputes.DisputesView",
+    "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+    "line": 23,
+    "area": 4,
+    "family": "api/features/disputes",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_audit_concurrency.py",
+      "core_apps/features/tests/test_audit_disputes.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/disputes/<uuid:dispute_id>/",
+    "name": "rental-dispute-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.disputes.DisputeDetailView",
+    "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+    "line": 134,
+    "area": 4,
+    "family": "api/features/disputes",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_audit_disputes.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/disputes/<uuid:dispute_id>/responses/",
+    "name": "rental-dispute-responses",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.disputes.DisputeRespondView",
+    "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+    "line": 157,
+    "area": 4,
+    "family": "api/features/disputes",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py"
+    ],
+    "aliases": [
+      "api/v1/features/v1/disputes/<uuid:dispute_id>/respond/"
+    ]
+  },
+  {
+    "route": "api/v1/features/v1/disputes/<uuid:dispute_id>/respond/",
+    "name": "rental-dispute-respond",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.disputes.DisputeRespondView",
+    "file": "core_apps/features/rental_phase6_views_parts/disputes.py",
+    "line": 157,
+    "area": 4,
+    "family": "api/features/disputes",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_audit_disputes.py"
+    ],
+    "aliases": [
+      "api/v1/features/v1/disputes/<uuid:dispute_id>/responses/"
+    ]
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/documents/",
+    "name": "lease-documents",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.LeaseDocumentsView",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 46,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rental-documents/<uuid:document_id>/download/",
+    "name": "rental-document-download",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.DocumentDownloadView",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 89,
+    "area": 4,
+    "family": "api/features/rental-documents",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_ux_document_context.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_company_role_contexts.py",
+      "core_apps/features/tests/test_company_tenancy.py",
+      "core_apps/features/tests/test_rental_statement_delivery.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/rental-statements/",
+    "name": "rental-statement-create",
+    "methods": [
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.RentalStatementCreateView",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 157,
+    "area": 4,
+    "family": "api/features/rental-statements",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/users/tests/test_identity_delivery_fences.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/reviews/",
+    "name": "lease-reviews",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.lease_reviews.LeaseReviewsView",
+    "file": "core_apps/features/rental_phase6_views_parts/lease_reviews.py",
+    "line": 262,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/features/v1/leases/<uuid:lease_id>/rental-center/",
+    "name": "rental-center",
+    "methods": [
+      "GET"
+    ],
+    "style": "DRF CBV",
+    "handler": "core_apps.features.rental_phase6_views_parts.rental_center.RentalCenterView",
+    "file": "core_apps/features/rental_phase6_views_parts/rental_center.py",
+    "line": 18,
+    "area": 4,
+    "family": "api/features/leases",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [
+      "core_apps/features/tests/test_field_audit_response_notes.py",
+      "core_apps/features/tests/test_rental_phase6.py",
+      "core_apps/features/tests/test_private_evidence_projections.py",
+      "core_apps/features/tests/test_rental_phase2.py",
+      "core_apps/features/tests/test_audit_change_terms.py",
+      "core_apps/features/tests/test_audit_documents.py",
+      "core_apps/features/tests/test_cycle_qa_setup.py",
+      "core_apps/features/tests/test_audit_private_changes.py",
+      "core_apps/features/tests/test_payment_extension_entry.py",
+      "core_apps/features/tests/test_audit_rental_contracts.py",
+      "core_apps/features/tests/test_individual_simplification.py",
+      "core_apps/features/tests/test_field_audit_queries.py",
+      "core_apps/features/tests/test_tenancy_invitations.py",
+      "core_apps/features/tests/test_field_audit_maintenance.py",
+      "core_apps/features/tests/test_rental_phase5.py",
+      "core_apps/features/tests/test_rental_list_filters.py",
+      "core_apps/features/tests/test_field_audit_settlement_notes.py",
+      "core_apps/features/tests/test_change_signature_notes.py",
+      "core_apps/features/tests/test_rental_phase4.py",
+      "core_apps/common/tests_mvp_scope.py"
+    ],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/advertising/v1/plans/",
+    "name": "plan-list",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.advertising.views_parts.owner_advertisement_collection.plan_list",
+    "file": "core_apps/advertising/views_parts/owner_advertisement_collection.py",
+    "line": 81,
+    "area": 4,
+    "family": "api/advertising",
+    "authentication": "CookieAuthentication",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/advertising/v1/owner-advertisements/",
+    "name": "owner-advertisement-list",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.advertising.views_parts.owner_advertisement_collection.owner_advertisement_collection",
+    "file": "core_apps/advertising/views_parts/owner_advertisement_collection.py",
+    "line": 93,
+    "area": 4,
+    "family": "api/advertising",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "AdvertisementCreateSerializer",
+    "mvp_allowed": {
+      "GET": false,
+      "POST": false
+    },
+    "signals": [
+      "receipt",
+      "upload"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/",
+    "name": "owner-advertisement-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.advertising.views_parts.owner_advertisement_collection.owner_advertisement_detail",
+    "file": "core_apps/advertising/views_parts/owner_advertisement_collection.py",
+    "line": 153,
+    "area": 4,
+    "family": "api/advertising",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/advertising/v1/owner-advertisements/<uuid:advertisement_id>/mock-payment/",
+    "name": "mock-payment",
+    "methods": [
+      "POST"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.advertising.views_parts.tenant_home_placement.mock_payment",
+    "file": "core_apps/advertising/views_parts/tenant_home_placement.py",
+    "line": 36,
+    "area": 4,
+    "family": "api/advertising",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "JSONParser",
+    "request_schema": "MockPaymentSerializer",
+    "mvp_allowed": {
+      "POST": false
+    },
+    "signals": [
+      "receipt"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/advertising/v1/operations/<str:operation_id>/",
+    "name": "operation-detail",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.advertising.views_parts.tenant_home_placement.operation_detail",
+    "file": "core_apps/advertising/views_parts/tenant_home_placement.py",
+    "line": 63,
+    "area": 4,
+    "family": "api/advertising",
+    "authentication": "CookieAuthentication",
+    "permissions": "IsAuthenticated",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "lock",
+      "receipt"
+    ],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/advertising/v1/placements/tenant-home/",
+    "name": "tenant-home",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.advertising.views_parts.tenant_home_placement.tenant_home_placement",
+    "file": "core_apps/advertising/views_parts/tenant_home_placement.py",
+    "line": 103,
+    "area": 4,
+    "family": "api/advertising",
+    "authentication": "CookieAuthentication",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [],
+    "tests": [],
+    "aliases": []
+  },
+  {
+    "route": "api/v1/advertising/v1/media/<uuid:advertisement_id>/",
+    "name": "advertisement-media",
+    "methods": [
+      "GET"
+    ],
+    "style": "decorated FBV",
+    "handler": "core_apps.advertising.views_parts.tenant_home_placement.advertisement_media",
+    "file": "core_apps/advertising/views_parts/tenant_home_placement.py",
+    "line": 139,
+    "area": 4,
+    "family": "api/advertising",
+    "authentication": "CookieAuthentication",
+    "permissions": "AllowAny",
+    "throttles": "AnonRateThrottle, UserRateThrottle",
+    "parsers": "FormParser, JSONParser, MultiPartParser",
+    "request_schema": "—",
+    "mvp_allowed": {
+      "GET": false
+    },
+    "signals": [
+      "headers"
+    ],
+    "tests": [],
+    "aliases": []
+  }
+]

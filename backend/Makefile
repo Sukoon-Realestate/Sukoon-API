@@ -235,3 +235,13 @@ test-sprint07-housing: ## Housing CBV/policy, domain and adjacent feature regres
 
 sprint07-coverage: ## Reconcile every scoped alias and global transport contract, without database access
 	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint07_inventory.py
+
+.PHONY: test-sprint08-commerce sprint08-coverage
+test-sprint08-commerce: ## Commerce/domain/identity regressions; supply isolated settings and storage
+	mkdir -p $(BASELINE_OUT)/sprint-08
+	$(BASELINE_ENV) DOTENV_DISABLED=1 $(CYCLE_PYTHON) -m pytest -p no:cacheprovider -o addopts="--strict-markers --tb=short" \
+		--ds=$(CYCLE_SETTINGS) --junitxml=$(BASELINE_OUT)/sprint-08/junit.xml \
+		core_apps/features/tests core_apps/advertising/tests core_apps/common core_apps/users/tests
+
+sprint08-coverage: ## Reconcile all 73 original commerce functions, callbacks and global aliases
+	DOTENV_DISABLED=1 DJANGO_SETTINGS_MODULE=config.settings.test $(CYCLE_PYTHON) tools/qa/sprint08_inventory.py

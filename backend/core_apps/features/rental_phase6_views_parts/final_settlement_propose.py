@@ -3,25 +3,13 @@
 from core_apps.features.http import ActionPolicy, FeatureAPIView
 
 
-import uuid
-from django.db import transaction
 from django.shortcuts import get_object_or_404
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ..models import FinalSettlement, Lease, PrivateAccessRevocation, RentalEvidence
+from ..models import FinalSettlement, Lease, PrivateAccessRevocation
 from ..providers import require_rental_provider, require_verified_rental_account
 from ..renderers import FeatureJsonRenderer
-from ..services.cycle_permissions import cycle_actions
-from ..services.commands import command_identity, money_minor
-from ..services.settlements import LINE_TYPES, financial_snapshot, prepare_settlement
-from ..services.settlement_notes import (
-    history_payload,
-    notes_payload,
-    remember_note,
-    validated_note,
-)
-from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 
 
 def _money(value):
@@ -49,35 +37,7 @@ def _lease(request, lease_id, lock=False, *, provider_required=False):
     return lease
 
 
-def settlement_payload(item, user=None):
-    from ..services.settlements_parts.prepare_settlement import (
-        settlement_precondition_error,
-    )
-
-    from ..services.billing_sources import source_invoices
-
-    error = settlement_precondition_error(item.lease)
-    return {
-        "billing_invoices": source_invoices("settlement", item.id),
-        "allowed_actions": cycle_actions(user, item),
-        "blocking_reasons": [error[1]] if error else [],
-        "id": str(item.id) if item.id else None,
-        "lease_id": str(item.lease.id),
-        "revision": item.revision,
-        "status": item.status,
-        "lines": item.lines,
-        "rent_balance": _money(item.rent_balance_minor),
-        "deposit_to_return": _money(item.deposit_to_return_minor),
-        "refund_due": _money(item.refund_due_minor),
-        "total_due": _money(item.total_due_minor),
-        "accepted_by": item.accepted_by,
-        "disputed_item_ids": item.disputed_item_ids,
-        "execution_status": item.execution_status,
-        "execution_plan": item.execution_plan,
-        "executed_at": item.executed_at.isoformat() if item.executed_at else None,
-        "history": history_payload(item),
-        "notes": notes_payload(item),
-    }
+from ..services.settlement_projection import settlement_payload as settlement_payload
 
 
 def _settlement(lease):
@@ -130,123 +90,28 @@ class FinalSettlementProposeView(FeatureAPIView):
     }
 
     def post(self, request, lease_id):
-        lease = _lease(request, lease_id)
-        request_key, expected_revision = command_identity(request.data, minimum=1)
-        operation = f"settlement.propose.{lease.id}"
-        replay = replay_operation(request.user, operation, request_key, request.data)
-        if replay:
-            return Response(replay[0], status=replay[1])
-        note = validated_note(request.data)
-        lines = []
-        seen = set()
-        if (
-            not isinstance(request.data.get("lines", []), list)
-            or len(request.data.get("lines", [])) > 100
-        ):
-            raise ValidationError({"lines": "Supply at most 100 settlement lines."})
-        for raw in request.data.get("lines", []):
-            if not isinstance(raw, dict):
-                raise ValidationError({"lines": "Each line must be an object."})
-            line_id = str(raw.get("id") or uuid.uuid4())
-            amount = money_minor(raw.get("amount"), allow_negative=True)
-            if (
-                line_id in seen
-                or raw.get("type") not in LINE_TYPES
-                or not isinstance(amount, int)
-            ):
-                raise ValidationError(
-                    {
-                        "lines": "Each line needs a unique ID, supported type, and integer EGP amount."
-                    }
-                )
-            evidence_ids = raw.get("evidence_ids", [])
-            if RentalEvidence.objects.filter(
-                id__in=evidence_ids,
-                lease=lease,
-                malware_status=RentalEvidence.MalwareStatus.SAFE,
-            ).count() != len(set(evidence_ids)):
-                raise ValidationError(
-                    {"lines": "Line evidence must be safe and belong to this lease."}
-                )
-            seen.add(line_id)
-            lines.append(
-                {
-                    "id": line_id,
-                    "type": raw["type"],
-                    "label": raw.get("label", raw["type"]),
-                    "description": raw.get("description")
-                    or raw.get("label")
-                    or raw["type"],
-                    "amount": _money(amount),
-                    "evidence_ids": list(evidence_ids),
-                    **(
-                        {
-                            "maintenance_request_id": raw.get("maintenance_request_id"),
-                            "cost_version": raw.get("cost_version"),
-                        }
-                        if raw["type"] == "maintenance"
-                        else {}
-                    ),
-                    **(
-                        {"invoice_id": str(raw["invoice_id"])}
-                        if raw.get("invoice_id")
-                        else {}
-                    ),
-                }
-            )
-        with transaction.atomic():
-            lease = _lease(request, lease_id, lock=True)
-            replay = replay_operation(
-                request.user, operation, request_key, request.data
-            )
-            if replay:
-                return Response(replay[0], status=replay[1])
-            item = _settlement(lease)
-            if item.revision != expected_revision:
-                raise RentalConflict(
-                    "Settlement revision conflict.", code="stale_revision"
-                )
-            if item.status == FinalSettlement.Status.ACCEPTED:
-                raise RentalConflict("An accepted settlement cannot be rewritten.")
-            plan = prepare_settlement(lease, lines)
-            item.history.append(
-                {
-                    "revision": item.revision,
-                    "status": item.status,
-                    "lines": item.lines,
-                    "accepted_by": item.accepted_by,
-                    "disputed_item_ids": item.disputed_item_ids,
-                }
-            )
-            item.lines = lines
-            item.financial_snapshot = financial_snapshot(lease)
-            item.execution_plan = plan
-            for field in (
-                "rent_balance_minor",
-                "deposit_to_return_minor",
-                "refund_due_minor",
-                "total_due_minor",
-            ):
-                setattr(item, field, plan[field])
-            item.status = FinalSettlement.Status.PROPOSED
-            item.accepted_by = [str(request.user.id)]
-            item.disputed_item_ids = []
-            item.proposed_by = request.user
-            item.revision += 1
-            remember_note(item, request.user, "propose", note, request_key)
-            item.save()
-            output = remember_mutation(
-                user=request.user,
-                operation=operation,
-                request_key=request_key,
-                payload=request.data,
-                request_subject_id=item.id,
-                result_subject_id=item.id,
-                result_revision=item.revision,
-                resource=settlement_payload(item, request.user),
-            )
-        return Response(output)
+        from core_apps.features.services.settlement_commands import propose_settlement
+
+        result = propose_settlement(
+            request.user,
+            request.auth,
+            request.data,
+            request.headers.get("X-Sokoun-Authorization", ""),
+            lease_id,
+        )
+        return Response(result.data, status=result.status)
 
 
 # Stable callable import for integrations; URLs use the explicit class.
 final_settlement_propose = FinalSettlementProposeView.as_view()
+
+__all__ = [
+    "FinalSettlementDetailView",
+    "FinalSettlementProposeView",
+    "_lease",
+    "_money",
+    "_settlement",
+    "final_settlement_detail",
+    "final_settlement_propose",
+    "settlement_payload",
+]
