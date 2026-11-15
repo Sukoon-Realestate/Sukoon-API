@@ -8,6 +8,7 @@ from core_apps.profiles.serializers import CloudinarySerializerField
 from core_apps.common.command_fields import StrictCharField
 from ...listing_media import ListingImageField
 from ...models import Property, PropertyImage, PropertyType
+from ...amenities import property_amenities
 from .property_collection import PropertyCollectionSerializer, stay_rating
 
 
@@ -155,6 +156,11 @@ def build_rental_summary(obj: Property, offer_ids=None):
 
 
 class PropertyListSerializer(PropertyPolicyProjection, serializers.ModelSerializer):
+    amenities = serializers.SerializerMethodField()
+
+    def get_amenities(self, obj: Property) -> list[str]:
+        return property_amenities(obj)
+
     def to_representation(self, instance):
         result = super().to_representation(instance)
         from core_apps.features.experience.media import variants
@@ -187,6 +193,7 @@ class PropertyListSerializer(PropertyPolicyProjection, serializers.ModelSerializ
             "price_period",
             "property_type",
             "area",
+            "amenities",
             "rate",
             "is_sponsored",
             "rental_schema_version",
