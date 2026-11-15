@@ -267,6 +267,7 @@ def _erase_profile(user, actor, item):
         city=None,
         gender=None,
         avatar=None,
+        google_avatar_url="",
         national_id="",
         id_face=None,
         id_back=None,

@@ -148,5 +148,5 @@ class PropertyDetailOwnerSerializer(serializers.Serializer):
     id = serializers.UUIDField(read_only=True)
     full_name = serializers.CharField(source="get_full_name", read_only=True)
     name = serializers.CharField(source="get_full_name", read_only=True)
-    avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
+    avatar = CloudinarySerializerField(source="profile.avatar_url", read_only=True)
     is_verified = serializers.BooleanField(read_only=True)

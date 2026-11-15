@@ -215,7 +215,8 @@ def test_completion_revokes_sessions_and_erases_profile_without_private_push(
 
     profile = Profile.objects.get(user=user)
     profile.phone_number = "+201000000001"
-    profile.save(update_fields=["phone_number"])
+    profile.google_avatar_url = "https://lh3.googleusercontent.com/a/profile-photo"
+    profile.save(update_fields=["phone_number", "google_avatar_url"])
     login = request(user)
     item = submit(user)
     result = decision(reviewer, item)
@@ -224,6 +225,7 @@ def test_completion_revokes_sessions_and_erases_profile_without_private_push(
     assert result["account_name"] == "حساب محذوف"
     assert user.closed_at and not user.is_active and not user.has_usable_password()
     assert not str(profile.phone_number) and profile.gender is None
+    assert not profile.google_avatar_url and profile.avatar_url is None
     assert not DecisionNotebook.objects.filter(user=user).exists()
     assert not DecisionNotebookVersion.objects.filter(notebook_id=notebook.pk).exists()
     assert not DecisionNotebookConflict.objects.filter(notebook_id=notebook.pk).exists()

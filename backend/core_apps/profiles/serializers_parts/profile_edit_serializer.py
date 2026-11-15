@@ -115,5 +115,6 @@ class ProfileEditSerializer(serializers.ModelSerializer):
             or instance.user.first_name
             or instance.user.email
         )
+        data["avatar"] = instance.avatar_url
         data["profile_image"] = data.get("avatar")
         return data

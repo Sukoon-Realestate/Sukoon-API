@@ -91,10 +91,7 @@ class OwnerVisitRequestCardSerializer(
     def get_tenant(self, obj):
         tenant = obj.tenant
         profile = getattr(tenant, "profile", None)
-        avatar = profile.avatar if profile else None
-        avatar_url = (
-            avatar.url if avatar and hasattr(avatar, "url") else str(avatar or "")
-        )
+        avatar_url = (profile.avatar_url or "") if profile else ""
         contact = counterpart_phone_payload(
             viewer=getattr(self.context.get("request"), "user", None),
             counterpart=tenant,

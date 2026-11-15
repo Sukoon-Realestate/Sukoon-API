@@ -127,7 +127,7 @@ def get_admin_user_detail(user_id):
             else "غير متوفر"
         ),
         "national_id": profile.national_id if profile else "",
-        "avatar": profile.avatar.url if profile and profile.avatar else None,
+        "avatar": profile.avatar_url if profile else None,
         "visitRequests": user.visits.count(),
         "properties_count": user.properties.count(),
         "reportsAgainst": user.reports_received.count(),

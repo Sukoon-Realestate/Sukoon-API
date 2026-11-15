@@ -35,7 +35,7 @@ class OwnerProfileMixin:
             profile = Profile.objects.filter(user=owner).first()
 
         avatar_url = (
-            profile.avatar.url if profile and getattr(profile, "avatar", None) else None
+            profile.avatar_url if profile else None
         )
         raw_phone = (
             str(profile.phone_number)

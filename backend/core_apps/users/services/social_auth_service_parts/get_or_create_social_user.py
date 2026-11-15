@@ -152,7 +152,7 @@ def authenticate_google(token: str):
     Raises ValidationError on bad/expired token.
     """
     claims = _verify_google(token)
-    return get_or_create_social_user(
+    user = get_or_create_social_user(
         provider=SocialAccount.PROVIDER_GOOGLE,
         provider_uid=claims.get("sub"),
         email=claims.get("email", ""),
@@ -160,6 +160,10 @@ def authenticate_google(token: str):
         first_name=claims.get("given_name", ""),
         last_name=claims.get("family_name", ""),
     )
+    from core_apps.users.services.google_avatar import sync_google_avatar
+
+    sync_google_avatar(user, claims.get("picture"))
+    return user
 
 
 def _verify_facebook(token: str) -> dict:

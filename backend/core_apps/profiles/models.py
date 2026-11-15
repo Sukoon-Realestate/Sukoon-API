@@ -35,6 +35,8 @@ class Profile(TimeStampedModel):
         blank=True,
         verbose_name=_("Avatar"),
     )
+    google_avatar_url = models.URLField(max_length=2048, blank=True, default="", editable=False)
+
     id_face = CloudinaryField(
         type="authenticated",
         folder="profile_documents/id_face/",
@@ -59,6 +61,11 @@ class Profile(TimeStampedModel):
     national_id = models.CharField(
         _("National ID"), max_length=50, blank=True, default=""
     )
+
+    @property
+    def avatar_url(self):
+        """Prefer a custom upload, with the verified Google photo as fallback."""
+        return self.avatar.url if self.avatar else (self.google_avatar_url or None)
 
     def __str__(self):
         return f"{self.user.email} profile"

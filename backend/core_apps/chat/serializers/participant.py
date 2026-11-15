@@ -33,9 +33,8 @@ class ParticipantSerializer(serializers.Serializer):
 
     def get_avatar_url(self, user) -> str:
         try:
-            if hasattr(user, "profile") and user.profile.avatar:
-                avatar = user.profile.avatar
-                return avatar.url if hasattr(avatar, "url") else str(avatar)
+            if hasattr(user, "profile"):
+                return user.profile.avatar_url or ""
         except Exception:
             pass
         return ""
