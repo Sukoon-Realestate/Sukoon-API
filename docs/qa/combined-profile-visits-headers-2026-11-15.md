@@ -1,0 +1,5 @@
+# Combined Profile and Visit Requests headers
+
+Removed the bell-only workspace header row on the Profile and renter Visit Requests tabs. Each page now supplies its notification bell beside the title in a flat toolbar. Profile retains support and settings as plain icon actions with 8px separation; role-correct notifications remain. Visits keeps its title, optional back control and company-settings access. Company Profile already owns the same settings destination. Shell read/runtime notices remain.
+
+522 visit/profile/settings/support checks and 16 focused header layout cases passed (Arabic/English, 320/390 widths, 1x/2x text). Profile flow request tracking was narrowed to profile/auth operations, excluding newly present unread-count reads. Existing header scroll and action spacing checks passed. Analyzer: same 12 unrelated baseline diagnostics. Header previews inspected; the Profile preview intentionally uses an empty body fixture. Live device runtime not reviewed. No support request, profile edit or account change was performed.

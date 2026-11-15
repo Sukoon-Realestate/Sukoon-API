@@ -1,0 +1,167 @@
+{
+  "baseline_passed": 122,
+  "baseline_failed": 40,
+  "same_failure_names_with_changes": true,
+  "failures": [
+    [
+      "dashboard_consistency_test.dart",
+      "company dashboard picker cancels without losing the body"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=false ar dark=false 390.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=false ar dark=true 390.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=false en dark=false 390.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=false en dark=true 390.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=false 1366.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=false 320.0 text=2.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=false 390.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=false 430.0 text=1.3"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=false 768.0 text=2.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=true 1366.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=true 320.0 text=2.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=true 390.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=true 430.0 text=1.3"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true ar dark=true 768.0 text=2.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=false 1366.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=false 320.0 text=2.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=false 390.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=false 430.0 text=1.3"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=false 768.0 text=2.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=true 1366.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=true 320.0 text=2.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=true 390.0 text=1.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=true 430.0 text=1.3"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "dashboard company active=true en dark=true 768.0 text=2.0"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "individual dashboard picker cancels without losing the body"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "owner dashboard picker cancels without losing the body"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "owner workspace controls remain available while dashboard read loads and fails"
+    ],
+    [
+      "dashboard_consistency_test.dart",
+      "student dashboard picker cancels without losing the body"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "company access recovery clears navigation on a short screen"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "failed service gate retry remains tappable"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "last company saved lists action clears navigation ar large text"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "last company saved lists action clears navigation en large text"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "last company selector action clears navigation ar large text"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "last company selector action clears navigation en large text"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "last owner group applications action clears navigation ar large text"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "last owner group applications action clears navigation en large text"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "last owner housing offers action clears navigation ar large text"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "last owner housing offers action clears navigation en large text"
+    ],
+    [
+      "workspace_navigation_clearance_test.dart",
+      "student last action en 320.0 text 2.0"
+    ]
+  ]
+}

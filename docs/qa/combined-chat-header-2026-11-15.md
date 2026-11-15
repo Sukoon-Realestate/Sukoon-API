@@ -1,0 +1,5 @@
+# Combined conversations header
+
+Used the empty area beside the notification bell by consolidating the conversations title, reply-reminder action, media/storage action and bell into a flat 56px toolbar. The shell omits its separate WorkspaceHeader on the messages tab; shell read notices and runtime controls remain. Company account settings remain an action on the chats toolbar. The notification role, shared unread count behavior, routes and inbox filters remain.
+
+Verification: eight focused Arabic/English layout cases passed at 320/390 widths and 1x/2x text, checking bell/actions share the app bar bounds. Arabic preview visually inspected. The combined chat/workspace test run passed 62 cases and failed two account-retry hydration cases (WorkspaceCubit.userId expected '1', actual null); both failures repeat in an isolated account-retry run. They do not exercise this header consolidation, but remain unresolved and are not counted as passing. The shell navigation test confirmed one notification bell on the messages tab. Diff whitespace check passed. Physical-device toolbar/navigation review was not performed.

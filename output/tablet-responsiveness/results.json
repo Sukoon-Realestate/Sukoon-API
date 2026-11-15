@@ -1,0 +1,13 @@
+{
+  "focused_app_passed": 189,
+  "new_tablet_cases": 29,
+  "shared_core_passed": 2,
+  "scoped_analysis": "No issues found",
+  "full_suite": {
+    "interrupted": true,
+    "passed": 13125,
+    "skipped": 32,
+    "failed_including_shutdown": 497
+  },
+  "live_tablet_verified": false
+}
