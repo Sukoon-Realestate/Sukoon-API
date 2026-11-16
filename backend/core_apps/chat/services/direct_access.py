@@ -143,6 +143,7 @@ def authorize_page(conversations, user):
     from core_apps.chat.models import ChatBlock, AccountRestriction
     from core_apps.chat.moderation.policy import ACTIVE_RESTRICTIONS, mode
     from core_apps.features.planning_models import RoommateConnection
+    from .unread import with_unread_count
 
     if mode() != "off":
         return {}
@@ -160,8 +161,8 @@ def authorize_page(conversations, user):
         row.pk: row for row in Conversation.objects.filter(pk__in=ids, kind="direct")
     }
     rosters = defaultdict(list)
-    for participant in ConversationParticipant.objects.filter(
-        conversation_id__in=ids
+    for participant in with_unread_count(
+        ConversationParticipant.objects.filter(conversation_id__in=ids)
     ).select_related("user__profile"):
         rosters[participant.conversation_id].append(participant)
     peers = {

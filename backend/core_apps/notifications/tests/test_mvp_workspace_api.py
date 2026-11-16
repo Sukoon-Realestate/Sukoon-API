@@ -1,6 +1,7 @@
 ﻿from unittest.mock import patch
 import pytest
 from core_apps.chat.services.message_service import get_or_create_direct_conversation
+from core_apps.chat.models import Message
 from core_apps.notifications.models import DeviceToken, Notification, PushDelivery
 from core_apps.notifications.services.push_delivery import queue_notification, dispatch
 from core_apps.notifications.services import preferences
@@ -13,7 +14,11 @@ def test_active_summary_counts_current_personal_spaces_without_deferred_counts(a
     user.save(update_fields=['is_verified'])
     for space, count in [('individual', 5), ('owner', 3), ('student', 11)]:
         c = get_or_create_direct_conversation(user=user, other_user=another_user, workspace=space)
-        c.participant_set.filter(user=user).update(unread_count=count)
+        c.participant_set.filter(user=user).update(unread_count=43)
+        Message.objects.bulk_create([
+            Message(conversation=c, sender=another_user, sequence=i + 1, content="Unread")
+            for i in range(count)
+        ])
     Notification.objects.create(user=user, title='Owner notice', data={'workspace': 'owner'})
     response = auth_client.get('/api/v1/features/v1/workspace-summary/', {'scope': 'owner'})
     assert response.status_code == 200, response.content

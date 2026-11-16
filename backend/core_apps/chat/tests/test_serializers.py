@@ -47,7 +47,7 @@ class TestChatSerializers:
 
         assert data["id"] == str(conversation.id)
         assert data["last_message_preview"] == "Hello there"
-        assert data["unread_count"] == 3
+        assert data["unread_count"] == 1
         assert data["other_participant"]["id"] == str(another_user.id)
 
     def test_conversation_create_serializer_valid(self):

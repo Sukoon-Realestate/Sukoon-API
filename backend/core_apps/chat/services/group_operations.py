@@ -44,19 +44,21 @@ def mark_group_read(conversation, user, sequence):
         participant.save(
             update_fields=["last_read_sequence", "last_read_at", "updated_at"]
         )
-        if conversation.kind == "direct":
-            participant.unread_count = unread_count(conversation, participant)
-            participant.save(update_fields=["unread_count"])
         record_event(
             conversation,
             MESSAGE_READ,
             actor=user,
             data={"membership_period": str(participant.membership_period)},
         )
+    unread = unread_count(conversation, participant)
+    if conversation.kind == "direct" and participant.unread_count != unread:
+        # Retried acknowledgements also repair counters written by older clients.
+        participant.unread_count = unread
+        participant.save(update_fields=["unread_count"])
     return {
         "conversation_id": str(conversation.id),
         "last_read_sequence": participant.last_read_sequence,
-        "unread_count": unread_count(conversation, participant),
+        "unread_count": unread,
     }
 
 
