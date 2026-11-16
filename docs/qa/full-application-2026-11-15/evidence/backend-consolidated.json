@@ -1,0 +1,34 @@
+{
+  "unique_cases": 6202,
+  "counts": {
+    "passed": 6168,
+    "skipped": 22,
+    "xfail": 12
+  },
+  "attempts": [
+    {
+      "file": "backend/mvp/junit.xml",
+      "counts": {
+        "passed": 5691,
+        "skipped": 489,
+        "xfail": 10,
+        "error": 12
+      }
+    },
+    {
+      "file": "backend-http-rerun.xml",
+      "counts": {
+        "passed": 40,
+        "skipped": 10
+      }
+    },
+    {
+      "file": "backend-postgres.xml",
+      "counts": {
+        "passed": 477,
+        "skipped": 5,
+        "xfail": 2
+      }
+    }
+  ]
+}

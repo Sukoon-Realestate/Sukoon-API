@@ -1,0 +1,3 @@
+Dart: 3490 files, 4168 callback sites, 6 parse diagnostics. No runtime tests executed.
+Web: 279 files, 415 bindings, 0 parse diagnostics. No browser tests executed.
+{"features": 79, "action_families": 884, "control_candidates": 4583, "backend_candidates": 1334, "case_rows": 6449, "observed_case_rows": 0, "parse_diagnostics": 6}

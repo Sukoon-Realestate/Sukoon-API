@@ -1,0 +1,59 @@
+
+> sukoon-landing@0.1.0 predev
+> node scripts/prepare-design-docs.mjs
+
+
+> sukoon-landing@0.1.0 dev
+> next dev --webpack --port 3000 --port 3037
+
+▲ Next.js 16.3.8 (webpack)
+- Local:         http://localhost:3037
+- Network:       http://192.168.1.7:3037
+✓ Ready in 632ms
+✓ Running next.config.ts took 161ms
+- Experiments (use with caution):
+  ✓ globalNotFound
+
+○ Compiling /admin/login ...
+ GET /admin/login 200 in 4.3s (next.js: 4.1s, proxy.ts: 101ms, application-code: 148ms)
+⚠ Blocked cross-origin request to Next.js dev resource /_next/hmr from "127.0.0.1".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['127.0.0.1'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /admin/login 200 in 23ms (next.js: 1.6ms, proxy.ts: 6ms, application-code: 15ms)
+ GET /admin 200 in 507ms (next.js: 492ms, proxy.ts: 1.9ms, application-code: 13ms)
+ GET /admin 200 in 10ms (next.js: 1.5ms, proxy.ts: 3ms, application-code: 5ms)
+ GET /admin 200 in 12ms (next.js: 0.8ms, proxy.ts: 2ms, application-code: 9ms)
+ GET /admin/users 200 in 365ms (next.js: 354ms, proxy.ts: 3ms, application-code: 8ms)
+ GET /admin/users/34807566-cba7-489d-a5a3-20192f64781c 200 in 708ms (next.js: 685ms, proxy.ts: 1.3ms, application-code: 22ms)
+[browser] Failed to fetch user details from API: Error: Connection interrupted. The result is unknown; refresh the original record before retrying.
+    at apiClient (../src/lib/api/client.ts:79:7)
+  77 |     let errorData: any = null;
+  78 |     try {
+> 79 |       errorData = await response.json();
+     |       ^
+  80 |     } catch {
+  81 |       errorData = { detail: response.statusText };
+  82 |     }
+ GET /admin/properties 200 in 312ms (next.js: 301ms, proxy.ts: 3ms, application-code: 8ms)
+ GET /admin/properties/review 200 in 365ms (next.js: 355ms, proxy.ts: 1.4ms, application-code: 9ms)
+ GET /admin/properties/tours 200 in 380ms (next.js: 367ms, proxy.ts: 4ms, application-code: 9ms)
+ GET /admin/support 200 in 1053ms (next.js: 1031ms, proxy.ts: 6ms, application-code: 16ms)
+ GET /admin/roles 200 in 519ms (next.js: 508ms, proxy.ts: 1.4ms, application-code: 9ms)
+ GET /admin/system/logs 200 in 457ms (next.js: 443ms, proxy.ts: 5ms, application-code: 10ms)
+ GET /admin/system/health 200 in 510ms (next.js: 498ms, proxy.ts: 2ms, application-code: 11ms)
+ GET /admin/settings 200 in 569ms (next.js: 548ms, proxy.ts: 8ms, application-code: 13ms)
+ GET /admin/support 200 in 35ms (next.js: 10ms, proxy.ts: 6ms, application-code: 19ms)
+ GET /admin/support/6d7cac11-246d-422a-b4c3-9f1b4347b304 200 in 1345ms (next.js: 1319ms, proxy.ts: 7ms, application-code: 18ms)
+ GET /admin/ 200 in 963ms (next.js: 782ms, proxy.ts: 13ms, application-code: 168ms)
+ GET /admin/support/6d7cac11-246d-422a-b4c3-9f1b4347b304 200 in 48ms (next.js: 19ms, proxy.ts: 3ms, application-code: 26ms)
+ GET /admin/login 200 in 385ms (next.js: 371ms, proxy.ts: 4ms, application-code: 10ms)
+ GET /admin/login 200 in 10ms (next.js: 1.3ms, proxy.ts: 3ms, application-code: 5ms)
+[?25h

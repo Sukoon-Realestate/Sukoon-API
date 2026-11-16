@@ -1,0 +1,15 @@
+{
+  "test_cases": {
+    "error": 425,
+    "success": 13124,
+    "failure": 72,
+    "skipped": 32
+  },
+  "loader_events": {
+    "success": 1
+  },
+  "terminal_event": null,
+  "active_at_end": [],
+  "recorded_seconds": 3692.55,
+  "failed_records": 497
+}

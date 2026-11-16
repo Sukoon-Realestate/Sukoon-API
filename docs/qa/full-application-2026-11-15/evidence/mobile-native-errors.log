@@ -1,0 +1,3 @@
+getpwuid_r did not find a match for uid 501
+Timestamp               Ty Process[PID:TID]
+2026-11-15 16:50:00.382 E  Runner[87563:154a2f4] [com.apple.coredata:error] CoreData: error: XPC: synchronousRemoteObjectProxyWithErrorHandler: store 'file:///Users/demo23home/Library/Developer/CoreSimulator/Devices/B2115E9E-6706-4E53-A60D-0914D583467D/data/Media/PhotoData/Photos.sqlite' encountered error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service created from an endpoint was invalidated: Failed to check-in, peer may have been unloaded: mach_error=10000003." UserInfo={NSDebugDescription=The connection to service created from an endpoint was invalidated: Failed to check-in, peer may have been unloaded: mach_error=10000003.}

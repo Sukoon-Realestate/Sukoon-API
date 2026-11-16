@@ -1,0 +1,118 @@
+Selected 484 PostgreSQL-dependent and HTTP setup-error tests.
+........................................................................ [ 14%]
+........................................................................ [ 29%]
+........................................................................ [ 44%]
+..........................................................sssss......... [ 59%]
+............................xx.......................................... [ 74%]
+........................................................................ [ 89%]
+....................................................                     [100%]
+=============================== warnings summary ===============================
+../../Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+../../Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+core_apps/common/test_route_contracts.py: 189 warnings
+core_apps/features/tests/test_audit_change_terms.py: 1 warning
+core_apps/features/tests/test_closure_continuation.py: 3 warnings
+core_apps/features/tests/test_company_property_agreements.py: 5 warnings
+core_apps/features/tests/test_company_role_contexts.py: 1 warning
+core_apps/features/tests/test_company_staff.py: 1 warning
+core_apps/features/tests/test_group_booking_listing_changes.py: 5 warnings
+core_apps/features/tests/test_group_process_history.py: 2 warnings
+core_apps/features/tests/test_housing_districts.py: 1 warning
+core_apps/features/tests/test_invitation_review_pause.py: 2 warnings
+core_apps/features/tests/test_mvp_owner_portfolio.py: 3 warnings
+core_apps/features/tests/test_portfolio_owner_workflows.py: 1 warning
+core_apps/properties/tests/test_contextual_viewings.py: 1 warning
+core_apps/properties/tests/test_mobile_handoff_oct2026.py: 1 warning
+core_apps/properties/tests/test_sprint03_correctness.py: 1 warning
+core_apps/properties/tests/test_unscheduled_visit_requests.py: 4 warnings
+core_apps/properties/tests/test_ux_convenience.py: 2 warnings
+core_apps/properties/tests/test_viewing_event_history.py: 1 warning
+core_apps/properties/tests/test_viewing_listing_changes.py: 6 warnings
+core_apps/properties/tests/test_views.py: 3 warnings
+core_apps/properties/tests/test_visit_offer_snapshot.py: 5 warnings
+core_apps/properties/tests/test_visit_phone_disclosure.py: 4 warnings
+core_apps/properties/tests/test_visit_request_api.py: 4 warnings
+core_apps/properties/tests/test_workspace_account_handoff.py: 1 warning
+core_apps/admin_api/tests/test_content_editor.py: 1 warning
+core_apps/admin_api/tests/test_plan_benefit_editor.py: 1 warning
+core_apps/advertising/tests/test_advertising_api.py: 2 warnings
+core_apps/chat/tests/test_deployed_acceptance.py: 2 warnings
+core_apps/features/tests/test_advanced_execution_concurrency.py: 1 warning
+core_apps/features/tests/test_audit_concurrency.py: 5 warnings
+core_apps/features/tests/test_beneficiary_confirmation.py: 1 warning
+core_apps/features/tests/test_cancellation_revision.py: 4 warnings
+core_apps/features/tests/test_change_recovery.py: 2 warnings
+core_apps/features/tests/test_change_versions.py: 1 warning
+core_apps/features/tests/test_chargeback_resolution.py: 1 warning
+core_apps/features/tests/test_checkout_absence_recovery.py: 2 warnings
+core_apps/features/tests/test_closure_maintenance.py: 1 warning
+core_apps/features/tests/test_commerce_v1.py: 2 warnings
+core_apps/features/tests/test_company_continuation_resolution.py: 1 warning
+core_apps/features/tests/test_company_continuations.py: 1 warning
+core_apps/features/tests/test_company_contract_preparation.py: 2 warnings
+core_apps/features/tests/test_company_core_closure.py: 2 warnings
+core_apps/features/tests/test_company_initial_recovery.py: 1 warning
+core_apps/features/tests/test_company_negotiation.py: 1 warning
+core_apps/features/tests/test_company_operation_recovery.py: 2 warnings
+core_apps/features/tests/test_company_publication_changes.py: 1 warning
+core_apps/features/tests/test_company_rental_value.py: 1 warning
+core_apps/features/tests/test_company_request_versions.py: 2 warnings
+core_apps/features/tests/test_company_selection_account_closure.py: 1 warning
+core_apps/features/tests/test_company_service_requests.py: 1 warning
+core_apps/features/tests/test_company_tenancy.py: 3 warnings
+core_apps/features/tests/test_connected_authority_concurrency.py: 12 warnings
+core_apps/features/tests/test_cycle_concurrency.py: 2 warnings
+core_apps/features/tests/test_decision_notebooks.py: 1 warning
+core_apps/features/tests/test_fulfillment_cases.py: 1 warning
+core_apps/features/tests/test_full_cycle_http.py: 1 warning
+core_apps/features/tests/test_group_application_listing_changes.py: 1 warning
+core_apps/features/tests/test_group_booking_negotiation.py: 1 warning
+core_apps/features/tests/test_housing_offer_source_changes.py: 1 warning
+core_apps/features/tests/test_housing_request_reviews.py: 1 warning
+core_apps/features/tests/test_invitation_create_recovery.py: 1 warning
+core_apps/features/tests/test_invitation_response_recovery.py: 1 warning
+core_apps/features/tests/test_negotiation_account_closure.py: 1 warning
+core_apps/features/tests/test_negotiation_versions.py: 1 warning
+core_apps/features/tests/test_paymob_invoice_payments.py: 2 warnings
+core_apps/features/tests/test_paymob_payouts.py: 1 warning
+core_apps/features/tests/test_pending_group_visit_listing.py: 1 warning
+core_apps/features/tests/test_planning_completion.py: 1 warning
+core_apps/features/tests/test_refund_execution_recovery.py: 2 warnings
+core_apps/features/tests/test_remaining_concurrency.py: 4 warnings
+core_apps/features/tests/test_rental_lifecycle.py: 2 warnings
+core_apps/features/tests/test_rental_lifecycle_safety.py: 1 warning
+core_apps/features/tests/test_rental_statement_delivery.py: 1 warning
+core_apps/features/tests/test_shared_housing_concurrency.py: 2 warnings
+core_apps/features/tests/test_sprint04_solver_commit.py: 2 warnings
+core_apps/features/tests/test_sprint04_tender_commit.py: 3 warnings
+core_apps/features/tests/test_student_events.py: 1 warning
+core_apps/features/tests/test_student_housing.py: 1 warning
+core_apps/features/tests/test_tenancy_invitation_revoke.py: 2 warnings
+core_apps/features/tests/test_tenancy_invitations.py: 3 warnings
+core_apps/features/tests/test_termination_notice.py: 2 warnings
+core_apps/features/tests/test_transition_network.py: 1 warning
+core_apps/features/tests/test_workspace_saved_lists.py: 1 warning
+core_apps/profiles/tests/test_identity_expiry.py: 1 warning
+core_apps/properties/tests/test_listing_input_matrix.py: 1 warning
+core_apps/properties/tests/test_post_visit_decision.py: 5 warnings
+core_apps/properties/tests/test_sprint03_listing_concurrency.py: 2 warnings
+core_apps/properties/tests/test_viewing_response_commands.py: 2 warnings
+core_apps/properties/tests/test_viewing_times.py: 6 warnings
+core_apps/properties/tests/test_visit_booking_concurrency.py: 2 warnings
+core_apps/support/tests/test_staged_media.py: 1 warning
+core_apps/users/tests/test_sprint05_identity.py: 1 warning
+core_apps/virtual_tours/tests/test_capture.py: 1 warning
+core_apps/virtual_tours/tests/test_recovery_and_concurrency.py: 2 warnings
+core_apps/virtual_tours/tests/test_sprint06_selection_races.py: 3 warnings
+  /Users/demo23home/code/sukoon/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /Users/demo23home/code/sukoon/Sukoon-API-sprint01/backend/staticfiles/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /Users/demo23home/code/sukoon/Sukoon-API-sprint01/docs/qa/full-application-2026-11-15/evidence/backend-postgres.xml -
+477 passed, 5 skipped, 2 xfailed, 379 warnings in 456.01s (0:07:36)
