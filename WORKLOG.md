@@ -1520,3 +1520,61 @@ Final reconciliation gate: 17 PostgreSQL publication/closure cases passed after 
 - **What:** Prepared the local full-application QA reports, captured evidence and replay tools for publication on `dev`.
 - **Details:** Preserved the existing local/remote `dev` history and integrated the current `main` baseline; used a normal push without rewriting remote history. Reviewed the publication scope and scanned report/evidence files for credential patterns before staging. Application fixes and deployment remained outside this task.
 - **Files:** `docs/qa/full-application-2026-11-15/`, this worklog.
+
+
+### Add one-command noninteractive Firebase Android distribution
+- **What:** Added a mobile-repository release wrapper that reads one private config, builds a fresh signed dev/prod APK, and uploads/distributes it through Firebase without input prompts.
+- **Details:** Reused existing flavor/app-ID and fresh-artifact validation; selected explicit service-account ADC with isolated Firebase CLI user configuration; passed noninteractive mode and closed stdin. Added increasing local build numbers, a concurrent-run lock, signing-file preservation/cleanup, literal subprocess arguments and nonzero failure propagation. Added the requested tester addresses to the example/private template, a Make target, ignored local credentials config, and an English setup guide covering service-account IAM, signing and build prerequisites. Preserved the unrelated mobile visit-test edits. No credential was supplied and no build, upload or invitation was executed.
+- **Validation:** All 24 distribution-tool unit tests passed (15 existing plus 9 new), shell syntax checks and whitespace checks passed, the Make target/help were verified, and Git ignore checks confirmed the private config and service-account filename patterns are excluded. A live upload, signing verification and email receipt remain unverified until credentials and Android tools are configured.
+- **Files:** In the separate `sokoun` repo: `apps/sokoun_app/release_android.sh`, `tool/distribution/release_android.py`, `test_release_android.py`, `firebase-android.example.json`, ignored `firebase-android.local.json`, app `.gitignore`, `Makefile`, `README.md`; `docs/FIREBASE_ANDROID_RELEASE.md`, existing distribution guide. In this API repo: this worklog.
+
+
+### Simplify Firebase Android publishing command
+- **What:** Added `make publish` in the mobile app as an alias for the existing noninteractive Android release target and updated the quick-start guide.
+- **Validation:** Dry-run Make expansion confirmed both `make publish` and `make publish ARGS=--dry-run` invoke the expected release script; whitespace checks passed. No upload was performed.
+- **Files:** Separate mobile repo `apps/sokoun_app/Makefile`, `docs/FIREBASE_ANDROID_RELEASE.md`; this worklog.
+
+
+### Expose Firebase publishing from the workspace root
+- **What:** Created `/Users/demo23home/code/sukoon/Makefile` with `make publish`, forwarding to the mobile app publisher with optional `ARGS`. Added a default help target and resolved the mobile path relative to the root Makefile.
+- **Validation:** Make dry-run expansion confirmed normal publishing and `ARGS=--dry-run` reach the existing mobile script. No build or upload was executed.
+- **Files:** Workspace-root `Makefile` (outside both Git repositories); this worklog.
+
+
+### Connect Android development configuration to the new Firebase project
+- **What:** Imported the user-provided `~/Downloads/google-services.json` for `sukoon-dev-testing` and package `com.app.sokoon.real.estate.dev` into the separate mobile app.
+- **Details:** Aligned native Android dev JSON, Android dev Flutter options and Firebase distribution metadata with project number `391635117977` and app ID `1:391635117977:android:d5731c3d8d996eb94cd508`. Preserved production and iOS native/Flutter settings; limited dev Dart generation metadata to the migrated Android platform. Updated setup documentation for the new service account and required published `dev_base_url` Remote Config value, plus optional Firestore diagnostics off. Noted project-specific push/OAuth setup remains separate; the new JSON contains no OAuth clients. No upload, invitations, IAM grant or remote config change was executed.
+- **Validation:** All 26 distribution/configuration tests passed, scoped Dart analysis reported no issues, whitespace checks passed, and the no-upload dry run selected the new project/app. No complete Android build was performed because SDK/signing/service-account setup is still incomplete.
+- **Files:** Separate mobile repo `apps/sokoun_app/android/app/src/dev/google-services.json`, `firebase.json`, `lib/firebase_options_dev.dart`, `tool/distribution/test_firebase_project_config.py`, Firebase setup guides; this worklog.
+
+
+### Configure the new Firebase publishing service-account credential
+- **What:** Validated the user-supplied Downloads service-account JSON for `sukoon-dev-testing` and saved its path in the mobile app's ignored, mode-0600 local release config. Installed official Firebase CLI 15.36.0 in a persistent user-local directory and configured that executable path. No key/token content was logged or committed.
+- **Verification:** Google service-account authentication completed for a read-only API request, but App Distribution groups returned HTTP 404 `NOT_FOUND`; successful distribution access was not established. Root `make publish ARGS=--dry-run` invoked the correct mobile wrapper and stopped with a clear missing signing-properties error. Java and Android SDK remain absent. No upload or invitations were sent.
+- **Follow-up:** Complete App Distribution onboarding/verify IAM access on the new project, provide a stable Android keystore/signing configuration, install Android build tools and publish required Remote Config parameters.
+- **Files:** Ignored mobile `firebase-android.local.json`; user-local Firebase CLI installation; this worklog.
+
+
+### Verify Firebase App Distribution onboarding
+- **What:** Rechecked the configured service account after the user completed App Distribution onboarding for `sukoon-dev-testing`.
+- **Validation:** Noninteractive read-only tester-group listing succeeded with exit code 0. No build, upload, invitations or remote settings changes were performed. Android signing/build-tool setup and required Remote Config publication remain pending.
+- **Files:** This worklog only.
+
+### Prepare the local Android publishing toolchain and stable signing
+- **What:** Installed checksum-verified Temurin Java 17 and official Android command-line tools in user-local directories, accepted the SDK licenses, and installed Android platform/build tools, NDK and CMake. Generated a persistent private development signing key and external signing properties with restricted permissions; configured their paths in the ignored mobile release configuration.
+- **Details:** The first real release attempt stopped before upload because Gradle 8.12 did not meet the installed Flutter minimum. Updated the mobile Gradle wrapper to checksum-pinned 8.14.3, Android Gradle Plugin to 8.11.1 and the property-capture plugin Kotlin pin to 2.3.21. Added `androidToolchainCheck` and updated the publishing guide. These satisfy current minimum checks; Flutter still emits future-support warnings recommending Gradle/AGP 9. The user confirmed publishing the required Remote Config values; those values were not independently read using the distribution service account.
+- **Validation:** Root `make publish ARGS=--dry-run` passed without input, all 26 distribution/config tests passed and mobile whitespace checks passed. A fresh release retry was started; its final upload result is recorded separately. No secret values were printed or committed. Google OAuth/backend push migration and physical Android runtime verification remain separate follow-ups.
+- **Files:** Separate mobile repo Android Gradle wrapper/settings, `packages/property_capture/android/build.gradle`, app Makefile and `docs/FIREBASE_ANDROID_RELEASE.md`; ignored local release configuration; private user-local Android/JDK/signing files; this worklog.
+
+### Publish the first signed Android development release to Firebase
+- **What:** Ran workspace-root `make publish` successfully, uploaded Android dev version `1.0.0` (`1794817185`) to `sukoon-dev-testing` and distributed it to `zeyadslama23@gmail.com` and `alarabofficial1@gmail.com`. Firebase release ID: `2tafpegh7gk4g`.
+- **Validation:** The complete publish command returned exit code 0; Firebase confirmed upload, release-note update and tester distribution. Independently verified APK package `com.app.sokoon.real.estate.dev`, version and development signing certificate. Confirmed temporary signing properties and release lock were removed. All 26 publishing/config tests passed, including removal of inherited Firebase DEBUG/token settings; whitespace checks passed.
+- **Details:** Removed inherited DEBUG from future publisher child environments to prevent verbose HTTP logging. Restricted the current run's debug logs to mode 0600. The stable signing key, service-account credential and local configuration remained private and uncommitted. Future releases run noninteractively with `make publish` from `/Users/demo23home/code/sukoon`.
+- **Limits:** Firebase accepted distribution; inbox delivery and physical Android installation/runtime behavior were not independently verified. Google OAuth clients/signing registration and backend FCM credentials still need integration verification for the new Firebase project. Product source changes were not committed or pushed by this task.
+- **Files:** Separate mobile repo `tool/distribution/release_android.py`, `test_release_android.py`, `docs/FIREBASE_ANDROID_RELEASE.md`; ignored release APK/state/config and private run logs; this worklog.
+
+### Publish both repositories' local changes and integrate main
+- **What:** Prepared all pending backend/frontend and mobile changes for commits on `dev` and `ui-v1`, respectively, and integration into each repository's `main` under the user's explicit push-and-merge request.
+- **Details:** Included the existing local regression tests for missing authoritative admin reputation and Accepted Visits request status. These intentionally expose unresolved findings from the QA backlog; no product fix or green full-suite claim was made. Preserved private release credentials, signing material, APKs and debug logs outside the commit scope. The workspace-root Makefile is outside both repositories and remains local.
+- **Validation:** All 26 Firebase publishing/configuration tests passed; whitespace checks passed. Admin reputation regression: 0 passed / 2 failed. Mobile tenant-visits regression: 5 passed / 4 failed, all four failures confirming unsupported request status. Remote fetch confirmed both current branches contain their respective remote main histories and allow fast-forward integration.
+- **Files:** This worklog and `frontend/tests/user-reputation.test.cjs`; separate mobile repository Firebase release tooling/configuration/documentation, Android build pins and `apps/sokoun_app/test/tenant_visits_data_test.dart`. Remote publication results were verified after pushing.
