@@ -12,7 +12,7 @@ const ar = {
   loading: "جارٍ التحميل…",
   header: {
     switchLanguage: "English",
-    getApp: "حمّل التطبيق",
+    getApp: "تنزيل التطبيق",
     adminDashboard: "لوحة الإدارة",
     homeLabel: "سكون – الصفحة الرئيسية",
     toggleTheme: "تبديل الوضع الليلي",
@@ -23,14 +23,15 @@ const ar = {
     howItWorks: "كيف يعمل",
     why: "لماذا سكون",
     faq: "أسئلة شائعة",
-    download: "حمّل التطبيق",
+    download: "تنزيل التطبيق",
   },
   store: {
     appStore: "App Store",
     googlePlay: "Google Play",
+    unavailable: "روابط التنزيل غير متاحة حاليًا",
   },
   hero: {
-    badge: "متاح على App Store و Google Play",
+    badge: "روابط تنزيل التطبيق غير متاحة حاليًا",
     titleLead: "سكنك القادم،",
     titleHighlight: "من المالك مباشرة.",
     subtitle:
@@ -138,12 +139,12 @@ const ar = {
       { question: "هل يأخذ سكون عمولة؟", answer: "لا، سكون لا يأخذ أي عمولة من المالك أو المستأجر، سواء عند التأجير أو تجديد الإيجار. تتواصل وتتفق مع الطرف الآخر مباشرة من خلال التطبيق، بدون وسيط." },
       { question: "كيف تتأكدون من العقارات؟", answer: "تخضع بيانات العقار للمراجعة، لكن ظهور الإعلان في البحث لا يعني اعتماده. راجع حالة المراجعة وتحقق من التفاصيل قبل الاتفاق." },
       { question: "لماذا أوثّق حسابي؟", answer: "حتى يعرف كل طرف مع من يتعامل. يتم التوثيق بمعلوماتك الشخصية." },
-      { question: "أين يمكنني تحميل التطبيق؟", answer: "متاح على App Store و Google Play." },
+      { question: "أين يمكنني تحميل التطبيق؟", answer: "روابط التنزيل غير متاحة حاليًا. راجع هذه الصفحة لاحقًا للحصول على روابط المتاجر المعتمدة." },
     ],
   },
   finalCta: {
     title: "الإيجار، بكل سكون.",
-    subtitle: "App Store و Google Play",
+    subtitle: "روابط التنزيل غير متاحة حاليًا",
   },
   footer: {
     unavailable: "غير متاح",
@@ -192,9 +193,10 @@ const en: Dictionary = {
   store: {
     appStore: "App Store",
     googlePlay: "Google Play",
+    unavailable: "Download links are currently unavailable",
   },
   hero: {
-    badge: "Available on the App Store and Google Play",
+    badge: "App download links are currently unavailable",
     titleLead: "Your next home,",
     titleHighlight: "straight from the owner.",
     subtitle:
@@ -311,12 +313,12 @@ const en: Dictionary = {
         question: "Why do I need to verify my account?",
         answer: "So both sides know who they’re dealing with. You verify with your personal details.",
       },
-      { question: "Where can I download the app?", answer: "The app is available on the App Store and Google Play." },
+      { question: "Where can I download the app?", answer: "Download links are currently unavailable. Check this page later for approved store links." },
     ],
   },
   finalCta: {
     title: "Renting, made calm.",
-    subtitle: "App Store and Google Play",
+    subtitle: "Download links are currently unavailable",
   },
   footer: {
     unavailable: "Unavailable",

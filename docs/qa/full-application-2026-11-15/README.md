@@ -1,6 +1,12 @@
 # Full-application QA — 15 November 2026
 
-**Release blockers were found. This pass does not certify the app as production-ready or establish that every button/cycle is covered.** The work includes the Flutter mobile app, hosted API, public frontend and Next.js admin portal. Product fixes were left for a later sprint as requested.
+**Release blockers were found. This pass does not certify the app as production-ready or establish that every button/cycle is covered.** The work includes the Flutter mobile app, hosted API, public frontend and Next.js admin portal. Product fixes were left for a later sprint in the original pass; local remediation began on 16 November.
+
+## Sprint 1 progress — 16 November 2026
+
+Local fixes cover **MOB-001**, **PRIV-001** and **ADM-001**. **WEB-001** now truthfully identifies unavailable download links. Both JavaScript trees use Next.js 16.4.6; repeat audits report **zero critical/high findings**, with seven moderate development-toolchain findings remaining per tree.
+
+See [Sprint 1 fixes, reproductions, verification and unresolved blockers](SPRINT-1.md). **Sprint 1 remains incomplete:** MOB-002 was not reproduced by repeated widget journeys, HOST-001 still returns 504, Python dependency remediation and real release/store acceptance remain open. Nothing was deployed. The tables below preserve the original 15 November baseline.
 
 Start with [findings and reproduction steps](FINDINGS.md), then [coverage, limitations and four proposed fix sprints](COVERAGE.md).
 

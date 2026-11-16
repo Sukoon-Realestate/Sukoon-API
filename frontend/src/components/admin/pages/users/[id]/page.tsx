@@ -12,7 +12,6 @@ import {
   AlertOctagon,
   UserX,
   Download,
-  Star,
   ArrowRight,
 } from 'lucide-react';
 import { fetchUserDetail, suspendUser, unsuspendUser } from '@/lib/api/users';
@@ -244,12 +243,14 @@ function UserProfileContent({ userId }: { userId: string }) {
                 style={{ animationDelay: '150ms' }}
               >
                 <div className="text-2xl font-black text-emerald-400 mb-1 flex items-center justify-center gap-1">
-                  <span>{user.is_verified ? '5.0' : '4.5'}</span>
-                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  <span>غير متاح</span>
                 </div>
                 <div className="text-xs font-semibold text-[var(--text-muted)]">
                   تقييم السلوك
                 </div>
+                <p className="text-xs text-[var(--text-muted)] mt-1">
+                  لم تُقدَّم بيانات تقييم موثوقة لهذا الحساب.
+                </p>
               </div>
             </div>
 

@@ -1,0 +1,50 @@
+00:00 +0: loading /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart
+00:00 +0: loads and maps a tenant visits page
+00:00 +1: adds the selected status filter to the request
+00:00 +2: maps an unknown backend status to the rejected fail state
+00:00 +3: Accepted uses confirmed: requests=false, empty=false
+00:00 +3 -1: Accepted uses confirmed: requests=false, empty=false [E]
+  Bad state: Invalid backend status choice
+  test/tenant_visits_data_test.dart 117:7                                        _FakeNetworkService.callApi
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 63:55   TenantVisitsApiDataSource.getVisits
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 39:49   TenantVisitsApiDataSource.getVisitsPage
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 103:30  TenantVisitsData.getVisitsPage
+  test/tenant_visits_data_test.dart 70:52                                        main.<fn>
+  
+00:00 +3 -1: Accepted uses confirmed: requests=false, empty=true
+00:00 +3 -2: Accepted uses confirmed: requests=false, empty=true [E]
+  Bad state: Invalid backend status choice
+  test/tenant_visits_data_test.dart 117:7                                        _FakeNetworkService.callApi
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 63:55   TenantVisitsApiDataSource.getVisits
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 39:49   TenantVisitsApiDataSource.getVisitsPage
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 103:30  TenantVisitsData.getVisitsPage
+  test/tenant_visits_data_test.dart 70:52                                        main.<fn>
+  
+00:00 +3 -2: Accepted uses confirmed: requests=true, empty=false
+00:00 +3 -3: Accepted uses confirmed: requests=true, empty=false [E]
+  Bad state: Invalid backend status choice
+  test/tenant_visits_data_test.dart 117:7                                        _FakeNetworkService.callApi
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 63:55   TenantVisitsApiDataSource.getVisits
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 39:49   TenantVisitsApiDataSource.getVisitsPage
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 103:30  TenantVisitsData.getVisitsPage
+  test/tenant_visits_data_test.dart 70:52                                        main.<fn>
+  
+00:00 +3 -3: Accepted uses confirmed: requests=true, empty=true
+00:00 +3 -4: Accepted uses confirmed: requests=true, empty=true [E]
+  Bad state: Invalid backend status choice
+  test/tenant_visits_data_test.dart 117:7                                        _FakeNetworkService.callApi
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 63:55   TenantVisitsApiDataSource.getVisits
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 39:49   TenantVisitsApiDataSource.getVisitsPage
+  package:sokoun_app/features/tenant/visits/data/tenant_visits_data.dart 103:30  TenantVisitsData.getVisitsPage
+  test/tenant_visits_data_test.dart 70:52                                        main.<fn>
+  
+00:00 +3 -4: legacy response aliases remain accepted
+00:00 +4 -4: builds a filter-specific stable cache key
+00:00 +5 -4: (tearDownAll)
+00:00 +5 -4: Some tests failed.
+
+Failing tests:
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: Accepted uses confirmed: requests=false, empty=false
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: Accepted uses confirmed: requests=false, empty=true
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: Accepted uses confirmed: requests=true, empty=false
+  /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: Accepted uses confirmed: requests=true, empty=true

@@ -2,6 +2,14 @@
 
 Registry scanner results on 2026-11-15. Affected version detection does not prove exploitability. Confirm deployed versions, reachable features and advisory prerequisites before assigning application risk. No exploit payloads were sent to the hosted app.
 
+## 16 November local remediation
+
+Both manifests and lockfiles now use Next.js and eslint-config-next 16.4.6. Compatible transitive patches also update sharp, source-map-js and zod. Fresh full-tree audits report **0 critical, 0 high, 7 moderate** per tree. Remaining findings are minimatch 10.2.6 and the six dependent TypeScript ESLint packages in the development toolchain. They remain tracked; no unsafe forced minimatch major override was applied. Both production webpack builds and the admin/merged regression suites passed. Default Turbopack verification hit a local worker port-binding restriction. See [Sprint 1](SPRINT-1.md) and [retained audit deltas](evidence/sprint-1-2026-11-16/).
+
+Python lockfile versions remain unchanged: SEC-002 is open. The original 124 advisory entries include black (4) and pytest (2), which are test/development tools even though they share the default lock section. Django (81), DRF (7), Djoser (2), OAuthlib (1), social-auth-app-django (2) and social-auth-core (7) require coordinated authentication/framework compatibility work. certifi (2), pyasn1 (4), pypdf (7), python-dotenv (2) and setuptools (3) require reachability/build-runtime review as well. These are advisory entries, not unique demonstrated exploits. Deployed versions were not established and no Python upgrade or exposure sign-off is claimed.
+
+The following tables preserve the original vulnerable-version ledger.
+
 ## frontend-audit.json
 
 | Package | Severity | Advisory | Affected versions |

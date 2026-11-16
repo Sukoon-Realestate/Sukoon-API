@@ -1608,3 +1608,18 @@ Final reconciliation gate: 17 PostgreSQL publication/closure cases passed after 
 - **Details:** Kept credential files, local environment settings and private runtime evidence excluded from Git. Clarified that the iOS/backend Firebase checks do not establish integration for the separately migrated Android development project. Preserved the outstanding iOS push configuration and Google account-login limitations. Separate mobile logo/splash edits were outside this session's changes and were not included.
 - **Validation:** Previously recorded focused checks passed (113 backend tests, one skip; 63 Flutter tests). Documentation whitespace and secret-exclusion checks passed. Publication uses the latest remote main without force pushing; the remote result is verified after pushing.
 - **Files:** `WORKLOG.md`, `docs/qa/google-notifications-2026-11-16.md`.
+
+
+### Start QA Sprint 1 release-blocker remediation
+- **What:** Fixed Accepted Visits request mapping, stale phone-privacy notices and fabricated admin reputation scores; corrected unavailable store messaging and patched both JavaScript dependency trees locally.
+- **Why:** Began the 15 November full-application QA backlog with Sprint 1 and release blockers, reproducing each changed defect before code edits.
+- **Details:** Preserved legacy visit parsing, stable cache keys, no-disclosure behavior and existing account actions. Added bilingual populated/empty HTTP filter coverage and repeated Back-flow widget checks; preserved concurrent unrelated edits. No deployment, release upload or production data mutation occurred.
+- **Validation:** 17 PostgreSQL cases, 15 focused Flutter cases, two repeated navigation tests, 60 admin tests and three merged build-config tests passed; broader visits had 79 passes and one original icon-count failure. Both webpack production builds passed. npm critical/high findings dropped to zero in both trees; seven moderate development findings remain each. Hosted associations still return 504; Python advisories, intermittent Back failure, full mobile/lint gates and native/signing acceptance remain unresolved. Default Turbopack builds hit an environment port-binding restriction.
+- **Files:** `docs/qa/full-application-2026-11-15/{README,FINDINGS,COVERAGE,SECURITY-ADVISORIES,SPRINT-1}.md` and new evidence; backend visit-filter contract test; frontend reputation/store components, locale copy, package manifests/lockfiles and tests; separate `sokoun` visit filter, privacy translations/banner and regression tests.
+
+
+### Publish Sprint 1 QA fixes to main
+- **What:** Prepared and published the completed Sprint 1 QA fix batch in both the API and mobile repositories on `main`.
+- **Details:** Included the visit filter/privacy fixes, admin score/store messaging/dependency changes, focused regressions and updated QA evidence. Preserved unrelated pending chat and mobile UI edits. Used normal pushes without rewriting history; no deployment or release upload was initiated.
+- **Validation:** Checked both remote main branches before publication, reviewed the staged scope and report evidence, retained the documented passing checks and unresolved baseline failures, and verified the resulting remote commit identities after pushing.
+- **Files:** API/frontend Sprint 1 changes, `docs/qa/full-application-2026-11-15/`, this worklog; separate mobile visit/privacy changes and focused tests.

@@ -1,6 +1,6 @@
 # Confirmed findings and security triage
 
-Date: 2026-11-15, Africa/Cairo. No product fixes were applied. P1 means resolve or explicitly disposition before release; P2 means a normal prioritized fix. Scanner severity is kept separate from demonstrated application impact.
+Original assessment: 2026-11-15, Africa/Cairo; no product fixes were applied during that assessment. Current local fix status and verification are recorded in [Sprint 1](SPRINT-1.md), dated 2026-11-16. P1 means resolve or explicitly disposition before release; P2 means a normal prioritized fix. Scanner severity is kept separate from demonstrated application impact.
 
 | ID | Priority | Finding | Evidence status |
 |---|---|---|---|
@@ -23,6 +23,8 @@ Date: 2026-11-15, Africa/Cairo. No product fixes were applied. P1 means resolve 
 
 ## MOB-001 — Accepted Visits filter fails
 
+**16 November follow-up:** see the current disposition and verification in [Sprint 1](SPRINT-1.md). The observations below retain the original reproduction.
+
 Reproduce on the mobile app: open **Visit requests → Accepted** (Arabic: **طلبات الزيارة → مقبولة**). The screen replaces the list with `Status: ... approved ...` and an invalid-choice error. Pending, Rejected and All work; Rejected's empty-state reset returns to All correctly.
 
 Expected: list accepted visits or show a successful empty state.
@@ -32,6 +34,8 @@ Cause: `TenantVisitFilter.approved.apiValue` returns the enum name `approved` in
 Fix direction: use an explicit wire-value mapping for Accepted and check both visit and visit-request collections. Preserve legacy response parsing separately from request values. Add an end-to-end test that uses the actual backend filter choices, in Arabic and English, with accepted records and an empty collection.
 
 ## MOB-002 — Listing Back flow reaches an unrecoverable screen
+
+**16 November follow-up:** see the current disposition and verification in [Sprint 1](SPRINT-1.md). The observations below retain the original reproduction.
 
 Observed sequence in the installed dev app (one failure; a fresh repeat after cold relaunch returned correctly): switch to English → Owner workspace → My properties → Accepted tab → Add property → Single residential unit → press Next photos with the form empty → Back to creation-mode selection → Back again.
 
@@ -49,6 +53,8 @@ Expected: language-dependent catalogs are refreshed or selected from the correct
 
 ## PRIV-001 — Phone privacy statements disagree
 
+**16 November follow-up:** see the current disposition and verification in [Sprint 1](SPRINT-1.md). The observations below retain the original reproduction.
+
 The hosted Arabic privacy policy says that account phone numbers are not displayed as a communication method between users. The viewing-request form says that after acceptance the owner sees the requester's number and the requester sees the owner's number. These communicate different privacy behavior.
 
 Reproduce: **Account → Privacy and preferences → Privacy policy**, then inspect the notice in **property details → Request a visit**. Public policy evidence: [hosted-privacy-policy.json](evidence/hosted-privacy-policy.json). Backend acceptance/disclosure behavior is exercised in `backend/core_apps/properties/tests/test_visit_phone_disclosure.py`.
@@ -56,6 +62,8 @@ Reproduce: **Account → Privacy and preferences → Privacy policy**, then insp
 Expected: policy, pre-submit notice, actual disclosure scope and revocation behavior agree. Decide the intended product behavior, then align policy and both participants' notices. This finding documents contradictory app behavior/copy; it is not a legal compliance conclusion.
 
 ## ADM-001 — Fabricated behavior rating
+
+**16 November follow-up:** see the current disposition and verification in [Sprint 1](SPRINT-1.md). The observations below retain the original reproduction.
 
 Reproduce in the Next.js portal: **Users → a newly created user**. The synthetic verified account, with no reputation history, shows **5.0** under **تقييم السلوك**.
 
@@ -81,6 +89,8 @@ Expected: distinguish unavailable audit data from a successful empty collection;
 
 ## WEB-001 — Download path ends at noninteractive badges
 
+**16 November follow-up:** see the current disposition and verification in [Sprint 1](SPRINT-1.md). The observations below retain the original reproduction.
+
 Reproduce on `https://www.sukoon.rent/ar`: click **حمّل التطبيق**. The page navigates to `#download`, where App Store and Google Play are noninteractive containers. The page and FAQ say the app is available on both stores, but provide no store URLs.
 
 Source: `frontend/landing/src/components/ui/StoreButtons.tsx:18` explicitly postpones destinations; each badge is a `span`. This can be intentional during preparation, but is incomplete for a public launch claiming availability.
@@ -88,6 +98,8 @@ Source: `frontend/landing/src/components/ui/StoreButtons.tsx:18` explicitly post
 Expected: correct listing links and accessible link semantics, or truthful prelaunch availability text. Check English and Arabic, desktop and mobile, and installed/uninstalled app behavior.
 
 ## HOST-001 — Association endpoints unavailable
+
+**16 November follow-up:** see the current disposition and verification in [Sprint 1](SPRINT-1.md). The observations below retain the original reproduction.
 
 Both `https://api.sukoon.rent/.well-known/assetlinks.json` and `https://api.sukoon.rent/.well-known/apple-app-site-association` returned HTTP 504 in two separate bounded checks. See [first run](evidence/hosted.json) and [repeat](evidence/hosted-repeat.json). The health endpoint returned ready during these checks.
 
@@ -97,6 +109,8 @@ Expected: direct HTTPS 200 JSON matching release certificate/package and team/bu
 
 ## SEC-001 — JavaScript dependency advisories
 
+**16 November follow-up:** see the current disposition and verification in [Sprint 1](SPRINT-1.md). The observations below retain the original reproduction.
+
 `npm audit --json` reports **1 critical, 3 high and 7 moderate affected packages** for the standalone admin lockfile, and **1 critical and 7 moderate** for the merged landing/admin lockfile. These counts overlap across dependency trees and are not unique exploits.
 
 Standalone admin pins Next.js 16.3.5; merged app pins 16.3.8. The scanner reports affected Next.js versions for multiple RCE, cache, information-disclosure, SSRF and denial-of-service advisories. The standalone tree also flags sharp, source-map-js and zod at high severity. See [complete advisory ledger](SECURITY-ADVISORIES.md), [admin audit](evidence/frontend-audit.json), and [merged-app audit](evidence/landing-audit.json).
@@ -104,6 +118,8 @@ Standalone admin pins Next.js 16.3.5; merged app pins 16.3.8. The scanner report
 Expected: triage applicability against the actual deployed build, update compatible patched dependencies, and repeat audit, build and functional tests. No exploitability or successful compromise was demonstrated by this pass.
 
 ## SEC-002 — Python dependency advisories
+
+**16 November follow-up:** see the current disposition and verification in [Sprint 1](SPRINT-1.md). The observations below retain the original reproduction.
 
 The pinned default lockfile scan reports **124 advisory entries across 13 packages**. Django 4.2.11 accounts for 81 entries; affected packages also include DRF, Djoser, OAuth/social auth, certificate/parser tooling and development tools. Some findings may have platform, configuration or feature prerequisites. Developer tools must be separated from the production runtime inventory before exposure is scored.
 

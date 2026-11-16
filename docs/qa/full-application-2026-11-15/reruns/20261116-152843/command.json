@@ -1,0 +1,9 @@
+{
+  "cwd": "/Users/demo23home/code/sukoon/Sukoon-API-sprint01",
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "/Users/demo23home/code/sukoon/Sukoon-API-sprint01/docs/qa/full-application-2026-11-15/probe_hosted.py",
+    "--output",
+    "/Users/demo23home/code/sukoon/Sukoon-API-sprint01/docs/qa/full-application-2026-11-15/reruns/20261116-152843/hosted.json"
+  ]
+}

@@ -64,6 +64,8 @@ Remaining backend skips include external native audio clips, externally generate
 
 ## Suggested fix sprints
 
+Sprint 1 has started; see [current fixes and unresolved work](SPRINT-1.md). This does not close the original coverage gaps.
+
 1. **Release blockers and dependency triage:** MOB-001, intermittent MOB-002, PRIV-001, ADM-001, HOST-001, store availability decision and runtime security advisories. Verify patched builds and real release signing identities.
 2. **Admin reliability:** ADM-002/003, truthful permission labels, lint baseline, populated role-specific review/support/catalog cycles, failures/retries and stale revisions.
 3. **Mobile regression recovery:** classify all 497 failed/error cases, repair obsolete fixtures/finders and product defects separately, remove hangs and obtain a successful complete run. Preserve Arabic/English/accessibility assertions.
