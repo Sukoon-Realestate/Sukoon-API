@@ -1403,3 +1403,37 @@ Final reconciliation gate: 17 PostgreSQL publication/closure cases passed after 
 - **Details:** Fetched origin and confirmed the local base matched remote main at `eecde3e7`; no merge or force push was required. Retained Sprint 10's partial-acceptance status and all remaining criteria. Database files, private media, environment files and ignored runtime logs were excluded.
 - **Validation:** Verified the recorded source digests and passing final/broad gate records; whitespace checks passed. The earlier test outcomes and final-tree limitations remain documented in `backend/sprints/evidence/sprint-10/README.md`. No tests, database changes or deployment commands were run for publication. The push result is reported separately.
 - **Files:** Sprint 10 backend source, tests, guidance, inventories, evidence and this worklog.
+
+
+## 2026-11-16
+
+
+### Diagnose signup verification-email failure
+
+- **What:** Stored the user-supplied DigitalOcean credential in an owner-only, Git-ignored local credential file and diagnosed the live signup failure on the Sukoon API deployment.
+- **Why:** Account creation showed a generic server error in the iOS simulator.
+- **Details:** Runtime logs correlated signup requests with HTTP 503 and `SMTPServerDisconnected` during verification-email delivery. Read-only probes from the deployed container confirmed SMTP connectivity and STARTTLS succeeded. An explicit Gmail LOGIN probe returned `535 5.7.8 Username and Password not accepted`; the local and deployed mail credentials matched. The required fix remained replacement of the rejected Gmail App Password, pending a fresh credential from the user. No application source or deployment configuration was changed, and no test email was sent.
+- **Validation:** Live health returned 200; empty signup requests returned expected localized 400 validation responses in English and Arabic. Credential and private diagnostic files were verified excluded from Git with permissions 0600.
+- **Files:** `WORKLOG.md`; ignored `credentials/digitalocean-token`, deployment snapshot, runtime log and `credentials/signup-diagnosis.json` (private evidence; not for publication).
+
+### Restore signup verification-email authentication
+
+- **What:** Replaced the rejected Gmail App Password in the ignored local environment and the existing DigitalOcean API service, storing the deployed value as a secret.
+- **Why:** Gmail authentication failures prevented verification-code delivery and caused signup to return HTTP 503.
+- **Details:** Validated the replacement using the same STARTTLS/SMTP login flow as Django, updated only the email-password environment entry and its secret type, and completed deployment `96382363-ab02-4db5-8d67-6b75f6fa3237`. The deployment became ACTIVE. No application code changed and no test email/account was created.
+- **Validation:** Gmail authentication returned 235 both before deployment and from the new live container using its deployed environment. Live health returned 200 and an empty Arabic signup request returned the expected localized 400 validation response. Full signup/email receipt was left for the user's real registration attempt.
+- **Files:** `WORKLOG.md`; ignored `.env` and owner-only credential/diagnostic files under `credentials/`. Secrets were excluded from Git and this worklog.
+
+### Test Google login and notification integration
+
+- **What:** Tested isolated backend social-auth/notification behavior, Flutter Google login and notification flows, and live OAuth/FCM configuration.
+- **Validation:** Backend 113 passed/one skipped; Flutter app 37 passed; shared notification tests 26 passed. Invalid Google token returned 400; unauthenticated notification list/device registration returned 401. Live Firebase credentials refreshed and an Android FCM validate-only request returned 200 without delivery. Google sign-in reached the actual Google account-entry page on the simulator.
+- **Findings:** iOS source lacks the APNs push entitlement, installed simulator signing entitlements are empty, and the backend has zero registered iOS devices. Successful Google callback/session requires the user's account sign-in; real notification receipt/tap routing remains unverified. No application/deployment changes or real notifications were made.
+- **Files:** `docs/qa/google-notifications-2026-11-16.md`, `WORKLOG.md`; test logs under `/private/tmp/`.
+
+### Publish signup diagnosis and Google/notification QA evidence
+
+- **What:** Prepared this session's signup-repair worklog and Google/notification QA report for integration into backend `main` and publication to origin under the user's push-and-merge request.
+- **Details:** Kept credential files, local environment settings and private runtime evidence excluded from Git. Clarified that the iOS/backend Firebase checks do not establish integration for the separately migrated Android development project. Preserved the outstanding iOS push configuration and Google account-login limitations. Separate mobile logo/splash edits were outside this session's changes and were not included.
+- **Validation:** Previously recorded focused checks passed (113 backend tests, one skip; 63 Flutter tests). Documentation whitespace and secret-exclusion checks passed. Publication uses the latest remote main without force pushing; the remote result is verified after pushing.
+- **Files:** `WORKLOG.md`, `docs/qa/google-notifications-2026-11-16.md`.
