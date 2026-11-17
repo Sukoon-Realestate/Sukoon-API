@@ -1,0 +1,72 @@
+{
+ "ChatForwardBatchScreen": {
+  "file": "apps/sokoun_app/lib/features/shared/chat/presentation/screens/chat_forward_batch_screen.dart",
+  "phone-ar": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=34.0 right=68.0 w=291.0 y=245"
+  ],
+  "phone-en": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=68.0 right=34.0 w=291.0 y=245"
+  ],
+  "se-ar": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=34.0 right=68.0 w=218.0 y=206"
+  ],
+  "se-en": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=68.0 right=34.0 w=218.0 y=227"
+  ],
+  "large-ar": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=34.0 right=68.0 w=291.0 y=348"
+  ],
+  "dark-ar": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=34.0 right=68.0 w=291.0 y=245"
+  ]
+ },
+ "SupportTicketDetailContentView": {
+  "file": "apps/sokoun_app/lib/features/shared/support/presentation/widgets/detail/support_ticket_detail_content_view.dart",
+  "phone-ar": [
+   "TEXT_OUT_OF_BOUNDS: \"اكتب ردًا…\" 234.5..551.5",
+   "TEXT_OUT_OF_BOUNDS: \"إرسال الرد\" 365.8..420.2"
+  ],
+  "phone-en": [
+   "TEXT_OUT_OF_BOUNDS: \"Write a reply...\" 234.5..551.5",
+   "TEXT_OUT_OF_BOUNDS: \"Send reply\" 357.8..428.2"
+  ],
+  "se-ar": [
+   "TEXT_OUT_OF_BOUNDS: \"اكتب ردًا…\" 198.0..442.0",
+   "TEXT_OUT_OF_BOUNDS: \"إرسال الرد\" 292.8..347.2"
+  ],
+  "se-en": [
+   "TEXT_OUT_OF_BOUNDS: \"Write a reply...\" 198.0..442.0",
+   "TEXT_OUT_OF_BOUNDS: \"Send reply\" 284.8..355.2"
+  ],
+  "large-ar": [
+   "TEXT_OUT_OF_BOUNDS: \"اكتب ردًا…\" 234.5..551.5",
+   "TEXT_OUT_OF_BOUNDS: \"إرسال الرد\" 338.7..447.3"
+  ],
+  "dark-ar": [
+   "TEXT_OUT_OF_BOUNDS: \"اكتب ردًا…\" 234.5..551.5",
+   "TEXT_OUT_OF_BOUNDS: \"إرسال الرد\" 365.8..420.2"
+  ]
+ },
+ "SupportHelpContentView": {
+  "file": "apps/sokoun_app/lib/features/shared/support/presentation/widgets/help/support_help_content_view.dart",
+  "phone-ar": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=38.0 right=72.0 w=283.0 y=71"
+  ],
+  "phone-en": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=72.0 right=38.0 w=283.0 y=71"
+  ],
+  "se-ar": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=38.0 right=72.0 w=210.0 y=32"
+  ],
+  "se-en": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=72.0 right=38.0 w=210.0 y=32",
+   "TEXT_TRUNCATED: \"Search frequently asked questions\""
+  ],
+  "large-ar": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=38.0 right=72.0 w=283.0 y=71"
+  ],
+  "dark-ar": [
+   "ASYMMETRIC_GUTTER: RenderEditable left=38.0 right=72.0 w=283.0 y=71"
+  ]
+ }
+}

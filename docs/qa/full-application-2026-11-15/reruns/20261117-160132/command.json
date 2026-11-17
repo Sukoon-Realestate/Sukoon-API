@@ -1,0 +1,16 @@
+{
+  "cwd": "/Users/demo23home/code/sukoon/sokoun/packages/core",
+  "argv": [
+    "flutter",
+    "test",
+    "--no-pub",
+    "--timeout",
+    "60s",
+    "--reporter",
+    "json",
+    "--concurrency",
+    "3",
+    "--dart-define=SUKOON_MVP=true",
+    "test"
+  ]
+}

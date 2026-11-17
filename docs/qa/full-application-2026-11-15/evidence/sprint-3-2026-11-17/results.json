@@ -1,0 +1,62 @@
+{
+  "before-mvp": {
+    "test_cases": {
+      "success": 166,
+      "error": 7
+    },
+    "terminal_success": false,
+    "active_at_end": [],
+    "failed_cases": [
+      "role work uses resource status labels in ar",
+      "company session opens in place; double tap and timeout preserve one completion",
+      "role work uses resource status labels in en",
+      "favorite card shows the saved group price instead of an unsaved bed minimum",
+      "favorite card keeps mixed prices separate and follows the filtered saved period",
+      "favorites category switching exposes matching saved offers and exact navigation",
+      "favorites v1 filters before paging and retains the filter on later pages"
+    ],
+    "completed_successfully": false
+  },
+  "before-full-company": {
+    "test_cases": {
+      "success": 15
+    },
+    "terminal_success": true,
+    "active_at_end": [],
+    "failed_cases": [],
+    "completed_successfully": true
+  },
+  "diagnostic-toast-cleanup": {
+    "test_cases": {
+      "success": 177,
+      "error": 2,
+      "skipped": 1
+    },
+    "terminal_success": false,
+    "active_at_end": [],
+    "failed_cases": [
+      "role work uses resource status labels in ar",
+      "role work uses resource status labels in en"
+    ],
+    "completed_successfully": false
+  },
+  "after-mvp": {
+    "test_cases": {
+      "success": 179,
+      "skipped": 1
+    },
+    "terminal_success": true,
+    "active_at_end": [],
+    "failed_cases": [],
+    "completed_successfully": true
+  },
+  "after-full": {
+    "test_cases": {
+      "success": 180
+    },
+    "terminal_success": true,
+    "active_at_end": [],
+    "failed_cases": [],
+    "completed_successfully": true
+  }
+}

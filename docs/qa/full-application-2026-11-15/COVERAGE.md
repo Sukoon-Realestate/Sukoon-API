@@ -6,6 +6,8 @@ This is a substantial QA pass, not exhaustive release certification. A passing u
 
 [Sprint 2](SPRINT-2.md) has completed its local implementation and controlled browser verification: 88 admin and 38 merged regressions, both webpack production builds, TypeScript, and six Chrome scenarios in each app layout pass. Admin lint passes with zero errors/six native-image warnings. The browser runs use synthetic intercepted APIs and verify actual app UI, CSV downloads, version/receipt handling, restricted navigation and blocked admin framing. Actual backend staff sessions/concurrency and hosted acceptance remain open. Sprint 1 blockers remain open. Original observations below are historical.
 
+[Sprint 3](SPRINT-3.md) remains in progress. Current per-case reconciliation verifies 475/497 historical records, leaving 22 open. Shared core completes with 345 passes. Focused product, banner, company/dashboard and 24 moved screen-audit runtime cases pass; separate geometry notes remain. The historical 93-file rerun now terminates with a red baseline, replacing the earlier stalled state. Complete final-tree app runs, remaining case repairs and native/device acceptance remain open.
+
 ## Environments
 
 - Hosted API: `https://api.sukoon.rent`; public web/admin: `https://www.sukoon.rent`.

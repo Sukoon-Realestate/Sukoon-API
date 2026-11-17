@@ -1,0 +1,125 @@
+{
+  "exit_code": 0,
+  "timed_out": false,
+  "test_cases": {
+    "success": 22
+  },
+  "terminal_success": true,
+  "active_at_end": [],
+  "failed_cases": [],
+  "case_results": [
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "backend fix preserves public advertisement and property UUIDs in every projection",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "an existing pending ad is prepared for invoice review without charging",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "cached banner details cannot authorize or confirm a payment",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "integer EGP plans preserve calendar durations and format all amounts",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "plan contracts reject fractional minor units and activation needs UTC timestamps",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "durable upload/create stops at invoice review without activating",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "concurrent submission creates once and never charges",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "lost create response reconciles after reopening without another upload",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "pending ad does not publish; later authoritative detail can confirm activation",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "storage failure stops transmission and retry retains input",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "unknown create requires explicit authoritative retry permission",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "wrong envelope or mock payment identity is rejected",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "late response never pays or activates in a replacement account",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "late create cannot pay after leaving and returning to owner",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "returning from invoice payment reads actual activation without charging again",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "only authoritative not_found permission permits reuse of create identity",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "rejected create unlocks correction only after a matching rejection lookup",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "changed server price blocks creation and requires plan review",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "plan rejection unlocks retained input only after rejected lookup",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "idempotency conflict retains original identity and never replaces it",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "recovered expired placement keeps original dates without another payment",
+      "result": "success"
+    },
+    {
+      "file": "owner_banner_ads_flow_test.dart",
+      "name": "private drafts separate environments and sessions",
+      "result": "success"
+    }
+  ],
+  "completed_successfully": true,
+  "mode": "full",
+  "suite": null
+}
