@@ -1,8 +1,11 @@
 # Full-application QA — 15 November 2026
 
+**Sprint 3 completed 18 November 2026:** all 497 historical records have dispositions (495 passing matches and two verified startup-contract replacements). Complete app: 13,757 passes / 45 intentional skips / zero failures. Shared core: 345 passes. MVP matrix: 264 passes plus final recovery checks. Strict native simulator ledger: 53 successful widget journeys. Connected/provider and physical-device acceptance remain Sprint 4 work. [Current details](SPRINT-3.md).
+
+
 **Release blockers were found. This pass does not certify the app as production-ready or establish that every button/cycle is covered.** The work includes the Flutter mobile app, hosted API, public frontend and Next.js admin portal. Product fixes were left for a later sprint in the original pass; local remediation began on 16 November.
 
-## Sprint 3 started — 17 November 2026
+## Earlier Sprint 3 progress — 17 November 2026 (superseded)
 
 The current reconciliation verifies **475 of 497 historical failure records; 22 remain open**. Product fixes address consent snapshot changes, disabled calendar selection, company large-text layout and unscoped discovery entries. Banner stalls and audit-harness lifecycle faults are reproduced and repaired. The complete shared-core suite passes 345 cases; focused app batches pass, but complete final-tree app gates and native acceptance remain open. See [Sprint 3 evidence and remaining work](SPRINT-3.md).
 

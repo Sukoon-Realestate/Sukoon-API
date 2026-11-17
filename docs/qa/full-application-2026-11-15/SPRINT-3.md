@@ -1,8 +1,20 @@
 # Sprint 3 — mobile regression recovery
 
-**Started 17 November 2026; in progress.** Scope follows Coverage's suggested Sprint 3: reconcile the 497 recorded failed/error cases, distinguish obsolete test contracts and intentional release gates from product defects, repair demonstrated causes, bound stalled runs and obtain successful complete mobile/core suites. Keep Arabic, English, accessibility, recovery and authorization assertions. Sprint 1 release blockers and Sprint 2 live-backend/hosted acceptance remain separate.
+**Completed 18 November 2026 for the mobile regression-recovery scope.** Started 17 November 2026. Scope follows Coverage's suggested Sprint 3: reconcile the 497 recorded failed/error cases, distinguish obsolete test contracts and intentional release gates from product defects, repair demonstrated causes, bound stalled runs and obtain successful complete mobile/core suites. Keep Arabic, English, accessibility, recovery and authorization assertions. Sprint 1 release blockers and Sprint 2 live-backend/hosted acceptance remain separate.
 
-## Current continuation — 17 November 2026
+## Final verified result — 18 November 2026
+
+All original records are now reconciled: **495 match passing reruns, and two startup records are explicitly superseded by verified current-contract tests**. The old immediate Welcome/Home assertions are replaced by splash-completion followed by exactly one Login/Home destination. [Exact dispositions](evidence/sprint-3-2026-11-17/closure/historical-reconciliation.json).
+
+The final isolated complete-app run passes **13,757 tests / 45 intentional skips / zero failures**, all 456 files, successful terminal and no active cases. Complete shared core passes **345 tests**. MVP matrix: 264 passes; guide/UI cross-check: 35 passes; final MVP identity/count/navigation checks: 132 passes and one deferred-group skip. Counts overlap. The strict fixture-only iOS simulator run passes **53 widget journeys**, all successful in the required execution ledger, with exit zero. [Current evidence](evidence/sprint-3-2026-11-17/closure/README.md).
+
+The final product fix also reloads authoritative identity preparation after a partial acknowledgement, preserving the message while requiring fresh input and revision before another submission. Failed refresh blocks edits/writes; no automatic replay occurs. Global badge refresh includes loaded/in-flight workspaces while keeping startup's original two-scope read contract.
+Sprint 3 is complete: all 497 historical records have dispositions, complete app/core runs terminate successfully, the MVP boundary checks pass, and the selected native regressions pass. The 45 full-mode skips are intentional MVP-only or environment-gated connected tests, listed in the evidence. Connected hosted/provider acceptance, physical-device/profile and exhaustive platform/device matrices remain Sprint 4 scope. Existing Sprint 1 release blockers and Sprint 2 connected acceptance remain open; this is not production-release sign-off. Changes in this continuation remain local/uncommitted, with no push or deployment.
+
+
+Product corrections now also restore shell-aware account retry, visible company account settings and Individual Home help, partial identity-correction feedback, termination-review identity/messages, accessible update badges and scrollable short owner-action sheets. Current guide, account replacement/logout, write refusal and duplicate-submission assertions remain enabled.
+
+## Earlier continuation — 17 November 2026
 
 The historical ledger now has **475/497 records with matching passing reruns; 22 remain open**. This reconciles prior failures with current mode-specific evidence; it does not mean 475 new production bugs were fixed or that an uninterrupted final-tree app suite is green. [Per-case reconciliation](evidence/sprint-3-2026-11-17/continuation/historical-reconciliation.json) and [remaining cases](evidence/sprint-3-2026-11-17/continuation/REMAINING.md).
 
@@ -33,7 +45,7 @@ Final focused matrix: **179 passes / one intentional skip in MVP; 180 passes / z
 
 `make sprint3RegressionCheck` in the mobile app repeats this four-file matrix. Code is on local `codex/sprint-03-mobile-regression`; QA tooling/reporting is on local `codex/sprint-03-qa`. Work is uncommitted and has not been pushed or deployed.
 
-## Remaining work
+## Historical first-batch remaining work (now superseded)
 
 1. Reproduce and classify the remaining **22 historical failure records** (the first batch originally left 490). Some may already be resolved by prior work; do not count them closed without a current run.
 2. Repair remaining fixture/finder/release-mode mismatches and independently demonstrated product defects, preserving meaningful checks.

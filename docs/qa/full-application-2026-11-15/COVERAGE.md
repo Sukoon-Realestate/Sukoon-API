@@ -1,12 +1,15 @@
 # Coverage and remaining acceptance work
 
+**Sprint 3 completed 18 November 2026:** all 497 historical records have dispositions (495 passing matches and two verified startup-contract replacements). Complete app: 13,757 passes / 45 intentional skips / zero failures. Shared core: 345 passes. MVP matrix: 264 passes plus final recovery checks. Strict native simulator ledger: 53 successful widget journeys. Connected/provider and physical-device acceptance remain Sprint 4 work. [Current details](SPRINT-3.md).
+
+
 This is a substantial QA pass, not exhaustive release certification. A passing unit test, an HTTP 200 page shell, a discovered callback and a completed user journey are different evidence. No statement here means every button was clicked or every security threat was ruled out.
 
 ## Current continuation
 
 [Sprint 2](SPRINT-2.md) has completed its local implementation and controlled browser verification: 88 admin and 38 merged regressions, both webpack production builds, TypeScript, and six Chrome scenarios in each app layout pass. Admin lint passes with zero errors/six native-image warnings. The browser runs use synthetic intercepted APIs and verify actual app UI, CSV downloads, version/receipt handling, restricted navigation and blocked admin framing. Actual backend staff sessions/concurrency and hosted acceptance remain open. Sprint 1 blockers remain open. Original observations below are historical.
 
-[Sprint 3](SPRINT-3.md) remains in progress. Current per-case reconciliation verifies 475/497 historical records, leaving 22 open. Shared core completes with 345 passes. Focused product, banner, company/dashboard and 24 moved screen-audit runtime cases pass; separate geometry notes remain. The historical 93-file rerun now terminates with a red baseline, replacing the earlier stalled state. Complete final-tree app runs, remaining case repairs and native/device acceptance remain open.
+[Sprint 3](SPRINT-3.md) is complete for regression recovery. All original records are reconciled; the complete app/core gates, intended MVP checks and selected fixture-only native journeys pass. Geometry diagnostics and connected/provider/physical-device acceptance remain Sprint 4 work.
 
 ## Environments
 

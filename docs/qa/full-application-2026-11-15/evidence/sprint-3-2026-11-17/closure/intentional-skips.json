@@ -1,0 +1,227 @@
+[
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP individual keeps main UI and deferred entries hidden ar dark=false reduced=false",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP individual keeps main UI and deferred entries hidden ar dark=false reduced=true",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP individual keeps main UI and deferred entries hidden ar dark=true reduced=false",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP individual keeps main UI and deferred entries hidden ar dark=true reduced=true",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP individual keeps main UI and deferred entries hidden en dark=false reduced=false",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP individual keeps main UI and deferred entries hidden en dark=false reduced=true",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP individual keeps main UI and deferred entries hidden en dark=true reduced=false",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP individual keeps main UI and deferred entries hidden en dark=true reduced=true",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP owner keeps main UI and deferred entries hidden ar dark=false reduced=false",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP owner keeps main UI and deferred entries hidden ar dark=false reduced=true",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP owner keeps main UI and deferred entries hidden ar dark=true reduced=false",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP owner keeps main UI and deferred entries hidden ar dark=true reduced=true",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP owner keeps main UI and deferred entries hidden en dark=false reduced=false",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP owner keeps main UI and deferred entries hidden en dark=false reduced=true",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP owner keeps main UI and deferred entries hidden en dark=true reduced=false",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_ui_merge_test.dart",
+    "name": "MVP owner keeps main UI and deferred entries hidden en dark=true reduced=true",
+    "result": "skipped"
+  },
+  {
+    "file": "django_cycle_contract_test.dart",
+    "name": "Django contract artifact must be explicitly supplied",
+    "result": "skipped"
+  },
+  {
+    "file": "django_remaining_contract_test.dart",
+    "name": "fresh Django artifacts required",
+    "result": "skipped"
+  },
+  {
+    "file": "api_field_cleanup_test.dart",
+    "name": "fresh local Django HTTP responses render invoice and owner state",
+    "result": "skipped"
+  },
+  {
+    "file": "api_field_cleanup_test.dart",
+    "name": "maintenance approval button submits the version received from Django HTTP",
+    "result": "skipped"
+  },
+  {
+    "file": "api_field_cleanup_test.dart",
+    "name": "HTTP maintenance approval and settlement notes render in ar",
+    "result": "skipped"
+  },
+  {
+    "file": "api_field_cleanup_test.dart",
+    "name": "HTTP maintenance approval and settlement notes render in en",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_privacy_overview_test.dart",
+    "name": "scoped privacy keeps current choices and public preview separate ar",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_privacy_overview_test.dart",
+    "name": "scoped privacy keeps current choices and public preview separate en",
+    "result": "skipped"
+  },
+  {
+    "file": "mvp_privacy_overview_test.dart",
+    "name": "failed settings section retains public preview and private-media information",
+    "result": "skipped"
+  },
+  {
+    "file": "django_mock_provider_contract_test.dart",
+    "name": "fresh Django provider completions required",
+    "result": "skipped"
+  },
+  {
+    "file": "api_field_query_cleanup_test.dart",
+    "name": "local Django response explanations appear in the lease timeline",
+    "result": "skipped"
+  },
+  {
+    "file": "api_field_query_cleanup_test.dart",
+    "name": "local Django ar analytics labels reach the existing summary",
+    "result": "skipped"
+  },
+  {
+    "file": "api_field_query_cleanup_test.dart",
+    "name": "local Django en analytics labels reach the existing summary",
+    "result": "skipped"
+  },
+  {
+    "file": "rent_invoice_field_integration_test.dart",
+    "name": "Django HTTP invoice amounts and deadlines drive the rendered accounting",
+    "result": "skipped"
+  },
+  {
+    "file": "rental_gap_closure_test.dart",
+    "name": "fresh Django envelopes parse into the same typed mobile resources",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live Home parses through the production transport: en",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live planning keeps guest commands disabled: en",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live banner feed parses without private data: en",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live Home parses through the production transport: ar",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live planning keeps guest commands disabled: ar",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live banner feed parses without private data: ar",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live actor authentication and scoped reads use the app transport: owner_a",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live actor authentication and scoped reads use the app transport: owner_b",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live actor authentication and scoped reads use the app transport: tenant_a",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_tenant_cycles_live_test.dart",
+    "name": "live actor authentication and scoped reads use the app transport: tenant_b",
+    "result": "skipped"
+  },
+  {
+    "file": "owner_banner_ads_live_test.dart",
+    "name": "live Google owner upload, idempotent activation and anonymous public feed",
+    "result": "skipped"
+  },
+  {
+    "file": "home_tools_redesign_test.dart",
+    "name": "explicit guide launcher replays Search then targets only Saved",
+    "result": "skipped"
+  },
+  {
+    "file": "home_tools_redesign_test.dart",
+    "name": "Home tools preview below the actual hero",
+    "result": "skipped"
+  },
+  {
+    "file": "property_capture_http_integration_test.dart",
+    "name": "real HTTP login, interrupted upload, verified manifest, durable worker and revocation",
+    "result": "skipped"
+  }
+]

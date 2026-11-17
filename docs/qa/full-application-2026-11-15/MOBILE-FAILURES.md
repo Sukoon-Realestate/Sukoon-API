@@ -1,5 +1,8 @@
 # Mobile regression failures
 
+**Sprint 3 completed 18 November 2026:** all 497 historical records have dispositions (495 passing matches and two verified startup-contract replacements). Complete app: 13,757 passes / 45 intentional skips / zero failures. Shared core: 345 passes. MVP matrix: 264 passes plus final recovery checks. Strict native simulator ledger: 53 successful widget journeys. Connected/provider and physical-device acceptance remain Sprint 4 work. [Current details](SPRINT-3.md).
+
+
 **17 November continuation:** [Sprint 3](SPRINT-3.md) now maps 475/497 historical records to passing reruns; 22 remain open. The [current per-case ledger](evidence/sprint-3-2026-11-17/continuation/historical-reconciliation.json) preserves failed/unmatched cases explicitly. This is accumulated mode-specific evidence, not a complete final-tree app gate. The original assessment below remains unchanged.
 
 These are observed test failures, not independently proven production defects. A stale finder, missing fixture, release gate, contract mismatch, timeout or product bug may cause them. The broad app run was interrupted after stalling; shutdown errors are retained in the raw log.
