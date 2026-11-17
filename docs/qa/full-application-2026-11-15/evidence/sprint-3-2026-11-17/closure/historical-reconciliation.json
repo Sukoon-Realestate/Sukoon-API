@@ -1,0 +1,3489 @@
+{
+  "counts": {
+    "success": 495,
+    "superseded_verified": 2
+  },
+  "records": [
+    {
+      "id": "MOB-af9628612683",
+      "file": "company_role_work_status_test.dart",
+      "historical_name": "role work uses resource status labels in ar",
+      "current_name": "role work uses resource status labels in ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f511ef6964ec",
+      "file": "rental_listing_categories_test.dart",
+      "historical_name": "favorite card shows the saved group price instead of an unsaved bed minimum",
+      "current_name": "favorite card shows the saved group price instead of an unsaved bed minimum",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-003e875764a9",
+      "file": "company_role_work_status_test.dart",
+      "historical_name": "role work uses resource status labels in en",
+      "current_name": "role work uses resource status labels in en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b2b8119b58a8",
+      "file": "rental_listing_categories_test.dart",
+      "historical_name": "favorite card keeps mixed prices separate and follows the filtered saved period",
+      "current_name": "favorite card keeps mixed prices separate and follows the filtered saved period",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-04e975545b5b",
+      "file": "rental_listing_categories_test.dart",
+      "historical_name": "favorites category switching exposes matching saved offers and exact navigation",
+      "current_name": "favorites category switching exposes matching saved offers and exact navigation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8487705d0c84",
+      "file": "rental_mock_provider_test.dart",
+      "historical_name": "company session opens in place; double tap and timeout preserve one completion",
+      "current_name": "company session opens in place; double tap and timeout preserve one completion",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7408ebd052db",
+      "file": "rental_listing_categories_test.dart",
+      "historical_name": "favorites v1 filters before paging and retains the filter on later pages",
+      "current_name": "favorites v1 filters before paging and retains the filter on later pages",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-02aecdb4597f",
+      "file": "advanced_execution_test.dart",
+      "historical_name": "lost ACK stays unknown and mounted execution clears on account replacement",
+      "current_name": "lost ACK stays unknown and mounted execution clears on account replacement",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-74063a05c445",
+      "file": "advanced_execution_test.dart",
+      "historical_name": "new execution child accepts its own revision while checking exact source",
+      "current_name": "new execution child accepts its own revision while checking exact source",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0dd936420a25",
+      "file": "advanced_execution_test.dart",
+      "historical_name": "bounded constructor keeps unknown outcome distinct from infeasibility",
+      "current_name": "bounded constructor keeps unknown outcome distinct from infeasibility",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b22ef65c4b48",
+      "file": "feature_completeness_widgets_test.dart",
+      "historical_name": "sessions show device labels and revoking another device retains current account",
+      "current_name": "sessions show device labels and revoking another device retains current account",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-31362b687da7",
+      "file": "badge_counts_test.dart",
+      "historical_name": "group send, socket echoes and reader receipts never fetch unread counts",
+      "current_name": "group send, socket echoes and reader receipts never fetch unread counts",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ff4960cb7493",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "group entry mounts only for students: student",
+      "current_name": "group entry mounts only for students: student",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e07898ec820d",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "direct wrong-workspace route makes zero capability or detail calls",
+      "current_name": "direct wrong-workspace route makes zero capability or detail calls",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fe5df02a2ac8",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "disabled catalog does not mount the group collection or call its endpoint",
+      "current_name": "disabled catalog does not mount the group collection or call its endpoint",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-80831042743b",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "unverified student sees verification before service discovery",
+      "current_name": "unverified student sees verification before service discovery",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-29591e066647",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "individual home and favorites do not build group controls or lists",
+      "current_name": "individual home and favorites do not build group controls or lists",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cf5de8f9b955",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "student groups remain available when optional academic tools are off",
+      "current_name": "student groups remain available when optional academic tools are off",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9beb27d3b689",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "changing workspace removes an already visible group entry",
+      "current_name": "changing workspace removes an already visible group entry",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b9d90b4f69cc",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "resume preserves content while refreshing and hides revoked service",
+      "current_name": "resume preserves content while refreshing and hides revoked service",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ab51b965d9df",
+      "file": "workspace_feature_access_test.dart",
+      "historical_name": "expired catalog refresh preserves selected tabs until service revocation",
+      "current_name": "expired catalog refresh preserves selected tabs until service revocation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6f11dbacf726",
+      "file": "tenant_property_details_screen_test.dart",
+      "historical_name": "shows the exception view when no cached details exist",
+      "current_name": "shows the exception view when no cached details exist",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ff6062ba3e17",
+      "file": "company_core_scope_test.dart",
+      "historical_name": "late company A response cannot replace company B context",
+      "current_name": "late company A response cannot replace company B context",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c2a10a9a40f5",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "details share entry requires student workspace and actual groups",
+      "current_name": "details share entry requires student workspace and actual groups",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7ef75d61b81a",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "group selector searches on server and returns exact chosen conversation",
+      "current_name": "group selector searches on server and returns exact chosen conversation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c988f48443a2",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "attachment picker previews a favorite and sends only on explicit send",
+      "current_name": "attachment picker previews a favorite and sends only on explicit send",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3753bfe251d2",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "picker preserves independent searches and applies existing property filters",
+      "current_name": "picker preserves independent searches and applies existing property filters",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-12aed64094cd",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "successful empty favorites retain search and tabs",
+      "current_name": "successful empty favorites retain search and tabs",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d62011a62247",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "unavailable property cannot navigate and available card keeps exact offer",
+      "current_name": "unavailable property cannot navigate and available card keeps exact offer",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a40b934fc442",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 320.0 scale 1.0 ar",
+      "current_name": "property picker 320.0 scale 1.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4d9ef4bd0b62",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 320.0 scale 1.0 en",
+      "current_name": "property picker 320.0 scale 1.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2a852210e18e",
+      "file": "group_booking_listing_changes_test.dart",
+      "historical_name": "source history disables own acceptance and keeps independent invitation en",
+      "current_name": "source history disables own acceptance and keeps independent invitation en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4f7cc17be99e",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 320.0 scale 1.3 ar",
+      "current_name": "property picker 320.0 scale 1.3 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ce360c6c2810",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 320.0 scale 1.3 en",
+      "current_name": "property picker 320.0 scale 1.3 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-022b64b842cd",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 320.0 scale 2.0 ar",
+      "current_name": "property picker 320.0 scale 2.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8e5ab741ef8a",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 320.0 scale 2.0 en",
+      "current_name": "property picker 320.0 scale 2.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-33fc1a3161bc",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 390.0 scale 1.0 ar",
+      "current_name": "property picker 390.0 scale 1.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-be6c2cb41ce0",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 390.0 scale 1.0 en",
+      "current_name": "property picker 390.0 scale 1.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5c16d13c1a9e",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 390.0 scale 1.3 ar",
+      "current_name": "property picker 390.0 scale 1.3 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-df5bd4dd105b",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 390.0 scale 1.3 en",
+      "current_name": "property picker 390.0 scale 1.3 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-254595162763",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 390.0 scale 2.0 ar",
+      "current_name": "property picker 390.0 scale 2.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5f49dc84a363",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 390.0 scale 2.0 en",
+      "current_name": "property picker 390.0 scale 2.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a3001494e091",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 600.0 scale 1.0 ar",
+      "current_name": "property picker 600.0 scale 1.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e091fcf8fc5b",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 600.0 scale 1.0 en",
+      "current_name": "property picker 600.0 scale 1.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fe663ab37690",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 600.0 scale 1.3 ar",
+      "current_name": "property picker 600.0 scale 1.3 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f1babe192435",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 600.0 scale 1.3 en",
+      "current_name": "property picker 600.0 scale 1.3 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1197b253761f",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 600.0 scale 2.0 ar",
+      "current_name": "property picker 600.0 scale 2.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-81869cf3404d",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 600.0 scale 2.0 en",
+      "current_name": "property picker 600.0 scale 2.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3c7c430c7e49",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 768.0 scale 1.0 ar",
+      "current_name": "property picker 768.0 scale 1.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-af416a67b6fb",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 768.0 scale 1.0 en",
+      "current_name": "property picker 768.0 scale 1.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3a92f384fceb",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 768.0 scale 1.3 ar",
+      "current_name": "property picker 768.0 scale 1.3 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6b5bd32d0562",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 768.0 scale 1.3 en",
+      "current_name": "property picker 768.0 scale 1.3 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0a3b4b9e1c31",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 768.0 scale 2.0 ar",
+      "current_name": "property picker 768.0 scale 2.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-802c91ea70c4",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 768.0 scale 2.0 en",
+      "current_name": "property picker 768.0 scale 2.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ed7d94bb99b3",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1024.0 scale 1.0 ar",
+      "current_name": "property picker 1024.0 scale 1.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-13ac8c3604b7",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1024.0 scale 1.0 en",
+      "current_name": "property picker 1024.0 scale 1.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-993167bca904",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1024.0 scale 1.3 ar",
+      "current_name": "property picker 1024.0 scale 1.3 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0f55187e0dac",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1024.0 scale 1.3 en",
+      "current_name": "property picker 1024.0 scale 1.3 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-282feddcd6ed",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1024.0 scale 2.0 ar",
+      "current_name": "property picker 1024.0 scale 2.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-261839d786db",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1024.0 scale 2.0 en",
+      "current_name": "property picker 1024.0 scale 2.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e42de18ef654",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1366.0 scale 1.0 ar",
+      "current_name": "property picker 1366.0 scale 1.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bb86b550d52d",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1366.0 scale 1.0 en",
+      "current_name": "property picker 1366.0 scale 1.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cfa4a1511385",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1366.0 scale 1.3 ar",
+      "current_name": "property picker 1366.0 scale 1.3 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8331e0768430",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1366.0 scale 1.3 en",
+      "current_name": "property picker 1366.0 scale 1.3 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-14c77f39bdcf",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1366.0 scale 2.0 ar",
+      "current_name": "property picker 1366.0 scale 2.0 ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-13809f5604db",
+      "file": "chat_property_sharing_widgets_test.dart",
+      "historical_name": "property picker 1366.0 scale 2.0 en",
+      "current_name": "property picker 1366.0 scale 2.0 en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-86ed522e9839",
+      "file": "application_share_consent_test.dart",
+      "historical_name": "changed recipient invalidates the already open consent review",
+      "current_name": "recipient invalidates the already open consent review",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-69c3b44585bb",
+      "file": "contextual_onboarding_widgets_test.dart",
+      "historical_name": "real authorized tenant_home guides only present current controls",
+      "current_name": "real authorized tenant_home guides only present current controls",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-92d054aee569",
+      "file": "backend_handoff_test.dart",
+      "historical_name": "video and canonical property links survive cache round trips",
+      "current_name": "video and canonical property links survive cache round trips",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bed369029d14",
+      "file": "backend_handoff_test.dart",
+      "historical_name": "partial KYC stays on form and successful completion keeps the signed-in journey",
+      "current_name": "partial KYC stays on form and successful completion keeps the signed-in journey",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f7dfca3d20f9",
+      "file": "group_chat_recovery_audio_test.dart",
+      "historical_name": "protected restoration completes before events can overwrite saved composition",
+      "current_name": "protected restoration completes before events can overwrite saved composition",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f5888aeb870b",
+      "file": "group_chat_recovery_audio_test.dart",
+      "historical_name": "permission denial offers settings and never sends a message",
+      "current_name": "permission denial offers settings and never sends a message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c7dac58cced0",
+      "file": "group_chat_recovery_audio_test.dart",
+      "historical_name": "finalizing recording produces an unsent preview and background cancels microphone",
+      "current_name": "finalizing recording produces an unsent preview and background cancels microphone",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-04090b784542",
+      "file": "group_chat_recovery_audio_test.dart",
+      "historical_name": "navigation stops a recording without upload or automatic send",
+      "current_name": "navigation stops a recording without upload or automatic send",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9002a8c90a3a",
+      "file": "group_chat_recovery_audio_test.dart",
+      "historical_name": "mute serializes the pending write and failed mutation retains canonical preference",
+      "current_name": "mute serializes the pending write and failed mutation retains canonical preference",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-818127d51c18",
+      "file": "company_selection_account_closure_test.dart",
+      "historical_name": "fresh closure disables a restored employee selection ar",
+      "current_name": "fresh closure disables a restored employee selection ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b44ce04d5462",
+      "file": "company_selection_account_closure_test.dart",
+      "historical_name": "fresh closure disables a restored employee selection en",
+      "current_name": "fresh closure disables a restored employee selection en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e8a490765cf3",
+      "file": "banner_ads_image_selection_test.dart",
+      "historical_name": "gallery return retains the form and full artwork in ar",
+      "current_name": "gallery return retains the form and full artwork in ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-85aa38de6ebc",
+      "file": "advanced_privacy_capability_test.dart",
+      "historical_name": "privacy withdrawal remains available for exact historical lab with disabled planning",
+      "current_name": "privacy withdrawal remains available for exact historical lab with disabled planning",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d5af39e20789",
+      "file": "banner_ads_image_selection_test.dart",
+      "historical_name": "gallery return retains the form and full artwork in en",
+      "current_name": "gallery return retains the form and full artwork in en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f4ef249bbb43",
+      "file": "banner_ads_image_selection_test.dart",
+      "historical_name": "replace, cancellation and invalid-file retry retain good artwork",
+      "current_name": "replace, cancellation and invalid-file retry retain good artwork",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-dc357afa0c43",
+      "file": "banner_ads_image_selection_test.dart",
+      "historical_name": "confirming an empty album selection removes artwork",
+      "current_name": "confirming an empty album selection removes artwork",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4c134adb8550",
+      "file": "banner_ads_image_selection_test.dart",
+      "historical_name": "a failed manual refresh preserves selection and entered text",
+      "current_name": "a failed manual refresh preserves selection and entered text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fbf5af6f7e2f",
+      "file": "banner_ads_image_selection_test.dart",
+      "historical_name": "a late gallery result cannot enter a replacement account",
+      "current_name": "a late gallery result cannot enter a replacement account",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f2edfc2b0936",
+      "file": "student_event_navigation_test.dart",
+      "historical_name": "detail reads current arrangement and rejects mismatched parent data",
+      "current_name": "detail reads current arrangement and rejects mismatched parent data",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d134d7ee85c3",
+      "file": "student_event_navigation_test.dart",
+      "historical_name": "a late student read cannot enter a different account session",
+      "current_name": "a late student read cannot enter a different account session",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6a9724bb2691",
+      "file": "group_chat_upload_test.dart",
+      "historical_name": "partial upload failure never publishes a partial image bundle; retry preserves identities",
+      "current_name": "partial upload failure never publishes a partial image bundle; retry preserves identities",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-85a28faa6d67",
+      "file": "group_chat_upload_test.dart",
+      "historical_name": "send keeps its caption, reply and complete bundle fixed during upload",
+      "current_name": "send keeps its caption, reply and complete bundle fixed during upload",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d904abf40019",
+      "file": "group_chat_upload_test.dart",
+      "historical_name": "ambiguous upload checks server identity instead of repeating multipart data",
+      "current_name": "ambiguous upload checks server identity instead of repeating multipart data",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5f91f1f10f75",
+      "file": "group_chat_upload_test.dart",
+      "historical_name": "confirmed missing upload retries the retained original file and UUID",
+      "current_name": "confirmed missing upload retries the retained original file and UUID",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f36d30c84ecd",
+      "file": "group_chat_upload_test.dart",
+      "historical_name": "the composer limit counts Unicode code points rather than UTF-16 units",
+      "current_name": "the composer limit counts Unicode code points rather than UTF-16 units",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-dfa304187ab9",
+      "file": "screen_audit_test.dart",
+      "historical_name": "ChatForwardBatchScreen phone-ar",
+      "current_name": "ChatForwardBatchScreen phone-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f382c827f1c5",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 320.0 1.0",
+      "current_name": "paid pending activation and original invoice ar 320.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9111a774c728",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 320.0 1.3",
+      "current_name": "paid pending activation and original invoice ar 320.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b1e01a971422",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 320.0 2.0",
+      "current_name": "paid pending activation and original invoice ar 320.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e477caa3982e",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 375.0 1.0",
+      "current_name": "paid pending activation and original invoice ar 375.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-21dd7081524a",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 375.0 1.3",
+      "current_name": "paid pending activation and original invoice ar 375.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4e699cf8f5b9",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 375.0 2.0",
+      "current_name": "paid pending activation and original invoice ar 375.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-18a6f8d3510d",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 390.0 1.0",
+      "current_name": "paid pending activation and original invoice ar 390.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b86b20793630",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 390.0 1.3",
+      "current_name": "paid pending activation and original invoice ar 390.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-df139d0a0855",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 390.0 2.0",
+      "current_name": "paid pending activation and original invoice ar 390.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e4f21af0f4b6",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 600.0 1.0",
+      "current_name": "paid pending activation and original invoice ar 600.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cf2441ae8e6e",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 600.0 1.3",
+      "current_name": "paid pending activation and original invoice ar 600.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9dd920af2e1a",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 600.0 2.0",
+      "current_name": "paid pending activation and original invoice ar 600.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4961c9f10305",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 768.0 1.0",
+      "current_name": "paid pending activation and original invoice ar 768.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-51ab69d58a55",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 768.0 1.3",
+      "current_name": "paid pending activation and original invoice ar 768.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-914f91444f75",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 768.0 2.0",
+      "current_name": "paid pending activation and original invoice ar 768.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b7ff5e8373f2",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 1024.0 1.0",
+      "current_name": "paid pending activation and original invoice ar 1024.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bff812d136dc",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 1024.0 1.3",
+      "current_name": "paid pending activation and original invoice ar 1024.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d88f92a89e15",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 1024.0 2.0",
+      "current_name": "paid pending activation and original invoice ar 1024.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7f562ecbd4bd",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 1366.0 1.0",
+      "current_name": "paid pending activation and original invoice ar 1366.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-16a7dffae4b5",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 1366.0 1.3",
+      "current_name": "paid pending activation and original invoice ar 1366.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f35b644f7124",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice ar 1366.0 2.0",
+      "current_name": "paid pending activation and original invoice ar 1366.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7ae95121a39c",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 320.0 1.0",
+      "current_name": "paid pending activation and original invoice en 320.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ec9dcf6719f8",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 320.0 1.3",
+      "current_name": "paid pending activation and original invoice en 320.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-15ed58086d94",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 320.0 2.0",
+      "current_name": "paid pending activation and original invoice en 320.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7b35f66408be",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 375.0 1.0",
+      "current_name": "paid pending activation and original invoice en 375.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0ff38d8eb97b",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 375.0 1.3",
+      "current_name": "paid pending activation and original invoice en 375.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-68144a5b3bfc",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 375.0 2.0",
+      "current_name": "paid pending activation and original invoice en 375.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e481f77d5f59",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 390.0 1.0",
+      "current_name": "paid pending activation and original invoice en 390.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-337147d755f0",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 390.0 1.3",
+      "current_name": "paid pending activation and original invoice en 390.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e94d615f6701",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 390.0 2.0",
+      "current_name": "paid pending activation and original invoice en 390.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6370cc7d0a01",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 600.0 1.0",
+      "current_name": "paid pending activation and original invoice en 600.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-720a025c141f",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 600.0 1.3",
+      "current_name": "paid pending activation and original invoice en 600.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a6c0e7b0b1aa",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 600.0 2.0",
+      "current_name": "paid pending activation and original invoice en 600.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-010b7c7e572e",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 768.0 1.0",
+      "current_name": "paid pending activation and original invoice en 768.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5d034827027a",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 768.0 1.3",
+      "current_name": "paid pending activation and original invoice en 768.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ee4cff964407",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 768.0 2.0",
+      "current_name": "paid pending activation and original invoice en 768.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9cbb367f39a6",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 1024.0 1.0",
+      "current_name": "paid pending activation and original invoice en 1024.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-969c07cce3e7",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 1024.0 1.3",
+      "current_name": "paid pending activation and original invoice en 1024.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-16656f9e68b3",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 1024.0 2.0",
+      "current_name": "paid pending activation and original invoice en 1024.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6f2220392793",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 1366.0 1.0",
+      "current_name": "paid pending activation and original invoice en 1366.0 1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6353c09d905e",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 1366.0 1.3",
+      "current_name": "paid pending activation and original invoice en 1366.0 1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c69f5c7ca5c5",
+      "file": "fulfillment_followup_test.dart",
+      "historical_name": "paid pending activation and original invoice en 1366.0 2.0",
+      "current_name": "paid pending activation and original invoice en 1366.0 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2fc404be8f90",
+      "file": "static_data_integration_test.dart",
+      "historical_name": "reviews remain accessible when the summary request fails",
+      "current_name": "reviews remain accessible when the summary request fails",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fab695693067",
+      "file": "company_role_layout_test.dart",
+      "historical_name": "admin destinations at 320.0 / ar / 2.0",
+      "current_name": "admin destinations at 320.0 / ar / 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-58317adff2f7",
+      "file": "group_chat_entry_test.dart",
+      "historical_name": "list opens chat with missing preview",
+      "current_name": "list opens chat with missing preview",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fcc7dc9a468a",
+      "file": "group_chat_entry_test.dart",
+      "historical_name": "list opens chat with unavailable preview",
+      "current_name": "list opens chat with unavailable preview",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9148da5dacdb",
+      "file": "group_chat_entry_test.dart",
+      "historical_name": "board opens chat with missing preview",
+      "current_name": "board opens chat with missing preview",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1f69365f6ffb",
+      "file": "group_chat_entry_test.dart",
+      "historical_name": "board opens chat with unavailable preview",
+      "current_name": "board opens chat with unavailable preview",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f685a2cf2012",
+      "file": "company_role_layout_test.dart",
+      "historical_name": "coordinator destinations at 320.0 / ar / 2.0",
+      "current_name": "coordinator destinations at 320.0 / ar / 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c0472c0ca005",
+      "file": "planning_completion_contract_test.dart",
+      "historical_name": "join creation binds the receipt to its new request and checks the group separately",
+      "current_name": "join creation binds the receipt to its new request and checks the group separately",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cc18f19bb85f",
+      "file": "company_role_layout_test.dart",
+      "historical_name": "approver destinations at 320.0 / ar / 2.0",
+      "current_name": "approver destinations at 320.0 / ar / 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-418de560edb7",
+      "file": "student_event_navigation_test.dart",
+      "historical_name": "a notification detail reads current version and exposes history without mutation",
+      "current_name": "a notification detail reads current version and exposes history without mutation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4e16da0f272f",
+      "file": "company_role_layout_test.dart",
+      "historical_name": "signer destinations at 320.0 / ar / 2.0",
+      "current_name": "signer destinations at 320.0 / ar / 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-601fe89e8763",
+      "file": "company_role_layout_test.dart",
+      "historical_name": "payer destinations at 320.0 / ar / 2.0",
+      "current_name": "payer destinations at 320.0 / ar / 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fa24a5ae00fd",
+      "file": "student_event_navigation_test.dart",
+      "historical_name": "opening an event while its arrangement is visible refreshes the current revision",
+      "current_name": "opening an event while its arrangement is visible refreshes the current revision",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8cde9d1a7762",
+      "file": "student_event_navigation_test.dart",
+      "historical_name": "history shows recorded terms and keeps unavailable historical content hidden",
+      "current_name": "history shows recorded terms and keeps unavailable historical content hidden",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c5024bc60377",
+      "file": "housing_request_reviews_test.dart",
+      "historical_name": "controls match space=individual, ownerView=false even with legacy actions",
+      "current_name": "controls match space=individual, ownerView=false even with legacy actions",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8c524e62620b",
+      "file": "housing_request_reviews_test.dart",
+      "historical_name": "controls match space=owner, ownerView=true even with legacy actions",
+      "current_name": "controls match space=owner, ownerView=true even with legacy actions",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6f2d2ad99fcc",
+      "file": "housing_request_reviews_test.dart",
+      "historical_name": "controls match space=student, ownerView=false even with legacy actions",
+      "current_name": "controls match space=student, ownerView=false even with legacy actions",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9b7c62b8ca0a",
+      "file": "group_property_agreements_test.dart",
+      "historical_name": "private allocation and workspace change, ar at 320 and doubled text",
+      "current_name": "private allocation and workspace change, ar at 320 and doubled text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5035fb63beeb",
+      "file": "housing_request_reviews_test.dart",
+      "historical_name": "pending and history filters request server scopes and retain useful empty states",
+      "current_name": "pending and history filters request server scopes and retain useful empty states",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7844caef56a8",
+      "file": "housing_request_reviews_test.dart",
+      "historical_name": "history refreshes for matching foreground edits and completed commands",
+      "current_name": "history refreshes for matching foreground edits and completed commands",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1d3108c8164c",
+      "file": "housing_request_reviews_test.dart",
+      "historical_name": "notification focus reads the exact response and rejects mismatched parents",
+      "current_name": "notification focus reads the exact response and rejects mismatched parents",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-44510993f774",
+      "file": "group_property_agreements_test.dart",
+      "historical_name": "private allocation and workspace change, en at 320 and doubled text",
+      "current_name": "private allocation and workspace change, en at 320 and doubled text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c3ecb7bdb2a1",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "send appears inside the chat immediately with no submission panel",
+      "current_name": "send appears inside the chat immediately with no submission panel",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3cdb9491c824",
+      "file": "screen_audit_test.dart",
+      "historical_name": "ChatForwardBatchScreen phone-en",
+      "current_name": "ChatForwardBatchScreen phone-en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-799336b16c68",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "old voice journal keeps a visible recovery bubble",
+      "current_name": "old voice journal keeps a visible recovery bubble",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5e27746a79af",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "old image journal keeps a visible recovery bubble",
+      "current_name": "old image journal keeps a visible recovery bubble",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-27f4a3d772fa",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=false width=320.0 scale=1.0",
+      "current_name": "composer and history ar dark=false width=320.0 scale=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bea24f2bec13",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history en dark=true width=320.0 scale=1.3",
+      "current_name": "composer and history en dark=true width=320.0 scale=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-dc1a997ef9f3",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=true width=320.0 scale=2.0",
+      "current_name": "composer and history ar dark=true width=320.0 scale=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b1303da0fbda",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=false width=390.0 scale=1.0",
+      "current_name": "composer and history ar dark=false width=390.0 scale=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-479659c86c60",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history en dark=true width=390.0 scale=1.3",
+      "current_name": "composer and history en dark=true width=390.0 scale=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-106ed1b4f08a",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=true width=390.0 scale=2.0",
+      "current_name": "composer and history ar dark=true width=390.0 scale=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-415354b7f46d",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=false width=600.0 scale=1.0",
+      "current_name": "composer and history ar dark=false width=600.0 scale=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-48fca1d759bc",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history en dark=true width=600.0 scale=1.3",
+      "current_name": "composer and history en dark=true width=600.0 scale=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-934bf8d4f13e",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=true width=600.0 scale=2.0",
+      "current_name": "composer and history ar dark=true width=600.0 scale=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-051dc89459ea",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=false width=768.0 scale=1.0",
+      "current_name": "composer and history ar dark=false width=768.0 scale=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8e9603c180ea",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history en dark=true width=768.0 scale=1.3",
+      "current_name": "composer and history en dark=true width=768.0 scale=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fbc0a4a7cbfc",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=true width=768.0 scale=2.0",
+      "current_name": "composer and history ar dark=true width=768.0 scale=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2d23daf959f9",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=false width=1024.0 scale=1.0",
+      "current_name": "composer and history ar dark=false width=1024.0 scale=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e6cb12653647",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history en dark=true width=1024.0 scale=1.3",
+      "current_name": "composer and history en dark=true width=1024.0 scale=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9c49ac97168e",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=true width=1024.0 scale=2.0",
+      "current_name": "composer and history ar dark=true width=1024.0 scale=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-585eb9e9d8b6",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=false width=1366.0 scale=1.0",
+      "current_name": "composer and history ar dark=false width=1366.0 scale=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2152ccac22c1",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history en dark=true width=1366.0 scale=1.3",
+      "current_name": "composer and history en dark=true width=1366.0 scale=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c8b855e20966",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "company and exact physical property are requested independently of public offer",
+      "current_name": "company and exact physical property are requested independently of public offer",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9ab3d3319436",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "composer and history ar dark=true width=1366.0 scale=2.0",
+      "current_name": "composer and history ar dark=true width=1366.0 scale=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-786117115d61",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "bundle totals and private scope at 320 with doubled text in ar",
+      "current_name": "bundle totals and private scope at 320 with doubled text in ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-aaf5bd9b8c03",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "bundle totals and private scope at 320 with doubled text in en",
+      "current_name": "bundle totals and private scope at 320 with doubled text in en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c2b2fe9224c3",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "switching company cannot carry private terms or a late response",
+      "current_name": "switching company cannot carry private terms or a late response",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9d13e74137d0",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "older-page prepend preserves the visible message anchor",
+      "current_name": "older-page prepend preserves the visible message anchor",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7651c9681c0e",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "a company viewing context cannot silently target another selected company",
+      "current_name": "a company viewing context cannot silently target another selected company",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-34fa5545a1b8",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "invalid property context is hidden: workspace",
+      "current_name": "invalid property context is hidden: workspace",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0a13275e9777",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "invalid property context is hidden: followed_at",
+      "current_name": "invalid property context is hidden: followed_at",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d47d787a8026",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "invalid property context is hidden: blocking_reasons",
+      "current_name": "invalid property context is hidden: blocking_reasons",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bc13f52483f7",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "invalid property context is hidden: expires_at",
+      "current_name": "invalid property context is hidden: expires_at",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-725366e89ba5",
+      "file": "company_property_agreements_test.dart",
+      "historical_name": "invalid property context is hidden: inventory",
+      "current_name": "invalid property context is hidden: inventory",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5e2909f8973c",
+      "file": "group_chat_widgets_test.dart",
+      "historical_name": "notification context highlights without clearing composer and returns to latest",
+      "current_name": "notification context highlights without clearing composer and returns to latest",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d91cf2124709",
+      "file": "group_booking_negotiation_test.dart",
+      "historical_name": "history and disabled own actions en at 320 with large text",
+      "current_name": "history and disabled own actions en at 320 with large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8c5f7e2bf78b",
+      "file": "feature_architecture_test.dart",
+      "historical_name": "Sokoun feature architecture presentation uses translations and semantic colors",
+      "current_name": "Sokoun feature architecture presentation uses translations and semantic colors",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f42ebd4cb18f",
+      "file": "company_closure_events_test.dart",
+      "historical_name": "an old notice refreshes the open company tenancy without payment or settlement commands",
+      "current_name": "an old notice refreshes the open company tenancy without payment or settlement commands",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e0fa75c192ed",
+      "file": "housing_group_navigation_test.dart",
+      "historical_name": "groups use one list without archive tabs",
+      "current_name": "groups use one list without archive tabs",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f78e1ebbb974",
+      "file": "housing_group_navigation_test.dart",
+      "historical_name": "group exposes invitation links and joining-request badge",
+      "current_name": "group exposes invitation links and joining-request badge",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-66f7b518ef98",
+      "file": "housing_group_navigation_test.dart",
+      "historical_name": "shortlist keeps the selected group and exact bed after navigation",
+      "current_name": "shortlist keeps the selected group and exact bed after navigation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-340fc5f3f430",
+      "file": "rental_home_sections_test.dart",
+      "historical_name": "empty success uses contextual Lottie and failures support pull refresh",
+      "current_name": "empty success uses contextual Lottie and failures support pull refresh",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-02608413209a",
+      "file": "company_staff_test.dart",
+      "historical_name": "staff creation cannot accept a receipt from another company",
+      "current_name": "staff creation cannot accept a receipt from another company",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b49dd912e350",
+      "file": "company_staff_test.dart",
+      "historical_name": "a late staff response cannot replace the newly selected company",
+      "current_name": "a late staff response cannot replace the newly selected company",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b2aa6f24ef0d",
+      "file": "screen_audit_test.dart",
+      "historical_name": "ChatForwardBatchScreen se-ar",
+      "current_name": "ChatForwardBatchScreen se-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3f6c1344524b",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "create group points to invalid city without the footer message",
+      "current_name": "create group points to invalid city without the footer message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c2447fcb404a",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "create group points to invalid scope without the footer message",
+      "current_name": "create group points to invalid scope without the footer message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-07b8a0ae31ff",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "create group points to invalid minimum budget without the footer message",
+      "current_name": "create group points to invalid minimum budget without the footer message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-89767a26b0ae",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "create group points to invalid budget range without the footer message",
+      "current_name": "create group points to invalid budget range without the footer message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c6c890a48422",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "create group points to invalid period without the footer message",
+      "current_name": "create group points to invalid period without the footer message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a7404c79852d",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "create group points to invalid start date without the footer message",
+      "current_name": "create group points to invalid start date without the footer message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-61ca418d045e",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "create group points to invalid end date without the footer message",
+      "current_name": "create group points to invalid end date without the footer message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-abe608ce9dc6",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "create group points to invalid occupants without the footer message",
+      "current_name": "create group points to invalid occupants without the footer message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-046e21c43742",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "Arabic group form advances to the next invalid field",
+      "current_name": "Arabic group form advances to the next invalid field",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2ec2f4b0e33a",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "calendar dates and Arabic numbers reach a single group creation request",
+      "current_name": "calendar dates and Arabic numbers reach a single group creation request",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5d50da117211",
+      "file": "housing_group_create_form_test.dart",
+      "historical_name": "restored group fields keep dates and ordered validation",
+      "current_name": "restored group fields keep dates and ordered validation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0d442b2138d1",
+      "file": "housing_requests_flow_test.dart",
+      "historical_name": "permissions are followed by the real published-request collection",
+      "current_name": "permissions are followed by the real published-request collection",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6aa8a8e562e1",
+      "file": "housing_requests_flow_test.dart",
+      "historical_name": "changing between own requests and owner demand reloads the right collection",
+      "current_name": "changing between own requests and owner demand reloads the right collection",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-aa46d6a28b55",
+      "file": "housing_requests_flow_test.dart",
+      "historical_name": "missing pagination cannot silently turn a returned request into an empty list",
+      "current_name": "missing pagination cannot silently turn a returned request into an empty list",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-82a48ab7bf2d",
+      "file": "company_housing_test.dart",
+      "historical_name": "new child receipt is independent of parent optimistic revision",
+      "current_name": "new child receipt is independent of parent optimistic revision",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9a3ab414698d",
+      "file": "company_housing_test.dart",
+      "historical_name": "company details are erased immediately on account cleanup",
+      "current_name": "company details are erased immediately on account cleanup",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1e02953261f0",
+      "file": "ui_refactor_remaining_ux_test.dart",
+      "historical_name": "open groups and join history explain their own empty state ar",
+      "current_name": "open groups and join history explain their own empty state ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3dcc3215b359",
+      "file": "ui_refactor_remaining_ux_test.dart",
+      "historical_name": "company context read has navigation and retry before detail ar",
+      "current_name": "company context read has navigation and retry before detail ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-697301ded410",
+      "file": "ui_refactor_remaining_ux_test.dart",
+      "historical_name": "open groups and join history explain their own empty state en",
+      "current_name": "open groups and join history explain their own empty state en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8a626e7ac37e",
+      "file": "ui_refactor_remaining_ux_test.dart",
+      "historical_name": "company context read has navigation and retry before detail en",
+      "current_name": "company context read has navigation and retry before detail en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5e40f83394b3",
+      "file": "student_housing_test.dart",
+      "historical_name": "fresh capability and exact receipt bind academic mutation to stable intent",
+      "current_name": "fresh capability and exact receipt bind academic mutation to stable intent",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c3ada973c321",
+      "file": "sokoun_refresh_indicator_test.dart",
+      "historical_name": "TargetPlatform.android shows pull, release and pending refresh states",
+      "current_name": "TargetPlatform.android shows pull, release and pending refresh states",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f2e3f9a1ae3c",
+      "file": "sokoun_refresh_indicator_test.dart",
+      "historical_name": "TargetPlatform.iOS shows pull, release and pending refresh states",
+      "current_name": "TargetPlatform.iOS shows pull, release and pending refresh states",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-09727699a19c",
+      "file": "sokoun_refresh_indicator_test.dart",
+      "historical_name": "reduced motion (false) keeps loading static",
+      "current_name": "reduced motion (false) keeps loading static",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0aa8b488bb66",
+      "file": "sokoun_refresh_indicator_test.dart",
+      "historical_name": "reduced motion (true) keeps loading static",
+      "current_name": "reduced motion (true) keeps loading static",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d6ad095d2c0a",
+      "file": "housing_offer_roles_test.dart",
+      "historical_name": "offer actions honor role owner=true in ar",
+      "current_name": "offer actions honor role owner=true in ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ad87eb020b5d",
+      "file": "housing_offer_roles_test.dart",
+      "historical_name": "offer actions honor role owner=true in en",
+      "current_name": "offer actions honor role owner=true in en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9dabab756b75",
+      "file": "housing_offer_roles_test.dart",
+      "historical_name": "owner offer tab loads only offers for this request",
+      "current_name": "owner offer tab loads only offers for this request",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-39c251255420",
+      "file": "housing_offer_roles_test.dart",
+      "historical_name": "standalone owner offers keep the owner collection",
+      "current_name": "standalone owner offers keep the owner collection",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-868921323e45",
+      "file": "housing_offer_roles_test.dart",
+      "historical_name": "tenant withdraw action targets the request, not an owner offer",
+      "current_name": "tenant withdraw action targets the request, not an owner offer",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0558be4dc573",
+      "file": "housing_offer_roles_test.dart",
+      "historical_name": "owner withdrawal retains the owner offer identity",
+      "current_name": "owner withdrawal retains the owner offer identity",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-af7dcf56ac1f",
+      "file": "sokoun_date_field_test.dart",
+      "historical_name": "no valid choices disables selection for []",
+      "current_name": "no valid choices disables selection for []",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b7c1a1d16001",
+      "file": "sokoun_date_field_test.dart",
+      "historical_name": "no valid choices disables selection for [2028-02-30, broken-date]",
+      "current_name": "no valid choices disables selection for [2028-02-30, broken-date]",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-03734340e3f0",
+      "file": "screen_audit_test.dart",
+      "historical_name": "ChatForwardBatchScreen se-en",
+      "current_name": "ChatForwardBatchScreen se-en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b3ce2996936e",
+      "file": "screen_audit_test.dart",
+      "historical_name": "ChatForwardBatchScreen large-ar",
+      "current_name": "ChatForwardBatchScreen large-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-180bf61ca1b9",
+      "file": "living_lab_test.dart",
+      "historical_name": "scenario creates a separately receipted child and sends only the chosen assumption",
+      "current_name": "scenario creates a separately receipted child and sends only the chosen assumption",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-436aa3252870",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "ad details open and return twice without build errors: active=false",
+      "current_name": "ad details open and return twice without build errors: active=false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-98ee0f91c9a1",
+      "file": "living_lab_test.dart",
+      "historical_name": "writes reauthorize and require the exact command receipt",
+      "current_name": "writes reauthorize and require the exact command receipt",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-502710828dd9",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "ad details open and return twice without build errors: active=true",
+      "current_name": "ad details open and return twice without build errors: active=true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f1da95604734",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "banner arrows and dots select the matching caption and reset after refresh",
+      "current_name": "banner arrows and dots select the matching caption and reset after refresh",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b0ea7c918d35",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "owner empty list retains create action and account change removes private subtree",
+      "current_name": "owner empty list retains create action and account change removes private subtree",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c38df1d2c2d0",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "activation refreshes the owner list but resume does not",
+      "current_name": "activation refreshes the owner list but resume does not",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a30e509c94c2",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "owner cached empty list survives an offline restart",
+      "current_name": "owner cached empty list survives an offline restart",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7031a8a14237",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "tenant sponsored preview 390.0 ar dark false",
+      "current_name": "tenant sponsored preview 390.0 ar dark false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fac3e575cd97",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "tenant sponsored preview 390.0 ar dark true",
+      "current_name": "tenant sponsored preview 390.0 ar dark true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-73d951afe48f",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "tenant sponsored preview 390.0 en dark false",
+      "current_name": "tenant sponsored preview 390.0 en dark false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-42653ec65844",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "tenant sponsored preview 390.0 en dark true",
+      "current_name": "tenant sponsored preview 390.0 en dark true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4dcd96783282",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "tenant sponsored preview 1024.0 ar dark false",
+      "current_name": "tenant sponsored preview 1024.0 ar dark false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0804b195502b",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "tenant sponsored preview 1024.0 ar dark true",
+      "current_name": "tenant sponsored preview 1024.0 ar dark true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-598aac562ec8",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "tenant sponsored preview 1024.0 en dark false",
+      "current_name": "tenant sponsored preview 1024.0 en dark false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a4058c4080c6",
+      "file": "owner_banner_ads_ui_test.dart",
+      "historical_name": "tenant sponsored preview 1024.0 en dark true",
+      "current_name": "tenant sponsored preview 1024.0 en dark true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5e5db15189d0",
+      "file": "screen_audit_test.dart",
+      "historical_name": "ChatForwardBatchScreen dark-ar",
+      "current_name": "ChatForwardBatchScreen dark-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e5c38efcb2ec",
+      "file": "planning_scope_contract_test.dart",
+      "historical_name": "housing offers respect unavailable server capabilities before reading records",
+      "current_name": "housing offers respect unavailable server capabilities before reading records",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d06772b3d879",
+      "file": "planning_scope_contract_test.dart",
+      "historical_name": "condition reports respect unavailable server capabilities before reading records",
+      "current_name": "condition reports respect unavailable server capabilities before reading records",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cc09225ed4ca",
+      "file": "planning_scope_contract_test.dart",
+      "historical_name": "move-out notices respect unavailable server capabilities before reading records",
+      "current_name": "move-out notices respect unavailable server capabilities before reading records",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e0b322ea5900",
+      "file": "planning_scope_contract_test.dart",
+      "historical_name": "replacements respect unavailable server capabilities before reading records",
+      "current_name": "replacements respect unavailable server capabilities before reading records",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7b06d9874d2c",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "opening a personal unread reminder clears it without rewinding receipts",
+      "current_name": "opening a personal unread reminder clears it without rewinding receipts",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-27124177c4df",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "opens without marking unread history as read or sending",
+      "current_name": "opens without marking unread history as read or sending",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f7982eb48731",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "Pagify inserts two local bubbles before ACK and replaces each identity once",
+      "current_name": "Pagify inserts two local bubbles before ACK and replaces each identity once",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7d7515f13373",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "offline local bubble retains its identity through socket retry",
+      "current_name": "offline local bubble retains its identity through socket retry",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7918aec13f47",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "reconnect drains never-sent queued messages in order and clears notice",
+      "current_name": "reconnect drains never-sent queued messages in order and clears notice",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-dafd66f4ee63",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "reconnect never replays an unknown send or a rejected message",
+      "current_name": "reconnect never replays an unknown send or a rejected message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b5a3f409c095",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "reconnect revalidates removed send authority before draining",
+      "current_name": "reconnect revalidates removed send authority before draining",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-63e71bee1805",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "catch-up retains a message received during the initial history request",
+      "current_name": "catch-up retains a message received during the initial history request",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c8648f68611c",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "a read socket acknowledgement and its echo invalidate unread once",
+      "current_name": "a read socket acknowledgement and its echo invalidate unread once",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0d0825f7f50b",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "presented messages share one read request and retain newer progress",
+      "current_name": "presented messages share one read request and retain newer progress",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-08db84dba3d4",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "other readers reload history only for affected outgoing messages",
+      "current_name": "other readers reload history only for affected outgoing messages",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e79725c06a25",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "group read received before the send ACK is reconciled after insertion",
+      "current_name": "group read received before the send ACK is reconciled after insertion",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-385f3591b0c5",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "read receipt updates wait until the chat is visible again",
+      "current_name": "read receipt updates wait until the chat is visible again",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-59831513d075",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "failed receipt refresh waits for catch-up instead of rapid retry",
+      "current_name": "failed receipt refresh waits for catch-up instead of rapid retry",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d045d3b4dcc0",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "event recovery polling runs only while visible and disconnected",
+      "current_name": "event recovery polling runs only while visible and disconnected",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-669cd5eb1e29",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "repeated connected notifications do not repeat event catch-up",
+      "current_name": "repeated connected notifications do not repeat event catch-up",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4a8717d455bb",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "overlapping recovery checks share one message lookup",
+      "current_name": "overlapping recovery checks share one message lookup",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d40b44b34396",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "failed durable intent write blocks transmission and preserves composer",
+      "current_name": "failed durable intent write blocks transmission and preserves composer",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-04fab1b2e0fa",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "intent and emptied composer persist before transport; double tap sends once",
+      "current_name": "intent and emptied composer persist before transport; double tap sends once",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c9fe56c7344e",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "unknown outcome is looked up without resend and 404 stays unknown",
+      "current_name": "unknown outcome is looked up without resend and 404 stays unknown",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-42f2447789cb",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "explicit supported retry reuses exact operation; background lookup never sends",
+      "current_name": "explicit supported retry reuses exact operation; background lookup never sends",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-dd5fb7364881",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "supported retry reconciles a lost acknowledgement without another transmission",
+      "current_name": "supported retry reconciles a lost acknowledgement without another transmission",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d320cad7f8d5",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "retry lookup outage preserves uncertainty and never transmits",
+      "current_name": "retry lookup outage preserves uncertainty and never transmits",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-14fedb06f43c",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "retry rechecks authority and refuses a replacement membership period",
+      "current_name": "retry rechecks authority and refuses a replacement membership period",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5ed94648eae2",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "revoked access while checking delivery cannot reissue the message",
+      "current_name": "revoked access while checking delivery cannot reissue the message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2e94dd134f2d",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "concurrent explicit retry taps issue one original operation",
+      "current_name": "concurrent explicit retry taps issue one original operation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e103cb444b1c",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "account switch while lookup is pending blocks later retry transmission",
+      "current_name": "account switch while lookup is pending blocks later retry transmission",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2f062fc04d60",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "socket ack requires sender, conversation and client identity",
+      "current_name": "socket ack requires sender, conversation and client identity",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5cc3e2ac3ad3",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "duplicate events do not duplicate messages or resurrect deletion",
+      "current_name": "duplicate events do not duplicate messages or resurrect deletion",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8045add1f967",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "read cursor only advances for presented messages while visible",
+      "current_name": "read cursor only advances for presented messages while visible",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9d034c3539a5",
+      "file": "group_chat_thread_test.dart",
+      "historical_name": "access revocation clears private state and ignores late REST success",
+      "current_name": "access revocation clears private state and ignores late REST success",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a4c9e5324b55",
+      "file": "rental_mutation_recovery_test.dart",
+      "historical_name": "confirmed planning submission does not become an unsent draft when discovery has expired",
+      "current_name": "confirmed planning submission does not become an unsent draft when discovery has expired",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-adfd6bceb78a",
+      "file": "rental_mutation_recovery_test.dart",
+      "historical_name": "unknown planning submission does not become an unsent draft when discovery has expired",
+      "current_name": "unknown planning submission does not become an unsent draft when discovery has expired",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-09e32ad18040",
+      "file": "rental_mutation_recovery_test.dart",
+      "historical_name": "offline unsent planning input remains an editable saved draft",
+      "current_name": "offline unsent planning input remains an editable saved draft",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-65303af56845",
+      "file": "rental_mutation_recovery_test.dart",
+      "historical_name": "fresh planning denial keeps its reason and draft without a POST",
+      "current_name": "fresh planning denial keeps its reason and draft without a POST",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b047d83e8e9d",
+      "file": "mobile_dev_handoff_integration_test.dart",
+      "historical_name": "failed revenue loads recover through pull refresh",
+      "current_name": "failed revenue loads recover through pull refresh",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5e70c9d46daa",
+      "file": "mobile_dev_handoff_integration_test.dart",
+      "historical_name": "owner Profile opens API-backed revenue",
+      "current_name": "owner Profile opens API-backed revenue",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2607c7849eb5",
+      "file": "tenancy_invitations_flow_test.dart",
+      "historical_name": "owner request details expose the invitation form without calling proposed APIs before enablement",
+      "current_name": "owner request details expose the invitation form without calling proposed APIs before enablement",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-147fc7ef5e6d",
+      "file": "tenancy_invitations_flow_test.dart",
+      "historical_name": "owner sends, tenant accepts from Contracts, owner proceeds to the test-enabled draft despite server can_create false",
+      "current_name": "owner sends, tenant accepts from Contracts, owner proceeds to the test-enabled draft despite server can_create false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-99274315f210",
+      "file": "company_role_context_test.dart",
+      "historical_name": "company discovery exposes no unscoped execution routes",
+      "current_name": "company discovery exposes no unscoped execution routes",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c9c884e970b9",
+      "file": "company_role_context_test.dart",
+      "historical_name": "multiple roles require a choice and carry one transport role",
+      "current_name": "multiple roles require a choice and carry one transport role",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e6e473b3081b",
+      "file": "company_role_context_test.dart",
+      "historical_name": "one role opens directly and revocation removes the old selection",
+      "current_name": "one role opens directly and revocation removes the old selection",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-43eb1a213f05",
+      "file": "company_role_context_test.dart",
+      "historical_name": "a remembered role is verified against current server roles",
+      "current_name": "a remembered role is verified against current server roles",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-caca00291a30",
+      "file": "company_role_context_test.dart",
+      "historical_name": "a late company response cannot restore its role or data",
+      "current_name": "a late company response cannot restore its role or data",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-910952c70824",
+      "file": "visit_collection_count_test.dart",
+      "historical_name": "company header reads its summary instead of the personal total",
+      "current_name": "company header reads its summary instead of the personal total",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c80a096d7d71",
+      "file": "visit_collection_count_test.dart",
+      "historical_name": "unloaded company summary never displays a personal fallback",
+      "current_name": "unloaded company summary never displays a personal fallback",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e649c2f53b5b",
+      "file": "visit_collection_count_test.dart",
+      "historical_name": "personal and student headers retain their own summary counts",
+      "current_name": "personal and student headers retain their own summary counts",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-723bb17ea05d",
+      "file": "visit_collection_count_test.dart",
+      "historical_name": "revoked company summary removes the previous number",
+      "current_name": "revoked company summary removes the previous number",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d78fa4c5db66",
+      "file": "visit_collection_count_test.dart",
+      "historical_name": "company switch discards a late previous summary",
+      "current_name": "company switch discards a late previous summary",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2efb5c82d121",
+      "file": "visit_collection_count_test.dart",
+      "historical_name": "role switch discards a late previous summary",
+      "current_name": "role switch discards a late previous summary",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8d30d54bd501",
+      "file": "visit_collection_count_test.dart",
+      "historical_name": "account switch discards a late previous summary",
+      "current_name": "account switch discards a late previous summary",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4858c4384d7b",
+      "file": "housing_offer_source_history_test.dart",
+      "historical_name": "source differences with replacement at 320 doubled text in ar",
+      "current_name": "source differences with replacement at 320 doubled text in ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-efbcbb8e3c38",
+      "file": "housing_offer_source_history_test.dart",
+      "historical_name": "source differences with replacement at 320 doubled text in en",
+      "current_name": "source differences with replacement at 320 doubled text in en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a3e67d1cecab",
+      "file": "company_mandate_status_test.dart",
+      "historical_name": "mandate approval is distinct from financial approval in ar",
+      "current_name": "mandate approval is distinct from financial approval in ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d313b0ff3ab1",
+      "file": "company_mandate_status_test.dart",
+      "historical_name": "mandate approval is distinct from financial approval in en",
+      "current_name": "mandate approval is distinct from financial approval in en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b3d7e596522d",
+      "file": "transition_network_test.dart",
+      "historical_name": "child run revision is independent of reviewed parent revision",
+      "current_name": "child run revision is independent of reviewed parent revision",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a973d8fe918f",
+      "file": "transition_network_test.dart",
+      "historical_name": "execution proposal receipt must belong to this transition source",
+      "current_name": "execution proposal receipt must belong to this transition source",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c2cac505b7a2",
+      "file": "transition_network_test.dart",
+      "historical_name": "interest binds own exact snapshot and cannot submit proxy identity",
+      "current_name": "interest binds own exact snapshot and cannot submit proxy identity",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bda1dc41d315",
+      "file": "company_rental_value_test.dart",
+      "historical_name": "late report after account switch cannot restore private data",
+      "current_name": "late report after account switch cannot restore private data",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a8786a9f9d33",
+      "file": "company_rental_value_test.dart",
+      "historical_name": "CSV preview checks staff authority for the selected company",
+      "current_name": "CSV preview checks staff authority for the selected company",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fea4d2530263",
+      "file": "group_chat_capability_test.dart",
+      "historical_name": "server denies group access before history, draft restoration or socket",
+      "current_name": "server denies group access before history, draft restoration or socket",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f24af84cb741",
+      "file": "company_rental_value_test.dart",
+      "historical_name": "changing offer filters owns a fresh pager and closing disposes it once",
+      "current_name": "changing offer filters owns a fresh pager and closing disposes it once",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-995baeacac71",
+      "file": "company_rental_value_test.dart",
+      "historical_name": "three steps preserve exact money and never submit before final review",
+      "current_name": "three steps preserve exact money and never submit before final review",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0fb90f3056e2",
+      "file": "banner_ads_backend_contract_test.dart",
+      "historical_name": "empty banner property picker keeps the informational banner option",
+      "current_name": "empty banner property picker keeps the informational banner option",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4511ee241386",
+      "file": "app_walkthrough_repairs_test.dart",
+      "historical_name": "unnamed chats retain a visible heading in list and conversation ar dark=false",
+      "current_name": "unnamed chats retain a visible heading in list and conversation ar dark=false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1be8e2fb974a",
+      "file": "app_walkthrough_repairs_test.dart",
+      "historical_name": "unnamed chats retain a visible heading in list and conversation en dark=false",
+      "current_name": "unnamed chats retain a visible heading in list and conversation en dark=false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6fb0c864d1a1",
+      "file": "app_walkthrough_repairs_test.dart",
+      "historical_name": "unnamed chats retain a visible heading in list and conversation ar dark=true",
+      "current_name": "unnamed chats retain a visible heading in list and conversation ar dark=true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f3bf5920634a",
+      "file": "app_walkthrough_repairs_test.dart",
+      "historical_name": "unnamed chats retain a visible heading in list and conversation en dark=true",
+      "current_name": "unnamed chats retain a visible heading in list and conversation en dark=true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-211bd96e097c",
+      "file": "housing_offer_compose_test.dart",
+      "historical_name": "owner chooses a bed once and sends its exact inventory (ar)",
+      "current_name": "owner chooses a bed once and sends its exact inventory (ar)",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1eda616dbeaa",
+      "file": "housing_offer_compose_test.dart",
+      "historical_name": "owner chooses a bed once and sends its exact inventory (en)",
+      "current_name": "owner chooses a bed once and sends its exact inventory (en)",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b7b037b97a8a",
+      "file": "housing_offer_compose_test.dart",
+      "historical_name": "missing property and no accommodation choice give useful validation",
+      "current_name": "missing property and no accommodation choice give useful validation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7fd338c9187d",
+      "file": "housing_offer_compose_test.dart",
+      "historical_name": "a single tap changes the selected room and its terms without confirming",
+      "current_name": "a single tap changes the selected room and its terms without confirming",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ac5b189e1e90",
+      "file": "housing_offer_compose_test.dart",
+      "historical_name": "failed inventory read can retry without reselecting the property",
+      "current_name": "failed inventory read can retry without reselecting the property",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-901bc887d192",
+      "file": "tenant_planning_locale_test.dart",
+      "historical_name": "TenantPlanningSection updates mounted Home labels",
+      "current_name": "TenantPlanningSection updates mounted Home labels",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cd7ca2177d95",
+      "file": "screen_audit_test.dart",
+      "historical_name": "OwnerTourEditorScreen phone-ar",
+      "current_name": "OwnerTourEditorScreen phone-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6e6fcbbf5b07",
+      "file": "student_profile_contract_workspace_test.dart",
+      "historical_name": "ar student profile preserves contracts workspace",
+      "current_name": "ar student profile preserves contracts workspace",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6edd93c459e5",
+      "file": "student_profile_contract_workspace_test.dart",
+      "historical_name": "ar individual profile preserves contracts workspace",
+      "current_name": "ar individual profile preserves contracts workspace",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cb093f9d67d0",
+      "file": "student_profile_contract_workspace_test.dart",
+      "historical_name": "ar company profile keeps its company housing entry",
+      "current_name": "ar company profile keeps its company housing entry",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-80519e415c6b",
+      "file": "student_profile_contract_workspace_test.dart",
+      "historical_name": "en student profile preserves contracts workspace",
+      "current_name": "en student profile preserves contracts workspace",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ccdc3b5dd57d",
+      "file": "student_profile_contract_workspace_test.dart",
+      "historical_name": "en individual profile preserves contracts workspace",
+      "current_name": "en individual profile preserves contracts workspace",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-31fb21702501",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "four spaces preserve legacy rental actor wire values",
+      "current_name": "four spaces preserve legacy rental actor wire values",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-acbb63893b6b",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "explicit guest choice survives authentication and is isolated by account and environment",
+      "current_name": "explicit guest choice survives authentication and is isolated by account and environment",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-79deaeaaf469",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "company selection ignores a late result and a cleared selection",
+      "current_name": "company selection ignores a late result and a cleared selection",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a2206e6bd5a1",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "private company notebook scope never aliases personal notebook",
+      "current_name": "private company notebook scope never aliases personal notebook",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-4da573a8b501",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "company selection is isolated by environment",
+      "current_name": "company selection is isolated by environment",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0f0d7a9a5390",
+      "file": "student_profile_contract_workspace_test.dart",
+      "historical_name": "en company profile keeps its company housing entry",
+      "current_name": "en company profile keeps its company housing entry",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-64be4ea647de",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "company tabs hide content during revalidation and revocation",
+      "current_name": "company tabs hide content during revalidation and revocation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-374753fec364",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "retained hidden company tabs do not fetch their own selector",
+      "current_name": "retained hidden company tabs do not fetch their own selector",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3efc1f11bd54",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "hidden company content waits for its own scope to be visited",
+      "current_name": "hidden company content waits for its own scope to be visited",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-df1fccb91594",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "workspace chooser ar at 320.0 with large text",
+      "current_name": "workspace chooser ar at 320.0 with large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bd559e81f689",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "workspace chooser ar at 1024.0 with large text",
+      "current_name": "workspace chooser ar at 1024.0 with large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0a8f639d57ad",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "workspace chooser en at 320.0 with large text",
+      "current_name": "workspace chooser en at 320.0 with large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-334af2cd69cd",
+      "file": "four_workspaces_test.dart",
+      "historical_name": "workspace chooser en at 1024.0 with large text",
+      "current_name": "workspace chooser en at 1024.0 with large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3f2fd892b759",
+      "file": "company_approver_navigation_test.dart",
+      "historical_name": "approver tasks open exact company-A tenancy and assigned renewal without submitting",
+      "current_name": "approver tasks open exact company-A tenancy and assigned renewal without submitting",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-53455765ae35",
+      "file": "company_approver_navigation_test.dart",
+      "historical_name": "approver tasks open exact company-B tenancy and assigned renewal without submitting",
+      "current_name": "approver tasks open exact company-B tenancy and assigned renewal without submitting",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2cd827b4b34c",
+      "file": "company_approver_navigation_test.dart",
+      "historical_name": "package approval remains reachable from original tasks list",
+      "current_name": "package approval remains reachable from original tasks list",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b82923db9e38",
+      "file": "company_approver_navigation_test.dart",
+      "historical_name": "decision history still opens its original request rather than a tenancy",
+      "current_name": "decision history still opens its original request rather than a tenancy",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-658a20ee9229",
+      "file": "my_housing_locale_test.dart",
+      "historical_name": "mounted housing follows AR EN AR and retains tab, owners and route (AppWorkspace.individual)",
+      "current_name": "mounted housing follows AR EN AR and retains tab, owners and route (AppWorkspace.individual)",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a28e61a04432",
+      "file": "company_approver_navigation_test.dart",
+      "historical_name": "empty authorized tenancy collection offers no fabricated renewal or action",
+      "current_name": "empty authorized tenancy collection offers no fabricated renewal or action",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-524c3cadb145",
+      "file": "main_journey_features_test.dart",
+      "historical_name": "listing tools share advertising and preserve lease property context",
+      "current_name": "listing tools share advertising and preserve lease property context",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c4c391cef469",
+      "file": "my_housing_locale_test.dart",
+      "historical_name": "mounted housing follows AR EN AR and retains tab, owners and route (AppWorkspace.student)",
+      "current_name": "mounted housing follows AR EN AR and retains tab, owners and route (AppWorkspace.student)",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7a3bd0b781cd",
+      "file": "main_journey_features_test.dart",
+      "historical_name": "guest discovery never requests private rent data",
+      "current_name": "guest discovery never requests private rent data",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6528ca1b109c",
+      "file": "main_journey_features_test.dart",
+      "historical_name": "tenant Home discovery coordinates header and feed scrolling and keeps rent in planning tools",
+      "current_name": "tenant Home discovery coordinates header and feed scrolling and keeps rent in planning tools",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0b4c472c6e77",
+      "file": "main_journey_features_test.dart",
+      "historical_name": "tenant Home keeps one preview request across feed rebuilds and opens fresh invoice details",
+      "current_name": "tenant Home keeps one preview request across feed rebuilds and opens fresh invoice details",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-010978070e6c",
+      "file": "main_journey_features_test.dart",
+      "historical_name": "Home rent loads independently of a pending discovery request",
+      "current_name": "Home rent loads independently of a pending discovery request",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-89752108efea",
+      "file": "housing_tenders_test.dart",
+      "historical_name": "an exact own consent carries digest and no proxy identity",
+      "current_name": "an exact own consent carries digest and no proxy identity",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-30c0feee1e91",
+      "file": "screen_audit_test.dart",
+      "historical_name": "OwnerTourEditorScreen phone-en",
+      "current_name": "OwnerTourEditorScreen phone-en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-30d14cfaddcf",
+      "file": "replacement_consent_flow_test.dart",
+      "historical_name": "server-disabled replacements fetch no private invitation collection",
+      "current_name": "server-disabled replacements fetch no private invitation collection",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-57f30e1c6508",
+      "file": "replacement_consent_flow_test.dart",
+      "historical_name": "incoming tenant can reach consent from the private invitation list",
+      "current_name": "incoming tenant can reach consent from the private invitation list",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6e721bad3971",
+      "file": "replacement_consent_flow_test.dart",
+      "historical_name": "server permission removal hides both consent actions",
+      "current_name": "server permission removal hides both consent actions",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ac59dd678590",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "individual dashboard picker cancels without losing the body",
+      "current_name": "individual inline workspace selection retains the dashboard body",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-58aee17945f2",
+      "file": "screen_audit_test.dart",
+      "historical_name": "OwnerTourEditorScreen se-ar",
+      "current_name": "OwnerTourEditorScreen se-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e56674ca37ad",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "owner dashboard picker cancels without losing the body",
+      "current_name": "owner inline workspace selection retains the dashboard body",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e30642242f7a",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "ar ended tenancy distinguishes current dates from its original offer in details and confirmation",
+      "current_name": "ar ended tenancy distinguishes current dates from its original offer in details and confirmation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-29feff0a3d7a",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "en ended tenancy distinguishes current dates from its original offer in details and confirmation",
+      "current_name": "en ended tenancy distinguishes current dates from its original offer in details and confirmation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ccd3ebb60727",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "student dashboard picker cancels without losing the body",
+      "current_name": "student inline workspace selection retains the dashboard body",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d4cd2270496a",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "ar review confirmation contains authorized contract details and cancel sends nothing",
+      "current_name": "ar review confirmation contains authorized contract details and cancel sends nothing",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0a62bd66b189",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "ar submit_signature confirmation contains authorized contract details and cancel sends nothing",
+      "current_name": "ar submit_signature confirmation contains authorized contract details and cancel sends nothing",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bfacd742b1a9",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=false ar dark=false 390.0 text=1.0",
+      "current_name": "dashboard company active=false ar dark=false 390.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-57b39c098538",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "ar sign confirmation contains authorized contract details and cancel sends nothing",
+      "current_name": "ar sign confirmation contains authorized contract details and cancel sends nothing",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c38e2e915be7",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "ar reconcile confirmation contains authorized contract details and cancel sends nothing",
+      "current_name": "ar reconcile confirmation contains authorized contract details and cancel sends nothing",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-597545547b71",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=false ar dark=true 390.0 text=1.0",
+      "current_name": "dashboard company active=false ar dark=true 390.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b1cc85df5c7b",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "en review confirmation contains authorized contract details and cancel sends nothing",
+      "current_name": "en review confirmation contains authorized contract details and cancel sends nothing",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b995486eeb55",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "en submit_signature confirmation contains authorized contract details and cancel sends nothing",
+      "current_name": "en submit_signature confirmation contains authorized contract details and cancel sends nothing",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bd32ff424d82",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "en sign confirmation contains authorized contract details and cancel sends nothing",
+      "current_name": "en sign confirmation contains authorized contract details and cancel sends nothing",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1f559a963a9a",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=false en dark=false 390.0 text=1.0",
+      "current_name": "dashboard company active=false en dark=false 390.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-12263159fcd6",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "en reconcile confirmation contains authorized contract details and cancel sends nothing",
+      "current_name": "en reconcile confirmation contains authorized contract details and cancel sends nothing",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5f87430a19c2",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "owner review modal contains its context independently of the form behind it",
+      "current_name": "owner review modal contains its context independently of the form behind it",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9c4f2e2278cc",
+      "file": "company_tenancy_confirmation_test.dart",
+      "historical_name": "continuation confirmation retains only the selected change alongside one base summary",
+      "current_name": "continuation confirmation retains only the selected change alongside one base summary",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cf17776b4bee",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=false en dark=true 390.0 text=1.0",
+      "current_name": "dashboard company active=false en dark=true 390.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-06678ce89795",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=false 320.0 text=2.0",
+      "current_name": "dashboard company active=true ar dark=false 320.0 text=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a16dc72e7d9f",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=false 390.0 text=1.0",
+      "current_name": "dashboard company active=true ar dark=false 390.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ff175e4d5980",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=false 430.0 text=1.3",
+      "current_name": "dashboard company active=true ar dark=false 430.0 text=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-15b9fe1b577c",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=false 768.0 text=2.0",
+      "current_name": "dashboard company active=true ar dark=false 768.0 text=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2e7ad7504344",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=false 1366.0 text=1.0",
+      "current_name": "dashboard company active=true ar dark=false 1366.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d7b53c3eee3d",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=true 320.0 text=2.0",
+      "current_name": "dashboard company active=true ar dark=true 320.0 text=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-18f38fda7a1c",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=true 390.0 text=1.0",
+      "current_name": "dashboard company active=true ar dark=true 390.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a4e60a403a50",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=true 430.0 text=1.3",
+      "current_name": "dashboard company active=true ar dark=true 430.0 text=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-30b7e26891b8",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=true 768.0 text=2.0",
+      "current_name": "dashboard company active=true ar dark=true 768.0 text=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6dff87884b73",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true ar dark=true 1366.0 text=1.0",
+      "current_name": "dashboard company active=true ar dark=true 1366.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0b0ae1ef8820",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=false 320.0 text=2.0",
+      "current_name": "dashboard company active=true en dark=false 320.0 text=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-255d6b4cfff3",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=false 390.0 text=1.0",
+      "current_name": "dashboard company active=true en dark=false 390.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-dae6f5a7b79d",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=false 430.0 text=1.3",
+      "current_name": "dashboard company active=true en dark=false 430.0 text=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2ba820d10191",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=false 768.0 text=2.0",
+      "current_name": "dashboard company active=true en dark=false 768.0 text=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6bfe50c96895",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=false 1366.0 text=1.0",
+      "current_name": "dashboard company active=true en dark=false 1366.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7f0a18803900",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=true 320.0 text=2.0",
+      "current_name": "dashboard company active=true en dark=true 320.0 text=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b9fa241d5f36",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=true 390.0 text=1.0",
+      "current_name": "dashboard company active=true en dark=true 390.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1f6232eda7ab",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=true 430.0 text=1.3",
+      "current_name": "dashboard company active=true en dark=true 430.0 text=1.3",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-70c35aba458d",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=true 768.0 text=2.0",
+      "current_name": "dashboard company active=true en dark=true 768.0 text=2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9075203a8d51",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "dashboard company active=true en dark=true 1366.0 text=1.0",
+      "current_name": "dashboard company active=true en dark=true 1366.0 text=1.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-50788f64c4dc",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "company dashboard picker cancels without losing the body",
+      "current_name": "company inline workspace selection retains the dashboard body",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f531a1a7304f",
+      "file": "dashboard_consistency_test.dart",
+      "historical_name": "owner workspace controls remain available while dashboard read loads and fails",
+      "current_name": "owner workspace controls remain available while dashboard read loads and fails",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-15ea2d203798",
+      "file": "screen_audit_test.dart",
+      "historical_name": "OwnerTourEditorScreen se-en",
+      "current_name": "OwnerTourEditorScreen se-en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a7b8310dca7c",
+      "file": "owner_home_locale_test.dart",
+      "historical_name": "retained owner dashboard translates entries without resetting child state",
+      "current_name": "retained owner dashboard translates entries without resetting child state",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7c4c6773a8b1",
+      "file": "owner_home_locale_test.dart",
+      "historical_name": "retained owner top work CTA follows AR EN AR",
+      "current_name": "retained owner top work CTA follows AR EN AR",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-39a5629c669d",
+      "file": "owner_home_locale_test.dart",
+      "historical_name": "retained owner top pending empty title follows AR EN AR",
+      "current_name": "retained owner top pending empty title follows AR EN AR",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b4c58cfb7e24",
+      "file": "owner_home_locale_test.dart",
+      "historical_name": "retained owner top pending empty description follows AR EN AR",
+      "current_name": "retained owner top pending empty description follows AR EN AR",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c69d7a39bc90",
+      "file": "chat_property_sharing_test.dart",
+      "historical_name": "property without caption is protected and queued with its original identity",
+      "current_name": "property without caption is protected and queued with its original identity",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2d2459d4e19a",
+      "file": "chat_property_sharing_test.dart",
+      "historical_name": "caption survives selection and storage failure restores the composition",
+      "current_name": "caption survives selection and storage failure restores the composition",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-80693febfd30",
+      "file": "chat_property_sharing_test.dart",
+      "historical_name": "a recovered property needs a draft decision and discard preserves uncertain sends",
+      "current_name": "a recovered property needs a draft decision and discard preserves uncertain sends",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5530d3475638",
+      "file": "chat_property_sharing_test.dart",
+      "historical_name": "opening from details preserves recovered composition until the user resolves it",
+      "current_name": "opening from details preserves recovered composition until the user resolves it",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-921e2399cfdd",
+      "file": "chat_property_sharing_test.dart",
+      "historical_name": "reconciliation matches exact property and offer, not changed display fields",
+      "current_name": "reconciliation matches exact property and offer, not changed display fields",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e446e27539fd",
+      "file": "chat_property_sharing_test.dart",
+      "historical_name": "withdrawn property is a definitive rejection with a useful message",
+      "current_name": "withdrawn property is a definitive rejection with a useful message",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3472902710b4",
+      "file": "company_tenancy_test.dart",
+      "historical_name": "rejected accept shows the server reason and retains its draft without replay",
+      "current_name": "rejected accept shows the server reason and retains its draft without replay",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f79bca4de5ce",
+      "file": "company_tenancy_test.dart",
+      "historical_name": "rejected decline shows the server reason and retains its draft without replay",
+      "current_name": "rejected decline shows the server reason and retains its draft without replay",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d5e04a8f541b",
+      "file": "company_tenancy_test.dart",
+      "historical_name": "termination uses the server date unchanged in ar",
+      "current_name": "termination uses the server date unchanged in ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-8018c74735c6",
+      "file": "company_tenancy_test.dart",
+      "historical_name": "termination uses the server date unchanged in en",
+      "current_name": "termination uses the server date unchanged in en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-526e5e80b2e2",
+      "file": "company_tenancy_test.dart",
+      "historical_name": "restored termination outside [] stays unchanged and cannot send",
+      "current_name": "restored termination outside [] stays unchanged and cannot send",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b3d517e98825",
+      "file": "screen_audit_test.dart",
+      "historical_name": "OwnerTourEditorScreen large-ar",
+      "current_name": "OwnerTourEditorScreen large-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-914cb9a7c191",
+      "file": "company_tenancy_test.dart",
+      "historical_name": "company renewal identifies the unchanged exclusive date in input and confirmation in ar",
+      "current_name": "company renewal identifies the unchanged exclusive date in input and confirmation in ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9fecce04dc02",
+      "file": "company_tenancy_test.dart",
+      "historical_name": "company renewal identifies the unchanged exclusive date in input and confirmation in en",
+      "current_name": "company renewal identifies the unchanged exclusive date in input and confirmation in en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-70cfbee6e15d",
+      "file": "owner_banner_ads_flow_test.dart",
+      "historical_name": "an existing pending ad is prepared for invoice review without charging",
+      "current_name": "an existing pending ad is prepared for invoice review without charging",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-472e397bc045",
+      "file": "owner_banner_ads_flow_test.dart",
+      "historical_name": "cached banner details cannot authorize or confirm a payment",
+      "current_name": "cached banner details cannot authorize or confirm a payment",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c9797bb221a2",
+      "file": "owner_banner_ads_flow_test.dart",
+      "historical_name": "durable upload/create stops at invoice review without activating",
+      "current_name": "durable upload/create stops at invoice review without activating",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-caf9169eea1c",
+      "file": "owner_banner_ads_flow_test.dart",
+      "historical_name": "concurrent submission creates once and never charges",
+      "current_name": "concurrent submission creates once and never charges",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-35e646ff7ff6",
+      "file": "feature_tools_flows_test.dart",
+      "historical_name": "rent records remain reachable while the payment provider is disabled",
+      "current_name": "rent records remain reachable while the payment provider is disabled",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-73202ccc3646",
+      "file": "screen_audit_test.dart",
+      "historical_name": "OwnerTourEditorScreen dark-ar",
+      "current_name": "OwnerTourEditorScreen dark-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-92821bf9c111",
+      "file": "feature_tools_flows_test.dart",
+      "historical_name": "a payable invoice keeps its payment action disabled with the provider reason",
+      "current_name": "a payable invoice keeps its payment action disabled with the provider reason",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-61090f6cc6e0",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportTicketDetailContentView phone-ar",
+      "current_name": "SupportTicketDetailContentView phone-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cfae34305fce",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportTicketDetailContentView phone-en",
+      "current_name": "SupportTicketDetailContentView phone-en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2d65d7421b37",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportTicketDetailContentView se-ar",
+      "current_name": "SupportTicketDetailContentView se-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-ec00b7889a2f",
+      "file": "workspace_switcher_design_test.dart",
+      "historical_name": "picker escapes the home hero theme dark=false width=390.0",
+      "current_name": "picker escapes the home hero theme dark=false width=390.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-66e9c2a928df",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportTicketDetailContentView se-en",
+      "current_name": "SupportTicketDetailContentView se-en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-938db82bcbae",
+      "file": "workspace_switcher_design_test.dart",
+      "historical_name": "picker escapes the home hero theme dark=false width=1024.0",
+      "current_name": "picker escapes the home hero theme dark=false width=1024.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e380ddf0d2c9",
+      "file": "workspace_switcher_design_test.dart",
+      "historical_name": "picker escapes the home hero theme dark=true width=390.0",
+      "current_name": "picker escapes the home hero theme dark=true width=390.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a4f4f8e33899",
+      "file": "workspace_switcher_design_test.dart",
+      "historical_name": "picker escapes the home hero theme dark=true width=1024.0",
+      "current_name": "picker escapes the home hero theme dark=true width=1024.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7aa2d69a0ffb",
+      "file": "workspace_switcher_design_test.dart",
+      "historical_name": "switching away does not refocus the retained inactive dashboard",
+      "current_name": "switching away does not refocus the retained inactive dashboard",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-5b1b7f53a6a4",
+      "file": "ux60_chat_suggested_draft_test.dart",
+      "historical_name": "suggestion preserves the recovered draft and never transmits",
+      "current_name": "suggestion preserves the recovered draft and never transmits",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-9f0bfb8a1e4b",
+      "file": "housing_group_list_flow_test.dart",
+      "historical_name": "one collection keeps existing groups reachable without archive controls",
+      "current_name": "one collection keeps existing groups reachable without archive controls",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d916391ec4af",
+      "file": "housing_groups_bugfix_test.dart",
+      "historical_name": "unit categories select and switch on the search screen",
+      "current_name": "unit categories select and switch on the search screen",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-af1823ab3ca1",
+      "file": "rental_availability_test.dart",
+      "historical_name": "planning keeps the disabled-environment reason even without expiry",
+      "current_name": "planning keeps the disabled-environment reason even without expiry",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-272dc44fd1ad",
+      "file": "rental_availability_test.dart",
+      "historical_name": "another account cannot supply a visible planning denial reason",
+      "current_name": "another account cannot supply a visible planning denial reason",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bb47df40a48d",
+      "file": "rental_availability_test.dart",
+      "historical_name": "planning notice displays the actual server reason",
+      "current_name": "planning notice displays the actual server reason",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2949883d8f89",
+      "file": "rental_availability_test.dart",
+      "historical_name": "planning denial remains visible with pending submission false",
+      "current_name": "planning denial remains visible with pending submission false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-27c7dc170924",
+      "file": "rental_availability_test.dart",
+      "historical_name": "planning denial remains visible with pending submission true",
+      "current_name": "planning denial remains visible with pending submission true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-0f1965122024",
+      "file": "company_negotiation_test.dart",
+      "historical_name": "old notice rereads current state without repeating a command",
+      "current_name": "old notice rereads current state without repeating a command",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-777daea47312",
+      "file": "workspace_navigation_test.dart",
+      "historical_name": "account retry hydrates retained Home and restores all navigation",
+      "current_name": "account retry hydrates retained Home and restores all navigation",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f9322813a467",
+      "file": "workspace_navigation_test.dart",
+      "historical_name": "account retry failure retains guest recovery until a successful read",
+      "current_name": "account retry failure retains guest recovery until a successful read",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-3480f2109cb3",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportTicketDetailContentView large-ar",
+      "current_name": "SupportTicketDetailContentView large-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d08e79cd4f06",
+      "file": "banner_ads_rollout_test.dart",
+      "historical_name": "home advertising opens the same composer",
+      "current_name": "home advertising opens the same composer",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1d36f3d04dc7",
+      "file": "company_simpler_alternative_test.dart",
+      "historical_name": "case permits withdrawal only before preparation and respects current tenancy access",
+      "current_name": "case permits withdrawal only before preparation and respects current tenancy access",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-06cb931cc8e7",
+      "file": "banner_ads_rollout_test.dart",
+      "historical_name": "property advertising opens the same composer",
+      "current_name": "property advertising opens the same composer",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-542de86d5c03",
+      "file": "banner_ads_rollout_test.dart",
+      "historical_name": "tools advertising opens the same composer",
+      "current_name": "tools advertising opens the same composer",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-c998291d87b4",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "last company selector action clears navigation ar large text",
+      "current_name": "last company selector action clears navigation ar large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b7c5a22ee465",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "last company saved lists action clears navigation ar large text",
+      "current_name": "last company saved lists action clears navigation ar large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e7c08e1efe76",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "last owner group applications action clears navigation ar large text",
+      "current_name": "last owner group applications action clears navigation ar large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-df76efaa6f8c",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "last owner housing offers action clears navigation ar large text",
+      "current_name": "last owner housing offers action clears navigation ar large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-f2ac81c15bf0",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "student last action en 320.0 text 2.0",
+      "current_name": "student last action en 320.0 text 2.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-a6355b3bd20d",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "last company selector action clears navigation en large text",
+      "current_name": "last company selector action clears navigation en large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-88c2893cb0d6",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "last company saved lists action clears navigation en large text",
+      "current_name": "last company saved lists action clears navigation en large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-d86b5f3fba9d",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "last owner group applications action clears navigation en large text",
+      "current_name": "last owner group applications action clears navigation en large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-da0a775d0f65",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "last owner housing offers action clears navigation en large text",
+      "current_name": "last owner housing offers action clears navigation en large text",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-7064b9693297",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "failed service gate retry remains tappable",
+      "current_name": "failed service gate retry remains tappable",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1fda33ed4028",
+      "file": "workspace_navigation_clearance_test.dart",
+      "historical_name": "company access recovery clears navigation on a short screen",
+      "current_name": "company access recovery clears navigation on a short screen",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-6257ed6b5d1d",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportTicketDetailContentView dark-ar",
+      "current_name": "SupportTicketDetailContentView dark-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1b8a20a81eec",
+      "file": "owner_visit_requests_flow_test.dart",
+      "historical_name": "renders the O-REQ-ICON-B request card states",
+      "current_name": "renders the O-REQ-ICON-B request card states",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-163e62ef82e4",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportHelpContentView phone-ar",
+      "current_name": "SupportHelpContentView phone-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b3fe247a9dfc",
+      "file": "company_role_populated_layout_test.dart",
+      "historical_name": "populated admin ar 320.0",
+      "current_name": "populated admin ar 320.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-2c098ed5c1fe",
+      "file": "company_role_populated_layout_test.dart",
+      "historical_name": "populated admin en 1024.0",
+      "current_name": "populated admin en 1024.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-cd34952d1f56",
+      "file": "company_role_populated_layout_test.dart",
+      "historical_name": "populated coordinator ar 320.0",
+      "current_name": "populated coordinator ar 320.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-af7b6bdfb07a",
+      "file": "company_role_populated_layout_test.dart",
+      "historical_name": "populated coordinator en 1024.0",
+      "current_name": "populated coordinator en 1024.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-852f6c68ccb0",
+      "file": "company_role_populated_layout_test.dart",
+      "historical_name": "populated approver ar 320.0",
+      "current_name": "populated approver ar 320.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-431eb41446be",
+      "file": "company_role_populated_layout_test.dart",
+      "historical_name": "populated approver en 1024.0",
+      "current_name": "populated approver en 1024.0",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-232d962d3f96",
+      "file": "rental_interest_creation_test.dart",
+      "historical_name": "company accommodation confirmation preserves representative viewing context",
+      "current_name": "company accommodation confirmation preserves representative viewing context",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-65adf1917385",
+      "file": "splash_startup_test.dart",
+      "historical_name": "renders splash before service setup and waits for it (reduced motion: false)",
+      "current_name": "renders splash before service setup and waits for it (reduced motion: false)",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-fdaa47e1cd97",
+      "file": "splash_startup_test.dart",
+      "historical_name": "renders splash before service setup and waits for it (reduced motion: true)",
+      "current_name": "renders splash before service setup and waits for it (reduced motion: true)",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-72c6741500bd",
+      "file": "splash_startup_test.dart",
+      "historical_name": "fast startup selects without waiting for decorative writing: Welcome once",
+      "current_name": "startup opens Login once after the splash",
+      "latest_result": "superseded_verified",
+      "disposition": "Current splash contract waits for the required splash animation and opens Login for guests or Home for signed-in users exactly once; it supersedes the historical immediate Welcome/Home expectation. The replacement tests pass, including required initialization and late-navigation guards."
+    },
+    {
+      "id": "MOB-283c37ce12a7",
+      "file": "splash_startup_test.dart",
+      "historical_name": "fast startup selects without waiting for decorative writing: Home once",
+      "current_name": "startup opens Home once after the splash",
+      "latest_result": "superseded_verified",
+      "disposition": "Current splash contract waits for the required splash animation and opens Login for guests or Home for signed-in users exactly once; it supersedes the historical immediate Welcome/Home expectation. The replacement tests pass, including required initialization and late-navigation guards."
+    },
+    {
+      "id": "MOB-0807673b9634",
+      "file": "splash_startup_test.dart",
+      "historical_name": "slow startup holds completed logo until session restoration finishes",
+      "current_name": "slow startup holds completed logo until session restoration finishes",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-786b2c318d75",
+      "file": "company_operation_recovery_test.dart",
+      "historical_name": "explicit closure sends identity and clears only exact receipt: false",
+      "current_name": "explicit closure sends identity and clears only exact receipt: false",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e15a88502972",
+      "file": "company_operation_recovery_test.dart",
+      "historical_name": "explicit closure sends identity and clears only exact receipt: true",
+      "current_name": "explicit closure sends identity and clears only exact receipt: true",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-90324d49fa2c",
+      "file": "company_package_submit_recovery_test.dart",
+      "historical_name": "approved revision 5 restores after login and clears exact historical receipt 4 with GET only",
+      "current_name": "approved revision 5 restores after login and clears exact historical receipt 4 with GET only",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-57cb4ff6a429",
+      "file": "company_tenancy_list_context_test.dart",
+      "historical_name": "held tenancy GET cannot replace role context rows",
+      "current_name": "held tenancy GET cannot replace role context rows",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-bc73936d9e28",
+      "file": "company_tenancy_list_context_test.dart",
+      "historical_name": "held tenancy GET cannot replace company context rows",
+      "current_name": "held tenancy GET cannot replace company context rows",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-00a28575490d",
+      "file": "company_tenancy_list_context_test.dart",
+      "historical_name": "held tenancy GET cannot replace account context rows",
+      "current_name": "held tenancy GET cannot replace account context rows",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e99628de82bc",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportHelpContentView phone-en",
+      "current_name": "SupportHelpContentView phone-en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e194554769fa",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportHelpContentView se-ar",
+      "current_name": "SupportHelpContentView se-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-b8ce7b85ef78",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportHelpContentView se-en",
+      "current_name": "SupportHelpContentView se-en",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-e65d58c3340a",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportHelpContentView large-ar",
+      "current_name": "SupportHelpContentView large-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-1cdea1a4a074",
+      "file": "screen_audit_test.dart",
+      "historical_name": "SupportHelpContentView dark-ar",
+      "current_name": "SupportHelpContentView dark-ar",
+      "latest_result": "success"
+    },
+    {
+      "id": "MOB-987e1ab7f392",
+      "file": "owner_banner_ads_flow_test.dart",
+      "historical_name": "lost create response reconciles after reopening without another upload",
+      "current_name": "lost create response reconciles after reopening without another upload",
+      "latest_result": "success"
+    }
+  ]
+}
