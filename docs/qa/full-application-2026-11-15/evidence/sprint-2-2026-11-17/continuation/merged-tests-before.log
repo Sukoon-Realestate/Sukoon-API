@@ -1,0 +1,97 @@
+(node:41702) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/src/lib/admin-dashboard.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/lib/admin-navigation' imported from /Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/src/lib/admin-navigation.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    at #resolve (node:internal/modules/esm/loader:683:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/src/lib/admin-navigation'
+}
+
+Node.js v24.18.0
+✖ landing/tests/admin-navigation.test.mjs (55.434375ms)
+(node:41703) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/src/lib/basePath.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ dashboard destination: / (0.373875ms)
+✔ dashboard destination: /login (0.055625ms)
+✔ dashboard destination: /users (0.032791ms)
+✔ dashboard destination: /users/user-123 (0.028334ms)
+✔ dashboard destination: /properties/review?id=prop-123#photos (0.038125ms)
+✔ dashboard destination: /reports/overview (0.029125ms)
+✔ dashboard destination: /reports/chat-policy (0.026333ms)
+✔ dashboard destination: /admin (0.024583ms)
+✔ dashboard destination: /admin/users (0.039667ms)
+✔ dashboard destination: /admin?tab=overview (0.059666ms)
+✔ dashboard destination: /admin#activity (0.037ms)
+✔ dashboard destination: /administrator (0.024709ms)
+✔ dashboard destination: #forgot (0.018875ms)
+✔ dashboard destination: https://example.com/help (0.025209ms)
+✔ dashboard destination: //example.com/help (0.016917ms)
+✔ dashboard destination: mailto:support@example.com (0.020167ms)
+✔ dashboard route matching: /admin (0.029917ms)
+✔ dashboard route matching: /admin/ (0.023416ms)
+✔ dashboard route matching: /admin/login (0.030459ms)
+✔ dashboard route matching: /admin/users/user-123 (0.024792ms)
+✔ dashboard route matching: /administrator (0.020583ms)
+✔ dashboard route matching: /ar (0.013917ms)
+✔ public ar page and layout agree on language, direction, navigation and form (30.934708ms)
+✔ public ar metadata advertises only valid canonical and translated routes (0.353875ms)
+✔ public en page and layout agree on language, direction, navigation and form (16.0225ms)
+✔ public en metadata advertises only valid canonical and translated routes (0.070792ms)
+✔ only supported public locales are generated; unsupported input does not render a page (0.307958ms)
+✔ locale proxy preserves query parameters and never redirects API methods or admin paths (2.434834ms)
+✔ test checkout form carries billing constraints and language without client-controlled price or provider credentials (0.776375ms)
+✔ unconfigured checkout origin uses the canonical API with one path separator (0.226291ms)
+✖ footer exposes only configured HTTPS legal destinations and a real contact; unavailable links stay inert (0.788958ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 30
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 381.530208
+
+✖ failing tests:
+
+test at landing/tests/admin-navigation.test.mjs:1:1
+✖ landing/tests/admin-navigation.test.mjs (55.434375ms)
+  'test failed'
+
+test at landing/tests/public-site-contract.test.mjs:164:1
+✖ footer exposes only configured HTTPS legal destinations and a real contact; unavailable links stay inert (0.788958ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at file:///Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/tests/public-site-contract.test.mjs:171:16
+      at withEnvironment (file:///Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/tests/public-site-contract.test.mjs:67:12)
+      at TestContext.<anonymous> (file:///Users/demo23home/code/sukoon/Sukoon-API-sprint01/frontend/landing/tests/public-site-contract.test.mjs:168:7)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

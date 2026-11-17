@@ -1,0 +1,91 @@
+{
+  "errors": 0,
+  "warnings": 6,
+  "findings": [
+    {
+      "file": "frontend/src/components/admin/pages/properties/[id]/page.tsx",
+      "messages": [
+        {
+          "ruleId": "@next/next/no-img-element",
+          "severity": 1,
+          "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+          "line": 115,
+          "column": 17,
+          "nodeType": "JSXOpeningElement",
+          "endLine": 119,
+          "endColumn": 19
+        }
+      ]
+    },
+    {
+      "file": "frontend/src/components/admin/pages/reports/chat-policy/PolicyMedia.tsx",
+      "messages": [
+        {
+          "ruleId": "@next/next/no-img-element",
+          "severity": 1,
+          "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+          "line": 26,
+          "column": 79,
+          "nodeType": "JSXOpeningElement",
+          "endLine": 26,
+          "endColumn": 157
+        }
+      ]
+    },
+    {
+      "file": "frontend/src/components/admin/pages/users/[id]/page.tsx",
+      "messages": [
+        {
+          "ruleId": "@next/next/no-img-element",
+          "severity": 1,
+          "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+          "line": 128,
+          "column": 17,
+          "nodeType": "JSXOpeningElement",
+          "endLine": 128,
+          "endColumn": 97
+        }
+      ]
+    },
+    {
+      "file": "frontend/src/components/properties/PropertyReview.tsx",
+      "messages": [
+        {
+          "ruleId": "@next/next/no-img-element",
+          "severity": 1,
+          "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+          "line": 81,
+          "column": 170,
+          "nodeType": "JSXOpeningElement",
+          "endLine": 81,
+          "endColumn": 274
+        }
+      ]
+    },
+    {
+      "file": "frontend/src/components/ui/IdentityImage.tsx",
+      "messages": [
+        {
+          "ruleId": "@next/next/no-img-element",
+          "severity": 1,
+          "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+          "line": 38,
+          "column": 21,
+          "nodeType": "JSXOpeningElement",
+          "endLine": 38,
+          "endColumn": 70
+        },
+        {
+          "ruleId": "@next/next/no-img-element",
+          "severity": 1,
+          "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+          "line": 40,
+          "column": 28,
+          "nodeType": "JSXOpeningElement",
+          "endLine": 40,
+          "endColumn": 85
+        }
+      ]
+    }
+  ]
+}

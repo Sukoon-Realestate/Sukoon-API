@@ -393,7 +393,7 @@ export async function handleMockRequest<T = unknown>(
 
   if (cleanPath === '/api/v1/admin/permissions') {
     if (method === 'PATCH' || method === 'POST') {
-      let matrix = rolesData.permissionsMatrix;
+      let matrix: unknown = rolesData.permissionsMatrix;
       if (options.body) {
         try {
           matrix = typeof options.body === 'string' ? JSON.parse(options.body) : options.body;
@@ -435,6 +435,9 @@ export async function handleMockRequest<T = unknown>(
 
     return {
       count: filtered.length,
+      page,
+      per_page: pageSize,
+      total_pages: Math.max(1, Math.ceil(filtered.length / pageSize)),
       next: start + pageSize < filtered.length ? `?page=${page + 1}` : null,
       previous: page > 1 ? `?page=${page - 1}` : null,
       results,
@@ -471,7 +474,9 @@ export async function handleMockRequest<T = unknown>(
       if (options.body) {
         try {
           const parsed = typeof options.body === 'string' ? JSON.parse(options.body) : options.body;
-          currentSettings = { ...currentSettings, ...parsed };
+          if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+            currentSettings = { ...currentSettings, ...parsed };
+          }
         } catch {
           // ignore
         }

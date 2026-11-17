@@ -1,0 +1,46 @@
+✔ CSV contains exact displayed fields, Arabic text, escaped delimiters and row identity (23.752791ms)
+✔ neutralizes spreadsheet formula/control prefix "=SUM(1,2)" (4.708667ms)
+✔ neutralizes spreadsheet formula/control prefix "+123" (3.238416ms)
+✔ neutralizes spreadsheet formula/control prefix "-1+2" (3.113583ms)
+✔ neutralizes spreadsheet formula/control prefix "@SUM(A1)" (2.492875ms)
+✔ neutralizes spreadsheet formula/control prefix "  =1" (2.143ms)
+✔ neutralizes spreadsheet formula/control prefix "\t=1" (1.951958ms)
+✔ neutralizes spreadsheet formula/control prefix "\r=1" (1.950125ms)
+✔ neutralizes spreadsheet formula/control prefix "\n@x" (2.108792ms)
+✔ neutralizes spreadsheet formula/control prefix "‮=1" (2.165291ms)
+✔ neutralizes spreadsheet formula/control prefix "​=1" (2.346792ms)
+✔ invalid/partial/empty pages never create a download (1.80025ms)
+✔ download failures revoke their URL and propagate for visible feedback (1.695791ms)
+✖ explicit demo audit pages retain the live pagination contract (13.155042ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 13
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 171.583291
+
+✖ failing tests:
+
+test at tests/audit-csv.test.cjs:47:1
+✖ explicit demo audit pages retain the live pagination contract (13.155042ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "Invalid audit pagination"
+      at TestContext.<anonymous> (<api-checkout>/frontend/tests/audit-csv.test.cjs:58:12)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: Invalid audit pagination
+        at Object.auditLogPage (evalmachine.<anonymous>:12:15)
+        at <api-checkout>/frontend/tests/audit-csv.test.cjs:58:41
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (<api-checkout>/frontend/tests/audit-csv.test.cjs:58:12)
+        at async Test.run (node:internal/test_runner/test:1332:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:911:7),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }

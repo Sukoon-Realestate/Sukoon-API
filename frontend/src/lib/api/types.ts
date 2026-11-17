@@ -185,7 +185,7 @@ export interface PermissionsMatrixRow {
   complianceOfficer?: boolean;
   supportRep?: boolean;
   contentModerator?: boolean;
-  [key: string]: any;
+  [key: string]: string | boolean | undefined;
 }
 
 export interface PropertyItem {

@@ -8,11 +8,11 @@ export class ApiError extends Error {
 
 export interface RequestOptions extends Omit<RequestInit, 'body'> {
   params?: Record<string, string | number | boolean | undefined | null>;
-  body?: any;
+  body?: unknown;
   anonymous?: boolean;
 }
 
-export async function apiClient<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+export async function apiClient<T = unknown>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   // Route to dummy static data JSON files when backend is disabled in env var
   if (!isBackendEnabled()) {
     return handleMockRequest<T>(endpoint, options);
@@ -49,9 +49,11 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     }
   }
 
-  let finalBody = body;
-  if (body && typeof body !== 'string' && !(body instanceof FormData) && !(body instanceof Blob)) {
+  let finalBody: BodyInit | null | undefined;
+  if (body !== undefined && body !== null && typeof body !== 'string' && !(body instanceof FormData) && !(body instanceof Blob)) {
     finalBody = JSON.stringify(body);
+  } else {
+    finalBody = body as BodyInit | null | undefined;
   }
 
   let response: Response;
@@ -74,13 +76,14 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
   }
 
   if (!response.ok) {
-    let errorData: any = null;
+    let errorData: unknown = null;
     try {
       errorData = await response.json();
     } catch {
       errorData = { detail: response.statusText };
     }
-    const errorMessage = typeof errorData?.message === 'string' && errorData.message.trim()
+    const errorMessage = errorData !== null && typeof errorData === 'object' && 'message' in errorData &&
+      typeof errorData.message === 'string' && errorData.message.trim()
       ? errorData.message : 'حدث خطأ في الاتصال بالخادم';
 
     if (!anonymous && response.status === 401 && !endpoint.includes('/auth/login/') &&
@@ -94,6 +97,8 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
         window.dispatchEvent(new Event('auth:unauthorized'));
         const loginPath = `${BASE_PATH}/login`;
         if (window.location.pathname !== loginPath) {
+          // A rejected credential requires a full document reload to discard private client state.
+          // eslint-disable-next-line @next/next/no-location-assign-relative-destination
           window.location.href = loginPath;
         }
       }

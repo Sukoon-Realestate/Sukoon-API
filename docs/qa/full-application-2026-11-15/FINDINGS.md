@@ -73,6 +73,8 @@ Expected: show an authoritative rating and its basis/count, or an explicit unava
 
 ## ADM-002 — Audit CSV button is inert
 
+**17 November local follow-up:** implementation, component/helper regressions and controlled real-browser acceptance are recorded in [Sprint 2](SPRINT-2.md); live-backend/hosted acceptance remains pending. Original observations follow.
+
 Reproduce: **Platform administration → Activity logs → Export CSV**. Clicking changes nothing and initiates no export.
 
 Source: `frontend/src/components/admin/pages/system/logs/page.tsx:120` renders the enabled button without `onClick`, a link, form action or download target. No export function exists in that component.
@@ -80,6 +82,8 @@ Source: `frontend/src/components/admin/pages/system/logs/page.tsx:120` renders t
 Expected: a real, correctly scoped export with CSV formula-injection handling, pagination/completeness semantics and error feedback, or a clearly unavailable action. Verify with a nonempty audit dataset as well as an empty result.
 
 ## ADM-003 — Audit read errors are hidden
+
+**17 November local follow-up:** implementation, component/helper regressions and controlled real-browser acceptance are recorded in [Sprint 2](SPRINT-2.md); live-backend/hosted acceptance remains pending. Original observations follow.
 
 Source: `frontend/src/components/admin/pages/system/logs/page.tsx:19` catches `fetchAuditLogs` failures and only writes to `console.error`. It then ends loading. `logs` remains empty on initial failure, or retains an earlier query's rows. The rendered empty state says **لا توجد سجلات مطابقة**. There is no visible failure state or retry action.
 
@@ -129,6 +133,8 @@ Expected: establish deployed package versions, prioritize reachable runtime advi
 
 ## SEC-003 — Portal framing hardening absent
 
+**17 November continuation:** response-level restrictions are implemented in both local app configurations and Chrome blocks same-origin admin framing. See [Sprint 2](SPRINT-2.md). Hosted deployment and header verification remain pending.
+
 Sampled hosted admin responses, including `/admin/login`, had HSTS but neither `X-Frame-Options` nor a `Content-Security-Policy` header. The read-only probe retains selected response headers in [hosted-repeat.json](evidence/hosted-repeat.json).
 
 Expected: define an intended framing policy and verify it in a browser. If embedding is not required, apply response-level restrictions such as CSP `frame-ancestors`. No authenticated clickjacking exploitation was performed; treat this as a hardening gap rather than a demonstrated takeover.
@@ -143,9 +149,13 @@ See [failure index](MOBILE-FAILURES.md), per-file reports and [independent rerun
 
 ## QA-002 — Frontend lint baseline
 
+**17 November continuation:** the admin lint gate now passes with zero errors/six native-image warnings. See [Sprint 2](SPRINT-2.md). The original failing baseline follows.
+
 `npm run lint` reports **91 errors and 7 warnings**. Some errors are CommonJS test/script imports being linted as production TypeScript; others require file-specific review. The production build and all 56 standalone admin tests pass, so this finding is a failing quality gate rather than proof of 98 runtime bugs. See [lint output](evidence/frontend-lint.log).
 
 ## COPY-001 — Read-only permissions matrix invites editing
+
+**17 November local follow-up:** implementation, component/helper regressions and controlled real-browser acceptance are recorded in [Sprint 2](SPRINT-2.md); live-backend/hosted acceptance remains pending. Original observations follow.
 
 The Roles page labels its matrix **مصفوفة الصلاحيات (انقر للتعديل المباشر)**, while every matrix cell describes a read-only server rule and role Edit buttons are disabled. Source: `frontend/src/components/admin/pages/roles/page.tsx`.
 

@@ -1,5 +1,7 @@
 # Sprint 1 remediation — 16 November 2026
 
+**17 November sequencing update:** The user explicitly requested synchronizing both repositories with main and then starting Sprint 2. Both prior-work main branches were already synchronized (`45793c5f` API / `a5935ae7` mobile); [Sprint 2 local work](SPRINT-2.md) has now started. This changes the earlier sequencing instruction, not Sprint 1 acceptance: the unresolved native exception/device, authentic production/Apple/store and live association blockers remain open. Earlier “Sprint 2 not started” statements below describe their historical checkpoints.
+
 **Partial completion; local changes only. No deployment, release upload or production data change.** Work was performed in `Sukoon-API-sprint01` and the separate `sokoun` checkout. Concurrent unrelated edits in both checkouts were preserved. Original 15 November evidence remains unchanged; new evidence is under [sprint-1-2026-11-16](evidence/sprint-1-2026-11-16/).
 
 ## 17 November publication verification

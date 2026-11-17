@@ -1,0 +1,30 @@
+✖ permissions matrix truthfully describes immutable server policy without interactive cells (79.336333ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 397.619958
+
+✖ failing tests:
+
+test at tests/permissions-copy.test.cjs:8:1
+✖ permissions matrix truthfully describes immutable server policy without interactive cells (79.336333ms)
+  AssertionError [ERR_ASSERTION]: The input was expected to not match the regular expression /انقر للتعديل المباشر/. Input:
+  
+  'جارٍ تحميل البيانات…الأدوار والصلاحياتالمشرفون الحاليونمصفوفة الصلاحيات (انقر للتعديل المباشر)الإجراءمالك النظاممشرف رئيسيمراجع KYCمراجع عقاراتدعمRead audits'
+  
+      at TestContext.<anonymous> (<api-checkout>/frontend/tests/permissions-copy.test.cjs:23:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'جارٍ تحميل البيانات…الأدوار والصلاحياتالمشرفون الحاليونمصفوفة الصلاحيات (انقر للتعديل المباشر)الإجراءمالك النظاممشرف رئيسيمراجع KYCمراجع عقاراتدعمRead audits',
+    expected: /انقر للتعديل المباشر/,
+    operator: 'doesNotMatch',
+    diff: 'simple'
+  }

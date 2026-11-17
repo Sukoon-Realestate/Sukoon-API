@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { test } from 'node:test';
 import { sumAvailableCounts } from '../src/lib/admin-dashboard.ts';
-import { adminNavigation, activeAdminHref, findAdminSection, searchAdminNavigation } from '../src/lib/admin-navigation.ts';
+import { source } from './source-loader.mjs';
+const { adminNavigation, activeAdminHref, findAdminSection, searchAdminNavigation } = source('lib/admin-navigation.ts');
 
 const items = adminNavigation.flatMap((group) => group.items);
 test('every grouped navigation destination has an existing page', () => {
@@ -12,7 +13,7 @@ test('every grouped navigation destination has an existing page', () => {
   }
 });
 test('all existing main sections appear exactly once', () => {
-  const expected = ['/', '/executive', '/analytics', '/properties', '/properties/review', '/users', '/kyc', '/users/suspended', '/moderation', '/users/reports', '/support', '/reports/overview', '/reports/chat-policy', '/financials', '/financials/transactions', '/notifications', '/roles', '/system/logs', '/system/health', '/settings'];
+  const expected = ['/', '/executive', '/analytics', '/properties', '/properties/review', '/properties/tours', '/users', '/kyc', '/users/suspended', '/moderation', '/account-closure', '/users/reports', '/support', '/reports/overview', '/reports/chat-policy', '/financials', '/financials/transactions', '/financials/payouts', '/financials/refunds', '/notifications', '/roles', '/security', '/system/logs', '/system/health', '/settings'];
   assert.deepEqual(items.map((item) => item.href).sort(), expected.sort());
   assert.equal(new Set(items.map((item) => item.href)).size, expected.length);
   assert.equal(adminNavigation.length, 6);
@@ -34,7 +35,7 @@ test('unknown and login routes do not masquerade as overview', () => {
 test('cross-cutting reports live with safety and support', () => {
   assert.equal(findAdminSection('/users/reports')?.id, 'trust');
   assert.equal(findAdminSection('/reports/chat-policy')?.id, 'trust');
-  assert.equal(findAdminSection('/users/suspended')?.id, 'community');
+  assert.equal(findAdminSection('/users/suspended')?.id, 'accounts');
 });
 test('Arabic search matches normalized spelling and descriptions', () => {
   assert.ok(searchAdminNavigation('الاشعارات').some((item) => item.href === '/notifications'));

@@ -2,6 +2,10 @@
 
 This is a substantial QA pass, not exhaustive release certification. A passing unit test, an HTTP 200 page shell, a discovered callback and a completed user journey are different evidence. No statement here means every button was clicked or every security threat was ruled out.
 
+## Current continuation
+
+[Sprint 2](SPRINT-2.md) has completed its local implementation and controlled browser verification: 88 admin and 38 merged regressions, both webpack production builds, TypeScript, and six Chrome scenarios in each app layout pass. Admin lint passes with zero errors/six native-image warnings. The browser runs use synthetic intercepted APIs and verify actual app UI, CSV downloads, version/receipt handling, restricted navigation and blocked admin framing. Actual backend staff sessions/concurrency and hosted acceptance remain open. Sprint 1 blockers remain open. Original observations below are historical.
+
 ## Environments
 
 - Hosted API: `https://api.sukoon.rent`; public web/admin: `https://www.sukoon.rent`.

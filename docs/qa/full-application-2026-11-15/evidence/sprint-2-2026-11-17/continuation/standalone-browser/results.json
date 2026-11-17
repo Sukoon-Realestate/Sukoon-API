@@ -1,0 +1,30 @@
+{
+  "origin": "http://127.0.0.1:3022",
+  "transport": "synthetic intercepted API",
+  "results": [
+    {
+      "name": "audit-failure-retry-download",
+      "passed": true
+    },
+    {
+      "name": "audit-filters-discard-late-result",
+      "passed": true
+    },
+    {
+      "name": "support-role-command-and-recovery",
+      "passed": true
+    },
+    {
+      "name": "property-review-stale-version-recovery",
+      "passed": true
+    },
+    {
+      "name": "owner-catalog-conflict-and-save",
+      "passed": true
+    },
+    {
+      "name": "permissions-read-only-and-framing-blocked",
+      "passed": true
+    }
+  ]
+}

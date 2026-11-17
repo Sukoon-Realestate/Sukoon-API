@@ -1,0 +1,23 @@
+
+> sukoon-landing@0.1.0 prebuild
+> node scripts/prepare-design-docs.mjs
+
+
+> sukoon-landing@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.4.6 (webpack)
+✓ Running next.config.ts took 169ms
+- Experiments (use with caution):
+  ✓ globalNotFound
+
+  Creating an optimized production build ...
+Failed to compile.
+
+../src/components/admin/pages/system/logs/page.tsx
+Module not found: Can't resolve '@/lib/api/auditLogs'
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+> Build failed because of webpack errors

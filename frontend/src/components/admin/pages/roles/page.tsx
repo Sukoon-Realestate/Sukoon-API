@@ -219,8 +219,11 @@ export default function AdminRolesPage() {
         {/* Bottom Section: Permissions Matrix */}
         <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
           <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
-            مصفوفة الصلاحيات (انقر للتعديل المباشر)
+            مصفوفة الصلاحيات (للعرض فقط)
           </h3>
+          <p className="text-xs text-[var(--text-muted)]">
+            تعكس هذه المصفوفة قواعد الصلاحيات المعتمدة في الخادم. تُدار صلاحيات المشرفين عبر تعيين الأدوار المعتمدة.
+          </p>
 
           <TableScroll>
             <table className="w-full text-right border-collapse">
@@ -242,7 +245,7 @@ export default function AdminRolesPage() {
                     </td>
 
                     <td aria-label="Read-only server role rule"
-                      className="py-4 px-4 text-center cursor-pointer hover:bg-teal-500/10 transition-colors rounded-lg"
+                      className="py-4 px-4 text-center"
                     >
                       {row.systemOwner ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
@@ -252,7 +255,7 @@ export default function AdminRolesPage() {
                     </td>
 
                     <td aria-label="Read-only server role rule"
-                      className="py-4 px-4 text-center cursor-pointer hover:bg-teal-500/10 transition-colors rounded-lg"
+                      className="py-4 px-4 text-center"
                     >
                       {row.mainAdmin ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
@@ -262,7 +265,7 @@ export default function AdminRolesPage() {
                     </td>
 
                     <td aria-label="Read-only server role rule"
-                      className="py-4 px-4 text-center cursor-pointer hover:bg-teal-500/10 transition-colors rounded-lg"
+                      className="py-4 px-4 text-center"
                     >
                       {row.kycReviewer ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
@@ -272,7 +275,7 @@ export default function AdminRolesPage() {
                     </td>
 
                     <td aria-label="Read-only server role rule"
-                      className="py-4 px-4 text-center cursor-pointer hover:bg-teal-500/10 transition-colors rounded-lg"
+                      className="py-4 px-4 text-center"
                     >
                       {row.propertyReviewer ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
@@ -282,7 +285,7 @@ export default function AdminRolesPage() {
                     </td>
 
                     <td aria-label="Read-only server role rule"
-                      className="py-4 px-4 text-center cursor-pointer hover:bg-teal-500/10 transition-colors rounded-lg"
+                      className="py-4 px-4 text-center"
                     >
                       {row.support ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
