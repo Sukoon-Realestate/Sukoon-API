@@ -2,6 +2,28 @@
 
 **Partial completion; local changes only. No deployment, release upload or production data change.** Work was performed in `Sukoon-API-sprint01` and the separate `sokoun` checkout. Concurrent unrelated edits in both checkouts were preserved. Original 15 November evidence remains unchanged; new evidence is under [sprint-1-2026-11-16](evidence/sprint-1-2026-11-16/).
 
+## 17 November publication verification
+
+The user explicitly requested all pending code in both repositories be merged
+and pushed to `main`. The API/frontend source batch is commit `94303a8b`;
+mobile `main` includes the full shared UI batch and subsequent launcher/metrics
+work through `b8a9df29`, plus the final accessible filter-sizing update at `a5935ae7`. The latter passes 82 targeted cases and analysis. Credentials, signing keys, build outputs and private
+runtime captures were excluded. Publication does not close Sprint 1.
+
+The final API source tree passes a **complete PostgreSQL restoration run:
+6,187 passed, 22 skipped, 12 expected failures; zero unexpected failures/errors**.
+[JUnit](evidence/sprint-1-2026-11-17/publication/restoration.xml),
+[log](evidence/sprint-1-2026-11-17/publication/restoration.log).
+The complete final-source PostgreSQL MVP run also passed **6,187 tests, 22 skipped, 12 expected failures, zero unexpected failures/errors** ([JUnit](evidence/sprint-1-2026-11-17/publication/mvp.xml), [log](evidence/sprint-1-2026-11-17/publication/mvp.log)). Both modes ran on isolated migrated databases with adequate lock capacity; the task-owned cluster was stopped afterward. Its first diagnostic reused an earlier
+flushed drill database, missing migration-seeded catalogs/plans; it was stopped
+at 1,403 passes/23 failures/two skips/two expected failures, then restarted on a
+fresh database. This diagnostic is retained and is not counted as acceptance.
+Frontend repeats pass 62 admin and three merged configuration tests, with zero
+advisories in both trees. The new mobile follow-up passes 26 design-map/details
+checks, 16 metrics layouts, targeted analysis and all ten shortcut vector compiles.
+The earlier additional shared mobile selection remains 131 passed/34 failed
+(old header/picker finder expectations); the full mobile baseline remains open.
+
 ## 17 November signing and timing continuation
 
 [New evidence](evidence/sprint-1-2026-11-17/signing-and-timing/) supersedes the earlier inference that an absent checked-out `android/key.properties` meant no Android signing configuration was available.

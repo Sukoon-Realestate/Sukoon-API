@@ -1,0 +1,48 @@
+{
+  "api_source_commit": "94303a8b36b9b5b0df066709d14f8d8dffc58c0a",
+  "mobile_main_commit": "a5935ae7da6585b413502257cfc9b8928f763650",
+  "restoration": {
+    "passed": 6187,
+    "skipped": 22,
+    "expected_failures": 12,
+    "unexpected_failures": 0,
+    "errors": 0
+  },
+  "interrupted_mvp_diagnostic": {
+    "passed": 1403,
+    "failed": 23,
+    "skipped": 2,
+    "expected_failures": 2,
+    "interrupted": true,
+    "cause": "Reused a previously flushed drill database, so migration-seeded plans and catalog entries were missing; rerun started on a fresh database."
+  },
+  "frontend": {
+    "admin_passed": 62,
+    "merged_config_passed": 3,
+    "admin_advisories": 0,
+    "merged_advisories": 0
+  },
+  "mobile_followup": {
+    "design_map_property_details_passed": 26,
+    "metrics_passed": 16,
+    "android_vector_compiles": 10,
+    "targeted_analysis_issues": 0
+  },
+  "limits": [
+    "Original shared mobile selection retains 34 old header/picker expectation failures; no full mobile-suite acceptance.",
+    "Sprint 1 native exception, production/Apple signing and live store/domain acceptance remain open.",
+    "Private credentials, signing files and runtime captures excluded."
+  ],
+  "mvp": {
+    "passed": 6187,
+    "skipped": 22,
+    "expected_failures": 12,
+    "unexpected_failures": 0,
+    "errors": 0
+  },
+  "task_owned_postgres_stopped": true,
+  "mobile_filter_final": {
+    "passed": 82,
+    "analysis_issues": 0
+  }
+}
