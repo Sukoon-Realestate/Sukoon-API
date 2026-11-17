@@ -1,0 +1,21 @@
+00:00 +0: loading /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart
+00:00 +0: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_privacy_copy_test.dart: visit notices preserve phone privacy in en
+00:00 +1: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_privacy_copy_test.dart: visit notices preserve phone privacy in ar
+00:00 +2: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_privacy_copy_test.dart: (tearDownAll)
+00:00 +2: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: loads and maps a tenant visits page
+00:00 +3: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: adds the selected status filter to the request
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: maps an unknown backend status to the rejected fail state
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: Accepted uses confirmed: requests=false, empty=false
+00:00 +6: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: Accepted uses confirmed: requests=false, empty=true
+00:00 +7: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: Accepted uses confirmed: requests=true, empty=false
+00:00 +8: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: Accepted uses confirmed: requests=true, empty=true
+00:00 +9: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: legacy response aliases remain accepted
+00:00 +10: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: builds a filter-specific stable cache key
+00:00 +11: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_data_test.dart: (tearDownAll)
+00:00 +11: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_contact_refresh_test.dart: (setUpAll)
+00:00 +11: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_contact_refresh_test.dart: collections refresh on acceptance but not on app resume
+00:01 +12: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_contact_refresh_test.dart: details refresh only for the requested visit or property
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_contact_refresh_test.dart: visit decision event and resume refresh the current detail only
+00:01 +14: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_contact_refresh_test.dart: account replacement prevents old screens from refreshing
+00:01 +15: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/visit_contact_refresh_test.dart: (tearDownAll)
+00:01 +15: All tests passed!

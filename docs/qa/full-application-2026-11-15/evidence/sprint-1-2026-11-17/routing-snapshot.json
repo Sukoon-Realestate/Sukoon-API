@@ -1,0 +1,30 @@
+{
+  "ingress": {
+    "rules": [
+      {
+        "match": {
+          "path": {
+            "prefix": "/"
+          },
+          "authority": {
+            "exact": ""
+          }
+        },
+        "component": {
+          "name": "sukoon-api"
+        }
+      }
+    ]
+  },
+  "domains": [
+    "api.sukoon.rent"
+  ],
+  "services": [
+    {
+      "name": "sukoon-api",
+      "http_port": 8080,
+      "source_dir": "/backend",
+      "release_identity_env": []
+    }
+  ]
+}

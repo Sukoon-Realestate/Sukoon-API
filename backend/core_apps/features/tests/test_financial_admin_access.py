@@ -11,7 +11,10 @@ from core_apps.users.models import User
 
 @pytest.mark.django_db
 def test_anonymous_admin_login_renders_without_financial_authority(client, settings):
-    settings.STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     response = client.get(reverse("admin:login"))
     assert response.status_code == 200
     assert b'name="username"' in response.content

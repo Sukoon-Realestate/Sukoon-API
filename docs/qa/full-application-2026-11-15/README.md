@@ -2,11 +2,15 @@
 
 **Release blockers were found. This pass does not certify the app as production-ready or establish that every button/cycle is covered.** The work includes the Flutter mobile app, hosted API, public frontend and Next.js admin portal. Product fixes were left for a later sprint in the original pass; local remediation began on 16 November.
 
-## Sprint 1 progress — 16 November 2026
+## Sprint 1 progress — 17 November 2026
 
-Local fixes cover **MOB-001**, **PRIV-001** and **ADM-001**. **WEB-001** now truthfully identifies unavailable download links. Both JavaScript trees use Next.js 16.4.6; repeat audits report **zero critical/high findings**, with seven moderate development-toolchain findings remaining per tree.
+Local fixes cover **MOB-001**, **PRIV-001** and **ADM-001**. **WEB-001** now truthfully identifies unavailable download links. Both JavaScript trees use Next.js 16.4.6 and compatible TypeScript ESLint 8.73.0; repeat audits now report **zero known vulnerabilities of every severity** in both trees.
 
-See [Sprint 1 fixes, reproductions, verification and unresolved blockers](SPRINT-1.md). **Sprint 1 remains incomplete:** MOB-002 was not reproduced by repeated widget journeys, HOST-001 still returns 504, Python dependency remediation and real release/store acceptance remain open. Nothing was deployed. The tables below preserve the original 15 November baseline.
+Local Android **dev signing is now verified** through the private release-wrapper configuration and an existing signed dev APK. Four new Back timing tests cover 16 lifecycle combinations; **130 affected mobile tests pass**. The original intermittent blank-screen exception, production/Apple signing, confirmed store destinations and live association acceptance remain open. See the latest [signing and timing continuation](SPRINT-1.md).
+
+The Python lockfile now audits with **zero known advisories** after reproducing 124 entries; compatible framework/social-auth updates include storage and OAuth compatibility fixes. The remaining visit-card test now checks all three lazily built cards individually; both visit files pass 65 tests. Hosted association 504s correlate with Django 503s and absent signing identities. Local landing association proxy rules and release configuration preparation address the separately reproduced link-host routing gap.
+
+See [Sprint 1 fixes, reproductions, verification and unresolved blockers](SPRINT-1.md). **Sprint 1 remains incomplete:** the original intermittent MOB-002 blank-screen failure did not recur during three earlier native simulator attempts (one with verified capture) or two additional fresh dev-build journeys with verified capture. The app was replaced by another local Flutter session afterward, limiting snapshot continuity; profile mode is unsupported on the simulator. Authentic exception capture and profile/release/device acceptance remain open. Association identities, live host configuration and signing/store acceptance remain blocked. Backend dependency regressions and their exact limitations are recorded in Sprint 1. Full mobile/lint gates remain red. Sprint 2 has not started. Nothing was deployed, uploaded or pushed. The tables below preserve the original 15 November baseline.
 
 Start with [findings and reproduction steps](FINDINGS.md), then [coverage, limitations and four proposed fix sprints](COVERAGE.md).
 

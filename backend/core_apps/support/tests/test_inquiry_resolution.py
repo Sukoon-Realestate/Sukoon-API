@@ -26,9 +26,10 @@ pytestmark = pytest.mark.django_db
 
 
 def test_console_resolves_general_inquiry_with_explicit_acknowledgment(user, settings):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     agent = operator("support")
     ticket = create_ticket(
         user,

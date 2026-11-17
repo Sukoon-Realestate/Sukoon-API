@@ -10,9 +10,10 @@ from core_apps.users.services.sessions import issue_refresh, revoke_all, revoke_
 
 @pytest.fixture
 def operator(db, settings):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     return User.objects.create_user(
         email="isolated-browser-operator@example.invalid",
         password="local-test-password",

@@ -1,0 +1,91 @@
+{
+  "subscriptions": [
+    {
+      "id": 1,
+      "result": {
+        "type": "Success"
+      }
+    },
+    {
+      "id": 2,
+      "result": {
+        "type": "Success"
+      }
+    },
+    {
+      "id": 3,
+      "result": {
+        "type": "Success"
+      }
+    },
+    {
+      "id": 4,
+      "result": {
+        "type": "Success"
+      }
+    }
+  ],
+  "first_event_utc": "2026-11-17T07:18:26.346000+00:00",
+  "last_event_utc": "2026-11-17T07:26:25.062000+00:00",
+  "event_counts": {
+    "Flutter.Frame": 27462,
+    "WriteEvent": 44,
+    "Logging": 2254,
+    "Flutter.Navigation": 4,
+    "provider:provider_list_changed": 2,
+    "provider:provider_changed": 2
+  },
+  "flutter_errors": [],
+  "navigation": [
+    {
+      "timestamp": 1794900092449,
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<bool>(OwnerCreationScreen)",
+          "settings": {
+            "name": "OwnerCreationScreen"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": 1794900096972,
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(OwnerPropertyFlowScreen)",
+          "settings": {
+            "name": "OwnerPropertyFlowScreen"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": 1794900109514,
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<Object?>(OwnerPropertyFlowScreen)",
+          "settings": {
+            "name": "OwnerPropertyFlowScreen"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": 1794900117912,
+      "data": {
+        "route": {
+          "description": "_CupertinoRoute<bool>(OwnerCreationScreen)",
+          "settings": {
+            "name": "OwnerCreationScreen"
+          }
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Two earlier UI attempts had no verified event subscription and are not counted as captured journeys.",
+    "Installed dev build revision unproven; no fresh/profile/release build or physical device acceptance.",
+    "Debug connection closed after the captured journey.",
+    "Raw event stream contains private debug data and remains outside the repository."
+  ]
+}

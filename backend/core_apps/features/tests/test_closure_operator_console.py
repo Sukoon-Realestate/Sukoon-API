@@ -13,9 +13,10 @@ pytestmark = pytest.mark.django_db
 def test_case_console_uses_current_assignee_revision_and_same_command_boundary(
     phase3_lease, settings
 ):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     owner, tenant, lease = phase3_lease
     agent = operator("support")
     case = open_system_case(

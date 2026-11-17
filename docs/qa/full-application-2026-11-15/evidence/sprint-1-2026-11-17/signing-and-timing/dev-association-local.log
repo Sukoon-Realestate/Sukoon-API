@@ -1,0 +1,2 @@
+PASS: verified dev certificate yields exact expected JSON and public cache policy
+PASS: missing production identity remains unavailable; dev certificate is not substituted for production

@@ -7,18 +7,20 @@ from core_apps.properties.models import Property, PropertyImage
 
 @pytest.fixture(autouse=True)
 def local_admin_assets(settings):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
 
 
 @pytest.mark.django_db
 def test_property_requests_admin_lists_filters_and_opens_submissions(
     client, superuser, user, apartment_type, cairo_city, cairo_governorate, settings
 ):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     pending = Property.objects.create(
         owner=user,
         title="Pending submission",
@@ -74,9 +76,10 @@ def test_property_requests_admin_lists_filters_and_opens_submissions(
 def test_property_request_edit_only_changes_status_and_verification(
     client, superuser, user, apartment_type, cairo_city, cairo_governorate, settings
 ):
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     property_obj = Property.objects.create(
         owner=user,
         title="Original title",
@@ -130,9 +133,10 @@ def test_property_request_edit_only_changes_status_and_verification(
 def test_property_requests_admin_reuses_property_permissions(client, user, settings):
     from django.contrib.auth.models import Permission
 
-    settings.STATICFILES_STORAGE = (
-        "django.contrib.staticfiles.storage.StaticFilesStorage"
-    )
+    settings.STORAGES = {
+        **settings.STORAGES,
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
     user.is_staff = True
     user.save(update_fields=["is_staff"])
     client.force_login(user)

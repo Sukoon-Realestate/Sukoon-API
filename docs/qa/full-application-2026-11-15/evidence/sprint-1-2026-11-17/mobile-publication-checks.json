@@ -1,0 +1,58 @@
+{
+  "repository": "https://github.com/ahmedemara231/sokoun",
+  "main_commit": "93d761c8c14500728bbde7a0566ed666de3c6189",
+  "pending_batch_files": 1346,
+  "analyzer": {
+    "errors": 0,
+    "warnings": 1,
+    "informational": 14
+  },
+  "latest_affected_journeys": {
+    "passed": 130
+  },
+  "additional_shared_regressions": {
+    "passed": 131,
+    "failed": 34,
+    "failure_names": [
+      "app bar owns title, back and actions: TextDirection.rtl 1.0",
+      "app bar owns title, back and actions: TextDirection.rtl 2.0",
+      "app bar owns title, back and actions: TextDirection.ltr 1.0",
+      "app bar owns title, back and actions: TextDirection.ltr 2.0",
+      "busy flows disable the app bar back action",
+      "individual dashboard picker cancels without losing the body",
+      "owner dashboard picker cancels without losing the body",
+      "student dashboard picker cancels without losing the body",
+      "dashboard company active=false ar dark=false 390.0 text=1.0",
+      "dashboard company active=false ar dark=true 390.0 text=1.0",
+      "dashboard company active=false en dark=false 390.0 text=1.0",
+      "dashboard company active=false en dark=true 390.0 text=1.0",
+      "dashboard company active=true ar dark=false 320.0 text=2.0",
+      "dashboard company active=true ar dark=false 390.0 text=1.0",
+      "dashboard company active=true ar dark=false 430.0 text=1.3",
+      "dashboard company active=true ar dark=false 768.0 text=2.0",
+      "dashboard company active=true ar dark=false 1366.0 text=1.0",
+      "dashboard company active=true ar dark=true 320.0 text=2.0",
+      "dashboard company active=true ar dark=true 390.0 text=1.0",
+      "dashboard company active=true ar dark=true 430.0 text=1.3",
+      "dashboard company active=true ar dark=true 768.0 text=2.0",
+      "dashboard company active=true ar dark=true 1366.0 text=1.0",
+      "dashboard company active=true en dark=false 320.0 text=2.0",
+      "dashboard company active=true en dark=false 390.0 text=1.0",
+      "dashboard company active=true en dark=false 430.0 text=1.3",
+      "dashboard company active=true en dark=false 768.0 text=2.0",
+      "dashboard company active=true en dark=false 1366.0 text=1.0",
+      "dashboard company active=true en dark=true 320.0 text=2.0",
+      "dashboard company active=true en dark=true 390.0 text=1.0",
+      "dashboard company active=true en dark=true 430.0 text=1.3",
+      "dashboard company active=true en dark=true 768.0 text=2.0",
+      "dashboard company active=true en dark=true 1366.0 text=1.0",
+      "company dashboard picker cancels without losing the body",
+      "owner workspace controls remain available while dashboard read loads and fails"
+    ]
+  },
+  "limitations": [
+    "Existing full-mobile baseline remains red.",
+    "These results do not certify Sprint 1 completion, a release or physical-device behavior.",
+    "Publication preserves the full user-requested local code batch; no valid assertion was disabled."
+  ]
+}

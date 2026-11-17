@@ -2,11 +2,25 @@
 
 Registry scanner results on 2026-11-15. Affected version detection does not prove exploitability. Confirm deployed versions, reachable features and advisory prerequisites before assigning application risk. No exploit payloads were sent to the hosted app.
 
+## 17 November npm follow-up
+
+Both JavaScript trees now audit with **zero known vulnerabilities of every severity**. Fresh pre-change audits reproduced seven moderate findings each. A compatible TypeScript ESLint 8.73.0 update declares patched minimatch `^11.0.1`; the lockfiles resolve 11.0.9 without a forced major override. Application manifests and Next.js 16.4.6 remain unchanged. Sixty-two admin tests, three merged build-configuration tests, both webpack builds and scoped lint pass. Full admin lint has no newly introduced findings; its existing baseline remains later-sprint work. [Exact lock deltas](evidence/sprint-1-2026-11-17/followup/toolchain-delta.json), [admin audit](evidence/sprint-1-2026-11-17/followup/admin-audit-after.json), [merged audit](evidence/sprint-1-2026-11-17/followup/landing-audit-after.json). Deployed versions have not changed or been certified.
+
+The 16 November paragraph below is the historical intermediate result, superseded by this follow-up.
+
 ## 16 November local remediation
 
 Both manifests and lockfiles now use Next.js and eslint-config-next 16.4.6. Compatible transitive patches also update sharp, source-map-js and zod. Fresh full-tree audits report **0 critical, 0 high, 7 moderate** per tree. Remaining findings are minimatch 10.2.6 and the six dependent TypeScript ESLint packages in the development toolchain. They remain tracked; no unsafe forced minimatch major override was applied. Both production webpack builds and the admin/merged regression suites passed. Default Turbopack verification hit a local worker port-binding restriction. See [Sprint 1](SPRINT-1.md) and [retained audit deltas](evidence/sprint-1-2026-11-16/).
 
-Python lockfile versions remain unchanged: SEC-002 is open. The original 124 advisory entries include black (4) and pytest (2), which are test/development tools even though they share the default lock section. Django (81), DRF (7), Djoser (2), OAuthlib (1), social-auth-app-django (2) and social-auth-core (7) require coordinated authentication/framework compatibility work. certifi (2), pyasn1 (4), pypdf (7), python-dotenv (2) and setuptools (3) require reachability/build-runtime review as well. These are advisory entries, not unique demonstrated exploits. Deployed versions were not established and no Python upgrade or exposure sign-off is claimed.
+## 17 November Python remediation
+
+A fresh pinned-package audit reproduced **124 advisory entries across 13 packages** before changes. The locally resolved lockfile now reports **zero known advisories**. The shared Python environment and deployment were not upgraded. This is advisory remediation, not proof against unknown vulnerabilities or production release acceptance.
+
+Python remains 3.11. Runtime pins now include Django 5.2.17, DRF 3.18.2, Djoser 2.3.5, social-auth-app-django 7.1.0, social-auth-core 6.2.0, OAuthlib 4.0.1, certifi 2026.10.23, pyasn1 0.6.5, pypdf 6.21.4, python-dotenv 1.2.2 and setuptools 84.1.0. Tooling uses black 26.10.1 and pytest 9.0.3 with pytest-asyncio 1.3.0. The resolver retained unrelated direct pins; [dependency deltas](evidence/sprint-1-2026-11-17/dependency-delta.json) enumerate necessary transitive changes.
+
+The patched DRF requires Django 5.2; patched social-auth core requires an adapter major supported by Djoser 2.3.5. Metadata was checked directly from PyPI, including [DRF](https://pypi.org/project/djangorestframework/3.18.2/), [Djoser](https://pypi.org/project/djoser/2.3.5/) and [the adapter](https://pypi.org/project/social-auth-app-django/7.1.0/). A disposable lockfile installation passes `pip check`. Compatibility work preserves WhiteNoise storage and inherited OAuth errors; see [Sprint 1](SPRINT-1.md) for regression outcomes and limitations. The adapter adds upstream migrations 0017–0020; synthetic existing Google/Apple/Facebook association IDs, users, UIDs and JSON survived a 0016→0020 upgrade, with expected `id_key` backfills. Actual release data must still be checked for invalid/empty UIDs before applying the new constraint.
+
+[Before audit](evidence/sprint-1-2026-11-17/audit-before.json), [after audit](evidence/sprint-1-2026-11-17/audit-after.json), [synthetic migration drill](evidence/sprint-1-2026-11-17/social-upgrade.log).
 
 The following tables preserve the original vulnerable-version ledger.
 

@@ -1,0 +1,2215 @@
+00:00 +0: loading /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart
+00:00 +0: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +0: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: maps received visit data from nested API fields
+00:00 +1: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +1: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: owner request pages use server pagination and serialize cached metadata
+00:00 +1: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +1: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: owner request pages use server pagination and serialize cached metadata
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:00 +2: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: chat send keeps the keyboard open and outside taps dismiss it
+00:00 +2: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: status filtering is delegated to the API and keeps global tab counts
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:00 +3: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: chat send keeps the keyboard open and outside taps dismiss it
+00:00 +3: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: canceled filter sends one request and retains global counts
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: chat send keeps the keyboard open and outside taps dismiss it
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: (setUpAll)
+[90m[🌎 Easy Localization] [DEBUG] Localization initialized[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: chat send keeps the keyboard open and outside taps dismiss it
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: missing draft image remains replaceable without image stream errors
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: missing draft image remains replaceable without image stream errors
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: chat send keeps the keyboard open and outside taps dismiss it
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: requests a visit with notes only:
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: requests a visit with notes only:
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: missing draft image remains replaceable without image stream errors
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: chat send keeps the keyboard open and outside taps dismiss it
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: requests a visit with notes only:
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: requests a visit with notes only:
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_arrange_in_chat] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ux_disclosure_details] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ux_viewing_extra_help] not found[0m
+00:00 +4: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: chat send keeps the keyboard open and outside taps dismiss it
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: requests a visit with notes only:
+[34m[🌎 Easy Localization] [WARNING] Localization key [free_visit_request_sent] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [free_visit_pending_explanation] not found[0m
+00:00 +5: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:00 +6: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+00:00 +6: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: reports one error in field order and scrolls after each correction
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +6: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+
+Warning: A call to drag() with finder "Found 1 widget with type "OwnerVisitRequestSummaryGrid": [
+  OwnerVisitRequestSummaryGrid(dependencies: [InheritedCupertinoTheme, _InheritedTheme, _LocalizationsScope-[GlobalKey#6603f]]),
+]" derived an Offset (Offset(195.0, 352.9)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+The finder corresponds to this RenderBox: RenderFlex#78434 relayoutBoundary=up7
+The hit test result at that offset is: HitTestResult(RenderDecoratedBox#4137f@Offset(195.0, 49.5), RenderSliverToBoxAdapter@(mainAxis: 49.50000000000003, crossAxis: 195.0), RenderSliverMainAxisGroup@(mainAxis: 49.50000000000003, crossAxis: 195.0), RenderSliverPadding@(mainAxis: 49.50000000000003, crossAxis: 195.0), RenderViewport#d1be0@Offset(195.0, 49.5), RenderIgnorePointer#f1e03@Offset(195.0, 49.5), RenderSemanticsAnnotations#72f94@Offset(195.0, 49.5), RenderPointerListener#5f6bb@Offset(195.0, 49.5), RenderSemanticsGestureHandler#3733d@Offset(195.0, 49.5), RenderPointerListener#25e1e@Offset(195.0, 49.5), _RenderScrollSemantics#0c81b@Offset(195.0, 49.5), RenderClipRect#0f157@Offset(195.0, 49.5), _RenderLayoutBuilder#74290@Offset(195.0, 49.5), RenderStack#513d2@Offset(195.0, 49.5), RenderStack#69338@Offset(195.0, 49.5), RenderFlex#1494a@Offset(195.0, 145.5), RenderConstrainedBox#af5e3@Offset(195.0, 145.5), RenderConstrainedBox#2814b@Offset(195.0, 145.5), RenderPositionedBox#7797e@Offset(195.0, 145.5), _RenderShimmerViewport#64e02@Offset(195.0, 145.5), RenderDecoratedBox#24223@Offset(195.0, 145.5), RenderSliverFillRemainingWithScrollable@(mainAxis: 145.50000000000003, crossAxis: 195.0), RenderNestedScrollViewViewport#268ab@Offset(195.0, 352.9), RenderIgnorePointer#a577d@Offset(195.0, 352.9), RenderSemanticsAnnotations#4304c@Offset(195.0, 352.9), RenderPointerListener#4ece1@Offset(195.0, 352.9), RenderSemanticsGestureHandler#b2d47@Offset(195.0, 352.9), RenderPointerListener#15213@Offset(195.0, 352.9), _RenderScrollSemantics#23d75@Offset(195.0, 352.9), RenderClipRect#8e67c@Offset(195.0, 352.9), RenderPadding#c9fdd@Offset(195.0, 352.9), RenderCustomMultiChildLayoutBox#33e61@Offset(195.0, 352.9), _RenderInkFeatures#226ba@Offset(195.0, 352.9), RenderPhysicalModel#e306a@Offset(195.0, 352.9), _RenderLayoutBuilder#68862@Offset(195.0, 352.9), RenderRepaintBoundary#57334@Offset(195.0, 352.9), RenderSemanticsAnnotations#f0a73@Offset(195.0, 352.9), RenderRepaintBoundary#cbfd7@Offset(195.0, 352.9), RenderIgnorePointer#4647c@Offset(195.0, 352.9), RenderAnimatedOpacity#cd0ef@Offset(195.0, 352.9), RenderAnimatedOpacity#47fa8@Offset(195.0, 352.9), _RenderColoredBox#b0e79@Offset(195.0, 352.9), RenderAnimatedOpacity#a2be1@Offset(195.0, 352.9), RenderIgnorePointer#9862c@Offset(195.0, 352.9), RenderAnimatedOpacity#687cf@Offset(195.0, 352.9), RenderRepaintBoundary#aace4@Offset(195.0, 352.9), RenderSemanticsAnnotations#79b42@Offset(195.0, 352.9), RenderOffstage#476c3@Offset(195.0, 352.9), RenderSemanticsAnnotations#8bce4@Offset(195.0, 352.9), _RenderTheater#935f6@Offset(195.0, 352.9), RenderAbsorbPointer#e3097@Offset(195.0, 352.9), RenderPointerListener#4e118@Offset(195.0, 352.9), RenderSemanticsAnnotations#26a05@Offset(195.0, 352.9), RenderCustomPaint#a696f@Offset(195.0, 352.9), RenderSemanticsAnnotations#a02f7@Offset(195.0, 352.9), RenderSemanticsAnnotations#4eab7@Offset(195.0, 352.9), RenderSemanticsAnnotations#921a8@Offset(195.0, 352.9), RenderTapRegionSurface#664a0@Offset(195.0, 352.9), RenderSemanticsAnnotations#2c9db@Offset(195.0, 352.9), RenderSemanticsAnnotations#b7467@Offset(195.0, 352.9), HitTestEntry<HitTestTarget>#c2ec3(_ReusableRenderView#32907), HitTestEntry<HitTestTarget>#d5f8c(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.drag (package:flutter_test/src/controller.dart:1604:7)
+#3      main.<anonymous closure> (file:///Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart:463:20)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "drag()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+00:00 +7: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:00 +7: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: requests a visit with notes only: Please contact me to arrange the visit
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_arrange_in_chat] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ux_disclosure_details] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ux_viewing_extra_help] not found[0m
+00:00 +7: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:00 +8: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+00:00 +8: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: selection validation blocks submission without a native FormField
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:00 +8: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+00:00 +8: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: selection validation blocks submission without a native FormField
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:00 +8: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:00 +8: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: requests a visit with notes only: Please contact me to arrange the visit
+[34m[🌎 Easy Localization] [WARNING] Localization key [free_visit_request_sent] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [free_visit_pending_explanation] not found[0m
+00:01 +8: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +9: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+00:01 +9: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: awaits submission and blocks duplicate button and keyboard calls
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+00:01 +9: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +9: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: awaits submission and blocks duplicate button and keyboard calls
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +10: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+00:01 +10: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: awaits submission and blocks duplicate button and keyboard calls
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +10: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +10: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +10: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +10: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +10: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+00:01 +11: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: summary, filters and cards scroll together and load the next page
+00:01 +11: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: failed submissions can retry and pending submissions can unmount
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +12: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+00:01 +12: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: failed submissions can retry and pending submissions can unmount
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +12: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:01 +12: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: empty and error states retain the header and refresh from it
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: empty and error states retain the header and refresh from it
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: login reports email before password and never submits invalid input
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: empty and error states retain the header and refresh from it
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: login reports email before password and never submits invalid input
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: empty and error states retain the header and refresh from it
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [operation_faild] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: empty and error states retain the header and refresh from it
+[34m[🌎 Easy Localization] [WARNING] Localization key [owner_retry_action] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: empty and error states retain the header and refresh from it
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_loading] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: empty and error states retain the header and refresh from it
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [owner_visits_empty_description] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [tools_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [guide_explain_screen] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_delay_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +13: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: empty and error states retain the header and refresh from it
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+
+Warning: A call to drag() with finder "Found 1 widget with type "OwnerVisitRequestSummaryGrid": [
+  OwnerVisitRequestSummaryGrid(dependencies: [InheritedCupertinoTheme, _InheritedTheme, _LocalizationsScope-[GlobalKey#3e849], _ScrollableScope]),
+]" derived an Offset (Offset(195.0, 145.5)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+The finder corresponds to this RenderBox: RenderFlex#7b4d6 relayoutBoundary=up7
+The hit test result at that offset is: HitTestResult(RenderDecoratedBox#a024f@Offset(195.0, 49.5), RenderSliverToBoxAdapter@(mainAxis: 49.5, crossAxis: 195.0), RenderSliverMainAxisGroup@(mainAxis: 49.5, crossAxis: 195.0), RenderSliverPadding@(mainAxis: 49.5, crossAxis: 195.0), RenderViewport#49bfb@Offset(195.0, 49.5), RenderIgnorePointer#65de3@Offset(195.0, 49.5), RenderSemanticsAnnotations#ac0e6@Offset(195.0, 49.5), RenderPointerListener#a279f@Offset(195.0, 49.5), RenderSemanticsGestureHandler#e271d@Offset(195.0, 49.5), RenderPointerListener#bbda7@Offset(195.0, 49.5), _RenderScrollSemantics#9bb77@Offset(195.0, 49.5), RenderClipRect#6a1e4@Offset(195.0, 49.5), _RenderLayoutBuilder#22fde@Offset(195.0, 49.5), RenderStack#ab7d1@Offset(195.0, 49.5), RenderStack#49de8@Offset(195.0, 49.5), RenderFlex#8b357@Offset(195.0, 145.5), RenderConstrainedBox#0e67c@Offset(195.0, 145.5), RenderConstrainedBox#f9842@Offset(195.0, 145.5), RenderPositionedBox#7eb40@Offset(195.0, 145.5), _RenderShimmerViewport#b0ba0@Offset(195.0, 145.5), RenderDecoratedBox#c61e0@Offset(195.0, 145.5), RenderSliverFillRemainingWithScrollable@(mainAxis: 145.49999999999997, crossAxis: 195.0), RenderNestedScrollViewViewport#d8238@Offset(195.0, 145.5), RenderIgnorePointer#5599a@Offset(195.0, 145.5), RenderSemanticsAnnotations#38ced@Offset(195.0, 145.5), RenderPointerListener#062d0@Offset(195.0, 145.5), RenderSemanticsGestureHandler#dc46b@Offset(195.0, 145.5), RenderPointerListener#0f724@Offset(195.0, 145.5), _RenderScrollSemantics#0d5f6@Offset(195.0, 145.5), RenderClipRect#d658d@Offset(195.0, 145.5), RenderPadding#6c2c8@Offset(195.0, 145.5), RenderCustomMultiChildLayoutBox#6c346@Offset(195.0, 145.5), _RenderInkFeatures#894d7@Offset(195.0, 145.5), RenderPhysicalModel#69ce1@Offset(195.0, 145.5), _RenderLayoutBuilder#16589@Offset(195.0, 145.5), RenderRepaintBoundary#f0f79@Offset(195.0, 145.5), RenderSemanticsAnnotations#c0074@Offset(195.0, 145.5), RenderRepaintBoundary#42682@Offset(195.0, 145.5), RenderIgnorePointer#0bfbb@Offset(195.0, 145.5), RenderAnimatedOpacity#ac848@Offset(195.0, 145.5), RenderAnimatedOpacity#6cfd1@Offset(195.0, 145.5), _RenderColoredBox#eca1e@Offset(195.0, 145.5), RenderAnimatedOpacity#30b14@Offset(195.0, 145.5), RenderIgnorePointer#3d9a5@Offset(195.0, 145.5), RenderAnimatedOpacity#31e4c@Offset(195.0, 145.5), RenderRepaintBoundary#9510b@Offset(195.0, 145.5), RenderSemanticsAnnotations#db247@Offset(195.0, 145.5), RenderOffstage#14995@Offset(195.0, 145.5), RenderSemanticsAnnotations#db304@Offset(195.0, 145.5), _RenderTheater#e21e8@Offset(195.0, 145.5), RenderAbsorbPointer#e4375@Offset(195.0, 145.5), RenderPointerListener#e95ce@Offset(195.0, 145.5), RenderSemanticsAnnotations#69ef4@Offset(195.0, 145.5), RenderCustomPaint#c0521@Offset(195.0, 145.5), RenderSemanticsAnnotations#22ab6@Offset(195.0, 145.5), RenderSemanticsAnnotations#e9741@Offset(195.0, 145.5), RenderSemanticsAnnotations#f3575@Offset(195.0, 145.5), RenderTapRegionSurface#a6d54@Offset(195.0, 145.5), RenderSemanticsAnnotations#3ebd1@Offset(195.0, 145.5), RenderSemanticsAnnotations#d47ab@Offset(195.0, 145.5), HitTestEntry<HitTestTarget>#13b2c(_ReusableRenderView#32907), HitTestEntry<HitTestTarget>#f8bd5(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.drag (package:flutter_test/src/controller.dart:1604:7)
+#3      main.<anonymous closure> (file:///Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart:518:20)
+<asynchronous suspension>
+#4      testWidgetsWithToasts.<anonymous closure> (file:///Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/helpers/toast_test_widgets.dart:17:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "drag()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +14: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+00:01 +14: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:01 +15: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+00:01 +15: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: OTP reports incomplete codes instead of silently ignoring confirm
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +15: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +15: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: OTP reports incomplete codes instead of silently ignoring confirm
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +15: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +15: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [professional_saving] not found[0m
+00:01 +15: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +16: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+00:01 +16: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=320.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +16: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [professional_saving] not found[0m
+00:01 +16: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=320.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +16: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [professional_saving] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [professional_saving] not found[0m
+00:01 +17: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+00:01 +17: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: password change reports its first invalid field before the next
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +17: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [success_done] not found[0m
+00:01 +18: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after retirement without losing the draft
+00:01 +18: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +19: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: runs visits list detail and rating frames
+00:01 +19: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+00:01 +19: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +19: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:01 +19: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +19: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:01 +20: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: password change reports its first invalid field before the next
+00:01 +20: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+00:01 +20: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +20: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +20: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:01 +20: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +21: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: password change reports its first invalid field before the next
+00:01 +21: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=320.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +21: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:01 +22: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+00:01 +22: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: support ticket reports its first invalid field before the next
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +22: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_cancellation_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_cancellation_description] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_keep_booking] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_confirm_cancellation] not found[0m
+00:01 +23: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+00:01 +23: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:01 +23: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_keep_booking] not found[0m
+00:01 +23: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+00:01 +23: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_cancellation_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_cancellation_description] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_keep_booking] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_confirm_cancellation] not found[0m
+00:01 +23: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=320.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +24: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+00:01 +24: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [visit_confirm_cancellation] not found[0m
+00:01 +24: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=320.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +24: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [success_done] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:01 +24: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=320.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +24: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:01 +25: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+00:01 +25: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +26: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+00:01 +26: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: password reset keyboard submit shares validation and duplicate guard
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+00:01 +26: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +26: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: password reset keyboard submit shares validation and duplicate guard
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:01 +26: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:01 +26: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: password reset keyboard submit shares validation and duplicate guard
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:01 +26: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: filters and cancels a pending visit request
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:02 +27: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+00:02 +27: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +28: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+00:02 +28: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=390.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:02 +28: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+00:02 +28: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=390.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +28: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +29: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: new type selection is blocked after failed refresh without losing the draft
+00:02 +29: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/first_validation_error_form_test.dart: booking submits optional notes without time validation
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +29: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +30: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+00:02 +30: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: editing keeps an inactive historical type and its server label
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:02 +30: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +31: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+00:02 +31: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: editing keeps an inactive historical type and its server label
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [tenant_search_title] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [tenant_search_field_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [search] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [filter] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [filter] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [use_my_location] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [tenant_filter_property_type] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [search_retry] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_accommodation_categories] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_category_all] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+[34m[🌎 Easy Localization] [WARNING] Localization key [tenant_search_property_types_empty_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [tenant_search_property_types_empty_description] not found[0m
+00:02 +32: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +33: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the API empty state and opens property search
+00:02 +33: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=390.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +34: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: editing keeps an inactive historical type and its server label
+00:02 +34: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits survive disconnected refresh and reopening
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +35: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: editing keeps an inactive historical type and its server label
+00:02 +35: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+00:02 +35: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits survive disconnected refresh and reopening
+[34m[🌎 Easy Localization] [WARNING] Localization key [operation_faild] not found[0m
+00:02 +35: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +36: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits survive disconnected refresh and reopening
+00:02 +36: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=390.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +37: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits survive disconnected refresh and reopening
+00:02 +37: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:02 +37: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=390.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +37: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits survive disconnected refresh and reopening
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +37: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +37: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits survive disconnected refresh and reopening
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [professional_saved_data] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [operation_faild] not found[0m
+00:02 +38: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits survive disconnected refresh and reopening
+00:02 +38: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +39: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +39: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits filter restores its cached empty result
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +40: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +40: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits filter restores its cached empty result
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+00:02 +40: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=600.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:02 +40: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits filter restores its cached empty result
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:02 +40: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=600.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +40: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits filter restores its cached empty result
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +41: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +41: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+00:02 +41: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits filter restores its cached empty result
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:02 +41: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:02 +41: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits filter restores its cached empty result
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +41: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+00:02 +41: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits filter restores its cached empty result
+[34m[🌎 Easy Localization] [WARNING] Localization key [operation_faild] not found[0m
+00:02 +41: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +42: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +42: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=600.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:02 +43: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +43: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=600.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +43: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits restore offline after losing the session cache
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits restore offline after losing the session cache
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits restore offline after losing the session cache
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits restore offline after losing the session cache
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits restore offline after losing the session cache
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: empty visits restore offline after losing the session cache
+[34m[🌎 Easy Localization] [WARNING] Localization key [operation_faild] not found[0m
+00:02 +44: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=600.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +45: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +45: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=600.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +46: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +46: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits without any saved response show an exception
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits without any saved response show an exception
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits without any saved response show an exception
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits without any saved response show an exception
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits without any saved response show an exception
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits without any saved response show an exception
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [operation_faild] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: offline visits without any saved response show an exception
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +47: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +48: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +48: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=768.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +49: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +49: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders the pending T-VISIT-04 state
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [tools_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [guide_explain_screen] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +50: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +50: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders unknown or rejected visits as a fail state
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders unknown or rejected visits as a fail state
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders unknown or rejected visits as a fail state
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders unknown or rejected visits as a fail state
+[34m[🌎 Easy Localization] [WARNING] Localization key [tools_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [guide_explain_screen] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: renders unknown or rejected visits as a fail state
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +51: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:02 +52: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +52: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:02 +52: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: ignores a legacy scheduled visit banner on the home page
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:02 +52: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+00:02 +52: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: ignores a legacy scheduled visit banner on the home page
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_home_headline] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [journey_saved_searches] not found[0m
+00:02 +52: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=1.3
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:02 +53: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:02 +53: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=768.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:03 +53: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: ignores a legacy scheduled visit banner on the home page
+[34m[🌎 Easy Localization] [WARNING] Localization key [notifications_flow_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [workspace_individuals] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [workspace_owner] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_home_search_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_home_search_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+00:03 +54: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +54: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+00:03 +54: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: ignores a legacy scheduled visit banner on the home page
+[34m[🌎 Easy Localization] [WARNING] Localization key [tenant_search_all] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [search_retry] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:03 +54: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:03 +54: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: ignores a legacy scheduled visit banner on the home page
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:03 +54: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+00:03 +54: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/tenant_visits_flow_test.dart: ignores a legacy scheduled visit banner on the home page
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [exception_error] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [tenant_search_property_types_empty_title] not found[0m
+00:03 +54: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:03 +55: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +55: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+00:03 +55: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +55: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=768.0 text=2.0
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:03 +56: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +56: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=768.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:03 +57: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +57: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=1024.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:03 +58: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +58: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=1024.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:03 +59: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +59: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=1024.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:03 +60: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +60: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=1024.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:03 +61: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +61: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=1024.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:03 +62: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +62: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=1024.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:03 +63: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +63: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=1366.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:03 +64: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +64: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=1366.0 text=1.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:03 +65: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +65: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=1366.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:03 +66: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +66: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=1366.0 text=1.3
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:03 +67: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +67: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests ar width=1366.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:03 +68: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +68: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: paginated requests en width=1366.0 text=2.0
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded en[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:03 +69: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +70: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +71: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +72: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +72: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: renders the O-REQ-ICON-B request card states
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:03 +73: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +73: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: list acceptance displays current server state: confirmed
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_viewing_only] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_delay_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:03 +74: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +74: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: list acceptance displays current server state: canceled
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_viewing_only] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+00:03 +75: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:03 +75: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: received-list entry reads authoritative owner decision controls
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_viewing_only] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:04 +76: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:04 +76: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: dashboard request card opens API-backed request details
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_viewing_only] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+00:04 +77: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:04 +77: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: opens chat when the request API allows chat
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_viewing_only] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_delay_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_conversations_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_conversations_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_conversation_opening] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [loading_making_room] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [loading_hang_tight] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_manage_conversation] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_report_problem_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_message_actions] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_starred_messages] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_search_messages] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_library] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_conversations_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_conversation_opening] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [loading_making_room] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [loading_hang_tight] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [group_chat_load_failed] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [group_chat_retry] not found[0m
+00:04 +78: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:04 +78: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: opens O-REQ-02 and completes the O-ACCEPT flow
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_viewing_only] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_viewing_only] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_delay_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+00:04 +79: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:04 +79: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_visit_requests_flow_test.dart: opens O-REQ-02 and completes the O-REJECT flow
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ui_requests_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [content_loading] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [pull_refresh_hint] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [check_internet] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [rental_viewing_only] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [arrival_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [viewing_times_title] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [ex_calendar] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [chat_safe_inside] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [owner_reject_confirmation] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [owner_reject_timing_reason] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_visit_agenda] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [cancelled] not found[0m
+[34m[🌎 Easy Localization] [WARNING] Localization key [personal_reset_view] not found[0m
+00:04 +80: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker addition retains the form after permission denial and cancellation
+00:05 +81: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker replacement retains the form after permission denial and cancellation
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:08 +82: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photo picker admits one pending selection and unlocks after cancellation
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:11 +83: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: camera denial explains permission and permits retry
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:11 +84: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: editing RentalScope.entireProperty opens its actual accommodation form
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:11 +85: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: editing RentalScope.room opens its actual accommodation form
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:11 +86: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: editing RentalScope.roomGroup opens its actual accommodation form
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:11 +87: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: editing RentalScope.bed opens its actual accommodation form
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:11 +88: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: scope selection immediately replaces the visible form and keeps compatible context
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:12 +89: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: Next shows required field errors and keeps the property draft
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:12 +90: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: uploads the cover once, uploads remaining photos concurrently, and retries only failures
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:33 +91: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: creation-mode handoff retains selected location and permits next step
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:33 +92: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: empty single-unit validation returns through mode selection to inventory, reducedMotion=false
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:34 +93: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: empty single-unit validation returns through mode selection to inventory, reducedMotion=true
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:34 +94: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: validation Back timing matrix, reducedMotion=false, systemBack=false
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:35 +95: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: validation Back timing matrix, reducedMotion=false, systemBack=true
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:35 +96: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: validation Back timing matrix, reducedMotion=true, systemBack=false
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:36 +97: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: validation Back timing matrix, reducedMotion=true, systemBack=true
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:36 +98: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: view properties after submission leaves without a stale draft or another create
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+00:54 +99: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: system back after submission leaves without a stale draft or another create
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+01:11 +100: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: failed property creation does not start image uploads
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+01:19 +101: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: the form is editable after Offline
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+01:26 +102: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: the form is editable after Request timed out
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+01:34 +103: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: the form is editable after Server unavailable
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+01:42 +104: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: reconciling a timed out create preserves later edits and uses the original request key
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:03 +105: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: a saved unknown request with a private document can leave and resume without a save failure
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:03 +106: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: copied photos cannot pass review and retain the entered form
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:09 +107: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: saving an offer draft persists locally without publication
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:16 +108: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: visible upload button creates a listing with video in the same request
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:33 +109: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: visible record button creates a listing with video in the same request
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:49 +110: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: photos and a video are both required before continuing to pricing
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:52 +111: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: maps the owned-properties response
+02:52 +112: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: maps governorate and city lookup responses
+02:52 +113: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: builds a real multipart create-property payload
+02:52 +114: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: accepts blank optional metadata for every newly selected photo
+02:52 +115: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: edit retains image IDs, clears captions, and preserves all returned terms and amenities
+02:52 +116: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: goes from photos to documented pricing fields
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:52 +117: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: review edit returns to basics and retains the full draft
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:53 +118: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: offers analytics, deletion, and editing for owned properties
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:54 +119: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: runs O-REJECT-01 edit and resubmit flow
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:55 +120: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: existing media captions, cover, location, and rental terms remain editable
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:56 +121: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: delete confirmation supports cancel, failure, and a successful retry
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:56 +122: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: connects add property from O-PROPS-01b
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:56 +123: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: toolbar back during a property step transition does not pop the editor route
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:57 +124: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: system back during a property step transition does not pop the editor route
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:57 +125: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: toolbar back autosaves and discards the draft on return
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:58 +126: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: toolbar back autosaves and resumes the draft on return
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:58 +127: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: system back autosaves and discards the draft on return
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+02:59 +128: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: system back autosaves and resumes the draft on return
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+03:00 +129: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: back saves under the authenticated account when cached identity is stale
+[90m[🌎 Easy Localization] [DEBUG] Start[0m
+[90m[🌎 Easy Localization] [DEBUG] Init state[0m
+[32m[🌎 Easy Localization] [INFO] Start locale loaded ar[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+[90m[🌎 Easy Localization] [DEBUG] Load Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Build[0m
+[90m[🌎 Easy Localization] [DEBUG] Init Localization Delegate[0m
+[90m[🌎 Easy Localization] [DEBUG] Init provider[0m
+03:00 +130: /Users/demo23home/code/sukoon/sokoun/apps/sokoun_app/test/owner_properties_flow_test.dart: (tearDownAll)
+03:00 +130: All tests passed!

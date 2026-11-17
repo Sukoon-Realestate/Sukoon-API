@@ -150,12 +150,14 @@ class CustomProviderAuthView(ProviderAuthView):
 
     def post(self, request: Request, *args, **kwargs) -> Response:
         from rest_framework.exceptions import NotFound
-        from social_core.exceptions import MissingBackend
+        from social_core.exceptions import AuthConfigurationError
 
         try:
             provider_res = super().post(request, *args, **kwargs)
-        except MissingBackend:
-            raise NotFound("Unknown authentication provider.")
+        except AuthConfigurationError as error:
+            if error.code != "backend_missing":
+                raise
+            raise NotFound("Unknown authentication provider.") from error
 
         if provider_res.status_code == status.HTTP_201_CREATED:
             access_token = provider_res.data.get("access")
