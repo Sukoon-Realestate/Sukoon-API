@@ -2,6 +2,10 @@
 
 **Release blockers were found. This pass does not certify the app as production-ready or establish that every button/cycle is covered.** The work includes the Flutter mobile app, hosted API, public frontend and Next.js admin portal. Product fixes were left for a later sprint in the original pass; local remediation began on 16 November.
 
+## Sprint 3 started — 17 November 2026
+
+The current reconciliation verifies **475 of 497 historical failure records; 22 remain open**. Product fixes address consent snapshot changes, disabled calendar selection, company large-text layout and unscoped discovery entries. Banner stalls and audit-harness lifecycle faults are reproduced and repaired. The complete shared-core suite passes 345 cases; focused app batches pass, but complete final-tree app gates and native acceptance remain open. See [Sprint 3 evidence and remaining work](SPRINT-3.md).
+
 ## Sprint 2 started — 17 November 2026
 
 Local Sprint 2 implementation now includes audit failure/retry/stale responses, current-page CSV, read-only permissions copy and admin framing protection. **88 admin tests, 38 merged tests, both production builds, and 12 Chrome scenario executions pass.** Admin lint passes with zero errors/six image warnings. Browser APIs were intercepted with synthetic data; live-backend and hosted acceptance remain open. See [Sprint 2 evidence and limits](SPRINT-2.md).
