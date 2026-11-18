@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "transport": "loopback_http",
+  "release_mode": "restoration",
+  "database": "pytest_disposable",
+  "security_test_bypass": false,
+  "result": "passed",
+  "scenario": "cookie_account_isolation_and_revocation",
+  "source_sha256": {
+    "tools/qa/connected_http.py": "f77f62f264aa3c61cea875e1daeb3472d0ab0a2487be8222f816224e0b6700d4",
+    "core_apps/common/test_connected_acceptance.py": "117a8e3aa100fe36f5e76731727faee94c25f373c2e72f558ce314af71f07662",
+    "core_apps/users/urls.py": "d59cdf1f916650d07333bef985ec21351c5b4c305e99a21a22a8e21d0d26414b",
+    "core_apps/profiles/urls.py": "3672e3d600cb29073ecac2e70e5f1810804f2d7a24628a88623fca07a9e2e7a3",
+    "core_apps/users/views_parts/set_auth_cookies.py": "15ca0bea7fcdbe4cdd36b665e9fcfa249075bfaece3caa1ed0f561f5b7c64754",
+    "core_apps/common/cookie_auth.py": "c262b95c963b3feb1632ae1fca307e317fc1d8afadbe84eaa5a1a920d9284666"
+  },
+  "assertions": [
+    "authenticated_identity",
+    "cross_origin_write_rejected_without_mutation",
+    "settings_persisted_and_actor_isolated",
+    "logout_clears_cookies",
+    "revoked_access_replay_rejected",
+    "other_actor_session_survives"
+  ],
+  "observations": [
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/my-account/",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/my-account/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/settings/",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/profiles/settings/",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/settings/",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/profiles/settings/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/settings/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/my-account/",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/my-account/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/settings/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/settings/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/my-account/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/my-account/",
+      "status": 401
+    }
+  ]
+}

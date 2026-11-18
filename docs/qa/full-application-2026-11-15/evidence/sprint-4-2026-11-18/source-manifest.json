@@ -1,0 +1,6 @@
+{
+  "api/backend/tools/qa/connected_http.py": "f77f62f264aa3c61cea875e1daeb3472d0ab0a2487be8222f816224e0b6700d4",
+  "api/backend/core_apps/common/test_connected_acceptance.py": "117a8e3aa100fe36f5e76731727faee94c25f373c2e72f558ce314af71f07662",
+  "mobile/apps/sokoun_app/tool/qa/reconcile_connected_acceptance.py": "4eebe4f4bdc6a18acea365d02df2bafa4c79c5c365d2d35e3621cd5b376f7ead",
+  "mobile/apps/sokoun_app/tool/qa/test_reconcile_connected_acceptance.py": "832bc57620791382de99a5f5e1b292a03de6b7e26a8309af4eaac5c5711a16f0"
+}
