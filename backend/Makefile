@@ -52,6 +52,21 @@ test:
 test-cov:
 	$(PIPENV) run pytest --cov=core_apps --cov-report=term-missing
 
+.PHONY: test-connected-acceptance
+test-connected-acceptance: ## Real loopback HTTP, disposable pytest database, no external providers
+	CONNECTED_ACCEPTANCE_OUT=$(abspath $(BASELINE_OUT)/connected-acceptance) $(CYCLE_PYTHON) -m pytest \
+		core_apps/common/test_connected_acceptance.py tools/qa/test_connected_workspace.py --ds=config.settings.test
+
+.PHONY: connected-acceptance-workspace
+connected-acceptance-workspace: ## Start a NEW disposable PostgreSQL/API workspace; Ctrl-C stops its processes
+	@test -n "$(CONNECTED_QA_ROOT)" || (echo "Set CONNECTED_QA_ROOT to a fresh /private/tmp/sukoon-sprint4-connected-* path" && exit 2)
+	$(CYCLE_PYTHON) tools/qa/run_connected_workspace.py --root "$(CONNECTED_QA_ROOT)"
+
+.PHONY: test-connected-company-acceptance
+test-connected-company-acceptance: ## Real company HTTP authority; pytest owns a disposable database
+	CONNECTED_ACCEPTANCE_OUT=$(abspath $(BASELINE_OUT)/connected-company) $(CYCLE_PYTHON) -m pytest \
+		core_apps/common/test_connected_company_acceptance.py --ds=$(CYCLE_SETTINGS)
+
 .PHONY: test-owner-tenant test-visit-booking test-cancellation-revision test-cycle-contract check-owner-tenant
 test-owner-tenant: ## Run rental, property, advertising and renderer regressions on an isolated DB
 	$(CYCLE_PYTHON) -m pytest core_apps/features/tests core_apps/advertising/tests core_apps/properties/tests core_apps/common --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/owner-tenant.xml
