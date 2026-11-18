@@ -1,0 +1,12 @@
+{
+  "source_branch": "main",
+  "source_commit": "3a289624213c59d547f4944b9d34c20ab53a04f8",
+  "incomplete_templates": 400,
+  "requests": 977,
+  "deferred": 532,
+  "schema_inspection_failures": 2,
+  "mvp_available": 445,
+  "serializer_templates": 80,
+  "format_variants_omitted": 12,
+  "shadowed_patterns_omitted": 1
+}
